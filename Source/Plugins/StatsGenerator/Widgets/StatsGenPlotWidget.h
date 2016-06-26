@@ -46,7 +46,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
-
+class QTableView;
 class SGAbstractTableModel;
 class QwtPlotZoomer;
 class QwtPlotPicker;
@@ -122,17 +122,32 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     void on_deleteRowBtn_clicked();
     void on_distributionTypeCombo_currentIndexChanged(int index);
 
+    void requestContextMenu(const QPoint& pos);
+    void showDataWindow(bool b);
+
   protected:
+
     void resetTableModel();
 
+    /**
+     * @brief initQwtPlot
+     * @param xAxisName
+     * @param yAxisName
+     * @param plot
+     */
+    void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
+
   private:
-    unsigned int m_DistributionType;
+    unsigned int          m_DistributionType;
     SGAbstractTableModel* m_TableModel;
-    QwtPlotGrid* m_grid;
-    unsigned int m_StatsType;
-    bool m_UserUpdatedData;
+    QwtPlotGrid*          m_grid;
+    unsigned int          m_StatsType;
+    bool                  m_UserUpdatedData;
 
     QVector<QwtPlotCurve* > m_PlotCurves;
+//    QWidget*                m_TableViewWidget;
+//    QTableView*             m_TableView;
+    QPoint                  m_ContextMenuPoint;
 
     StatsGenPlotWidget(const StatsGenPlotWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenPlotWidget&); // Operator '=' Not Implemented

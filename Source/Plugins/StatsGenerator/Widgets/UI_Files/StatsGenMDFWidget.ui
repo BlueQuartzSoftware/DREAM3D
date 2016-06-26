@@ -82,7 +82,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+          <iconset resource="../../../../../../SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
            <normaloff>:/add2.png</normaloff>:/add2.png</iconset>
          </property>
          <property name="iconSize">
@@ -123,7 +123,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+          <iconset resource="../../../../../../SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
            <normaloff>:/delete2.png</normaloff>:/delete2.png</iconset>
          </property>
          <property name="iconSize">
@@ -177,7 +177,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+          <iconset resource="../../../../../../SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
            <normaloff>:/refresh.png</normaloff>:/refresh.png</iconset>
          </property>
          <property name="iconSize">
@@ -203,6 +203,12 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QwtPlot
+{
+background-color: rgb(0, 0, 0);
+}</string>
+     </property>
     </widget>
    </item>
   </layout>
@@ -216,7 +222,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../../../SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

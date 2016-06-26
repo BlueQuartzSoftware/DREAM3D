@@ -172,7 +172,7 @@ class SGAbstractTableModel : public QAbstractTableModel
      * @param binNumbers
      */
     //virtual void setBinNumbers(QVector<float> binNumbers) = 0;
-    virtual void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors) = 0;
+    virtual void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QColor> colors) = 0;
 
 
     /**
@@ -192,14 +192,14 @@ class SGAbstractTableModel : public QAbstractTableModel
      *
      * @return
      */
-    virtual QVector<QString>& getColors() = 0;
+    virtual QVector<QColor>& getColors() = 0;
 
     /**
      *
      * @param row
      * @return
      */
-    virtual QString getColor(qint32 row) = 0;
+    virtual QColor getColor(qint32 row) = 0;
 
     /**
      *

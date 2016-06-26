@@ -93,7 +93,7 @@ class SGBetaTableModel : public SGAbstractTableModel
 
     QAbstractItemDelegate* getItemDelegate();
 
-    void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors);
+    void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QColor> colors);
 
     QVector<float>& getBinNumbers()
     {
@@ -104,11 +104,11 @@ class SGBetaTableModel : public SGAbstractTableModel
       return m_BinNumbers[row];
     }
 
-    QVector<QString>& getColors()
+    QVector<QColor>& getColors()
     {
       return m_Colors;
     }
-    QString getColor(qint32 row)
+    QColor getColor(qint32 row)
     {
       return m_Colors[row];
     }
@@ -142,7 +142,7 @@ class SGBetaTableModel : public SGAbstractTableModel
     QVector<float> m_BinNumbers;
     QVector<float> m_Alpha;
     QVector<float> m_Beta;
-    QVector<QString> m_Colors;
+    QVector<QColor> m_Colors;
 
     SGBetaTableModel(const SGBetaTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGBetaTableModel&); // Operator '=' Not Implemented
