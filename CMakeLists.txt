@@ -459,7 +459,6 @@ include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 option(SIMPLib_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
 if( SIMPLib_BUILD_CLI_TOOLS )
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
-    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools/astyle ${PROJECT_BINARY_DIR}/Tools/astyle)
 endif()
 
 
