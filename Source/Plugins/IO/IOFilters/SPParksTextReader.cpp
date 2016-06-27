@@ -90,7 +90,7 @@ SPParksTextReader::~SPParksTextReader()
 void SPParksTextReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.dump", "SPParks Dump File"));
+  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, InputFile), SIMPL_BIND_GETTER(SPParksTextReader, this, InputFile), "*.dump", "SPParks Dump File"));
   parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, Origin), SIMPL_BIND_GETTER(SPParksTextReader, this, Origin)));
 
   parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, Resolution), SIMPL_BIND_GETTER(SPParksTextReader, this, Resolution)));

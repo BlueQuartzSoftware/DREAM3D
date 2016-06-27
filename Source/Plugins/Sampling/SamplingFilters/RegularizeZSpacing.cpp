@@ -79,7 +79,7 @@ RegularizeZSpacing::~RegularizeZSpacing()
 void RegularizeZSpacing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Current Z Positions File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.txt", SIMPL_BIND_SETTER(RegularizeZSpacing, this, InputFile), SIMPL_BIND_GETTER(RegularizeZSpacing, this, InputFile)));
+  parameters.push_back(InputFileFilterParameter::New("Current Z Positions File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularizeZSpacing, this, InputFile), SIMPL_BIND_GETTER(RegularizeZSpacing, this, InputFile), "*.txt"));
   parameters.push_back(DoubleFilterParameter::New("New Z Resolution", "NewZRes", getNewZRes(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularizeZSpacing, this, NewZRes), SIMPL_BIND_GETTER(RegularizeZSpacing, this, NewZRes)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

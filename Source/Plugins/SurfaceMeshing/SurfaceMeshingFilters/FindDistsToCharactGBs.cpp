@@ -314,7 +314,7 @@ void FindDistsToCharactGBs::setupFilterParameters()
   {
     QString degSymbol = QChar(0x00B0);
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest 180" + degSymbol +"-tilt  Boundary", "DistTo180TiltArrayPath", getDistTo180TiltArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest 180" + degSymbol + "-tilt  Boundary", "DistTo180TiltArrayPath", getDistTo180TiltArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindDistsToCharactGBs, this, DistTo180TiltArrayPath), SIMPL_BIND_GETTER(FindDistsToCharactGBs, this, DistTo180TiltArrayPath)));
   }
   setFilterParameters(parameters);
 }

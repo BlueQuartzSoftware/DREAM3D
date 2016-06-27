@@ -430,11 +430,11 @@ void FindGBPDMetricBased::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, PhaseOfInterest), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, PhaseOfInterest)));
-  parameters.push_back(DoubleFilterParameter::New("Limiting Distance [deg.]", "LimitDist", getLimitDist(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Limiting Distance [deg.]", "LimitDist", getLimitDist(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, LimitDist), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, LimitDist)));
   parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, NumSamplPts), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, NumSamplPts)));
   parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, ExcludeTripleLines), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, ExcludeTripleLines)));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, DistOutputFile), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, DistOutputFile), ));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, ErrOutputFile), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, ErrOutputFile), ));
+  parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, DistOutputFile), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, DistOutputFile)));
+  parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, ErrOutputFile), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, ErrOutputFile)));
   parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SaveRelativeErr), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SaveRelativeErr)));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {

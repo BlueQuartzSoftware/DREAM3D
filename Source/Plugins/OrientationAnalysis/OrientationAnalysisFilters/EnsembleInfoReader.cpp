@@ -87,7 +87,7 @@ EnsembleInfoReader::~EnsembleInfoReader()
 void EnsembleInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EnsembleInfoReader, this, InputFile), SIMPL_BIND_GETTER(EnsembleInfoReader, this, InputFile), *.ini *.txt));
+  parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EnsembleInfoReader, this, InputFile), SIMPL_BIND_GETTER(EnsembleInfoReader, this, InputFile), "*.ini *.txt"));
   {
     DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EnsembleInfoReader, this, DataContainerName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, DataContainerName)));

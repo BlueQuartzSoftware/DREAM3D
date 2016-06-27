@@ -185,7 +185,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
   linkedProps.clear();
   linkedProps << "PrecipInputFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Precipitates", "HavePrecips", getHavePrecips(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, HavePrecips), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, HavePrecips)));
-  parameters.push_back(InputFileFilterParameter::New("Precipitate Input File", "PrecipInputFile", getPrecipInputFile(), FilterParameter::Parameter, "*.txt", "Text File"));
+  parameters.push_back(InputFileFilterParameter::New("Precipitate Input File", "PrecipInputFile", getPrecipInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, PrecipInputFile), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, PrecipInputFile), "*.txt", "Text File"));
   linkedProps.clear();
   linkedProps << "CsvOutputFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, WriteGoalAttributes), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, WriteGoalAttributes)));

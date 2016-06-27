@@ -131,7 +131,7 @@ SIMPL_PIMPL_PROPERTY_DEF(PhReader, QDateTime, LastRead)
 void PhReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.ph", "CMU Grain Growth"));
+  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PhReader, this, InputFile), SIMPL_BIND_GETTER(PhReader, this, InputFile), "*.ph", "CMU Grain Growth"));
   parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PhReader, this, Origin), SIMPL_BIND_GETTER(PhReader, this, Origin)));
 
   parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PhReader, this, Resolution), SIMPL_BIND_GETTER(PhReader, this, Resolution)));

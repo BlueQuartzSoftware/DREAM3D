@@ -94,7 +94,7 @@ FeatureInfoReader::~FeatureInfoReader()
 void FeatureInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input Feature Info File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.txt", SIMPL_BIND_SETTER(FeatureInfoReader, this, InputFile), SIMPL_BIND_GETTER(FeatureInfoReader, this, InputFile)));
+  parameters.push_back(InputFileFilterParameter::New("Input Feature Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, InputFile), SIMPL_BIND_GETTER(FeatureInfoReader, this, InputFile), "*.txt"));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayName" << "CellEulerAnglesArrayName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Create Element Level Arrays", "CreateCellLevelArrays", getCreateCellLevelArrays(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, CreateCellLevelArrays), SIMPL_BIND_GETTER(FeatureInfoReader, this, CreateCellLevelArrays)));

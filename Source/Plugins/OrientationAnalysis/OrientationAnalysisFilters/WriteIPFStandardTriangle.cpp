@@ -81,7 +81,7 @@ WriteIPFStandardTriangle::~WriteIPFStandardTriangle()
 void WriteIPFStandardTriangle::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.tif, *.bmp, *.png", "Image"));
+  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteIPFStandardTriangle, this, OutputFile), SIMPL_BIND_GETTER(WriteIPFStandardTriangle, this, OutputFile), "*.tif, *.bmp, *.png", "Image"));
   parameters.push_back(IntFilterParameter::New("Image Size (Square Pixels)", "ImageSize", getImageSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteIPFStandardTriangle, this, ImageSize), SIMPL_BIND_GETTER(WriteIPFStandardTriangle, this, ImageSize)));
   setFilterParameters(parameters);
 }
