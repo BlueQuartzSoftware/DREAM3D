@@ -201,7 +201,7 @@ void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPt
           ss << " " << static_cast<int>(val[i]);
         }
         else {
-        ss << " " << val[i];
+          ss << " " << val[i];
         }
       }
       ss << "\n";
