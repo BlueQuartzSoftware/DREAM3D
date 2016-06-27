@@ -150,7 +150,7 @@ endif()
 # Official: This is an official release from BlueQuartz Software
 # Beta: This is a Beta release that has is getting ready to be officially released.
 # Development: This is currently in development and probably has bugs.
-set(DREAM3DProj_RELEASE_TYPE "Development")
+set(DREAM3DProj_RELEASE_TYPE "Beta")
 
 include(CMakeParseArguments)
 
