@@ -96,7 +96,7 @@ Qt::ItemFlags SGPowerLawTableModel::flags(const QModelIndex& index) const
     }
     else if (col == LineColor)
     {
-      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+     // theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
   }
   return theFlags;
@@ -149,12 +149,12 @@ QVariant SGPowerLawTableModel::data(const QModelIndex& index, qint32 role) const
       }
       case LineColor:
       {
-        comboBox.currentText = QString("Dark Blue     ");
-        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length())
-        {
-          comboBox.currentText = header;
-        }
+//        comboBox.currentText = QString("Dark Blue     ");
+//        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
+//        if (header.length() > comboBox.currentText.length())
+//        {
+//          comboBox.currentText = header;
+//        }
         break;
       }
       default:
@@ -190,7 +190,7 @@ QVariant SGPowerLawTableModel::data(const QModelIndex& index, qint32 role) const
     }
     else if (col == LineColor)
     {
-      return QVariant(m_Colors[index.row()]);
+    //  return QVariant(m_Colors[index.row()]);
     }
   }
 
@@ -219,7 +219,7 @@ QVariant SGPowerLawTableModel::headerData(int section, Qt::Orientation orientati
         return QVariant(QString("Beta"));
         break;
       case LineColor:
-        return QVariant(QString("Color"));
+       // return QVariant(QColor("white"));
         break;
       default:
         break;
@@ -274,7 +274,7 @@ bool SGPowerLawTableModel::setData(const QModelIndex& index, const QVariant& val
       m_Beta[row] = value.toFloat(&ok);
       break;
     case LineColor:
-      m_Colors[row] = value.toString();
+      //m_Colors[row] = value.to();
       break;
     default:
       Q_ASSERT(false);
@@ -295,7 +295,7 @@ bool SGPowerLawTableModel::insertRows(int row, int count, const QModelIndex& ind
   float alpha = 15.0;
   float k = 2.0;
   float beta = 1.0;
-  QString c("blue");
+  QColor c("blue");
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
   for (int i = 0; i < count; ++i)
@@ -407,7 +407,7 @@ void SGPowerLawTableModel::setColumnData(int col, QVector<float>& data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGPowerLawTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors)
+void SGPowerLawTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QColor> colors)
 {
   qint32 count = bins.count();
 

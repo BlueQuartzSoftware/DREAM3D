@@ -90,20 +90,14 @@ void PrimaryEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot,
 
   QVector<float> alphas;
   QVector<float> betas;
-  QVector<QString> colors;
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
+  QVector<QColor> colors = GenerateColors(count, 160, 255);
+
   for (qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 10.0 + rg.genrand_res53();
     beta = (0 * i) + 1.5 + (0.5 * rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-    if (colorOffset == colorNames.size())
-    {
-      colorOffset = 21;
-    }
   }
 
   QVector<QVector<float> > data;
@@ -135,20 +129,14 @@ void PrimaryEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot,
 
   QVector<float> alphas;
   QVector<float> betas;
-  QVector<QString> colors;
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
+  QVector<QColor> colors = GenerateColors(count, 160, 255);
+
   for (qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 15.0 + rg.genrand_res53();
     beta = (0 * i) + 1.25 + (0.5 * rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-    if (colorOffset == colorNames.size())
-    {
-      colorOffset = 21;
-    }
   }
 
   QVector<QVector<float> > data;
@@ -180,20 +168,14 @@ void PrimaryEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot,
 
   QVector<float> alphas;
   QVector<float> betas;
-  QVector<QString> colors;
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
+  QVector<QColor> colors = GenerateColors(count, 160, 255);
+
   for (qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 15.0 + rg.genrand_res53();
     beta = (0 * i) + 1.25 + (0.5 * rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
-    colors.push_back(colorNames[colorOffset++]);
-    if (colorOffset == colorNames.size())
-    {
-      colorOffset = 21;
-    }
   }
 
   QVector<QVector<float> > data;
@@ -227,9 +209,8 @@ void PrimaryEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plo
 
   QVector<float> mus;
   QVector<float> sigmas;
-  QVector<QString> colors;
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
+  QVector<QColor> colors = GenerateColors(count, 160, 255);
+
   int middlebin = count / 2;
   for (qint32 i = 0; i < count; ++i)
   {
@@ -237,11 +218,6 @@ void PrimaryEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plo
     sigma = 0.3 + (float(middlebin - i) / float(middlebin * 10));
     mus.push_back(mu);
     sigmas.push_back(sigma);
-    colors.push_back(colorNames[colorOffset++]);
-    if (colorOffset == colorNames.size())
-    {
-      colorOffset = 21;
-    }
   }
 
   QVector<QVector<float> > data;

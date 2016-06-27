@@ -99,16 +99,16 @@ class SGPowerLawTableModel : public SGAbstractTableModel
 
     QAbstractItemDelegate* getItemDelegate();
 
-    void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors);
+    void setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QColor> colors);
 
     QVector<float>& getBinNumbers()
     { return m_BinNumbers;}
     float getBinNumber(qint32 row)
     { return m_BinNumbers[row];}
 
-    QVector<QString>& getColors()
+    QVector<QColor>& getColors()
     { return m_Colors;}
-    QString getColor(qint32 row)
+    QColor getColor(qint32 row)
     { return m_Colors[row];}
 
     virtual QVector<float> getData(int col);
@@ -137,7 +137,7 @@ class SGPowerLawTableModel : public SGAbstractTableModel
     QVector<float> m_Alpha;
     QVector<float> m_K;
     QVector<float> m_Beta;
-    QVector<QString> m_Colors;
+    QVector<QColor> m_Colors;
 
     SGPowerLawTableModel(const SGPowerLawTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGPowerLawTableModel&); // Operator '=' Not Implemented

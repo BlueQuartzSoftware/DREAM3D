@@ -94,6 +94,7 @@ StatsGeneratorWidget::StatsGeneratorWidget(FilterParameter* parameter, AbstractF
   Q_ASSERT_X(m_Filter != NULL, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilter filter");
 
   m_OpenDialogLastDirectory = QDir::homePath();
+  setWidgetIsExpanding(true);
   setupUi(this);
   setupGui();
 }

@@ -45,6 +45,8 @@
 //-- Qt Includes
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QAbstractItemDelegate>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QTableView>
 
 //-- Qwt Includes
 #include <qwt.h>
@@ -60,6 +62,10 @@
 #include <qwt_interval.h>
 #include <qwt_point_3d.h>
 #include <qwt_compat.h>
+#include <qwt_plot_layout.h>
+#include <qwt_scale_widget.h>
+#include <qwt_plot_item.h>
+#include <qwt_text_label.h>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -67,7 +73,7 @@
 #include "StatsGenerator/Widgets/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
-
+#include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
@@ -127,7 +133,12 @@ void StatsGenPlotWidget::setStatisticsType(unsigned int distributionType)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setPlotTitle(QString title)
 {
-  // this->m_PlotTitle->setText(title);
+  QwtText qwtTitle(title);
+  qwtTitle.setColor(Qt::white);
+ // qwtTitle.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
+  //title.setFont(font);
+  m_PlotView->setTitle(qwtTitle);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -177,14 +188,9 @@ int StatsGenPlotWidget::extractStatsData(int index,
   // This will force a reset of the table model creating a new table model
   setDistributionType(m_DistributionType); // This makes sure the combo box is set correctly
 
-  QVector<QString> colors;
   qint32 count = binNumbers.count();
-  QStringList colorNames = QColor::colorNames();
-  qint32 colorOffset = 21;
-  for (qint32 i = 0; i < count; ++i)
-  {
-    colors.push_back(colorNames[colorOffset++]);
-  }
+  QVector<QColor> colors = AbstractMicrostructurePreset::GenerateColors(count, 160, 255);
+
   QVector<QVector<float> > data;
 
   for(VectorOfFloatArray::size_type i = 0; i < arrays.size(); ++i)
@@ -386,13 +392,115 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
+{
+
+  QPalette  pal;
+  pal.setColor(QPalette::Text, Qt::white);
+  pal.setColor(QPalette::Foreground, Qt::white);
+  pal.setColor(QPalette::Window, Qt::black);
+
+  plot->setPalette( pal );
+
+  plot->plotLayout()->setAlignCanvasToScales( true );
+  for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
+  {
+      plot->axisWidget( axis )->setMargin( 0 );
+      plot->axisWidget(axis)->setPalette(pal);
+  }
+  QwtPlotCanvas *canvas = new QwtPlotCanvas();
+
+  canvas->setAutoFillBackground( false );
+  canvas->setFrameStyle( QFrame::NoFrame );
+  canvas->setPalette(pal);
+
+  plot->setCanvas( canvas );
+
+//  QwtPlotMagnifier* plotMag =  new QwtPlotMagnifier( canvas );
+//  plotMag->setWheelModifiers(Qt::KeyboardModifiers(Qt::Key_Shift));
+
+  //(void) new QwtPlotPanner(canvas);
+
+  QFont font;
+  font.setBold(true);
+
+  QwtText xAxis(xAxisName);
+  xAxis.setColor(Qt::white);
+  xAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+  xAxis.setFont(font);
+  plot->setAxisTitle(QwtPlot::xBottom, xAxis);
+
+  QwtText yAxis(yAxisName);
+  yAxis.setColor(Qt::white);
+  yAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+  yAxis.setFont(font);
+  plot->setAxisTitle(QwtPlot::yLeft, yAxis);
+
+
+  QwtText title("");
+  title.setColor(Qt::white);
+ // title.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
+  title.setFont(font);
+  plot->setTitle(title);
+
+  const int margin = 1;
+  plot->setContentsMargins( margin, margin, margin, margin );
+
+
+  m_grid = new QwtPlotGrid;
+  m_grid->enableXMin(true);
+  m_grid->enableYMin(true);
+#if (QWT_VERSION > 0x060000)
+  m_grid->setMajorPen(QPen(Qt::gray, 0, Qt::SolidLine));
+  m_grid->setMinorPen(QPen(Qt::lightGray, 0, Qt::SolidLine));
+#else
+  m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
+  m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
+#endif
+
+
+
+ // m_grid->attach(m_PlotView);
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::showDataWindow(bool b)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ void StatsGenPlotWidget::requestContextMenu(const QPoint& pos)
+ {
+   QPoint mapped = mapToGlobal(pos);
+   m_ContextMenuPoint = mapped;
+   QMenu menu;
+   QAction* editData = new QAction(QString("Edit Data"), &menu);
+   connect(editData, SIGNAL(triggered(bool)),
+           this, SLOT(showDataWindow(bool)));
+   menu.addAction(editData);
+   menu.exec(mapped);
+
+ }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setupGui()
 {
-  distributionTypeCombo->blockSignals(true);
-  distributionTypeCombo->addItem(SIMPL::StringConstants::BetaDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(SIMPL::StringConstants::LogNormalDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(SIMPL::StringConstants::PowerLawDistribution.toLatin1().data());
-  distributionTypeCombo->blockSignals(false);
+
+
+
+//  distributionTypeCombo->blockSignals(true);
+//  distributionTypeCombo->addItem(SIMPL::StringConstants::BetaDistribution.toLatin1().data());
+//  distributionTypeCombo->addItem(SIMPL::StringConstants::LogNormalDistribution.toLatin1().data());
+//  distributionTypeCombo->addItem(SIMPL::StringConstants::PowerLawDistribution.toLatin1().data());
+//  distributionTypeCombo->blockSignals(false);
 
 
   // Setup the TableView and Table Models
@@ -402,20 +510,7 @@ void StatsGenPlotWidget::setupGui()
   headerView->show();
 
   // Setup the Qwt Plot Widget
-  //plot->setCanvasBackground(QColor(Qt::white));
-  //m_PlotView->canvas()->setFrameShape(QFrame::NoFrame);
-
-  m_grid = new QwtPlotGrid;
-  m_grid->enableXMin(true);
-  m_grid->enableYMin(true);
-#if (QWT_VERSION > 0x060000)
-  m_grid->setMajorPen(QPen(Qt::gray, 0, Qt::SolidLine));
-  m_grid->setMinorPen(QPen(Qt::lightGray, 0, Qt::DotLine));
-#else
-  m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
-  m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
-#endif
-  m_grid->attach(m_PlotView);
+  initQwtPlot("", "", m_PlotView);
 
   resetTableModel();
   if (NULL != m_TableModel)

@@ -66,7 +66,8 @@
 #include <qwt_interval.h>
 #include <qwt_point_3d.h>
 #include <qwt_compat.h>
-
+#include <qwt_plot_layout.h>
+#include <qwt_scale_widget.h>
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -137,8 +138,46 @@ void StatsGenMDFWidget::setupGui()
 // -----------------------------------------------------------------------------
 void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
 {
-  plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
-  plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
+
+  QPalette  pal;
+  pal.setColor(QPalette::Text, Qt::white);
+  pal.setColor(QPalette::Foreground, Qt::white);
+  pal.setColor(QPalette::Window, Qt::black);
+
+  plot->setPalette( pal );
+
+  plot->plotLayout()->setAlignCanvasToScales( true );
+  for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
+  {
+      plot->axisWidget( axis )->setMargin( 0 );
+      plot->axisWidget(axis)->setPalette(pal);
+  }
+  QwtPlotCanvas *canvas = new QwtPlotCanvas();
+
+  canvas->setAutoFillBackground( false );
+  canvas->setFrameStyle( QFrame::NoFrame );
+  canvas->setPalette(pal);
+  plot->setCanvas( canvas );
+
+  QFont font;
+  font.setBold(true);
+
+  QwtText xAxis(xAxisName);
+  xAxis.setColor(Qt::white);
+  xAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+  xAxis.setFont(font);
+
+  QwtText yAxis(yAxisName);
+  yAxis.setColor(Qt::white);
+  yAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+  yAxis.setFont(font);
+
+  const int margin = 5;
+  plot->setContentsMargins( margin, margin, margin, margin );
+
+  plot->setAxisTitle(QwtPlot::xBottom, xAxis);
+  plot->setAxisTitle(QwtPlot::yLeft, yAxis);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -240,7 +279,13 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
 #else
   curve->setData(xD, yD);
 #endif
+  QColor color = QColor("DodgerBlue");
+  curve->setPen(color, 2);
+  curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
   curve->setStyle(QwtPlotCurve::Lines);
+  QwtSymbol *symbol = new QwtSymbol( QwtSymbol::Ellipse,
+      QBrush( Qt::white ), QPen( color, 2 ), QSize( 8, 8 ) );
+  curve->setSymbol( symbol );
   curve->attach(m_MDFPlot);
   m_MDFPlot->replot();
 }

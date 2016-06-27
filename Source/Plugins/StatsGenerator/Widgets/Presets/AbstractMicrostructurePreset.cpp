@@ -114,4 +114,18 @@ void AbstractMicrostructurePreset::initializeMDFTableModel(StatsGenMDFWidget* wi
   model->setTableData(angles, axis, weights);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<QColor> AbstractMicrostructurePreset::GenerateColors(int count, int saturation, int value)
+{
+  QVector<QColor> colors(count);
 
+  float increment = 360.0 / count;
+  for(int i = 0; i < count; i++)
+  {
+     QColor c = QColor::fromHsv(i*increment, saturation, value, 255);
+     colors[i] = c;
+  }
+  return colors;
+}

@@ -91,7 +91,7 @@ Qt::ItemFlags SGLogNormalTableModel::flags(const QModelIndex& index) const
     }
     else if (col == LineColor)
     {
-      theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    //  theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
   }
   return theFlags;
@@ -137,12 +137,12 @@ QVariant SGLogNormalTableModel::data(const QModelIndex& index, qint32 role) cons
       }
       case LineColor:
       {
-        comboBox.currentText = QString("Dark Blue      ");
-        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length())
-        {
-          comboBox.currentText = header;
-        }
+//        comboBox.currentText = QString("Dark Blue      ");
+//        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
+//        if (header.length() > comboBox.currentText.length())
+//        {
+//          comboBox.currentText = header;
+//        }
         break;
       }
       default:
@@ -174,7 +174,7 @@ QVariant SGLogNormalTableModel::data(const QModelIndex& index, qint32 role) cons
     }
     else if (col == LineColor)
     {
-      return QVariant(m_Colors[index.row()]);
+    //  return QVariant(m_Colors[index.row()]);
     }
   }
 
@@ -200,7 +200,7 @@ QVariant SGLogNormalTableModel::headerData(int section, Qt::Orientation orientat
         return QVariant(QString("StdDev"));
         break;
       case LineColor:
-        return QVariant(QString("Color"));
+      //  return QVariant(QString("Color"));
         break;
       default:
         break;
@@ -374,7 +374,7 @@ void SGLogNormalTableModel::setColumnData(int col, QVector<float>& data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGLogNormalTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors)
+void SGLogNormalTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QColor> colors)
 {
   qint32 count = bins.count();
   // Now make sure we _really_ have the correct count because the number of

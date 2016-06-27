@@ -358,12 +358,6 @@ else()
   message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
 endif()
 
-
-# ------------------------------------------------------------------------------
-#  Qwt Section. Find Qwt and setup copy and install rules
-# ------------------------------------------------------------------------------
-include(${CMP_SOURCE_DIR}/ExtLib/QwtSupport.cmake)
-
 # --------------------------------------------------------------------
 # Now that we have found all of our required libraries and packages we can start the all
 # the tests

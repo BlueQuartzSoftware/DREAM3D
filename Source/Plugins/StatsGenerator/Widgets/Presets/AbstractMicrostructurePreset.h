@@ -37,7 +37,9 @@
 #ifndef _abstractmicrostructurepreset_h_
 #define _abstractmicrostructurepreset_h_
 
-#include "QtCore/QVector"
+#include <QtCore/QVector>
+#include <QtGui/QColor>
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 class StatsGenPlotWidget;
@@ -128,6 +130,16 @@ class AbstractMicrostructurePreset
      * @param widget
      */
     virtual void initializeMDFTableModel(StatsGenMDFWidget* widget);
+
+    /**
+     * @brief Generates a vector of colors based on the HSV color wheel. The colors
+     * are evenly distributed around the color wheel by taking 360/count.
+     * @param count The total number of colors
+     * @param saturation
+     * @param value
+     * @return
+     */
+    static QVector<QColor> GenerateColors(int count, int saturation = 255, int value = 255);
 
   protected:
     AbstractMicrostructurePreset();
