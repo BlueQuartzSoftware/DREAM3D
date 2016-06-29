@@ -9,56 +9,6 @@ These release notes summarize the major changes for each officially released ver
 
 [Developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.2.XXX ##
-
-
-### General Changes ###
-+ Releases are now built against Qt 5.6.0, HDF5 1.8.16, Boost 1.60.0, Qwt 6.1.2, Eigen 3.2.8, ITK 4.9.1
-+ Created new "ToolBox" window that contains the *Filter List*, *Filter Library* and *Bookmarks* tabs from earlier versions
-
-### DREAM.3D Changes ###
-
-+ Fixing a bug that was causing DREAM3D to crash when quitting if the user launched the help dialog during the session.
-+ Adding explanation to CTF readers why 30 degrees is added to phi2 angle.
-+ Bug Fix: Enforce that the packing grid has dimension of at least 1.
-+ Bug Fix: Fix incorrect computation of seed during segmentation. Thanks to W. Lenthe for the bug report.
-+ Bug Fix: Fixing an issue when reading a H5EBSD file where the Euler Angles are represented in Degrees AND the user selects to apply the 'Recommended Transformations'. The Euler Angles are silently treated as radians for some internal calculations that transform from Euler angles to an Orientation Matrix and back to Euler Angles.
-+ Feature: Added filter **Find GBCD (Metric Based)**. Thanks to Krzysztof Glowinski for donating the filter.
-+ Crash Fix: certain Rodrigues and Axis-Angle combinations would cause a seg- fault due to all values being Zero. Correct formatting of the various labels. distinguish between Errors and Warnings Automatically normalizing the Axis-Angle and Rodrigues vectors. Updating documentation to explicitly state that the utility is auto-normalizing some of the inputs.
-+ Bug Fix: DREAM3D_UI closeEvent slot was being called twice when exiting DREAM3D from the dock menu.
-+ Adding custom dock menu for Mac OS X.
-
-### SIMPLView Changes ###
-+ Bug Fix: Fixing bug where it was possible to delete filter widgets using the delete key while the pipeline was running.
-+ Added GUI for **Pause Pipeline** filter
-+ Added GUI for **Execute Process** filter
-+ Added GUI for **StatsGenerator** filter
-+ Added GUI for **Array Calculator** filter
-+ Added GUI for standard output to capture output during the **Execute Process** filter
-+ Feature: Adding drag-and-drop of filters between DREAM.3D/SIMPLView windows
-+ Feature: Adding a "Select All" keyboard short cut
-+ Bug Fix: Fixing a bug relating to the help dialog crashing on Windows when DREAM3D closes.
-+ Bug Fix: Adding high-DPI support for Windows on retina quality screens.
-+ Feature: Allow reading a stack of scans from inside an EDAX HDF5 file.
-+ Bug Fix: Fixing bug where changing the name of a data array or attribute matrix in the DataArrayCreationWidget or AttributeMatrixCreationWidget, respectively, would cause the name to revert back to its old name when explicitly pressing the Apply button.
-+ Feature: Adding code to disable the Go button whenever preflight finishes with errors.
-
-
-### SIMPLib Changes ###
-+ Feature: Add infrastructure to allow Cut/Copy/Paste of filters into/out-of a pipeline view
-+ Feature: Add infrastructure to allow "Undo/Redo" commands
-+ Feature: Add **Execute Process** filter that allows the filter to execute any program on the computer system.
-+ Feature: Add a **Pause Pipeline** filter that allows the user to pause a pipeline at a given point.
-+ Feature: Added a **StatsGenerator** filter that allows the user to generate statistics for a synthetic microstructure inside a pipeline instead of using a separate application.
-+ Feature: Added an **Array Calculator** filter
-+ Bug Fix: Fix bug that was not allowing **Pipeline Runner** to execute properly
-+ Optimize Array initialization during the **Create Data Array** filter
-+ Bug Fix: Fix issue where attempting to read a single variable length string from an HDF5 file would result in random bytes copied into the buffer
-+ Bug Fix: incorrect logic test in copyData() method of the DataArray class
-+ Feature: Filters can now track warning conditions
-+ Bug Fix: Fixing a bug that was causing the range filter parameter's values to fail during the H5FilterParameter writing process.
-+ Bug Fix: Do not allocate Geometry Arrays during preflight.
-
 
 ## Version 6.2.327 Jan 6, 2016 ##
 + DREAM.3D has new logo and splash screen!
