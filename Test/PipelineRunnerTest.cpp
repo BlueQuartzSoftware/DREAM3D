@@ -108,7 +108,8 @@ void ExecutePipeline(const QString& pipelineFile)
   }
   else if (ext == "json")
   {
-    pipeline = JsonFilterParametersReader::ReadPipelineFromFile(pipelineFile);
+    JsonFilterParametersReader::Pointer jsonReader = JsonFilterParametersReader::New();
+    pipeline = jsonReader->readPipelineFromFile(pipelineFile);
   }
 
   if (NULL == pipeline.get())
