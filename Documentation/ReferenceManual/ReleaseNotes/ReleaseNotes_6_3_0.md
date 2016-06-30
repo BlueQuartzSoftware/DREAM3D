@@ -5,16 +5,19 @@ These release notes summarize the major changes for each officially released ver
 
 ## Getting Help ##
 
-[Users](https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users)
+The developers of DREAM.3D maintain a pair of Google Groups for discussions on the use of DREAM.3D and the development of filters or plugins for DREAM.3D. If you have a question those are the best places to ask and get help from the community.
 
-[Developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
+[DREAM.3D Users List](https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users)
+
+[DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
 ## Version 6.3.0 ##
 
 
-### General Changes ###
-+ Releases are now built against Qt 5.6.0, HDF5 1.8.16, Boost 1.60.0, Qwt 6.1.2, Eigen 3.2.8, ITK 4.9.1
+### Major Changes ###
 + Created new "ToolBox" window that contains the *Filter List*, *Filter Library* and *Bookmarks* tabs from earlier versions
++ Cut/Copy/Paste of Filters within DREAM.3D pipelines and between DREAM.3D documents.
++ Added OrientationLib which uses a unified source code for calculating crystallographic angle transforms.
 
 ### DREAM.3D Changes ###
 
@@ -28,8 +31,9 @@ These release notes summarize the major changes for each officially released ver
 + BUG: Fixing an issue when reading a H5EBSD file where the Euler Angles are represented in Degrees AND the user selects to apply the 'Recommended Transformations'. The Euler Angles are silently treated as radians for some internal calculations that transform from Euler angles to an Orientation Matrix and back to Euler Angles.
 + Feature: Added filter **Find GBCD (Metric Based)**. Thanks to Krzysztof Glowinski for donating the filter.
 + BUG: certain Rodrigues and Axis-Angle combinations would cause a seg- fault due to all values being Zero. Distinguish between Errors and Warnings when automatically normalizing the Axis-Angle and Rodrigues vectors. Updating documentation to explicitly state that the utility is auto-normalizing some of the inputs.
-+ BUG: DREAM3D_UI closeEvent slot was being called twice when exiting DREAM3D from the dock menu.
++ BUG: DREAM3D\_UI closeEvent slot was being called twice when exiting DREAM3D from the dock menu.
 + Feature: Adding custom dock menu for Mac OS X.
++ Feature: Integrated the complete **StatsGenerator** application as a filter in DREAM.3D 
 
 ### SIMPLView Changes ###
 + Bug Fix: Fixing bug where it was possible to delete filter widgets using the delete key while the pipeline was running.
@@ -64,7 +68,9 @@ These release notes summarize the major changes for each officially released ver
 
 ### Known Issues ###
 
++ LINUX: DREAM.3D help opens in the user's preferred web browser instead of a DREAM.3D window.
 
 ### Developer Notes ###
 
-Please note the new library requirements for this build.
++ Releases are now built against Qt 5.6.0, HDF5 1.8.16, Boost 1.60.0, Qwt 6.1.2, Eigen 3.2.8, ITK 4.9.1
+
