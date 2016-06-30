@@ -150,7 +150,11 @@ endif()
 # Official: This is an official release from BlueQuartz Software
 # Beta: This is a Beta release that has is getting ready to be officially released.
 # Development: This is currently in development and probably has bugs.
-set(DREAM3DProj_RELEASE_TYPE "Beta")
+get_property(DREAM3DProj_RELEASE_TYPE GLOBAL PROPERTY PACKAGE_RELEASE_TYPE)
+if("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "")
+  set(DREAM3DProj_RELEASE_TYPE "Beta")
+  set_property(GLOBAL PROPERTY PACKAGE_RELEASE_TYPE "${DREAM3DProj_RELEASE_TYPE}")
+endif()
 
 include(CMakeParseArguments)
 
@@ -218,6 +222,11 @@ if(SIMPLib_USE_ITK)
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
   get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
 endif()
+
+# -----------------------------------------------------------------------
+# Set a global value to NOT install headers
+# -----------------------------------------------------------------------
+set_property(GLOBAL PROPERTY CMP_PROJECT_INSTALL_HEADERS "0")
 
 
 # -----------------------------------------------------------------------
