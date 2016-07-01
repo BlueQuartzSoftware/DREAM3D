@@ -260,6 +260,8 @@ void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Comparison Operator");
     parameter->setPropertyName("SelectedComparison");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, SelectedComparison));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, SelectedComparison));
 
     QVector<QString> choices;
     choices.push_back("<");

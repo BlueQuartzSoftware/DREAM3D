@@ -272,6 +272,8 @@ void InsertAtoms::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");
     parameter->setPropertyName("Basis");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(InsertAtoms, this, Basis));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(InsertAtoms, this, Basis));
 
     QVector<QString> choices;
     choices.push_back("Simple Cubic");

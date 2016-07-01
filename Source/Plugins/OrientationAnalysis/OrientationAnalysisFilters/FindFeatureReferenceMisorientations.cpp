@@ -100,6 +100,8 @@ void FindFeatureReferenceMisorientations::setupFilterParameters()
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Reference Orientation");
     parameter->setPropertyName("ReferenceOrientation");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FindFeatureReferenceMisorientations, this, ReferenceOrientation));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FindFeatureReferenceMisorientations, this, ReferenceOrientation));
 
     QVector<QString> choices;
     choices.push_back("Average Orientation");

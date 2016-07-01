@@ -111,6 +111,8 @@ void WarpRegularGrid::setupFilterParameters()
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Polynomial Order");
     parameter->setPropertyName("PolyOrder");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(WarpRegularGrid, this, PolyOrder));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(WarpRegularGrid, this, PolyOrder));
 
     QVector<QString> choices;
     choices.push_back("2nd");

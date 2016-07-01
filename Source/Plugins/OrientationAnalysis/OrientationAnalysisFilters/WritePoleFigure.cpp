@@ -114,6 +114,8 @@ void WritePoleFigure::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
     parameter->setPropertyName("ImageFormat");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(WritePoleFigure, this, ImageFormat));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(WritePoleFigure, this, ImageFormat));
 
     QVector<QString> choices;
     choices.push_back("tif");
@@ -129,6 +131,8 @@ void WritePoleFigure::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Layout");
     parameter->setPropertyName("ImageLayout");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(WritePoleFigure, this, ImageLayout));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(WritePoleFigure, this, ImageLayout));
 
     QVector<QString> choices;
     choices.push_back("Horizontal");

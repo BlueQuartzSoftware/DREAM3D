@@ -157,6 +157,8 @@ void ExportData::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();  //Delimiter choice
     parameter->setHumanLabel("Delimiter");
     parameter->setPropertyName("Delimeter");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ExportData, this, Delimeter));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ExportData, this, Delimeter));
 
     QVector<QString> choices;
     choices.push_back(", (comma)");

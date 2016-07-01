@@ -118,6 +118,8 @@ void InitializeData::setupFilterParameters()
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Initialization Type");
     parameter->setPropertyName("InitType");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(InitializeData, this, InitType));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(InitializeData, this, InitType));
 
     parameter->setDefaultValue(Manual);
 

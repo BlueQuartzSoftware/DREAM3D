@@ -90,6 +90,8 @@ void WriteImages::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
     parameter->setPropertyName("ImageFormat");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(WriteImages, this, ImageFormat));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(WriteImages, this, ImageFormat));
 
     QVector<QString> choices;
     choices.push_back("tif");
@@ -103,6 +105,8 @@ void WriteImages::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane");
     parameter->setPropertyName("Plane");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(WriteImages, this, Plane));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(WriteImages, this, Plane));
 
     QVector<QString> choices;
     choices.push_back("XY");

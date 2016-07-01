@@ -90,6 +90,8 @@ void FindFeatureHistogram::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Number of Bins");
     parameter->setPropertyName("NumberOfBins");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FindFeatureHistogram, this, NumberOfBins));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FindFeatureHistogram, this, NumberOfBins));
 
     parameters.push_back(parameter);
   }

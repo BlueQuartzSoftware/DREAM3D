@@ -123,6 +123,8 @@ void ChangeAngleRepresentation::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Conversion Type");
     parameter->setPropertyName("ConversionType");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ChangeAngleRepresentation, this, ConversionType));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ChangeAngleRepresentation, this, ConversionType));
 
     QVector<QString> choices;
     choices.push_back("Degrees to Radians");

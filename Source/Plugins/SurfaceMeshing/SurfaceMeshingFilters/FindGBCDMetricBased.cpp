@@ -487,6 +487,8 @@ void FindGBCDMetricBased::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Limiting Distances");
     parameter->setPropertyName("ChosenLimitDists");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FindGBCDMetricBased, this, ChosenLimitDists));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FindGBCDMetricBased, this, ChosenLimitDists));
 
     QVector<QString> choices;
 

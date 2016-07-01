@@ -83,6 +83,8 @@ void FindLargestCrossSections::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
     parameter->setPropertyName("Plane");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FindLargestCrossSections, this, Plane));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FindLargestCrossSections, this, Plane));
 
     QVector<QString> choices;
     choices.push_back("XY");

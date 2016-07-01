@@ -93,6 +93,8 @@ void FitFeatureData::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");
     parameter->setPropertyName("DistributionType");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FitFeatureData, this, DistributionType));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FitFeatureData, this, DistributionType));
 
     QVector<QString> choices;
     choices.push_back("Beta");

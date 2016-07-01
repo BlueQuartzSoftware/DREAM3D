@@ -129,6 +129,8 @@ void FlattenImage::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Flattening Method");
     parameter->setPropertyName("FlattenMethod");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FlattenImage, this, FlattenMethod));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FlattenImage, this, FlattenMethod));
 
     QVector<QString> choices;
     choices.push_back("Average");
