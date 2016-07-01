@@ -104,7 +104,8 @@ void ExecutePipeline(const QString& pipelineFile)
   FilterPipeline::Pointer pipeline;
   if (ext == "dream3d")
   {
-    pipeline = H5FilterParametersReader::ReadPipelineFromFile(pipelineFile);
+    H5FilterParametersReader::Pointer dream3dReader = H5FilterParametersReader::New();
+    pipeline = dream3dReader->readPipelineFromFile(pipelineFile);
   }
   else if (ext == "json")
   {
