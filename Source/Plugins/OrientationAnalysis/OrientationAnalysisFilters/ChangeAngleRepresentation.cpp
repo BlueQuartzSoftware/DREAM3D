@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -98,7 +98,7 @@ class ChangeAngleRepresentationImpl
 // -----------------------------------------------------------------------------
 ChangeAngleRepresentation::ChangeAngleRepresentation() :
   AbstractFilter(),
-  m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians),
+  m_ConversionType(SIMPL::EulerAngleConversionType::DegreesToRadians),
   m_CellEulerAnglesArrayPath("", "", ""),
   m_CellEulerAngles(NULL)
 {
@@ -132,7 +132,7 @@ void ChangeAngleRepresentation::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -161,6 +161,14 @@ int ChangeAngleRepresentation::writeFilterParameters(AbstractFilterParametersWri
   SIMPL_FILTER_WRITE_PARAMETER(ConversionType)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ChangeAngleRepresentation::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -206,11 +214,11 @@ void ChangeAngleRepresentation::execute()
 #endif
 
   float conversionFactor = 1.0f;
-  if (m_ConversionType == DREAM3D::EulerAngleConversionType::DegreesToRadians)
+  if (m_ConversionType == SIMPL::EulerAngleConversionType::DegreesToRadians)
   {
     conversionFactor = static_cast<float>( M_PI / 180.0f );
   }
-  else if (conversionFactor == DREAM3D::EulerAngleConversionType::RadiansToDegrees)
+  else if (conversionFactor == SIMPL::EulerAngleConversionType::RadiansToDegrees)
   {
     conversionFactor = static_cast<float>( 180.0f / M_PI );
   }
@@ -276,13 +284,13 @@ const QString ChangeAngleRepresentation::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ChangeAngleRepresentation::getGroupName()
-{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
+{ return SIMPL::FilterGroups::OrientationAnalysisFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ChangeAngleRepresentation::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConversionFilters; }
+{ return SIMPL::FilterSubGroups::ConversionFilters; }
 
 // -----------------------------------------------------------------------------
 //

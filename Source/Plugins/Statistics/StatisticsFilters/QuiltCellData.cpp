@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -58,8 +58,8 @@
 QuiltCellData::QuiltCellData() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
-  m_OutputDataContainerName(DREAM3D::Defaults::NewImageDataContainerName),
-  m_OutputAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_OutputDataContainerName(SIMPL::Defaults::NewImageDataContainerName),
+  m_OutputAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_OutputArrayName("Quilt_Data"),
   m_OutputArray(NULL)
 {
@@ -138,6 +138,14 @@ int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QuiltCellData::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QuiltCellData::dataCheck()
 {
   DataArrayPath tempPath;
@@ -210,7 +218,7 @@ void QuiltCellData::dataCheck()
   DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer newImage = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer newImage = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m2->setGeometry(newImage);
 
   int newDimX = int(dcDims[0] / m_QuiltStep.x);
@@ -229,7 +237,7 @@ void QuiltCellData::dataCheck()
   tDims[0] = m2->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m2->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m2->getGeometryAs<ImageGeom>()->getZPoints();
-  AttributeMatrix::Pointer newCellAttrMat = m2->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer newCellAttrMat = m2->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0 || NULL == newCellAttrMat.get()) { return; }
 
   //Get the name and create the array in the new data attrMat
@@ -474,14 +482,14 @@ const QString QuiltCellData::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString QuiltCellData::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString QuiltCellData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
 
 
 // -----------------------------------------------------------------------------

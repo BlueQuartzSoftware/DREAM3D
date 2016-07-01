@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -53,7 +53,7 @@
 // -----------------------------------------------------------------------------
 SegmentFeatures::SegmentFeatures() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName)
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 {
 }
 
@@ -82,6 +82,14 @@ int SegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* write
   SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SegmentFeatures::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -136,30 +144,26 @@ void SegmentFeatures::execute()
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
+
+  int64_t dims[3] =
+  { static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]), };
 
   int32_t gnum = 1;
   int64_t seed = 0;
-  DimType neighbor = 0;
+  int64_t neighbor = 0;
   bool good = 0;
-  DimType col = 0, row = 0, plane = 0;
+  int64_t col = 0, row = 0, plane = 0;
   size_t size = 0;
   size_t initialVoxelsListSize = 100000;
   std::vector<int64_t> voxelslist(initialVoxelsListSize, -1);
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -(dims[0] * dims[1]);
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
   neighpoints[3] = 1;
   neighpoints[4] = dims[0];
   neighpoints[5] = (dims[0] * dims[1]);
-  int64_t nextSeed = -1;
+  int64_t nextSeed = 0;
 
   while (seed >= 0)
   {
@@ -172,7 +176,7 @@ void SegmentFeatures::execute()
       size++;
       while (size > 0)
       {
-        DimType currentpoint = voxelslist[size - 1];
+        int64_t currentpoint = voxelslist[size - 1];
         size -= 1;
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
@@ -260,13 +264,13 @@ const QString SegmentFeatures::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString SegmentFeatures::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SegmentFeatures::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SegmentationFilters; }
+{ return SIMPL::FilterSubGroups::SegmentationFilters; }
 
 // -----------------------------------------------------------------------------
 //

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _WritePoleFigure_H_
-#define _WritePoleFigure_H_
+#ifndef _writepolefigure_h_
+#define _writepolefigure_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -185,11 +185,16 @@ class WritePoleFigure : public AbstractFilter
 
   protected:
     WritePoleFigure();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief generateImagePath Generates the path to write the image

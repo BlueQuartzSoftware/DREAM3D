@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _MatchCrystallography_H_
-#define _MatchCrystallography_H_
+#ifndef _matchcrystallography_h_
+#define _matchcrystallography_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -193,11 +193,16 @@ class MatchCrystallography : public AbstractFilter
 
   protected:
     MatchCrystallography();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief initializeArrays Initializes the ODF and MDF arrays for each Ensemble
@@ -290,16 +295,16 @@ class MatchCrystallography : public AbstractFilter
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     // All other private instance variables
-    float mdfchange;
-    float odfchange;
+    float m_MdfChange;
+    float m_OdfChange;
 
-    std::vector<float> unbiasedvol;
+    std::vector<float> m_UnbiasedVolume;
     std::vector<float> m_TotalSurfaceArea;
 
-    FloatArrayType::Pointer actualodf;
-    FloatArrayType::Pointer simodf;
-    FloatArrayType::Pointer actualmdf;
-    FloatArrayType::Pointer simmdf;
+    FloatArrayType::Pointer m_ActualOdf;
+    FloatArrayType::Pointer m_SimOdf;
+    FloatArrayType::Pointer m_ActualMdf;
+    FloatArrayType::Pointer m_SimMdf;
 
     std::vector<std::vector<float> > m_MisorientationLists;
 

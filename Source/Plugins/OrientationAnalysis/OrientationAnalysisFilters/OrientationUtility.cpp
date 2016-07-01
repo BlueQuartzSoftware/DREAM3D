@@ -68,6 +68,14 @@ int OrientationUtility::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void OrientationUtility::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void OrientationUtility::dataCheck()
 {
 
@@ -137,7 +145,7 @@ const QString OrientationUtility::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString OrientationUtility::getGroupName()
-{ return DREAM3D::FilterGroups::Utilities; }
+{ return SIMPL::FilterGroups::Utilities; }
 
 // -----------------------------------------------------------------------------
 //

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SPParksTextReader_H_
-#define _SPParksTextReader_H_
+#ifndef _spparkstextreader_h_
+#define _spparkstextreader_h_
 
 #include <QtCore/QFile>
 
@@ -162,9 +162,14 @@ class SPParksTextReader : public FileReader
     virtual int32_t readFile();
 
     /**
-     * @brief readFile Reimplemented from @see FileReader class
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
 
     /**
      * @brief updateCellInstancePointers Updates raw cell pointers
@@ -196,7 +201,6 @@ class SPParksTextReader : public FileReader
     void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol);
 
   private:
-    size_t m_Dims[3];
     QFile m_InStream;
     QMap<QString, DataParser::Pointer> m_NamePointerMap;
 

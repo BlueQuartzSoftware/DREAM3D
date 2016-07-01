@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -59,26 +59,25 @@
 // -----------------------------------------------------------------------------
 FindShapes::FindShapes() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CentroidsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
-  m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
-  m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
-  m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
-  m_AspectRatiosArrayName(DREAM3D::FeatureData::AspectRatios),
+  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_CentroidsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids),
+  m_Omega3sArrayName(SIMPL::FeatureData::Omega3s),
+  m_VolumesArrayName(SIMPL::FeatureData::Volumes),
+  m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths),
+  m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles),
+  m_AspectRatiosArrayName(SIMPL::FeatureData::AspectRatios),
   m_FeatureIds(NULL),
   m_Centroids(NULL),
   m_AxisEulerAngles(NULL),
   m_AxisLengths(NULL),
   m_Omega3s(NULL),
   m_Volumes(NULL),
-  m_AspectRatios(NULL)
+  m_AspectRatios(NULL),
+  m_ScaleFactor(1.0f)
 {
   featuremoments = NULL;
   featureeigenvals = NULL;
-
-  scaleFactor = 1.0f;
 
   setupFilterParameters();
 }
@@ -98,16 +97,16 @@ void FindShapes::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
@@ -158,9 +157,18 @@ int FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindShapes::initialize()
+{
+  m_ScaleFactor = 1.0f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindShapes::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -245,9 +253,9 @@ void FindShapes::find_moments()
 
   // using a modified resolution to keept he moment calculations "small" and prevent exceeding numerical bounds.
   // scaleFactor is applied later to rescale the calculated axis lengths
-  float modXRes = xRes * float(scaleFactor);
-  float modYRes = yRes * float(scaleFactor);
-  float modZRes = zRes * float(scaleFactor);
+  float modXRes = xRes * float(m_ScaleFactor);
+  float modYRes = yRes * float(m_ScaleFactor);
+  float modZRes = zRes * float(m_ScaleFactor);
 
   for (size_t i = 0; i < numfeatures; i++)
   {
@@ -282,30 +290,30 @@ void FindShapes::find_moments()
         y2 = y - (modYRes / 4.0f);
         z1 = z + (modZRes / 4.0f);
         z2 = z - (modZRes / 4.0f);
-        xdist1 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-        ydist1 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-        zdist1 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
-        xdist2 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-        ydist2 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-        zdist2 = (z2 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
-        xdist3 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-        ydist3 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-        zdist3 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
-        xdist4 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-        ydist4 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-        zdist4 = (z2 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
-        xdist5 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-        ydist5 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-        zdist5 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
-        xdist6 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-        ydist6 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-        zdist6 = (z2 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
-        xdist7 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-        ydist7 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-        zdist7 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
-        xdist8 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-        ydist8 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-        zdist8 = (z2 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
+        xdist1 = (x1 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+        ydist1 = (y1 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+        zdist1 = (z1 - (m_Centroids[gnum * 3 + 2] * m_ScaleFactor));
+        xdist2 = (x1 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+        ydist2 = (y1 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+        zdist2 = (z2 - (m_Centroids[gnum * 3 + 2] * m_ScaleFactor));
+        xdist3 = (x1 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+        ydist3 = (y2 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+        zdist3 = (z1 - (m_Centroids[gnum * 3 + 2] * m_ScaleFactor));
+        xdist4 = (x1 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+        ydist4 = (y2 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+        zdist4 = (z2 - (m_Centroids[gnum * 3 + 2] * m_ScaleFactor));
+        xdist5 = (x2 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+        ydist5 = (y1 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+        zdist5 = (z1 - (m_Centroids[gnum * 3 + 2] * m_ScaleFactor));
+        xdist6 = (x2 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+        ydist6 = (y1 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+        zdist6 = (z2 - (m_Centroids[gnum * 3 + 2] * m_ScaleFactor));
+        xdist7 = (x2 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+        ydist7 = (y2 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+        zdist7 = (z1 - (m_Centroids[gnum * 3 + 2] * m_ScaleFactor));
+        xdist8 = (x2 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+        ydist8 = (y2 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+        zdist8 = (z2 - (m_Centroids[gnum * 3 + 2] * m_ScaleFactor));
 
         xx = ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
              + ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
@@ -404,8 +412,8 @@ void FindShapes::find_moments2D()
     yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   }
 
-  float modXRes = xRes * scaleFactor;
-  float modYRes = yRes * scaleFactor;
+  float modXRes = xRes * m_ScaleFactor;
+  float modYRes = yRes * m_ScaleFactor;
 
   for (size_t i = 0; i < 6 * numfeatures; i++)
   {
@@ -428,14 +436,14 @@ void FindShapes::find_moments2D()
       x2 = x - (modXRes / 4.0f);
       y1 = y + (modYRes / 4.0f);
       y2 = y - (modYRes / 4.0f);
-      xdist1 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-      ydist1 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-      xdist2 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-      ydist2 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-      xdist3 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-      ydist3 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
-      xdist4 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
-      ydist4 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+      xdist1 = (x1 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+      ydist1 = (y1 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+      xdist2 = (x1 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+      ydist2 = (y2 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+      xdist3 = (x2 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+      ydist3 = (y1 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
+      xdist4 = (x2 - (m_Centroids[gnum * 3 + 0] * m_ScaleFactor));
+      ydist4 = (y2 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
       xx = ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
       yy = ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
       xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
@@ -536,9 +544,9 @@ void FindShapes::find_axes()
     b = sqrt(b) * a;
     c = A / (a * a * a * b);
 
-    m_AxisLengths[3 * i] = static_cast<float>(a / scaleFactor);
-    m_AxisLengths[3 * i + 1] = static_cast<float>(b / scaleFactor);
-    m_AxisLengths[3 * i + 2] = static_cast<float>(c / scaleFactor);
+    m_AxisLengths[3 * i] = static_cast<float>(a / m_ScaleFactor);
+    m_AxisLengths[3 * i + 1] = static_cast<float>(b / m_ScaleFactor);
+    m_AxisLengths[3 * i + 2] = static_cast<float>(c / m_ScaleFactor);
     bovera = static_cast<float>(b / a);
     covera = static_cast<float>(c / a);
     if (A == 0 || B == 0 || C == 0) { bovera = 0.0f, covera = 0.0f; }
@@ -621,8 +629,8 @@ void FindShapes::find_axes2D()
     postterm2 = pow(postterm2, 0.125f);
     r1 = preterm * postterm1;
     r2 = preterm * postterm2;
-    m_AxisLengths[3 * i] = static_cast<float>(r1 / scaleFactor);
-    m_AxisLengths[3 * i + 1] = static_cast<float>(r2 / scaleFactor);
+    m_AxisLengths[3 * i] = static_cast<float>(r1 / m_ScaleFactor);
+    m_AxisLengths[3 * i + 1] = static_cast<float>(r2 / m_ScaleFactor);
     m_AspectRatios[2 * i] = static_cast<float>(r2 / r1);
     m_AspectRatios[2 * i + 1] = 0.0f;
   }
@@ -848,9 +856,9 @@ void FindShapes::execute()
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
-  scaleFactor = static_cast<double>(1.0 / xRes);
-  if (yRes > xRes && yRes > zRes) { scaleFactor = static_cast<double>(1.0 / yRes); }
-  if (zRes > xRes && zRes > yRes) { scaleFactor = static_cast<double>(1.0 / zRes); }
+  m_ScaleFactor = static_cast<double>(1.0 / xRes);
+  if (yRes > xRes && yRes > zRes) { m_ScaleFactor = static_cast<double>(1.0 / yRes); }
+  if (zRes > xRes && zRes > yRes) { m_ScaleFactor = static_cast<double>(1.0 / zRes); }
 
   if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_moments(); }
   if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_moments2D(); }
@@ -907,13 +915,13 @@ const QString FindShapes::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindShapes::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindShapes::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 // -----------------------------------------------------------------------------
 //

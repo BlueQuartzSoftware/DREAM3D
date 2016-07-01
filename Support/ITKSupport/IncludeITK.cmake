@@ -32,7 +32,7 @@ function(AddITKCopyInstallRules)
 
     if(TARGET ${Z_LIBNAME})
 
-      GET_TARGET_PROPERTY(LibPath ${Z_LIBNAME} IMPORTED_LOCATION_${TYPE})
+      GET_TARGET_PROPERTY(LibPath ${Z_LIBNAME} LOCATION_${TYPE})
       GET_TARGET_PROPERTY(LibType ${Z_LIBNAME} TYPE)
 
       if(0)
@@ -87,7 +87,7 @@ endif()
 set(ITK_LIBRARY_DIR "" CACHE  STRING "" FORCE)
 
 # Set the list of ITK Modules that DREAM3D supports using
-set(DREAM3D_ITK_MODULES
+set(DREAM3D_CORE_ITK_MODULES
     #Group Core
     ITKCommon
 
@@ -120,9 +120,16 @@ set(DREAM3D_ITK_MODULES
     ITKWatersheds
     ITKClassifiers
     #ITKConnectedComponents
+    ITKTransform
 
     #Other
     ITKReview
+  )
+
+get_property(DREAM3D_ADDITIONAL_ITK_MODULES GLOBAL PROPERTY DREAM3D_ADDITIONAL_ITK_MODULES)
+list(APPEND DREAM3D_ITK_MODULES
+    ${DREAM3D_CORE_ITK_MODULES}
+    ${DREAM3D_ADDITIONAL_ITK_MODULES}
   )
 
 # --------------------------------------------------------------------

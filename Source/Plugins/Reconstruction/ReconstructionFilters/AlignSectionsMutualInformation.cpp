@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -57,16 +57,16 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   AlignSections(),
   m_MisorientationTolerance(5.0f),
   m_UseGoodVoxels(true),
-  m_QuatsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
+  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
   m_Quats(NULL),
   m_CellPhases(NULL),
   m_GoodVoxels(NULL),
   m_CrystalStructures(NULL)
 {
-  m_Seed = QDateTime::currentMSecsSinceEpoch();
+  m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
 
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -95,20 +95,20 @@ void AlignSectionsMutualInformation::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -146,6 +146,16 @@ int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParamete
   SIMPL_FILTER_WRITE_PARAMETER(MisorientationTolerance)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::initialize()
+{
+  m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
+  m_MIFeaturesPtr = Int32ArrayType::NullPointer();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -225,16 +235,12 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   float disorientation = 0.0f;
@@ -248,22 +254,22 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
   int64_t oldxshift = 0;
   int64_t oldyshift = 0;
   float count = 0.0f;
-  DimType slice = 0;
+  int64_t slice = 0;
 
   int32_t refgnum = 0, curgnum = 0;
-  DimType refposition = 0;
-  DimType curposition = 0;
+  int64_t refposition = 0;
+  int64_t curposition = 0;
 
   form_features_sections();
 
   std::vector<std::vector<float> >  misorients;
   misorients.resize(dims[0]);
-  for (DimType a = 0; a < dims[0]; a++)
+  for (int64_t a = 0; a < dims[0]; a++)
   {
     misorients[a].assign(dims[1], 0.0f);
   }
 
-  for (DimType iter = 1; iter < dims[2]; iter++)
+  for (int64_t iter = 1; iter < dims[2]; iter++)
   {
     float prog = ((float)iter / dims[2]) * 100;
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(QString::number(prog, 'f', 0));
@@ -290,9 +296,9 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
     oldyshift = -1;
     newxshift = 0;
     newyshift = 0;
-    for (DimType a = 0; a < dims[0]; a++)
+    for (int64_t a = 0; a < dims[0]; a++)
     {
-      for (DimType b = 0; b < dims[1]; b++)
+      for (int64_t b = 0; b < dims[1]; b++)
       {
         misorients[a][b] = 0;
       }
@@ -310,9 +316,9 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
           if (misorients[k + oldxshift + dims[0] / 2][j + oldyshift + dims[1] / 2] == 0 && llabs(k + oldxshift) < (dims[0] / 2)
               && (j + oldyshift) < (dims[1] / 2))
           {
-            for (DimType l = 0; l < dims[1]; l = l + 4)
+            for (int64_t l = 0; l < dims[1]; l = l + 4)
             {
-              for (DimType n = 0; n < dims[0]; n = n + 4)
+              for (int64_t n = 0; n < dims[0]; n = n + 4)
               {
                 if ((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
@@ -399,7 +405,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
     mutualinfo12 = NULL;
   }
 
-  m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray(DREAM3D::CellData::FeatureIds);
+  m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray(SIMPL::CellData::FeatureIds);
 
   if (getWriteAlignmentShifts() == true)
   {
@@ -417,23 +423,19 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
-  DimType point = 0;
-  DimType seed = 0;
+  int64_t point = 0;
+  int64_t seed = 0;
   bool noseeds = false;
   int32_t featurecount = 1;
-  DimType neighbor = 0;
+  int64_t neighbor = 0;
   QuatF q1 = QuaternionMathF::New();
   QuatF q2 = QuaternionMathF::New();
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
@@ -441,11 +443,11 @@ void AlignSectionsMutualInformation::form_features_sections()
   float n1 = 0.0f;
   float n2 = 0.0f;
   float n3 = 0.0f;
-  DimType randx = 0;
-  DimType randy = 0;
+  int64_t randx = 0;
+  int64_t randy = 0;
   bool good = false;
-  DimType x = 0, y = 0, z = 0;
-  DimType col = 0, row = 0;
+  int64_t x = 0, y = 0, z = 0;
+  int64_t col = 0, row = 0;
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
@@ -454,8 +456,8 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
 
-  std::vector<DimType> voxelslist(initialVoxelsListSize, -1);
-  DimType neighpoints[4] = { 0, 0, 0, 0 };
+  std::vector<int64_t> voxelslist(initialVoxelsListSize, -1);
+  int64_t neighpoints[4] = { 0, 0, 0, 0 };
   neighpoints[0] = -dims[0];
   neighpoints[1] = -1;
   neighpoints[2] = 1;
@@ -463,7 +465,7 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   uint32_t phase1 = 0, phase2 = 0;
 
-  for (DimType slice = 0; slice < dims[2]; slice++)
+  for (int64_t slice = 0; slice < dims[2]; slice++)
   {
     float prog = ((float)slice / dims[2]) * 100;
     QString ss = QObject::tr("Aligning Sections || Identifying Features on Sections || %1% Complete").arg(QString::number(prog, 'f', 0));
@@ -473,11 +475,11 @@ void AlignSectionsMutualInformation::form_features_sections()
     while (noseeds == false)
     {
       seed = -1;
-      randx = DimType(float(rg.genrand_res53()) * float(dims[0]));
-      randy = DimType(float(rg.genrand_res53()) * float(dims[1]));
-      for (DimType j = 0; j < dims[1]; ++j)
+      randx = static_cast<int64_t>(float(rg.genrand_res53()) * float(dims[0]));
+      randy = static_cast<int64_t>(float(rg.genrand_res53()) * float(dims[1]));
+      for (int64_t j = 0; j < dims[1]; ++j)
       {
-        for (DimType i = 0; i < dims[0]; ++i)
+        for (int64_t i = 0; i < dims[0]; ++i)
         {
           x = randx + i;
           y = randy + j;
@@ -502,7 +504,7 @@ void AlignSectionsMutualInformation::form_features_sections()
         size++;
         for (size_t j = 0; j < size; ++j)
         {
-          DimType currentpoint = voxelslist[j];
+          int64_t currentpoint = voxelslist[j];
           col = currentpoint % dims[0];
           row = (currentpoint / dims[0]) % dims[1];
           QuaternionMathF::Copy(quats[currentpoint], q1);
@@ -529,11 +531,11 @@ void AlignSectionsMutualInformation::form_features_sections()
                 miFeatureIds[neighbor] = featurecount;
                 voxelslist[size] = neighbor;
                 size++;
-                if (std::vector<DimType>::size_type(size) >= voxelslist.size())
+                if (std::vector<int64_t>::size_type(size) >= voxelslist.size())
                 {
                   size = voxelslist.size();
                   voxelslist.resize(size + initialVoxelsListSize);
-                  for (std::vector<DimType>::size_type v = size; v < voxelslist.size(); ++v) { voxelslist[v] = -1; }
+                  for (std::vector<int64_t>::size_type v = size; v < voxelslist.size(); ++v) { voxelslist[v] = -1; }
                 }
               }
             }
@@ -609,13 +611,13 @@ const QString AlignSectionsMutualInformation::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMutualInformation::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMutualInformation::getSubGroupName()
-{return DREAM3D::FilterSubGroups::AlignmentFilters;}
+{return SIMPL::FilterSubGroups::AlignmentFilters;}
 
 // -----------------------------------------------------------------------------
 //

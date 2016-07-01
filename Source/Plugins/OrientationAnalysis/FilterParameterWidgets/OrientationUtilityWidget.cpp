@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -92,8 +92,15 @@ void OrientationUtilityWidget::setupGui()
 void OrientationUtilityWidget::setErrorEntry(int errorCode, QString errorMsg)
 {
   errorTextEdit->clear();
-
-  errorTextEdit->setText("<b>Error Message:  </b>" + errorMsg);
+  errorMsg = errorMsg.toHtmlEscaped();
+  if(errorCode == 0)
+  {
+    errorTextEdit->setText("<b>Information: </b>" + errorMsg);
+  }
+  else
+  {
+    errorTextEdit->setText("<b>Error: </b>" + errorMsg);
+  }
 }
 
 // -----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -60,7 +60,7 @@
 // -----------------------------------------------------------------------------
 MergeTwins::MergeTwins() :
   GroupFeatures(),
-  m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
+  m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName),
   m_AxisTolerance(1.0f),
   m_AngleTolerance(1.0f),
   m_RandomizeParentIds(true),
@@ -68,9 +68,9 @@ MergeTwins::MergeTwins() :
   m_FeaturePhasesArrayPath("", "", ""),
   m_AvgQuatsArrayPath("", "", ""),
   m_CrystalStructuresArrayPath("", "", ""),
-  m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CellParentIdsArrayName(SIMPL::CellData::ParentIds),
+  m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_FeatureIds(NULL),
   m_AvgQuats(NULL),
   m_FeaturePhases(NULL),
@@ -81,7 +81,7 @@ MergeTwins::MergeTwins() :
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
-  axisTolerance = 0.0f;
+  m_AxisToleranceRad = 0.0f;
 
   setupFilterParameters();
 }
@@ -103,21 +103,21 @@ void MergeTwins::setupFilterParameters()
   parameters.push_front(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter));
   parameters.push_front(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
@@ -184,6 +184,14 @@ void MergeTwins::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MergeTwins::initialize()
+{
+  m_AxisToleranceRad = 0.0f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MergeTwins::dataCheck()
 {
   setErrorCondition(0);
@@ -196,7 +204,7 @@ void MergeTwins::dataCheck()
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<size_t> cDims(1, 1);
 
@@ -316,7 +324,7 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
       w = w * (180.0f / SIMPLib::Constants::k_Pi);
       float axisdiff111 = acosf(fabsf(n1) * 0.57735f + fabsf(n2) * 0.57735f + fabsf(n3) * 0.57735f);
       float angdiff60 = fabsf(w - 60.0f);
-      if (axisdiff111 < axisTolerance && angdiff60 < m_AngleTolerance) { twin = true; }
+      if (axisdiff111 < m_AxisToleranceRad && angdiff60 < m_AngleTolerance) { twin = true; }
       if (twin == true)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
@@ -344,7 +352,7 @@ void MergeTwins::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  axisTolerance = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   m_FeatureParentIds[0] = 0; // set feature 0 to be parent 0
 
@@ -468,13 +476,13 @@ const QString MergeTwins::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString MergeTwins::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MergeTwins::getSubGroupName()
-{return DREAM3D::FilterSubGroups::GroupingFilters;}
+{return SIMPL::FilterSubGroups::GroupingFilters;}
 
 // -----------------------------------------------------------------------------
 //

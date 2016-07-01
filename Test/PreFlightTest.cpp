@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -364,7 +364,7 @@ void TestPreflight()
       //DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
       err = filter->getErrorCondition();
       // An error condition GREATER than ZERO is an anomoly and should be looked at.
-      if (err >= 0)
+      if (err > 0)
       {
         qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass()
                  << " Error Condition = " << filter->getErrorCondition();

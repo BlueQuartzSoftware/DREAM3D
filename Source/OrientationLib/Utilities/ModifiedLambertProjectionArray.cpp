@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -378,7 +378,7 @@ bool ModifiedLambertProjectionArray::copyData(size_t destTupleOffset, IDataArray
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::initializeTuple(size_t i, double p)
+void ModifiedLambertProjectionArray::initializeTuple(size_t i, void* p)
 {
   Q_ASSERT(false);
 }
@@ -608,7 +608,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId, QVector<size_t> 
   {
     return -2;
   }
-  hid_t gid = QH5Utilities::createGroup(parentId, DREAM3D::StringConstants::GBCD);
+  hid_t gid = QH5Utilities::createGroup(parentId, SIMPL::StringConstants::GBCD);
   if (gid < 0)
   {
     return -1;
@@ -652,7 +652,7 @@ int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
   //bool ok = false;
   int err = 0;
   QString statsType;
-  hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::StringConstants::Statistics);
+  hid_t gid = QH5Utilities::openHDF5Object(parentId, SIMPL::StringConstants::Statistics);
   if(gid < 0)
   {
     return err;
@@ -671,7 +671,7 @@ int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
     //int index = 0;
     statsType = "";
     //index = QString( *iter ).toInt(&ok, 10);
-    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::StringConstants::StatsType, statsType);
+    QH5Lite::readStringAttribute(gid, *iter, SIMPL::StringConstants::StatsType, statsType);
     hid_t statId = QH5Utilities::openHDF5Object(gid, *iter);
     if(statId < 0)
     {
@@ -700,11 +700,11 @@ int ModifiedLambertProjectionArray::writeXdmfAttribute(QTextStream& out, int64_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ModifiedLambertProjectionArray::getInfoString(DREAM3D::InfoStringFormat format)
+QString ModifiedLambertProjectionArray::getInfoString(SIMPL::InfoStringFormat format)
 {
   QString info;
   QTextStream ss (&info);
-  if(format == DREAM3D::HtmlFormat)
+  if(format == SIMPL::HtmlFormat)
   {
     ss << "<html><head></head>\n";
     ss << "<body>\n";

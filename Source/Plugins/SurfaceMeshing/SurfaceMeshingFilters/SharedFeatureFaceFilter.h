@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SharedFeatureFaceFilter_H_
-#define _SharedFeatureFaceFilter_H_
+#ifndef _sharedfeaturefacefilter_h_
+#define _sharedfeaturefacefilter_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -140,11 +140,16 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
 
   protected:
     SharedFeatureFaceFilter();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)

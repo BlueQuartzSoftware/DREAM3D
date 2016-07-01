@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -63,7 +63,7 @@ EbsdToH5Ebsd::EbsdToH5Ebsd() :
   m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_ZResolution(1.0f),
-  m_RefFrameZDir(Ebsd::RefFrameZDir::LowtoHigh),
+  m_RefFrameZDir(SIMPL::RefFrameZDir::LowtoHigh),
   m_InputPath(""),
   m_FilePrefix(""),
   m_FileSuffix(""),
@@ -145,6 +145,14 @@ int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, 
   SIMPL_FILTER_WRITE_PARAMETER(EulerTransformation)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -342,8 +350,8 @@ void EbsdToH5Ebsd::execute()
   bool hasMissingFiles = false;
   const bool stackLowToHigh = true;
 
-  //if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  //else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  //if( SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
+  //else if (SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
 
   // Now generate all the file names the user is asking for and populate the table
@@ -590,13 +598,13 @@ const QString EbsdToH5Ebsd::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString EbsdToH5Ebsd::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EbsdToH5Ebsd::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

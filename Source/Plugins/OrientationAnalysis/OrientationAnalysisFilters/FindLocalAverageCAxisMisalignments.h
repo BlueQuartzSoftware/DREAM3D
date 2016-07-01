@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindLocalAverageCAxisMisalignments_H_
-#define _FindLocalAverageCAxisMisalignments_H_
+#ifndef _findlocalaveragecaxismisalignments_h_
+#define _findlocalaveragecaxismisalignments_h_
 
 #include <QtCore/QObject>
 
@@ -193,13 +193,20 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
 
   protected:
     FindLocalAverageCAxisMisalignments();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
 
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
+
   private:
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellParentIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
@@ -211,7 +218,6 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
 
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     FindLocalAverageCAxisMisalignments(const FindLocalAverageCAxisMisalignments&); // Copy Constructor Not Implemented
     void operator=(const FindLocalAverageCAxisMisalignments&); // Operator '=' Not Implemented

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _VerifyTriangleWinding_H_
-#define _VerifyTriangleWinding_H_
+#ifndef _verifytrianglewinding_h_
+#define _verifytrianglewinding_h_
 
 #include <QtCore/QString>
 
@@ -126,14 +126,15 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
     VerifyTriangleWinding();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief This method generates a mapping between a "Label" (Feature Id) and the set of triangles that belong to that

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AlignSectionsMisorientation_H_
-#define _AlignSectionsMisorientation_H_
+#ifndef _alignsectionsmisorientation_h_
+#define _alignsectionsmisorientation_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -142,11 +142,16 @@ class AlignSectionsMisorientation : public AlignSections
 
   protected:
     AlignSectionsMisorientation();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_shifts Reimplemented from @see AlignSections class
@@ -161,7 +166,7 @@ class AlignSectionsMisorientation : public AlignSections
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    uint64_t Seed;
+    uint64_t m_RandomSeed;
 
     AlignSectionsMisorientation(const AlignSectionsMisorientation&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsMisorientation&); // Operator '=' Not Implemented

@@ -9,7 +9,8 @@ These release notes summarize the major changes for each officially released ver
 
 [Developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.2.327 ##
+
+## Version 6.2.327 Jan 6, 2016 ##
 + DREAM.3D has new logo and splash screen!
 + Added **Filter** "Import ASCII Data", which implements a generic text reader to import data into DREAM.3D.  The **Filter** utilizes a wizard to guide the user through importing their column-oriented ASCII data.
 + Added **Filter** "Combine Attribute Arrays", which allows the user to stack any number of **Attribute Arrays** to form a new combined array.

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -49,42 +49,49 @@
 
 #include "SamplingTestFileLocations.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveTestFiles()
+class SampleSurfaceMeshSpecifiedPointsTest
 {
+  public:
+    SampleSurfaceMeshSpecifiedPointsTest(){}
+    virtual ~SampleSurfaceMeshSpecifiedPointsTest(){}
+    SIMPL_TYPE_MACRO(SampleSurfaceMeshSpecifiedPointsTest)
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void RemoveTestFiles()
+    {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile1);
-  QFile::remove(UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile2);
+      QFile::remove(UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile1);
+      QFile::remove(UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile2);
 #endif
-}
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TestFilterAvailability()
-{
-  // Now instantiate the SampleSurfaceMeshSpecifiedPoints Filter from the FilterManager
-  QString filtName = "SampleSurfaceMeshSpecifiedPoints";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL == filterFactory.get())
-  {
-    std::stringstream ss;
-    ss << "The SampleSurfaceMeshSpecifiedPointsTest Requires the use of the " << filtName.toStdString() << " filter which is found in the Sampling Plugin";
-    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-  }
-  return 0;
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int TestFilterAvailability()
+    {
+      // Now instantiate the SampleSurfaceMeshSpecifiedPointsTest Filter from the FilterManager
+      QString filtName = "SampleSurfaceMeshSpecifiedPoints";
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      if (NULL == filterFactory.get())
+      {
+        std::stringstream ss;
+        ss << "The SampleSurfaceMeshSpecifiedPointsTest Requires the use of the " << filtName.toStdString() << " filter which is found in the Sampling Plugin";
+        DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+      }
+      return 0;
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SampleSurfaceMeshSpecifiedPointsTest()
-{
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  /* Please write SampleSurfaceMeshSpecifiedPoints test code here.
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int RunTest()
+    {
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      /* Please write SampleSurfaceMeshSpecifiedPointsTest test code here.
    *
    * Your IO test files are:
    * UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile1
@@ -100,44 +107,24 @@ int SampleSurfaceMeshSpecifiedPointsTest()
    * with the DREAM3D_REGISTER_TEST() macro, the next test will execute. There are
    * lots of examples in the DREAM3D/Test folder to look at.
    */
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  return EXIT_SUCCESS;
-}
+      return EXIT_SUCCESS;
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void loadFilterPlugins()
-{
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  SIMPLibPluginLoader::LoadPluginFilters(fm);
+    /**
+  * @brief
+*/
+    void operator()()
+    {
+      int err = EXIT_SUCCESS;
+      DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-  // Send progress messages from PipelineBuilder to this object for display
-  QMetaObjectUtilities::RegisterMetaTypes();
-}
+      DREAM3D_REGISTER_TEST( RunTest() )
 
-
-// -----------------------------------------------------------------------------
-//  Use test framework
-// -----------------------------------------------------------------------------
-int main(int argc, char** argv)
-{
-  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("SampleSurfaceMeshSpecifiedPointsTest");
-
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( loadFilterPlugins() );
-  DREAM3D_REGISTER_TEST( TestFilterAvailability() );
-
-  DREAM3D_REGISTER_TEST( SampleSurfaceMeshSpecifiedPointsTest() )
-
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  PRINT_TEST_SUMMARY();
-  return err;
-}
-
+          DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    }
+  private:
+    SampleSurfaceMeshSpecifiedPointsTest(const SampleSurfaceMeshSpecifiedPointsTest&); // Copy Constructor Not Implemented
+    void operator=(const SampleSurfaceMeshSpecifiedPointsTest&); // Operator '=' Not Implemented
+};

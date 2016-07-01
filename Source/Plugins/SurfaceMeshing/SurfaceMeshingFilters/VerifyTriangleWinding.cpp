@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -212,10 +212,10 @@ class LabelVisitorInfo
 // -----------------------------------------------------------------------------
 VerifyTriangleWinding::VerifyTriangleWinding() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
-  m_SurfaceMeshNodeFacesArrayName(DREAM3D::VertexData::SurfaceMeshNodeFaces),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceDataContainerName(SIMPL::Defaults::DataContainerName),
+  m_SurfaceMeshNodeFacesArrayName(SIMPL::VertexData::SurfaceMeshNodeFaces),
+  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();
@@ -260,6 +260,14 @@ int VerifyTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter*
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VerifyTriangleWinding::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -788,14 +796,14 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
 //
 // -----------------------------------------------------------------------------
   const QString VerifyTriangleWinding::getGroupName()
-  { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+  { return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
   const QString VerifyTriangleWinding::getSubGroupName()
-  { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+  { return SIMPL::FilterSubGroups::ConnectivityArrangementFilters; }
 
 
 // -----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _WriteImages_H_
-#define _WriteImages_H_
+#ifndef _writeimages_h_
+#define _writeimages_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -152,7 +152,17 @@ class WriteImages : public AbstractFilter
      * @param dims Array of the 3 dimensions
      * @return Integer error values
      */
-    int32_t saveImage(size_t slice, size_t dB, size_t dA, size_t* dims);
+    int32_t writeRGBImage(size_t slice, size_t dB, size_t dA, size_t* dims);
+
+    /**
+     * @brief saveImage Saves the data to an image on the disk
+     * @param slice The axis on which the slicing occurs
+     * @param dA Dimensions of one axis of the plane
+     * @param dB Dimensions of the second axis of the plane
+     * @param dims Array of the 3 dimensions
+     * @return Integer error values
+     */
+    int32_t writeGrayscaleImage(size_t slice, size_t dB, size_t dA, size_t* dims);
 
   signals:
     /**
@@ -179,11 +189,16 @@ class WriteImages : public AbstractFilter
 
   protected:
     WriteImages();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     DEFINE_DATAARRAY_VARIABLE(uint8_t, Colors)

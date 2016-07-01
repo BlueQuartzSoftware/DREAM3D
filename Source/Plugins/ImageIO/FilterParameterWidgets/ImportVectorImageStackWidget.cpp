@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -55,7 +55,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
-#include "QtSupportLib/QFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 
 #include "ImageIO/ImageIOFilters/ImportVectorImageStack.h"
 
@@ -136,7 +136,7 @@ void ImportVectorImageStackWidget::setupGui()
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  QFileCompleter* com = new QFileCompleter(this, true);
+  QtSFileCompleter* com = new QtSFileCompleter(this, true);
   m_InputDir->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputDir_textChanged(const QString&)));
@@ -384,9 +384,9 @@ void ImportVectorImageStackWidget::on_m_InputDir_textChanged(const QString& text
 // -----------------------------------------------------------------------------
 uint32_t ImportVectorImageStackWidget::getRefFrameZDir()
 {
-  if (m_StackLowToHigh->isChecked()) { return Ebsd::RefFrameZDir::LowtoHigh; }
-  if (m_StackHighToLow->isChecked()) { return Ebsd::RefFrameZDir::HightoLow; }
-  return Ebsd::RefFrameZDir::UnknownRefFrameZDirection;
+  if (m_StackLowToHigh->isChecked()) { return SIMPL::RefFrameZDir::LowtoHigh; }
+  if (m_StackHighToLow->isChecked()) { return SIMPL::RefFrameZDir::HightoLow; }
+  return SIMPL::RefFrameZDir::UnknownRefFrameZDirection;
 }
 
 // -----------------------------------------------------------------------------
@@ -394,11 +394,11 @@ uint32_t ImportVectorImageStackWidget::getRefFrameZDir()
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::setRefFrameZDir(uint32_t ref)
 {
-  if (ref == Ebsd::RefFrameZDir::LowtoHigh)
+  if (ref == SIMPL::RefFrameZDir::LowtoHigh)
   {
     m_StackLowToHigh->setChecked(true);
   }
-  if (ref == Ebsd::RefFrameZDir::HightoLow)
+  if (ref == SIMPL::RefFrameZDir::HightoLow)
   {
     m_StackHighToLow->setChecked(true);
   }

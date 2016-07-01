@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -60,11 +60,11 @@
 // -----------------------------------------------------------------------------
 SPParksTextReader::SPParksTextReader() :
   FileReader(),
-  m_VolumeDataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_OneBasedArrays(false),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds)
+  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -73,10 +73,6 @@ SPParksTextReader::SPParksTextReader() :
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
   m_Resolution.z = 1.0f;
-
-  m_Dims[0] = 0;
-  m_Dims[1] = 0;
-  m_Dims[2] = 0;
 
   setupFilterParameters();
 }
@@ -153,15 +149,28 @@ void SPParksTextReader::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SPParksTextReader::initialize()
+{
+  m_NamePointerMap.clear();
+  if(m_InStream.isOpen())
+  {
+    m_InStream.close();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SPParksTextReader::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> tDims(3, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   // Creating a Feature Ids array here in preflight so that it appears in the current data structure
@@ -184,7 +193,7 @@ void SPParksTextReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
@@ -559,13 +568,13 @@ const QString SPParksTextReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

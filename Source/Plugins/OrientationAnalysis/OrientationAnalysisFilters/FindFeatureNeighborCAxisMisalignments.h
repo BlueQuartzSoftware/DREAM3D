@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindFeatureNeighborCAxisMisalignments_H_
-#define _FindFeatureNeighborCAxisMisalignments_H_
+#ifndef _findfeatureneighborcaxismisalignments_h_
+#define _findfeatureneighborcaxismisalignments_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -167,11 +167,16 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 
   protected:
     FindFeatureNeighborCAxisMisalignments();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;

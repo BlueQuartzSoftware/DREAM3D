@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -112,10 +112,10 @@ class FindUniqueIdsImpl
 // -----------------------------------------------------------------------------
 ReadStlFile::ReadStlFile() :
   AbstractFilter(),
-  m_SurfaceMeshDataContainerName(DREAM3D::Defaults::TriangleDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_SurfaceMeshDataContainerName(SIMPL::Defaults::TriangleDataContainerName),
+  m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName),
   m_StlFilePath(""),
-  m_FaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_FaceNormalsArrayName(SIMPL::FaceData::SurfaceMeshFaceNormals),
   m_FaceNormals(NULL),
   m_minXcoord(std::numeric_limits<float>::max()),
   m_maxXcoord(-std::numeric_limits<float>::max()),
@@ -191,8 +191,22 @@ void ReadStlFile::updateFaceInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ReadStlFile::initialize()
+{
+  m_minXcoord = std::numeric_limits<float>::max();
+  m_maxXcoord = -std::numeric_limits<float>::max();
+  m_minYcoord = std::numeric_limits<float>::max();
+  m_maxYcoord = -std::numeric_limits<float>::max();
+  m_minZcoord = std::numeric_limits<float>::max();
+  m_maxZcoord = -std::numeric_limits<float>::max();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReadStlFile::dataCheck()
 {
+  initialize();
   setErrorCondition(0);
 
   DataArrayPath tempPath;
@@ -208,12 +222,12 @@ void ReadStlFile::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   SharedVertexList::Pointer sharedVertList = TriangleGeom::CreateSharedVertexList(0);
-  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, sharedVertList, DREAM3D::Geometry::TriangleGeometry);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, sharedVertList, SIMPL::Geometry::TriangleGeometry, !getInPreflight());
 
   sm->setGeometry(triangleGeom);
 
   QVector<size_t> tDims(1, 0);
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
+  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Face);
 
   QVector<size_t> cDims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName() );
@@ -478,13 +492,13 @@ const QString ReadStlFile::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ReadStlFile::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadStlFile::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

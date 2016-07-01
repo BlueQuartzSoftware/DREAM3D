@@ -37,7 +37,6 @@ set(DOCUMENTATION_SOURCE_FILES
   \"${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md\"
   \"${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md\"
   \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingData.md\"
-  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/StatsGenerator.md\"
   \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/DevHelper.md\"
   \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/PipelineRunner.md\"
   \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox\"
@@ -45,6 +44,7 @@ set(DOCUMENTATION_SOURCE_FILES
   \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_0_0.md\"
   \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_1_0.md\"
   \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_2_0.md\"
+  \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_3_0.md\"
 )
 
 option(DREAM3D_INCLUDE_DEVELOPER_DOCS "Include the Developer Documentation in the DOxygen Generated output." ON)
@@ -71,22 +71,28 @@ set(DOXYGEN_IMAGE_DIRS
 
 #-------------------------------------------------------------------------------
 # Read the list of Groups back into CMake
-file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList DREAM3D_DOC_GROUPS_FILE_LIST)
-file(WRITE ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n\n@page filterdocumentation Filter Documentation\n\n")
+get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
+get_property(DREAM3D_DOC_GROUPS_FILE_LIST GLOBAL PROPERTY DREAM3DDoc_GROUPS)
+
+
+set(temp_string "/*!\n\n@page filterdocumentation Filter Documentation\n\n")
+
 foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   #message(STATUS "=======>   DOxygen Group: ${group}")
   string(TOLOWER ${group} filterGroup_Lower)
-  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "@subpage ${filterGroup_Lower}\n\n")
+  set(temp_string "${temp_string}@subpage ${filterGroup_Lower}\n\n")
 endforeach()
-file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "\n*/\n\n")
-
+set(temp_string "${temp_string}\n*/\n\n")
+file(WRITE ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "${temp_string}")
 
 
 #-------------------------------------------------------------------------------
 # Now Append the list of filters for each Group into the same file
 foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   string(TOLOWER ${group} filterGroup_Lower)
-  file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group} filter_path_list)
+  #file(STRINGS ${DREAM3DDocRoot}/DREAM3DDoc_${group} filter_path_list)
+  get_property(filter_path_list GLOBAL PROPERTY DREAM3DDoc_${group})
+
   file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n@page ${filterGroup_Lower} ${group}\n\n")
   # Read the summary for the group if it exists
   if(EXISTS ${DREAM3DReferenceManual_SOURCE_DIR}/Filters/${group}/${group}.md)
@@ -103,9 +109,7 @@ foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   endforeach()
   list(REMOVE_DUPLICATES DOXYGEN_IMAGE_DIRS)
   file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "*/\n\n")
-  file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group})
 endforeach()
-file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
 set(DOCUMENTATION_SOURCE_FILES
     "${DOCUMENTATION_SOURCE_FILES}"

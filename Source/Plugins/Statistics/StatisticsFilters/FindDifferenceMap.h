@@ -2,8 +2,8 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _FindDifferenceMap_H_
-#define _FindDifferenceMap_H_
+#ifndef _finddifferencemap_h_
+#define _finddifferencemap_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -121,11 +121,16 @@ class FindDifferenceMap : public AbstractFilter
 
   protected:
     FindDifferenceMap();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     DEFINE_IDATAARRAY_VARIABLE(FirstInputArray)

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -56,8 +56,8 @@
 // -----------------------------------------------------------------------------
 NearestPointFuseRegularGrids::NearestPointFuseRegularGrids() :
 AbstractFilter(),
-m_ReferenceCellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
-m_SamplingCellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "")
+m_ReferenceCellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""),
+m_SamplingCellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
 {
   setupFilterParameters();
 }
@@ -77,11 +77,11 @@ void NearestPointFuseRegularGrids::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Reference Cell Attribute Matrix", "ReferenceCellAttributeMatrixPath", getReferenceCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Sampling Cell Attribute Matrix", "SamplingCellAttributeMatrixPath", getSamplingCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -109,6 +109,14 @@ int NearestPointFuseRegularGrids::writeFilterParameters(AbstractFilterParameters
     SIMPL_FILTER_WRITE_PARAMETER(SamplingCellAttributeMatrixPath)
     writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void NearestPointFuseRegularGrids::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -165,7 +173,7 @@ void NearestPointFuseRegularGrids::dataCheck()
     if (getErrorCondition() >= 0)
     {
       tempAttrMatType = tmpAttrMat->getType();
-      if (tempAttrMatType > DREAM3D::AttributeMatrixType::Cell)
+      if (tempAttrMatType > SIMPL::AttributeMatrixType::Cell)
       {
         if (refAttrMatNames.contains(tmpAttrMat->getName()) == true)
         {
@@ -366,7 +374,7 @@ const QString NearestPointFuseRegularGrids::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getGroupName()
 {
-  return DREAM3D::FilterGroups::SamplingFilters;
+  return SIMPL::FilterGroups::SamplingFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -374,7 +382,7 @@ const QString NearestPointFuseRegularGrids::getGroupName()
 // -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getSubGroupName()
 {
-  return DREAM3D::FilterSubGroups::ResolutionFilters;
+  return SIMPL::FilterSubGroups::ResolutionFilters;
 }
 
 // -----------------------------------------------------------------------------

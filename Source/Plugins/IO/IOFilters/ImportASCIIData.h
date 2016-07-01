@@ -2,8 +2,8 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ImportASCIIData_H_
-#define _ImportASCIIData_H_
+#ifndef _importasciidata_h_
+#define _importasciidata_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -116,14 +116,19 @@ class ImportASCIIData : public AbstractFilter
 
   protected:
     ImportASCIIData();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
 
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
+
   private:
-    QMap<int, IDataArray::Pointer>                                      m_ASCIIArrayMap;
+    QMap<int, IDataArray::Pointer>        m_ASCIIArrayMap;
 
     ImportASCIIData(const ImportASCIIData&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIData&); // Operator '=' Not Implemented

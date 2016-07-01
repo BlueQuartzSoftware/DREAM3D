@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -270,7 +270,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
     ystartspot = static_cast<int>( (ypointstemp - ypointsslice) / 2 );
 
     // If no stacking order preference was passed, read it from the file and use that value
-    if(ZDir == Ebsd::RefFrameZDir::UnknownRefFrameZDirection)
+    if(ZDir == SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
     {
       ZDir = getStackingOrder();
     }

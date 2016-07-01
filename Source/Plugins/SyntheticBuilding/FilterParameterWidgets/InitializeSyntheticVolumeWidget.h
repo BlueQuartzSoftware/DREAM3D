@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _InitializeSyntheticVolumeWidget_H_
-#define _InitializeSyntheticVolumeWidget_H_
+#ifndef _initializesyntheticvolumewidget_h_
+#define _initializesyntheticvolumewidget_h_
 
 
 #include <QtCore/QObject>
@@ -44,9 +44,9 @@
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "SVWidgetsLib/SVWidgetsLib.h"
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 #include "SyntheticBuilding/ui_InitializeSyntheticVolumeWidget.h"
 

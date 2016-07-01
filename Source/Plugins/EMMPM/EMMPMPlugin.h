@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _EMMPM_H_
-#define _EMMPM_H_
+#ifndef _emmpmplugin_h_
+#define _emmpmplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

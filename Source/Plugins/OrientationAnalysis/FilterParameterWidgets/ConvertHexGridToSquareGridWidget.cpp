@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -44,7 +44,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 
-#include "QtSupportLib/QFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
@@ -146,7 +146,7 @@ void ConvertHexGridToSquareGridWidget::setupGui()
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  QFileCompleter* com = new QFileCompleter(this, true);
+  QtSFileCompleter* com = new QtSFileCompleter(this, true);
   m_InputDir->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputDir_textChanged(const QString&)));

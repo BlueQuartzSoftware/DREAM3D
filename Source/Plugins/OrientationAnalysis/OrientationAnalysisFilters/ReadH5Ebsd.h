@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,13 +34,14 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ReadH5Ebsd_H_
-#define _ReadH5Ebsd_H_
+#ifndef _readh5ebsd_h_
+#define _readh5ebsd_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
 #include "EbsdLib/H5EbsdVolumeReader.h"
 
@@ -89,6 +90,10 @@ class ReadH5Ebsd : public AbstractFilter
 
     SIMPL_INSTANCE_PROPERTY(QSet<QString>, DataArrayNames) // These are for reading the names of the arrays during a preflight
     Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames)
+
+    SIMPL_FILTER_PARAMETER(int, AngleRepresentation)
+    Q_PROPERTY(int AngleRepresentation READ getAngleRepresentation WRITE setAngleRepresentation)
+
 
     //-------------------------------------------------------
     // Not sure why these are here. We would be reading all of these from the file
@@ -193,11 +198,16 @@ class ReadH5Ebsd : public AbstractFilter
 
   protected:
     ReadH5Ebsd();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief initDataContainerDimsRes Initializes the dimensions to the correct size
@@ -298,13 +308,13 @@ class ReadH5Ebsd : public AbstractFilter
       }
 
 
-      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
       m_CrystalStructuresPtr = crystalStructures;
       m_CrystalStructures = crystalStructures->getPointer(0);
-      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
       m_LatticeConstantsPtr = latticeConstants;
       m_LatticeConstants = latticeConstants->getPointer(0);
-      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+      attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
       m_MaterialNamesPtr = materialNames;
       return 0;
     }

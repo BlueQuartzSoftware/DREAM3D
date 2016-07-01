@@ -18,7 +18,7 @@ endif()
 
 set(${PLUGIN_NAME}_Project_SRCS "")
 
-include(${DREAM3DProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
+include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 
 #-------
 # Start writing this header file
@@ -90,6 +90,10 @@ include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME})
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test)
+include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLProj_BINARY_DIR})
+include_directories( ${SIMPLViewProj_BINARY_DIR})
 
 # Remove the temp files that we no longer need
 file(REMOVE ${FilterWidget_GEN_HDRS_File})
@@ -196,7 +200,8 @@ set(${PLUGIN_NAME}_MODULE_SRCS
 # --------------------------------------------------------------------
 # Setup output Directory for the plugin
 if(NOT MSVC)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/Plugins  )
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_SAVE ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Plugins  )
 endif()
 
 
@@ -206,9 +211,9 @@ target_link_libraries(${PLUGIN_NAME}
                     Qt5::Core
                     SIMPLib
                     OrientationLib
-                    Qt5::Gui Qt5::Widgets
-                    QtSupportLib
-                    DREAM3DWidgetsLib
+                    Qt5::Gui
+                    Qt5::Widgets
+                    SVWidgetsLib
 )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)
@@ -222,11 +227,11 @@ PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
 # --------------------------------------------------------------------
 # Put back the output directory
 if(NOT MSVC)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_SAVE}  )
 endif()
 
 
-if(DREAM3D_BUILD_TESTING)
+if(SIMPL_BUILD_TESTING)
   include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 

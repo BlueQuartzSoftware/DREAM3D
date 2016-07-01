@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ImportImageStack_H_
-#define _ImportImageStack_H_
+#ifndef _importimagestack_h_
+#define _importimagestack_h_
 
 #include <QtCore/QFile>
 
@@ -174,11 +174,15 @@ class ImportImageStack : public AbstractFilter
 
   protected:
     ImportImageStack();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
 
     /**
     * @brief readBounds Reads the bounds for voxels from the specified file

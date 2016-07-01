@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -57,7 +57,7 @@ FindFeaturePhases::FindFeaturePhases() :
   AbstractFilter(),
   m_FeatureIdsArrayPath("", "", ""),
   m_CellPhasesArrayPath("", "", ""),
-  m_FeaturePhasesArrayPath(DREAM3D::FeatureData::Phases),
+  m_FeaturePhasesArrayPath(SIMPL::FeatureData::Phases),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_FeaturePhases(NULL)
@@ -81,16 +81,16 @@ void FindFeaturePhases::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArrayCreationFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::CreatedArray, req));
   }
   setFilterParameters(parameters);
@@ -125,15 +125,22 @@ int FindFeaturePhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindFeaturePhases::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindFeaturePhases::dataCheck()
 {
   setErrorCondition(0);
 
-  DataArrayPath tempPath;
-
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
+
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -176,10 +183,40 @@ void FindFeaturePhases::execute()
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   int32_t gnum = 0;
+  QMap<int32_t, int32_t> featureMap;
+
+  QMap<int32_t, int32_t> warningMap;
+
   for (size_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
+    if (!featureMap.contains(gnum)) { featureMap.insert(gnum, m_CellPhases[i]); }
+    int32_t curPhaseVal = featureMap.value(gnum);
+
+    if (curPhaseVal != m_CellPhases[i])
+    {
+      if(!warningMap.contains(gnum)) { warningMap[gnum] = 1; }
+      else {
+        warningMap[gnum]++;
+      }
+    }
     m_FeaturePhases[gnum] = m_CellPhases[i];
+  }
+
+  if(warningMap.size() > 0)
+  {
+    QStringList warnings;
+    QString header = QString("Elements from some features did not all have the same phase Id. The last phase Id copied into each feature will be used");
+    warnings.append(header);
+    QMapIterator<int32_t, int32_t> i(warningMap);
+    while (i.hasNext()) {
+        i.next();
+        QString str;
+        QTextStream ss(&str);
+        ss << "  Phase Feature " << i.key() << " created " << i.value() << " warnings.";
+        warnings.append(str);
+    }
+    notifyWarningMessage(getHumanLabel(), warnings.join("\n"), getErrorCondition());
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -228,13 +265,13 @@ const QString FindFeaturePhases::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindFeaturePhases::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return SIMPL::FilterGroups::GenericFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeaturePhases::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return SIMPL::FilterSubGroups::MiscFilters; }
 
 // -----------------------------------------------------------------------------
 //

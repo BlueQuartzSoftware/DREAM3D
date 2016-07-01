@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -231,7 +231,7 @@ QString createConstructorEntries(QStringListIterator& sourceLines, QStringList& 
 
   QString str;
   QTextStream out(&str);
-  out << "/*[]*/m_" << name << "ArrayPath(DREAM3D::Defaults::SomePath)";
+  out << "/*[]*/m_" << name << "ArrayPath(SIMPL::Defaults::SomePath)";
   outLines.push_back(str);
 
   return "";
@@ -609,7 +609,7 @@ void LoopOnFilters()
     //std::cout << "  public:" << std::endl;
     IFilterFactory::Pointer factory = i.value();
     AbstractFilter::Pointer filter = factory->create();
-    //if (filter->getGroupName().compare(DREAM3D::FilterGroups::StatisticsFilters) == 0)
+    //if (filter->getGroupName().compare(SIMPL::FilterGroups::StatisticsFilters) == 0)
     // if(filter->getNameOfClass().compare("FindSchmids") == 0)
     {
       //   std::cout << "" << filter->getGroupName().toStdString() << "Filters/" << filter->getNameOfClass().toStdString() << ".cpp" << std::endl;

@@ -37,7 +37,7 @@ sitk_install_exported_target( SimpleITKExplicit )
 LibraryProperties( SimpleITKExplicit  ${EXE_DEBUG_EXTENSION} )
 
 
-if(BUILD_SHARED_LIBS AND NOT APPLE)
+if(NOT MSVC)
     INSTALL(TARGETS SimpleITKExplicit
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}

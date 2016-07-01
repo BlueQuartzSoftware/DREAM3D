@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindBasalLoadingFactor_H_
-#define _FindBasalLoadingFactor_H_
+#ifndef _findbasalloadingfactor_h_
+#define _findbasalloadingfactor_h_
 
 #include <vector>
 #include <string>
@@ -162,11 +162,16 @@ class FindBasalLoadingFactor : public AbstractFilter
 
   protected:
     FindBasalLoadingFactor();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
 

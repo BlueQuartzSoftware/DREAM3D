@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -56,8 +56,8 @@
 // -----------------------------------------------------------------------------
 FindBoundaryCells::FindBoundaryCells() :
   AbstractFilter(),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells),
   m_FeatureIds(NULL),
   m_BoundaryCells(NULL)
 {
@@ -80,7 +80,7 @@ void FindBoundaryCells::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -110,6 +110,14 @@ int FindBoundaryCells::writeFilterParameters(AbstractFilterParametersWriter* wri
   SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindBoundaryCells::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -255,13 +263,13 @@ const QString FindBoundaryCells::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryCells::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return SIMPL::FilterGroups::GenericFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryCells::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+{ return SIMPL::FilterSubGroups::SpatialFilters; }
 
 // -----------------------------------------------------------------------------
 //

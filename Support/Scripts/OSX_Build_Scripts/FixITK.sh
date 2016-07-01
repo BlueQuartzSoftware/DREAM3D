@@ -1,6 +1,25 @@
 #! /bin/bash
 # This script requires a single argument which is the current install path
 
+
+#------------------------------------------------------------------------------
+# Read the configuration file for the SDK Build
+shopt -s extglob
+configfile="SDK_Configuration.conf" # set the actual path name of your (DOS or Unix) config file
+tr -d '\r' < $configfile > $configfile.unix
+while IFS='= ' read lhs rhs
+do
+    if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+        rhs="${rhs%%\#*}"    # Del in line right comments
+        rhs="${rhs%%*( )}"   # Del trailing spaces
+        rhs="${rhs%\"*}"     # Del opening string quotes 
+        rhs="${rhs#\"*}"     # Del closing string quotes 
+        declare $lhs="$rhs"
+    fi
+done < $configfile.unix
+rm $configfile.unix
+#------------------------------------------------------------------------------
+
 DEBUG=0
 # -----------------------------------------------------------------------------
 #  Conditional Printing
@@ -12,7 +31,7 @@ function printStatus()
     fi  
 }
 
-printStatus "************** Fixing up ITK 4.7.2 **********************"
+printStatus "************** Fixing up ITK 4.9.1 **********************"
 
 
 InstallPrefix="${1}"
@@ -32,7 +51,7 @@ InstallNameLib=${LibPath}
 
 TmpDir="/tmp"
 
-
+changes=""
 
 
 # -----------------------------------------------------------------------------
@@ -67,7 +86,7 @@ function CorrectLibraryDependency()
   # Filter out System Libraries or those located in /Libary/Frameworks
   isSystem=`expr  "${oldPath}" : '/System'`
   isUsrLib=`expr "${oldPath}" : '/usr/lib'`
-  isToolkitsLib=`expr "${oldPath}" : '/Users/Shared/DREAM3D_SDK/hdf5-1.8.15'`
+  isToolkitsLib=`expr "${oldPath}" : '/Users/Shared/DREAM3D_SDK/hdf5-1.8.16'`
   #isLibFrwk=`expr "${oldPath}" : '/Libraray/Frameworks'`
   isEmbeddedPathExe=`expr "${oldPath}" : '@executable_path/'`
   isEmbeddedPathLdr=`expr "${oldPath}" : '@loader_path/'`
@@ -203,12 +222,13 @@ function UpdateDylibInstallName()
 # -----------------------------------------------------------------------------
 function UpdateExecutableDependencies()
 {
+  changes=""
   pattern=" \(*\)"            # everything between '(' and ')'
   oldPath="${1%$pattern}"
   # Filter out System Libraries or those located in /Libary/Frameworks
   isSystem=`expr  "${oldPath}" : '/System'`
   isUsrLib=`expr "${oldPath}" : '/usr/lib'`
-  isToolkitsLib=`expr "${oldPath}" : '/Users/Shared/DREAM3D_SDK/hdf5-1.8.15'`
+  isToolkitsLib=`expr "${oldPath}" : '/Users/Shared/DREAM3D_SDK/hdf5-1.8.16'`
   #isLibFrwk=`expr "${oldPath}" : '/Libraray/Frameworks'`
   isEmbeddedPathExe=`expr "${oldPath}" : '@executable_path/'`
   isEmbeddedPathLdr=`expr "${oldPath}" : '@loader_path/'`
@@ -255,13 +275,14 @@ do
     echo "[${k}/${total}] Changing " $l
     let k=k+1
     ApplicationExe=$l
-
+    # for itk library get the linked libraries
     otool -L "${LibPath}/${ApplicationExe}" > "${tmpFile}"
 
     i=0
     exec 9<"${tmpFile}"
     while read -u 9 line
     do
+        # For each output line from the 'otool'
         if [[ ${i} -gt 0 ]]; then
             UpdateExecutableDependencies "${line}" "${ApplicationExe}"     
         fi

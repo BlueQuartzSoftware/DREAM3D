@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EbsdToH5Ebsd_H_
-#define _EbsdToH5Ebsd_H_
+#ifndef _ebsdtoh5ebsd_h_
+#define _ebsdtoh5ebsd_h_
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
@@ -43,6 +43,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
 /**
  * @brief The EbsdToH5Ebsd class. See [Filter documentation](@ref ebsdtoh5ebsd) for details.
@@ -170,11 +171,16 @@ class EbsdToH5Ebsd : public AbstractFilter
 
   protected:
     EbsdToH5Ebsd();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     EbsdToH5Ebsd(const EbsdToH5Ebsd&); // Copy Constructor Not Implemented

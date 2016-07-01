@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -50,9 +50,9 @@
 #include "SIMPLib/Common/Constants.h"
 
 
-#include "QtSupportLib/QFileCompleter.h"
-#include "QtSupportLib/SIMPLQtMacros.h"
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSMacros.h"
+#include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
@@ -164,7 +164,7 @@ void ReadH5EbsdWidget::setupGui()
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  QFileCompleter* com = new QFileCompleter(this, false);
+  QtSFileCompleter* com = new QtSFileCompleter(this, false);
   m_InputFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputFile_textChanged(const QString&)));
@@ -178,11 +178,12 @@ void ReadH5EbsdWidget::setupGui()
   // Set the initial range based on the z min & z max. This will get adjusted later
   m_ZStartIndex->setRange(0, m_Filter->getZEndIndex());
   m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
-  // Set the initial range based on the z min & z max. This will get adjusted later  
+  // Set the initial range based on the z min & z max. This will get adjusted later
   m_ZEndIndex->setRange(0, m_Filter->getZEndIndex());
   m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
-  
+
   m_UseTransformations->setChecked( m_Filter->getUseTransformations() );
+  m_AngleRepresentationCB->setCurrentIndex(m_Filter->getAngleRepresentation());
   m_RefFrameZDir->setText( Ebsd::StackingOrder::Utils::getStringForEnum( m_Filter->getRefFrameZDir() )  );
   updateFileInfoWidgets();
   QSet<QString> selectedArrays = m_Filter->getSelectedArrayNames();
@@ -360,6 +361,17 @@ void ReadH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 void ReadH5EbsdWidget::on_m_UseTransformations_stateChanged(int state)
 {
   m_DidCausePreflight = true;
+  m_AngleRepresentationCB->setEnabled(m_UseTransformations->isChecked());
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdWidget::on_m_AngleRepresentationCB_currentIndexChanged(int index)
+{
+  m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
 }
@@ -402,8 +414,10 @@ void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   readEbsd->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
   readEbsd->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
   readEbsd->setUseTransformations(m_UseTransformations->isChecked() );
-
+  int index = m_AngleRepresentationCB->currentIndex();
+  readEbsd->setAngleRepresentation(index);
   readEbsd->setSelectedArrayNames(getSelectedArrayNames());
+
   //  m_Filter->setSelectedEnsembleNames(getSelectedEnsembleNames());
 
 }

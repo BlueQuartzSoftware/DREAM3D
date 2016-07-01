@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -61,20 +61,20 @@
 // -----------------------------------------------------------------------------
 VectorSegmentFeatures::VectorSegmentFeatures() :
   SegmentFeatures(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_SelectedVectorArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
+  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName),
+  m_SelectedVectorArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::VectorData),
   m_AngleTolerance(5.0f),
   m_RandomizeFeatureIds(true),
   m_UseGoodVoxels(true),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
+  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_Vectors(NULL),
   m_FeatureIds(NULL),
   m_GoodVoxels(NULL),
-  m_Active(NULL)
+  m_Active(NULL),
+  m_AngleToleranceRad(0.0f)
 {
-  angleTolerance = 0.0f;
 
   setupFilterParameters();
 }
@@ -161,10 +161,20 @@ void VectorSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VectorSegmentFeatures::initialize()
+{
+  m_AngleToleranceRad = 0.0f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VectorSegmentFeatures::dataCheck()
 {
-  DataArrayPath tempPath;
+
   setErrorCondition(0);
+  initialize();
+  DataArrayPath tempPath;
 
   // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_SelectedVectorArrayPath.getDataContainerName());
@@ -176,7 +186,7 @@ void VectorSegmentFeatures::dataCheck()
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -279,7 +289,7 @@ int64_t VectorSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int64_t seed = -1;
   // start with the next voxel after the last seed
-  size_t randpoint = static_cast<size_t>(nextSeed)+1;
+  size_t randpoint = static_cast<size_t>(nextSeed);
   while (seed == -1 && randpoint < totalPoints)
   {
     if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
@@ -323,7 +333,7 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
     float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
     w = acosf(w);
     if (w > SIMPLib::Constants::k_PiOver2) { w = SIMPLib::Constants::k_Pi - w; }
-    if (w < angleTolerance)
+    if (w < m_AngleToleranceRad)
     {
       group = true;
       m_FeatureIds[neighborpoint] = gnum;
@@ -365,7 +375,7 @@ void VectorSegmentFeatures::execute()
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
 
   // Convert user defined tolerance to radians.
-  angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_AngleToleranceRad = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;
@@ -435,13 +445,13 @@ const QString VectorSegmentFeatures::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString VectorSegmentFeatures::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VectorSegmentFeatures::getSubGroupName()
-{return DREAM3D::FilterSubGroups::SegmentationFilters;}
+{return SIMPL::FilterSubGroups::SegmentationFilters;}
 
 // -----------------------------------------------------------------------------
 //

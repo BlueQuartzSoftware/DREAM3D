@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -101,7 +101,7 @@ class ReverseWindingImpl
 // -----------------------------------------------------------------------------
 ReverseTriangleWinding::ReverseTriangleWinding() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::TriangleDataContainerName)
+  m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
 {
   setupFilterParameters();
 }
@@ -121,7 +121,7 @@ void ReverseTriangleWinding::setupFilterParameters()
   FilterParameterVector parameters;
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
+    req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -147,6 +147,14 @@ int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReverseTriangleWinding::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -248,13 +256,13 @@ const QString ReverseTriangleWinding::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+{ return SIMPL::FilterSubGroups::ConnectivityArrangementFilters; }
 
 // -----------------------------------------------------------------------------
 //

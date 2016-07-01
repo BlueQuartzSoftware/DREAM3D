@@ -1,8 +1,8 @@
 /*
  * Your License should go here
  */
-#ifndef _EMMPMConstants_H_
-#define _EMMPMConstants_H_
+#ifndef _emmpmconstants_h_
+#define _emmpmconstants_h_
 
 #include <QtCore/QString>
 
@@ -26,4 +26,12 @@ namespace FilterParameterWidgetType
   /*  const QString SomeCustomWidget("SomeCustomWidget"); */
 
 }
+
+namespace BlueQuartz
+{
+  const QString VendorName("BlueQuartz Software, LLC");
+  const QString URL("http://www.bluequartz.net");
+  const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
+}
+
 #endif

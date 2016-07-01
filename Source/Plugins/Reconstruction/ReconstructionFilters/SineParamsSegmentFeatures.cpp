@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -64,17 +64,18 @@
 // -----------------------------------------------------------------------------
 SineParamsSegmentFeatures::SineParamsSegmentFeatures() :
   SegmentFeatures(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_SineParamsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::SineParams),
+  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName),
+  m_SineParamsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::SineParams),
   m_RandomizeFeatureIds(true),
   m_UseGoodVoxels(true),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::GoodVoxels),
+  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_SineParams(NULL),
   m_FeatureIds(NULL),
   m_GoodVoxels(NULL),
-  m_Active(NULL)
+  m_Active(NULL),
+  m_MissingGoodVoxels(false)
 {
   setupFilterParameters();
 }
@@ -160,9 +161,18 @@ void SineParamsSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SineParamsSegmentFeatures::initialize()
+{
+  m_MissingGoodVoxels = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SineParamsSegmentFeatures::dataCheck()
 {
   DataArrayPath tempPath;
+  initialize();
   setErrorCondition(0);
 
   //Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
@@ -174,7 +184,7 @@ void SineParamsSegmentFeatures::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
 
   ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
@@ -324,7 +334,7 @@ int64_t SineParamsSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int64_t seed = -1;
   // start with the next voxel after the last seed
-  size_t randpoint = static_cast<size_t>(nextSeed)+1;
+  size_t randpoint = static_cast<size_t>(nextSeed);
   while (seed == -1 && randpoint < totalPoints)
   {
     if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
@@ -439,14 +449,14 @@ const QString SineParamsSegmentFeatures::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString SineParamsSegmentFeatures::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SineParamsSegmentFeatures::getSubGroupName()
-{return DREAM3D::FilterSubGroups::SegmentationFilters;}
+{return SIMPL::FilterSubGroups::SegmentationFilters;}
 
 
 // -----------------------------------------------------------------------------

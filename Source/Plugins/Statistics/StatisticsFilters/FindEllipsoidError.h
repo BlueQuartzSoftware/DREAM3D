@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindEllipsoidError_H_
-#define _FindEllipsoidError_H_
+#ifndef _findellipsoiderror_h_
+#define _findellipsoiderror_h_
 
 #include <vector>
 #include <QtCore/QString>
@@ -180,11 +180,16 @@ class FindEllipsoidError : public AbstractFilter
 
   protected:
     FindEllipsoidError();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     void find_error2D();
 
@@ -197,7 +202,7 @@ class FindEllipsoidError : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, IdealFeatureIds)
     DEFINE_DATAARRAY_VARIABLE(float, EllipsoidError)
 
-    double scaleFactor;
+    double m_ScaleFator;
 
     FindEllipsoidError(const FindEllipsoidError&); // Copy Constructor Not Implemented
     void operator=(const FindEllipsoidError&); // Operator '=' Not Implemented

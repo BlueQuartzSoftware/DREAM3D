@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -65,7 +65,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadCtfData.h"
@@ -355,7 +355,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       DataArrayPath eulerAnglesPath(dcName, cellAttrMatName, Ebsd::CtfFile::EulerAngles);
       QVariant var;
       var.setValue(eulerAnglesPath);
-      convert->setProperty("ConversionType", DREAM3D::EulerAngleConversionType::DegreesToRadians);
+      convert->setProperty("ConversionType", SIMPL::EulerAngleConversionType::DegreesToRadians);
       convert->setProperty("CellEulerAnglesArrayPath", var);
 
       convert->setDataContainerArray(dca);
@@ -734,6 +734,6 @@ void QEbsdReferenceFrameDialog::referenceDirectionChanged()
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::on_showHelp_clicked()
 {
-  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl("ebsdtoh5ebsd", this);
+  QtSHelpUrlGenerator::generateAndOpenHTMLUrl("ebsdtoh5ebsd", this);
 }
 

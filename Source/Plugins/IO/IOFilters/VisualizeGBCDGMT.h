@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _VisualizeGBCDGMT_H_
-#define _VisualizeGBCDGMT_H_
+#ifndef _visualizegbcdgmt_h_
+#define _visualizegbcdgmt_h_
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
@@ -43,6 +43,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -163,11 +164,16 @@ class VisualizeGBCDGMT : public AbstractFilter
 
   protected:
     VisualizeGBCDGMT();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief getSquareCoord Computes the square based coordinate based on the incoming normal

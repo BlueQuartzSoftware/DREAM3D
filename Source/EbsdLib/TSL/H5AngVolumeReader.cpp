@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -272,12 +272,12 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     ystop = ypointsslice;
 
     // If no stacking order preference was passed, read it from the file and use that value
-    if(ZDir == Ebsd::RefFrameZDir::UnknownRefFrameZDirection)
+    if(ZDir == SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
     {
       ZDir = getStackingOrder();
     }
-    if(ZDir == Ebsd::RefFrameZDir::LowtoHigh) { zval = slice; }
-    if(ZDir == Ebsd::RefFrameZDir::HightoLow) { zval = static_cast<int>( (zpoints - 1) - slice ); }
+    if(ZDir == SIMPL::RefFrameZDir::LowtoHigh) { zval = slice; }
+    if(ZDir == SIMPL::RefFrameZDir::HightoLow) { zval = static_cast<int>( (zpoints - 1) - slice ); }
 
     // Copy the data from the current storage into the new memory Location
     for (int j = 0; j < ystop; j++)

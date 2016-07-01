@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AvizoUniformCoordinateWriter_H_
-#define _AvizoUniformCoordinateWriter_H_
+#ifndef _avizouniformcoordinatewriter_h_
+#define _avizouniformcoordinatewriter_h_
 
 #include <QtCore/QString>
 
@@ -170,11 +170,16 @@ class AvizoUniformCoordinateWriter : public AbstractFilter
 
   protected:
     AvizoUniformCoordinateWriter();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief Generates the Avizo Header for this file

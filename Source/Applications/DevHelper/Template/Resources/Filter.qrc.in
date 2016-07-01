@@ -1,7 +1,0 @@
- <!DOCTYPE RCC>
- <RCC version="1.0">
- <qresource>
- <file>@ClassName@/@ClassName@License.txt</file>
- <file>@ClassName@/@ClassName@Description.txt</file>
- </qresource>
- </RCC>

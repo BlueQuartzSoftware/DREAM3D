@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -65,7 +65,7 @@ AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
   m_OutputFile(""),
   m_WriteBinaryFile(false),
   m_WriteFeatureIds(true),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -117,6 +117,14 @@ int AvizoUniformCoordinateWriter::writeFilterParameters(AbstractFilterParameters
   SIMPL_FILTER_WRITE_PARAMETER(WriteBinaryFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AvizoUniformCoordinateWriter::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -332,14 +340,14 @@ const QString AvizoUniformCoordinateWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AvizoUniformCoordinateWriter::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AvizoUniformCoordinateWriter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

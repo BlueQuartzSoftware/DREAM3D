@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _QReadH5Ebsd_H_
-#define _QReadH5Ebsd_H_
+#ifndef _readh5ebsdwidget_h_
+#define _readh5ebsdwidget_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
@@ -46,10 +46,10 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
+#include "SVWidgetsLib/SVWidgetsLib.h"
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 #include "OrientationAnalysis/ui_ReadH5EbsdWidget.h"
 
@@ -106,6 +106,7 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     void on_m_ZStartIndex_valueChanged(int value);
     void on_m_ZEndIndex_valueChanged(int value);
     void on_m_UseTransformations_stateChanged(int state);
+    void on_m_AngleRepresentationCB_currentIndexChanged(int index);
 
 
   protected:

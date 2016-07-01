@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -146,6 +146,14 @@ int FindFeatureHistogram::writeFilterParameters(AbstractFilterParametersWriter* 
   SIMPL_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindFeatureHistogram::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -351,14 +359,14 @@ const QString FindFeatureHistogram::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureHistogram::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureHistogram::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
 
 
 // -----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -51,6 +51,8 @@
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
+#include "EbsdLib/EbsdConstants.h"
+
 #include "Reconstruction/ReconstructionConstants.h"
 
 // Include the MOC generated file for this class
@@ -62,7 +64,7 @@
 // -----------------------------------------------------------------------------
 GroupMicroTextureRegions::GroupMicroTextureRegions() :
   GroupFeatures(),
-  m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
+  m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName),
   m_CAxisTolerance(1.0f),
   m_UseRunningAverage(false),
   m_RandomizeParentIds(true),
@@ -71,9 +73,9 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_VolumesArrayPath("", "", ""),
   m_AvgQuatsArrayPath("", "", ""),
   m_CrystalStructuresArrayPath("", "", ""),
-  m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CellParentIdsArrayName(SIMPL::CellData::ParentIds),
+  m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_FeatureIds(NULL),
   m_AvgQuats(NULL),
   m_FeaturePhases(NULL),
@@ -85,10 +87,10 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
-  avgCaxes[0] = 0.0f;
-  avgCaxes[1] = 0.0f;
-  avgCaxes[2] = 0.0f;
-  caxisTolerance = 0.0f;
+  m_AvgCAxes[0] = 0.0f;
+  m_AvgCAxes[1] = 0.0f;
+  m_AvgCAxes[2] = 0.0f;
+  m_CAxisToleranceRad = 0.0f;
 
   setupFilterParameters();
 }
@@ -196,9 +198,21 @@ void GroupMicroTextureRegions::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::initialize()
+{
+  m_AvgCAxes[0] = 0.0f;
+  m_AvgCAxes[1] = 0.0f;
+  m_AvgCAxes[2] = 0.0f;
+  m_CAxisToleranceRad = 0.0f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
   DataArrayPath tempPath;
 
   GroupFeatures::dataCheck();
@@ -208,7 +222,7 @@ void GroupMicroTextureRegions::dataCheck()
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -375,8 +389,8 @@ int32_t GroupMicroTextureRegions::getSeed(int32_t newFid)
       // normalize so that the dot product can be taken below without
       // dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c1);
-      MatrixMath::Copy3x1(c1, avgCaxes);
-      MatrixMath::Multiply3x1withConstant(avgCaxes, m_Volumes[seed]);
+      MatrixMath::Copy3x1(c1, m_AvgCAxes);
+      MatrixMath::Multiply3x1withConstant(m_AvgCAxes, m_Volumes[seed]);
     }
   }
   return seed;
@@ -432,17 +446,17 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
       // dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c2);
 
-      if (m_UseRunningAverage == true) { w = GeometryMath::CosThetaBetweenVectors(avgCaxes, c2); }
+      if (m_UseRunningAverage == true) { w = GeometryMath::CosThetaBetweenVectors(m_AvgCAxes, c2); }
       else { w = GeometryMath::CosThetaBetweenVectors(c1, c2); }
       SIMPLibMath::boundF(w, -1, 1);
       w = acosf(w);
-      if (w <= caxisTolerance || (SIMPLib::Constants::k_Pi - w) <= caxisTolerance)
+      if (w <= m_CAxisToleranceRad || (SIMPLib::Constants::k_Pi - w) <= m_CAxisToleranceRad)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
         if (m_UseRunningAverage == true)
         {
           MatrixMath::Multiply3x1withConstant(c2, m_Volumes[neighborFeature]);
-          MatrixMath::Add3x1s(avgCaxes, c2, avgCaxes);
+          MatrixMath::Add3x1s(m_AvgCAxes, c2, m_AvgCAxes);
         }
         return true;
       }
@@ -478,11 +492,11 @@ void GroupMicroTextureRegions::execute()
   if(getErrorCondition() < 0) { return; }
 
   // Convert user defined tolerance to radians.
-  caxisTolerance = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
-  avgCaxes[0] = 0.0f;
-  avgCaxes[1] = 0.0f;
-  avgCaxes[2] = 0.0f;
+  m_AvgCAxes[0] = 0.0f;
+  m_AvgCAxes[1] = 0.0f;
+  m_AvgCAxes[2] = 0.0f;
 
   GroupFeatures::execute();
 
@@ -554,13 +568,13 @@ const QString GroupMicroTextureRegions::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GroupMicroTextureRegions::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GroupMicroTextureRegions::getSubGroupName()
-{return DREAM3D::FilterSubGroups::GroupingFilters;}
+{return SIMPL::FilterSubGroups::GroupingFilters;}
 
 // -----------------------------------------------------------------------------
 //

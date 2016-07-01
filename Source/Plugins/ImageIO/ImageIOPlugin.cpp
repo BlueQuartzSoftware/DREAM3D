@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -54,10 +54,10 @@
 ImageIOPlugin::ImageIOPlugin() :
   m_Version(SIMPLib::Version::Package()),
   m_CompatibilityVersion(SIMPLib::Version::Package()),
-  m_Vendor(DREAM3D::BlueQuartz::VendorName),
-  m_URL(DREAM3D::BlueQuartz::URL),
+  m_Vendor(BlueQuartz::VendorName),
+  m_URL(BlueQuartz::URL),
   m_Location(""),
-  m_Copyright(DREAM3D::BlueQuartz::Copyright),
+  m_Copyright(BlueQuartz::Copyright),
   m_DidLoad(false)
 {
 

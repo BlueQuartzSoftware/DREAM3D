@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -111,6 +111,14 @@ int GenerateGeometryConnectivity::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GenerateGeometryConnectivity::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::dataCheck()
 {
   getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getSurfaceDataContainerName());
@@ -212,13 +220,13 @@ const QString GenerateGeometryConnectivity::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+{ return SIMPL::FilterSubGroups::ConnectivityArrangementFilters; }
 
 // -----------------------------------------------------------------------------
 //

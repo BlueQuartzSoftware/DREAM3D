@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -129,7 +129,7 @@ class CalculateDihedralAnglesImpl
 // -----------------------------------------------------------------------------
 TriangleDihedralAngleFilter::TriangleDihedralAngleFilter() :
   SurfaceMeshFilter(),
-  m_SurfaceMeshTriangleDihedralAnglesArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceDihedralAngles),
+  m_SurfaceMeshTriangleDihedralAnglesArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceDihedralAngles),
   m_SurfaceMeshTriangleDihedralAngles(NULL)
 {
   setupFilterParameters();
@@ -150,7 +150,7 @@ void TriangleDihedralAngleFilter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(DataArrayCreationFilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayPath", getSurfaceMeshTriangleDihedralAnglesArrayPath(), FilterParameter::CreatedArray, req));
   }
   setFilterParameters(parameters);
@@ -176,6 +176,14 @@ int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersW
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleDihedralAnglesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriangleDihedralAngleFilter::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -290,13 +298,13 @@ const QString TriangleDihedralAngleFilter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString TriangleDihedralAngleFilter::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleDihedralAngleFilter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return SIMPL::FilterSubGroups::MiscFilters; }
 
 // -----------------------------------------------------------------------------
 //

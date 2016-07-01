@@ -1,0 +1,7 @@
+ <!DOCTYPE RCC>
+ <RCC version="1.0">
+ <qresource>
+ <file>StatsGenerator/StatsGeneratorLicense.txt</file>
+ <file>StatsGenerator/StatsGeneratorDescription.txt</file>
+ </qresource>
+ </RCC>

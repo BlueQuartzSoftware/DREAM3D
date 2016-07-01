@@ -57,7 +57,22 @@ if(DOX_GENERATE_LATEX)
                      OUTPUT_SUB_DIR "latex")
 endif()
 
-set(DOCUMENTATION_SOURCE_FILES ${DOCUMENTATION_SOURCE_FILES})
+set(DOCUMENTATION_SOURCE_FILES 
+    ${DOCUMENTATION_SOURCE_FILES}
+)
+# Include the SIMPLib doc files
+if(NOT ${SIMPLProj_SOURCE_DIR} STREQUAL "")
+    set(DOCUMENTATION_SOURCE_FILES ${DOCUMENTATION_SOURCE_FILES}
+        ${SIMPLProj_SOURCE_DIR}/Source
+    )
+endif()
+
+#include the SIMPLView doc files
+if(NOT ${SIMPLViewProj_SOURCE_DIR} STREQUAL "")
+    set(DOCUMENTATION_SOURCE_FILES ${DOCUMENTATION_SOURCE_FILES}
+        ${SIMPLViewProj_SOURCE_DIR}/Source
+    )
+endif()
 
 
 if(DOX_GENERATE_HTML)
@@ -71,6 +86,7 @@ if(DOX_GENERATE_HTML)
                      GENERATE_HTML "YES"
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "NO"
+                     INCLUDE_MARKDOWN_FILES "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
                      IMAGE_DIR "${DOXYGEN_IMAGE_DIRS}"
                      OUTPUT_DIR "${PROJECT_BINARY_DIR}_HTML"

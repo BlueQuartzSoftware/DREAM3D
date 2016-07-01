@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -62,7 +62,7 @@
 // -----------------------------------------------------------------------------
 LammpsFileWriter::LammpsFileWriter() :
   AbstractFilter(),
-  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
+  m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName),
   m_LammpsFile("")
 {
   setupFilterParameters();
@@ -114,6 +114,14 @@ int LammpsFileWriter::writeFilterParameters(AbstractFilterParametersWriter* writ
   SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void LammpsFileWriter::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -290,14 +298,14 @@ const QString LammpsFileWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

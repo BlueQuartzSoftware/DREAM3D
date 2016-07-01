@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -207,6 +207,14 @@ int ExportData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ExportData::initialize()
+{
+  m_SelectedWeakPtrVector.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ExportData::dataCheck()
 {
   // Make sure the weak pointer vector is cleared before we begin...
@@ -275,6 +283,7 @@ void ExportData::preflight()
 void ExportData::execute()
 {
   setErrorCondition(0);
+  initialize();
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -393,13 +402,13 @@ const QString ExportData::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ExportData::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ExportData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //

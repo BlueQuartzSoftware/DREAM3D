@@ -7,7 +7,7 @@ PROJECT( SimpleITKExplicit VERSION 0.9.0)
 # Check and set required flags for compilation
 # This must be done before any other try compiles based tests are
 # done.
-include(${PROJECT_CODE_DIR}/SimpleITKExplicit/CMake/sitkCheckRequiredFlags.cmake)
+include(${PROJECT_SOURCE_DIR}/CMake/sitkCheckRequiredFlags.cmake)
 
 
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SimpleITKExplicit_REQUIRED_C_FLAGS}")
@@ -21,11 +21,11 @@ include(${PROJECT_CODE_DIR}/SimpleITKExplicit/CMake/sitkCheckRequiredFlags.cmake
 # message(STATUS "CMAKE_SHARED_LINKER_FLAGS: ${CMAKE_SHARED_LINKER_FLAGS}")
 # message(STATUS "CMAKE_MODULE_LINKER_FLAGS: ${CMAKE_MODULE_LINKER_FLAGS}")
 
-include(${PROJECT_CODE_DIR}/SimpleITKExplicit/CMake/sitkCheckCXX11.cmake)
+include(${PROJECT_SOURCE_DIR}/CMake/sitkCheckCXX11.cmake)
 
 ## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
-include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
+include( ${DREAM3DProj_SOURCE_DIR}/Support/ITKSupport/IncludeITK.cmake)
 include_directories(${ITK_INCLUDE_DIRS})
 
 #----------------------------------------------------------
@@ -74,13 +74,14 @@ function(sitk_install_exported_target tgt)
   export(TARGETS ${tgt}
     APPEND FILE "${CMAKE_BINARY_DIR}/SimpleITKTargets.cmake"
     )
-
-  install(TARGETS ${tgt}
-    EXPORT SimpleITKExplicit
-    RUNTIME DESTINATION ${SimpleITKExplicit_INSTALL_RUNTIME_DIR}
-    LIBRARY DESTINATION ${SimpleITKExplicit_INSTALL_LIBRARY_DIR}
-    ARCHIVE DESTINATION ${SimpleITKExplicit_INSTALL_ARCHIVE_DIR}
-    )
+  if(NOT MSVC)
+    install(TARGETS ${tgt}
+      EXPORT SimpleITKExplicit
+      RUNTIME DESTINATION ${SimpleITKExplicit_INSTALL_RUNTIME_DIR}
+      LIBRARY DESTINATION ${SimpleITKExplicit_INSTALL_LIBRARY_DIR}
+      ARCHIVE DESTINATION ${SimpleITKExplicit_INSTALL_ARCHIVE_DIR}
+      )
+  endif()
 endfunction()
 
 set(install_dir "bin")

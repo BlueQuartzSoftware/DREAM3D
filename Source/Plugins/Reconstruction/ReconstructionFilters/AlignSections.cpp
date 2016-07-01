@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -36,6 +36,7 @@
 #include "AlignSections.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -43,6 +44,7 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -56,8 +58,8 @@
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_WriteAlignmentShifts(false),
   m_AlignmentShiftFileName("")
 {
@@ -105,6 +107,14 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
   SIMPL_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSections::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -161,6 +171,19 @@ void AlignSections::find_shifts(std::vector<int64_t>& xshifts, std::vector<int64
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template<typename T>
+void initializeArrayValues(IDataArray::Pointer p, size_t index)
+{
+
+    typename DataArray<T>::Pointer ptr = std::dynamic_pointer_cast<DataArray<T>>(p);
+    T var = static_cast<T>(0);
+    ptr->initializeTuple(index, &var);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AlignSections::execute()
 {
   setErrorCondition(0);
@@ -169,24 +192,12 @@ void AlignSections::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  size_t udims[3] = { 0, 0, 0 };
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
+  size_t dims[3] = { 0, 0, 0 };
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-
-  DimType xspot = 0, yspot = 0;
-  DimType newPosition = 0;
-  DimType currentPosition = 0;
+  int64_t xspot = 0, yspot = 0;
+  int64_t newPosition = 0;
+  int64_t currentPosition = 0;
 
   std::vector<int64_t> xshifts(dims[2], 0);
   std::vector<int64_t> yshifts(dims[2], 0);
@@ -195,12 +206,12 @@ void AlignSections::execute()
 
 
   QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
-  int64_t progIncrement = dims[2] / 100;
-  int64_t prog = 1;
-  int64_t progressInt = 0;
-  DimType slice = 0;
+  size_t progIncrement = dims[2] / 100;
+  size_t prog = 1;
+  size_t progressInt = 0;
+  size_t slice = 0;
 
-  for (DimType i = 1; i < dims[2]; i++)
+  for (size_t i = 1; i < dims[2]; i++)
   {
     if (i > prog)
     {
@@ -215,9 +226,9 @@ void AlignSections::execute()
       return;
     }
     slice = (dims[2] - 1) - i;
-    for (DimType l = 0; l < dims[1]; l++)
+    for (size_t l = 0; l < dims[1]; l++)
     {
-      for (DimType n = 0; n < dims[0]; n++)
+      for (size_t n = 0; n < dims[0]; n++)
       {
         if (yshifts[i] >= 0) { yspot = l; }
         else if (yshifts[i] < 0) { yspot = dims[1] - 1 - l; }
@@ -225,22 +236,22 @@ void AlignSections::execute()
         else if (xshifts[i] < 0) { xspot = dims[0] - 1 - n; }
         newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
         currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
-        if ((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
-            && (xspot + xshifts[i]) <= dims[0] - 1)
+        if ((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= static_cast<int64_t>(dims[1]) - 1 && (xspot + xshifts[i]) >= 0
+            && (xspot + xshifts[i]) <= static_cast<int64_t>(dims[0]) - 1)
         {
           for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-            p->copyTuple(currentPosition, newPosition);
+            p->copyTuple( static_cast<size_t>(currentPosition), static_cast<size_t>(newPosition));
           }
         }
-        if ((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
-            || (xspot + xshifts[i]) > dims[0] - 1)
+        if ((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > static_cast<int64_t>(dims[1] - 1) || (xspot + xshifts[i]) < 0
+            || (xspot + xshifts[i]) > static_cast<int64_t>(dims[0]) - 1)
         {
           for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-            p->initializeTuple(newPosition, 0);
+            EXECUTE_FUNCTION_TEMPLATE(this, initializeArrayValues, p, p, newPosition)
           }
         }
       }
@@ -294,13 +305,13 @@ const QString AlignSections::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AlignSections::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSections::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::AlignmentFilters; }
+{ return SIMPL::FilterSubGroups::AlignmentFilters; }
 
 // -----------------------------------------------------------------------------
 //

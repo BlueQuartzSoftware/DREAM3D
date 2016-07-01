@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindShapes_H_
-#define _FindShapes_H_
+#ifndef _findshapes_h_
+#define _findshapes_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -170,11 +170,16 @@ class FindShapes : public AbstractFilter
 
   protected:
     FindShapes();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_moments Determines the second order moments for each Feature
@@ -216,7 +221,7 @@ class FindShapes : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(float, Volumes)
     DEFINE_DATAARRAY_VARIABLE(float, AspectRatios)
 
-    double scaleFactor;
+    double m_ScaleFactor;
 
     FindShapes(const FindShapes&); // Copy Constructor Not Implemented
     void operator=(const FindShapes&); // Operator '=' Not Implemented

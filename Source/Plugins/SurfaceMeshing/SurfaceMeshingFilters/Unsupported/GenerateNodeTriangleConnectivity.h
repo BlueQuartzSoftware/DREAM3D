@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _GenerateNodeTriangleConnectivity_H_
-#define _GenerateNodeTriangleConnectivity_H_
+#ifndef _generatenodetriangleconnectivity_h_
+#define _generatenodetriangleconnectivity_h_
 
 #include <string>
 
@@ -78,7 +78,7 @@ class GenerateNodeTriangleConnectivity : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const QString getGroupName() { return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -119,14 +119,15 @@ class GenerateNodeTriangleConnectivity : public AbstractFilter
     GenerateNodeTriangleConnectivity();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
 //   int32_t* m_SurfaceMeshUniqueEdges;

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -82,16 +82,16 @@ void DataFormatPage::setupGui()
   registerField("startRow", startRowSpin);
 
   QStringList dataTypes;
-  dataTypes.push_back(DREAM3D::TypeNames::Double);
-  dataTypes.push_back(DREAM3D::TypeNames::Float);
-  dataTypes.push_back(DREAM3D::TypeNames::Int8);
-  dataTypes.push_back(DREAM3D::TypeNames::Int16);
-  dataTypes.push_back(DREAM3D::TypeNames::Int32);
-  dataTypes.push_back(DREAM3D::TypeNames::Int64);
-  dataTypes.push_back(DREAM3D::TypeNames::UInt8);
-  dataTypes.push_back(DREAM3D::TypeNames::UInt16);
-  dataTypes.push_back(DREAM3D::TypeNames::UInt32);
-  dataTypes.push_back(DREAM3D::TypeNames::UInt64);
+  dataTypes.push_back(SIMPL::TypeNames::Double);
+  dataTypes.push_back(SIMPL::TypeNames::Float);
+  dataTypes.push_back(SIMPL::TypeNames::Int8);
+  dataTypes.push_back(SIMPL::TypeNames::Int16);
+  dataTypes.push_back(SIMPL::TypeNames::Int32);
+  dataTypes.push_back(SIMPL::TypeNames::Int64);
+  dataTypes.push_back(SIMPL::TypeNames::UInt8);
+  dataTypes.push_back(SIMPL::TypeNames::UInt16);
+  dataTypes.push_back(SIMPL::TypeNames::UInt32);
+  dataTypes.push_back(SIMPL::TypeNames::UInt64);
   dataTypeCB->addItems(dataTypes);
   dataTypeCB->setCurrentIndex(0);
 
@@ -115,7 +115,6 @@ void DataFormatPage::setupGui()
 // -----------------------------------------------------------------------------
 void DataFormatPage::showEvent(QShowEvent* event)
 {
-  bool isFixedWidth = field("isFixedWidth").toBool();
   bool tabAsDelimiter = field("tabAsDelimiter").toBool();
   bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
   bool commaAsDelimiter = field("commaAsDelimiter").toBool();
@@ -127,7 +126,7 @@ void DataFormatPage::showEvent(QShowEvent* event)
 
   QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, isFixedWidth, consecutiveDelimiters);
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 
   for (int i = 0; i < model->columnCount(); i++)
@@ -158,7 +157,6 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
 
   tupleCountLabel->setText(QString::number(m_NumLines - value + 1));
 
-  bool isFixedWidth = field("isFixedWidth").toBool();
   bool tabAsDelimiter = field("tabAsDelimiter").toBool();
   bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
   bool commaAsDelimiter = field("commaAsDelimiter").toBool();
@@ -170,7 +168,7 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
 
   QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, isFixedWidth, consecutiveDelimiters);
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 
   // Re-check the tuple dimensions
@@ -237,7 +235,6 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
   QStringList list;
   list.push_back(line);
 
-  bool isFixedWidth = field("isFixedWidth").toBool();
   bool tabAsDelimiter = field("tabAsDelimiter").toBool();
   bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
   bool commaAsDelimiter = field("commaAsDelimiter").toBool();
@@ -246,7 +243,7 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
 
   QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
 
-  QList<QStringList> result = ImportASCIIDataWizard::TokenizeLines(list, delimiters, isFixedWidth, consecutiveDelimiters);
+  QList<QStringList> result = ImportASCIIDataWizard::TokenizeLines(list, delimiters, consecutiveDelimiters);
 
   QStringList tokenizedLine = result[0];
 
@@ -419,7 +416,6 @@ void DataFormatPage::refreshModel()
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   model->clear();
 
-  bool isFixedWidth = field("isFixedWidth").toBool();
   bool tabAsDelimiter = field("tabAsDelimiter").toBool();
   bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
   bool commaAsDelimiter = field("commaAsDelimiter").toBool();
@@ -432,7 +428,7 @@ void DataFormatPage::refreshModel()
 
   QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, isFixedWidth, consecutiveDelimiters);
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 
   // Refresh the headers

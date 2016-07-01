@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -57,7 +57,7 @@
 IdentifySample::IdentifySample() :
   AbstractFilter(),
   m_FillHoles(false),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
   m_GoodVoxels(NULL)
 {
   setupFilterParameters();
@@ -78,7 +78,7 @@ void IdentifySample::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Fill Holes in Largest Feature", "FillHoles", getFillHoles(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -106,6 +106,14 @@ int IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer
   SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IdentifySample::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -150,22 +158,18 @@ void IdentifySample::execute()
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
-  DimType xp = dims[0];
-  DimType yp = dims[1];
-  DimType zp = dims[2];
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t xp = dims[0];
+  int64_t yp = dims[1];
+  int64_t zp = dims[2];
 
   neighpoints[0] = -(xp * yp);
   neighpoints[1] = -xp;
@@ -180,7 +184,7 @@ void IdentifySample::execute()
   size_t count = 0;
   int32_t good = 0;
   int64_t neighbor = 0;
-  DimType column = 0, row = 0, plane = 0;
+  int64_t column = 0, row = 0, plane = 0;
   int64_t index = 0;
 
   // In this loop over the data we are finding the biggest contiguous set of GoodVoxels and calling that the 'sample'  All GoodVoxels that do not touch the 'sample'
@@ -333,13 +337,13 @@ const QString IdentifySample::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString IdentifySample::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString IdentifySample::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CleanupFilters; }
+{ return SIMPL::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //

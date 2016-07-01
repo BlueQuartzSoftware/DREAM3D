@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -58,16 +58,16 @@ AlignSectionsMisorientation::AlignSectionsMisorientation() :
   AlignSections(),
   m_MisorientationTolerance(5.0f),
   m_UseGoodVoxels(true),
-  m_QuatsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
+  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
   m_Quats(NULL),
   m_CellPhases(NULL),
   m_GoodVoxels(NULL),
   m_CrystalStructures(NULL)
 {
-  Seed = QDateTime::currentMSecsSinceEpoch();
+  m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
 
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -94,20 +94,20 @@ void AlignSectionsMisorientation::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -150,9 +150,18 @@ int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AlignSectionsMisorientation::initialize()
+{
+  m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());
@@ -219,16 +228,12 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   float disorientation = 0.0f;
@@ -238,32 +243,32 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
   int64_t oldxshift = 0;
   int64_t oldyshift = 0;
   float count = 0.0f;
-  DimType slice = 0;
+  int64_t slice = 0;
   float w = 0.0f;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   QuatF q1 = QuaternionMathF::New();
   QuatF q2 = QuaternionMathF::New();
-  DimType refposition = 0;
-  DimType curposition = 0;
+  int64_t refposition = 0;
+  int64_t curposition = 0;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   uint32_t phase1 = 0, phase2 = 0;
-  DimType progInt = 0;
+  int64_t progInt = 0;
 
   // Allocate a 2D Array which will be reused from slice to slice
   BoolArrayType::Pointer misorientsPtr = BoolArrayType::CreateArray(dims[0] * dims[1], "_INTERNAL_USE_ONLY_Misorients");
   misorientsPtr->initializeWithValue(false);
   bool* misorients = misorientsPtr->getPointer(0); // Get the raw pointer to use in our calculations for speed.
 
-  DimType idx = 0; // This will be used to compute the index into the flat array
-  DimType xIdx = 0;
-  DimType yIdx = 0;
+  int64_t idx = 0; // This will be used to compute the index into the flat array
+  int64_t xIdx = 0;
+  int64_t yIdx = 0;
 
-  const DimType halfDim0 = static_cast<DimType>(dims[0] * 0.5f);
-  const DimType halfDim1 = static_cast<DimType>(dims[1] * 0.5f);
+  const int64_t halfDim0 = static_cast<int64_t>(dims[0] * 0.5f);
+  const int64_t halfDim1 = static_cast<int64_t>(dims[1] * 0.5f);
 
   // Loop over the Z Direction
-  for (DimType iter = 1; iter < dims[2]; iter++)
+  for (int64_t iter = 1; iter < dims[2]; iter++)
   {
     progInt = ((float)iter / dims[2]) * 100.0f;
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(progInt);
@@ -296,9 +301,9 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
           idx = (dims[0] * yIdx) + xIdx;
           if (misorients[idx] == false && llabs(k + oldxshift) < halfDim0 && llabs(j + oldyshift) < halfDim1)
           {
-            for (DimType l = 0; l < dims[1]; l = l + 4)
+            for (int64_t l = 0; l < dims[1]; l = l + 4)
             {
-              for (DimType n = 0; n < dims[0]; n = n + 4)
+              for (int64_t n = 0; n < dims[0]; n = n + 4)
               {
                 if ((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
@@ -423,13 +428,13 @@ const QString AlignSectionsMisorientation::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMisorientation::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMisorientation::getSubGroupName()
-{return DREAM3D::FilterSubGroups::AlignmentFilters;}
+{return SIMPL::FilterSubGroups::AlignmentFilters;}
 
 // -----------------------------------------------------------------------------
 //

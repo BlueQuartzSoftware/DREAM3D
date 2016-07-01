@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -53,7 +53,8 @@
 //
 // -----------------------------------------------------------------------------
 CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int64_t nring,
-    std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting,
+    std::vector<int64_t> triangleIds,
+    bool useNormalsForCurveFitting,
     DoubleArrayType::Pointer principleCurvature1,
     DoubleArrayType::Pointer principleCurvature2,
     DoubleArrayType::Pointer principleDirection1,

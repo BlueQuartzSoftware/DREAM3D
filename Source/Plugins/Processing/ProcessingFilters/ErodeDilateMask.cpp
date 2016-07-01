@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -63,7 +63,7 @@ ErodeDilateMask::ErodeDilateMask() :
   m_XDirOn(true),
   m_YDirOn(true),
   m_ZDirOn(true),
-  m_MaskArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
+  m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
   m_MaskCopy(NULL),
   m_Mask(NULL)
 {
@@ -102,7 +102,7 @@ void ErodeDilateMask::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -143,9 +143,18 @@ int ErodeDilateMask::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ErodeDilateMask::initialize()
+{
+  m_MaskCopy = nullptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ErodeDilateMask::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getMaskArrayPath().getDataContainerName());
 
@@ -193,16 +202,12 @@ void ErodeDilateMask::execute()
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   int32_t good = 1;
@@ -210,7 +215,7 @@ void ErodeDilateMask::execute()
   int64_t kstride = 0, jstride = 0;
   int64_t neighpoint = 0;
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -224,13 +229,13 @@ void ErodeDilateMask::execute()
     {
       m_MaskCopy[j] = m_Mask[j];
     }
-    for (DimType k = 0; k < dims[2]; k++)
+    for (int64_t k = 0; k < dims[2]; k++)
     {
       kstride = dims[0] * dims[1] * k;
-      for (DimType j = 0; j < dims[1]; j++)
+      for (int64_t j = 0; j < dims[1]; j++)
       {
         jstride = dims[0] * j;
-        for (DimType i = 0; i < dims[0]; i++)
+        for (int64_t i = 0; i < dims[0]; i++)
         {
           count = kstride + jstride + i;
           if (m_Mask[count] == false)
@@ -314,13 +319,13 @@ const QString ErodeDilateMask::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateMask::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateMask::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CleanupFilters; }
+{ return SIMPL::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //

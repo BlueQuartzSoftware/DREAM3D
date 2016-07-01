@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -236,7 +236,7 @@ ReplaceElementAttributesWithNeighborValues::ReplaceElementAttributesWithNeighbor
   AbstractFilter(),
   m_MinConfidence(0.1f),
   m_Loop(false),
-  m_ConfidenceIndexArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ConfidenceIndex),
+  m_ConfidenceIndexArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex),
   m_SelectedComparison(Detail::LessThan)
 {
   setupFilterParameters();
@@ -273,7 +273,7 @@ void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Comparison Array", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -288,6 +288,7 @@ void ReplaceElementAttributesWithNeighborValues::readFilterParameters(AbstractFi
   setConfidenceIndexArrayPath(reader->readDataArrayPath("ConfidenceIndexArrayPath", getConfidenceIndexArrayPath() ) );
   setMinConfidence( reader->readValue("MinConfidence", getMinConfidence()) );
   setLoop( reader->readValue("Loop", false) );
+  setSelectedComparison(reader->readValue("SelectedComparison", getSelectedComparison()));
   reader->closeFilterGroup();
 }
 
@@ -301,8 +302,17 @@ int ReplaceElementAttributesWithNeighborValues::writeFilterParameters(AbstractFi
   SIMPL_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(MinConfidence)
   SIMPL_FILTER_WRITE_PARAMETER(Loop)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedComparison)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReplaceElementAttributesWithNeighborValues::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -402,13 +412,13 @@ const QString ReplaceElementAttributesWithNeighborValues::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ReplaceElementAttributesWithNeighborValues::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReplaceElementAttributesWithNeighborValues::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CleanupFilters; }
+{ return SIMPL::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //

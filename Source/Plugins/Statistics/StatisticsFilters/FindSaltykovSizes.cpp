@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -57,8 +57,8 @@
 // -----------------------------------------------------------------------------
 FindSaltykovSizes::FindSaltykovSizes() :
   AbstractFilter(),
-  m_EquivalentDiametersArrayPath(DREAM3D::FeatureData::EquivalentDiameters),
-  m_SaltykovEquivalentDiametersArrayPath(DREAM3D::FeatureData::SaltykovEquivalentDiameters),
+  m_EquivalentDiametersArrayPath(SIMPL::FeatureData::EquivalentDiameters),
+  m_SaltykovEquivalentDiametersArrayPath(SIMPL::FeatureData::SaltykovEquivalentDiameters),
   m_EquivalentDiameters(NULL),
   m_SaltykovEquivalentDiameters(NULL)
 {
@@ -112,6 +112,14 @@ int FindSaltykovSizes::writeFilterParameters(AbstractFilterParametersWriter* wri
   SIMPL_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindSaltykovSizes::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -450,14 +458,14 @@ const QString FindSaltykovSizes::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindSaltykovSizes::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSaltykovSizes::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 
 // -----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,17 +34,22 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ImportASCIIDataWidget_H_
-#define _ImportASCIIDataWidget_H_
+#ifndef _importasciidatawidget_h_
+#define _importasciidatawidget_h_
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include <QtCore/QThread>
+
+#include <QtGui/QMovie>
+
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 #include "ui_ImportASCIIDataWidget.h"
 
-class QFSDropLabel;
+class QtSFSDropLabel;
 class ImportASCIIDataFilterParameter;
 class ImportASCIIDataWizard;
 class ImportASCIIData;
+class LineCounterObject;
 
 class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportASCIIDataWidget
 {
@@ -76,6 +81,9 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
     void on_editHeadersBtn_pressed();
     void on_removeFileBtn_pressed();
 
+    void lineCountDidFinish();
+    void updateProgress(double percentage);
+
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
@@ -86,9 +94,11 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
 
     ImportASCIIDataWizard*                            m_ImportWizard;
 
+    QString                                           m_FilePath;
     static QString                                    m_OpenDialogLastDirectory;
 
-    int                                               m_NumLines;
+    QThread*                                          m_WorkerThread;
+    LineCounterObject*                                m_LineCounter;
 
     ImportASCIIDataWidget(const ImportASCIIDataWidget&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIDataWidget&); // Operator '=' Not Implemented

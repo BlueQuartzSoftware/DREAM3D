@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -67,16 +67,16 @@
 // -----------------------------------------------------------------------------
 CAxisSegmentFeatures::CAxisSegmentFeatures() :
   SegmentFeatures(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName),
   m_MisorientationTolerance(5.0f),
   m_RandomizeFeatureIds(true),
   m_UseGoodVoxels(true),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_QuatsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
+  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
+  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_Quats(NULL),
   m_CellPhases(NULL),
   m_GoodVoxels(NULL),
@@ -86,7 +86,7 @@ CAxisSegmentFeatures::CAxisSegmentFeatures() :
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
-  misoTolerance = 0.0f;
+  m_MisoTolerance = 0.0f;
 
   setupFilterParameters();
 }
@@ -110,20 +110,20 @@ void CAxisSegmentFeatures::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -187,6 +187,14 @@ void CAxisSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::initialize()
+{
+  m_MisoTolerance = 0.0f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CAxisSegmentFeatures::dataCheck()
 {
   DataArrayPath tempPath;
@@ -202,7 +210,7 @@ void CAxisSegmentFeatures::dataCheck()
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -313,7 +321,7 @@ int64_t CAxisSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int64_t seed = -1;
   // start with the next voxel after the last seed
-  size_t randpoint = static_cast<size_t>(nextSeed) + 1;
+  size_t randpoint = static_cast<size_t>(nextSeed);
   while (seed == -1 && randpoint < totalPoints)
   {
     if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
@@ -381,7 +389,7 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
 
       w = ((c1[0] * c2[0]) + (c1[1] * c2[1]) + (c1[2] * c2[2]));
       w = acosf(w);
-      if (w <= misoTolerance || (SIMPLib::Constants::k_Pi - w) <= misoTolerance)
+      if (w <= m_MisoTolerance || (SIMPLib::Constants::k_Pi - w) <= m_MisoTolerance)
       {
         group = true;
         m_FeatureIds[neighborpoint] = gnum;
@@ -423,7 +431,7 @@ void CAxisSegmentFeatures::execute()
   updateFeatureInstancePointers();
 
   // Convert user defined tolerance to radians.
-  misoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;
@@ -494,13 +502,13 @@ const QString CAxisSegmentFeatures::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString CAxisSegmentFeatures::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CAxisSegmentFeatures::getSubGroupName()
-{return DREAM3D::FilterSubGroups::SegmentationFilters;}
+{return SIMPL::FilterSubGroups::SegmentationFilters;}
 
 // -----------------------------------------------------------------------------
 //

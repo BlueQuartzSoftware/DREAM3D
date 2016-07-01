@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -92,7 +92,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     if ( p->getPropertyName().compare("InputDataArrayPath") == 0 )
     {
       {
-        MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+        MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
         parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray, req);
       }
     }
@@ -166,6 +166,15 @@ int MultiEmmpmFilter::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MultiEmmpmFilter::initialize()
+{
+  m_PreviousMu.clear();
+  m_PreviousSigma.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MultiEmmpmFilter::dataCheck()
 {
   setErrorCondition(0);
@@ -220,7 +229,7 @@ void MultiEmmpmFilter::dataCheck()
 
   // Now create our output attributeMatrix which will contain all of our segmented images
   QVector<size_t> tDims = inAM->getTupleDimensions();
-  AttributeMatrix::Pointer outAM = getDataContainerArray()->getDataContainer(inputAMPath.getDataContainerName())->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer outAM = getDataContainerArray()->getDataContainer(inputAMPath.getDataContainerName())->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0 || NULL == outAM.get()) { return; }
 
   // Get the list of checked array names from the input data arrays list
@@ -276,6 +285,8 @@ void MultiEmmpmFilter::execute()
   setErrorCondition(0);
   dataCheck();
   if (getErrorCondition() < 0) { return; }
+  initialize();
+
 
   DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 
@@ -386,13 +397,13 @@ const QString MultiEmmpmFilter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString MultiEmmpmFilter::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MultiEmmpmFilter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SegmentationFilters; }
+{ return SIMPL::FilterSubGroups::SegmentationFilters; }
 
 // -----------------------------------------------------------------------------
 //

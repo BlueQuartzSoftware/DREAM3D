@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -60,13 +60,13 @@
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
-  m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
-  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
+  m_CellFeatureAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_SharedSurfaceAreaListArrayName(SIMPL::FeatureData::SharedSurfaceAreaList),
+  m_NeighborListArrayName(SIMPL::FeatureData::NeighborList),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells),
+  m_NumNeighborsArrayName(SIMPL::FeatureData::NumNeighbors),
+  m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures),
   m_StoreBoundaryCells(false),
   m_StoreSurfaceFeatures(false),
   m_FeatureIds(NULL),
@@ -100,12 +100,12 @@ void FindNeighbors::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Store Surface Features Array", "StoreSurfaceFeatures", getStoreSurfaceFeatures(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -160,9 +160,19 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindNeighbors::initialize()
+{
+  m_NeighborList = NeighborList<int32_t>::NullPointer();
+  m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindNeighbors::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -235,19 +245,15 @@ void FindNeighbors::execute()
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -255,12 +261,12 @@ void FindNeighbors::execute()
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0] * dims[1];
 
-  DimType column = 0, row = 0, plane = 0;
+  int64_t column = 0, row = 0, plane = 0;
   int32_t feature = 0;
   int32_t nnum = 0;
   int8_t onsurf = 0;
   bool good = false;
-  DimType neighbor = 0;
+  int64_t neighbor = 0;
 
   std::vector<std::vector<int32_t> > neighborlist;
   std::vector<std::vector<float> > neighborsurfacearealist;
@@ -307,19 +313,19 @@ void FindNeighbors::execute()
     feature = m_FeatureIds[j];
     if (feature > 0)
     {
-      column = static_cast<DimType>( j % m->getGeometryAs<ImageGeom>()->getXPoints() );
-      row = static_cast<DimType>( (j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints() );
-      plane = static_cast<DimType>( j / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) );
+      column = static_cast<int64_t>( j % m->getGeometryAs<ImageGeom>()->getXPoints() );
+      row = static_cast<int64_t>( (j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints() );
+      plane = static_cast<int64_t>( j / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) );
       if (m_StoreSurfaceFeatures == true)
       {
-        if ((column == 0 || column == DimType((m->getGeometryAs<ImageGeom>()->getXPoints() - 1))
-             || row == 0 || row == DimType((m->getGeometryAs<ImageGeom>()->getYPoints()) - 1)
-             || plane == 0 || plane == DimType((m->getGeometryAs<ImageGeom>()->getZPoints() - 1)))
+        if ((column == 0 || column == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getXPoints() - 1))
+             || row == 0 || row == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getYPoints()) - 1)
+             || plane == 0 || plane == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getZPoints() - 1)))
             && m->getGeometryAs<ImageGeom>()->getZPoints() != 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
-        if ((column == 0 || column == DimType((m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) || row == 0 || row == DimType((m->getGeometryAs<ImageGeom>()->getYPoints() - 1))) && m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+        if ((column == 0 || column == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) || row == 0 || row == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getYPoints() - 1))) && m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
@@ -327,7 +333,7 @@ void FindNeighbors::execute()
       for (int32_t k = 0; k < 6; k++)
       {
         good = true;
-        neighbor = static_cast<DimType>( j + neighpoints[k] );
+        neighbor = static_cast<int64_t>( j + neighpoints[k] );
         if (k == 0 && plane == 0) { good = false; }
         if (k == 5 && plane == (m->getGeometryAs<ImageGeom>()->getZPoints() - 1)) { good = false; }
         if (k == 1 && row == 0) { good = false; }
@@ -446,13 +452,13 @@ const QString FindNeighbors::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighbors::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighbors::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 // -----------------------------------------------------------------------------
 //

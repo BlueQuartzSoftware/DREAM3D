@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _MergeTwins_H_
-#define _MergeTwins_H_
+#ifndef _mergetwins_h_
+#define _mergetwins_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -44,6 +44,9 @@
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
+
+#include "EbsdLib/EbsdConstants.h"
+
 
 /**
  * @brief The MergeTwins class. See [Filter documentation](@ref mergetwins) for details.
@@ -156,11 +159,16 @@ class MergeTwins : public GroupFeatures
 
   protected:
     MergeTwins();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief getSeed Reimplemented from @see GroupFeatures class
@@ -189,7 +197,7 @@ class MergeTwins : public GroupFeatures
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    float axisTolerance;
+    float m_AxisToleranceRad;
 
     /**
      * @brief updateFeatureInstancePointers Updates raw Feature pointers

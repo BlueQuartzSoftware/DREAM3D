@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GenericConstants_H_
-#define _GenericConstants_H_
+#ifndef _genericconstants_h_
+#define _genericconstants_h_
 
 #include <QtCore/QString>
 
@@ -58,4 +58,12 @@ namespace FilterParameterWidgetType
   /*  const QString SomeCustomWidget("SomeCustomWidget"); */
 
 }
+
+namespace BlueQuartz
+{
+  const QString VendorName("BlueQuartz Software, LLC");
+  const QString URL("http://www.bluequartz.net");
+  const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
+}
+
 #endif

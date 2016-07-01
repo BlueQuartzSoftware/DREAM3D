@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -68,7 +68,7 @@
 // -----------------------------------------------------------------------------
 EMMPMFilter::EMMPMFilter() :
   AbstractFilter(),
-  m_InputDataArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
+  m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData),
   m_NumClasses(4),
   m_ExchangeEnergy(0.5f),
   m_HistogramLoops(5),
@@ -112,12 +112,12 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("EM Loop Delay", "EMLoopDelay", getEMLoopDelay(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Input Attribute Array", "InputDataArrayPath", getInputDataArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArrayCreationFilterParameter::New("Output Attribute Array", "OutputDataArrayPath", getOutputDataArrayPath(), FilterParameter::CreatedArray, req));
   }
   setFilterParameters(parameters);
@@ -167,6 +167,15 @@ int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   SIMPL_FILTER_WRITE_PARAMETER(OutputDataArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EMMPMFilter::initialize()
+{
+  m_PreviousMu.clear();
+  m_PreviousSigma.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -223,6 +232,7 @@ void EMMPMFilter::execute()
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
+  initialize();
 
   // This is the routine that sets up the EM/MPM to segment the image
   segment(getEmmpmInitType());
@@ -398,13 +408,13 @@ const QString EMMPMFilter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SegmentationFilters; }
+{ return SIMPL::FilterSubGroups::SegmentationFilters; }
 
 // -----------------------------------------------------------------------------
 //

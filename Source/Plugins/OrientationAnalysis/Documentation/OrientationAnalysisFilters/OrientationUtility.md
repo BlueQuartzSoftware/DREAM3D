@@ -5,7 +5,7 @@ OrientationUtility {#orientationutility}
 OrientationAnalysis (Utilities)
 
 ## Description ##
-This **Filter** is a **Utility** that allows the user to compute alternate representations of orientation based on a single representation. The supported representations are:
+This **Filter** is a **Utility** that allows the user to compute alternate representations of an orientation based on a another representation. The supported representations are:
 
 + Euler Angles
 + Axis Angle
@@ -15,7 +15,7 @@ This **Filter** is a **Utility** that allows the user to compute alternate repre
 + Quaternion
 + Rodrigues
 
-To use the utility, simply drag the filter into the pipeline area and start entering values for a representation. The other representations will be instantly calculated as shown in figure 1 below.
+To use the utility, simply drag the filter into the pipeline area and start entering values for a representation. The other representations will be instantly calculated as shown in figure 1 below. **The Axis-Angle and Rodrigues vectors are automatically normalized for the user.**
 
 ![Figure 1: Orientation Utility where the user has entered an Axis-Angle representation.](images/OrientationUtility_1.png)
 

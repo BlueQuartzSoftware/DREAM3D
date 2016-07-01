@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -149,7 +149,7 @@ void RotateEulerRefFrame::setupFilterParameters()
   parameters.push_back(FloatVec3FilterParameter::New("Rotation Axis (ijk)", "RotationAxis", getRotationAxis(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -179,6 +179,14 @@ int RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* w
   SIMPL_FILTER_WRITE_PARAMETER(RotationAngle)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RotateEulerRefFrame::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -287,13 +295,13 @@ const QString RotateEulerRefFrame::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getGroupName()
-{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
+{ return SIMPL::FilterGroups::OrientationAnalysisFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConversionFilters; }
+{ return SIMPL::FilterSubGroups::ConversionFilters; }
 
 // -----------------------------------------------------------------------------
 //

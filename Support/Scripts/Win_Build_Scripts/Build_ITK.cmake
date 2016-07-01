@@ -53,9 +53,9 @@ function(InitializeCacheFile)
 
   set(cacheFile "${SDK_INSTALL}/ITK-${ITK_VERSION}/CMakeCache.txt")
   FILE(WRITE ${cacheFile} "")
+  FILE(APPEND ${cacheFile} "CMAKE_MODULE_PATH:LIST=${SDK_INSTALL}/${I_HDF_INSTALL}/cmake\n")
   FILE(APPEND ${cacheFile} "CMAKE_CXX_FLAGS:STRING=/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MP\n")
   FILE(APPEND ${cacheFile} "BUILD_DOCUMENTATION:BOOL=OFF\n")
-  FILE(APPEND ${cacheFile} "ITK_USE_SYSTEM_HDF5:BOOL=ON\n")
   FILE(APPEND ${cacheFile} "BUILD_EXAMPLES:BOOL=OFF\n")
   FILE(APPEND ${cacheFile} "BUILD_SHARED_LIBS:BOOL=ON\n")
   FILE(APPEND ${cacheFile} "BUILD_TESTING:BOOL=OFF\n")
@@ -65,17 +65,20 @@ function(InitializeCacheFile)
   FILE(APPEND ${cacheFile} "DITK_LEGACY_REMOVE:BOOL=ON\n")
   FILE(APPEND ${cacheFile} "KWSYS_USE_MD5:BOOL=ON\n")
   FILE(APPEND ${cacheFile} "Module_ITKReview:BOOL=ON\n")
-  FILE(APPEND ${cacheFile} "ITK_BUILD_DEFAULT_MODULES=OFF\n")
-  FILE(APPEND ${cacheFile} "ITKGroup_Core=ON\n")
-  FILE(APPEND ${cacheFile} "ITKGroup_Filtering=ON\n")
-  FILE(APPEND ${cacheFile} "ITKGroup_Registration=ON\n")
-  FILE(APPEND ${cacheFile} "ITKGroup_Segmentation=ON\n")
-  FILE(APPEND ${cacheFile} "ITK_USE_SYSTEM_HDF5=ON\n")
+  FILE(APPEND ${cacheFile} "ITK_BUILD_DEFAULT_MODULES:BOOL=OFF\n")
+  FILE(APPEND ${cacheFile} "ITKGroup_Core:BOOL=ON\n")
+  FILE(APPEND ${cacheFile} "ITKGroup_Filtering:BOOL=ON\n")
+  FILE(APPEND ${cacheFile} "ITKGroup_Registration:BOOL=ON\n")
+  FILE(APPEND ${cacheFile} "ITKGroup_Segmentation:BOOL=ON\n")
+  FILE(APPEND ${cacheFile} "ITK_USE_SYSTEM_HDF5:BOOL=ON\n")
   if(NOT WIN32)
     FILE(APPEND ${cacheFile} "CMAKE_SKIP_INSTALL_RPATH=ON\n")
     FILE(APPEND ${cacheFile} "CMAKE_SKIP_RPATH=ON\n")
   endif()
 
+
+  FILE(APPEND ${cacheFile} "HDF5_INCLUDE_DIRS:PATH=${SDK_INSTALL}/${I_HDF_INSTALL}/include\n")
+  FILE(APPEND ${cacheFile} "HDF5_INCLUDE_DIR_CPP:PATH=${SDK_INSTALL}/${I_HDF_INSTALL}/include\n")
   FILE(APPEND ${cacheFile} "HDF5_CXX_COMPILER_EXECUTABLE:FILEPATH=HDF5_CXX_COMPILER_EXECUTABLE-NOTFOUND\n")
   FILE(APPEND ${cacheFile} "HDF5_CXX_INCLUDE_DIR:PATH=${SDK_INSTALL}/${I_HDF_INSTALL}/include\n")
   FILE(APPEND ${cacheFile} "HDF5_CXX_LIBRARY:PATH=debug;${SDK_INSTALL}/${I_HDF_INSTALL}/lib/hdf5_cpp${DEBUG_PREFIX}.lib;optimized;${SDK_INSTALL}/${I_HDF_INSTALL}/lib/hdf5_cpp.lib\n")
@@ -84,8 +87,10 @@ function(InitializeCacheFile)
   FILE(APPEND ${cacheFile} "HDF5_C_LIBRARY:PATH=debug;${SDK_INSTALL}/${I_HDF_INSTALL}/lib/hdf5${DEBUG_PREFIX}.lib;optimized;${SDK_INSTALL}/${I_HDF_INSTALL}/lib/hdf5.lib\n")
   FILE(APPEND ${cacheFile} "HDF5_DIFF_EXECUTABLE:FILEPATH=${SDK_INSTALL}/${I_HDF_INSTALL}/bin/h5dlldiff.exe\n")
   FILE(APPEND ${cacheFile} "HDF5_DIR:PATH=${SDK_INSTALL}/${I_HDF_INSTALL}/cmake\n")
+  FILE(APPEND ${cacheFile} "HDF5_ROOT_DIR:PATH=${SDK_INSTALL}/${I_HDF_INSTALL}/cmake\n")
   FILE(APPEND ${cacheFile} "HDF5_Fortran_COMPILER_EXECUTABLE:FILEPATH=HDF5_Fortran_COMPILER_EXECUTABLE-NOTFOUND\n")
   FILE(APPEND ${cacheFile} "HDF5_IS_PARALLEL:BOOL=OFF\n")
+  FILE(APPEND ${cacheFile} "HDF5_LIBRARIES:PATH=debug;${SDK_INSTALL}/${I_HDF_INSTALL}/lib/hdf5${DEBUG_PREFIX}.lib;${SDK_INSTALL}/${I_HDF_INSTALL}/lib/hdf5_cpp${DEBUG_PREFIX}.lib;optimized;${SDK_INSTALL}/${I_HDF_INSTALL}/lib/hdf5.lib;${SDK_INSTALL}/${I_HDF_INSTALL}/lib/hdf5_cpp.lib\n")
 
   set(upper "DEBUG")
   FILE(APPEND ${cacheFile} "HDF5_hdf5_LIBRARY_${upper}:FILEPATH=${SDK_INSTALL}/${I_HDF_INSTALL}/bin/hdf5${DEBUG_PREFIX}.dll\n")
@@ -97,13 +102,15 @@ function(InitializeCacheFile)
 
 endfunction()
 
+
+
 #------------------------------------------------------------------------------
 # Init our Cache file
 InitializeCacheFile (HDF_INSTALL hdf5-${HDFVERSION})
 
 #------------------------------------------------------------------------------
 # Have CMake generate our Visual Studio Project
-execute_process(COMMAND ${CMAKE_COMMAND} -G "Visual Studio 12 2013 Win64" "${SDK_INSTALL}/${itkArchiveName}"
+execute_process(COMMAND ${CMAKE_COMMAND} -G "Visual Studio 12 2013 Win64" "${SDK_INSTALL}/${itkArchiveName}" 
                   WORKING_DIRECTORY "${SDK_INSTALL}/ITK-${ITK_VERSION}")
 
 #------------------------------------------------------------------------------

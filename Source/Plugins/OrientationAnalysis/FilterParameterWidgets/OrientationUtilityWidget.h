@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _OrientationUtilityWidget_H_
-#define _OrientationUtilityWidget_H_
+#ifndef _orientationutilitywidget_h_
+#define _orientationutilitywidget_h_
 
 
 #include <QtCore/QString>
@@ -44,7 +44,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QUrl>
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 #include "ui_OrientationUtilityWidget.h"
 

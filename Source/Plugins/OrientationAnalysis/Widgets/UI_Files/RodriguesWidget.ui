@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>629</width>
+    <width>676</width>
     <height>51</height>
    </rect>
   </property>
@@ -16,14 +16,8 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="label_32">
-     <property name="styleSheet">
-      <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-     </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Rodrigues:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>Rodrigues Vector</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -68,28 +62,6 @@ font-size: 11px;
      </property>
     </widget>
    </item>
-   <item row="0" column="7">
-    <widget class="QLineEdit" name="r4">
-     <property name="minimumSize">
-      <size>
-       <width>118</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string/>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="3">
     <widget class="QLineEdit" name="r2">
      <property name="minimumSize">
@@ -130,13 +102,31 @@ font-size: 11px;
      </property>
     </widget>
    </item>
+   <item row="0" column="7">
+    <widget class="QLineEdit" name="r4">
+     <property name="minimumSize">
+      <size>
+       <width>118</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>r1</tabstop>
   <tabstop>r2</tabstop>
   <tabstop>r3</tabstop>
-  <tabstop>r4</tabstop>
  </tabstops>
  <resources/>
  <connections/>

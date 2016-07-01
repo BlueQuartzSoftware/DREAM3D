@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SineParamsSegmentFeatures_H_
-#define _SineParamsSegmentFeatures_H_
+#ifndef _sineparamssegmentfeatures_h_
+#define _sineparamssegmentfeatures_h_
 
 #include <QtCore/QString>
 
@@ -161,11 +161,16 @@ class SineParamsSegmentFeatures : public SegmentFeatures
     virtual void preflight();
   protected:
     SineParamsSegmentFeatures();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
     virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
@@ -204,7 +209,7 @@ class SineParamsSegmentFeatures : public SegmentFeatures
      */
     void updateFeatureInstancePointers();
 
-    bool missingGoodVoxels;
+    bool m_MissingGoodVoxels;
 
     SineParamsSegmentFeatures(const SineParamsSegmentFeatures&); // Copy Constructor Not Implemented
     void operator=(const SineParamsSegmentFeatures&); // Operator '=' Not Implemented

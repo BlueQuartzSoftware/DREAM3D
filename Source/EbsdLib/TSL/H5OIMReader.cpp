@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -126,6 +126,8 @@ int H5OIMReader::readFile()
     QString str;
     QTextStream ss(&str);
     ss << "H5OIMReader Error: Could not open HDF5 file '" << getFileName() << "'";
+    setErrorCode(-2);
+    setErrorMessage(str);
     return err;
   }
 
@@ -174,7 +176,7 @@ int H5OIMReader::readFile()
   {
     QString str;
     QTextStream ss(&str);
-    ss << "H5OIMReader Error: could not read data";
+    ss << "H5OIMReader Error: could not read data. Internal Error code " << err << " generated.";
     err = QH5Utilities::closeFile(fileId);
     setErrorCode(-900022);
     setErrorMessage(str);

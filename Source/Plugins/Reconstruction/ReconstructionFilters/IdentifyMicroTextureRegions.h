@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _IdentifyMicroTextureRegions_H_
-#define _IdentifyMicroTextureRegions_H_
+#ifndef _identifymicrotextureregions_h_
+#define _identifymicrotextureregions_h_
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
@@ -180,11 +180,16 @@ class IdentifyMicroTextureRegions : public AbstractFilter
 
   protected:
     IdentifyMicroTextureRegions();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     DEFINE_DATAARRAY_VARIABLE(float, CAxisLocations)
@@ -204,7 +209,7 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     std::shared_ptr<Generator> m_NumberGenerator;
     size_t                       m_TotalRandomNumbersGenerated;
 
-    float caxisTolerance;
+    float m_CAxisToleranceRad;
 
     /**
      * @brief randomizeGrainIds Randomizes Feature Ids

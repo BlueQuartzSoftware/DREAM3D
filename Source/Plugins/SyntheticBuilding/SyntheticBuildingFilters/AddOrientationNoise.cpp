@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -80,7 +80,7 @@ void AddOrientationNoise::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Magnitude of Orientation Noise (Degrees)", "Magnitude", getMagnitude(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -107,6 +107,14 @@ int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* w
   SIMPL_FILTER_WRITE_PARAMETER(Magnitude)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddOrientationNoise::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -235,13 +243,13 @@ const QString AddOrientationNoise::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AddOrientationNoise::getGroupName()
-{ return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+{ return SIMPL::FilterGroups::SyntheticBuildingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AddOrientationNoise::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+{ return SIMPL::FilterSubGroups::CrystallographyFilters; }
 
 // -----------------------------------------------------------------------------
 //

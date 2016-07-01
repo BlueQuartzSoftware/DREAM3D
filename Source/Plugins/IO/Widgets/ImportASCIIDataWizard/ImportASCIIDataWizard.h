@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ImportASCIIDataWizard_H_
-#define _ImportASCIIDataWizard_H_
+#ifndef _importasciidatawizard_h_
+#define _importasciidatawizard_h_
 
 #include <QtWidgets/QWizard>
 
@@ -59,7 +59,6 @@ class ImportASCIIDataWizard : public QWizard
   public:
     enum WizardPages
     {
-      DelimitedOrFixedWidth,
       Delimited,
       DataFormat
     };
@@ -104,22 +103,20 @@ class ImportASCIIDataWizard : public QWizard
     static void LoadOriginalLines(QStringList lines);
 
     /**
-    * @brief Static function that will split the lines argument into a list of tokens based on delimiter and fixed width settings from the wizard
+    * @brief Static function that will split the lines argument into a list of tokens based on delimiter settings from the wizard
     * @param lines The lines to tokenize
     * @param delimiters List of delimiters
-    * @param isFixedWidth Boolean that identifies if the fixed width radio button is checked or not.
     * @param consecutiveDelimiters Boolean that identifies if the consecutive delimiters checkbox is checked or not.
     */
-    static QList<QStringList> TokenizeLines(QStringList lines, QList<char> delimiters, bool isFixedWidth, bool consecutiveDelimiters);
+    static QList<QStringList> TokenizeLines(QStringList lines, QList<char> delimiters, bool consecutiveDelimiters);
 
     /**
-    * @brief Static function that will split the line argument into a list of tokens based on delimiter and fixed width settings from the wizard
+    * @brief Static function that will split the line argument into a list of tokens based on delimiter settings from the wizard
     * @param line The line to tokenize
     * @param delimiters List of delimiters
-    * @param isFixedWidth Boolean that identifies if the fixed width radio button is checked or not.
     * @param consecutiveDelimiters Boolean that identifies if the consecutive delimiters checkbox is checked or not.
     */
-    static QStringList TokenizeLine(QString line, QList<char> delimiters, bool isFixedWidth, bool consecutiveDelimiters);
+    static QStringList TokenizeLine(QString line, QList<char> delimiters, bool consecutiveDelimiters);
 
     /**
     * @brief Static function that will insert the tokenized lines into the preview table.
@@ -137,7 +134,6 @@ class ImportASCIIDataWizard : public QWizard
 
     QList<char> getDelimiters();
     bool getConsecutiveDelimiters();
-    bool getHasFixedWidth();
     QStringList getHeaders();
     QStringList getDataTypes();
     int getBeginningLineNum();

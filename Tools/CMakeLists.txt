@@ -66,6 +66,20 @@ ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
 configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
                 ${DREAM3DTools_BINARY_DIR}/ToolConfiguration.h)
 
+include_directories(${DREAM3DTest_BINARY_DIR})
+include_directories(${SIMPLProj_SOURCE_DIR}/Source)
+include_directories(${SIMPLProj_BINARY_DIR})
+include_directories(${SIMPLViewProj_BINARY_DIR})
+include_directories(${SIMPLViewProj_BINARY_DIR}/Applications/SIMPLView)
+
+# ---------- Find HDF5 Headers/Libraries -----------------------
+# HDF5 now comes with everything that is needed for CMake to load
+# up the targets (Exported) that it needs. We just need to find where
+# HDF5 is installed.
+include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
+include_directories(${HDF5_INCLUDE_DIRS}) # Covers 1.8.15
+include_directories(${HDF5_INCLUDE_DIR}) # Covers 1.8.16
+
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
 # simple command line tools that just need one or two source files
@@ -92,24 +106,10 @@ function(COMPILE_TOOL)
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMPONENT     ${D3DTOOL_COMPONENT}
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
-        SOLUTION_FOLDER "Applications"
+        SOLUTION_FOLDER "Tools"
     )
 
 endfunction()
-
-# Create a Command line tool for the PipelineRunner
-COMPILE_TOOL(
-    TARGET PipelineRunner
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/PipelineRunner.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Tools
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES EbsdLib SIMPLib
-)
 
 
 # Create a Command line tool for the FilterParameterTool
@@ -145,12 +145,12 @@ OPTION (DREAM3D_BUILD_VERSION_FILE "Generate dream3d_version.json for the webser
 if(${DREAM3D_BUILD_VERSION_FILE})
   COMPILE_TOOL(
       TARGET CreateWebServerJson
-      SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp
+      SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp ${SIMPLView_VERSION_SRC_FILE}
       DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
       VERSION_MAJOR ${DREAM3D_VER_MAJOR}
       VERSION_MINOR ${DREAM3D_VER_MINOR}
       VERSION_PATCH ${DREAM3D_VER_PATCH}
       BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-      LINK_LIBRARIES hdf5 Qt5::Core H5Support SIMPLib
+      LINK_LIBRARIES SIMPLib
   )
 endif()

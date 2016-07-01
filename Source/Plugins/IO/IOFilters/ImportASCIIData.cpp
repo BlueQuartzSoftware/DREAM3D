@@ -78,13 +78,12 @@ void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reade
   data.dataHeaders = reader->readStringList(prefix + "DataHeaders", QStringList());
   data.dataTypes = reader->readStringList(prefix + "DataTypes", QStringList());
   data.inputFilePath = reader->readString(prefix + "InputFilePath", "");
-  data.isFixedWidth = reader->readValue(prefix + "IsFixedWidth", false);
   data.numberOfLines = reader->readValue(prefix + "NumberOfLines", -1);
 
   QVector<uint64_t> tmpVec;
   QVector<size_t> tDims;
   tmpVec = reader->readArray(prefix + "TupleDims", QVector<uint64_t>());
-  for (int i = 0; i < tmpVec.size(); i++) 
+  for (int i = 0; i < tmpVec.size(); i++)
   {
     tDims.push_back(static_cast<size_t>(tmpVec[i]));
   }
@@ -117,7 +116,6 @@ int ImportASCIIData::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->writeValue(prefix + "DataHeaders", m_WizardData.dataHeaders);
   writer->writeValue(prefix + "DataTypes", m_WizardData.dataTypes);
   writer->writeValue(prefix + "InputFilePath", m_WizardData.inputFilePath);
-  writer->writeValue(prefix + "IsFixedWidth", m_WizardData.isFixedWidth);
   writer->writeValue(prefix + "NumberOfLines", m_WizardData.numberOfLines);
   QVector<uint64_t> tDims;
   QVector<size_t> tmpVec = m_WizardData.tupleDims;
@@ -133,6 +131,14 @@ int ImportASCIIData::writeFilterParameters(AbstractFilterParametersWriter* write
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportASCIIData::initialize()
+{
+  m_ASCIIArrayMap.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -155,8 +161,6 @@ void ImportASCIIData::dataCheck()
   QString inputFilePath = wizardData.inputFilePath;
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
-//  int numLines = wizardData.numberOfLines;
-//  int beginIndex = wizardData.beginIndex;
   QVector<size_t> tDims = wizardData.tupleDims;
   QVector<size_t> cDims(1, 1);
 
@@ -205,52 +209,52 @@ void ImportASCIIData::dataCheck()
     DataArrayPath arrayPath = m_AttributeMatrixPath;
     arrayPath.setDataArrayName(name);
 
-    if (dataType == DREAM3D::TypeNames::Double)
+    if (dataType == SIMPL::TypeNames::Double)
     {
       DoubleArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Float)
+    else if (dataType == SIMPL::TypeNames::Float)
     {
       FloatArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Int8)
+    else if (dataType == SIMPL::TypeNames::Int8)
     {
       Int8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int8ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Int16)
+    else if (dataType == SIMPL::TypeNames::Int16)
     {
       Int16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int16ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Int32)
+    else if (dataType == SIMPL::TypeNames::Int32)
     {
       Int32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Int64)
+    else if (dataType == SIMPL::TypeNames::Int64)
     {
       Int64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int64ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt8)
+    else if (dataType == SIMPL::TypeNames::UInt8)
     {
       UInt8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt16)
+    else if (dataType == SIMPL::TypeNames::UInt16)
     {
       UInt16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt16ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt32)
+    else if (dataType == SIMPL::TypeNames::UInt32)
     {
       UInt32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt64)
+    else if (dataType == SIMPL::TypeNames::UInt64)
     {
       UInt64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt64ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
@@ -278,6 +282,7 @@ void ImportASCIIData::preflight()
 void ImportASCIIData::execute()
 {
   setErrorCondition(0);
+  initialize();
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -286,7 +291,6 @@ void ImportASCIIData::execute()
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
   QList<char> delimiters = wizardData.delimiters;
-  bool isFixedWidth = wizardData.isFixedWidth;
   bool consecutiveDelimiters = wizardData.consecutiveDelimiters;
   int numLines = wizardData.numberOfLines;
   int beginIndex = wizardData.beginIndex;
@@ -300,61 +304,61 @@ void ImportASCIIData::execute()
     QString dataType = dataTypes[i];
     QString name = headers[i];
 
-    if (dataType == DREAM3D::TypeNames::Double)
+    if (dataType == SIMPL::TypeNames::Double)
     {
       DoubleArrayType::Pointer data = std::dynamic_pointer_cast<DoubleArrayType>(m_ASCIIArrayMap.value(i));
       DoubleParserType::Pointer parser = DoubleParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Float)
+    else if (dataType == SIMPL::TypeNames::Float)
     {
       FloatArrayType::Pointer data = std::dynamic_pointer_cast<FloatArrayType>(m_ASCIIArrayMap.value(i));
       FloatParserType::Pointer parser = FloatParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Int8)
+    else if (dataType == SIMPL::TypeNames::Int8)
     {
       Int8ArrayType::Pointer data = std::dynamic_pointer_cast<Int8ArrayType>(m_ASCIIArrayMap.value(i));
       Int8ParserType::Pointer parser = Int8ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Int16)
+    else if (dataType == SIMPL::TypeNames::Int16)
     {
       Int16ArrayType::Pointer data = std::dynamic_pointer_cast<Int16ArrayType>(m_ASCIIArrayMap.value(i));
       Int16ParserType::Pointer parser = Int16ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Int32)
+    else if (dataType == SIMPL::TypeNames::Int32)
     {
       Int32ArrayType::Pointer data = std::dynamic_pointer_cast<Int32ArrayType>(m_ASCIIArrayMap.value(i));
       Int32ParserType::Pointer parser = Int32ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Int64)
+    else if (dataType == SIMPL::TypeNames::Int64)
     {
       Int64ArrayType::Pointer data = std::dynamic_pointer_cast<Int64ArrayType>(m_ASCIIArrayMap.value(i));
       Int64ParserType::Pointer parser = Int64ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt8)
+    else if (dataType == SIMPL::TypeNames::UInt8)
     {
       UInt8ArrayType::Pointer data = std::dynamic_pointer_cast<UInt8ArrayType>(m_ASCIIArrayMap.value(i));
       UInt8ParserType::Pointer parser = UInt8ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt16)
+    else if (dataType == SIMPL::TypeNames::UInt16)
     {
       UInt16ArrayType::Pointer data = std::dynamic_pointer_cast<UInt16ArrayType>(m_ASCIIArrayMap.value(i));
       UInt16ParserType::Pointer parser = UInt16ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt32)
+    else if (dataType == SIMPL::TypeNames::UInt32)
     {
       UInt32ArrayType::Pointer data = std::dynamic_pointer_cast<UInt32ArrayType>(m_ASCIIArrayMap.value(i));
       UInt32ParserType::Pointer parser = UInt32ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt64)
+    else if (dataType == SIMPL::TypeNames::UInt64)
     {
       UInt64ArrayType::Pointer data = std::dynamic_pointer_cast<UInt64ArrayType>(m_ASCIIArrayMap.value(i));
       UInt64ParserType::Pointer parser = UInt64ParserType::New(data, name, i);
@@ -381,7 +385,7 @@ void ImportASCIIData::execute()
     for (int lineNum = beginIndex; lineNum <= numLines; lineNum++)
     {
       QString line = in.readLine();
-      QStringList tokens = ImportASCIIDataWizard::TokenizeLine(line, delimiters, isFixedWidth, consecutiveDelimiters);
+      QStringList tokens = ImportASCIIDataWizard::TokenizeLine(line, delimiters, consecutiveDelimiters);
 
       if (dataTypes.size() != tokens.size())
       {
@@ -455,13 +459,13 @@ const QString ImportASCIIData::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString ImportASCIIData::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportASCIIData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

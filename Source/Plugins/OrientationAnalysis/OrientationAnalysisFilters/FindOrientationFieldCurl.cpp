@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -121,10 +121,10 @@ class FindMisorientationVectorsImpl
 // -----------------------------------------------------------------------------
 FindOrientationFieldCurl::FindOrientationFieldCurl() :
   AbstractFilter(),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_QuatsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
-  m_DislocationTensorsArrayName(DREAM3D::CellData::DislocationTensors),
+  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
+  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
+  m_DislocationTensorsArrayName(SIMPL::CellData::DislocationTensors),
   m_CellPhases(NULL),
   m_DislocationTensors(NULL),
   m_Quats(NULL),
@@ -156,15 +156,15 @@ void FindOrientationFieldCurl::setupFilterParameters()
   parameters.push_back(IntVec3FilterParameter::New("Curl Radius (Pixels)", "CurlSize", getCurlSize(), FilterParameter::Parameter));
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 4, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 4, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Quats", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -199,6 +199,14 @@ int FindOrientationFieldCurl::writeFilterParameters(AbstractFilterParametersWrit
   SIMPL_FILTER_WRITE_PARAMETER(CurlSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindOrientationFieldCurl::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -327,21 +335,17 @@ void FindOrientationFieldCurl::execute()
 //  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType xPoints = static_cast<DimType>(udims[0]);
-  DimType yPoints = static_cast<DimType>(udims[1]);
-  DimType zPoints = static_cast<DimType>(udims[2]);
 
-  DimType point;
+  int64_t xPoints = static_cast<int64_t>(udims[0]);
+  int64_t yPoints = static_cast<int64_t>(udims[1]);
+  int64_t zPoints = static_cast<int64_t>(udims[2]);
+
+  int64_t point;
   size_t neighbor = 0;
-  DimType rowShift = xPoints;
-  DimType planeShift = xPoints * yPoints;
-  DimType rowStride;
-  DimType planeStride;
+  int64_t rowShift = xPoints;
+  int64_t planeShift = xPoints * yPoints;
+  int64_t rowStride;
+  int64_t planeStride;
 
   float kappa11 = 0;
   float kappa21 = 0;
@@ -352,13 +356,13 @@ void FindOrientationFieldCurl::execute()
   float kappa13 = 0;
   float kappa23 = 0;
   float kappa33 = 0;
-  for (DimType plane = 0; plane < zPoints; plane++)
+  for (int64_t plane = 0; plane < zPoints; plane++)
   {
     planeStride = plane * planeShift;
-    for (DimType row = 0; row < yPoints; row++)
+    for (int64_t row = 0; row < yPoints; row++)
     {
       rowStride = row * rowShift;
-      for (DimType col = 0; col < xPoints; col++)
+      for (int64_t col = 0; col < xPoints; col++)
       {
         point = planeStride + rowStride + col;
         if (m_CellPhases[point] > 0)
@@ -501,14 +505,14 @@ const QString FindOrientationFieldCurl::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
 
 
 // -----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -60,11 +60,11 @@
 // -----------------------------------------------------------------------------
 VASPReader::VASPReader() :
   FileReader(),
-  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
-  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
+  m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName),
+  m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName),
   m_InputFile(""),
-  m_AtomVelocitiesArrayName(DREAM3D::VertexData::AtomVelocities),
-  m_AtomTypesArrayName(DREAM3D::VertexData::AtomTypes),
+  m_AtomVelocitiesArrayName(SIMPL::VertexData::AtomVelocities),
+  m_AtomTypesArrayName(SIMPL::VertexData::AtomTypes),
   m_AtomVelocities(NULL),
   m_AtomTypes(NULL)
 {
@@ -139,17 +139,33 @@ void VASPReader::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VASPReader::initialize()
+{
+  if(m_InStream.isOpen())
+  {
+    m_InStream.close();
+  }
+  latticeConstant = 0.0f;
+  for(size_t i = 0; i < 3; i++) { for(size_t j=0;j<3;j++) { latticeVectors[i][j] = 0.0f;} }
+  atomNumbers.clear();
+  totalAtoms = -1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VASPReader::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
+  initialize();
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims (1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0 || NULL == vertexAttrMat.get()) { return; }
 
-  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(0, DREAM3D::Geometry::VertexGeometry);
+  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   m->setGeometry(vertex);
 
   QFileInfo fi(getInputFile());
@@ -177,11 +193,6 @@ void VASPReader::dataCheck()
   m_AtomTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AtomTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  if (m_InStream.isOpen() == true)
-  {
-    m_InStream.close();
-  }
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
@@ -316,7 +327,7 @@ int VASPReader::readHeader()
     totalAtoms += tokens[i].toInt(&ok, 10);
   }
 
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, DREAM3D::VertexData::SurfaceMeshNodes);
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, SIMPL::VertexData::SurfaceMeshNodes, !getInPreflight());
   m->setGeometry(vertices);
 
   QVector<size_t> tDims(1, totalAtoms);
@@ -445,14 +456,14 @@ const QString VASPReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString VASPReader::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VASPReader::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 
 // -----------------------------------------------------------------------------

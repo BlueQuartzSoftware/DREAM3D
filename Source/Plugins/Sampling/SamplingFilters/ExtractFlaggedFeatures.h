@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ExtractFlaggedFeatures_H_
-#define _ExtractFlaggedFeatures_H_
+#ifndef _extractflaggedfeatures_h_
+#define _extractflaggedfeatures_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -149,11 +149,16 @@ class ExtractFlaggedFeatures : public AbstractFilter
 
   protected:
     ExtractFlaggedFeatures();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_feature_bounds Determines the bounding box for each Feature. The bounding box determines the Feature cropping.
@@ -161,7 +166,7 @@ class ExtractFlaggedFeatures : public AbstractFilter
     void find_feature_bounds();
 
   private:
-    Int32ArrayType::Pointer boundsPtr;
+    Int32ArrayType::Pointer m_BoundsPtr;
     int32_t* m_FeatureBounds;
 
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)

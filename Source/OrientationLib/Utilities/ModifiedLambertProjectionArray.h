@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ModifiedLambertProjectionArray_H_
-#define _ModifiedLambertProjectionArray_H_
+#ifndef _modifiedlambertprojectionarray_h_
+#define _modifiedlambertprojectionarray_h_
 
 #include <vector>
 
@@ -276,7 +276,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    virtual void initializeTuple(size_t i, double p);
+    virtual void initializeTuple(size_t i, void* p);
 
     /**
      * @brief Sets all the values to zero.
@@ -349,7 +349,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @return Returns a formatted string that contains general infomation about
      * the instance of the object.
      */
-    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
+    virtual QString getInfoString(SIMPL::InfoStringFormat format);
 
   protected:
     ModifiedLambertProjectionArray();

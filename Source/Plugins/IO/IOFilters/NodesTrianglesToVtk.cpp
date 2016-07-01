@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -127,6 +127,14 @@ int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void NodesTrianglesToVtk::initialize()
+{
+  m_NodeKind = nullptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::dataCheck()
 {
   setErrorCondition(0);
@@ -196,6 +204,8 @@ void NodesTrianglesToVtk::execute()
 
   dataCheck();
   if(getErrorCondition() < 0) { return; }
+  initialize();
+
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
   if (nodesFile == NULL)
@@ -636,14 +646,14 @@ const QString NodesTrianglesToVtk::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToVtk::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToVtk::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

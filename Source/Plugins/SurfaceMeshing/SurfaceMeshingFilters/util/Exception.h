@@ -10,8 +10,8 @@
 * San Francisco, California, 94105, USA.
  ***/
 
-#ifndef H_CENTIPEDE_BASICS_EXCEPTIONS_EXCEPTION
-#define H_CENTIPEDE_BASICS_EXCEPTIONS_EXCEPTION
+#ifndef _exception_h_
+#define _exception_h_
 
 #include <QtCore/QString>
 

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -58,6 +58,9 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+
+#include "EbsdLib/EbsdConstants.h"
+
 
 // included so we can call under the hood to segment the patches found in this filter
 #include "Reconstruction/ReconstructionFilters/VectorSegmentFeatures.h"
@@ -217,16 +220,16 @@ class FindPatchMisalignmentsImpl
 // -----------------------------------------------------------------------------
 IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   AbstractFilter(),
-  m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
+  m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName),
   m_CAxisTolerance(1.0f),
   m_MinMTRSize(1.0f),
   m_MinVolFrac(1.0f),
   m_RandomizeMTRIds(false),
-  m_CAxisLocationsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CAxisLocation),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_MTRIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CAxisLocationsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::CAxisLocation),
+  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
+  m_MTRIdsArrayName(SIMPL::CellData::ParentIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_CAxisLocations(NULL),
   m_CellPhases(NULL),
   m_CrystalStructures(NULL),
@@ -238,7 +241,7 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   m_PatchIds(NULL),
   m_PatchActive(NULL)
 {
-  caxisTolerance = 0.0f;
+  m_CAxisToleranceRad = 0.0f;
 
   setupFilterParameters();
 }
@@ -332,9 +335,20 @@ void IdentifyMicroTextureRegions::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::initialize()
+{
+  m_CAxisToleranceRad = 0.0f;
+  m_TotalRandomNumbersGenerated = 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
+
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCAxisLocationsArrayPath().getDataContainerName());
@@ -343,7 +357,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<size_t> cDims(1, 3);
 
@@ -525,7 +539,7 @@ void IdentifyMicroTextureRegions::execute()
   tDims[0] = newDimX;
   tDims[1] = newDimY;
   tDims[2] = newDimZ;
-  tmpDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchAM(Temp)", tDims, DREAM3D::AttributeMatrixType::Cell);
+  tmpDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchAM(Temp)", tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   DataArrayPath tempPath;
@@ -548,7 +562,7 @@ void IdentifyMicroTextureRegions::execute()
   { m_AvgCAxis = m_AvgCAxisPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Convert user defined tolerance to radians.
-  caxisTolerance = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -560,13 +574,13 @@ void IdentifyMicroTextureRegions::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPatches),
-                      FindPatchMisalignmentsImpl(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, caxisTolerance), tbb::auto_partitioner());
+                      FindPatchMisalignmentsImpl(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, m_CAxisToleranceRad), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    FindPatchMisalignmentsImpl serial(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, caxisTolerance);
+    FindPatchMisalignmentsImpl serial(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, m_CAxisToleranceRad);
     serial.convert(0, totalPatches);
   }
 
@@ -716,13 +730,13 @@ const QString IdentifyMicroTextureRegions::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString IdentifyMicroTextureRegions::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString IdentifyMicroTextureRegions::getSubGroupName()
-{return DREAM3D::FilterSubGroups::GroupingFilters;}
+{return SIMPL::FilterSubGroups::GroupingFilters;}
 
 // -----------------------------------------------------------------------------
 //

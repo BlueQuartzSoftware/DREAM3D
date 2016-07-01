@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -108,6 +108,14 @@ int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWrit
   SIMPL_FILTER_WRITE_PARAMETER(ImageSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteIPFStandardTriangle::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -359,13 +367,13 @@ const QString WriteIPFStandardTriangle::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //

@@ -7,7 +7,8 @@
 <body>
 <h3>ImageIO  Plugin</h3>
 
-<p>This plugin implements filters to import and write out images from/to stanard image file format types such as Tif, PNG, BMP or GIF. The plugin also contains a few specialized filters that can import a stack of images but interpret the stack as a multi-component data array. More information can be found in the respective filter's documentation.</p>
+<p>This plugin implements filters to import and write out images from/to stanard image file format types such as Tif, PNG, BMP or GIF. The plugin also contains a few specialized filters that can import a stack of images but interpret the stack as a multi-component data array. More information can be found in the respective filter's documentation.
+The filters use the Image IO functionality of QImage. Because of this supporting 16 bit images is not possible.</p>
 
 
 </body>

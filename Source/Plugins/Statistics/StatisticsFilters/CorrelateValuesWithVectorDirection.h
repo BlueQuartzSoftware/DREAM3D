@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef CorrelateValuesWithVectorDirection_H_
-#define CorrelateValuesWithVectorDirection_H_
+#ifndef _correlatevalueswithvectordirection_h_
+#define _correlatevalueswithvectordirection_h_
 
 #include <vector>
 #include <QtCore/QString>
@@ -162,11 +162,16 @@ class CorrelateValuesWithVectorDirection : public AbstractFilter
 
   protected:
     CorrelateValuesWithVectorDirection();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     void makeLambertProjection(size_t numComps);
     int determineSquareCoordsandBin(float xyz[3]);

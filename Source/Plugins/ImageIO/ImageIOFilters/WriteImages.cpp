@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -122,7 +122,7 @@ void WriteImages::setupFilterParameters()
   parameters.push_back(StringFilterParameter::New("Image File Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Color Data", "ColorsArrayPath", getColorsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -158,6 +158,14 @@ int WriteImages::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   SIMPL_FILTER_WRITE_PARAMETER(Plane)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteImages::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -275,11 +283,21 @@ void WriteImages::execute()
   size_t dims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
+  int32_t nComp = m_ColorsPtr.lock()->getNumberOfComponents();
+
   if (0 == m_Plane) // XY plane
   {
     for (size_t z = 0; z < dims[2]; ++z)
     {
-      err = saveImage(z, dims[0], dims[1], dims);
+      if (nComp == 1)
+      {
+        err = writeGrayscaleImage(z, dims[0], dims[1], dims);
+      }
+      else
+      {
+        err = writeRGBImage(z, dims[0], dims[1], dims);
+      }
+
       if (-1 == err)
       {
         return;
@@ -290,7 +308,15 @@ void WriteImages::execute()
   {
     for (size_t y = 0; y < dims[1]; ++y)
     {
-      err = saveImage(y, dims[0], dims[2], dims);
+      if (nComp == 1)
+      {
+        err = writeGrayscaleImage(y, dims[0], dims[2], dims);
+      }
+      else
+      {
+        err = writeRGBImage(y, dims[0], dims[2], dims);
+      }
+
       if (-1 == err)
       {
         return;
@@ -301,7 +327,15 @@ void WriteImages::execute()
   {
     for (size_t x = 0; x < dims[0]; ++x)
     {
-      err = saveImage(x, dims[1], dims[2], dims);
+      if (nComp == 1)
+      {
+        err = writeGrayscaleImage(x, dims[1], dims[2], dims);
+      }
+      else
+      {
+        err = writeRGBImage(x, dims[1], dims[2], dims);
+      }
+
       if (-1 == err)
       {
         return;
@@ -315,7 +349,7 @@ void WriteImages::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t WriteImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
+int32_t WriteImages::writeRGBImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 {
   int32_t err = 0;
   // Sets up for Gray Scale or RGB or RGBA arrays
@@ -414,6 +448,100 @@ int32_t WriteImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int32_t WriteImages::writeGrayscaleImage(size_t slice, size_t dB, size_t dA, size_t* dims)
+{
+  int32_t err = 0;
+
+  QString path = (m_OutputPath) + QDir::separator() + (m_ImagePrefix) + QString::number(slice);
+
+  if (!m_FilePrefix)
+  {
+    path = (m_OutputPath) + QDir::separator() + QString::number(slice);
+  }
+  if (m_ImageFormat == TifImageType)
+  {
+    path.append(".tif");
+  }
+  else if (m_ImageFormat == BmpImageType)
+  {
+    path.append(".bmp");
+  }
+  else if (m_ImageFormat == PngImageType)
+  {
+    path.append(".png");
+  }
+
+  path = QDir::toNativeSeparators(path);
+  QFileInfo fi(path);
+  QDir parent(fi.absolutePath());
+  if (parent.exists() == false)
+  {
+    parent.mkpath(fi.absolutePath());
+  }
+
+  int32_t index = 0;
+  size_t total = dB * dA;
+  if(total > std::numeric_limits<int32_t>::max())
+  {
+    QString ss = QObject::tr("The image will have more than 2GB worth of pixels. Try cropping the data so that the total pixels on a single plane is less than 2GB.");
+    setErrorCondition(-1012);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
+
+
+  QImage image(dB, dA, QImage::Format_Grayscale8);
+  if(image.isNull())
+  {
+    QString ss = QObject::tr("The memory for the image could not be allocated using a QImage. The total number of bytes would be greater than 2GB");
+    setErrorCondition(-1014);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
+
+  for (size_t axisA = 0; axisA < dA; ++axisA)
+  {
+    uint8_t* scanLine = image.scanLine(axisA);
+    for (size_t axisB = 0; axisB < dB; ++axisB)
+    {
+#if defined (CMP_WORDS_BIGENDIAN)
+#error
+#else
+      if (0 == m_Plane)  // XY plane
+      {
+        index = (dims[0] * dims[1] * slice) + (dims[0] * axisA) + axisB;
+      }
+      if (1 == m_Plane)  // XZ plane
+      {
+        index = (dims[0] * dims[1] * axisA) + (dims[0] * slice) + axisB;
+      }
+      if (2 == m_Plane)  // YZ plane
+      {
+        index = (dims[0] * dims[1] * axisA) + (dims[0] * axisB) + slice;
+      }
+      scanLine[axisB] = m_Colors[index];
+#endif
+    }
+  }
+  image.setText("Description", SIMPLib::Version::PackageComplete());
+  bool success = image.save(path);
+  if (success)
+  {
+    err = 0;
+  }
+  else
+  {
+    err = -1;
+    QString ss = QObject::tr("The image '%1' was not successfully saved").arg(path);
+    setErrorCondition(-1007);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AbstractFilter::Pointer WriteImages::newFilterInstance(bool copyFilterParameters)
 {
   WriteImages::Pointer filter = WriteImages::New();
@@ -454,13 +582,13 @@ const QString WriteImages::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString WriteImages::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteImages::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //

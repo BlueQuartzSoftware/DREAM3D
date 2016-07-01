@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -59,10 +59,10 @@ BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck() :
   AbstractFilter(),
   m_MisorientationTolerance(5.0f),
   m_NumberOfNeighbors(6),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_QuatsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
+  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
+  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
   m_Quats(NULL),
   m_GoodVoxels(NULL),
   m_CellPhases(NULL),
@@ -89,20 +89,20 @@ void BadDataNeighborOrientationCheck::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Required Number of Neighbors", "NumberOfNeighbors", getNumberOfNeighbors(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -138,6 +138,14 @@ int BadDataNeighborOrientationCheck::writeFilterParameters(AbstractFilterParamet
   SIMPL_FILTER_WRITE_PARAMETER(NumberOfNeighbors)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BadDataNeighborOrientationCheck::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -204,29 +212,25 @@ void BadDataNeighborOrientationCheck::execute()
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   int32_t good = 1;
-  DimType neighbor = 0;
-  DimType column = 0, row = 0, plane = 0;
+  int64_t neighbor = 0;
+  int64_t column = 0, row = 0, plane = 0;
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
-  neighpoints[0] = static_cast<DimType>(-dims[0] * dims[1]);
-  neighpoints[1] = static_cast<DimType>(-dims[0]);
-  neighpoints[2] = static_cast<DimType>(-1);
-  neighpoints[3] = static_cast<DimType>(1);
-  neighpoints[4] = static_cast<DimType>(dims[0]);
-  neighpoints[5] = static_cast<DimType>(dims[0] * dims[1]);
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  neighpoints[0] = static_cast<int64_t>(-dims[0] * dims[1]);
+  neighpoints[1] = static_cast<int64_t>(-dims[0]);
+  neighpoints[2] = static_cast<int64_t>(-1);
+  neighpoints[3] = static_cast<int64_t>(1);
+  neighpoints[4] = static_cast<int64_t>(dims[0]);
+  neighpoints[5] = static_cast<int64_t>(dims[0] * dims[1]);
 
   float w = 10000.0f;
   QuatF q1 = QuaternionMathF::New();
@@ -290,7 +294,7 @@ void BadDataNeighborOrientationCheck::execute()
           column = i % dims[0];
           row = (i / dims[0]) % dims[1];
           plane = i / (dims[0] * dims[1]);
-          for (DimType j = 0; j < 6; j++)
+          for (int64_t j = 0; j < 6; j++)
           {
             good = 1;
             neighbor = i + neighpoints[j];
@@ -368,13 +372,13 @@ const QString BadDataNeighborOrientationCheck::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString BadDataNeighborOrientationCheck::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString BadDataNeighborOrientationCheck::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CleanupFilters; }
+{ return SIMPL::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //

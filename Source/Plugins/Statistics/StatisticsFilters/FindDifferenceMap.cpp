@@ -239,6 +239,14 @@ void warnOnUnsignedTypes(AbstractFilter* filter, IDataArray::Pointer ptr)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindDifferenceMap::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindDifferenceMap::dataCheck()
 {
   setErrorCondition(0);
@@ -347,7 +355,7 @@ const QString FindDifferenceMap::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindDifferenceMap::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
@@ -359,5 +367,5 @@ const QString FindDifferenceMap::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString FindDifferenceMap::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return SIMPL::FilterSubGroups::MiscFilters; }
 

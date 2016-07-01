@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ConvertHexGridToSquareGridWidget_H_
-#define _ConvertHexGridToSquareGridWidget_H_
+#ifndef _converthexgridtosquaregridwidget_h_
+#define _converthexgridtosquaregridwidget_h_
 
 
 #include <QtCore/QString>
@@ -48,11 +48,11 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "QtSupportLib/SIMPLPluginFrame.h"
+#include "SVWidgetsLib/QtSupport/QtSPluginFrame.h"
 
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "SVWidgetsLib/SVWidgetsLib.h"
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 
 #include "ui_ConvertHexGridToSquareGridWidget.h"

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -63,8 +63,8 @@ SurfaceMeshToNonconformalVtk::SurfaceMeshToNonconformalVtk() :
   AbstractFilter(),
   m_OutputVtkFile(""),
   m_WriteBinaryFile(false),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshNodeType(NULL)
 {
@@ -126,6 +126,14 @@ int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParameters
   SIMPL_FILTER_WRITE_PARAMETER(WriteBinaryFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshToNonconformalVtk::initialize()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -561,7 +569,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 #endif
 
   // This is from the Goldfeather Paper
-  writePointVectorData<double>(sm, attrMatName, DREAM3D::VertexData::SurfaceMeshNodeNormals,
+  writePointVectorData<double>(sm, attrMatName, SIMPL::VertexData::SurfaceMeshNodeNormals,
                                "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
 
 
@@ -858,32 +866,32 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
   QString attrMatName = m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName();
 
   notifyStatusMessage(getHumanLabel(), "Writing Face Normals...");
-  writeCellNormalData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshFaceNormals,
+  writeCellNormalData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshFaceNormals,
                               "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
   notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 1");
-  writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1,
+  writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshPrincipalCurvature1,
                               "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
   notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 2");
-  writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2,
+  writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshPrincipalCurvature2,
                               "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
   notifyStatusMessage(getHumanLabel(), "Writing Feature Face Id");
-  writeCellScalarData<int32_t>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshFeatureFaceId,
+  writeCellScalarData<int32_t>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshFeatureFaceId,
                                "int", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
   notifyStatusMessage(getHumanLabel(), "Writing Gaussian Curvature");
-  writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures,
+  writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshGaussianCurvatures,
                               "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
   notifyStatusMessage(getHumanLabel(), "Writing Mean Curvature");
-  writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshMeanCurvatures,
+  writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshMeanCurvatures,
                               "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 #if 0
-  writeCellVectorData<double>(sm, attrMatName, DREAM3D::CellData::SurfaceMeshPrincipalDirection1,
+  writeCellVectorData<double>(sm, attrMatName, SIMPL::CellData::SurfaceMeshPrincipalDirection1,
                               "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
 
-  writeCellVectorData<double>(sm, attrMatName, DREAM3D::CellData::SurfaceMeshPrincipalDirection2,
+  writeCellVectorData<double>(sm, attrMatName, SIMPL::CellData::SurfaceMeshPrincipalDirection2,
                               "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
 
   writeCellNormalData<double>(sm, attrMatName, "Goldfeather_Triangle_Normals",
@@ -937,14 +945,14 @@ const QString SurfaceMeshToNonconformalVtk::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString SurfaceMeshToNonconformalVtk::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SurfaceMeshToNonconformalVtk::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

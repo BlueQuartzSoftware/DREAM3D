@@ -9,7 +9,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 /* ============================================================================
- * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -43,8 +43,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FindGBCDMetricBased_H_
-#define _FindGBCDMetricBased_H_
+#ifndef _findgbcdmetricbased_h_
+#define _findgbcdmetricbased_h_
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
@@ -52,6 +52,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -181,7 +182,6 @@ public:
   */
   virtual void preflight();
 
-
 protected:
   FindGBCDMetricBased();
 
@@ -189,6 +189,11 @@ protected:
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
   void dataCheck();
+
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
 private:
   DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
@@ -200,10 +205,10 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
   DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
 
-  static const int NUM_RESOL_CHOICES = 7;
-  static const int DEFAULT_RESOL_CHOICE = 2;
-  static const float RESOL_CHOICES[][2];
-  static const double BALL_VOLS_M3M[];
+  static const int k_NumberResolutionChoices = 7;
+  static const int k_DefaultResolutionChoice = 2;
+  static const float k_ResolutionChoices[][2];
+  static const double k_BallVolumesM3M[];
 
   FindGBCDMetricBased(const FindGBCDMetricBased&); // Copy Constructor Not Implemented
   void operator=(const FindGBCDMetricBased&); // Operator '=' Not Implemented

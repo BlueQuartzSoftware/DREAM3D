@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _GoldfeatherReader_H_
-#define _GoldfeatherReader_H_
+#ifndef _goldfeatherreader_h_
+#define _goldfeatherreader_h_
 
 #include <QtCore/QString>
 
@@ -176,11 +176,16 @@ class GoldfeatherReader : public AbstractFilter
 
   protected:
     GoldfeatherReader();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     void updateVertexInstancePointers();
     void updateFaceInstancePointers();

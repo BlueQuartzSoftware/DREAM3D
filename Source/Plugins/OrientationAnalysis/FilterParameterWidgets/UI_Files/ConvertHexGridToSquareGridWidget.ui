@@ -431,7 +431,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QFSDropLineEdit" name="m_InputDir"/>
+      <widget class="QtSFSDropLineEdit" name="m_InputDir"/>
      </item>
      <item row="1" column="2">
       <widget class="QPushButton" name="m_InputDirBtn">
@@ -516,7 +516,7 @@ font-size: 12px;
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QFSDropLineEdit" name="m_OutputDir">
+      <widget class="QtSFSDropLineEdit" name="m_OutputDir">
        <property name="toolTip">
         <string>The absolute path to the output file</string>
        </property>
@@ -556,7 +556,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QFSDropLineEdit" name="m_OutputPrefix">
+      <widget class="QtSFSDropLineEdit" name="m_OutputPrefix">
        <property name="toolTip">
         <string>The absolute path to the output file</string>
        </property>
@@ -568,9 +568,9 @@ font-size: 11px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QFSDropLineEdit</class>
+   <class>QtSFSDropLineEdit</class>
    <extends>QLineEdit</extends>
-   <header location="global">QFSDropLineEdit.h</header>
+   <header location="global">QtSFSDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

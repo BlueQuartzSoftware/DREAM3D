@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -56,8 +56,8 @@
 // -----------------------------------------------------------------------------
 ExtractFlaggedFeatures::ExtractFlaggedFeatures() :
   AbstractFilter(),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_FlaggedFeaturesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Active),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_FlaggedFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Active),
   m_FeatureBounds(NULL),
   m_FeatureIds(NULL),
   m_FlaggedFeatures(NULL)
@@ -80,12 +80,12 @@ void ExtractFlaggedFeatures::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(DataArraySelectionFilterParameter::New("Flagged Features", "FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -114,6 +114,15 @@ int ExtractFlaggedFeatures::writeFilterParameters(AbstractFilterParametersWriter
   SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ExtractFlaggedFeatures::initialize()
+{
+  m_BoundsPtr = Int32ArrayType::NullPointer();
+  m_FeatureBounds = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -158,34 +167,30 @@ void ExtractFlaggedFeatures::find_feature_bounds()
   size_t totalFeatures = m_FlaggedFeaturesPtr.lock()->getNumberOfTuples();
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   QVector<size_t> cDims(1, 6);
-  boundsPtr = Int32ArrayType::CreateArray(totalFeatures, cDims, "_INTERNAL_USE_ONLY_Bounds");
-  m_FeatureBounds = boundsPtr->getPointer(0);
-  boundsPtr->initializeWithValue(-1);
+  m_BoundsPtr = Int32ArrayType::CreateArray(totalFeatures, cDims, "_INTERNAL_USE_ONLY_Bounds");
+  m_FeatureBounds = m_BoundsPtr->getPointer(0);
+  m_BoundsPtr->initializeWithValue(-1);
 
-  DimType kstride = 0, jstride = 0, count = 0;
-  DimType featureShift = 0;
+  int64_t kstride = 0, jstride = 0, count = 0;
+  int64_t featureShift = 0;
   int32_t feature = 0;
 
-  for (DimType k = 0; k < dims[2]; k++)
+  for (int64_t k = 0; k < dims[2]; k++)
   {
     kstride = dims[0] * dims[1] * k;
-    for (DimType j = 0; j < dims[1]; j++)
+    for (int64_t j = 0; j < dims[1]; j++)
     {
       jstride = dims[0] * j;
-      for (DimType i = 0; i < dims[0]; i++)
+      for (int64_t i = 0; i < dims[0]; i++)
       {
         count = kstride + jstride + i;
         feature = m_FeatureIds[count];
@@ -286,13 +291,13 @@ const QString ExtractFlaggedFeatures::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getGroupName()
-{ return DREAM3D::FilterGroups::SamplingFilters; }
+{ return SIMPL::FilterGroups::SamplingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CropCutFilters; }
+{ return SIMPL::FilterSubGroups::CropCutFilters; }
 
 // -----------------------------------------------------------------------------
 //

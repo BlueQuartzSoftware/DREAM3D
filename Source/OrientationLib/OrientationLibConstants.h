@@ -29,8 +29,8 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _OrientationLibConstants_H_
-#define _OrientationLibConstants_H_
+#ifndef _orientationlibconstants_h_
+#define _orientationlibconstants_h_
 
 namespace LambertParametersType
 {

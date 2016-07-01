@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -115,6 +115,17 @@ int CorrelateValuesWithVectorDirection::writeFilterParameters(AbstractFilterPara
   writer->writeValue("CorrelatedDataArrayPath", getCorrelatedDataArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CorrelateValuesWithVectorDirection::initialize()
+{
+  m_LambertProj = DoubleArrayType::NullPointer();
+  m_MaxCoord = sqrt(SIMPLib::Constants::k_2Pi) / 2.0;
+  m_Dimension = 72;
+  m_StepSize = sqrt(SIMPLib::Constants::k_2Pi) / 72.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -705,7 +716,7 @@ const QString CorrelateValuesWithVectorDirection::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString CorrelateValuesWithVectorDirection::getGroupName()
 {
-  return DREAM3D::FilterGroups::StatisticsFilters;
+  return SIMPL::FilterGroups::StatisticsFilters;
 }
 
 
@@ -714,7 +725,7 @@ const QString CorrelateValuesWithVectorDirection::getGroupName()
 // -----------------------------------------------------------------------------
 const QString CorrelateValuesWithVectorDirection::getSubGroupName()
 {
-  return DREAM3D::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographicFilters;
 }
 
 
