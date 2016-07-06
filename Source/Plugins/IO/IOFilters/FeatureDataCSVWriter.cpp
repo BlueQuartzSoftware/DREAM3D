@@ -104,20 +104,6 @@ void FeatureDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureDataFile)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteNeighborListData)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FeatureDataCSVWriter::initialize()
 {
 

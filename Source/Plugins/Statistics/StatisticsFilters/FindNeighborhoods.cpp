@@ -121,23 +121,6 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborhoodsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborhoodListArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MultiplesOfAverage)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindNeighborhoods::initialize()
 {
   m_NeighborhoodList = NeighborList<int32_t>::NullPointer();

@@ -124,22 +124,6 @@ void GBCDTriangleDumper::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GBCDTriangleDumper::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  writer->closeFilterGroup();
-  return index;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GBCDTriangleDumper::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);

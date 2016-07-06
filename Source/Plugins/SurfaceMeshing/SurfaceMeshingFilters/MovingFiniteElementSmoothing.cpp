@@ -189,23 +189,6 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(IterationSteps)
-  SIMPL_FILTER_WRITE_PARAMETER(NodeConstraints)
-  SIMPL_FILTER_WRITE_PARAMETER(ConstrainSurfaceNodes)
-  SIMPL_FILTER_WRITE_PARAMETER(ConstrainQuadPoints)
-  SIMPL_FILTER_WRITE_PARAMETER(SmoothTripleLines)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::initialize()
 {
 

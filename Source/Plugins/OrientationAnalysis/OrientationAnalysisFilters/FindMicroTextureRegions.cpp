@@ -111,21 +111,6 @@ void FindMicroTextureRegions::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(MicroTextureRegionFractionOccupiedArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(MicroTextureRegionNumCellsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindMicroTextureRegions::initialize()
 {
 

@@ -155,18 +155,6 @@ void TriangleAreaFilter::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleAreasArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void TriangleAreaFilter::initialize()
 {
 

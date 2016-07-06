@@ -166,26 +166,6 @@ void WarpRegularGrid::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WarpRegularGrid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SecondOrderACoeff)
-  SIMPL_FILTER_WRITE_PARAMETER(SecondOrderBCoeff)
-  SIMPL_FILTER_WRITE_PARAMETER(ThirdOrderACoeff)
-  SIMPL_FILTER_WRITE_PARAMETER(ThirdOrderBCoeff)
-  SIMPL_FILTER_WRITE_PARAMETER(FourthOrderACoeff)
-  SIMPL_FILTER_WRITE_PARAMETER(FourthOrderBCoeff)
-  SIMPL_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void WarpRegularGrid::initialize()
 {
 

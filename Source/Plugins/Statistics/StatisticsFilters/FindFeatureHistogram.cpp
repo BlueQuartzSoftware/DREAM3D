@@ -136,23 +136,6 @@ void FindFeatureHistogram::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindFeatureHistogram::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NumberOfBins)
-  SIMPL_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindFeatureHistogram::initialize()
 {
 

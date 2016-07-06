@@ -132,24 +132,6 @@ void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
-  SIMPL_FILTER_WRITE_PARAMETER(RenumberFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ChangeResolution::initialize()
 {
 

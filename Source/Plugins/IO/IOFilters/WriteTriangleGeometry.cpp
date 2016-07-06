@@ -111,20 +111,6 @@ void WriteTriangleGeometry::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteTriangleGeometry::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerSelection)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputNodesFile)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputTrianglesFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void WriteTriangleGeometry::initialize()
 {
 

@@ -155,19 +155,6 @@ void ChangeAngleRepresentation::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ChangeAngleRepresentation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ConversionType)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::initialize()
 {
 

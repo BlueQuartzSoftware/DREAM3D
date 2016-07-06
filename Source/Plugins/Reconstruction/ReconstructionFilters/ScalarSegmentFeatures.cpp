@@ -229,24 +229,6 @@ void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  SIMPL_FILTER_WRITE_PARAMETER(ScalarArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ScalarTolerance)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);

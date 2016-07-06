@@ -98,10 +98,6 @@ class SegmentFeatures : public AbstractFilter
      */
     virtual const QString getHumanLabel();
 
-    /**
-     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class

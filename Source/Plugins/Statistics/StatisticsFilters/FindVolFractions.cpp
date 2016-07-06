@@ -104,19 +104,6 @@ void FindVolFractions::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindVolFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(VolFractionsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindVolFractions::initialize()
 {
 

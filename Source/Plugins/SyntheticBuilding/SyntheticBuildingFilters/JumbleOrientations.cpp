@@ -129,22 +129,6 @@ void JumbleOrientations::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void JumbleOrientations::initialize()
 {
 

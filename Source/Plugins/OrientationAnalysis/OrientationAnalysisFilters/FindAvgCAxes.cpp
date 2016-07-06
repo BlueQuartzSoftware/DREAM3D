@@ -116,20 +116,6 @@ void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgCAxesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindAvgCAxes::initialize()
 {
 

@@ -171,30 +171,6 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(LambdasArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PhisArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PolesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SlipSystemsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SchmidsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(LoadingDirection)
-  SIMPL_FILTER_WRITE_PARAMETER(StoreAngleComponents)
-  SIMPL_FILTER_WRITE_PARAMETER(OverrideSystem)
-  SIMPL_FILTER_WRITE_PARAMETER(SlipPlane)
-  SIMPL_FILTER_WRITE_PARAMETER(SlipDirection)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindSchmids::initialize()
 {
 

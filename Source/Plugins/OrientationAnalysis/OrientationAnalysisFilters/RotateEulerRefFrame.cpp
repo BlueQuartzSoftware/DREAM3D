@@ -170,20 +170,6 @@ void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(RotationAxis)
-  SIMPL_FILTER_WRITE_PARAMETER(RotationAngle)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void RotateEulerRefFrame::initialize()
 {
 

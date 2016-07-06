@@ -106,19 +106,6 @@ void ExtractFlaggedFeatures::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ExtractFlaggedFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FlaggedFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ExtractFlaggedFeatures::initialize()
 {
   m_BoundsPtr = Int32ArrayType::NullPointer();

@@ -234,24 +234,6 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageVarArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageStdArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageAvgArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageMaxArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageMinArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Plane)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindProjectedImageStatistics::initialize()
 {
 

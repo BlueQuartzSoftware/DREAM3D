@@ -168,20 +168,6 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FlatImageDataArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(ImageDataArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FlattenMethod)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FlattenImage::initialize()
 {
 

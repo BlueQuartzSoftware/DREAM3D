@@ -110,21 +110,6 @@ void NodesTrianglesToStl::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NodesFile)
-  SIMPL_FILTER_WRITE_PARAMETER(TrianglesFile)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputStlDirectory)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputStlPrefix)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void NodesTrianglesToStl::initialize()
 {
 

@@ -157,23 +157,6 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(Origin)
-  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DxReader::updateCellInstancePointers()
 {
   setErrorCondition(0);

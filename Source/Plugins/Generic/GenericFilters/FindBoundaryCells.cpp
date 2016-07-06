@@ -102,19 +102,6 @@ void FindBoundaryCells::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindBoundaryCells::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(BoundaryCellsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindBoundaryCells::initialize()
 {
 

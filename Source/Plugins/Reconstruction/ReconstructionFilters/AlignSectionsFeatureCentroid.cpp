@@ -104,20 +104,6 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  AlignSections::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(UseReferenceSlice)
-  SIMPL_FILTER_WRITE_PARAMETER(ReferenceSlice)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::initialize()
 {
 

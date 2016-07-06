@@ -127,23 +127,6 @@ void ErodeDilateBadData::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ErodeDilateBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Direction)
-  SIMPL_FILTER_WRITE_PARAMETER(NumIterations)
-  SIMPL_FILTER_WRITE_PARAMETER(XDirOn)
-  SIMPL_FILTER_WRITE_PARAMETER(YDirOn)
-  SIMPL_FILTER_WRITE_PARAMETER(ZDirOn)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ErodeDilateBadData::initialize()
 {
   m_Neighbors = nullptr;

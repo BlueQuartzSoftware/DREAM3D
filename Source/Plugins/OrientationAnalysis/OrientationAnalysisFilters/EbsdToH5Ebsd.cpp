@@ -127,29 +127,6 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(ZStartIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(ZEndIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(ZResolution)
-  SIMPL_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
-  SIMPL_FILTER_WRITE_PARAMETER(FileSuffix)
-  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
-  SIMPL_FILTER_WRITE_PARAMETER(PaddingDigits)
-  SIMPL_FILTER_WRITE_PARAMETER(SampleTransformation)
-  SIMPL_FILTER_WRITE_PARAMETER(EulerTransformation)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::initialize()
 {
 

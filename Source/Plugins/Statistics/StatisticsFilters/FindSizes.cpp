@@ -118,22 +118,6 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(NumCellsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindSizes::initialize()
 {
 

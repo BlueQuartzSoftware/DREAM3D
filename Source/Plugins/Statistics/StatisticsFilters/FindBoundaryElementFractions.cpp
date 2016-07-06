@@ -108,20 +108,6 @@ void FindBoundaryElementFractions::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindBoundaryElementFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(BoundaryCellFractionsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(BoundaryCellsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindBoundaryElementFractions::initialize()
 {
 

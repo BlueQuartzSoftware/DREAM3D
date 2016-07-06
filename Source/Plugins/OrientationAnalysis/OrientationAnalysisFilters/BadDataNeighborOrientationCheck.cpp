@@ -126,23 +126,6 @@ void BadDataNeighborOrientationCheck::readFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BadDataNeighborOrientationCheck::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(NumberOfNeighbors)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void BadDataNeighborOrientationCheck::initialize()
 {
 

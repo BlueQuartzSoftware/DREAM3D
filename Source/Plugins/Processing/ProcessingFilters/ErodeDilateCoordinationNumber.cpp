@@ -104,20 +104,6 @@ void ErodeDilateCoordinationNumber::readFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ErodeDilateCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CoordinationNumber)
-  SIMPL_FILTER_WRITE_PARAMETER(Loop)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ErodeDilateCoordinationNumber::initialize()
 {
   m_Neighbors = nullptr;

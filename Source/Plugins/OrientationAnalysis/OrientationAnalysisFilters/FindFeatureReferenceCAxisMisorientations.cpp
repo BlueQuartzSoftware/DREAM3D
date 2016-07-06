@@ -132,24 +132,6 @@ void FindFeatureReferenceCAxisMisorientations::readFilterParameters(AbstractFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindFeatureReferenceCAxisMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureReferenceCAxisMisorientationsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureStdevCAxisMisorientationsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureAvgCAxisMisorientationsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgCAxesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindFeatureReferenceCAxisMisorientations::initialize()
 {
 

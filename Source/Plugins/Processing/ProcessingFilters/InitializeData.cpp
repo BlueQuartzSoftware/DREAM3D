@@ -162,27 +162,6 @@ void InitializeData::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int InitializeData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPaths)
-  SIMPL_FILTER_WRITE_PARAMETER(XMin)
-  SIMPL_FILTER_WRITE_PARAMETER(YMin)
-  SIMPL_FILTER_WRITE_PARAMETER(ZMin)
-  SIMPL_FILTER_WRITE_PARAMETER(XMax)
-  SIMPL_FILTER_WRITE_PARAMETER(YMax)
-  SIMPL_FILTER_WRITE_PARAMETER(ZMax)
-  SIMPL_FILTER_WRITE_PARAMETER(InitType)
-  SIMPL_FILTER_WRITE_PARAMETER(InitValue)
-  SIMPL_FILTER_WRITE_PARAMETER(InitRange)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void InitializeData::initialize()
 {
 

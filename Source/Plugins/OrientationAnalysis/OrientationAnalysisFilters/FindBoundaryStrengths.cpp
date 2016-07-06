@@ -148,25 +148,6 @@ void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshmPrimesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshF7sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshF1sptsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshF1sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Loading)
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindBoundaryStrengths::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);

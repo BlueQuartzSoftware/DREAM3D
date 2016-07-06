@@ -188,22 +188,6 @@ void FindOrientationFieldCurl::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindOrientationFieldCurl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DislocationTensorsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CurlSize)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::initialize()
 {
 

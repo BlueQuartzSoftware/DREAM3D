@@ -365,24 +365,6 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(DeleteTempFiles)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void M3CSliceBySlice::initialize()
 {
 

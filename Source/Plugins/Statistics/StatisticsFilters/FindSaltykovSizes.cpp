@@ -104,19 +104,6 @@ void FindSaltykovSizes::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindSaltykovSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindSaltykovSizes::initialize()
 {
 

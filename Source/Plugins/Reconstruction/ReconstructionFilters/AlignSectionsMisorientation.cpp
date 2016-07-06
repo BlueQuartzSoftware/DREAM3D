@@ -133,23 +133,6 @@ void AlignSectionsMisorientation::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  AlignSections::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::initialize()
 {
   m_RandomSeed = QDateTime::currentMSecsSinceEpoch();

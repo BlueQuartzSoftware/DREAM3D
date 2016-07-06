@@ -297,21 +297,6 @@ void ReplaceElementAttributesWithNeighborValues::readFilterParameters(AbstractFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReplaceElementAttributesWithNeighborValues::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MinConfidence)
-  SIMPL_FILTER_WRITE_PARAMETER(Loop)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedComparison)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReplaceElementAttributesWithNeighborValues::initialize()
 {
 

@@ -124,25 +124,6 @@ void RegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int RegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  SampleSurfaceMesh::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
-  SIMPL_FILTER_WRITE_PARAMETER(Origin)
-  SIMPL_FILTER_WRITE_PARAMETER(XPoints)
-  SIMPL_FILTER_WRITE_PARAMETER(YPoints)
-  SIMPL_FILTER_WRITE_PARAMETER(ZPoints)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void RegularGridSampleSurfaceMesh::initialize()
 {
 

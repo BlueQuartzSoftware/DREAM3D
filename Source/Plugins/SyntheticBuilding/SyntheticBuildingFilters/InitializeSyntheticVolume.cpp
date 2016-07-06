@@ -170,26 +170,6 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(Dimensions)
-  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
-  SIMPL_FILTER_WRITE_PARAMETER(Origin)
-  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputStatsFile);
-  SIMPL_FILTER_WRITE_PARAMETER(EstimateNumberOfFeatures);
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::initialize()
 {
 

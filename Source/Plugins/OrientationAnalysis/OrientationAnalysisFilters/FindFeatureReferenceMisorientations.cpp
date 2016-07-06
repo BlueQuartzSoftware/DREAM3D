@@ -167,26 +167,6 @@ void FindFeatureReferenceMisorientations::readFilterParameters(AbstractFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindFeatureReferenceMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureReferenceMisorientationsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureAvgMisorientationsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ReferenceOrientation)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::initialize()
 {
 

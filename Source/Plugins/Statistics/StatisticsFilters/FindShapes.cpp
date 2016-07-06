@@ -138,25 +138,6 @@ void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(AspectRatiosArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisLengthsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(Omega3sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindShapes::initialize()
 {
   m_ScaleFactor = 1.0f;

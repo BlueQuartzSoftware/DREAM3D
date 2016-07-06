@@ -148,30 +148,6 @@ void CropImageGeometry::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CropImageGeometry::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(XMin)
-  SIMPL_FILTER_WRITE_PARAMETER(YMin)
-  SIMPL_FILTER_WRITE_PARAMETER(ZMin)
-  SIMPL_FILTER_WRITE_PARAMETER(XMax)
-  SIMPL_FILTER_WRITE_PARAMETER(YMax)
-  SIMPL_FILTER_WRITE_PARAMETER(ZMax)
-  SIMPL_FILTER_WRITE_PARAMETER(RenumberFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
-  SIMPL_FILTER_WRITE_PARAMETER(UpdateOrigin)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void CropImageGeometry::initialize()
 {
 

@@ -97,20 +97,6 @@ void GenerateGeometryConnectivity::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GenerateGeometryConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(GenerateVertexTriangleLists)
-  SIMPL_FILTER_WRITE_PARAMETER(GenerateTriangleNeighbors)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::initialize()
 {
 

@@ -107,20 +107,6 @@ void GroupFeatures::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GroupFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(UseNonContiguousNeighbors)
-  SIMPL_FILTER_WRITE_PARAMETER(ContiguousNeighborListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NonContiguousNeighborListArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GroupFeatures::initialize()
 {
   m_ContiguousNeighborList = NeighborList<int32_t>::NullPointer();

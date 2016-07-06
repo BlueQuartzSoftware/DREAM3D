@@ -103,19 +103,6 @@ void FindFeatureCentroids::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindFeatureCentroids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindFeatureCentroids::initialize()
 {
 

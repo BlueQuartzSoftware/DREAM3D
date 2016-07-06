@@ -134,24 +134,6 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgMisorientationsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationListArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FindAvgMisors)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindMisorientations::initialize()
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();

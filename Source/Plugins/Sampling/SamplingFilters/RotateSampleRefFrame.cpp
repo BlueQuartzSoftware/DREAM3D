@@ -222,20 +222,6 @@ void RotateSampleRefFrame::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(RotationAxis)
-  SIMPL_FILTER_WRITE_PARAMETER(RotationAngle)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void RotateSampleRefFrame::initialize()
 {
 

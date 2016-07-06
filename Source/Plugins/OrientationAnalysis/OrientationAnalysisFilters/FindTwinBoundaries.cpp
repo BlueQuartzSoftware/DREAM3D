@@ -295,27 +295,6 @@ void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindTwinBoundaries::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryIncoherenceArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(FindCoherence)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindTwinBoundaries::dataCheckVoxel()
 {
   setErrorCondition(0);

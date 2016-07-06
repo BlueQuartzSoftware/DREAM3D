@@ -188,27 +188,6 @@ void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ImagePrefix)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ImageFormat)
-  SIMPL_FILTER_WRITE_PARAMETER(ImageSize)
-  SIMPL_FILTER_WRITE_PARAMETER(LambertSize)
-  SIMPL_FILTER_WRITE_PARAMETER(ImageLayout)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void WritePoleFigure::initialize()
 {
 

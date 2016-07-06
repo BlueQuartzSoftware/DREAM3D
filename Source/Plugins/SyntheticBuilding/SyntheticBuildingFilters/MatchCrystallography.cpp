@@ -213,31 +213,6 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(MaxIterations)
-  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MatchCrystallography::initialize()
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();

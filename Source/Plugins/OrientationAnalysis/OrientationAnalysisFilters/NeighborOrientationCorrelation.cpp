@@ -131,24 +131,6 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(MinConfidence)
-  SIMPL_FILTER_WRITE_PARAMETER(Level)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::initialize()
 {
 

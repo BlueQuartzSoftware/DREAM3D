@@ -143,33 +143,6 @@ void ImportVectorImageStack::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ImportVectorImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(VectorDataArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(StartIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(EndIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(StartComp)
-  SIMPL_FILTER_WRITE_PARAMETER(EndComp)
-  SIMPL_FILTER_WRITE_PARAMETER(PaddingDigits)
-  SIMPL_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
-  SIMPL_FILTER_WRITE_PARAMETER(Separator)
-  SIMPL_FILTER_WRITE_PARAMETER(FileSuffix)
-  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
-  SIMPL_FILTER_WRITE_PARAMETER(Origin)
-  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ImportVectorImageStack::initialize()
 {
 

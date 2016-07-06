@@ -221,33 +221,6 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(BoundaryCellsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
-  SIMPL_FILTER_WRITE_PARAMETER(UseMask)
-  SIMPL_FILTER_WRITE_PARAMETER(MatchRDF)
-  SIMPL_FILTER_WRITE_PARAMETER(HavePrecips)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
-  SIMPL_FILTER_WRITE_PARAMETER(PrecipInputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(CsvOutputFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);

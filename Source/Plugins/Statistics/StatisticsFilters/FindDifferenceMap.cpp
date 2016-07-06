@@ -173,19 +173,6 @@ void FindDifferenceMap::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindDifferenceMap::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FirstInputArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SecondInputArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(DifferenceMapArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 template<typename DataType>
 void validateArrayTypes(AbstractFilter* filter, QVector<IDataArray::Pointer> ptrArray)
 {

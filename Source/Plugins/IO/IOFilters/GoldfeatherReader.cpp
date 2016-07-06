@@ -151,28 +151,6 @@ void GoldfeatherReader::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection1sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection2sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeNormalsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GoldfeatherReader::updateVertexInstancePointers()
 {
   setErrorCondition(0);

@@ -115,21 +115,6 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MinAllowedDefectSize)
-  SIMPL_FILTER_WRITE_PARAMETER(StoreAsNewPhase)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FillBadData::initialize()
 {
   m_AlreadyChecked = nullptr;

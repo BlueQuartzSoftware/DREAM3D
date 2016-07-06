@@ -120,28 +120,6 @@ void ConvertHexGridToSquareGrid::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ConvertHexGridToSquareGrid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(ZStartIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(ZEndIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(PaddingDigits)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputPrefix)
-  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
-  SIMPL_FILTER_WRITE_PARAMETER(FileSuffix)
-  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
-  SIMPL_FILTER_WRITE_PARAMETER(XResolution)
-  SIMPL_FILTER_WRITE_PARAMETER(YResolution)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGrid::initialize()
 {
 

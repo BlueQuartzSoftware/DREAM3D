@@ -179,30 +179,6 @@ void FindLocalAverageCAxisMisalignments::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindLocalAverageCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CAxisMisalignmentListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesPerParentArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(LocalCAxisMisalignmentsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(UnbiasedLocalCAxisMisalignmentsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgCAxisMisalignmentsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellParentIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CalcUnbiasedAvg)
-  SIMPL_FILTER_WRITE_PARAMETER(CalcBiasedAvg)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindLocalAverageCAxisMisalignments::initialize()
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();

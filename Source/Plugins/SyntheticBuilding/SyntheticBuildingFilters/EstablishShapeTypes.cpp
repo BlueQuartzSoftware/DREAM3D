@@ -113,20 +113,6 @@ void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EstablishShapeTypes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ShapeTypesArrayName)
-  writer->writeValue("ShapeTypeData", getShapeTypeData().d );
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void EstablishShapeTypes::initialize()
 {
 

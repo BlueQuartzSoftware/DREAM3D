@@ -98,44 +98,6 @@ void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ImportASCIIData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-
-  QString prefix = "Wizard_";
-
-  QString delimitersStr = "";
-  for (int i = 0; i < m_WizardData.delimiters.size(); i++)
-  {
-    delimitersStr.append(m_WizardData.delimiters[i]);
-  }
-
-  writer->writeValue(prefix + "Delimiters", delimitersStr);
-  writer->writeValue(prefix + "BeginIndex", m_WizardData.beginIndex);
-  writer->writeValue(prefix + "ConsecutiveDelimiters", m_WizardData.consecutiveDelimiters);
-  writer->writeValue(prefix + "DataHeaders", m_WizardData.dataHeaders);
-  writer->writeValue(prefix + "DataTypes", m_WizardData.dataTypes);
-  writer->writeValue(prefix + "InputFilePath", m_WizardData.inputFilePath);
-  writer->writeValue(prefix + "NumberOfLines", m_WizardData.numberOfLines);
-  QVector<uint64_t> tDims;
-  QVector<size_t> tmpVec = m_WizardData.tupleDims;
-
-  for (int i = 0; i < tmpVec.size(); i++)
-  {
-    tDims.push_back(static_cast<uint64_t>(tmpVec[i]));
-  }
-
-  writer->writeValue(prefix + "TupleDims", tDims);
-
-  SIMPL_FILTER_WRITE_PARAMETER(AttributeMatrixPath)
-
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ImportASCIIData::initialize()
 {
   m_ASCIIArrayMap.clear();

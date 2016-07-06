@@ -319,24 +319,6 @@ void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int InsertAtoms::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(AtomFeatureLabelsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(LatticeConstants)
-  SIMPL_FILTER_WRITE_PARAMETER(Basis)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void InsertAtoms::updateVertexInstancePointers()
 {
   setErrorCondition(0);

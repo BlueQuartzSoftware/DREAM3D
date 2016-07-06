@@ -124,22 +124,6 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(GBCDArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::initialize()
 {
   gmtValues.clear();

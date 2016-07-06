@@ -110,22 +110,6 @@ void VASPReader::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VASPReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
-  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) ;
-  SIMPL_FILTER_WRITE_PARAMETER(AtomTypesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AtomVelocitiesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VASPReader::updateVertexInstancePointers()
 {
   setErrorCondition(0);

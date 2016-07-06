@@ -153,25 +153,6 @@ void FitCorrelatedFeatureData::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FitCorrelatedFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CorrelatedFeatureArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(DistributionType)
-  SIMPL_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(NumberOfCorrelatedBins)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::initialize()
 {
 

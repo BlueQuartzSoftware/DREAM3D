@@ -104,20 +104,6 @@ void AppendImageGeometryZSlice::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AppendImageGeometryZSlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputAttributeMatrix)
-  SIMPL_FILTER_WRITE_PARAMETER(DestinationAttributeMatrix)
-  SIMPL_FILTER_WRITE_PARAMETER(CheckResolution)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void AppendImageGeometryZSlice::initialize()
 {
 

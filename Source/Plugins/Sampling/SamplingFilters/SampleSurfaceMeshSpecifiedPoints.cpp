@@ -96,19 +96,6 @@ void SampleSurfaceMeshSpecifiedPoints::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SampleSurfaceMeshSpecifiedPoints::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  SampleSurfaceMesh::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(InputFilePath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFilePath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 {
   setErrorCondition(0);

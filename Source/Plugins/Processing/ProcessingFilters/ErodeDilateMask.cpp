@@ -128,23 +128,6 @@ void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ErodeDilateMask::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Direction)
-  SIMPL_FILTER_WRITE_PARAMETER(NumIterations)
-  SIMPL_FILTER_WRITE_PARAMETER(XDirOn)
-  SIMPL_FILTER_WRITE_PARAMETER(YDirOn)
-  SIMPL_FILTER_WRITE_PARAMETER(ZDirOn)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ErodeDilateMask::initialize()
 {
   m_MaskCopy = nullptr;

@@ -128,24 +128,6 @@ void VtkStructuredPointsReader::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkStructuredPointsReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(ReadPointData)
-  SIMPL_FILTER_WRITE_PARAMETER(ReadCellData)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VtkStructuredPointsReader::initialize()
 {
   m_CurrentAttrMat = AttributeMatrix::NullPointer();

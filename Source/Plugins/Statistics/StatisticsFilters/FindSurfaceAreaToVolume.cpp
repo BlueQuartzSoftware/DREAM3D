@@ -109,19 +109,6 @@ void FindSurfaceAreaToVolume::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindSurfaceAreaToVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NumCellsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceAreaVolumeRatioArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::initialize()
 {
 

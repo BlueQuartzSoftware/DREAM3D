@@ -145,23 +145,6 @@ void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FitFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewEnsembleArrayArray)
-  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(DistributionType)
-  SIMPL_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FitFeatureData::initialize()
 {
 

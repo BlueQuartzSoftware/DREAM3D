@@ -180,33 +180,6 @@ void FeatureFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection1sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection2sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshGaussianCurvaturesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshMeanCurvaturesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleCentroidsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NRing)
-  SIMPL_FILTER_WRITE_PARAMETER(ComputePrincipalDirectionVectors)
-  SIMPL_FILTER_WRITE_PARAMETER(ComputeGaussianCurvature)
-  SIMPL_FILTER_WRITE_PARAMETER(ComputeMeanCurvature)
-  SIMPL_FILTER_WRITE_PARAMETER(UseNormalsForCurveFitting)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::initialize()
 {
   m_SurfaceMeshFaceEdges = nullptr;

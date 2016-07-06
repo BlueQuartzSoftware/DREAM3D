@@ -132,24 +132,6 @@ void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VectorSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedVectorArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VectorSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);

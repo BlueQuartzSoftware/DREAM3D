@@ -140,26 +140,6 @@ void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(BoundaryCellsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(StoreBoundaryCells)
-  SIMPL_FILTER_WRITE_PARAMETER(StoreSurfaceFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(NumNeighborsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindNeighbors::initialize()
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();

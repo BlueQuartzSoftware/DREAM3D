@@ -154,28 +154,6 @@ void FindFeatureClustering::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(NumberOfBins)
-  SIMPL_FILTER_WRITE_PARAMETER(ClusteringListArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(MaxMinArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseNumber)
-  SIMPL_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindFeatureClustering::initialize()
 {
   m_ClusteringList = NeighborList<float>::NullPointer();

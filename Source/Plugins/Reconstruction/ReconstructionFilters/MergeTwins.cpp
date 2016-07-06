@@ -152,27 +152,6 @@ void MergeTwins::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  index = GroupFeatures::writeFilterParameters(writer, index) - 1;
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MergeTwins::updateFeatureInstancePointers()
 {
   setErrorCondition(0);

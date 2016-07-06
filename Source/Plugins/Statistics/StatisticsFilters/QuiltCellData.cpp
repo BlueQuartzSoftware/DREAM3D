@@ -121,23 +121,6 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(QuiltStep)
-  SIMPL_FILTER_WRITE_PARAMETER(PatchSize)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void QuiltCellData::initialize()
 {
 

@@ -112,20 +112,6 @@ void FindAvgScalarValueForFeatures::readFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindAvgScalarValueForFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewFeatureArrayArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindAvgScalarValueForFeatures::initialize()
 {
 

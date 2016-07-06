@@ -150,23 +150,6 @@ void WriteImages::readFilterParameters(AbstractFilterParametersReader* reader, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(ImagePrefix)
-  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ColorsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ImageFormat)
-  SIMPL_FILTER_WRITE_PARAMETER(Plane)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void WriteImages::initialize()
 {
 

@@ -168,28 +168,6 @@ void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(UseMask)
-  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void EstablishMatrixPhase::updateFeatureInstancePointers()
 {
   setErrorCondition(0);

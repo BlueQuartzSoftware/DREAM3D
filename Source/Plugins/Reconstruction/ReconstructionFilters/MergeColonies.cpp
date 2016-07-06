@@ -243,30 +243,6 @@ void MergeColonies::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  GroupFeatures::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(GlobAlphaArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(IdentifyGlobAlpha)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MergeColonies::updateFeatureInstancePointers()
 {
   setErrorCondition(0);

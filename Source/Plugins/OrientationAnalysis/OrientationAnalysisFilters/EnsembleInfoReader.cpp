@@ -116,22 +116,6 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void EnsembleInfoReader::updateEnsembleInstancePointers()
 {
   setErrorCondition(0);

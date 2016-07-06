@@ -249,20 +249,6 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedDataArrayPaths)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteBinaryFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::initialize()
 {
   m_SelectedWeakPtrVector.clear();

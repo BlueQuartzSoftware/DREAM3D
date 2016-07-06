@@ -165,28 +165,6 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  GroupFeatures::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CAxisTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(UseRunningAverage)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::updateFeatureInstancePointers()
 {
   setErrorCondition(0);

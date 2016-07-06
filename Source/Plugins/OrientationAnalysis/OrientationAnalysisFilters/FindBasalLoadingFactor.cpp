@@ -114,20 +114,6 @@ void FindBasalLoadingFactor::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(BasalLoadingFactorArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(LoadingDirection)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::initialize()
 {
 

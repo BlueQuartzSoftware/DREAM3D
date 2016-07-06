@@ -120,22 +120,6 @@ void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CalcByPhase)
-  SIMPL_FILTER_WRITE_PARAMETER(PhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::initialize()
 {
 

@@ -194,21 +194,6 @@ void ExportData::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ExportData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedDataArrayPaths)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Delimeter)
-  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
-  SIMPL_FILTER_WRITE_PARAMETER(MaxValPerLine)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ExportData::initialize()
 {
   m_SelectedWeakPtrVector.clear();

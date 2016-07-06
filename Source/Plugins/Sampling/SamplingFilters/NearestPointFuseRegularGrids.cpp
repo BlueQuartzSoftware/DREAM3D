@@ -101,19 +101,6 @@ void NearestPointFuseRegularGrids::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NearestPointFuseRegularGrids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-    SIMPL_FILTER_WRITE_PARAMETER(ReferenceCellAttributeMatrixPath)
-    SIMPL_FILTER_WRITE_PARAMETER(SamplingCellAttributeMatrixPath)
-    writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::initialize()
 {
 

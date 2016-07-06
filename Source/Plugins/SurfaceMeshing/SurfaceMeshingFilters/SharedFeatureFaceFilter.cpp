@@ -111,22 +111,6 @@ void SharedFeatureFaceFilter::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SharedFeatureFaceFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceLabelsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceNumTrianglesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::initialize()
 {
 

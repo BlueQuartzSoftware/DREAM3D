@@ -92,18 +92,6 @@ void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  AlignSections::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void AlignSectionsList::initialize()
 {
 

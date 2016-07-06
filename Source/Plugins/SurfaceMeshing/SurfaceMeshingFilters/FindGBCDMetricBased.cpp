@@ -581,32 +581,6 @@ void FindGBCDMetricBased::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindGBCDMetricBased::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
-  SIMPL_FILTER_WRITE_PARAMETER(ChosenLimitDists)
-  SIMPL_FILTER_WRITE_PARAMETER(NumSamplPts)
-  SIMPL_FILTER_WRITE_PARAMETER(ExcludeTripleLines)
-  SIMPL_FILTER_WRITE_PARAMETER(DistOutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(ErrOutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(SaveRelativeErr)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NodeTypesArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindGBCDMetricBased::initialize()
 {
 

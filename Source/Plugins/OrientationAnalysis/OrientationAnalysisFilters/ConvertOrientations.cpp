@@ -132,21 +132,6 @@ void ConvertOrientations::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ConvertOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputType)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputType)
-  SIMPL_FILTER_WRITE_PARAMETER(InputOrientationArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputOrientationArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ConvertOrientations::initialize()
 {
 

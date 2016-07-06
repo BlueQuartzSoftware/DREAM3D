@@ -124,23 +124,6 @@ void MinSize::readFilterParameters(AbstractFilterParametersReader* reader, int i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NumCellsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MinAllowedFeatureSize)
-  SIMPL_FILTER_WRITE_PARAMETER(ApplyToSinglePhase)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseNumber)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MinSize::initialize()
 {
   m_Neighbors = nullptr;

@@ -166,41 +166,6 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(StatsGeneratorDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(StatsDataArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
-
-  if (dynamic_cast<H5FilterParametersWriter*>(writer))
-  {
-    QJsonObject jsonRoot;
-    m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
-    QJsonDocument jDoc(jsonRoot);
-    QByteArray jsonBytes = jDoc.toJson();
-    QString jsonString(jsonBytes);
-    writer->writeValue("StatsDataArray", jsonString);
-  }
-  else if (dynamic_cast<JsonFilterParametersWriter*>(writer))
-  {
-    JsonFilterParametersWriter* jsonWriter = dynamic_cast<JsonFilterParametersWriter*>(writer);
-    QJsonObject& jsonRoot = jsonWriter->getCurrentGroupObject();
-    if(nullptr != m_StatsDataArray.get())
-    {
-      m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
-    }
-  }
-
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void StatsGeneratorFilter::initialize()
 {
 

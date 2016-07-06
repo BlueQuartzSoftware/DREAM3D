@@ -147,25 +147,6 @@ void FindEllipsoidError::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindEllipsoidError::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisLengthsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NumCellsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(IdealFeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(EllipsoidErrorArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteIdealEllipseFeatureIds)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindEllipsoidError::initialize()
 {
   m_ScaleFator = 1.0;

@@ -435,26 +435,6 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(GBCDArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(GBCDRes)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindGBCD::initialize()
 {
   m_GbcdDeltasArray = FloatArrayType::NullPointer();

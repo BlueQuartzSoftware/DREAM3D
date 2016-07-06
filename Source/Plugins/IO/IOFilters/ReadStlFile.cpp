@@ -165,21 +165,6 @@ void ReadStlFile::readFilterParameters(AbstractFilterParametersReader* reader, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadStlFile::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(StlFilePath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceNormalsArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ReadStlFile::updateFaceInstancePointers()
 {
   setErrorCondition(0);

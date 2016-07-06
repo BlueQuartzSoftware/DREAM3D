@@ -156,30 +156,6 @@ void YSChoiAbaqusReader::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFeatureInfoFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void YSChoiAbaqusReader::updateCellInstancePointers()
 {
   setErrorCondition(0);

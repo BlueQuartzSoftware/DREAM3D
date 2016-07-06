@@ -125,24 +125,6 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QuickSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedDataArrayPaths)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(NodeTypesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void QuickSurfaceMesh::updateVertexInstancePointers()
 {
   setErrorCondition(0);

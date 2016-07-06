@@ -129,26 +129,6 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(IterationSteps)
-  SIMPL_FILTER_WRITE_PARAMETER(Lambda)
-  SIMPL_FILTER_WRITE_PARAMETER(TripleLineLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(QuadPointLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfacePointLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceTripleLineLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceQuadPointLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void LaplacianSmoothing::initialize()
 {
 

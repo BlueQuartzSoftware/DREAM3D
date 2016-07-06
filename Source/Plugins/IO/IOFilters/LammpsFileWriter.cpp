@@ -106,19 +106,6 @@ void LammpsFileWriter::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LammpsFileWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(LammpsFile)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void LammpsFileWriter::initialize()
 {
 

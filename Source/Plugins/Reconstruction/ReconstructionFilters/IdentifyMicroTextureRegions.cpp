@@ -305,25 +305,6 @@ void IdentifyMicroTextureRegions::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int IdentifyMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(MTRIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CAxisLocationsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CAxisTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(MinMTRSize)
-  SIMPL_FILTER_WRITE_PARAMETER(MinVolFrac)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::updateFeatureInstancePointers()
 {
   setErrorCondition(0);

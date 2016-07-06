@@ -103,20 +103,6 @@ void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(AddSurfaceLayer)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DxWriter::initialize()
 {
 

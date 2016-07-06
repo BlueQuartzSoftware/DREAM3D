@@ -321,52 +321,6 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CalculateMorphologicalStats)
-  SIMPL_FILTER_WRITE_PARAMETER(IncludeRadialDistFunc)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(StatisticsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Omega3sArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(RDFArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MaxMinRDFArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AspectRatiosArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborhoodsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ComputeSizeDistribution)
-  SIMPL_FILTER_WRITE_PARAMETER(SizeDistributionFitType)
-  SIMPL_FILTER_WRITE_PARAMETER(ComputeAspectRatioDistribution)
-  SIMPL_FILTER_WRITE_PARAMETER(AspectRatioDistributionFitType)
-  SIMPL_FILTER_WRITE_PARAMETER(ComputeOmega3Distribution)
-  SIMPL_FILTER_WRITE_PARAMETER(Omega3DistributionFitType)
-  SIMPL_FILTER_WRITE_PARAMETER(ComputeNeighborhoodDistribution)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborhoodDistributionFitType)
-  SIMPL_FILTER_WRITE_PARAMETER(CalculateCrystallographicStats)
-  SIMPL_FILTER_WRITE_PARAMETER(CalculateODF)
-  SIMPL_FILTER_WRITE_PARAMETER(CalculateMDF)
-  SIMPL_FILTER_WRITE_PARAMETER(CalculateAxisODF)
-  SIMPL_FILTER_WRITE_PARAMETER(SizeCorrelationResolution)
-  writer->writeValue("PhaseTypeArray", getPhaseTypeData().d );
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::initialize()
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();

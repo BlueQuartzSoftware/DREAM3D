@@ -127,24 +127,6 @@ void CalculateArrayHistogram::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CalculateArrayHistogram::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NumberOfBins)
-  SIMPL_FILTER_WRITE_PARAMETER(Normalize)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NewAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainer)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void CalculateArrayHistogram::initialize()
 {
 

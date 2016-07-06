@@ -139,33 +139,6 @@ void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MultiEmmpmFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputDataArrayVector)
-  SIMPL_FILTER_WRITE_PARAMETER(NumClasses)
-  SIMPL_FILTER_WRITE_PARAMETER(ExchangeEnergy)
-  SIMPL_FILTER_WRITE_PARAMETER(HistogramLoops)
-  SIMPL_FILTER_WRITE_PARAMETER(SegmentationLoops)
-  SIMPL_FILTER_WRITE_PARAMETER(UseSimulatedAnnealing)
-  SIMPL_FILTER_WRITE_PARAMETER(UseGradientPenalty)
-  SIMPL_FILTER_WRITE_PARAMETER(GradientPenalty)
-  SIMPL_FILTER_WRITE_PARAMETER(UseCurvaturePenalty)
-  SIMPL_FILTER_WRITE_PARAMETER(CurvaturePenalty)
-  SIMPL_FILTER_WRITE_PARAMETER(RMax)
-  SIMPL_FILTER_WRITE_PARAMETER(EMLoopDelay)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(UsePreviousMuSigma)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputArrayPrefix)
-
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MultiEmmpmFilter::initialize()
 {
   m_PreviousMu.clear();

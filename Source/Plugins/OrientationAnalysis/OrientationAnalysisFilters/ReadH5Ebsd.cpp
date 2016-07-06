@@ -144,28 +144,6 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  SIMPL_FILTER_WRITE_PARAMETER(ZStartIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(ZEndIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(UseTransformations)
-  SIMPL_FILTER_WRITE_PARAMETER(AngleRepresentation)
-  writer->writeArraySelections("SelectedArrayNames", getSelectedArrayNames() );
-
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int32_t ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer m)
 {
   int32_t err = 0;

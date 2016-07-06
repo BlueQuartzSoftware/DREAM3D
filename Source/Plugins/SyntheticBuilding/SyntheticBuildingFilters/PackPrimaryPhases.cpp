@@ -441,36 +441,6 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
-  SIMPL_FILTER_WRITE_PARAMETER(UseMask)
-  SIMPL_FILTER_WRITE_PARAMETER(HaveFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureInputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(CsvOutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(VtkOutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(ErrorOutputFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PackPrimaryPhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);

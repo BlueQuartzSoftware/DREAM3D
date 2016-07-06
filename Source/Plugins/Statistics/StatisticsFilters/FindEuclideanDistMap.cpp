@@ -338,27 +338,6 @@ void FindEuclideanDistMap::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NearestNeighborsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(QPEuclideanDistancesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(TJEuclideanDistancesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(DoBoundaries)
-  SIMPL_FILTER_WRITE_PARAMETER(DoTripleLines)
-  SIMPL_FILTER_WRITE_PARAMETER(DoQuadPoints)
-  SIMPL_FILTER_WRITE_PARAMETER(SaveNearestNeighbors)
-  SIMPL_FILTER_WRITE_PARAMETER(CalcOnlyManhattanDist)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindEuclideanDistMap::initialize()
 {
 
