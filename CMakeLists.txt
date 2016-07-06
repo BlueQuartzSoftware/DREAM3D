@@ -168,8 +168,8 @@ endif()
 
 # Set the Application Name to DREAM3D to rebrand SIMPLView with the correct icons and badges
 set(SIMPLView_APPLICATION_NAME "DREAM3D")
-set(SIMPLView_VERSION_HDR_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLViewVersion.h")
-set(SIMPLView_VERSION_SRC_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLViewVersion.cpp")
+set(SIMPLView_VERSION_HDR_FILE "SIMPLViewVersion.h")
+set(SIMPLView_VERSION_SRC_FILE "SIMPLViewVersion.cpp")
 
 # -----------------------------------------------------------------------
 # Set these CMP variables because the Version Files need them set
@@ -182,11 +182,18 @@ INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 # -----------------------------------------------------------------------
 # Generate a set of Version Cpp/H files that will be used by SIMPLView to
 # get and display the proper version numbers.
-cmpRevisionString( GENERATED_HEADER_FILE_PATH "SIMPLViewVersion.h"
-                        GENERATED_SOURCE_FILE_PATH "SIMPLViewVersion.cpp"
+cmpRevisionString( GENERATED_HEADER_FILE_PATH "${SIMPLView_VERSION_HDR_FILE}"
+                        GENERATED_SOURCE_FILE_PATH "${SIMPLView_VERSION_SRC_FILE}"
                         NAMESPACE "SIMPLView"
                         PROJECT_NAME "${PROJECT_NAME}"
                         EXPORT_MACRO "SIMPLView_EXPORT")
+
+make_directory("${DREAM3DProj_BINARY_DIR}/SIMPLView")
+file(RENAME "${DREAM3DProj_BINARY_DIR}/${SIMPLView_VERSION_HDR_FILE}" "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${SIMPLView_VERSION_HDR_FILE}")
+file(RENAME "${DREAM3DProj_BINARY_DIR}/${SIMPLView_VERSION_SRC_FILE}" "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${SIMPLView_VERSION_SRC_FILE}")
+
+set(SIMPLView_VERSION_HDR_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${SIMPLView_VERSION_HDR_FILE}")
+set(SIMPLView_VERSION_SRC_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${SIMPLView_VERSION_SRC_FILE}")
 
 # -----------------------------------------------------------------------
 # Setup a Global property that is used to gather Documentation Information
