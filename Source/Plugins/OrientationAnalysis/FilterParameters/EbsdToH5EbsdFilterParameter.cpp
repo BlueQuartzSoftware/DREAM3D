@@ -82,47 +82,41 @@ QString EbsdToH5EbsdFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdFilterParameter::readJson(const QJsonObject &json)
 {
-  QJsonValue jsonValue = json[getPropertyName()];
-  if(!jsonValue.isUndefined() )
-  {
-    QJsonObject obj = jsonValue.toObject();
+  m_Filter->setOutputFile(json["OutputFile"].toString());
+  m_Filter->setZStartIndex(static_cast<int64_t>(std::stoi(json["ZStartIndex"].toString().toStdString())));
+  m_Filter->setZEndIndex(static_cast<int64_t>(std::stoi(json["ZEndIndex"].toString().toStdString())));
+  m_Filter->setZResolution(static_cast<float>(json["ZResolution"].toDouble()));
+  m_Filter->setRefFrameZDir(static_cast<uint32_t>(json["RefFrameZDir"].toDouble()));
+  m_Filter->setInputPath(json["InputPath"].toString());
+  m_Filter->setFilePrefix(json["FilePrefix"].toString());
+  m_Filter->setFileSuffix(json["FileSuffix"].toString());
+  m_Filter->setFileExtension(json["FileExtension"].toString());
+  m_Filter->setPaddingDigits(json["PaddingDigits"].toInt());
 
-    m_Filter->setOutputFile(obj["OutputFile"].toString());
-    m_Filter->setZStartIndex(static_cast<int64_t>(obj["ZStartIndex"].toDouble()));
-    m_Filter->setZEndIndex(static_cast<int64_t>(obj["ZEndIndex"].toDouble()));
-    m_Filter->setZResolution(static_cast<float>(obj["ZResolution"].toDouble()));
-    m_Filter->setRefFrameZDir(static_cast<uint32_t>(obj["RefFrameZDir"].toDouble()));
-    m_Filter->setInputPath(obj["InputPath"].toString());
-    m_Filter->setFilePrefix(obj["FilePrefix"].toString());
-    m_Filter->setFileSuffix(obj["FileSuffix"].toString());
-    m_Filter->setFileExtension(obj["FileExtension"].toString());
-    m_Filter->setPaddingDigits(obj["PaddingDigits"].toInt());
+  QJsonObject axisObj = json["SampleTransformation"].toObject();
+  float angle = static_cast<float>(axisObj["angle"].toDouble());
+  float h = static_cast<float>(axisObj["h"].toDouble());
+  float k = static_cast<float>(axisObj["k"].toDouble());
+  float l = static_cast<float>(axisObj["l"].toDouble());
 
-    QJsonObject axisObj = obj["SampleTransformation"].toObject();
-    float angle = static_cast<float>(axisObj["angle"].toDouble());
-    float h = static_cast<float>(axisObj["h"].toDouble());
-    float k = static_cast<float>(axisObj["k"].toDouble());
-    float l = static_cast<float>(axisObj["l"].toDouble());
+  AxisAngleInput_t axisAngle;
+  axisAngle.angle = angle;
+  axisAngle.h = h;
+  axisAngle.k = k;
+  axisAngle.l = l;
+  m_Filter->setSampleTransformation(axisAngle);
 
-    AxisAngleInput_t axisAngle;
-    axisAngle.angle = angle;
-    axisAngle.h = h;
-    axisAngle.k = k;
-    axisAngle.l = l;
-    m_Filter->setSampleTransformation(axisAngle);
+  axisObj = json["EulerTransformation"].toObject();
+  angle = static_cast<float>(axisObj["angle"].toDouble());
+  h = static_cast<float>(axisObj["h"].toDouble());
+  k = static_cast<float>(axisObj["k"].toDouble());
+  l = static_cast<float>(axisObj["l"].toDouble());
 
-    axisObj = obj["EulerTransformation"].toObject();
-    angle = static_cast<float>(axisObj["angle"].toDouble());
-    h = static_cast<float>(axisObj["h"].toDouble());
-    k = static_cast<float>(axisObj["k"].toDouble());
-    l = static_cast<float>(axisObj["l"].toDouble());
-
-    axisAngle.angle = angle;
-    axisAngle.h = h;
-    axisAngle.k = k;
-    axisAngle.l = l;
-    m_Filter->setEulerTransformation(axisAngle);
-  }
+  axisAngle.angle = angle;
+  axisAngle.h = h;
+  axisAngle.k = k;
+  axisAngle.l = l;
+  m_Filter->setEulerTransformation(axisAngle);
 }
 
 // -----------------------------------------------------------------------------
@@ -130,17 +124,16 @@ void EbsdToH5EbsdFilterParameter::readJson(const QJsonObject &json)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject &json)
 {
-  QJsonObject obj;
-  obj["OutputFile"] = m_Filter->getOutputFile();
-  obj["ZStartIndex"] = static_cast<double>(m_Filter->getZStartIndex());
-  obj["ZEndIndex"] = static_cast<double>(m_Filter->getZEndIndex());
-  obj["ZResolution"] = static_cast<double>(m_Filter->getZResolution());
-  obj["RefFrameZDir"] = static_cast<double>(m_Filter->getRefFrameZDir());
-  obj["InputPath"] = m_Filter->getInputPath();
-  obj["FilePrefix"] = m_Filter->getFilePrefix();
-  obj["FileSuffix"] = m_Filter->getFileSuffix();
-  obj["FileExtension"] = m_Filter->getFileExtension();
-  obj["PaddingDigits"] = m_Filter->getPaddingDigits();
+  json["OutputFile"] = m_Filter->getOutputFile();
+  json["ZStartIndex"] = QString::number(m_Filter->getZStartIndex());
+  json["ZEndIndex"] = QString::number(m_Filter->getZEndIndex());
+  json["ZResolution"] = static_cast<double>(m_Filter->getZResolution());
+  json["RefFrameZDir"] = static_cast<double>(m_Filter->getRefFrameZDir());
+  json["InputPath"] = m_Filter->getInputPath();
+  json["FilePrefix"] = m_Filter->getFilePrefix();
+  json["FileSuffix"] = m_Filter->getFileSuffix();
+  json["FileExtension"] = m_Filter->getFileExtension();
+  json["PaddingDigits"] = m_Filter->getPaddingDigits();
 
   QJsonObject axisObj;
 
@@ -149,15 +142,13 @@ void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject &json)
   axisObj["h"] = axisAngle.h;
   axisObj["k"] = axisAngle.k;
   axisObj["l"] = axisAngle.l;
-  obj["SampleTransformation"] = axisObj;
+  json["SampleTransformation"] = axisObj;
 
   axisAngle = m_Filter->getEulerTransformation();
   axisObj["angle"] = axisAngle.angle;
   axisObj["h"] = axisAngle.h;
   axisObj["k"] = axisAngle.k;
   axisObj["l"] = axisAngle.l;
-  obj["EulerTransformation"] = axisObj;
-
-  json[getPropertyName()] = obj;
+  json["EulerTransformation"] = axisObj;
 }
 
