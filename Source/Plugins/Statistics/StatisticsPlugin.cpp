@@ -41,9 +41,9 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/SIMPLibVersion.h"
 
 #include "Statistics/StatisticsConstants.h"
+#include "Statistics/StatisticsVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_StatisticsPlugin.cpp"
@@ -52,8 +52,8 @@
 //
 // -----------------------------------------------------------------------------
 StatisticsPlugin::StatisticsPlugin() :
-  m_Version(SIMPLib::Version::Package()),
-  m_CompatibilityVersion(SIMPLib::Version::Package()),
+  m_Version(Statistics::Version::Package()),
+  m_CompatibilityVersion(Statistics::Version::Package()),
   m_Vendor(BlueQuartz::VendorName),
   m_URL(BlueQuartz::URL),
   m_Location(""),

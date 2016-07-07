@@ -38,12 +38,12 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
+#include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_SyntheticBuildingPlugin.cpp"
@@ -52,8 +52,8 @@
 //
 // -----------------------------------------------------------------------------
 SyntheticBuildingPlugin::SyntheticBuildingPlugin() :
-  m_Version(SIMPLib::Version::Package()),
-  m_CompatibilityVersion(SIMPLib::Version::Package()),
+  m_Version(SyntheticBuilding::Version::Package()),
+  m_CompatibilityVersion(SyntheticBuilding::Version::Package()),
   m_Vendor(BlueQuartz::VendorName),
   m_URL(BlueQuartz::URL),
   m_Location(""),

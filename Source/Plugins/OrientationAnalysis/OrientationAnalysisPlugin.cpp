@@ -41,9 +41,9 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/SIMPLibVersion.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_OrientationAnalysisPlugin.cpp"
@@ -52,8 +52,8 @@
 //
 // -----------------------------------------------------------------------------
 OrientationAnalysisPlugin::OrientationAnalysisPlugin() :
-  m_Version(SIMPLib::Version::Package()),
-  m_CompatibilityVersion(SIMPLib::Version::Package()),
+  m_Version(OrientationAnalysis::Version::Package()),
+  m_CompatibilityVersion(OrientationAnalysis::Version::Package()),
   m_Vendor(BlueQuartz::VendorName),
   m_URL(BlueQuartz::URL),
   m_Location(""),

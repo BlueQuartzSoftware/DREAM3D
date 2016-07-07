@@ -49,6 +49,7 @@
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "Statistics/StatisticsConstants.h"
+#include "Statistics/StatisticsVersion.h"
 /**
  * @class CorrelateValuesWithVectorDirection CorrelateValuesWithVectorDirection.h DREAM3DLib/GenericFilters/CorrelateValuesWithVectorDirection.h
  * @brief

@@ -45,7 +45,6 @@
 #include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
@@ -53,7 +52,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ImageIOTestFileLocations.h"
-
+#include "ImageIO/ImageIOVersion.cpp"
 
 #define WRITE_IMAGES_FILTER_NAME "WriteImages"
 
@@ -236,7 +235,7 @@ class WriteImagesTest
         if (dcName == "dc2") // metadata only for .png
         {
           QString ver = testImage.text("Description");
-          DREAM3D_REQUIRE_EQUAL(ver, SIMPLib::Version::PackageComplete());
+          DREAM3D_REQUIRE_EQUAL(ver, ImageIO::Version::PackageComplete());
         }
       }
     }

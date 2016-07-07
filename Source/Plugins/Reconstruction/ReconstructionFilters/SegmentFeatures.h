@@ -42,6 +42,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
+#include "Reconstruction/ReconstructionVersion.h"
 
 /**
  * @brief The SegmentFeatures class. This class serves as a superclass for other classes

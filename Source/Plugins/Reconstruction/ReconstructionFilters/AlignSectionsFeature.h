@@ -42,6 +42,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
+#include "Reconstruction/ReconstructionVersion.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 

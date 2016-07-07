@@ -12,6 +12,7 @@
 #include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
+#include "StatsGenerator/StatsGeneratorVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_StatsGeneratorPlugin.cpp"
@@ -20,15 +21,14 @@
 //
 // -----------------------------------------------------------------------------
 StatsGeneratorPlugin::StatsGeneratorPlugin() :
-m_Version("0.1.0"),                            // Initialize StatsGenerator's Version Number Here
-m_CompatibilityVersion("0.1.0"), // Initialize StatsGenerator's Compatibility Version Number Here
-m_Vendor("Vendor Name"),                                // Initialize StatsGenerator's Vendor Name Here
-m_URL("URL"),                                           // Initialize Company URL Here
-m_Location("Location"),                                 // Initialize StatsGenerator library Location Here
-m_Description("Description"),                           // Initialize StatsGenerator's Description Here
-m_Copyright("Copyright"),                               // Initialize StatsGenerator's Copyright Here
-m_Filters(QList<QString>()),                        // Initialize StatsGenerator's List of Dependencies Here
-m_DidLoad(false)
+  m_Version(StatsGenerator::Version::Package()),                            // Initialize StatsGenerator's Version Number Here
+  m_CompatibilityVersion(StatsGenerator::Version::Package()), // Initialize StatsGenerator's Compatibility Version Number Here
+  m_Vendor(BlueQuartz::VendorName),
+  m_URL(BlueQuartz::URL),
+  m_Location(""),
+  m_Copyright(BlueQuartz::Copyright),
+  m_Filters(QList<QString>()),
+  m_DidLoad(false)
 {
 
 }
