@@ -48,7 +48,6 @@
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/FilterFactory.hpp"
@@ -292,7 +291,7 @@ int main(int argc, char** argv)
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("PhToHDF5");
 
-  std::cout << "PhToHDF5 Starting. Version " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
+  std::cout << "PhToHDF5 Starting. Version " << IO::Version::PackageComplete().toStdString() << std::endl;
 
 
   // Register all the filters including trying to load those from Plugins
@@ -305,7 +304,7 @@ int main(int argc, char** argv)
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("PhToHDF5", ' ', SIMPLib::Version::Complete().toStdString());
+    TCLAP::CmdLine cmd("PhToHDF5", ' ', IO::Version::Complete().toStdString());
 
     TCLAP::ValueArg<std::string> phFileArg( "p", "phfile", "Ph Input File", true, "", "Ph Input File");
     cmd.add(phFileArg);

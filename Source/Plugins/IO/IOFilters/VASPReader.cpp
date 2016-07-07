@@ -40,7 +40,6 @@
 
 #include <QtCore/QFileInfo>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -50,6 +49,7 @@
 #include "SIMPLib/Geometry/VertexGeom.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_VASPReader.cpp"
@@ -448,7 +448,7 @@ const QString VASPReader::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 

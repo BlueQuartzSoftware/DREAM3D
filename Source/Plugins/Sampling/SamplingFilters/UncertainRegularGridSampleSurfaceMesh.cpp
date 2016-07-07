@@ -36,7 +36,6 @@
 #include "UncertainRegularGridSampleSurfaceMesh.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -50,6 +49,7 @@
 #include "SIMPLib/Geometry/VertexGeom.h"
 
 #include "Sampling/SamplingConstants.h"
+#include "Sampling/SamplingVersion.h"
 
 #include "moc_UncertainRegularGridSampleSurfaceMesh.cpp"
 
@@ -297,7 +297,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

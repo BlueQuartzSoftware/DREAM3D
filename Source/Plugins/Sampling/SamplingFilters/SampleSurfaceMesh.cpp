@@ -43,7 +43,6 @@
 #endif
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -55,6 +54,7 @@
 #include "SIMPLib/Geometry/VertexGeom.h"
 
 #include "Sampling/SamplingConstants.h"
+#include "Sampling/SamplingVersion.h"
 
 /**
  * @brief The SampleSurfaceMeshImpl class implements a threaded algorithm that samples a surface mesh based on points passed from subclassed Filters.
@@ -376,7 +376,7 @@ const QString SampleSurfaceMesh::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

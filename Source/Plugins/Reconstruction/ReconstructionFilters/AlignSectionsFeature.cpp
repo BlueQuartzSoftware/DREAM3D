@@ -38,7 +38,6 @@
 #include <fstream>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -46,6 +45,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
+#include "Reconstruction/ReconstructionVersion.h"
 
 #include "moc_AlignSectionsFeature.cpp"
 // -----------------------------------------------------------------------------
@@ -309,7 +309,7 @@ const QString AlignSectionsFeature::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

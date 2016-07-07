@@ -14,6 +14,7 @@
 #include "FilterParameters/ImportASCIIDataFilterParameter.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 #include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
 #include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"

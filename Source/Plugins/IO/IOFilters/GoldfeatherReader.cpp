@@ -37,7 +37,6 @@
 
 #include <QtCore/QFileInfo>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -46,6 +45,7 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 
 /**
@@ -432,7 +432,7 @@ const QString GoldfeatherReader::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 

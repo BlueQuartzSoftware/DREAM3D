@@ -42,9 +42,9 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ComparisonSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/SIMPLibVersion.h"
 
 #include "Processing/ProcessingConstants.h"
+#include "Processing/ProcessingVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_MultiThresholdObjects.cpp"
@@ -317,7 +317,7 @@ const QString MultiThresholdObjects::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

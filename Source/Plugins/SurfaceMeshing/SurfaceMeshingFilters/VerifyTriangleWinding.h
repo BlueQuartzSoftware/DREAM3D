@@ -44,6 +44,7 @@
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
+#include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
 /**
  * @class VerifyTriangleWinding VerifyTriangleWinding.h /SurfaceMeshFilters/VerifyTriangleWinding.h

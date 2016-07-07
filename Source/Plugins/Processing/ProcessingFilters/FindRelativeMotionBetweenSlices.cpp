@@ -42,7 +42,6 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -56,6 +55,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Processing/ProcessingConstants.h"
+#include "Processing/ProcessingVersion.h"
 
 /**
  * @brief The CalcRelativeMotion class implements a templated threaded algorithm for
@@ -724,7 +724,7 @@ const QString FindRelativeMotionBetweenSlices::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
 

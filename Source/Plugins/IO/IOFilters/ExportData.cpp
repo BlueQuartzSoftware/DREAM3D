@@ -38,7 +38,6 @@
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -50,6 +49,7 @@
 
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 /**
  * @brief The ExportDataPrivate class is a templated class that implements a method to generically
@@ -395,7 +395,7 @@ const QString ExportData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

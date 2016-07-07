@@ -40,7 +40,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -51,6 +50,7 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_NodesTrianglesToStl.cpp"
@@ -512,7 +512,7 @@ const QString NodesTrianglesToStl::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 

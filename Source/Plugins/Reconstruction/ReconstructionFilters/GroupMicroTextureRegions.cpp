@@ -36,7 +36,6 @@
 #include "GroupMicroTextureRegions.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -54,6 +53,7 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
+#include "Reconstruction/ReconstructionVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_GroupMicroTextureRegions.cpp"
@@ -561,7 +561,7 @@ const QString GroupMicroTextureRegions::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

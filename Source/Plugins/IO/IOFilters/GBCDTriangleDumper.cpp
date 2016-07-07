@@ -35,9 +35,7 @@
 
 #include "GBCDTriangleDumper.h"
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -47,6 +45,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_GBCDTriangleDumper.cpp"
@@ -230,7 +229,7 @@ void GBCDTriangleDumper::execute()
     return;
   }
 
-  fprintf(f, "# Triangles Produced from DREAM3D version %s\n", SIMPLib::Version::Package().toLatin1().data() );
+  fprintf(f, "# Triangles Produced from DREAM3D version %s\n", IO::Version::Package().toLatin1().data() );
   fprintf(f, "# Column 1-3:    right hand average orientation (phi1, PHI, phi2 in RADIANS)\n");
   fprintf(f, "# Column 4-6:    left hand average orientation (phi1, PHI, phi2 in RADIANS)\n");
   fprintf(f, "# Column 7-9:    triangle normal\n");
@@ -309,7 +308,7 @@ const QString GBCDTriangleDumper::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

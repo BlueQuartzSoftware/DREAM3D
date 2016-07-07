@@ -39,7 +39,6 @@
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -49,6 +48,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 #define BUF_SIZE 1024
 
@@ -443,7 +443,7 @@ const QString PhReader::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

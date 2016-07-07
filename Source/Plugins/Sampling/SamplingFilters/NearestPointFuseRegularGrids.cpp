@@ -36,7 +36,6 @@
 #include "NearestPointFuseRegularGrids.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -45,6 +44,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Sampling/SamplingConstants.h"
+#include "Sampling/SamplingVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_NearestPointFuseRegularGrids.cpp"
@@ -365,7 +365,7 @@ const QString NearestPointFuseRegularGrids::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 

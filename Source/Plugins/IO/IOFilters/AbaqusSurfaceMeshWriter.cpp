@@ -37,7 +37,6 @@
 
 #include <QtCore/QDir>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -48,6 +47,7 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 #define TRI_ELEMENT_TYPE "SFM3D3"
 
@@ -253,7 +253,7 @@ int32_t AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int64_t nodeCount, int64_t
     return -1;
   }
   fprintf(f, "*HEADING\n");
-  fprintf(f, "** File Created with DREAM3D Version %s\n", SIMPLib::Version::Complete().toStdString().c_str());
+  fprintf(f, "** File Created with DREAM3D Version %s\n", IO::Version::Complete().toStdString().c_str());
   fprintf(f, "** There are 3 Sections to this INP File: Nodes, Elements and Sets of Elements for each grain\n");
   fprintf(f, "** This file represents a trianguglar based mesh. The element type selected is %s for the triangles\n", TRI_ELEMENT_TYPE);
   fprintf(f, "** This file is an experimental output from DREAM3D. The user is responsible for verifying all elements in Abaqus\n");
@@ -414,7 +414,7 @@ const QString AbaqusSurfaceMeshWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

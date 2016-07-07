@@ -43,7 +43,6 @@
 #endif
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -52,6 +51,7 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 /**
  * @brief The FindUniqueIdsImpl class implements a threaded algorithm that determines the set of
@@ -485,7 +485,7 @@ const QString ReadStlFile::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

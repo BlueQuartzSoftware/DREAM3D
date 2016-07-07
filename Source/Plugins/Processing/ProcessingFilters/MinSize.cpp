@@ -36,7 +36,6 @@
 #include "MinSize.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -46,6 +45,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Processing/ProcessingConstants.h"
+#include "Processing/ProcessingVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_MinSize.cpp"
@@ -451,7 +451,7 @@ const QString MinSize::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

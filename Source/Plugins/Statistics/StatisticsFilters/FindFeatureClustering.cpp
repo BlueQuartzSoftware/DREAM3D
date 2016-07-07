@@ -38,7 +38,6 @@
 #include <fstream>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -52,6 +51,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Statistics/StatisticsConstants.h"
+#include "Statistics/StatisticsVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_FindFeatureClustering.cpp"
@@ -482,7 +482,7 @@ const QString FindFeatureClustering::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

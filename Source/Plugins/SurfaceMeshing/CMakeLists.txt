@@ -15,6 +15,17 @@ if(NOT Qt5Core_FOUND)
     message(FATAL_ERROR "Qt 5 is Needed for plugin ${PLUGIN_NAME}Plugin.")
 endif()
 
+set(CMP_TOP_HEADER_FILE "${PLUGIN_NAME}Plugin.h")
+set(VERSION_HEADER_FILE_NAME "${PLUGIN_NAME}Version.h")
+set(VERSION_SOURCE_FILE_NAME "${PLUGIN_NAME}Version.cpp")
+set(${PLUGIN_NAME}_VERSION_MAJOR "${DREAM3DProj_VERSION_MAJOR}")
+set(${PLUGIN_NAME}_VERSION_MINOR "${DREAM3DProj_VERSION_MINOR}")
+
+cmpRevisionString( GENERATED_HEADER_FILE_PATH "${VERSION_HEADER_FILE_NAME}"
+                    GENERATED_SOURCE_FILE_PATH "${VERSION_SOURCE_FILE_NAME}"
+                    NAMESPACE "${PLUGIN_NAME}"
+                    PROJECT_NAME "${PLUGIN_NAME}"
+                    EXPORT_MACRO "")
 
 set(${PLUGIN_NAME}_Project_SRCS "")
 

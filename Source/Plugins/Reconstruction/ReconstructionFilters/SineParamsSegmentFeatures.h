@@ -56,6 +56,7 @@ typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Gen
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 #include "Reconstruction/ReconstructionConstants.h"
+#include "Reconstruction/ReconstructionVersion.h"
 
 
 class CompareFunctor;

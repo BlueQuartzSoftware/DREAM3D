@@ -55,7 +55,6 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"

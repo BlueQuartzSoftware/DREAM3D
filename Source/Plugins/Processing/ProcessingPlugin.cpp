@@ -41,9 +41,9 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/SIMPLibVersion.h"
 
 #include "Processing/ProcessingConstants.h"
+#include "Processing/ProcessingVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_ProcessingPlugin.cpp"
@@ -52,8 +52,8 @@
 //
 // -----------------------------------------------------------------------------
 ProcessingPlugin::ProcessingPlugin() :
-  m_Version(SIMPLib::Version::Package()),
-  m_CompatibilityVersion(SIMPLib::Version::Package()),
+  m_Version(Processing::Version::Package()),
+  m_CompatibilityVersion(Processing::Version::Package()),
   m_Vendor(BlueQuartz::VendorName),
   m_URL(BlueQuartz::URL),
   m_Location(""),

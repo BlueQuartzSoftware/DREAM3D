@@ -44,7 +44,6 @@
 
 #include <QtCore/QDateTime>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
@@ -60,6 +59,7 @@
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
+#include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
 /**
  * @brief The CalculateGBCDImpl class implements a threaded algorithm that calculates the
@@ -779,7 +779,7 @@ const QString FindGBCD::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

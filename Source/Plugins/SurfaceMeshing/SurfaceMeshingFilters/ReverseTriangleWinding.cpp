@@ -36,7 +36,6 @@
 #include "ReverseTriangleWinding.h"
 
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
@@ -50,6 +49,7 @@
 #endif
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
+#include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
 /**
  * @brief The ReverseWindingImpl class implements a threaded algorithm that reverses the node
@@ -249,7 +249,7 @@ const QString ReverseTriangleWinding::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

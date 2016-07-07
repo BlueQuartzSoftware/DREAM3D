@@ -45,7 +45,6 @@
 #endif
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -57,6 +56,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Statistics/StatisticsConstants.h"
+#include "Statistics/StatisticsVersion.h"
 
 /**
  * @brief The FindEuclideanMap class implements a threaded algorithm that computes the Euclidean distance map
@@ -603,7 +603,7 @@ const QString FindEuclideanDistMap::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

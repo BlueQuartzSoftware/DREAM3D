@@ -44,6 +44,7 @@
 #include "EbsdLib/HKL/CtfReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 struct Ctf_Private_Data
 {

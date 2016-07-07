@@ -59,7 +59,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/DataArrays/StructArray.hpp"
-#include "SIMPLib/SIMPLibVersion.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshFunctions.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
@@ -1061,7 +1060,7 @@ const QString MovingFiniteElementSmoothing::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 

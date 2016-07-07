@@ -39,7 +39,7 @@
 #include <Eigen/Eigen>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -50,6 +50,7 @@
 #include "SIMPLib/Utilities/ColorTable.h"
 
 #include "Generic/GenericConstants.h"
+#include "Generic/GenericVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_GenerateVectorColors.cpp"
@@ -317,7 +318,7 @@ const QString GenerateVectorColors::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  Generic::Version::Major() << "." << Generic::Version::Minor() << "." << Generic::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

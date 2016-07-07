@@ -40,7 +40,6 @@
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/SIMPLibVersion.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
 
@@ -51,6 +50,7 @@
 #endif
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
+#include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
 /**
  * @brief The CalculateNormalsImpl class implements a threaded algorithm that computes the normal for
@@ -275,7 +275,7 @@ const QString TriangleNormalFilter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

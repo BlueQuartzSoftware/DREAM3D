@@ -51,7 +51,6 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -62,6 +61,7 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 
 #define SET_DIRECTION(i, j, k)\
@@ -327,7 +327,7 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
   bool writeLine = false;
   out <<  "# All lines starting with '#' are comments and should come before the header.\n";
   out <<  "# DREAM.3D StatsGenerator Angles Input File\n";
-  out <<  "# DREAM.3D Version " << SIMPLib::Version::Complete() << "\n";
+  out <<  "# DREAM.3D Version " << OrientationAnalysis::Version::Complete() << "\n";
   out <<  "# Angle Data is space delimited.\n";
   out <<  "# Euler0 Euler1 Euler2 Weight Sigma\n";
   out <<  "Angle Count:" << lineCount << "\n";
@@ -399,7 +399,7 @@ const QString WriteStatsGenOdfAngleFile::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 

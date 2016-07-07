@@ -57,9 +57,9 @@
 #include "SIMPLib/StatsData/MatrixStatsData.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/SIMPLibVersion.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
+#include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
   if (m_##var <= 0) { QString ss = QObject::tr("%1 must be positive").arg( #var); notifyErrorMessage(getHumanLabel(), ss, errCond);}
@@ -480,7 +480,7 @@ const QString InitializeSyntheticVolume::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  SyntheticBuilding::Version::Major() << "." << SyntheticBuilding::Version::Minor() << "." << SyntheticBuilding::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

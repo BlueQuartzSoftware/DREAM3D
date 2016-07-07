@@ -45,6 +45,7 @@
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
+#include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
 /**
  * @brief The MatchCrystallography class. See [Filter documentation](@ref matchcrystallography) for details.

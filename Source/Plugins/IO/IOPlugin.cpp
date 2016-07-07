@@ -41,9 +41,9 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/SIMPLibVersion.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_IOPlugin.cpp"
@@ -52,8 +52,8 @@
 //
 // -----------------------------------------------------------------------------
 IOPlugin::IOPlugin() :
-  m_Version(SIMPLib::Version::Package()),
-  m_CompatibilityVersion(SIMPLib::Version::Package()),
+  m_Version(IO::Version::Package()),
+  m_CompatibilityVersion(IO::Version::Package()),
   m_Vendor(BlueQuartz::VendorName),
   m_URL(BlueQuartz::URL),
   m_Location(""),

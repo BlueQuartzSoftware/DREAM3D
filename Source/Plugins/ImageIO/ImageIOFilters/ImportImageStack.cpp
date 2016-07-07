@@ -38,7 +38,6 @@
 #include <QtGui/QImageReader>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -52,6 +51,7 @@
 #include "SIMPLib/Geometry/RectGridGeom.h"
 
 #include "ImageIO/ImageIOConstants.h"
+#include "ImageIO/ImageIOVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_ImportImageStack.cpp"
@@ -727,7 +727,7 @@ const QString ImportImageStack::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  ImageIO::Version::Major() << "." << ImageIO::Version::Minor() << "." << ImageIO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

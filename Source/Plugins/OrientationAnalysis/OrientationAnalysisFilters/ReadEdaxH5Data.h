@@ -46,6 +46,7 @@
 #include "EbsdLib/TSL/AngPhase.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 class H5OIMReader;
 

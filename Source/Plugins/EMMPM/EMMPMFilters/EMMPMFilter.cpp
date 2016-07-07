@@ -58,6 +58,8 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLibVersion.h"
 
+#include "EMMPM/EMMPMVersion.h"
+
 // Include the MOC generated file for this class
 #include "moc_EMMPMFilter.cpp"
 
@@ -401,7 +403,7 @@ const QString EMMPMFilter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  EM_MPM::Version::Major() << "." << EM_MPM::Version::Minor() << "." << EM_MPM::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

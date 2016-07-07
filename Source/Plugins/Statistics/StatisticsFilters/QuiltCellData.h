@@ -46,6 +46,7 @@
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 
 #include "Statistics/StatisticsConstants.h"
+#include "Statistics/StatisticsVersion.h"
 
 /**
  * @class QuiltCellData QuiltCellData.h /FilterCategoryFilters/QuiltCellData.h

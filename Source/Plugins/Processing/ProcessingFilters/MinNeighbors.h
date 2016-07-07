@@ -42,6 +42,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Processing/ProcessingConstants.h"
+#include "Processing/ProcessingVersion.h"
 
 /**
  * @brief The MinNeighbors class. See [Filter documentation](@ref minneighbors) for details.

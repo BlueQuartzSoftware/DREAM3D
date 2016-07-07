@@ -3,6 +3,7 @@
 
 
 #include "Statistics/StatisticsConstants.h"
+#include "Statistics/StatisticsVersion.h"
 
 #endif /* CORRELATEFIELDSTATISTICS_H_ */
 

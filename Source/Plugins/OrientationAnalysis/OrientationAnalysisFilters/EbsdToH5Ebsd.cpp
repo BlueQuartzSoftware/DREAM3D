@@ -38,7 +38,6 @@
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
@@ -47,6 +46,7 @@
 #include "EbsdLib/TSL/H5AngImporter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 #include "OrientationAnalysis/FilterParameters/EbsdToH5EbsdFilterParameter.h"
 
 // Include the MOC generated file for this class
@@ -591,7 +591,7 @@ const QString EbsdToH5Ebsd::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

@@ -50,6 +50,7 @@
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
 #include "Statistics/StatisticsConstants.h"
+#include "Statistics/StatisticsVersion.h"
 
 /**
  * @class FitCorrelatedFeatureData FitCorrelatedFeatureData.h /FilterCategoryFilters/FitCorrelatedFeatureData.h

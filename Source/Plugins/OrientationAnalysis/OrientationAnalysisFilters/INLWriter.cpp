@@ -38,9 +38,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -52,6 +50,7 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_INLWriter.cpp"
@@ -323,7 +322,7 @@ int32_t INLWriter::writeFile()
   }
 
   // Write the header, Each line starts with a "#" symbol
-  fprintf(f, "# File written from %s\r\n", SIMPLib::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "# File written from %s\r\n", OrientationAnalysis::Version::PackageComplete().toLatin1().data());
   fprintf(f, "# DateTime: %s\r\n", QDateTime::currentDateTime().toString().toLatin1().data());
   fprintf(f, "# X_STEP: %f\r\n", res[0]);
   fprintf(f, "# Y_STEP: %f\r\n", res[1]);
@@ -481,7 +480,7 @@ const QString INLWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

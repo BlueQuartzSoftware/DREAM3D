@@ -37,9 +37,7 @@
 
 #include <QtCore/QDir>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
@@ -51,6 +49,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ImageIO/ImageIOConstants.h"
+#include "ImageIO/ImageIOVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_WriteImages.cpp"
@@ -429,7 +428,7 @@ int32_t WriteImages::writeRGBImage(size_t slice, size_t dB, size_t dA, size_t* d
 #endif
     }
   }
-  image.setText("Description", SIMPLib::Version::PackageComplete());
+  image.setText("Description", ImageIO::Version::PackageComplete());
   bool success = image.save(path);
   if (success)
   {
@@ -523,7 +522,7 @@ int32_t WriteImages::writeGrayscaleImage(size_t slice, size_t dB, size_t dA, siz
 #endif
     }
   }
-  image.setText("Description", SIMPLib::Version::PackageComplete());
+  image.setText("Description", ImageIO::Version::PackageComplete());
   bool success = image.save(path);
   if (success)
   {
@@ -575,7 +574,7 @@ const QString WriteImages::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  ImageIO::Version::Major() << "." << ImageIO::Version::Minor() << "." << ImageIO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------

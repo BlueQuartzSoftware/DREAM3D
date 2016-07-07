@@ -12,6 +12,7 @@
 #include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
+#include "StatsGenerator/StatsGeneratorVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_StatsGeneratorPlugin.cpp"

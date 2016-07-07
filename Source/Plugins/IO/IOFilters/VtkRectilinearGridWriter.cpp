@@ -41,7 +41,6 @@
 #include <QtCore/QFile>
 
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -53,6 +52,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 
 namespace Detail
@@ -71,7 +71,7 @@ void WriteVTKHeader(FILE* f, DataContainer::Pointer m, bool isBinary)
   size_t zpoints = m->getGeometryAs<Geometry>()->getZPoints() + 1;
 
   fprintf(f, "# vtk DataFile Version 2.0\n");
-  fprintf(f, "Data set from %s\n", SIMPLib::Version::PackageComplete().toLatin1().constData());
+  fprintf(f, "Data set from %s\n", IO::Version::PackageComplete().toLatin1().constData());
   if(isBinary)
   {
     fprintf(f, "BINARY\n");
@@ -522,7 +522,7 @@ const QString VtkRectilinearGridWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream << SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 

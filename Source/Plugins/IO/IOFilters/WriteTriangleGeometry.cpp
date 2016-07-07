@@ -42,7 +42,6 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
@@ -50,6 +49,7 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "IO/IOConstants.h"
+#include "IO/IOVersion.h"
 
 
 #define WRITE_EDGES_FILE 0
@@ -230,7 +230,7 @@ void WriteTriangleGeometry::execute()
   }
   fprintf(nodesFile, "# All lines starting with '#' are comments\n");
   fprintf(nodesFile, "# DREAM.3D Nodes file\n");
-  fprintf(nodesFile, "# DREAM.3D Version %s\n", SIMPLib::Version::Complete().toLatin1().constData());
+  fprintf(nodesFile, "# DREAM.3D Version %s\n", IO::Version::Complete().toLatin1().constData());
   fprintf(nodesFile, "# Node Data is X Y Z space delimited.\n");
   fprintf(nodesFile, "Node Count: %lld\n", numNodes);
   for (int i = 0; i < numNodes; i++)
@@ -261,7 +261,7 @@ void WriteTriangleGeometry::execute()
 
   fprintf(triFile, "# All lines starting with '#' are comments\n");
   fprintf(triFile, "# DREAM.3D Triangle file\n");
-  fprintf(triFile, "# DREAM.3D Version %s\n", SIMPLib::Version::Complete().toLatin1().constData());
+  fprintf(triFile, "# DREAM.3D Version %s\n", IO::Version::Complete().toLatin1().constData());
   fprintf(triFile, "# Each Triangle consists of 3 Node Ids.\n");
   fprintf(triFile, "# NODE IDs START AT 0.\n");
   fprintf(triFile, "Geometry Type: %s\n", geometryType.toLatin1().constData());
@@ -321,7 +321,7 @@ const QString WriteTriangleGeometry::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 

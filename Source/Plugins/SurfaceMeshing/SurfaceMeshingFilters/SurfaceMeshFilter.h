@@ -42,6 +42,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
+#include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
 /**
  * @brief The SurfaceMeshFilter class. This class serves as a superclass for other classes
