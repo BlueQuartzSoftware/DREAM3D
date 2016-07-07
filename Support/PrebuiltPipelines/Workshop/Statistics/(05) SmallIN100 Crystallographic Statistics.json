@@ -141,19 +141,6 @@
                                 },
                                 {
                                     "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "MisorientationColor",
-                                    "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
                                         1
                                     ],
                                     "Flag": 2,
@@ -223,32 +210,6 @@
                                     ],
                                     "Flag": 2,
                                     "Name": "TJEuclideanDistances",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "X Position",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
@@ -642,7 +603,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1882",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
         "QuatsArrayPath": {
@@ -668,7 +629,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1882",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Neighbor Misorientations",
         "Filter_Name": "FindMisorientations",
         "FindAvgMisors": 0,
@@ -695,7 +656,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1882",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Schmid Factors",
         "Filter_Name": "FindSchmids",
         "LambdasArrayName": "Schmid_Lambdas",
@@ -744,7 +705,7 @@
             "Data Container Name": "ImageDataContainer"
         },
         "FeatureReferenceMisorientationsArrayName": "FeatureReferenceMisorientations",
-        "FilterVersion": "6.0.1882",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Reference Misorientations",
         "Filter_Name": "FindFeatureReferenceMisorientations",
         "GBEuclideanDistancesArrayPath": {
@@ -775,7 +736,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1882",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Kernel Average Misorientations",
         "Filter_Name": "FindKernelAvgMisorientations",
         "KernelAverageMisorientationsArrayName": "KernelAverageMisorientations",
@@ -791,7 +752,7 @@
         }
     },
     "6": {
-        "FilterVersion": "6.0.1882",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -800,6 +761,6 @@
     "PipelineBuilder": {
         "Name": "(05) SmallIN100 Crystallographic Statistics",
         "Number_Filters": 7,
-        "Version": "6.0"
+        "Version": "1.0"
     }
 }

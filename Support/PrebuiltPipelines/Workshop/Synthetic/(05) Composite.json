@@ -33,7 +33,7 @@
                 "BinNumber": [
                     19.985357284545898
                 ],
-                "BoundaryArea": 6.2584792213074179e-27,
+                "BoundaryArea": 0,
                 "Crystal Symmetry": 1,
                 "FeatureSize Distribution": {
                     "Average": 3,
@@ -109,7 +109,7 @@
             "z": 128
         },
         "EstimateNumberOfFeatures": 0,
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
         "InputPhaseTypesArrayPath": {
@@ -135,7 +135,7 @@
         }
     },
     "2": {
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
         "InputPhaseTypesArrayPath": {
@@ -154,7 +154,7 @@
         "CellPhasesArrayName": "Phases",
         "FeatureIdsArrayName": "FeatureIds",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Establish Matrix Phase",
         "Filter_Name": "EstablishMatrixPhase",
         "InputPhaseTypesArrayPath": {
@@ -194,7 +194,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -226,7 +226,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Insert Precipitate Phases",
         "Filter_Name": "InsertPrecipitatePhases",
         "HavePrecips": 0,
@@ -262,7 +262,7 @@
         "WriteGoalAttributes": 0
     },
     "6": {
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/CompositeOut.dream3d",

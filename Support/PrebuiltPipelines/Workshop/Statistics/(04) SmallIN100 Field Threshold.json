@@ -24,6 +24,19 @@
                                 },
                                 {
                                     "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "EquivalentDiameters",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
                                         3
                                     ],
                                     "Flag": 2,
@@ -115,19 +128,6 @@
                                 },
                                 {
                                     "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "MisorientationColor",
-                                    "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
                                         1
                                     ],
                                     "Flag": 2,
@@ -197,32 +197,6 @@
                                     ],
                                     "Flag": 2,
                                     "Name": "TJEuclideanDistances",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "X Position",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
@@ -579,7 +553,7 @@
     },
     "1": {
         "DestinationArrayName": "CriticalFields",
-        "FilterVersion": "6.0.1882",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -613,8 +587,8 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1882",
-        "Filter_Human_Label": "Create Element Array From Feature Array",
+        "FilterVersion": "1.0.278",
+        "Filter_Human_Label": "Create Element Array from Feature Array",
         "Filter_Name": "CopyFeatureArrayToElementArray",
         "SelectedFeatureArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
@@ -623,7 +597,7 @@
         }
     },
     "3": {
-        "FilterVersion": "6.0.1882",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -632,6 +606,6 @@
     "PipelineBuilder": {
         "Name": "(04) SmallIN100 Field Threshold",
         "Number_Filters": 4,
-        "Version": "6.0"
+        "Version": "1.0"
     }
 }

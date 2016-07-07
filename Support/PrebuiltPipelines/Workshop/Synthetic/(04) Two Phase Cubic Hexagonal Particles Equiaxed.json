@@ -104,7 +104,7 @@
                     6.2255411148071289,
                     8.2255411148071289
                 ],
-                "BoundaryArea": 0,
+                "BoundaryArea": 64498012,
                 "Crystal Symmetry": 0,
                 "FeatureSize Distribution": {
                     "Average": 1.6000000238418579,
@@ -198,7 +198,7 @@
             "z": 128
         },
         "EstimateNumberOfFeatures": 0,
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
         "InputPhaseTypesArrayPath": {
@@ -224,7 +224,7 @@
         }
     },
     "2": {
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
         "InputPhaseTypesArrayPath": {
@@ -246,7 +246,7 @@
         "FeatureIdsArrayName": "FeatureIds",
         "FeatureInputFile": "",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Pack Primary Phases",
         "Filter_Name": "PackPrimaryPhases",
         "HaveFeatures": 0,
@@ -290,7 +290,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Boundary Cells (Image)",
         "Filter_Name": "FindBoundaryCells"
     },
@@ -316,7 +316,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Insert Precipitate Phases",
         "Filter_Name": "InsertPrecipitatePhases",
         "HavePrecips": 0,
@@ -363,7 +363,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -392,7 +392,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Match Crystallography",
         "Filter_Name": "MatchCrystallography",
         "InputStatsArrayPath": {
@@ -445,7 +445,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "StatsGeneratorDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -461,7 +461,7 @@
         "UseGoodVoxels": 0
     },
     "9": {
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/TwoPhaseCubicHexParticlesEquiaxedOut.dream3d",

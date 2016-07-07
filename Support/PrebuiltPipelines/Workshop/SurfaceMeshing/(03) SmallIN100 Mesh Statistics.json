@@ -102,19 +102,6 @@
                                 },
                                 {
                                     "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "MisorientationColor",
-                                    "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
                                         1
                                     ],
                                     "Flag": 2,
@@ -158,32 +145,6 @@
                                     ],
                                     "Flag": 2,
                                     "Name": "SEM Signal",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "X Position",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
@@ -456,7 +417,7 @@
         "OverwriteExistingDataContainers": 0
     },
     "1": {
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Generate Triangle Areas",
         "Filter_Name": "TriangleAreaFilter",
         "SurfaceMeshTriangleAreasArrayPath": {
@@ -466,7 +427,7 @@
         }
     },
     "2": {
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Generate Triangle Normals",
         "Filter_Name": "TriangleNormalFilter",
         "SurfaceMeshTriangleNormalsArrayPath": {
@@ -476,7 +437,7 @@
         }
     },
     "3": {
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Minimum Triangle Dihedral Angle",
         "Filter_Name": "TriangleDihedralAngleFilter",
         "SurfaceMeshTriangleDihedralAnglesArrayPath": {
@@ -501,7 +462,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Generate IPF Colors (Face)",
         "Filter_Name": "GenerateFaceIPFColoring",
         "SurfaceMeshFaceIPFColorsArrayName": "SurfaceMeshFaceIPFColors",
@@ -532,7 +493,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Generate Misorientation Colors (Face)",
         "Filter_Name": "GenerateFaceMisorientationColoring",
         "SurfaceMeshFaceLabelsArrayPath": {
@@ -543,7 +504,7 @@
         "SurfaceMeshFaceMisorientationColorsArrayName": "SurfaceMeshFaceMisorientationColors"
     },
     "6": {
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Mesh.dream3d",
@@ -552,6 +513,6 @@
     "PipelineBuilder": {
         "Name": "(03) SmallIN100 Mesh Statistics",
         "Number_Filters": 7,
-        "Version": "6.0"
+        "Version": "1.0"
     }
 }

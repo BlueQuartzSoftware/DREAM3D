@@ -102,19 +102,6 @@
                                 },
                                 {
                                     "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "MisorientationColor",
-                                    "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
                                         1
                                     ],
                                     "Flag": 2,
@@ -158,32 +145,6 @@
                                     ],
                                     "Flag": 2,
                                     "Name": "SEM Signal",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "X Position",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
@@ -537,7 +498,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.1.87",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find GBCD",
         "Filter_Name": "FindGBCD",
         "GBCDArrayName": "GBCD",
@@ -564,7 +525,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.1.87",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write GBCD Pole Figure (GMT 5)",
         "Filter_Name": "VisualizeGBCDGMT",
         "GBCDArrayPath": {
@@ -587,7 +548,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.1.87",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write GBCD Pole Figure (VTK)",
         "Filter_Name": "VisualizeGBCDPoleFigure",
         "GBCDArrayPath": {
@@ -605,7 +566,7 @@
         "PhaseOfInterest": 1
     },
     "4": {
-        "FilterVersion": "6.1.87",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Mesh_GBCD.dream3d",
@@ -614,6 +575,6 @@
     "PipelineBuilder": {
         "Name": "(04) SmallIN100 GBCD",
         "Number_Filters": 5,
-        "Version": "6.1"
+        "Version": "1.0"
     }
 }
