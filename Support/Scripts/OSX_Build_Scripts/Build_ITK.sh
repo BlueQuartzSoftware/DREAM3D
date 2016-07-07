@@ -88,6 +88,7 @@ function ConfigureITK()
   echo "CMAKE_OSX_DEPLOYMENT_TARGET=$OSX_DEPLOYMENT_TARGET" >> $cacheFile
   echo "CMAKE_OSX_SYSROOT:Path=$OSX_SDK" >> $cacheFile
   echo "CMAKE_CXX_FLAGS:STRING=-stdlib=libc++ -std=c++11" >> cacheFile
+  echo "Module_SCIFIO:BOOL=ON" >> $cacheFile
 
   echo "HDF5_DIR:STRING=$SDK_INSTALL/$1-$2/share/cmake" >> $cacheFile
   echo "HDF5_CXX_COMPILER_EXECUTABLE:FILEPATH=HDF5_CXX_COMPILER_EXECUTABLE-NOTFOUND" >> $cacheFile
