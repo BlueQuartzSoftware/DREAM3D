@@ -151,32 +151,6 @@
                                         1
                                     ],
                                     "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "X Position",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Y Position",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
                                 }
                             ],
                             "Flag": 2,
@@ -249,7 +223,7 @@
                                         3
                                     ],
                                     "Flag": 2,
-                                    "Name": "AvgEulerAngles",
+                                    "Name": "AvgEuler",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
@@ -406,7 +380,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "0.0.0",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Fill Bad Data",
         "Filter_Name": "FillBadData",
         "MinAllowedDefectSize": 1000,
@@ -419,7 +393,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "0.0.0",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
         "NumIterations": 2,
@@ -434,7 +408,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "0.0.0",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
         "NumIterations": 2,
@@ -443,7 +417,7 @@
         "ZDirOn": 1
     },
     "4": {
-        "FilterVersion": "6.3.90",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -452,6 +426,6 @@
     "PipelineBuilder": {
         "Name": "(07) SmallIN100 Final Processing",
         "Number_Filters": 5,
-        "Version": "6.3"
+        "Version": "1.0"
     }
 }

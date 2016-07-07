@@ -24,45 +24,6 @@
                                 },
                                 {
                                     "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "CriticalFields1",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "CriticalFields2",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "EquivalentDiameters",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
                                         3
                                     ],
                                     "Flag": 2,
@@ -81,19 +42,6 @@
                                     "Flag": 2,
                                     "Name": "FeatureIds",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "FeatureReferenceMisorientations",
-                                    "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
@@ -157,24 +105,11 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "KernelAverageMisorientations",
-                                    "Object Type": "DataArray<float>",
+                                    "Name": "Mask",
+                                    "Object Type": "DataArray<bool>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "MisorientationColor",
-                                    "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        3
                                     ],
                                     "Version": 2
                                 },
@@ -249,45 +184,6 @@
                                     ],
                                     "Flag": 2,
                                     "Name": "TJEuclideanDistances",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "ThresholdArray",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "X Position",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
@@ -444,60 +340,8 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "CriticalFields1",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "CriticalFields2",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
                                     "Name": "EquivalentDiameters",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "FeatureAvgMisorientations",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "MisorientationList",
-                                    "Object Type": "NeighborList<T>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
@@ -574,6 +418,19 @@
                                         1
                                     ],
                                     "Flag": 2,
+                                    "Name": "NumNeighbors2",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
                                     "Name": "Omega3s",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
@@ -610,23 +467,10 @@
                                 },
                                 {
                                     "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Poles",
-                                    "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "Schmids",
+                                    "Name": "Shape Volumes",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
@@ -652,20 +496,7 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "SlipSystems",
-                                    "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Volumes",
+                                    "Name": "Size Volumes",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
@@ -714,7 +545,7 @@
             "Data Container Name": "ImageDataContainer"
         },
         "FeatureDataFile": "Data/Output/SmallIN100Cleaned.csv",
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write Feature Data as CSV File",
         "Filter_Name": "FeatureDataCSVWriter",
         "WriteNeighborListData": 0
@@ -722,6 +553,6 @@
     "PipelineBuilder": {
         "Name": "(02) SmallIN100 Export Statistics",
         "Number_Filters": 2,
-        "Version": "6.0"
+        "Version": "1.0"
     }
 }

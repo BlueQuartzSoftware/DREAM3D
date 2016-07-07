@@ -16,7 +16,7 @@
                     22.013751983642578,
                     32.013751983642578
                 ],
-                "BoundaryArea": 4.7798475054884532e+29,
+                "BoundaryArea": 44621128,
                 "Crystal Symmetry": 0,
                 "FeatureSize Distribution": {
                     "Average": 2.2999999523162842,
@@ -109,7 +109,7 @@
             "z": 128
         },
         "EstimateNumberOfFeatures": 0,
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
         "InputPhaseTypesArrayPath": {
@@ -135,7 +135,7 @@
         }
     },
     "2": {
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
         "InputPhaseTypesArrayPath": {
@@ -156,7 +156,7 @@
         "FeatureIdsArrayName": "FeatureIds",
         "FeatureInputFile": "",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Pack Primary Phases",
         "Filter_Name": "PackPrimaryPhases",
         "HaveFeatures": 0,
@@ -205,7 +205,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -234,7 +234,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Match Crystallography",
         "Filter_Name": "MatchCrystallography",
         "InputStatsArrayPath": {
@@ -287,7 +287,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "StatsGeneratorDataContainer"
         },
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -303,7 +303,7 @@
         "UseGoodVoxels": 0
     },
     "7": {
-        "FilterVersion": "1.0.253",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/HexagonalSingleEquiaxedOut.dream3d",

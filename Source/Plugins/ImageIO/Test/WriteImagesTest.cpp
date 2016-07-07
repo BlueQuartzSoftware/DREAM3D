@@ -134,13 +134,13 @@ class WriteImagesTest
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void SaveImagesTest(AbstractFilter::Pointer filter, DataContainerArray::Pointer dca, const QString& dcName)
+    void SaveImagesTest(AbstractFilter::Pointer filter, DataContainerArray::Pointer dca, const QString& dcName, QImage::Format fmt)
     {
       QVariant var;
       int err = 0, plane, fileExtension, numSlices = 1, w = 0, h = 0;
       bool propWasSet, filePrefix, b;
       QString fp, extension;
-      QImage testImage;
+
       extension = QString();
 
       if (dcName == "dc0") // XY slices along Z, no file prefix, 1 slice, .tif, 20x10
@@ -215,28 +215,30 @@ class WriteImagesTest
         DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
       }
 
+
       for (size_t i = 0; i < numSlices; i++)
       {
+        QImage testImage;
         b = testImage.load(UnitTest::TestTempDir + QDir::separator() + fp + QString::number(i) + extension);
         fileNames << UnitTest::TestTempDir + QDir::separator() + fp + QString::number(i) + extension;
         DREAM3D_REQUIRE_EQUAL(b, true);
+
+
+        int wRead = testImage.width();
+        DREAM3D_REQUIRE_EQUAL(wRead, w);
+
+        int hRead = testImage.height();
+        DREAM3D_REQUIRE_EQUAL(hRead, h);
+
+        QImage::Format format = testImage.format();
+        DREAM3D_REQUIRE_EQUAL(format, fmt);
+
+        if (dcName == "dc2") // metadata only for .png
+        {
+          QString ver = testImage.text("Description");
+          DREAM3D_REQUIRE_EQUAL(ver, SIMPLib::Version::PackageComplete());
+        }
       }
-
-      int wRead = testImage.width();
-      DREAM3D_REQUIRE_EQUAL(wRead, w);
-
-      int hRead = testImage.height();
-      DREAM3D_REQUIRE_EQUAL(hRead, h);
-
-      int format = testImage.format();
-      DREAM3D_REQUIRE_EQUAL(format, QImage::Format_RGB32);
-
-      if (dcName == "dc2") // metadata only for .png
-      {
-        QString ver = testImage.text("Description");
-        DREAM3D_REQUIRE_EQUAL(ver, SIMPLib::Version::PackageComplete());
-      }
-
     }
     // -----------------------------------------------------------------------------
     //
@@ -256,16 +258,16 @@ class WriteImagesTest
         AbstractFilter::Pointer filter = filterFactory->create();
 
         dca = initializeDataContainerArray("dc0", 3);
-        SaveImagesTest(filter, dca, "dc0"); // XY slices along Z, no file prefix, 1 slice, .tif, 20x10, 3 components
+        SaveImagesTest(filter, dca, "dc0", QImage::Format_RGB32); // XY slices along Z, no file prefix, 1 slice, .tif, 20x10, 3 components
 
         dca = initializeDataContainerArray("dc1", 1);
-        SaveImagesTest(filter, dca, "dc1"); // XZ slices along Y, XZ_ file prefix, 10 slices, .bmp, 20x1, 1 component
+        SaveImagesTest(filter, dca, "dc1", QImage::Format_Indexed8); // XZ slices along Y, XZ_ file prefix, 10 slices, .bmp, 20x1, 1 component
 
         dca = initializeDataContainerArray("dc2", 4);
-        SaveImagesTest(filter, dca, "dc2"); // YZ slices along X, YZ_ file prefix, 20 slices, .png, 10x1, 4 components
+        SaveImagesTest(filter, dca, "dc2", QImage::Format_RGB32); // YZ slices along X, YZ_ file prefix, 20 slices, .png, 10x1, 4 components
 
         dca = initializeDataContainerArray("dc3", 2);
-        SaveImagesTest(filter, dca, "dc3"); // 2 components, should have error -1006, number of components must be 1, 3, or 4
+        SaveImagesTest(filter, dca, "dc3", QImage::Format_RGB32); // 2 components, should have error -1006, number of components must be 1, 3, or 4
       }
       else
       {

@@ -197,7 +197,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "0.0.0",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
         "Filter_Name": "BadDataNeighborOrientationCheck",
         "GoodVoxelsArrayPath": {
@@ -229,7 +229,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "0.0.0",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Neighbor Orientation Correlation",
         "Filter_Name": "NeighborOrientationCorrelation",
         "Level": 2,
@@ -399,7 +399,7 @@
                 }
             ]
         },
-        "FilterVersion": "6.3.90",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Delete Data",
         "Filter_Name": "RemoveArrays"
     },
@@ -420,7 +420,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "0.0.0",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -436,7 +436,7 @@
         "UseGoodVoxels": 1
     },
     "5": {
-        "FilterVersion": "6.3.90",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -445,6 +445,6 @@
     "PipelineBuilder": {
         "Name": "(04) SmallIN100 Presegmentation Processing",
         "Number_Filters": 6,
-        "Version": "6.3"
+        "Version": "1.0"
     }
 }

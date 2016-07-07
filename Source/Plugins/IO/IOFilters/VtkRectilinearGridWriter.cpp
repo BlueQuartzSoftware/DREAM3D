@@ -59,33 +59,32 @@ namespace Detail
 {
 
 
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
-  template<class Geometry>
-  void WriteVTKHeader(FILE* f, DataContainer::Pointer m, bool isBinary)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template <class Geometry>
+void WriteVTKHeader(FILE* f, DataContainer::Pointer m, bool isBinary)
+{
+
+  size_t xpoints = m->getGeometryAs<Geometry>()->getXPoints() + 1;
+  size_t ypoints = m->getGeometryAs<Geometry>()->getYPoints() + 1;
+  size_t zpoints = m->getGeometryAs<Geometry>()->getZPoints() + 1;
+
+  fprintf(f, "# vtk DataFile Version 2.0\n");
+  fprintf(f, "Data set from %s\n", SIMPLib::Version::PackageComplete().toLatin1().constData());
+  if(isBinary)
   {
-
-    size_t xpoints = m->getGeometryAs<Geometry>()->getXPoints() + 1;
-    size_t ypoints = m->getGeometryAs<Geometry>()->getYPoints() + 1;
-    size_t zpoints = m->getGeometryAs<Geometry>()->getZPoints() + 1;
-
-    fprintf(f, "# vtk DataFile Version 2.0\n");
-    fprintf(f, "Data set from %s\n", SIMPLib::Version::PackageComplete().toLatin1().constData());
-    if(isBinary)
-    {
-      fprintf(f, "BINARY\n");
-    }
-    else
-    {
-      fprintf(f, "ASCII\n");
-    }
-    fprintf(f, "\n");
-    fprintf(f, "DATASET RECTILINEAR_GRID\n");
-    fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);
+    fprintf(f, "BINARY\n");
+  } else
+  {
+    fprintf(f, "ASCII\n");
   }
+  fprintf(f, "\n");
+  fprintf(f, "DATASET RECTILINEAR_GRID\n");
+  fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);
+}
 
-  /**
+/**
       * @brief This function writes a set of Axis coordinates to that are needed
       * for a Rectilinear Grid based data set.
       * @param f The "C" FILE* pointer to the file being written to.
@@ -96,102 +95,120 @@ namespace Detail
       * @param max The maximum value of the axis
       * @param step The step value between each point on the axis.
       */
-  template<typename T>
-  int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
-  {
-    int err = 0;
-#if CMP_SIZEOF_LONG == 8 && !defined (__APPLE__)
-    fprintf(f, "%s %ld %s\n", axis, npoints, type);
+template <typename T>
+int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
+{
+  int err = 0;
+#if CMP_SIZEOF_LONG == 8 && !defined(__APPLE__)
+  fprintf(f, "%s %ld %s\n", axis, npoints, type);
 #else
-    fprintf(f, "%s %lld %s\n", axis, npoints, type);
+  fprintf(f, "%s %lld %s\n", axis, npoints, type);
 #endif
-    if (binary == true)
+  if(binary == true)
+  {
+    T* data = new T[npoints];
+    T d;
+    for(int idx = 0; idx < npoints; ++idx)
     {
-      T* data = new T[npoints];
-      T d;
-      for (int idx = 0; idx < npoints; ++idx)
-      {
-        d = idx * step + min;
-        SIMPLib::Endian::FromSystemToBig::convert(d);
-        data[idx] = d;
-      }
-      size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);
-      fprintf(f, "\n"); // Write a newline character at the end of the coordinates
-      delete[] data;
-      if (totalWritten != static_cast<size_t>(npoints) )
-      {
-        qDebug() << "Error Writing Binary VTK Data into file " ;
-        fclose(f);
-        return -1;
-      }
-
+      d = idx * step + min;
+      SIMPLib::Endian::FromSystemToBig::convert(d);
+      data[idx] = d;
     }
-    else
+    size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);
+    fprintf(f, "\n"); // Write a newline character at the end of the coordinates
+    delete[] data;
+    if(totalWritten != static_cast<size_t>(npoints))
     {
-      T d;
-      for (int idx = 0; idx < npoints; ++idx)
+      qDebug() << "Error Writing Binary VTK Data into file ";
+      fclose(f);
+      return -1;
+    }
+
+  } else
+  {
+    T d;
+    for(int idx = 0; idx < npoints; ++idx)
+    {
+      d = idx * step + min;
+      fprintf(f, "%f ", d);
+      if(idx % 20 == 0 && idx != 0)
       {
-        d = idx * step + min;
-        fprintf(f, "%f ", d);
-        if (idx % 20 == 0 && idx != 0) { fprintf(f, "\n"); }
+        fprintf(f, "\n");
+      }
+    }
+    fprintf(f, "\n");
+  }
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template <typename T>
+void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPtr, bool writeBinary)
+{
+  QString ss = QObject::tr("Writing Cell Data %1").arg(iDataPtr->getName());
+  filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
+  //qDebug() << "Writing DataArray " << iDataPtr->getName() << " To a VTK File";
+
+  typedef DataArray<T> ArrayType;
+
+  typename ArrayType::Pointer array = std::dynamic_pointer_cast<ArrayType>(iDataPtr);
+
+  if(NULL != array.get())
+  {
+    size_t totalElements = array->getSize();
+    T* val = array->getPointer(0);
+    int numComps = array->getNumberOfComponents();
+    QString dName = array->getName();
+    dName = dName.replace(" ", "_");
+
+    QString vtkTypeString = VTKUtil::TypeForPrimitive<T>(val[0]);
+    bool useIntCast = false;
+    if(vtkTypeString.compare("unsigned_char") == 0 || vtkTypeString.compare("char") == 0)
+    {
+      useIntCast = true;
+    }
+
+    fprintf(f, "SCALARS %s %s %d\n", dName.toLatin1().data(), vtkTypeString.toLatin1().data(), numComps);
+    fprintf(f, "LOOKUP_TABLE default\n");
+    if(writeBinary)
+    {
+      if(BIGENDIAN == 0)
+      {
+        array->byteSwapElements();
+      }
+      size_t totalWritten = fwrite(val, array->getTypeSize(), totalElements, f);
+      if(totalWritten != totalElements)
+      {
       }
       fprintf(f, "\n");
-    }
-    return err;
-  }
-
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
-  template<typename T>
-  void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPtr, bool writeBinary)
-  {
-    QString ss = QObject::tr("Writing Cell Data %1").arg(iDataPtr->getName());
-    filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
-    //qDebug() << "Writing DataArray " << iDataPtr->getName() << " To a VTK File";
-
-    typedef DataArray<T> ArrayType;
-
-    typename ArrayType::Pointer array = std::dynamic_pointer_cast<ArrayType>(iDataPtr);
-
-    if(NULL != array.get())
-    {
-      size_t totalElements = array->getSize();
-      T* val = array->getPointer(0);
-      int numComps = array->getNumberOfComponents();
-      QString dName = array->getName();
-      dName = dName.replace(" ", "_");
-
-      QString VtkType = VTKUtil::TypeForPrimitive<T>(val[0]);
-
-      fprintf(f, "SCALARS %s %s %d\n", dName.toLatin1().data(), VtkType.toLatin1().data(), numComps);
-      fprintf(f, "LOOKUP_TABLE default\n");
-      if ( writeBinary )
+      if(BIGENDIAN == 0)
       {
-        if(BIGENDIAN == 0) { array->byteSwapElements(); }
-        size_t totalWritten = fwrite(val, array->getTypeSize(), totalElements, f);
-        if(totalWritten != totalElements) {}
-        fprintf(f, "\n");
-        if(BIGENDIAN == 0) { array->byteSwapElements(); }
+        array->byteSwapElements();
       }
-      else
+    } else
+    {
+      std::stringstream ss;
+      for(size_t i = 0; i < totalElements; i++)
       {
-        std::stringstream ss;
-        for (size_t i = 0; i < totalElements; i++)
+        if(i % 20 == 0 && i > 0)
         {
-          if(i % 20 == 0 && i > 0)
-          {
-            ss << "\n";
-          }
+          ss << "\n";
+        }
+        if(useIntCast)
+        {
+          ss << " " << static_cast<int>(val[i]);
+        }
+        else {
           ss << " " << val[i];
         }
-        ss << "\n";
-        fprintf(f, "%s", ss.str().c_str());
       }
+      ss << "\n";
+      fprintf(f, "%s", ss.str().c_str());
     }
   }
-
-
+}
 }
 
 
@@ -203,8 +220,8 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
-  AbstractFilter(),
+VtkRectilinearGridWriter::VtkRectilinearGridWriter()
+: AbstractFilter(),
   m_OutputFile(""),
   m_WriteBinaryFile(false)
 {
@@ -240,9 +257,9 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
-  setSelectedDataArrayPaths( reader->readDataArrayPathVector("SelectedDataArrayPaths", getSelectedDataArrayPaths()) );
-  setWriteBinaryFile( reader->readValue("WriteBinaryFile", false) );
+  setOutputFile(reader->readString("OutputFile", getOutputFile()));
+  setSelectedDataArrayPaths(reader->readDataArrayPathVector("SelectedDataArrayPaths", getSelectedDataArrayPaths()));
+  setWriteBinaryFile(reader->readValue("WriteBinaryFile", false));
   reader->closeFilterGroup();
 }
 
@@ -270,23 +287,22 @@ void VtkRectilinearGridWriter::dataCheck()
 
   // Make sure what we are checking is an actual file name and not a directory
   QFileInfo fi(m_OutputFile);
-  if (fi.isDir() == false)
+  if(fi.isDir() == false)
   {
     QDir parentPath = fi.path();
-    if (parentPath.exists() == false)
+    if(parentPath.exists() == false)
     {
       QString ss = QObject::tr("The directory path for the output file does not exist.");
       notifyWarningMessage(getHumanLabel(), ss, -1);
     }
-  }
-  else
+  } else
   {
     QString ss = QObject::tr("The output file path is a path to an existing directory. Please change the path to point to a file");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (m_SelectedDataArrayPaths.isEmpty() == true)
+  if(m_SelectedDataArrayPaths.isEmpty() == true)
   {
     setErrorCondition(-11001);
     QString ss = QObject::tr("At least one Attribute Array must be selected");
@@ -297,7 +313,7 @@ void VtkRectilinearGridWriter::dataCheck()
 
   QVector<DataArrayPath> paths = getSelectedDataArrayPaths();
 
-  if (DataArrayPath::ValidateVector(paths) == false)
+  if(DataArrayPath::ValidateVector(paths) == false)
   {
     setErrorCondition(-11004);
     QString ss = QObject::tr("There are Attribute Arrays selected that are not contained in the same Attribute Matrix. All selected Attribute Arrays must belong to the same Attribute Matrix");
@@ -305,7 +321,7 @@ void VtkRectilinearGridWriter::dataCheck()
     return;
   }
 
-  for (int32_t i = 0; i < paths.count(); i++)
+  for(int32_t i = 0; i < paths.count(); i++)
   {
     DataArrayPath path = paths.at(i);
     IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
@@ -314,9 +330,11 @@ void VtkRectilinearGridWriter::dataCheck()
 
   QString dcName = DataArrayPath::GetAttributeMatrixPath(getSelectedDataArrayPaths()).getDataContainerName();
 
-  ImageGeom::Pointer image =  getDataContainerArray()->getDataContainer(dcName)->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
-
+  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(dcName)->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0 || NULL == image.get())
+  {
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -339,7 +357,10 @@ void VtkRectilinearGridWriter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -359,9 +380,9 @@ void VtkRectilinearGridWriter::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(dcName);
 
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-  size_t dims[3] = {0, 0, 0};
+  size_t dims[3] = { 0, 0, 0 };
   image->getDimensions(dims);
-  float res[3] = { 0.0f, 0.0f, 0.0f};
+  float res[3] = { 0.0f, 0.0f, 0.0f };
   image->getResolution(res);
   float origin[3] = { 0.0f, 0.0f, 0.0f };
   image->getOrigin(origin);
@@ -383,7 +404,7 @@ void VtkRectilinearGridWriter::execute()
 
   // Write the Coordinate Points
   err = Detail::WriteCoords<float>(f, "X_COORDINATES", "float", dims[0] + 1, origin[0] - res[0] * 0.5f, (float)(dims[0] + 1 * res[0]), res[0], m_WriteBinaryFile);
-  if (err < 0)
+  if(err < 0)
   {
     QString ss = QObject::tr("Error writing X Coordinates in vtk file %s'\n ").arg(m_OutputFile);
     setErrorCondition(-2031002);
@@ -391,7 +412,7 @@ void VtkRectilinearGridWriter::execute()
     return;
   }
   err = Detail::WriteCoords<float>(f, "Y_COORDINATES", "float", dims[1] + 1, origin[1] - res[1] * 0.5f, (float)(dims[1] + 1 * res[1]), res[1], m_WriteBinaryFile);
-  if (err < 0)
+  if(err < 0)
   {
     QString ss = QObject::tr("Error writing Y Coordinates in vtk file %s'\n ").arg(m_OutputFile);
     setErrorCondition(-2031002);
@@ -399,7 +420,7 @@ void VtkRectilinearGridWriter::execute()
     return;
   }
   err = Detail::WriteCoords<float>(f, "Z_COORDINATES", "float", dims[2] + 1, origin[0] - res[2] * 0.5f, (float)(dims[2] + 1 * res[2]), res[2], m_WriteBinaryFile);
-  if (err < 0)
+  if(err < 0)
   {
     QString ss = QObject::tr("Error writing Z Coordinates in vtk file %s'\n ").arg(m_OutputFile);
     setErrorCondition(-2031002);
@@ -430,7 +451,7 @@ void VtkRectilinearGridWriter::execute()
       VTK_WRITE_RECTILINEAR_DATA(Int16ArrayType, iDataPtr, "short", int16_t, "%d ");
       VTK_WRITE_RECTILINEAR_DATA(UInt32ArrayType, iDataPtr, "unsigned_int", quint32, "%d ");
       VTK_WRITE_RECTILINEAR_DATA(Int32ArrayType, iDataPtr, "int", int32_t, "%d ");
-#if CMP_SIZEOF_LONG == 8 && !defined (__APPLE__)
+#if CMP_SIZEOF_LONG == 8 && !defined(__APPLE__)
       VTK_WRITE_RECTILINEAR_DATA(UInt64ArrayType, iDataPtr, "unsigned_long", uint64_t, "%lu ");
       VTK_WRITE_RECTILINEAR_DATA(Int64ArrayType, iDataPtr, "long", int64_t, "%ld ");
 #else
@@ -487,7 +508,7 @@ const QString VtkRectilinearGridWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  vStream << SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
   return version;
 }
 
@@ -495,19 +516,24 @@ const QString VtkRectilinearGridWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getHumanLabel()
-{ return "Vtk Rectilinear Grid Writer"; }
-
+{
+  return "Vtk Rectilinear Grid Writer";
+}

@@ -7,12 +7,9 @@
 <body>
 <h3>StatsGenerator Plugin</h3>
 
-<p>This plugin implements ....</p>
+<p>This plugin allows the user to generate statistics for a synthetic microstructure by integrating the
+previously external application <b>StatsGenerator</b> into the form of a filter.</p>
 
-<h4>Citations</h4>
-<p>
-[1]...
-[2]...
-</p>
+
 </body>
 </html>

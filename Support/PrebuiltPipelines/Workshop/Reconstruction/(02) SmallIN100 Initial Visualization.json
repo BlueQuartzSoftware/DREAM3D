@@ -1,27 +1,28 @@
 {
     "0": {
+        "AngleRepresentation": 0,
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "0.0.0",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Read H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
         "InputFile": "Data/Output/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
-            "Confidence Index",
-            "Image Quality",
             "SEM Signal",
-            "EulerAngles",
+            "Image Quality",
             "Phases",
-            "Fit"
+            "Fit",
+            "Confidence Index",
+            "EulerAngles"
         ],
         "UseTransformations": 1,
         "ZEndIndex": 117,
         "ZStartIndex": 1
     },
     "1": {
-        "FilterVersion": "6.3.90",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100.dream3d",
@@ -30,6 +31,6 @@
     "PipelineBuilder": {
         "Name": "(02) SmallIN100 Initial Visualization",
         "Number_Filters": 2,
-        "Version": "6.3"
+        "Version": "1.0"
     }
 }

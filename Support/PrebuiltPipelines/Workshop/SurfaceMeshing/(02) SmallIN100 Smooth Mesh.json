@@ -102,19 +102,6 @@
                                 },
                                 {
                                     "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "MisorientationColor",
-                                    "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
                                         1
                                     ],
                                     "Flag": 2,
@@ -158,32 +145,6 @@
                                     ],
                                     "Flag": 2,
                                     "Name": "SEM Signal",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "X Position",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
@@ -456,7 +417,7 @@
         "OverwriteExistingDataContainers": 0
     },
     "1": {
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Laplacian Smoothing",
         "Filter_Name": "LaplacianSmoothing",
         "IterationSteps": 100,
@@ -478,7 +439,7 @@
         "TripleLineLambda": 0.20000000298023224
     },
     "2": {
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Mesh.dream3d",
@@ -487,6 +448,6 @@
     "PipelineBuilder": {
         "Name": "(02) SmallIN100 Smooth Mesh",
         "Number_Filters": 3,
-        "Version": "6.0"
+        "Version": "1.0"
     }
 }

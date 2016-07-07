@@ -9,7 +9,7 @@
         "FileExtension": "ang",
         "FilePrefix": "Slice_",
         "FileSuffix": "",
-        "FilterVersion": "6.3.0",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Import Orientation File(s) to H5EBSD",
         "Filter_Name": "EbsdToH5Ebsd",
         "InputPath": "Data/SmallIN100",
@@ -29,6 +29,6 @@
     "PipelineBuilder": {
         "Name": "(01) SmallIN100 Archive",
         "Number_Filters": 1,
-        "Version": "6.3"
+        "Version": "1.0"
     }
 }

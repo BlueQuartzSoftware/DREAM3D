@@ -53,7 +53,7 @@ cmake_minimum_required(VERSION 3.1.0)
 #------------------------------------------------------------------------------
 # Create the Top level Project
 # 
-project(DREAM3DProj VERSION 6.2.0.0)
+project(DREAM3DProj VERSION 6.3.0.0)
 
 
 # ---------- Setup output Directories -------------------------
@@ -150,7 +150,11 @@ endif()
 # Official: This is an official release from BlueQuartz Software
 # Beta: This is a Beta release that has is getting ready to be officially released.
 # Development: This is currently in development and probably has bugs.
-set(DREAM3DProj_RELEASE_TYPE "Development")
+get_property(DREAM3DProj_RELEASE_TYPE GLOBAL PROPERTY PACKAGE_RELEASE_TYPE)
+if("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "")
+  set(DREAM3DProj_RELEASE_TYPE "Development")
+  set_property(GLOBAL PROPERTY PACKAGE_RELEASE_TYPE "${DREAM3DProj_RELEASE_TYPE}")
+endif()
 
 include(CMakeParseArguments)
 
@@ -164,8 +168,8 @@ endif()
 
 # Set the Application Name to DREAM3D to rebrand SIMPLView with the correct icons and badges
 set(SIMPLView_APPLICATION_NAME "DREAM3D")
-set(SIMPLView_VERSION_HDR_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLViewVersion.h")
-set(SIMPLView_VERSION_SRC_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLViewVersion.cpp")
+set(SIMPLView_VERSION_HDR_FILE "SIMPLViewVersion.h")
+set(SIMPLView_VERSION_SRC_FILE "SIMPLViewVersion.cpp")
 
 # -----------------------------------------------------------------------
 # Set these CMP variables because the Version Files need them set
@@ -178,11 +182,18 @@ INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 # -----------------------------------------------------------------------
 # Generate a set of Version Cpp/H files that will be used by SIMPLView to
 # get and display the proper version numbers.
-cmpRevisionString( GENERATED_HEADER_FILE_PATH "SIMPLViewVersion.h"
-                        GENERATED_SOURCE_FILE_PATH "SIMPLViewVersion.cpp"
+cmpRevisionString( GENERATED_HEADER_FILE_PATH "${SIMPLView_VERSION_HDR_FILE}"
+                        GENERATED_SOURCE_FILE_PATH "${SIMPLView_VERSION_SRC_FILE}"
                         NAMESPACE "SIMPLView"
                         PROJECT_NAME "${PROJECT_NAME}"
                         EXPORT_MACRO "SIMPLView_EXPORT")
+
+make_directory("${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView")
+file(RENAME "${DREAM3DProj_BINARY_DIR}/${SIMPLView_VERSION_HDR_FILE}" "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${SIMPLView_VERSION_HDR_FILE}")
+file(RENAME "${DREAM3DProj_BINARY_DIR}/${SIMPLView_VERSION_SRC_FILE}" "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${SIMPLView_VERSION_SRC_FILE}")
+
+set(SIMPLView_VERSION_HDR_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${SIMPLView_VERSION_HDR_FILE}")
+set(SIMPLView_VERSION_SRC_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${SIMPLView_VERSION_SRC_FILE}")
 
 # -----------------------------------------------------------------------
 # Setup a Global property that is used to gather Documentation Information
@@ -218,6 +229,11 @@ if(SIMPLib_USE_ITK)
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
   get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
 endif()
+
+# -----------------------------------------------------------------------
+# Set a global value to NOT install headers
+# -----------------------------------------------------------------------
+set_property(GLOBAL PROPERTY CMP_PROJECT_INSTALL_HEADERS "0")
 
 
 # -----------------------------------------------------------------------
@@ -369,12 +385,13 @@ set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 # Generate our ReadMe and License Files
 configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
                 ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt )
-configure_file(${PROJECT_SOURCE_DIR}/ReadMe.md
-                ${PROJECT_BINARY_DIR}/ReadMe.md )
+configure_file(${PROJECT_SOURCE_DIR}/ReadMe-DREAM3D.md
+                ${PROJECT_BINARY_DIR}/ReadMe-DREAM3D.md )
 
 # --------------------------------------------------------------------
 # Generate install rules for the text files
-install(FILES ${PROJECT_BINARY_DIR}/ReadMe.md
+install(FILES ${PROJECT_BINARY_DIR}/ReadMe-DREAM3D.md
+              ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
         DESTINATION .
         COMPONENT Applications)
 
@@ -459,7 +476,6 @@ include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 option(SIMPLib_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
 if( SIMPLib_BUILD_CLI_TOOLS )
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
-    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools/astyle ${PROJECT_BINARY_DIR}/Tools/astyle)
 endif()
 
 

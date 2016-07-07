@@ -89,14 +89,14 @@
                                 },
                                 {
                                     "Component Dimensions": [
-                                        3
+                                        1
                                     ],
                                     "Flag": 2,
-                                    "Name": "MisorientationColor",
-                                    "Object Type": "DataArray<uint8_t>",
+                                    "Name": "Mask",
+                                    "Object Type": "DataArray<bool>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
-                                        3
+                                        1
                                     ],
                                     "Version": 2
                                 },
@@ -145,45 +145,6 @@
                                     ],
                                     "Flag": 2,
                                     "Name": "SEM Signal",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "ThresholdArray",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "X Position",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
@@ -419,7 +380,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Centroids",
         "Filter_Name": "FindFeatureCentroids"
     },
@@ -435,7 +396,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
         "NumCellsArrayName": "NumCells",
@@ -460,7 +421,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Shapes",
         "Filter_Name": "FindShapes",
         "Omega3sArrayName": "Omega3s",
@@ -478,7 +439,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -504,7 +465,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Feature Neighborhoods",
         "Filter_Name": "FindNeighborhoods",
         "MultiplesOfAverage": 1,
@@ -521,7 +482,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Find Euclidean Distance Map",
         "Filter_Name": "FindEuclideanDistMap",
         "GBEuclideanDistancesArrayName": "GBEuclideanDistances",
@@ -531,7 +492,7 @@
         "TJEuclideanDistancesArrayName": "TJEuclideanDistances"
     },
     "7": {
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -540,6 +501,6 @@
     "PipelineBuilder": {
         "Name": "(01) SmallIN100 Morphological Statistics",
         "Number_Filters": 8,
-        "Version": "6.0"
+        "Version": "1.0"
     }
 }

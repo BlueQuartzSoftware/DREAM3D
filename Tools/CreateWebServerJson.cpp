@@ -18,7 +18,7 @@
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
-#include "Applications/SIMPLView/SIMPLViewVersion.h"
+#include "SIMPLView/SIMPLViewVersion.h"
 
 #include "ToolConfiguration.h"
 
