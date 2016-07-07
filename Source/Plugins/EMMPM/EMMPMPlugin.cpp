@@ -8,12 +8,12 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "EMMPM/EMMPMConstants.h"
+#include "EMMPM/EMMPMVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_EMMPMPlugin.cpp"
@@ -22,8 +22,8 @@
 //
 // -----------------------------------------------------------------------------
 EMMPMPlugin::EMMPMPlugin() :
-  m_Version(SIMPLib::Version::Package()),
-  m_CompatibilityVersion(SIMPLib::Version::Package()),
+  m_Version(EM_MPM::Version::Package()),
+  m_CompatibilityVersion(EM_MPM::Version::Package()),
   m_Vendor(BlueQuartz::VendorName),
   m_URL(BlueQuartz::URL),
   m_Location(""),
