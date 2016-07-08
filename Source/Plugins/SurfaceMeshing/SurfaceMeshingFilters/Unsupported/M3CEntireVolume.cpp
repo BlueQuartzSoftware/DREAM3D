@@ -115,7 +115,7 @@ int M3CEntireVolume::writeFilterParameters(AbstractFilterParametersWriter* write
   SIMPL_FILTER_WRITE_PARAMETER(AddSurfaceLayer)
 
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -133,7 +133,7 @@ int GBCDTriangleDumper::writeFilterParameters(AbstractFilterParametersWriter* wr
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
   writer->closeFilterGroup();
-  return index;
+  return ++index;
 }
 
 // -----------------------------------------------------------------------------
