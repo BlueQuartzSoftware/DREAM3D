@@ -161,6 +161,7 @@ int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter*
   SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(Loading)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
