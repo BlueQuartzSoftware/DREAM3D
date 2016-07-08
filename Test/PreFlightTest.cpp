@@ -33,8 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-
 #include <stdlib.h>
 
 #include <iostream>
@@ -59,15 +57,14 @@
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/SIMPLibFilters.h"
-
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
+
 #include "DREAM3DTestFileLocations.h"
 
 #include "PreflightVerify.h"
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -78,21 +75,25 @@ QString getH5StatsFile()
   return s;
 }
 
-void setCurrentFilter(AbstractFilter::Pointer f)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeAllFilters(QString filePath)
 {
+  FilterManager* fm = FilterManager::Instance();
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    pipeline->pushBack(filter);
+  }
 
+  JsonFilterParametersWriter::WritePipelineToFile(pipeline, filePath, "Pipeline", nullptr);
 }
-
-void pipelineFinished()
-{
-
-}
-
-void setErrorCondition(int err)
-{
-
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -443,9 +444,6 @@ void TestUncategorizedFilterParameters()
   }
 }
 
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -526,6 +524,7 @@ int main(int argc, char** argv)
   verifyFilterParameters();
 
   int err = EXIT_SUCCESS;
+  //writeAllFilters("/Users/joeykleingers/Desktop/AllFiltersPipelineNew.json");
   DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
   DREAM3D_REGISTER_TEST( TestPreflight() )
   DREAM3D_REGISTER_TEST( TestUniqueHumanLabels() )
