@@ -119,13 +119,6 @@ class PackPrimaryPhases : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
-    // THESE SHOULD GO AWAY THEY ARE FOR DEBUGGING ONLY
-    SIMPL_FILTER_PARAMETER(QString, ErrorOutputFile)
-    Q_PROPERTY(QString ErrorOutputFile READ getErrorOutputFile WRITE setErrorOutputFile)
-
-    SIMPL_FILTER_PARAMETER(QString, VtkOutputFile)
-    Q_PROPERTY(QString VtkOutputFile READ getVtkOutputFile WRITE setVtkOutputFile)
-
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
@@ -460,6 +453,9 @@ class PackPrimaryPhases : public AbstractFilter
     float m_FillingError, m_OldFillingError;
     float m_CurrentNeighborhoodError, m_OldNeighborhoodError;
     float m_CurrentSizeDistError, m_OldSizeDistError;
+
+    QString m_ErrorOutputFile;
+    QString m_VtkOutputFile;
 
     /**
      * @brief updateFeatureInstancePointers Resets the raw pointers that belong to a
