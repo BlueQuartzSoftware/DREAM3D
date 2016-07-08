@@ -86,7 +86,7 @@ void EbsdToH5EbsdFilterParameter::readJson(const QJsonObject &json)
   m_Filter->setZStartIndex(static_cast<int64_t>(std::stoi(json["ZStartIndex"].toString().toStdString())));
   m_Filter->setZEndIndex(static_cast<int64_t>(std::stoi(json["ZEndIndex"].toString().toStdString())));
   m_Filter->setZResolution(static_cast<float>(json["ZResolution"].toDouble()));
-  m_Filter->setRefFrameZDir(static_cast<uint32_t>(json["RefFrameZDir"].toDouble()));
+  m_Filter->setRefFrameZDir(json["RefFrameZDir"].toString().toUInt());
   m_Filter->setInputPath(json["InputPath"].toString());
   m_Filter->setFilePrefix(json["FilePrefix"].toString());
   m_Filter->setFileSuffix(json["FileSuffix"].toString());
@@ -128,7 +128,7 @@ void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject &json)
   json["ZStartIndex"] = QString::number(m_Filter->getZStartIndex());
   json["ZEndIndex"] = QString::number(m_Filter->getZEndIndex());
   json["ZResolution"] = static_cast<double>(m_Filter->getZResolution());
-  json["RefFrameZDir"] = static_cast<double>(m_Filter->getRefFrameZDir());
+  json["RefFrameZDir"] = QString::number(m_Filter->getRefFrameZDir());
   json["InputPath"] = m_Filter->getInputPath();
   json["FilePrefix"] = m_Filter->getFilePrefix();
   json["FileSuffix"] = m_Filter->getFileSuffix();

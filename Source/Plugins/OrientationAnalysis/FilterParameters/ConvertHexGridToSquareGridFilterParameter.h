@@ -38,6 +38,8 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
+#include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
+
 class ConvertHexGridToSquareGridFilterParameter : public FilterParameter
 {
 public:
@@ -45,18 +47,17 @@ public:
     SIMPL_STATIC_NEW_MACRO(ConvertHexGridToSquareGridFilterParameter)
     SIMPL_TYPE_MACRO(ConvertHexGridToSquareGridFilterParameter)
 
-  typedef std::function<void(int)> SetterCallbackType;
-  typedef std::function<int(void)> GetterCallbackType;
-
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category, SetterCallbackType setterCallback,
-    GetterCallbackType getterCallback, const QString& fileExtension = QString(""),
-    const QString& fileType = QString(""), int groupIndex = -1);
+    const QVariant& defaultValue, Category category, ConvertHexGridToSquareGrid* filter,
+    const QString& fileExtension = QString(""), const QString& fileType = QString(""),
+    int groupIndex = -1);
 
   virtual ~ConvertHexGridToSquareGridFilterParameter();
 
   SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
     SIMPL_INSTANCE_STRING_PROPERTY(FileType)
+
+  SIMPL_INSTANCE_PROPERTY(ConvertHexGridToSquareGrid*, Filter)
 
   QString getWidgetType();
 
@@ -71,9 +72,6 @@ public:
    * @return
    */
   void writeJson(QJsonObject &json);
-
-  SIMPL_INSTANCE_PROPERTY(SetterCallbackType, SetterCallback)
-  SIMPL_INSTANCE_PROPERTY(GetterCallbackType, GetterCallback)
 
 protected:
   ConvertHexGridToSquareGridFilterParameter();

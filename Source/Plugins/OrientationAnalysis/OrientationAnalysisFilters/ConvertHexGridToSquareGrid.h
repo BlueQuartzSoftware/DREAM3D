@@ -85,6 +85,8 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
 
     SIMPL_INSTANCE_PROPERTY(bool, HeaderIsComplete)
 
+
+
     SIMPL_FILTER_PARAMETER(int, HexGridStack)
     Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
 

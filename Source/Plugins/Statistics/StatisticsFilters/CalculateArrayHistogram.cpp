@@ -127,6 +127,24 @@ void CalculateArrayHistogram::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CalculateArrayHistogram::readFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::readFilterParameters(obj);
+  setNormalize(static_cast<bool>(obj["Normalize"].toInt()));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::writeFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::writeFilterParameters(obj);
+  obj["Normalize"] = static_cast<int>(getNormalize());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CalculateArrayHistogram::initialize()
 {
 
