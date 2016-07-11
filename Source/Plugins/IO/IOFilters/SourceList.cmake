@@ -20,6 +20,8 @@ SIMPL_START_FILTER_GROUP(
 set(_PublicFilters
   AbaqusHexahedronWriter
   AbaqusSurfaceMeshWriter
+  AvizoRectilinearCoordinateWriter
+  AvizoUniformCoordinateWriter
   DxReader
   DxWriter
   ExportData
@@ -37,7 +39,6 @@ set(_PublicFilters
   VtkStructuredPointsReader
   WriteStlFile
   WriteTriangleGeometry
-
   VtkRectilinearGridWriter
   ImportASCIIData
 )
@@ -56,8 +57,6 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-  AvizoRectilinearCoordinateWriter
-  AvizoUniformCoordinateWriter
   GoldfeatherReader
   LammpsFileWriter
   NodesTrianglesToStl
