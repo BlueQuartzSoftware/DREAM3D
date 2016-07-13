@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
@@ -69,6 +70,8 @@ LaplacianSmoothing::LaplacianSmoothing() :
   m_QuadPointLambda(0.0f),
   m_SurfaceTripleLineLambda(0.0f),
   m_SurfaceQuadPointLambda(0.0f),
+  m_UseTaubinSmoothing(false),
+  m_MuFactor(-1.03),
   m_SurfaceMeshNodeType(NULL),
   m_SurfaceMeshFaceLabels(NULL)
 {
@@ -90,6 +93,11 @@ void LaplacianSmoothing::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(IntFilterParameter::New("Iteration Steps", "IterationSteps", getIterationSteps(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Default Lambda", "Lambda", getLambda(), FilterParameter::Parameter));
+
+  QStringList linkedProps;
+  linkedProps << "MuFactor";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Taubin Smoothing", "UseTaubinSmoothing", getUseTaubinSmoothing(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Mu Factor", "MuFactor", getMuFactor(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Triple Line Lambda", "TripleLineLambda", getTripleLineLambda(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Quadruple Points Lambda", "QuadPointLambda", getQuadPointLambda(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Outer Points Lambda", "SurfacePointLambda", getSurfacePointLambda(), FilterParameter::Parameter));
@@ -123,6 +131,8 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
   setSurfaceQuadPointLambda( reader->readValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda()) );
   setSurfaceMeshNodeTypeArrayPath(reader->readDataArrayPath("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath() ) );
   setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
+  setUseTaubinSmoothing(reader->readValue("UseTaubinSmoothing", getUseTaubinSmoothing()));
+  setMuFactor(reader->readValue("MuFactor", getMuFactor()));
   reader->closeFilterGroup();
 }
 
@@ -142,6 +152,9 @@ int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* wr
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceQuadPointLambda)
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MuFactor)
+  SIMPL_FILTER_WRITE_PARAMETER(UseTaubinSmoothing)
+
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -315,6 +328,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
     if (getCancel() == true) { return -1; }
     QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    // Compute the Deltas for each point
     for (int64_t i = 0; i < nedges; i++)
     {
       int64_t in1 = uedges[2 * i];   // row of the first vertex
@@ -332,6 +346,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
       ncon[in2] += 1;
     }
 
+    // Move each point
     float ll = 0.0f;
     for (int64_t i = 0; i < nvert; i++)
     {
@@ -346,6 +361,53 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
       }
       ncon[i] = 0; // reset for next iteration
     }
+
+
+    // Now optionally apply a negative lambda based on the mu Factor value.
+    // This is from Taubin's paper on smoothing without shrinkage. This effectively
+    // runs a low pass filter on the data
+    if(m_UseTaubinSmoothing)
+    {
+
+      if (getCancel() == true) { return -1; }
+      QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      // Compute the Delta's
+      for (int64_t i = 0; i < nedges; i++)
+      {
+        int64_t in1 = uedges[2 * i];   // row of the first vertex
+        int64_t in2 = uedges[2 * i + 1]; // row the second vertex
+
+        for (int32_t j = 0; j < 3; j++)
+        {
+          Q_ASSERT( static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3) );
+          Q_ASSERT( static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3) );
+          dlta = verts[3 * in2 + j] - verts[3 * in1 + j];
+          delta[3 * in1 + j] += dlta;
+          delta[3 * in2 + j] += -1.0 * dlta;
+        }
+        ncon[in1] += 1;
+        ncon[in2] += 1;
+      }
+
+      // MOve the points
+      float ll = 0.0f;
+      for (int64_t i = 0; i < nvert; i++)
+      {
+        for (int32_t j = 0; j < 3; j++)
+        {
+          int64_t in0 = 3 * i + j;
+          dlta = delta[in0] / ncon[i];
+
+          ll = lambda[i] * m_MuFactor;
+          verts[3 * i + j] += ll * dlta;
+          delta[in0] = 0.0; // reset for next iteration
+        }
+        ncon[i] = 0; // reset for next iteration
+      }
+
+    }
+
   }
 
   return err;
@@ -508,23 +570,29 @@ const QString LaplacianSmoothing::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LaplacianSmoothing::getGroupName()
-{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
+{
+  return SIMPL::FilterGroups::SurfaceMeshingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LaplacianSmoothing::getSubGroupName()
-{ return SIMPL::FilterSubGroups::SmoothingFilters; }
+{
+  return SIMPL::FilterSubGroups::SmoothingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LaplacianSmoothing::getHumanLabel()
-{ return "Laplacian Smoothing"; }
+{
+  return "Laplacian Smoothing";
+}
