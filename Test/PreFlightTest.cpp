@@ -525,7 +525,7 @@ int main(int argc, char** argv)
   verifyFilterParameters();
 
   int err = EXIT_SUCCESS;
-  //writeAllFilters("/Users/joeykleingers/Desktop/AllFiltersPipelineNew.json");
+  writeAllFilters("/Users/joeywork/Desktop/AllFiltersPipelineNew.json");
   DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
   DREAM3D_REGISTER_TEST( TestPreflight() )
   DREAM3D_REGISTER_TEST( TestUniqueHumanLabels() )

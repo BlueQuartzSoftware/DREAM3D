@@ -321,6 +321,67 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GenerateEnsembleStatistics::readFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::readFilterParameters(obj);
+
+  setCalculateAxisODF(static_cast<bool>(obj["CalculateAxisODF"].toInt()));
+  setCalculateMDF(static_cast<bool>(obj["CalculateMDF"].toInt()));
+  setCalculateODF(static_cast<bool>(obj["CalculateODF"].toInt()));
+  setComputeAspectRatioDistribution(static_cast<bool>(obj["ComputeAspectRatioDistribution"].toInt()));
+  setComputeNeighborhoodDistribution(static_cast<bool>(obj["ComputeNeighborhoodDistribution"].toInt()));
+  setComputeOmega3Distribution(static_cast<bool>(obj["ComputeOmega3Distribution"].toInt()));
+  setComputeSizeDistribution(static_cast<bool>(obj["ComputeSizeDistribution"].toInt()));
+
+  QJsonObject dapObj = obj["CellEnsembleAttributeMatrixPath"].toObject();
+  DataArrayPath dap;
+  dap.readJson(dapObj);
+  setCellEnsembleAttributeMatrixPath(dap);
+
+  QJsonArray jsonArray = obj["PhaseTypeArray"].toArray();
+  for (int i=0; i<jsonArray.size(); i++)
+  {
+    getPhaseTypeData().d.push_back(static_cast<uint32_t>(jsonArray[i].toInt()));
+  }
+}
+
+// FP: Check why these values are not connected to a filter parameter!
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenerateEnsembleStatistics::writeFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::writeFilterParameters(obj);
+
+  obj["CalculateAxisODF"] = static_cast<int>(getCalculateAxisODF());
+  obj["CalculateMDF"] = static_cast<int>(getCalculateMDF());
+  obj["CalculateODF"] = static_cast<int>(getCalculateODF());
+  obj["ComputeAspectRatioDistribution"] = static_cast<int>(getComputeAspectRatioDistribution());
+  obj["ComputeNeighborhoodDistribution"] = static_cast<int>(getComputeNeighborhoodDistribution());
+  obj["ComputeOmega3Distribution"] = static_cast<int>(getComputeOmega3Distribution());
+  obj["ComputeSizeDistribution"] = static_cast<int>(getComputeSizeDistribution());
+
+  DataArrayPath dap = getCellEnsembleAttributeMatrixPath();
+  QJsonObject dapObj;
+
+  dapObj["Data Container Name"] = dap.getDataContainerName();
+  dapObj["Attribute Matrix Name"] = dap.getAttributeMatrixName();
+  dapObj["Data Array Name"] = dap.getDataArrayName();
+  obj["CellEnsembleAttributeMatrixPath"] = dapObj;
+
+  QVector<uint32_t> data = getPhaseTypeData().d;
+  QJsonArray jsonArray;
+  for (int i=0; i<data.size(); i++)
+  {
+    jsonArray.push_back(static_cast<int>(data[i]));
+  }
+  obj["PhaseTypeArray"] = jsonArray;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::initialize()
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();

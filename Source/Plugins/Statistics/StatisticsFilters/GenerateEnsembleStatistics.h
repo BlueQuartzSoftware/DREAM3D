@@ -221,6 +221,18 @@ class GenerateEnsembleStatistics : public AbstractFilter
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
+    * @brief readFilterParametersFromJson Reads the filter parameters from a file
+    * @param reader Reader that is used to read the parameters from a file
+    */
+    virtual void readFilterParameters(QJsonObject &obj);
+
+    /**
+    * @brief writeFilterParametersToJson Writes the filter parameters to a file
+    * @param root The root json object
+    */
+    virtual void writeFilterParameters(QJsonObject &obj);
+
+    /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
     virtual void execute();

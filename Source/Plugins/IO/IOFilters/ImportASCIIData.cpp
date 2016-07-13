@@ -99,6 +99,115 @@ void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImportASCIIData::readFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::readFilterParameters(obj);
+
+  QString prefix = "Wizard_";
+
+  m_WizardData.beginIndex = obj[prefix + "BeginIndex"].toInt();
+  m_WizardData.consecutiveDelimiters = static_cast<bool>(obj[prefix + "ConsecutiveDelimiters"].toInt());
+  m_WizardData.inputFilePath = obj[prefix + "InputFilePath"].toString();
+  m_WizardData.numberOfLines = obj[prefix + "NumberOfLines"].toInt();
+
+  {
+    QJsonArray jsonArray = obj[prefix + "DataHeaders"].toArray();
+    QStringList dataHeaders;
+    for (int i=0; i<jsonArray.size(); i++)
+    {
+      dataHeaders.push_back(jsonArray[i].toString());
+    }
+    m_WizardData.dataHeaders = dataHeaders;
+  }
+
+  {
+    QJsonArray jsonArray = obj[prefix + "DataTypes"].toArray();
+    QStringList dataTypes;
+    for (int i=0; i<jsonArray.size(); i++)
+    {
+      dataTypes.push_back(jsonArray[i].toString());
+    }
+    m_WizardData.dataTypes = dataTypes;
+  }
+
+  {
+    QString delimitersStr = obj[prefix + "Delimiters"].toString();
+    QList<char> delimiters;
+    for (int i = 0; i < delimitersStr.size(); i++)
+    {
+      delimiters.push_back(delimitersStr[i].toLatin1());
+    }
+    m_WizardData.delimiters = delimiters;
+  }
+
+  {
+    QJsonArray jsonArray = obj[prefix + "TupleDims"].toArray();
+    QVector<size_t> tupleDims;
+    for (int i=0; i<jsonArray.size(); i++)
+    {
+      tupleDims.push_back(static_cast<size_t>(jsonArray[i].toInt()));
+    }
+    m_WizardData.tupleDims = tupleDims;
+  }
+}
+
+// FP: Check why these values are not connected to a filter parameter!
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportASCIIData::writeFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::writeFilterParameters(obj);
+
+  QString prefix = "Wizard_";
+
+  obj[prefix + "BeginIndex"] = m_WizardData.beginIndex;
+  obj[prefix + "ConsecutiveDelimiters"] = static_cast<int>(m_WizardData.consecutiveDelimiters);
+  obj[prefix + "InputFilePath"] = m_WizardData.inputFilePath;
+  obj[prefix + "NumberOfLines"] = m_WizardData.numberOfLines;
+
+  {
+    QJsonArray jsonArray;
+    for (int i=0; i<m_WizardData.dataHeaders.size(); i++)
+    {
+      jsonArray.push_back(m_WizardData.dataHeaders[i]);
+    }
+    obj[prefix + "DataHeaders"] = jsonArray;
+  }
+
+  {
+    QJsonArray jsonArray;
+    for (int i=0; i<m_WizardData.dataTypes.size(); i++)
+    {
+      jsonArray.push_back(m_WizardData.dataTypes[i]);
+    }
+    obj[prefix + "DataTypes"] = jsonArray;
+  }
+
+  {
+    QString delimitersStr = "";
+    for (int i = 0; i < m_WizardData.delimiters.size(); i++)
+    {
+      delimitersStr.append(m_WizardData.delimiters[i]);
+    }
+
+    obj[prefix + "Delimiters"] = delimitersStr;
+  }
+
+  {
+    QJsonArray jsonArray;
+    for (int i=0; i<m_WizardData.tupleDims.size(); i++)
+    {
+      jsonArray.push_back(static_cast<int>(m_WizardData.tupleDims[i]));
+    }
+    obj[prefix + "TupleDims"] = jsonArray;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ImportASCIIData::initialize()
 {
   m_ASCIIArrayMap.clear();

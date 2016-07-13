@@ -133,6 +133,8 @@ void CalculateArrayHistogram::readFilterParameters(QJsonObject &obj)
   setNormalize(static_cast<bool>(obj["Normalize"].toInt()));
 }
 
+// FP: Check why these values are not connected to a filter parameter!
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

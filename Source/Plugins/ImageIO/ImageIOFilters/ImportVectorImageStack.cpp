@@ -106,7 +106,7 @@ void ImportVectorImageStack::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(ImportVectorImageStackFilterParameter::New("Import Image Data", "ImageVector", getImageVector(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ImportVectorImageStack, this, ImageVector), SIMPL_BIND_GETTER(ImportVectorImageStack, this, ImageVector)));
+  parameters.push_back(ImportVectorImageStackFilterParameter::New("Import Image Data", "ImageVector", getImageVector(), FilterParameter::Parameter, this));
 
   parameters.push_back(StringFilterParameter::New("Data Container Name", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, DataContainerName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, DataContainerName)));
   parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, CellAttributeMatrixName)));

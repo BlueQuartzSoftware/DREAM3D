@@ -113,6 +113,34 @@ void WriteStlFile::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void WriteStlFile::readFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::readFilterParameters(obj);
+
+  QJsonObject dataPathObj = obj["SurfaceMeshFacePhasesArrayPath"].toObject();
+  DataArrayPath dap;
+  dap.readJson(dataPathObj);
+  setSurfaceMeshFacePhasesArrayPath(dap);
+}
+
+// FP: Check why these values are not connected to a filter parameter!
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteStlFile::writeFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::writeFilterParameters(obj);
+
+  DataArrayPath dap = getSurfaceMeshFacePhasesArrayPath();
+  QJsonObject dataPathObj;
+  dap.writeJson(dataPathObj);
+  obj["SurfaceMeshFacePhasesArrayPath"] = dataPathObj;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void WriteStlFile::initialize()
 {
 
