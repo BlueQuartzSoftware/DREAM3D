@@ -50,6 +50,7 @@ set(_PublicFilters
   WritePoleFigure
   WriteStatsGenOdfAngleFile
   OrientationUtility
+  Stereographic3D
 )
 
 
