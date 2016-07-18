@@ -76,3 +76,16 @@ ENUM_VALUES_PER_LINE = 4
 GENERATE_TREEVIEW = YES
 TREEVIEW_WIDTH = 250
 
+#---------------------------------------------------------------------------
+# configuration options related to the Qt Help output
+#---------------------------------------------------------------------------
+GENERATE_QHP           = NO
+QCH_FILE               = @DOX_OUTPUT_SUB_DIR@.qch
+QHP_NAMESPACE          = net.bluequartzsoftware.DREAM3D
+QHP_VIRTUAL_FOLDER     = DREAM3D
+QHP_CUST_FILTER_NAME   = 
+QHP_CUST_FILTER_ATTRS  = 
+QHP_SECT_FILTER_ATTRS  = 
+QHG_LOCATION           = @Qt5_DIR@/../../bin/qhelpgenerator
+
+

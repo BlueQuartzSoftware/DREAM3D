@@ -1,15 +1,7 @@
 Compiling DREAM.3D {#compilingdream3d}
 ========
 
-# Preliminaries #
-
-A compiler suite (Visual Studio, Xcode, GCC, etc.) for your operating system is necessary. The following table lists the compilers that DREAM.3D is commonly compiled against.
-
-| Compiler Version | Notes |  
-|  ------	| ------	|  
-| Visual Studio 2013 Pro & Express/Community SP4 | 64 bit builds |  
-| Xcode 5.1.1 (or Greater) (OS X Version 10.8, 10.9, 10.10) | 64 bit Intel Only |  
-| GCC 4.7.x or Clang (Ubuntu 14.04) | 64 bit Intel Only |  
+ 
 
 ## Note for MinGW/MSys/Cygwin ##
 
