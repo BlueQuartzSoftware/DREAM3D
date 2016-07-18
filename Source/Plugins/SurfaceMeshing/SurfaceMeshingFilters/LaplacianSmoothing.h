@@ -88,6 +88,12 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     SIMPL_FILTER_PARAMETER(float, SurfaceQuadPointLambda)
     Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
 
+    SIMPL_FILTER_PARAMETER(bool, UseTaubinSmoothing)
+    Q_PROPERTY(bool UseTaubinSmoothing READ getUseTaubinSmoothing WRITE setUseTaubinSmoothing)
+
+    SIMPL_FILTER_PARAMETER(float, MuFactor)
+    Q_PROPERTY(float MuFactor READ getMuFactor WRITE setMuFactor)
+
 
     /* This class is designed to be subclassed so that thoes subclasses can add
      * more functionality such as constrained surface nodes or Triple Lines. We use

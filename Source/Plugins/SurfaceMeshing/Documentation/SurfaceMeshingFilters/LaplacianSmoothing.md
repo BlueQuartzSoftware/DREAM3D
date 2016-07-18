@@ -39,7 +39,16 @@ If &lambda; is too small, one needs more iterations for smoothing and the smooth
 
 In the Laplacian algorithm the &lambda; term has a range of 0 &le; &lambda; &le; 1 and defines a relative distance that a node can move relative to the positions of the nodes neighbors. A &lambda; = 0 value will effectively stop those node types from any movement during the algorithm thus by allowing the user to set this value for specific types of nodes the user can arrest the shrinkage of the surface mesh during the smoothing process.
 
-Currently, if you lock the _Default Lambda_ value to zero (0), the triple lines and quadruple points will not be able to move because none of their neighbors can move. The user may want to consider allowing a small value of &lambda; for the default nodes which will allow some movement of the triple lines and/or quadruple Points. This **Filter** will create additional internal arrays in order to facilitate the calculations. These arrays are
+
+### Taubin's Lambda-Mu Smoothing Algorithm ##
+
+One of the options for the filter allows the user to apply Taubin's Lambda-Mu variation on Laplacian smoothing. This variation removes the shrinkage typically found with Laplacian smoothing by adding an additional step within each iteration where the negative of the (Lambda value \* Mu Factor) which effectively moves the points in the **opposite** direction from the initial movement. Because of this negative movement the number of iterations to achieve the same level of smoothing is greatly increased, on the order of 10x to 20x.
+
+### Algorithm Usage and Memory Requirements ###
+
+Currently, if you lock the _Default Lambda_ value to zero (0), the triple lines and quadruple points will not be able to move because none of their neighbors can move. The user may want to consider allowing a small value of &lambda; for the default nodes which will allow some movement of the triple lines and/or quadruple Points. 
+
+This **Filter** will create additional internal arrays in order to facilitate the calculations. These arrays are
 
 - Float - &lambda; values (same size as nodes array)
 - 64 bit integer - unique edges array
@@ -64,11 +73,14 @@ The values for the _Node Type_ array can take one of the following values.
 
 For more information on surface meshing, visit the [tutorial](@ref tutorialsurfacemeshingtutorial).
 
+
 ## Parameters ##
 | Name | Type | Description |
 |------|------|-------------|
 | Iteration Steps | int32_t | Number of iteration steps to perform. More steps causes more smoothing but will also cause the volume to shrink more. _Inreasing this number too high may cause collapse of points!_ |
 | Default Lambda | float | Value of &lambda; to apply to general internal nodes that are not triple lines, quadruple points or on the surface of the volume |
+| Use Taubin Smoothing | boolean | Use Taubin's Lambda-Mu algorithm. |
+| Mu Factor | float | A value that is multipied by Lambda the result of which is the *mu* in Taubin's paper. The value should be a negative value. |
 | Triple Line Lambda | float | Value of &lambda; to apply to nodes designated as triple line nodes. |
 | Quadruple Points Lambda | float | Value of &lambda; to apply to nodes designated as quadruple points. |
 | Outer Points Lambda | float | The value of &lambda; to apply to nodes that lie on the outer surface of the volume |
@@ -91,7 +103,7 @@ None
 
 [1] D. A. Feature, (1988) Laplacian smoothing and Delaunay triangulations. Commun. appl. numer. methods, 4: 709–712. doi: 10.1002/cnm.1630040603
 
-[2] A. Belyaev, "Mesh Smoothing and Enhancing Curvature Estimation"
+[2] A. Belyaev, “Mesh smoothing and enhancing curvature estimation,” [http://www.mpi-inf.mpg.de/ ̃ag4-gm/handouts/06gm_surf3.pdf](http://www.mpi-inf.mpg.de/ ̃ag4-gm/handouts/06gm_surf3.pdf).
 
 
 ## License & Copyright ##

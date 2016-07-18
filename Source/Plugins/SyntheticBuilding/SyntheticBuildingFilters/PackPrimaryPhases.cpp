@@ -241,8 +241,6 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_CsvOutputFile(""),
   m_PeriodicBoundaries(false),
   m_WriteGoalAttributes(false),
-  m_ErrorOutputFile(""),
-  m_VtkOutputFile(""),
   m_NeighborhoodsArrayName(SIMPL::FeatureData::Neighborhoods),
   m_CentroidsArrayName(SIMPL::FeatureData::Centroids),
   m_VolumesArrayName(SIMPL::FeatureData::Volumes),
@@ -265,7 +263,9 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_EquivalentDiameters(NULL),
   m_PhaseTypes(NULL),
   m_ShapeTypes(NULL),
-  m_NumFeatures(NULL)
+  m_NumFeatures(NULL),
+  m_ErrorOutputFile(""),
+  m_VtkOutputFile("")
 {
 
   initialize();
@@ -433,8 +433,8 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
   setInputShapeTypesArrayPath(reader->readDataArrayPath("InputShapeTypesArrayPath", getInputShapeTypesArrayPath() ) );
   setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath() ) );
-  setVtkOutputFile( reader->readString( "VtkOutputFile", getVtkOutputFile() ) );
-  setErrorOutputFile( reader->readString( "ErrorOutputFile", getErrorOutputFile() ) );
+//  setVtkOutputFile( reader->readString( "VtkOutputFile", getVtkOutputFile() ) );
+//  setErrorOutputFile( reader->readString( "ErrorOutputFile", getErrorOutputFile() ) );
   reader->closeFilterGroup();
 }
 
@@ -444,8 +444,8 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 void PackPrimaryPhases::readFilterParameters(QJsonObject &obj)
 {
   AbstractFilter::readFilterParameters(obj);
-  setErrorOutputFile(obj["ErrorOutputFile"].toString());
-  setVtkOutputFile(obj["VtkOutputFile"].toString());
+  //setErrorOutputFile(obj["ErrorOutputFile"].toString());
+  //setVtkOutputFile(obj["VtkOutputFile"].toString());
 }
 
 // FP: Check why these values are not connected to a filter parameter!
@@ -456,8 +456,8 @@ void PackPrimaryPhases::readFilterParameters(QJsonObject &obj)
 void PackPrimaryPhases::writeFilterParameters(QJsonObject &obj)
 {
   AbstractFilter::writeFilterParameters(obj);
-  obj["ErrorOutputFile"] = getErrorOutputFile();
-  obj["VtkOutputFile"] = getVtkOutputFile();
+  //obj["ErrorOutputFile"] = getErrorOutputFile();
+  //obj["VtkOutputFile"] = getVtkOutputFile();
 }
 
 // -----------------------------------------------------------------------------
