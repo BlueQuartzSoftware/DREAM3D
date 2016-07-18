@@ -236,7 +236,11 @@ void FeatureDataCSVWriter::execute()
   outFile << "\n";
 
   // Get the number of tuples in the arrays
-  size_t numTuples = data[0]->getNumberOfTuples();
+  size_t numTuples =  0;
+  if (!data.empty())
+  {
+    numTuples = data[0]->getNumberOfTuples();
+  }
 
   float threshold = 0.0f;
 
@@ -294,7 +298,7 @@ void FeatureDataCSVWriter::execute()
   file.close();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "FeatureDataCSVWriter Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
