@@ -153,7 +153,7 @@ void ImportASCIIData::dataCheck()
   ASCIIWizardData wizardData = getWizardData();
   if (wizardData.isEmpty() == true)
   {
-    QString ss = "A file has not been chosen to import.  Please pick a file to import.";
+    QString ss = "A file has not been chosen to import. Please pick a file to import.";
     setErrorCondition(EMPTY_FILE);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -166,6 +166,18 @@ void ImportASCIIData::dataCheck()
   QVector<size_t> cDims(1, 1);
 
   QFileInfo fi(inputFilePath);
+  if (inputFilePath.isEmpty() == true)
+  {
+    QString ss = QObject::tr("The input file must be set");
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  else if (fi.exists() == false)
+  {
+    QString ss = QObject::tr("The input file does not exist");
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixPath);
   if (NULL == am.get())
