@@ -106,7 +106,7 @@ set(DREAM3D_CORE_ITK_MODULES
     #ITKImageGradient
     #ITKImageFilterBase
     #ITKSmoothing
-    #ITKDenoising
+    ITKDenoising
     ITKConvolution
     ITKStatistics
     #ITKImageFeature
