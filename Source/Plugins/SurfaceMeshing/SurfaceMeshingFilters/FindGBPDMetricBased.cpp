@@ -544,6 +544,11 @@ void FindGBPDMetricBased::dataCheck()
     setErrorCondition(-1);
   }
 
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+
   QFileInfo distOutFileInfo(getDistOutputFile());
   QDir distParentPath = distOutFileInfo.path();
   if (distParentPath.exists() == false)

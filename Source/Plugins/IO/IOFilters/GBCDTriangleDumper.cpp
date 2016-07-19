@@ -129,7 +129,7 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
 
   if(getOutputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr("The output file must be set").arg(ClassName());
+    QString ss = QObject::tr("The output file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }

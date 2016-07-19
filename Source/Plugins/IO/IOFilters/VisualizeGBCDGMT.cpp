@@ -144,7 +144,9 @@ void VisualizeGBCDGMT::dataCheck()
     QString ss = QObject::tr( "The output file must be set");
     setErrorCondition(-1000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
+
 
   QFileInfo fi(getOutputFile());
   QDir parentPath = fi.path();
