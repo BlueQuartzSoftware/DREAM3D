@@ -521,7 +521,7 @@ void PackPrimaryPhases::dataCheck()
   m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
   if(m_StatsDataArray.lock() == NULL)
   {
-    QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
+    QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serializeDataArrayPath());
     setErrorCondition(-308);
     notifyErrorMessage(getHumanLabel(), ss, -308);
   }
@@ -2103,7 +2103,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   // Bail if the shapeclass is not one of our enumerated types
   if (shapeclass >= SIMPL::ShapeType::ShapeTypeEnd)
   {
-    QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
+    QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serializeDataArrayPath());
     setErrorCondition(-666);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -2265,7 +2265,7 @@ void PackPrimaryPhases::assign_voxels()
 
     if (shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
     {
-      QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
+      QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serializeDataArrayPath());
       setErrorCondition(-666);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;

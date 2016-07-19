@@ -251,7 +251,7 @@ class Filter
     {
       out << "m_P1: " << m_Parameter1 << std::endl;
       out << "m_P2: " << m_Parameter2 << std::endl;
-      out << "FeatureIds Path: " << m_FeatureIdsPath.serialize("|").toStdString() << std::endl;
+      out << "FeatureIds Path: " << m_FeatureIdsPath.serializeDataArrayPath("|").toStdString() << std::endl;
     }
 
     QString getName()

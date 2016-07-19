@@ -228,7 +228,7 @@ void MinNeighbors::execute()
 
     if (unavailablePhase == true)
     {
-      QString ss = QObject::tr("The phase number (%1) is not available in the supplied Feature phases array with path (%2)").arg(m_PhaseNumber).arg(m_FeaturePhasesArrayPath.serialize());
+      QString ss = QObject::tr("The phase number (%1) is not available in the supplied Feature phases array with path (%2)").arg(m_PhaseNumber).arg(m_FeaturePhasesArrayPath.serializeDataArrayPath());
       setErrorCondition(-5555);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
