@@ -11,8 +11,24 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.3.0 ##
+## Version 6.3 ##
 
+
+### Version 6.3.29 ###
+
++ BUG: Fixed issues when DREAM.3D is run on a system with a European locale. Entering decimal numbers will not work due to a different between the use of "," and ".".
++ BUG: Fixed crashing bug when dragging filters in the pipeline.
++ ENH: Adding option to use Taubin Smoothing in the Laplacian surface meshing filter
++ ENH: Added new filter to calculate the 3D coordinates from a quaternion.
++ ENH: Enabling the Avizo writer filters.
++ BUG: Fixing issue where the Filter index group was not closed leading to corrupted Pipeline files if "Find Boundary Strengths" filter is used.
++ BUG: Each Plugin now has a unique version specific to itself.
++ BUG: Fixing issue where the ComparisonSelectionWidget would not refresh its list of DataContainers and AttributeMatrices after an upstream pipeline was changed.
+
+
+### Version 6.3.0 ###
+
+This is a major update and all users of DREAM.3D are encouraged to update to this version.
 
 ### Major Changes ###
 + Created new "ToolBox" window that contains the *Filter List*, *Filter Library* and *Bookmarks* tabs from earlier versions
