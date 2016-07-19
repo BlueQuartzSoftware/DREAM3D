@@ -85,12 +85,12 @@ void WriteTriangleGeometry::setupFilterParameters()
   FilterParameterVector parameters;
 
 
-  parameters.push_back(OutputFileFilterParameter::New("Output Nodes File", "OutputNodesFile", getOutputNodesFile(), FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Output Triangles File", "OutputTrianglesFile", getOutputTrianglesFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output Nodes File", "OutputNodesFile", getOutputNodesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteTriangleGeometry, this, OutputNodesFile), SIMPL_BIND_GETTER(WriteTriangleGeometry, this, OutputNodesFile)));
+  parameters.push_back(OutputFileFilterParameter::New("Output Triangles File", "OutputTrianglesFile", getOutputTrianglesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteTriangleGeometry, this, OutputTrianglesFile), SIMPL_BIND_GETTER(WriteTriangleGeometry, this, OutputTrianglesFile)));
 
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("DataContainer", "DataContainerSelection", getDataContainerSelection(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataContainerSelectionFilterParameter::New("DataContainer", "DataContainerSelection", getDataContainerSelection(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteTriangleGeometry, this, DataContainerSelection), SIMPL_BIND_GETTER(WriteTriangleGeometry, this, DataContainerSelection)));
   }
 
   setFilterParameters(parameters);
@@ -106,20 +106,6 @@ void WriteTriangleGeometry::readFilterParameters(AbstractFilterParametersReader*
   setOutputNodesFile( reader->readString( "OutputNodesFile", getOutputNodesFile() ) );
   setOutputTrianglesFile( reader->readString( "OutputTrianglesFile", getOutputTrianglesFile() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int WriteTriangleGeometry::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerSelection)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputNodesFile)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputTrianglesFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

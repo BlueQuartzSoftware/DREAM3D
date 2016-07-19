@@ -49,7 +49,12 @@ file(APPEND ${RegisterKnownFiltersFile} "#include \"${PLUGIN_NAME}Filters.h\"\n\
 file(APPEND ${RegisterKnownFiltersFile} "\n//----------------------------------------------------------\n")
 file(APPEND ${RegisterKnownFiltersFile} "\nvoid ${PLUGIN_NAME}Plugin::registerFilters(FilterManager* fm)\n{\n")
 
-
+# --------------------------------------------------------------------
+# Generate a file with all of our MOC'ed sources and  headers
+set(FilterWidget_GEN_HDRS_File ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidget_GEN_HDRS_File.cmake)
+set(FilterWidget_GEN_SRCS_File ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidget_GEN_SRCS_File.cmake)
+file(WRITE ${FilterWidget_GEN_HDRS_File})
+file(WRITE ${FilterWidget_GEN_SRCS_File})
 
 set(Project_SRCS "")
 
@@ -120,8 +125,16 @@ include_directories( ${SIMPLProj_BINARY_DIR}/SVWidgetsLib)
 include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
 include_directories( ${SIMPLViewProj_BINARY_DIR})
 
+# ******************************************************************************
+# Create our custom executable that will generate most of our QFilterWidget
+# classes from information stored in the Filters themselves.
+# Read the file back into a string so we can configure our file
+file(READ ${FilterWidget_GEN_HDRS_File} ${PLUGIN_NAME}Widget_GEN_HDRS)
+file(READ ${FilterWidget_GEN_SRCS_File} ${PLUGIN_NAME}Widget_GEN_SRCS)
 
-
+# Remove the temp files that we no longer need
+file(REMOVE ${FilterWidget_GEN_HDRS_File})
+file(REMOVE ${FilterWidget_GEN_SRCS_File})
 
 
 set(FILTER_HEADERS "#include \"${AllFiltersHeaderFile}\"")

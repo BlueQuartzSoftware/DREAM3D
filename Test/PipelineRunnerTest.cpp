@@ -73,7 +73,6 @@
 #include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/FilterParameters/QFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/H5FilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
@@ -81,40 +80,6 @@
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "PipelineRunnerTest.h"
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline::Pointer pipeline)
-{
-  FilterManager* filtManager = FilterManager::Instance();
-  QSettings* prefs = paramsReader->getPrefs();
-  prefs->beginGroup(SIMPL::Settings::PipelineBuilderGroup);
-  bool ok = false;
-  int filterCount = prefs->value("Number_Filters").toInt(&ok);
-  prefs->endGroup();
-  if (false == ok) {filterCount = 0;}
-
-  for (int i = 0; i < filterCount; ++i)
-  {
-    QString gName = QString::number(i);
-
-    // Open the group to get the name of the filter then close again.
-    prefs->beginGroup(gName);
-    QString filterName = prefs->value("Filter_Name", "").toString();
-    prefs->endGroup();
-    //  qDebug() << filterName;
-
-    IFilterFactory::Pointer factory = filtManager->getFactoryForFilter(filterName);
-    AbstractFilter::Pointer filter = factory->create();
-
-    if(NULL != filter.get())
-    {
-      filter->readFilterParameters(paramsReader.get(), i);
-      pipeline->pushBack(filter);
-    }
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -137,17 +102,15 @@ void ExecutePipeline(const QString& pipelineFile)
 
   // Use the static method to read the Pipeline file and return a Filter Pipeline
   FilterPipeline::Pointer pipeline;
-  if (ext == "ini" || ext == "txt")
+  if (ext == "dream3d")
   {
-    pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelineFile, QSettings::IniFormat);
-  }
-  else if (ext == "dream3d")
-  {
-    pipeline = H5FilterParametersReader::ReadPipelineFromFile(pipelineFile);
+    H5FilterParametersReader::Pointer dream3dReader = H5FilterParametersReader::New();
+    pipeline = dream3dReader->readPipelineFromFile(pipelineFile);
   }
   else if (ext == "json")
   {
-    pipeline = JsonFilterParametersReader::ReadPipelineFromFile(pipelineFile);
+    JsonFilterParametersReader::Pointer jsonReader = JsonFilterParametersReader::New();
+    pipeline = jsonReader->readPipelineFromFile(pipelineFile);
   }
 
   if (NULL == pipeline.get())

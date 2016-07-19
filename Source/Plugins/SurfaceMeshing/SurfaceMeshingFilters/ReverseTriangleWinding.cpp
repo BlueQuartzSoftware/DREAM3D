@@ -122,7 +122,7 @@ void ReverseTriangleWinding::setupFilterParameters()
   {
     DataContainerSelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ReverseTriangleWinding, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(ReverseTriangleWinding, this, SurfaceDataContainerName)));
   }
   setFilterParameters(parameters);
 }
@@ -135,18 +135,6 @@ void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader
   reader->openFilterGroup(this, index);
   setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

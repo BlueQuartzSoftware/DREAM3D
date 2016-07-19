@@ -35,6 +35,9 @@
 
 #include "ReadEdaxH5DataFilterParameter.h"
 
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonArray>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -52,7 +55,7 @@ ReadEdaxH5DataFilterParameter::~ReadEdaxH5DataFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ReadEdaxH5DataFilterParameter::Pointer ReadEdaxH5DataFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, const QString &listProperty, Category category, int groupIndex)
+  const QVariant& defaultValue, const QString &listProperty, Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback, int groupIndex)
 {
   ReadEdaxH5DataFilterParameter::Pointer ptr = ReadEdaxH5DataFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -61,6 +64,9 @@ ReadEdaxH5DataFilterParameter::Pointer ReadEdaxH5DataFilterParameter::New(const 
   ptr->setListProperty(listProperty);
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
+  ptr->setSetterCallback(setterCallback);
+  ptr->setGetterCallback(getterCallback);
+
   return ptr;
 }
 
@@ -71,5 +77,37 @@ ReadEdaxH5DataFilterParameter::Pointer ReadEdaxH5DataFilterParameter::New(const 
 QString ReadEdaxH5DataFilterParameter::getWidgetType()
 {
   return QString("ReadEdaxH5DataWidget");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadEdaxH5DataFilterParameter::readJson(const QJsonObject &json)
+{
+  QStringList scanNames;
+  QJsonArray scanNamesArray = json["SelectedScanNames"].toArray();
+
+  for (int i=0; i<scanNamesArray.size(); i++)
+  {
+    scanNames.push_back(scanNamesArray[i].toString());
+  }
+
+  m_SetterCallback(scanNames);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadEdaxH5DataFilterParameter::writeJson(QJsonObject &json)
+{
+  QStringList scanNames = m_GetterCallback();
+  QJsonArray scanNamesArray;
+
+  for (int i=0; i<scanNames.size(); i++)
+  {
+    scanNamesArray.push_back(scanNames[i]);
+  }
+
+  json["SelectedScanNames"] = scanNamesArray;
 }
 

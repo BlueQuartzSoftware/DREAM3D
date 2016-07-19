@@ -85,12 +85,12 @@ void VASPReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*"));
+  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VASPReader, this, InputFile), SIMPL_BIND_GETTER(VASPReader, this, InputFile), "*"));
 
-  parameters.push_back(StringFilterParameter::New("Vertex Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("AtomVelocities", "AtomVelocitiesArrayName", getAtomVelocitiesArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("AtomTypes", "AtomTypesArrayName", getAtomTypesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Vertex Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VASPReader, this, VertexDataContainerName), SIMPL_BIND_GETTER(VASPReader, this, VertexDataContainerName)));
+  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VASPReader, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(VASPReader, this, VertexAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("AtomVelocities", "AtomVelocitiesArrayName", getAtomVelocitiesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VASPReader, this, AtomVelocitiesArrayName), SIMPL_BIND_GETTER(VASPReader, this, AtomVelocitiesArrayName)));
+  parameters.push_back(StringFilterParameter::New("AtomTypes", "AtomTypesArrayName", getAtomTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VASPReader, this, AtomTypesArrayName), SIMPL_BIND_GETTER(VASPReader, this, AtomTypesArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -105,22 +105,6 @@ void VASPReader::readFilterParameters(AbstractFilterParametersReader* reader, in
   setAtomVelocitiesArrayName(reader->readString("AtomVelocitiesArrayName", getAtomVelocitiesArrayName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VASPReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
-  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) ;
-  SIMPL_FILTER_WRITE_PARAMETER(AtomTypesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AtomVelocitiesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

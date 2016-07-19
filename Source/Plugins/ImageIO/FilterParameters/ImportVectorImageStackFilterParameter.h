@@ -38,6 +38,8 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
+#include "ImageIO/ImageIOFilters/ImportVectorImageStack.h"
+
 class ImportVectorImageStackFilterParameter : public FilterParameter
 {
 public:
@@ -46,11 +48,26 @@ public:
     SIMPL_TYPE_MACRO(ImportVectorImageStackFilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category, int groupIndex = -1);
+    const QVariant& defaultValue, Category category, ImportVectorImageStack* filter,
+    int groupIndex = -1);
 
   virtual ~ImportVectorImageStackFilterParameter();
 
   QString getWidgetType();
+
+  /**
+   * @brief readJson
+   * @return
+   */
+  void readJson(const QJsonObject &json);
+
+  /**
+   * @brief writeJson
+   * @return
+   */
+  void writeJson(QJsonObject &json);
+
+  SIMPL_INSTANCE_PROPERTY(ImportVectorImageStack*, Filter)
 
 protected:
   ImportVectorImageStackFilterParameter();

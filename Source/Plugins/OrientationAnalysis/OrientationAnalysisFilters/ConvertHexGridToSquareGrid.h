@@ -85,6 +85,8 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
 
     SIMPL_INSTANCE_PROPERTY(bool, HeaderIsComplete)
 
+
+
     SIMPL_FILTER_PARAMETER(int, HexGridStack)
     Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
 
@@ -131,11 +133,6 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
     virtual void setupFilterParameters();
-
-    /**
-     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class

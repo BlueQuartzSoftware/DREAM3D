@@ -35,6 +35,8 @@
 
 #include "ConvertHexGridToSquareGridFilterParameter.h"
 
+#include <QtCore/QJsonObject>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -52,7 +54,7 @@ ConvertHexGridToSquareGridFilterParameter::~ConvertHexGridToSquareGridFilterPara
 //
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, const QString& fileExtension,
+  const QVariant& defaultValue, Category category, ConvertHexGridToSquareGrid *filter, const QString& fileExtension,
   const QString& fileType, int groupIndex)
 {
   ConvertHexGridToSquareGridFilterParameter::Pointer ptr = ConvertHexGridToSquareGridFilterParameter::New();
@@ -63,6 +65,8 @@ ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFil
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);
   ptr->setGroupIndex(groupIndex);
+  ptr->setFilter(filter);
+
   return ptr;
 }
 
@@ -73,5 +77,41 @@ ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFil
 QString ConvertHexGridToSquareGridFilterParameter::getWidgetType()
 {
   return QString("ConvertHexGridToSquareGridWidget");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridFilterParameter::readJson(const QJsonObject &json)
+{
+  m_Filter->setFileExtension(json["FileExtension"].toString());
+  m_Filter->setFilePrefix(json["FilePrefix"].toString());
+  m_Filter->setFileSuffix(json["FileSuffix"].toString());
+  m_Filter->setInputPath(json["InputPath"].toString());
+  m_Filter->setOutputPath(json["OutputPath"].toString());
+  m_Filter->setOutputPrefix(json["OutputPrefix"].toString());
+  m_Filter->setPaddingDigits(json["PaddingDigits"].toInt());
+  m_Filter->setXResolution(static_cast<float>(json["XResolution"].toDouble()));
+  m_Filter->setYResolution(static_cast<float>(json["YResolution"].toDouble()));
+  m_Filter->setZEndIndex(json["ZEndIndex"].toString().toLongLong());
+  m_Filter->setZStartIndex(json["ZStartIndex"].toString().toLongLong());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridFilterParameter::writeJson(QJsonObject &json)
+{
+  json["FileExtension"] = m_Filter->getFileExtension();
+  json["FilePrefix"] = m_Filter->getFilePrefix();
+  json["FileSuffix"] = m_Filter->getFileSuffix();
+  json["InputPath"] = m_Filter->getInputPath();
+  json["OutputPath"] = m_Filter->getOutputPath();
+  json["OutputPrefix"] = m_Filter->getOutputPrefix();
+  json["PaddingDigits"] = m_Filter->getPaddingDigits();
+  json["XResolution"] = static_cast<double>(m_Filter->getXResolution());
+  json["YResolution"] = static_cast<double>(m_Filter->getYResolution());
+  json["ZEndIndex"] = QString::number(m_Filter->getZEndIndex());
+  json["ZStartIndex"] = QString::number(m_Filter->getZStartIndex());
 }
 

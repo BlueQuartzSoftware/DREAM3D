@@ -38,6 +38,8 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
+#include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
+
 class ReadH5EbsdFilterParameter : public FilterParameter
 {
 public:
@@ -47,6 +49,7 @@ public:
 
   static Pointer New(const QString& humanLabel, const QString& propertyName,
                      const QVariant& defaultValue, Category category,
+                     ReadH5Ebsd* filter,
                      const QString& fileExtension = QString(""),
                      const QString& fileType = QString(""),
                      int groupIndex = -1);
@@ -54,9 +57,22 @@ public:
   virtual ~ReadH5EbsdFilterParameter();
 
   SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
-    SIMPL_INSTANCE_STRING_PROPERTY(FileType)
+  SIMPL_INSTANCE_STRING_PROPERTY(FileType)
+  SIMPL_INSTANCE_PROPERTY(ReadH5Ebsd*, Filter)
 
   QString getWidgetType();
+
+  /**
+   * @brief readJson
+   * @return
+   */
+  void readJson(const QJsonObject &json);
+
+  /**
+   * @brief writeJson
+   * @return
+   */
+  void writeJson(QJsonObject &json);
 
 protected:
   ReadH5EbsdFilterParameter();
