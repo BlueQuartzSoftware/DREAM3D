@@ -6,7 +6,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "OrientationAnalysis/FilterParameters/OrientationUtilityFilterParameter.h"
 
