@@ -40,7 +40,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -150,13 +149,15 @@ ExportData::~ExportData()
 void ExportData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputPathFilterParameter::New("Output Path", "OutputPath", getOutputPath(), FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("File Extension", "FileExtension", getFileExtension(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Maximum Tuples Per Line", "MaxValPerLine", getMaxValPerLine(), FilterParameter::Parameter));
+  parameters.push_back(OutputPathFilterParameter::New("Output Path", "OutputPath", getOutputPath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ExportData, this, OutputPath), SIMPL_BIND_GETTER(ExportData, this, OutputPath)));
+  parameters.push_back(StringFilterParameter::New("File Extension", "FileExtension", getFileExtension(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ExportData, this, FileExtension), SIMPL_BIND_GETTER(ExportData, this, FileExtension)));
+  parameters.push_back(IntFilterParameter::New("Maximum Tuples Per Line", "MaxValPerLine", getMaxValPerLine(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ExportData, this, MaxValPerLine), SIMPL_BIND_GETTER(ExportData, this, MaxValPerLine)));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();  //Delimiter choice
     parameter->setHumanLabel("Delimiter");
     parameter->setPropertyName("Delimeter");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ExportData, this, Delimeter));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ExportData, this, Delimeter));
 
     QVector<QString> choices;
     choices.push_back(", (comma)");
@@ -170,7 +171,7 @@ void ExportData::setupFilterParameters()
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Export", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req));
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Export", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ExportData, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(ExportData, this, SelectedDataArrayPaths)));
   }
   setFilterParameters(parameters);
 }
@@ -187,21 +188,6 @@ void ExportData::readFilterParameters(AbstractFilterParametersReader* reader, in
   setFileExtension(reader->readString("FileExtension", getFileExtension()));
   setMaxValPerLine(reader->readValue("MaxValPerLine", getMaxValPerLine()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ExportData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedDataArrayPaths)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Delimeter)
-  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
-  SIMPL_FILTER_WRITE_PARAMETER(MaxValPerLine)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -80,12 +79,12 @@ void FindSaltykovSizes::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSaltykovSizes, this, EquivalentDiametersArrayPath), SIMPL_BIND_GETTER(FindSaltykovSizes, this, EquivalentDiametersArrayPath)));
   }
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Saltykov Equivalent Diameters", "SaltykovEquivalentDiametersArrayPath", getSaltykovEquivalentDiametersArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Saltykov Equivalent Diameters", "SaltykovEquivalentDiametersArrayPath", getSaltykovEquivalentDiametersArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindSaltykovSizes, this, SaltykovEquivalentDiametersArrayPath), SIMPL_BIND_GETTER(FindSaltykovSizes, this, SaltykovEquivalentDiametersArrayPath)));
   }
 
   setFilterParameters(parameters);
@@ -99,19 +98,6 @@ void FindSaltykovSizes::readFilterParameters(AbstractFilterParametersReader* rea
   setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
   setSaltykovEquivalentDiametersArrayPath(reader->readDataArrayPath("SaltykovEquivalentDiametersArrayPath", getSaltykovEquivalentDiametersArrayPath()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindSaltykovSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

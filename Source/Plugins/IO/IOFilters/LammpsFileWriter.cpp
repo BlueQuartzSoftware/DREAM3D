@@ -42,7 +42,6 @@
 #include <QtCore/QtEndian>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
@@ -82,11 +81,11 @@ void LammpsFileWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Lammps File", "LammpsFile", getLammpsFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Lammps File", "LammpsFile", getLammpsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LammpsFileWriter, this, LammpsFile), SIMPL_BIND_GETTER(LammpsFileWriter, this, LammpsFile)));
 
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Vertex Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataContainerSelectionFilterParameter::New("Vertex Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(LammpsFileWriter, this, VertexDataContainerName), SIMPL_BIND_GETTER(LammpsFileWriter, this, VertexDataContainerName)));
   }
 
   setFilterParameters(parameters);
@@ -101,19 +100,6 @@ void LammpsFileWriter::readFilterParameters(AbstractFilterParametersReader* read
   setLammpsFile( reader->readString( "LammpsFile", getLammpsFile() ) );
   setVertexDataContainerName( reader->readString( "VertexDataContainerName", getVertexDataContainerName() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int LammpsFileWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(LammpsFile)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

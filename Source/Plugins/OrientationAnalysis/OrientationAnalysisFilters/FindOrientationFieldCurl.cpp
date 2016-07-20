@@ -46,7 +46,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -153,22 +152,22 @@ void FindOrientationFieldCurl::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntVec3FilterParameter::New("Curl Radius (Pixels)", "CurlSize", getCurlSize(), FilterParameter::Parameter));
+  parameters.push_back(IntVec3FilterParameter::New("Curl Radius (Pixels)", "CurlSize", getCurlSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, CurlSize), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, CurlSize)));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, CellPhasesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, CrystalStructuresArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 4, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quats", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Quats", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, QuatsArrayPath), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, QuatsArrayPath)));
   }
 
-  parameters.push_back(StringFilterParameter::New("DislocationTensors", "DislocationTensorsArrayName", getDislocationTensorsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("DislocationTensors", "DislocationTensorsArrayName", getDislocationTensorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, DislocationTensorsArrayName), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, DislocationTensorsArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -183,22 +182,6 @@ void FindOrientationFieldCurl::readFilterParameters(AbstractFilterParametersRead
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setCurlSize( reader->readIntVec3("CurlSize", getCurlSize() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindOrientationFieldCurl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DislocationTensorsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CurlSize)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

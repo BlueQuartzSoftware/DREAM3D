@@ -35,6 +35,9 @@
 
 #include "ImportVectorImageStackFilterParameter.h"
 
+#include <QtCore/QJsonValue>
+#include <QtCore/QJsonObject>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -52,7 +55,7 @@ ImportVectorImageStackFilterParameter::~ImportVectorImageStackFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, int groupIndex)
+  const QVariant& defaultValue, Category category, ImportVectorImageStack *filter, int groupIndex)
 {
 
   ImportVectorImageStackFilterParameter::Pointer ptr = ImportVectorImageStackFilterParameter::New();
@@ -61,6 +64,8 @@ ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParam
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
+  ptr->setFilter(filter);
+
   return ptr;
 }
 
@@ -71,5 +76,61 @@ ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParam
 QString ImportVectorImageStackFilterParameter::getWidgetType()
 {
   return QString("ImportVectorImageStackWidget");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportVectorImageStackFilterParameter::readJson(const QJsonObject &json)
+{
+  m_Filter->setStartIndex(json["StartIndex"].toString().toLongLong());
+  m_Filter->setEndIndex(json["EndIndex"].toString().toLongLong());
+  m_Filter->setStartComp(json["StartComp"].toString().toLongLong());
+  m_Filter->setEndComp(json["EndComp"].toString().toLongLong());
+  m_Filter->setPaddingDigits(json["PaddingDigits"].toInt());
+  m_Filter->setRefFrameZDir(static_cast<uint32_t>(json["RefFrameZDir"].toInt()));
+  m_Filter->setInputPath(json["InputPath"].toString());
+  m_Filter->setFilePrefix(json["FilePrefix"].toString());
+  m_Filter->setSeparator(json["Separator"].toString());
+  m_Filter->setFileSuffix(json["FileSuffix"].toString());
+  m_Filter->setFileExtension(json["FileExtension"].toString());
+
+  QJsonObject originObject = json["Origin"].toObject();
+  FloatVec3_t origin;
+  origin.readJson(originObject);
+  m_Filter->setOrigin(origin);
+
+  QJsonObject resolutionObject = json["Resolution"].toObject();
+  FloatVec3_t resolution;
+  resolution.readJson(resolutionObject);
+  m_Filter->setResolution(resolution);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportVectorImageStackFilterParameter::writeJson(QJsonObject &json)
+{
+  json["StartIndex"] = QString::number(m_Filter->getStartIndex());
+  json["EndIndex"] = QString::number(m_Filter->getEndIndex());
+  json["StartComp"] = QString::number(m_Filter->getStartComp());
+  json["EndComp"] = QString::number(m_Filter->getEndComp());
+  json["PaddingDigits"] = m_Filter->getPaddingDigits();
+  json["RefFrameZDir"] = static_cast<int>(m_Filter->getRefFrameZDir());
+  json["InputPath"] = m_Filter->getInputPath();
+  json["FilePrefix"] = m_Filter->getFilePrefix();
+  json["Separator"] = m_Filter->getSeparator();
+  json["FileSuffix"] = m_Filter->getFileSuffix();
+  json["FileExtension"] = m_Filter->getFileExtension();
+
+  FloatVec3_t origin = m_Filter->getOrigin();
+  QJsonObject originObj;
+  origin.writeJson(originObj);
+  json["Origin"] = originObj;
+
+  FloatVec3_t resolution = m_Filter->getResolution();
+  QJsonObject resolutionObj;
+  resolution.writeJson(resolutionObj);
+  json["Resolution"] = resolutionObj;
 }
 

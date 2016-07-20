@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -79,15 +78,15 @@ void GroupFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("NonContiguousNeighborListArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(GroupFeatures, this, UseNonContiguousNeighbors), SIMPL_BIND_GETTER(GroupFeatures, this, UseNonContiguousNeighbors)));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GroupFeatures, this, NonContiguousNeighborListArrayPath), SIMPL_BIND_GETTER(GroupFeatures, this, NonContiguousNeighborListArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GroupFeatures, this, ContiguousNeighborListArrayPath), SIMPL_BIND_GETTER(GroupFeatures, this, ContiguousNeighborListArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -102,20 +101,6 @@ void GroupFeatures::readFilterParameters(AbstractFilterParametersReader* reader,
   setContiguousNeighborListArrayPath( reader->readDataArrayPath("ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath()));
   setNonContiguousNeighborListArrayPath( reader->readDataArrayPath("NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int GroupFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(UseNonContiguousNeighbors)
-  SIMPL_FILTER_WRITE_PARAMETER(ContiguousNeighborListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NonContiguousNeighborListArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -41,7 +41,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -181,39 +180,39 @@ MergeColonies::~MergeColonies()
 void MergeColonies::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_front(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter));
-  parameters.push_front(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter));
+  parameters.push_front(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, AxisTolerance), SIMPL_BIND_GETTER(MergeColonies, this, AxisTolerance)));
+  parameters.push_front(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, AngleTolerance), SIMPL_BIND_GETTER(MergeColonies, this, AngleTolerance)));
   QStringList linkedProps("GlobAlphaArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Identify Glob Alpha", "IdentifyGlobAlpha", getIdentifyGlobAlpha(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Identify Glob Alpha", "IdentifyGlobAlpha", getIdentifyGlobAlpha(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, IdentifyGlobAlpha), SIMPL_BIND_GETTER(MergeColonies, this, IdentifyGlobAlpha)));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, FeaturePhasesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, AvgQuatsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, FeatureIdsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, CellPhasesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, CrystalStructuresArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "CellParentIdsArrayName", getCellParentIdsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Glob Alpha", "GlobAlphaArrayName", getGlobAlphaArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Parent Ids", "CellParentIdsArrayName", getCellParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, CellParentIdsArrayName), SIMPL_BIND_GETTER(MergeColonies, this, CellParentIdsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Glob Alpha", "GlobAlphaArrayName", getGlobAlphaArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, GlobAlphaArrayName), SIMPL_BIND_GETTER(MergeColonies, this, GlobAlphaArrayName)));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "FeatureParentIdsArrayName", getFeatureParentIdsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, NewCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(MergeColonies, this, NewCellFeatureAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Parent Ids", "FeatureParentIdsArrayName", getFeatureParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, FeatureParentIdsArrayName), SIMPL_BIND_GETTER(MergeColonies, this, FeatureParentIdsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, ActiveArrayName), SIMPL_BIND_GETTER(MergeColonies, this, ActiveArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -238,30 +237,6 @@ void MergeColonies::readFilterParameters(AbstractFilterParametersReader* reader,
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
   setIdentifyGlobAlpha( reader->readValue("IdentifyGlobAlpha", getIdentifyGlobAlpha()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  GroupFeatures::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(GlobAlphaArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(IdentifyGlobAlpha)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

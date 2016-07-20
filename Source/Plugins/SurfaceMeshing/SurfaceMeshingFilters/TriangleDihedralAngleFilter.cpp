@@ -43,7 +43,6 @@
 #endif
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -151,7 +150,7 @@ void TriangleDihedralAngleFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayPath", getSurfaceMeshTriangleDihedralAnglesArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayPath", getSurfaceMeshTriangleDihedralAnglesArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(TriangleDihedralAngleFilter, this, SurfaceMeshTriangleDihedralAnglesArrayPath), SIMPL_BIND_GETTER(TriangleDihedralAngleFilter, this, SurfaceMeshTriangleDihedralAnglesArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -164,18 +163,6 @@ void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersR
   reader->openFilterGroup(this, index);
   setSurfaceMeshTriangleDihedralAnglesArrayPath(reader->readDataArrayPath("SurfaceMeshTriangleDihedralAnglesArrayPath", getSurfaceMeshTriangleDihedralAnglesArrayPath()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleDihedralAnglesArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

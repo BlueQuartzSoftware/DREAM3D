@@ -41,7 +41,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -94,11 +93,11 @@ FeatureInfoReader::~FeatureInfoReader()
 void FeatureInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input Feature Info File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.txt"));
+  parameters.push_back(InputFileFilterParameter::New("Input Feature Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, InputFile), SIMPL_BIND_GETTER(FeatureInfoReader, this, InputFile), "*.txt"));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayName" << "CellEulerAnglesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Create Element Level Arrays", "CreateCellLevelArrays", getCreateCellLevelArrays(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Create Element Level Arrays", "CreateCellLevelArrays", getCreateCellLevelArrays(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, CreateCellLevelArrays), SIMPL_BIND_GETTER(FeatureInfoReader, this, CreateCellLevelArrays)));
+  parameters.push_back(BooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, RenumberFeatures), SIMPL_BIND_GETTER(FeatureInfoReader, this, RenumberFeatures)));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
@@ -107,19 +106,19 @@ void FeatureInfoReader::setupFilterParameters()
     amTypes.push_back(SIMPL::AttributeMatrixType::Edge);
     amTypes.push_back(SIMPL::AttributeMatrixType::Face);
     amTypes.push_back(SIMPL::AttributeMatrixType::Vertex);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Element Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Element Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellAttributeMatrixName)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureInfoReader, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FeatureInfoReader, this, FeatureIdsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Euler Angles", "CellEulerAnglesArrayName", getCellEulerAnglesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellPhasesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellPhasesArrayName)));
+  parameters.push_back(StringFilterParameter::New("Euler Angles", "CellEulerAnglesArrayName", getCellEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellEulerAnglesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellEulerAnglesArrayName)));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Phases", "FeaturePhasesArrayName", getFeaturePhasesArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Euler Angles", "FeatureEulerAnglesArrayName", getFeatureEulerAnglesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellFeatureAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Phases", "FeaturePhasesArrayName", getFeaturePhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, FeaturePhasesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, FeaturePhasesArrayName)));
+  parameters.push_back(StringFilterParameter::New("Euler Angles", "FeatureEulerAnglesArrayName", getFeatureEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, FeatureEulerAnglesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, FeatureEulerAnglesArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -140,27 +139,6 @@ void FeatureInfoReader::readFilterParameters(AbstractFilterParametersReader* rea
   setCreateCellLevelArrays( reader->readValue("CreateCellLevelArrays", getCreateCellLevelArrays()) );
   setRenumberFeatures( reader->readValue("RenumberFeatures", getRenumberFeatures()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FeatureInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(CreateCellLevelArrays)
-  SIMPL_FILTER_WRITE_PARAMETER(RenumberFeatures)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

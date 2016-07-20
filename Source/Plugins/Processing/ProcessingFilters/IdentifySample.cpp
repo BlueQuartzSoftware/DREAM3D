@@ -36,7 +36,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -75,11 +74,11 @@ IdentifySample::~IdentifySample()
 void IdentifySample::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Fill Holes in Largest Feature", "FillHoles", getFillHoles(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Fill Holes in Largest Feature", "FillHoles", getFillHoles(), FilterParameter::Parameter, SIMPL_BIND_SETTER(IdentifySample, this, FillHoles), SIMPL_BIND_GETTER(IdentifySample, this, FillHoles)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(IdentifySample, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(IdentifySample, this, GoodVoxelsArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -93,19 +92,6 @@ void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader
   setFillHoles(reader->readValue("FillHoles", getFillHoles() ) );
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FillHoles)
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

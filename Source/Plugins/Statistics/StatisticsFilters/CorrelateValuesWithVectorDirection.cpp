@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -82,11 +81,11 @@ void CorrelateValuesWithVectorDirection::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("VectorData", "VectorDataArrayPath", getVectorDataArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("VectorData", "VectorDataArrayPath", getVectorDataArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CorrelateValuesWithVectorDirection, this, VectorDataArrayPath), SIMPL_BIND_GETTER(CorrelateValuesWithVectorDirection, this, VectorDataArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", getCorrelatedDataArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", getCorrelatedDataArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CorrelateValuesWithVectorDirection, this, CorrelatedDataArrayPath), SIMPL_BIND_GETTER(CorrelateValuesWithVectorDirection, this, CorrelatedDataArrayPath)));
   }
 
   setFilterParameters(parameters);
@@ -101,19 +100,6 @@ void CorrelateValuesWithVectorDirection::readFilterParameters(AbstractFilterPara
   setVectorDataArrayPath(reader->readDataArrayPath("VectorDataArrayPath", getVectorDataArrayPath() ) );
   setCorrelatedDataArrayPath(reader->readDataArrayPath("CorrelatedDataArrayPath", getCorrelatedDataArrayPath() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int CorrelateValuesWithVectorDirection::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  writer->writeValue("VectorDataArrayPath", getVectorDataArrayPath() );
-  writer->writeValue("CorrelatedDataArrayPath", getCorrelatedDataArrayPath() );
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

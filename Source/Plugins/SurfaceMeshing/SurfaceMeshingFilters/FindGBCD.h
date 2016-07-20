@@ -40,7 +40,6 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -129,11 +128,6 @@ class FindGBCD : public SurfaceMeshFilter
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
     virtual void setupFilterParameters();
-
-    /**
-     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class

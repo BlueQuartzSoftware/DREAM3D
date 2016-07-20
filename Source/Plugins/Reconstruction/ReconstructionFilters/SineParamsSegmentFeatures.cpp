@@ -41,7 +41,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -94,20 +93,20 @@ void SineParamsSegmentFeatures::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, UseGoodVoxels)));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Sine Parameters", "SineParamsArrayPath", getSineParamsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Sine Parameters", "SineParamsArrayPath", getSineParamsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath)));
   }
 
-  parameters.push_back(StringFilterParameter::New("FeatureIds", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("FeatureIds", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, FeatureIdsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, CellFeatureAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, ActiveArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -126,24 +125,6 @@ void SineParamsSegmentFeatures::readFilterParameters(AbstractFilterParametersRea
   setSineParamsArrayPath( reader->readDataArrayPath( "SineParamsArrayPath", getSineParamsArrayPath() ) );
   //setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SineParamsSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  SIMPL_FILTER_WRITE_PARAMETER(SineParamsArrayPath)
-  //SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

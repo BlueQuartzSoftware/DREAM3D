@@ -41,7 +41,6 @@
 #include "SIMPLib/Common/Constants.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -87,19 +86,19 @@ void GenerateVectorColors::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateVectorColors, this, UseGoodVoxels), SIMPL_BIND_GETTER(GenerateVectorColors, this, UseGoodVoxels)));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Vector Attribute Array", "VectorsArrayPath", getVectorsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Vector Attribute Array", "VectorsArrayPath", getVectorsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateVectorColors, this, VectorsArrayPath), SIMPL_BIND_GETTER(GenerateVectorColors, this, VectorsArrayPath)));
   }
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateVectorColors, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(GenerateVectorColors, this, GoodVoxelsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Vector Colors", "CellVectorColorsArrayName", getCellVectorColorsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Vector Colors", "CellVectorColorsArrayName", getCellVectorColorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GenerateVectorColors, this, CellVectorColorsArrayName), SIMPL_BIND_GETTER(GenerateVectorColors, this, CellVectorColorsArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -114,21 +113,6 @@ void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* 
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   setVectorsArrayPath(reader->readDataArrayPath("VectorsArrayPath", getVectorsArrayPath() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int GenerateVectorColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  SIMPL_FILTER_WRITE_PARAMETER(CellVectorColorsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(VectorsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

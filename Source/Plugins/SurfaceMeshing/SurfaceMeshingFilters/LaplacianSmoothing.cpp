@@ -40,7 +40,6 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -91,27 +90,28 @@ LaplacianSmoothing::~LaplacianSmoothing()
 void LaplacianSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Iteration Steps", "IterationSteps", getIterationSteps(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Default Lambda", "Lambda", getLambda(), FilterParameter::Parameter));
+
+  parameters.push_back(IntFilterParameter::New("Iteration Steps", "IterationSteps", getIterationSteps(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, IterationSteps), SIMPL_BIND_GETTER(LaplacianSmoothing, this, IterationSteps)));
+  parameters.push_back(DoubleFilterParameter::New("Default Lambda", "Lambda", getLambda(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, Lambda), SIMPL_BIND_GETTER(LaplacianSmoothing, this, Lambda)));
 
   QStringList linkedProps;
   linkedProps << "MuFactor";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Taubin Smoothing", "UseTaubinSmoothing", getUseTaubinSmoothing(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Mu Factor", "MuFactor", getMuFactor(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Triple Line Lambda", "TripleLineLambda", getTripleLineLambda(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Quadruple Points Lambda", "QuadPointLambda", getQuadPointLambda(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Outer Points Lambda", "SurfacePointLambda", getSurfacePointLambda(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", getSurfaceTripleLineLambda(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", getSurfaceQuadPointLambda(), FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Taubin Smoothing", "UseTaubinSmoothing", getUseTaubinSmoothing(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, UseTaubinSmoothing), SIMPL_BIND_GETTER(LaplacianSmoothing, this, UseTaubinSmoothing)));
+  parameters.push_back(DoubleFilterParameter::New("Mu Factor", "MuFactor", getMuFactor(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, MuFactor), SIMPL_BIND_GETTER(LaplacianSmoothing, this, MuFactor)));
+  parameters.push_back(DoubleFilterParameter::New("Triple Line Lambda", "TripleLineLambda", getTripleLineLambda(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, TripleLineLambda), SIMPL_BIND_GETTER(LaplacianSmoothing, this, TripleLineLambda)));
+  parameters.push_back(DoubleFilterParameter::New("Quadruple Points Lambda", "QuadPointLambda", getQuadPointLambda(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, QuadPointLambda), SIMPL_BIND_GETTER(LaplacianSmoothing, this, QuadPointLambda)));
+  parameters.push_back(DoubleFilterParameter::New("Outer Points Lambda", "SurfacePointLambda", getSurfacePointLambda(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, SurfacePointLambda), SIMPL_BIND_GETTER(LaplacianSmoothing, this, SurfacePointLambda)));
+  parameters.push_back(DoubleFilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", getSurfaceTripleLineLambda(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, SurfaceTripleLineLambda), SIMPL_BIND_GETTER(LaplacianSmoothing, this, SurfaceTripleLineLambda)));
+  parameters.push_back(DoubleFilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", getSurfaceQuadPointLambda(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, SurfaceQuadPointLambda), SIMPL_BIND_GETTER(LaplacianSmoothing, this, SurfaceQuadPointLambda)));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Vertex, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(LaplacianSmoothing, this, SurfaceMeshNodeTypeArrayPath), SIMPL_BIND_GETTER(LaplacianSmoothing, this, SurfaceMeshNodeTypeArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(LaplacianSmoothing, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(LaplacianSmoothing, this, SurfaceMeshFaceLabelsArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -134,29 +134,6 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
   setUseTaubinSmoothing(reader->readValue("UseTaubinSmoothing", getUseTaubinSmoothing()));
   setMuFactor(reader->readValue("MuFactor", getMuFactor()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(IterationSteps)
-  SIMPL_FILTER_WRITE_PARAMETER(Lambda)
-  SIMPL_FILTER_WRITE_PARAMETER(TripleLineLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(QuadPointLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfacePointLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceTripleLineLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceQuadPointLambda)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MuFactor)
-  SIMPL_FILTER_WRITE_PARAMETER(UseTaubinSmoothing)
-
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

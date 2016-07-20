@@ -40,7 +40,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -115,12 +114,12 @@ ReadH5Ebsd::~ReadH5Ebsd()
 void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(ReadH5EbsdFilterParameter::New("Read H5Ebsd File", "ReadH5Ebsd", "__NULL__", FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(ReadH5EbsdFilterParameter::New("Read H5Ebsd File", "ReadH5Ebsd", "__NULL__", FilterParameter::Parameter, this));
+  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadH5Ebsd, this, DataContainerName), SIMPL_BIND_GETTER(ReadH5Ebsd, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadH5Ebsd, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ReadH5Ebsd, this, CellAttributeMatrixName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadH5Ebsd, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(ReadH5Ebsd, this, CellEnsembleAttributeMatrixName)));
   setFilterParameters(parameters);
 }
 
@@ -139,28 +138,6 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
   setSelectedArrayNames(reader->readArraySelections("SelectedArrayNames", getSelectedArrayNames() ));
   setAngleRepresentation(reader->readValue("AngleRepresentation", getAngleRepresentation() ));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  SIMPL_FILTER_WRITE_PARAMETER(ZStartIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(ZEndIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(UseTransformations)
-  SIMPL_FILTER_WRITE_PARAMETER(AngleRepresentation)
-  writer->writeArraySelections("SelectedArrayNames", getSelectedArrayNames() );
-
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

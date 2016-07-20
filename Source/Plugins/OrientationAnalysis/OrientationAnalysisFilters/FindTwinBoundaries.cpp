@@ -44,7 +44,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -242,37 +241,37 @@ FindTwinBoundaries::~FindTwinBoundaries()
 void FindTwinBoundaries::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundaries, this, AxisTolerance), SIMPL_BIND_GETTER(FindTwinBoundaries, this, AxisTolerance)));
+  parameters.push_back(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundaries, this, AngleTolerance), SIMPL_BIND_GETTER(FindTwinBoundaries, this, AngleTolerance)));
   QStringList linkedProps;
   linkedProps << "SurfaceMeshFaceNormalsArrayPath" << "SurfaceMeshTwinBoundaryIncoherenceArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Coherence", "FindCoherence", getFindCoherence(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Coherence", "FindCoherence", getFindCoherence(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundaries, this, FindCoherence), SIMPL_BIND_GETTER(FindTwinBoundaries, this, FindCoherence)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundaries, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindTwinBoundaries, this, AvgQuatsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundaries, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindTwinBoundaries, this, FeaturePhasesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundaries, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindTwinBoundaries, this, CrystalStructuresArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundaries, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindTwinBoundaries, this, SurfaceMeshFaceLabelsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundaries, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FindTwinBoundaries, this, SurfaceMeshFaceNormalsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Twin Boundary", "SurfaceMeshTwinBoundaryArrayName", getSurfaceMeshTwinBoundaryArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Twin Boundary Incoherence", "SurfaceMeshTwinBoundaryIncoherenceArrayName", getSurfaceMeshTwinBoundaryIncoherenceArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Twin Boundary", "SurfaceMeshTwinBoundaryArrayName", getSurfaceMeshTwinBoundaryArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindTwinBoundaries, this, SurfaceMeshTwinBoundaryArrayName), SIMPL_BIND_GETTER(FindTwinBoundaries, this, SurfaceMeshTwinBoundaryArrayName)));
+  parameters.push_back(StringFilterParameter::New("Twin Boundary Incoherence", "SurfaceMeshTwinBoundaryIncoherenceArrayName", getSurfaceMeshTwinBoundaryIncoherenceArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindTwinBoundaries, this, SurfaceMeshTwinBoundaryIncoherenceArrayName), SIMPL_BIND_GETTER(FindTwinBoundaries, this, SurfaceMeshTwinBoundaryIncoherenceArrayName)));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -290,27 +289,6 @@ void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* re
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
   setFindCoherence( reader->readValue("FindCoherence", getFindCoherence()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindTwinBoundaries::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryIncoherenceArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(FindCoherence)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

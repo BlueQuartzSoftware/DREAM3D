@@ -42,7 +42,6 @@
 #include <QtCore/QtEndian>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -85,11 +84,11 @@ void NodesTrianglesToVtk::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Nodes File", "NodesFile", getNodesFile(), FilterParameter::Parameter));
-  parameters.push_back(InputFileFilterParameter::New("Triangles File", "TrianglesFile", getTrianglesFile(), FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", getWriteConformalMesh(), FilterParameter::Parameter));
+  parameters.push_back(InputFileFilterParameter::New("Nodes File", "NodesFile", getNodesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, NodesFile), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, NodesFile)));
+  parameters.push_back(InputFileFilterParameter::New("Triangles File", "TrianglesFile", getTrianglesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, TrianglesFile), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, TrianglesFile)));
+  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, OutputVtkFile), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, OutputVtkFile)));
+  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, WriteBinaryFile), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, WriteBinaryFile)));
+  parameters.push_back(BooleanFilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", getWriteConformalMesh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, WriteConformalMesh), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, WriteConformalMesh)));
 
   setFilterParameters(parameters);
 }
@@ -106,22 +105,6 @@ void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* r
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
   setWriteConformalMesh( reader->readValue("WriteConformalMesh", getWriteConformalMesh()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NodesFile)
-  SIMPL_FILTER_WRITE_PARAMETER(TrianglesFile)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputVtkFile)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteBinaryFile)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteConformalMesh)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

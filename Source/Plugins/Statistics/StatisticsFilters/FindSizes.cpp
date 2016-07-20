@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -87,17 +86,17 @@ void FindSizes::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSizes, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindSizes, this, FeatureIdsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSizes, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindSizes, this, CellFeatureAttributeMatrixName)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayName", getEquivalentDiametersArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Number of Cells", "NumCellsArrayName", getNumCellsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Volumes", "VolumesArrayName", getVolumesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayName", getEquivalentDiametersArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSizes, this, EquivalentDiametersArrayName), SIMPL_BIND_GETTER(FindSizes, this, EquivalentDiametersArrayName)));
+  parameters.push_back(StringFilterParameter::New("Number of Cells", "NumCellsArrayName", getNumCellsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSizes, this, NumCellsArrayName), SIMPL_BIND_GETTER(FindSizes, this, NumCellsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Volumes", "VolumesArrayName", getVolumesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSizes, this, VolumesArrayName), SIMPL_BIND_GETTER(FindSizes, this, VolumesArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -113,22 +112,6 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int
   setVolumesArrayName(reader->readString("VolumesArrayName", getVolumesArrayName() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(NumCellsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

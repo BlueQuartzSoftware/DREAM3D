@@ -39,7 +39,6 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -94,17 +93,20 @@ UncertainRegularGridSampleSurfaceMesh::~UncertainRegularGridSampleSurfaceMesh()
 void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(IntFilterParameter::New("X Points", "XPoints", getXPoints(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Points", "YPoints", getYPoints(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Points", "ZPoints", getZPoints(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Uncertainty", "Uncertainty", getUncertainty(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("X Points", "XPoints", getXPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, XPoints), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, XPoints)));
+  parameters.push_back(IntFilterParameter::New("Y Points", "YPoints", getYPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, YPoints), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, YPoints)));
+  parameters.push_back(IntFilterParameter::New("Z Points", "ZPoints", getZPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, ZPoints), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, ZPoints)));
+  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, Resolution), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, Resolution)));
 
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, Origin), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, Origin)));
+
+  parameters.push_back(FloatVec3FilterParameter::New("Uncertainty", "Uncertainty", getUncertainty(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, Uncertainty), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, Uncertainty)));
+
+
+  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, DataContainerName), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, CellAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, FeatureIdsArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -125,20 +127,6 @@ void UncertainRegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterP
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int UncertainRegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  SampleSurfaceMesh::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

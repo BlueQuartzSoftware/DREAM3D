@@ -44,7 +44,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -129,6 +128,8 @@ void FlattenImage::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Flattening Method");
     parameter->setPropertyName("FlattenMethod");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FlattenImage, this, FlattenMethod));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FlattenImage, this, FlattenMethod));
 
     QVector<QString> choices;
     choices.push_back("Average");
@@ -144,10 +145,10 @@ void FlattenImage::setupFilterParameters()
     cDims.push_back(QVector<size_t>(1, 3));
     cDims.push_back(QVector<size_t>(1, 4));
     req.componentDimensions = cDims;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FlattenImage, this, ImageDataArrayPath), SIMPL_BIND_GETTER(FlattenImage, this, ImageDataArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Flat Image Data", "FlatImageDataArrayName", getFlatImageDataArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Flat Image Data", "FlatImageDataArrayName", getFlatImageDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FlattenImage, this, FlatImageDataArrayName), SIMPL_BIND_GETTER(FlattenImage, this, FlatImageDataArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -161,20 +162,6 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
   setImageDataArrayPath(reader->readDataArrayPath("ImageDataArrayPath", getImageDataArrayPath() ) );
   setFlattenMethod( reader->readValue("FlattenMethod", getFlattenMethod()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FlatImageDataArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(ImageDataArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FlattenMethod)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -236,7 +236,7 @@ void VerifyTriangleWinding::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(VerifyTriangleWinding, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(VerifyTriangleWinding, this, SurfaceMeshFaceLabelsArrayPath)));
   setFilterParameters(parameters);
 }
 
@@ -248,18 +248,6 @@ void VerifyTriangleWinding::readFilterParameters(AbstractFilterParametersReader*
   reader->openFilterGroup(this, index);
   setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VerifyTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

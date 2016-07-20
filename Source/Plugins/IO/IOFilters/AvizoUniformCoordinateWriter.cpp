@@ -45,7 +45,6 @@
 #include "IO/IOVersion.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -85,11 +84,11 @@ void AvizoUniformCoordinateWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.am", "Amira Mesh"));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AvizoUniformCoordinateWriter, this, OutputFile), SIMPL_BIND_GETTER(AvizoUniformCoordinateWriter, this, OutputFile),"*.am", "Amira Mesh"));
+  parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AvizoUniformCoordinateWriter, this, WriteBinaryFile), SIMPL_BIND_GETTER(AvizoUniformCoordinateWriter, this, WriteBinaryFile)));
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AvizoUniformCoordinateWriter, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(AvizoUniformCoordinateWriter, this, FeatureIdsArrayPath)));
   }
 
   setFilterParameters(parameters);
@@ -103,20 +102,6 @@ void AvizoUniformCoordinateWriter::readFilterParameters(AbstractFilterParameters
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int AvizoUniformCoordinateWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteBinaryFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

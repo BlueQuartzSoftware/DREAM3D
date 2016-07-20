@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -77,11 +76,11 @@ AddOrientationNoise::~AddOrientationNoise()
 void AddOrientationNoise::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Magnitude of Orientation Noise (Degrees)", "Magnitude", getMagnitude(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Magnitude of Orientation Noise (Degrees)", "Magnitude", getMagnitude(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddOrientationNoise, this, Magnitude), SIMPL_BIND_GETTER(AddOrientationNoise, this, Magnitude)));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AddOrientationNoise, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(AddOrientationNoise, this, CellEulerAnglesArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -94,19 +93,6 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
   setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
   setMagnitude( reader->readValue("Magnitude", getMagnitude()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Magnitude)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

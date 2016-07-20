@@ -7,7 +7,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
@@ -145,15 +144,15 @@ void FindDifferenceMap::setupFilterParameters()
   FilterParameterVector parameters;
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("First Attribute Array", "FirstInputArrayPath", getFirstInputArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("First Attribute Array", "FirstInputArrayPath", getFirstInputArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindDifferenceMap, this, FirstInputArrayPath), SIMPL_BIND_GETTER(FindDifferenceMap, this, FirstInputArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Second Attribute Array", "SecondInputArrayPath", getSecondInputArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Second Attribute Array", "SecondInputArrayPath", getSecondInputArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindDifferenceMap, this, SecondInputArrayPath), SIMPL_BIND_GETTER(FindDifferenceMap, this, SecondInputArrayPath)));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Difference Map", "DifferenceMapArrayPath", getDifferenceMapArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Difference Map", "DifferenceMapArrayPath", getDifferenceMapArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindDifferenceMap, this, DifferenceMapArrayPath), SIMPL_BIND_GETTER(FindDifferenceMap, this, DifferenceMapArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -168,19 +167,6 @@ void FindDifferenceMap::readFilterParameters(AbstractFilterParametersReader* rea
   setSecondInputArrayPath(reader->readDataArrayPath("SecondInputArrayPath", getSecondInputArrayPath()));
   setDifferenceMapArrayPath(reader->readDataArrayPath("DifferenceMapArrayPath", getDifferenceMapArrayPath()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindDifferenceMap::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FirstInputArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SecondInputArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(DifferenceMapArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

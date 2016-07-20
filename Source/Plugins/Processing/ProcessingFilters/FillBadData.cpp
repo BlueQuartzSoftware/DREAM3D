@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -83,18 +82,18 @@ FillBadData::~FillBadData()
 void FillBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", getMinAllowedDefectSize(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", getMinAllowedDefectSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FillBadData, this, MinAllowedDefectSize), SIMPL_BIND_GETTER(FillBadData, this, MinAllowedDefectSize)));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects as New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects as New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FillBadData, this, StoreAsNewPhase), SIMPL_BIND_GETTER(FillBadData, this, StoreAsNewPhase)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FillBadData, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FillBadData, this, FeatureIdsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FillBadData, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(FillBadData, this, CellPhasesArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -110,21 +109,6 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, i
   setMinAllowedDefectSize( reader->readValue("MinAllowedDefectSize", getMinAllowedDefectSize()) );
   setStoreAsNewPhase( reader->readValue("StoreAsNewPhase", getStoreAsNewPhase()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MinAllowedDefectSize)
-  SIMPL_FILTER_WRITE_PARAMETER(StoreAsNewPhase)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

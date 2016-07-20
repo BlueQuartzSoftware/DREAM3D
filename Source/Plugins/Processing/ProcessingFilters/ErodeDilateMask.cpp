@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -88,6 +87,8 @@ void ErodeDilateMask::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
     parameter->setPropertyName("Direction");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ErodeDilateMask, this, Direction));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ErodeDilateMask, this, Direction));
 
     QVector<QString> choices;
     choices.push_back("Dilate");
@@ -96,14 +97,14 @@ void ErodeDilateMask::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Number of Iterations", "NumIterations", getNumIterations(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("X Direction", "XDirOn", getXDirOn(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Y Direction", "YDirOn", getYDirOn(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Number of Iterations", "NumIterations", getNumIterations(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateMask, this, NumIterations), SIMPL_BIND_GETTER(ErodeDilateMask, this, NumIterations)));
+  parameters.push_back(BooleanFilterParameter::New("X Direction", "XDirOn", getXDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateMask, this, XDirOn), SIMPL_BIND_GETTER(ErodeDilateMask, this, XDirOn)));
+  parameters.push_back(BooleanFilterParameter::New("Y Direction", "YDirOn", getYDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateMask, this, YDirOn), SIMPL_BIND_GETTER(ErodeDilateMask, this, YDirOn)));
+  parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateMask, this, ZDirOn), SIMPL_BIND_GETTER(ErodeDilateMask, this, ZDirOn)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ErodeDilateMask, this, MaskArrayPath), SIMPL_BIND_GETTER(ErodeDilateMask, this, MaskArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -121,23 +122,6 @@ void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reade
   setYDirOn(reader->readValue("YDirOn", getYDirOn()) );
   setZDirOn(reader->readValue("ZDirOn", getZDirOn()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ErodeDilateMask::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Direction)
-  SIMPL_FILTER_WRITE_PARAMETER(NumIterations)
-  SIMPL_FILTER_WRITE_PARAMETER(XDirOn)
-  SIMPL_FILTER_WRITE_PARAMETER(YDirOn)
-  SIMPL_FILTER_WRITE_PARAMETER(ZDirOn)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

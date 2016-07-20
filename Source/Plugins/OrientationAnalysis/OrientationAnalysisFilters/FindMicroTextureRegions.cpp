@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -84,15 +83,15 @@ void FindMicroTextureRegions::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, FeatureIdsArrayPath)));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::UnknownGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, CellFeatureAttributeMatrixName)));
   }
 
-  parameters.push_back(StringFilterParameter::New("MicroTextureRegionNumCells", "MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("MicroTextureRegionFractionOccupied", "MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("MicroTextureRegionNumCells", "MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, MicroTextureRegionNumCellsArrayName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, MicroTextureRegionNumCellsArrayName)));
+  parameters.push_back(StringFilterParameter::New("MicroTextureRegionFractionOccupied", "MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, MicroTextureRegionFractionOccupiedArrayName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, MicroTextureRegionFractionOccupiedArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -106,21 +105,6 @@ void FindMicroTextureRegions::readFilterParameters(AbstractFilterParametersReade
   setMicroTextureRegionNumCellsArrayName(reader->readString("MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(MicroTextureRegionFractionOccupiedArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(MicroTextureRegionNumCellsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

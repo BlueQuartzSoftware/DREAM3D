@@ -36,7 +36,6 @@
 #include "GenerateGeometryConnectivity.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -73,11 +72,11 @@ GenerateGeometryConnectivity::~GenerateGeometryConnectivity()
 void GenerateGeometryConnectivity::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", getGenerateVertexTriangleLists(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", getGenerateTriangleNeighbors(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", getGenerateVertexTriangleLists(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateGeometryConnectivity, this, GenerateVertexTriangleLists), SIMPL_BIND_GETTER(GenerateGeometryConnectivity, this, GenerateVertexTriangleLists)));
+  parameters.push_back(BooleanFilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", getGenerateTriangleNeighbors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateGeometryConnectivity, this, GenerateTriangleNeighbors), SIMPL_BIND_GETTER(GenerateGeometryConnectivity, this, GenerateTriangleNeighbors)));
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateGeometryConnectivity, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(GenerateGeometryConnectivity, this, SurfaceDataContainerName)));
   }
   setFilterParameters(parameters);
 }
@@ -92,20 +91,6 @@ void GenerateGeometryConnectivity::readFilterParameters(AbstractFilterParameters
   setGenerateVertexTriangleLists( reader->readValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists()) );
   setGenerateTriangleNeighbors( reader->readValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int GenerateGeometryConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(GenerateVertexTriangleLists)
-  SIMPL_FILTER_WRITE_PARAMETER(GenerateTriangleNeighbors)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

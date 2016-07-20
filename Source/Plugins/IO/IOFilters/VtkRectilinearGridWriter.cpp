@@ -44,7 +44,6 @@
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
@@ -242,12 +241,12 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK Rectilinear Grid"));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, OutputFile), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, OutputFile), "*.vtk", "VTK Rectilinear Grid"));
+  parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, WriteBinaryFile), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, WriteBinaryFile)));
 
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req));
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths)));
   }
 
   setFilterParameters(parameters);
@@ -261,20 +260,6 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
   setSelectedDataArrayPaths(reader->readDataArrayPathVector("SelectedDataArrayPaths", getSelectedDataArrayPaths()));
   setWriteBinaryFile(reader->readValue("WriteBinaryFile", false));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedDataArrayPaths)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteBinaryFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -38,7 +38,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -89,15 +88,17 @@ RegularGridSampleSurfaceMesh::~RegularGridSampleSurfaceMesh()
 void RegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(IntFilterParameter::New("X Points", "XPoints", getXPoints(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Points", "YPoints", getYPoints(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Points", "ZPoints", getZPoints(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(IntFilterParameter::New("X Points", "XPoints", getXPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, XPoints), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, XPoints)));
+  parameters.push_back(IntFilterParameter::New("Y Points", "YPoints", getYPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, YPoints), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, YPoints)));
+  parameters.push_back(IntFilterParameter::New("Z Points", "ZPoints", getZPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, ZPoints), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, ZPoints)));
+  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, Resolution), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, Resolution)));
+
+  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, Origin), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, Origin)));
+
+  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, DataContainerName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, CellAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, FeatureIdsArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -117,25 +118,6 @@ void RegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParameters
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int RegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  SampleSurfaceMesh::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
-  SIMPL_FILTER_WRITE_PARAMETER(Origin)
-  SIMPL_FILTER_WRITE_PARAMETER(XPoints)
-  SIMPL_FILTER_WRITE_PARAMETER(YPoints)
-  SIMPL_FILTER_WRITE_PARAMETER(ZPoints)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

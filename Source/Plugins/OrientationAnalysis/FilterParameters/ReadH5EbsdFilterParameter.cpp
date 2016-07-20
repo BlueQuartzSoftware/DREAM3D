@@ -52,7 +52,7 @@ ReadH5EbsdFilterParameter::~ReadH5EbsdFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, const QString& fileExtension,
+  const QVariant& defaultValue, Category category, ReadH5Ebsd* filter, const QString& fileExtension,
   const QString& fileType, int groupIndex)
 {
   ReadH5EbsdFilterParameter::Pointer ptr = ReadH5EbsdFilterParameter::New();
@@ -63,6 +63,7 @@ ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::New(const QString&
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);
   ptr->setGroupIndex(groupIndex);
+  ptr->setFilter(filter);
   return ptr;
 }
 
@@ -73,5 +74,48 @@ ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::New(const QString&
 QString ReadH5EbsdFilterParameter::getWidgetType()
 {
   return QString("ReadH5EbsdWidget");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdFilterParameter::readJson(const QJsonObject &json)
+{
+  m_Filter->setInputFile(json["InputFile"].toString());
+  m_Filter->setZStartIndex(json["ZStartIndex"].toInt());
+  m_Filter->setZEndIndex(json["ZEndIndex"].toInt());
+  m_Filter->setUseTransformations(static_cast<bool>(json["UseTransformations"].toInt()));
+  m_Filter->setAngleRepresentation(json["AngleRepresentation"].toInt());
+  m_Filter->setRefFrameZDir(static_cast<uint32_t>(json["RefFrameZDir"].toInt()));
+
+  QSet<QString> selectedArrayNames;
+  QJsonArray selectedArrayNamesObj = json["SelectedArrayNames"].toArray();
+  for (int i=0; i<selectedArrayNamesObj.size(); i++)
+  {
+    selectedArrayNames.insert(selectedArrayNamesObj[i].toString());
+  }
+  m_Filter->setSelectedArrayNames(selectedArrayNames);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdFilterParameter::writeJson(QJsonObject &json)
+{
+  json["InputFile"] = m_Filter->getInputFile();
+  json["ZStartIndex"] = m_Filter->getZStartIndex();
+  json["ZEndIndex"] = m_Filter->getZEndIndex();
+  json["UseTransformations"] = static_cast<int>(m_Filter->getUseTransformations());
+  json["AngleRepresentation"] = m_Filter->getAngleRepresentation();
+  json["RefFrameZDir"] = static_cast<int>(m_Filter->getRefFrameZDir());
+
+  QJsonArray selectedArrayNamesObj;
+  QSetIterator<QString> iter(m_Filter->getSelectedArrayNames());
+  while (iter.hasNext())
+  {
+    QString selectedArrayName = iter.next();
+    selectedArrayNamesObj.push_back(selectedArrayName);
+  }
+  json["SelectedArrayNames"] = selectedArrayNamesObj;
 }
 

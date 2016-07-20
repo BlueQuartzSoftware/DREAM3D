@@ -36,7 +36,6 @@
 #include "ConvertOrientations.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -82,6 +81,8 @@ void ConvertOrientations::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Input Orientation Type");
     parameter->setPropertyName("InputType");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertOrientations, this, InputType));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertOrientations, this, InputType));
 
     QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
     parameter->setChoices(inputChoices);
@@ -93,6 +94,8 @@ void ConvertOrientations::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Orientation Type");
     parameter->setPropertyName("OutputType");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertOrientations, this, OutputType));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertOrientations, this, OutputType));
 
     QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
     parameter->setChoices(inputChoices);
@@ -104,10 +107,10 @@ void ConvertOrientations::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req;
     req.daTypes = QVector<QString>(2, SIMPL::TypeNames::Double);
     req.daTypes[1] = SIMPL::TypeNames::Float;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Input Orientations", "InputOrientationArrayPath", getInputOrientationArrayPath(), FilterParameter::RequiredArray, req, 0));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Input Orientations", "InputOrientationArrayPath", getInputOrientationArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ConvertOrientations, this, InputOrientationArrayPath), SIMPL_BIND_GETTER(ConvertOrientations, this, InputOrientationArrayPath), 0));
   }
 
-  parameters.push_back(StringFilterParameter::New("Output Orientations", "OutputOrientationArrayName", getOutputOrientationArrayName(), FilterParameter::CreatedArray, 0));
+  parameters.push_back(StringFilterParameter::New("Output Orientations", "OutputOrientationArrayName", getOutputOrientationArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ConvertOrientations, this, OutputOrientationArrayName), SIMPL_BIND_GETTER(ConvertOrientations, this, OutputOrientationArrayName), 0));
 
   setFilterParameters(parameters);
 }
@@ -123,21 +126,6 @@ void ConvertOrientations::readFilterParameters(AbstractFilterParametersReader* r
   setInputOrientationArrayPath(reader->readDataArrayPath("InputOrientationArrayPath", getInputOrientationArrayPath()));
   setOutputOrientationArrayName(reader->readString("OutputOrientationArrayName", getOutputOrientationArrayName()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ConvertOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputType)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputType)
-  SIMPL_FILTER_WRITE_PARAMETER(InputOrientationArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputOrientationArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

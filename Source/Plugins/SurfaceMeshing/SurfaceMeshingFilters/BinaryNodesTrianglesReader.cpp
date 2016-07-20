@@ -44,7 +44,6 @@
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
@@ -86,8 +85,8 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Binary Nodes Input File", "BinaryNodesFile", getBinaryNodesFile(), FilterParameter::Parameter, "*.raw", "Raw Files"));
-  parameters.push_back(InputFileFilterParameter::New("Binary Triangles Input File", "BinaryTrianglesFile", getBinaryTrianglesFile(), FilterParameter::Parameter, "*.raw", "Raw Files"));
+  parameters.push_back(InputFileFilterParameter::New("Binary Nodes Input File", "BinaryNodesFile", getBinaryNodesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(BinaryNodesTrianglesReader, this, BinaryNodesFile), SIMPL_BIND_GETTER(BinaryNodesTrianglesReader, this, BinaryNodesFile), "*.raw", "Raw Files"));
+  parameters.push_back(InputFileFilterParameter::New("Binary Triangles Input File", "BinaryTrianglesFile", getBinaryTrianglesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(BinaryNodesTrianglesReader, this, BinaryTrianglesFile), SIMPL_BIND_GETTER(BinaryNodesTrianglesReader, this, BinaryTrianglesFile), "*.raw", "Raw Files"));
 
   setFilterParameters(parameters);
 }
@@ -100,21 +99,6 @@ void BinaryNodesTrianglesReader::readFilterParameters(AbstractFilterParametersRe
   reader->openFilterGroup(this, index);
 
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  SIMPL_FILTER_WRITE_PARAMETER(BinaryNodesFile)
-  SIMPL_FILTER_WRITE_PARAMETER(BinaryTrianglesFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

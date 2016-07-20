@@ -40,7 +40,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -94,17 +93,17 @@ VisualizeGBCDPoleFigure::~VisualizeGBCDPoleFigure()
 void VisualizeGBCDPoleFigure::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter));
-  parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Output Regular Grid VTK File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK File"));
+  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDPoleFigure, this, PhaseOfInterest), SIMPL_BIND_GETTER(VisualizeGBCDPoleFigure, this, PhaseOfInterest)));
+  parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDPoleFigure, this, MisorientationRotation), SIMPL_BIND_GETTER(VisualizeGBCDPoleFigure, this, MisorientationRotation)));
+  parameters.push_back(OutputFileFilterParameter::New("Output Regular Grid VTK File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDPoleFigure, this, OutputFile), SIMPL_BIND_GETTER(VisualizeGBCDPoleFigure, this, OutputFile), "*.vtk", "VTK File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::FaceEnsemble, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VisualizeGBCDPoleFigure, this, GBCDArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDPoleFigure, this, GBCDArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VisualizeGBCDPoleFigure, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDPoleFigure, this, CrystalStructuresArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -121,22 +120,6 @@ void VisualizeGBCDPoleFigure::readFilterParameters(AbstractFilterParametersReade
   setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1) );
   setPhaseOfInterest(reader->readValue("PhaseOfInterest", getPhaseOfInterest()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VisualizeGBCDPoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(GBCDArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -87,6 +86,8 @@ void ErodeDilateBadData::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
     parameter->setPropertyName("Direction");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ErodeDilateBadData, this, Direction));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ErodeDilateBadData, this, Direction));
 
     QVector<QString> choices;
     choices.push_back("Dilate");
@@ -95,14 +96,14 @@ void ErodeDilateBadData::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Number of Iterations", "NumIterations", getNumIterations(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("X Direction", "XDirOn", getXDirOn(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Y Direction", "YDirOn", getYDirOn(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Number of Iterations", "NumIterations", getNumIterations(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateBadData, this, NumIterations), SIMPL_BIND_GETTER(ErodeDilateBadData, this, NumIterations)));
+  parameters.push_back(BooleanFilterParameter::New("X Direction", "XDirOn", getXDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateBadData, this, XDirOn), SIMPL_BIND_GETTER(ErodeDilateBadData, this, XDirOn)));
+  parameters.push_back(BooleanFilterParameter::New("Y Direction", "YDirOn", getYDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateBadData, this, YDirOn), SIMPL_BIND_GETTER(ErodeDilateBadData, this, YDirOn)));
+  parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateBadData, this, ZDirOn), SIMPL_BIND_GETTER(ErodeDilateBadData, this, ZDirOn)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ErodeDilateBadData, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(ErodeDilateBadData, this, FeatureIdsArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -120,23 +121,6 @@ void ErodeDilateBadData::readFilterParameters(AbstractFilterParametersReader* re
   setYDirOn(reader->readValue("YDirOn", getYDirOn()) );
   setZDirOn(reader->readValue("ZDirOn", getZDirOn()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ErodeDilateBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Direction)
-  SIMPL_FILTER_WRITE_PARAMETER(NumIterations)
-  SIMPL_FILTER_WRITE_PARAMETER(XDirOn)
-  SIMPL_FILTER_WRITE_PARAMETER(YDirOn)
-  SIMPL_FILTER_WRITE_PARAMETER(ZDirOn)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

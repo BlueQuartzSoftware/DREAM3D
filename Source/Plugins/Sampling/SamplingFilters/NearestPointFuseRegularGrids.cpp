@@ -38,7 +38,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -78,11 +77,11 @@ void NearestPointFuseRegularGrids::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Reference Cell Attribute Matrix", "ReferenceCellAttributeMatrixPath", getReferenceCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Reference Cell Attribute Matrix", "ReferenceCellAttributeMatrixPath", getReferenceCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(NearestPointFuseRegularGrids, this, ReferenceCellAttributeMatrixPath), SIMPL_BIND_GETTER(NearestPointFuseRegularGrids, this, ReferenceCellAttributeMatrixPath)));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Sampling Cell Attribute Matrix", "SamplingCellAttributeMatrixPath", getSamplingCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Sampling Cell Attribute Matrix", "SamplingCellAttributeMatrixPath", getSamplingCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(NearestPointFuseRegularGrids, this, SamplingCellAttributeMatrixPath), SIMPL_BIND_GETTER(NearestPointFuseRegularGrids, this, SamplingCellAttributeMatrixPath)));
   }
   setFilterParameters(parameters);
 }
@@ -96,19 +95,6 @@ void NearestPointFuseRegularGrids::readFilterParameters(AbstractFilterParameters
   setReferenceCellAttributeMatrixPath(reader->readDataArrayPath("ReferenceCellAttributeMatrixPath", getReferenceCellAttributeMatrixPath()));
   setSamplingCellAttributeMatrixPath(reader->readDataArrayPath("SamplingCellAttributeMatrixPath", getSamplingCellAttributeMatrixPath()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int NearestPointFuseRegularGrids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-    SIMPL_FILTER_WRITE_PARAMETER(ReferenceCellAttributeMatrixPath)
-    SIMPL_FILTER_WRITE_PARAMETER(SamplingCellAttributeMatrixPath)
-    writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

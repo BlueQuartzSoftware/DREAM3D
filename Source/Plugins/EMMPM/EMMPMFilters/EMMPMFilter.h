@@ -143,11 +143,6 @@ class EMMPMFilter : public AbstractFilter
     virtual void setupFilterParameters();
 
     /**
-     * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);

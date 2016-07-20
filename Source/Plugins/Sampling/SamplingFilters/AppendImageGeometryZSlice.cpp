@@ -36,7 +36,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -77,14 +76,14 @@ void AppendImageGeometryZSlice::setupFilterParameters()
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input Cell Data", "InputAttributeMatrix", getInputAttributeMatrix(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input Cell Data", "InputAttributeMatrix", getInputAttributeMatrix(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, InputAttributeMatrix), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, InputAttributeMatrix)));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Destination Cell Data", "DestinationAttributeMatrix", getDestinationAttributeMatrix(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Destination Cell Data", "DestinationAttributeMatrix", getDestinationAttributeMatrix(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, DestinationAttributeMatrix), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, DestinationAttributeMatrix)));
   }
 
-  parameters.push_back(BooleanFilterParameter::New("Check Resolution", "CheckResolution", getCheckResolution(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Check Resolution", "CheckResolution", getCheckResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, CheckResolution), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, CheckResolution)));
 
   setFilterParameters(parameters);
 }
@@ -99,20 +98,6 @@ void AppendImageGeometryZSlice::readFilterParameters(AbstractFilterParametersRea
   setDestinationAttributeMatrix(reader->readDataArrayPath("DestinationAttributeMatrix", getDestinationAttributeMatrix()));
   setCheckResolution(reader->readValue("CheckResolution", getCheckResolution()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int AppendImageGeometryZSlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputAttributeMatrix)
-  SIMPL_FILTER_WRITE_PARAMETER(DestinationAttributeMatrix)
-  SIMPL_FILTER_WRITE_PARAMETER(CheckResolution)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

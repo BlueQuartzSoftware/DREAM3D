@@ -917,6 +917,7 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
 // -----------------------------------------------------------------------------
 void ReplaceText(QString absPath)
 {
+  QString filterName;
   QString contents;
   {
     // Read the Source File
@@ -925,7 +926,7 @@ void ReplaceText(QString absPath)
     //    {
     //      return;
     //    }
-
+    filterName = fi.baseName();
     QFile source(absPath);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -940,7 +941,7 @@ void ReplaceText(QString absPath)
   QVector<int> lines(0);
 
 
-  QString searchString = "@@@@INCLUDE";
+  QString searchString = "%FILTER_CLASS%";
   QVector<QString> outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
@@ -950,71 +951,16 @@ void ReplaceText(QString absPath)
   {
     QString line = sourceLines.next();
 
-    if(line.startsWith(searchString))
+    if(line.contains(searchString))
     {
-      QStringList tokens = line.split(" ");
-      includes.push_back(tokens[1] + " " + tokens[2]);
+      line.replace(searchString, filterName);
       didReplace = true;
-      continue;
     }
-    else
-    {
-      outLines.push_back(line);
-    }
-  }
-
-  list = outLines.toList();
-  outLines.resize(0);
-  QVector<QString> outVec;
-  sourceLines = QStringListIterator(list);
-  sourceLines.toFront();
-  searchString = QString("#include \"DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h\"");
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-
-    if(line.startsWith(searchString))
-    {
-      outVec.push_back(line);
-      outVec.push_back(includes.join("\n"));
-      continue;
-    }
-    else
-    {
-      outVec.push_back(line);
-    }
+     outLines.push_back(line);
   }
 
 
-  list = outVec.toList();
-  outVec.resize(0);
-  outVec.clear();
-  sourceLines = QStringListIterator(list);
-  sourceLines.toFront();
-  searchString = QString("#include \"DREAM3DLib/FilterParameters/");
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-
-    if(line.startsWith(searchString))
-    {
-      if(outVec.contains(line) == false)
-      {
-        outVec.push_back(line);
-      }
-      else
-      {
-        didReplace = true;
-      }
-      continue;
-    }
-    else
-    {
-      outVec.push_back(line);
-    }
-  }
-
-  writeOutput(didReplace, outVec, absPath);
+  writeOutput(didReplace, outLines, absPath);
 }
 
 // -----------------------------------------------------------------------------
@@ -1194,8 +1140,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 {
 
   QStringList filters;
-//  filters.append("*.cpp");
-  filters.append("*.h");
+  filters.append("*.cpp");
+//  filters.append("*.h");
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
   {
@@ -1219,7 +1165,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 //    std::cout << "-------------------------------------" << std::endl;
 //    std::cout << itemFilePath.toStdString() << std::endl;
 //    AddIGeometryIncludes(itemFilePath);
-    GroupIncludes(itemFilePath);
+//   GroupIncludes(itemFilePath);
+      ReplaceText(itemFilePath);
   }
 }
 
@@ -1329,7 +1276,7 @@ int main(int argc, char* argv[])
 
 
 
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -1350,14 +1297,10 @@ int main(int argc, char* argv[])
 //  GenerateMarkDownDocs();
   GenerateFilterParametersCode();
 #else
-//  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Source" ) );
-//  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
-  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Source" ));
-  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Test" ));
-  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Tools" ));
-  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../SIMPL" ));
-  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../SIMPLView" ));
-  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ));
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Source" ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../SIMPL" ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../SIMPLView" ) );
 
 #endif
   return 0;

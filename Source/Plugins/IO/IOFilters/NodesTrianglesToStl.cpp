@@ -42,7 +42,6 @@
 
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -85,10 +84,10 @@ void NodesTrianglesToStl::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Nodes File", "NodesFile", getNodesFile(), FilterParameter::Parameter));
-  parameters.push_back(InputFileFilterParameter::New("Triangles File", "TrianglesFile", getTrianglesFile(), FilterParameter::Parameter));
-  parameters.push_back(OutputPathFilterParameter::New("Output STL Directory", "OutputStlDirectory", getOutputStlDirectory(), FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Stl File Prefix", "OutputStlPrefix", getOutputStlPrefix(), FilterParameter::Parameter));
+  parameters.push_back(InputFileFilterParameter::New("Nodes File", "NodesFile", getNodesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, NodesFile), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, NodesFile)));
+  parameters.push_back(InputFileFilterParameter::New("Triangles File", "TrianglesFile", getTrianglesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, TrianglesFile), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, TrianglesFile)));
+  parameters.push_back(OutputPathFilterParameter::New("Output STL Directory", "OutputStlDirectory", getOutputStlDirectory(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, OutputStlDirectory), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, OutputStlDirectory)));
+  parameters.push_back(StringFilterParameter::New("Stl File Prefix", "OutputStlPrefix", getOutputStlPrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, OutputStlPrefix), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, OutputStlPrefix)));
 
   setFilterParameters(parameters);
 }
@@ -105,21 +104,6 @@ void NodesTrianglesToStl::readFilterParameters(AbstractFilterParametersReader* r
   setOutputStlPrefix( reader->readString( "OutputStlPrefix", getOutputStlPrefix() ) );
   /* readString END*/
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NodesFile)
-  SIMPL_FILTER_WRITE_PARAMETER(TrianglesFile)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputStlDirectory)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputStlPrefix)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

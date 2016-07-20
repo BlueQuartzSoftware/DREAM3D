@@ -39,7 +39,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -79,12 +78,12 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
   // getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
   QStringList linkedProps("ReferenceSlice");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Reference Slice", "UseReferenceSlice", getUseReferenceSlice(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Reference Slice", "ReferenceSlice", getReferenceSlice(), FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Reference Slice", "UseReferenceSlice", getUseReferenceSlice(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(AlignSectionsFeatureCentroid, this, UseReferenceSlice), SIMPL_BIND_GETTER(AlignSectionsFeatureCentroid, this, UseReferenceSlice)));
+  parameters.push_back(IntFilterParameter::New("Reference Slice", "ReferenceSlice", getReferenceSlice(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AlignSectionsFeatureCentroid, this, ReferenceSlice), SIMPL_BIND_GETTER(AlignSectionsFeatureCentroid, this, ReferenceSlice)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AlignSectionsFeatureCentroid, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(AlignSectionsFeatureCentroid, this, GoodVoxelsArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -99,20 +98,6 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
   setUseReferenceSlice( reader->readValue("UseReferenceSlice", getUseReferenceSlice()) );
   setReferenceSlice( reader->readValue("ReferenceSlice", getReferenceSlice()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  AlignSections::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(UseReferenceSlice)
-  SIMPL_FILTER_WRITE_PARAMETER(ReferenceSlice)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

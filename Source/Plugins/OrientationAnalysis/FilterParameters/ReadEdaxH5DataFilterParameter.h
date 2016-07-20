@@ -45,13 +45,32 @@ public:
     SIMPL_STATIC_NEW_MACRO(ReadEdaxH5DataFilterParameter)
     SIMPL_TYPE_MACRO(ReadEdaxH5DataFilterParameter)
 
+  typedef std::function<void(QStringList)> SetterCallbackType;
+  typedef std::function<QStringList(void)> GetterCallbackType;
+
   static Pointer New(const QString& humanLabel, const QString& propertyName,
                      const QVariant& defaultValue, const QString &listProperty,
-                     Category category, int groupIndex = -1);
+                     Category category, SetterCallbackType setterCallback,
+                     GetterCallbackType getterCallback, int groupIndex = -1);
 
   virtual ~ReadEdaxH5DataFilterParameter();
 
   QString getWidgetType();
+
+  /**
+   * @brief readJson
+   * @return
+   */
+  void readJson(const QJsonObject &json);
+
+  /**
+   * @brief writeJson
+   * @return
+   */
+  void writeJson(QJsonObject &json);
+
+  SIMPL_INSTANCE_PROPERTY(SetterCallbackType, SetterCallback)
+  SIMPL_INSTANCE_PROPERTY(GetterCallbackType, GetterCallback)
 
   SIMPL_INSTANCE_PROPERTY(QString, ListProperty)
 

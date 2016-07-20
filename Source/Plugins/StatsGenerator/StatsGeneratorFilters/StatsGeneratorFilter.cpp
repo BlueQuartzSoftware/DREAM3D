@@ -37,7 +37,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
@@ -86,11 +85,11 @@ void StatsGeneratorFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(StatsGeneratorFilterParameter::New("StatsGenerator", "StatsGenerator", "", FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Statistics Data Container", "StatsGeneratorDataContainerName", getStatsGeneratorDataContainerName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Statistics", "StatsDataArrayName", getStatsDataArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Statistics Data Container", "StatsGeneratorDataContainerName", getStatsGeneratorDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, StatsGeneratorDataContainerName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, StatsGeneratorDataContainerName)));
+  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, CellEnsembleAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Statistics", "StatsDataArrayName", getStatsDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, StatsDataArrayName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, StatsDataArrayName)));
+  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, CrystalStructuresArrayName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, CrystalStructuresArrayName)));
+  parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, PhaseTypesArrayName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, PhaseTypesArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -161,41 +160,6 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
     unsigned int pt = m_StatsDataArray->getStatsData(index)->getPhaseType();
     m_PhaseTypes->setValue(index, pt);
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(StatsGeneratorDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(StatsDataArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
-
-  if (dynamic_cast<H5FilterParametersWriter*>(writer))
-  {
-    QJsonObject jsonRoot;
-    m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
-    QJsonDocument jDoc(jsonRoot);
-    QByteArray jsonBytes = jDoc.toJson();
-    QString jsonString(jsonBytes);
-    writer->writeValue("StatsDataArray", jsonString);
-  }
-  else if (dynamic_cast<JsonFilterParametersWriter*>(writer))
-  {
-    JsonFilterParametersWriter* jsonWriter = dynamic_cast<JsonFilterParametersWriter*>(writer);
-    QJsonObject& jsonRoot = jsonWriter->getCurrentGroupObject();
-    if(nullptr != m_StatsDataArray.get())
-    {
-      m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
-    }
-  }
-
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

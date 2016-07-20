@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -89,27 +88,29 @@ void FindFeatureHistogram::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Number of Bins");
     parameter->setPropertyName("NumberOfBins");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FindFeatureHistogram, this, NumberOfBins));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FindFeatureHistogram, this, NumberOfBins));
 
     parameters.push_back(parameter);
   }
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureHistogram, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FindFeatureHistogram, this, RemoveBiasedFeatures)));
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Bin", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Bin", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureHistogram, this, SelectedFeatureArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, SelectedFeatureArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureHistogram, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, FeaturePhasesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureHistogram, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, BiasedFeaturesArrayPath)));
   }
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindFeatureHistogram, this, NewEnsembleArrayArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, NewEnsembleArrayArrayPath)));
   }
 
   setFilterParameters(parameters);
@@ -128,23 +129,6 @@ void FindFeatureHistogram::readFilterParameters(AbstractFilterParametersReader* 
   setNumberOfBins( reader->readValue( "NumberOfBins", getNumberOfBins() ) );
   setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindFeatureHistogram::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NumberOfBins)
-  SIMPL_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

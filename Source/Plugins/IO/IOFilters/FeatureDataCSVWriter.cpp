@@ -40,7 +40,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -79,12 +78,12 @@ FeatureDataCSVWriter::~FeatureDataCSVWriter()
 void FeatureDataCSVWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "FeatureDataFile", getFeatureDataFile(), FilterParameter::Parameter, "*.csv", "Comma Separated Data"));
-  parameters.push_back(BooleanFilterParameter::New("Write Neighbor Data", "WriteNeighborListData", getWriteNeighborListData(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output File", "FeatureDataFile", getFeatureDataFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, FeatureDataFile), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, FeatureDataFile), "*.csv", "Comma Separated Data"));
+  parameters.push_back(BooleanFilterParameter::New("Write Neighbor Data", "WriteNeighborListData", getWriteNeighborListData(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, WriteNeighborListData), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, WriteNeighborListData)));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, CellFeatureAttributeMatrixPath)));
   }
   setFilterParameters(parameters);
 }
@@ -99,20 +98,6 @@ void FeatureDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* 
   setFeatureDataFile( reader->readString( "FeatureDataFile", getFeatureDataFile() ) );
   setWriteNeighborListData( reader->readValue("WriteNeighborListData", getWriteNeighborListData()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureDataFile)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteNeighborListData)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

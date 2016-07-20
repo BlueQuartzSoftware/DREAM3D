@@ -43,7 +43,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
@@ -142,20 +141,20 @@ SIMPL_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QDateTime, TimeStamp_Cache)
 void ReadEdaxH5Data::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.h5 *.hdf5"));
+  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, InputFile), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, InputFile), "*.h5 *.hdf5"));
 
   //parameters.push_back(DynamicChoiceFilterParameter::New("Scan Name", "ScanName", getScanName(), "FileScanNames", FilterParameter::Parameter));
-  parameters.push_back(ReadEdaxH5DataFilterParameter::New("Scan Names", "SelectedScanNames", getSelectedScanNames(), "FileScanNames", FilterParameter::Parameter));
+  parameters.push_back(ReadEdaxH5DataFilterParameter::New("Scan Names", "SelectedScanNames", getSelectedScanNames(), "FileScanNames", FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, SelectedScanNames), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, SelectedScanNames)));
 
-  parameters.push_back(DoubleFilterParameter::New("Z Spacing (Microns)", "ZSpacing", getZSpacing(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin (XYZ)", "Origin", getOrigin(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Z Spacing (Microns)", "ZSpacing", getZSpacing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, ZSpacing), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, ZSpacing)));
+  parameters.push_back(FloatVec3FilterParameter::New("Origin (XYZ)", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, Origin), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, Origin)));
 
-  parameters.push_back(BooleanFilterParameter::New("Read Pattern Data", "ReadPatternData", getReadPatternData(), FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(BooleanFilterParameter::New("Read Pattern Data", "ReadPatternData", getReadPatternData(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, ReadPatternData), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, ReadPatternData)));
+  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, DataContainerName), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, CellAttributeMatrixName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, CellEnsembleAttributeMatrixName)));
   setFilterParameters(parameters);
 }
 
@@ -174,24 +173,6 @@ void ReadEdaxH5Data::readFilterParameters(AbstractFilterParametersReader* reader
   setSelectedScanNames(reader->readStringList("SelectedScanNames", getSelectedScanNames()));
   setReadPatternData(reader->readValue("ReadPatternData", getReadPatternData()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ReadEdaxH5Data::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(ZSpacing)
-  SIMPL_FILTER_WRITE_PARAMETER(Origin)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedScanNames)
-  SIMPL_FILTER_WRITE_PARAMETER(ReadPatternData)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

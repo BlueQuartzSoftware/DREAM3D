@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -84,24 +83,24 @@ MinNeighbors::~MinNeighbors()
 void MinNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", getMinNumNeighbors(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", getMinNumNeighbors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, MinNumNeighbors), SIMPL_BIND_GETTER(MinNeighbors, this, MinNumNeighbors)));
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, ApplyToSinglePhase), SIMPL_BIND_GETTER(MinNeighbors, this, ApplyToSinglePhase)));
+  parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, PhaseNumber), SIMPL_BIND_GETTER(MinNeighbors, this, PhaseNumber)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MinNeighbors, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(MinNeighbors, this, FeatureIdsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MinNeighbors, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(MinNeighbors, this, FeaturePhasesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Neighbors", "NumNeighborsArrayPath", getNumNeighborsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Neighbors", "NumNeighborsArrayPath", getNumNeighborsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MinNeighbors, this, NumNeighborsArrayPath), SIMPL_BIND_GETTER(MinNeighbors, this, NumNeighborsArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -119,23 +118,6 @@ void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader, 
   setPhaseNumber( reader->readValue("PhaseNumber", getPhaseNumber() ) );
   setMinNumNeighbors( reader->readValue("MinNumNeighbors", getMinNumNeighbors()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NumNeighborsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ApplyToSinglePhase)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseNumber)
-  SIMPL_FILTER_WRITE_PARAMETER(MinNumNeighbors)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

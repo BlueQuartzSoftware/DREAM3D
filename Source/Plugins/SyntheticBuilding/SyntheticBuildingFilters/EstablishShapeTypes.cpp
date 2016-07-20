@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ShapeTypeSelectionFilterParameter.h"
@@ -84,11 +83,12 @@ void EstablishShapeTypes::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EstablishShapeTypes, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(EstablishShapeTypes, this, InputPhaseTypesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Shape Types", "ShapeTypesArrayName", getShapeTypesArrayName(), FilterParameter::CreatedArray));
-  ShapeTypeSelectionFilterParameter::Pointer sType_parameter = ShapeTypeSelectionFilterParameter::New( "Shape Types", "ShapeTypeData", "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", FilterParameter::CreatedArray);
+  parameters.push_back(StringFilterParameter::New("Shape Types", "ShapeTypesArrayName", getShapeTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishShapeTypes, this, ShapeTypesArrayName), SIMPL_BIND_GETTER(EstablishShapeTypes, this, ShapeTypesArrayName)));
+  ShapeTypeSelectionFilterParameter::Pointer sType_parameter = ShapeTypeSelectionFilterParameter::New( "Shape Types", "ShapeTypeData", "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", FilterParameter::CreatedArray,
+                                                                                                        SIMPL_BIND_SETTER(EstablishShapeTypes, this, ShapeTypeData), SIMPL_BIND_GETTER(EstablishShapeTypes, this, ShapeTypeData));
   parameters.push_back(sType_parameter);
   setFilterParameters(parameters);
 }
@@ -107,20 +107,6 @@ void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* r
   vec.d = data;
   setShapeTypeData(vec);
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EstablishShapeTypes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ShapeTypesArrayName)
-  writer->writeValue("ShapeTypeData", getShapeTypeData().d );
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

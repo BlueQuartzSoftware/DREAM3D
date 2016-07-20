@@ -39,7 +39,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -79,12 +78,12 @@ RegularizeZSpacing::~RegularizeZSpacing()
 void RegularizeZSpacing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Current Z Positions File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.txt"));
-  parameters.push_back(DoubleFilterParameter::New("New Z Resolution", "NewZRes", getNewZRes(), FilterParameter::Parameter));
+  parameters.push_back(InputFileFilterParameter::New("Current Z Positions File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularizeZSpacing, this, InputFile), SIMPL_BIND_GETTER(RegularizeZSpacing, this, InputFile), "*.txt"));
+  parameters.push_back(DoubleFilterParameter::New("New Z Resolution", "NewZRes", getNewZRes(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularizeZSpacing, this, NewZRes), SIMPL_BIND_GETTER(RegularizeZSpacing, this, NewZRes)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(RegularizeZSpacing, this, CellAttributeMatrixPath), SIMPL_BIND_GETTER(RegularizeZSpacing, this, CellAttributeMatrixPath)));
   }
   setFilterParameters(parameters);
 }
@@ -99,20 +98,6 @@ void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* re
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setNewZRes( reader->readValue("NewZRes", getNewZRes()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(NewZRes)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

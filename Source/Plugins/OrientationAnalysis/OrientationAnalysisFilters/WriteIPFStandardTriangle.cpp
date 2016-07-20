@@ -41,7 +41,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -81,8 +80,8 @@ WriteIPFStandardTriangle::~WriteIPFStandardTriangle()
 void WriteIPFStandardTriangle::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.tif, *.bmp, *.png", "Image"));
-  parameters.push_back(IntFilterParameter::New("Image Size (Square Pixels)", "ImageSize", getImageSize(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteIPFStandardTriangle, this, OutputFile), SIMPL_BIND_GETTER(WriteIPFStandardTriangle, this, OutputFile), "*.tif, *.bmp, *.png", "Image"));
+  parameters.push_back(IntFilterParameter::New("Image Size (Square Pixels)", "ImageSize", getImageSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteIPFStandardTriangle, this, ImageSize), SIMPL_BIND_GETTER(WriteIPFStandardTriangle, this, ImageSize)));
   setFilterParameters(parameters);
 }
 
@@ -95,19 +94,6 @@ void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersRead
   setOutputFile( reader->readString("OutputFile", getOutputFile()));
   setImageSize( reader->readValue("ImageSize", getImageSize()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(ImageSize)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

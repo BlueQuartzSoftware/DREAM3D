@@ -38,7 +38,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/ThresholdFilterHelper.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ComparisonSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -83,9 +82,11 @@ void MultiThresholdObjects::setupFilterParameters()
 
     parameter->setShowOperators(true);
     parameter->setCategory(FilterParameter::Parameter);
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(MultiThresholdObjects, this, SelectedThresholds));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(MultiThresholdObjects, this, SelectedThresholds));
     parameters.push_back(parameter);
   }
-  parameters.push_back(StringFilterParameter::New("Output Attribute Array", "DestinationArrayName", getDestinationArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Output Attribute Array", "DestinationArrayName", getDestinationArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MultiThresholdObjects, this, DestinationArrayName), SIMPL_BIND_GETTER(MultiThresholdObjects, this, DestinationArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -98,19 +99,6 @@ void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader*
   setDestinationArrayName(reader->readString("DestinationArrayName", getDestinationArrayName() ) );
   setSelectedThresholds(reader->readComparisonInputs("SelectedThresholds", getSelectedThresholds()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int MultiThresholdObjects::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DestinationArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedThresholds)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

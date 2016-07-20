@@ -43,7 +43,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -148,10 +147,10 @@ void Stereographic3D::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-  parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(Stereographic3D, this, QuatsArrayPath), SIMPL_BIND_GETTER(Stereographic3D, this, QuatsArrayPath)));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Coordinates", "CoordinatesArrayName", getCoordinatesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Coordinates", "CoordinatesArrayName", getCoordinatesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(Stereographic3D, this, CoordinatesArrayName), SIMPL_BIND_GETTER(Stereographic3D, this, CoordinatesArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -165,18 +164,6 @@ void Stereographic3D::readFilterParameters(AbstractFilterParametersReader* reade
   setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath()));
   setCoordinatesArrayName(reader->readString("CoordinatesArrayName", getCoordinatesArrayName()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int Stereographic3D::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CoordinatesArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

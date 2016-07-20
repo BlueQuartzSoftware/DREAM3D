@@ -40,7 +40,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -93,18 +92,18 @@ VtkStructuredPointsReader::~VtkStructuredPointsReader()
 void VtkStructuredPointsReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input VTK File", "InputFile", getInputFile(), FilterParameter::Parameter));
+  parameters.push_back(InputFileFilterParameter::New("Input VTK File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, InputFile), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, InputFile)));
   QStringList linkedProps;
   linkedProps << "VertexDataContainerName" << "VertexAttributeMatrixName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Read Point Data", "ReadPointData", getReadPointData(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Read Point Data", "ReadPointData", getReadPointData(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, ReadPointData), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, ReadPointData)));
   linkedProps.clear();
   linkedProps << "VolumeDataContainerName" << "CellAttributeMatrixName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Read Cell Data", "ReadCellData", getReadCellData(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Point Data Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Data Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Read Cell Data", "ReadCellData", getReadCellData(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, ReadCellData), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, ReadCellData)));
+  parameters.push_back(StringFilterParameter::New("Point Data Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, VertexDataContainerName), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, VertexDataContainerName)));
+  parameters.push_back(StringFilterParameter::New("Cell Data Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, VolumeDataContainerName), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, VolumeDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Point Data Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Data Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Point Data Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, VertexAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Cell Data Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, CellAttributeMatrixName)));
   setFilterParameters(parameters);
 }
 
@@ -123,24 +122,6 @@ void VtkStructuredPointsReader::readFilterParameters(AbstractFilterParametersRea
   setReadPointData(reader->readValue("ReadPointData", getReadPointData()));
   setReadCellData(reader->readValue("ReadCellData", getReadCellData()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VtkStructuredPointsReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(ReadPointData)
-  SIMPL_FILTER_WRITE_PARAMETER(ReadCellData)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

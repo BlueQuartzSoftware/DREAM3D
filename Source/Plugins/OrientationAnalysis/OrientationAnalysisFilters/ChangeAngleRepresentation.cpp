@@ -45,7 +45,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -123,6 +122,8 @@ void ChangeAngleRepresentation::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Conversion Type");
     parameter->setPropertyName("ConversionType");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ChangeAngleRepresentation, this, ConversionType));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ChangeAngleRepresentation, this, ConversionType));
 
     QVector<QString> choices;
     choices.push_back("Degrees to Radians");
@@ -133,7 +134,7 @@ void ChangeAngleRepresentation::setupFilterParameters()
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ChangeAngleRepresentation, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(ChangeAngleRepresentation, this, CellEulerAnglesArrayPath)));
   }
 
   setFilterParameters(parameters);
@@ -148,19 +149,6 @@ void ChangeAngleRepresentation::readFilterParameters(AbstractFilterParametersRea
   setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
   setConversionType( reader->readValue("ConversionType", getConversionType()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ChangeAngleRepresentation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ConversionType)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

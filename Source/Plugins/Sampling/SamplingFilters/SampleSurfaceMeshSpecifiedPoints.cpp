@@ -39,7 +39,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
@@ -76,8 +75,8 @@ SampleSurfaceMeshSpecifiedPoints::~SampleSurfaceMeshSpecifiedPoints()
 void SampleSurfaceMeshSpecifiedPoints::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(InputFileFilterParameter::New("Specified Points File", "InputFilePath", getInputFilePath(), FilterParameter::Parameter, "*.raw, *.bin"));
-  parameters.push_back(OutputFileFilterParameter::New("Sampled Values File", "OutputFilePath", getOutputFilePath(), FilterParameter::Parameter, "*.txt"));
+  parameters.push_back(InputFileFilterParameter::New("Specified Points File", "InputFilePath", getInputFilePath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SampleSurfaceMeshSpecifiedPoints, this, InputFilePath), SIMPL_BIND_GETTER(SampleSurfaceMeshSpecifiedPoints, this, InputFilePath), "*.raw, *.bin"));
+  parameters.push_back(OutputFileFilterParameter::New("Sampled Values File", "OutputFilePath", getOutputFilePath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SampleSurfaceMeshSpecifiedPoints, this, OutputFilePath), SIMPL_BIND_GETTER(SampleSurfaceMeshSpecifiedPoints, this, OutputFilePath), "*.txt"));
   setFilterParameters(parameters);
 }
 
@@ -91,19 +90,6 @@ void SampleSurfaceMeshSpecifiedPoints::readFilterParameters(AbstractFilterParame
   setInputFilePath(reader->readString("InputFilePath", getInputFilePath()));
   setOutputFilePath(reader->readString("OutputFilePath", getOutputFilePath()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SampleSurfaceMeshSpecifiedPoints::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  SampleSurfaceMesh::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(InputFilePath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFilePath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

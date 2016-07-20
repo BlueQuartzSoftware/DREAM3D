@@ -40,7 +40,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -87,15 +86,15 @@ EnsembleInfoReader::~EnsembleInfoReader()
 void EnsembleInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.ini *.txt"));
+  parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EnsembleInfoReader, this, InputFile), SIMPL_BIND_GETTER(EnsembleInfoReader, this, InputFile), "*.ini *.txt"));
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EnsembleInfoReader, this, DataContainerName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, DataContainerName)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, CellEnsembleAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, CrystalStructuresArrayName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, CrystalStructuresArrayName)));
+  parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, PhaseTypesArrayName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, PhaseTypesArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -111,22 +110,6 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
   setCrystalStructuresArrayName(reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

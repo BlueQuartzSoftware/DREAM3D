@@ -49,7 +49,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -428,49 +427,49 @@ FindGBPDMetricBased::~FindGBPDMetricBased()
 void FindGBPDMetricBased::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Limiting Distance [deg.]", "LimitDist", getLimitDist(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, ""));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, ""));
-  parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, PhaseOfInterest), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, PhaseOfInterest)));
+  parameters.push_back(DoubleFilterParameter::New("Limiting Distance [deg.]", "LimitDist", getLimitDist(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, LimitDist), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, LimitDist)));
+  parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, NumSamplPts), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, NumSamplPts)));
+  parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, ExcludeTripleLines), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, ExcludeTripleLines)));
+  parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, DistOutputFile), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, DistOutputFile)));
+  parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, ErrOutputFile), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, ErrOutputFile)));
+  parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SaveRelativeErr), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SaveRelativeErr)));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Node Types", "NodeTypesArrayPath", getNodeTypesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Node Types", "NodeTypesArrayPath", getNodeTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, NodeTypesArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, NodeTypesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFaceLabelsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFaceNormalsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFaceAreasArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFaceAreasArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::FaceFeature, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFeatureFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFeatureFaceLabelsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, FeatureEulerAnglesArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, FeatureEulerAnglesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, FeaturePhasesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, CrystalStructuresArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -497,31 +496,6 @@ void FindGBPDMetricBased::readFilterParameters(AbstractFilterParametersReader* r
   setSurfaceMeshFaceAreasArrayPath(reader->readDataArrayPath("SurfaceMeshFaceAreas", getSurfaceMeshFaceAreasArrayPath()));
   setNodeTypesArrayPath(reader->readDataArrayPath("NodeTypes", getNodeTypesArrayPath()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindGBPDMetricBased::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
-  SIMPL_FILTER_WRITE_PARAMETER(LimitDist)
-  SIMPL_FILTER_WRITE_PARAMETER(NumSamplPts)
-  SIMPL_FILTER_WRITE_PARAMETER(ExcludeTripleLines)
-  SIMPL_FILTER_WRITE_PARAMETER(DistOutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(ErrOutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(SaveRelativeErr)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NodeTypesArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -567,6 +541,11 @@ void FindGBPDMetricBased::dataCheck()
     QString ss = QObject::tr("The output file for saving the distribution errors must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1000);
     setErrorCondition(-1);
+  }
+
+  if(getErrorCondition() < 0)
+  {
+    return;
   }
 
   QFileInfo distOutFileInfo(getDistOutputFile());

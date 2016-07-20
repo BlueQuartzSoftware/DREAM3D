@@ -51,7 +51,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -343,17 +342,17 @@ void PackPrimaryPhases::initialize()
 void PackPrimaryPhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", getPeriodicBoundaries(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", getPeriodicBoundaries(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, PeriodicBoundaries), SIMPL_BIND_GETTER(PackPrimaryPhases, this, PeriodicBoundaries)));
   QStringList linkedProps("MaskArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, UseMask), SIMPL_BIND_GETTER(PackPrimaryPhases, this, UseMask)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "OutputCellAttributeMatrixPath", getOutputCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "OutputCellAttributeMatrixPath", getOutputCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(PackPrimaryPhases, this, OutputCellAttributeMatrixPath), SIMPL_BIND_GETTER(PackPrimaryPhases, this, OutputCellAttributeMatrixPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(PackPrimaryPhases, this, MaskArrayPath), SIMPL_BIND_GETTER(PackPrimaryPhases, this, MaskArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
@@ -362,7 +361,7 @@ void PackPrimaryPhases::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(PackPrimaryPhases, this, InputStatsArrayPath), SIMPL_BIND_GETTER(PackPrimaryPhases, this, InputStatsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
@@ -370,7 +369,7 @@ void PackPrimaryPhases::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(PackPrimaryPhases, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(PackPrimaryPhases, this, InputPhaseTypesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
@@ -378,29 +377,29 @@ void PackPrimaryPhases::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Shape Types", "InputShapeTypesArrayPath", getInputShapeTypesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Shape Types", "InputShapeTypesArrayPath", getInputShapeTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(PackPrimaryPhases, this, InputShapeTypesArrayPath), SIMPL_BIND_GETTER(PackPrimaryPhases, this, InputShapeTypesArrayPath)));
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, FeatureIdsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, CellPhasesArrayName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, CellPhasesArrayName)));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Phases", "FeaturePhasesArrayName", getFeaturePhasesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, OutputCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, OutputCellFeatureAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Phases", "FeaturePhasesArrayName", getFeaturePhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, FeaturePhasesArrayName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, FeaturePhasesArrayName)));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Number of Features", "NumFeaturesArrayName", getNumFeaturesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, OutputCellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, OutputCellEnsembleAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Number of Features", "NumFeaturesArrayName", getNumFeaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, NumFeaturesArrayName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, NumFeaturesArrayName)));
 
   linkedProps.clear();
   linkedProps << "FeatureInputFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Features", "HaveFeatures", getHaveFeatures(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(InputFileFilterParameter::New("Feature Input File", "FeatureInputFile", getFeatureInputFile(), FilterParameter::Parameter, "*.txt", "Text File"));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Features", "HaveFeatures", getHaveFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, HaveFeatures), SIMPL_BIND_GETTER(PackPrimaryPhases, this, HaveFeatures)));
+  parameters.push_back(InputFileFilterParameter::New("Feature Input File", "FeatureInputFile", getFeatureInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, FeatureInputFile), SIMPL_BIND_GETTER(PackPrimaryPhases, this, FeatureInputFile), "*.txt", "Text File"));
   linkedProps.clear();
   linkedProps << "CsvOutputFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", getCsvOutputFile(), FilterParameter::Parameter, "*.csv", "Comma Separated Data"));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, WriteGoalAttributes), SIMPL_BIND_GETTER(PackPrimaryPhases, this, WriteGoalAttributes)));
+  parameters.push_back(OutputFileFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", getCsvOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, CsvOutputFile), SIMPL_BIND_GETTER(PackPrimaryPhases, this, CsvOutputFile), "*.csv", "Comma Separated Data"));
 
 #if PPP_SHOW_DEBUG_OUTPUTS
   parameters.push_back(InputFileFilterParameter::New("Debug VTK File", "VtkOutputFile", getVtkOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK File"));
@@ -441,31 +440,23 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+void PackPrimaryPhases::readFilterParameters(QJsonObject &obj)
 {
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
-  SIMPL_FILTER_WRITE_PARAMETER(UseMask)
-  SIMPL_FILTER_WRITE_PARAMETER(HaveFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureInputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(CsvOutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
-//  SIMPL_FILTER_WRITE_PARAMETER(VtkOutputFile)
-//  SIMPL_FILTER_WRITE_PARAMETER(ErrorOutputFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
+  AbstractFilter::readFilterParameters(obj);
+  //setErrorOutputFile(obj["ErrorOutputFile"].toString());
+  //setVtkOutputFile(obj["VtkOutputFile"].toString());
+}
+
+// FP: Check why these values are not connected to a filter parameter!
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::writeFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::writeFilterParameters(obj);
+  //obj["ErrorOutputFile"] = getErrorOutputFile();
+  //obj["VtkOutputFile"] = getVtkOutputFile();
 }
 
 // -----------------------------------------------------------------------------

@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -92,34 +91,34 @@ CropImageGeometry::~CropImageGeometry()
 void CropImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("X Max (Column) [Inclusive]", "XMax", getXMax(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Max (Row) [Inclusive]", "YMax", getYMax(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Max (Plane) [Inclusive]", "ZMax", getZMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, XMin), SIMPL_BIND_GETTER(CropImageGeometry, this, XMin)));
+  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, YMin), SIMPL_BIND_GETTER(CropImageGeometry, this, YMin)));
+  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, ZMin), SIMPL_BIND_GETTER(CropImageGeometry, this, ZMin)));
+  parameters.push_back(IntFilterParameter::New("X Max (Column) [Inclusive]", "XMax", getXMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, XMax), SIMPL_BIND_GETTER(CropImageGeometry, this, XMax)));
+  parameters.push_back(IntFilterParameter::New("Y Max (Row) [Inclusive]", "YMax", getYMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, YMax), SIMPL_BIND_GETTER(CropImageGeometry, this, YMax)));
+  parameters.push_back(IntFilterParameter::New("Z Max (Plane) [Inclusive]", "ZMax", getZMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, ZMax), SIMPL_BIND_GETTER(CropImageGeometry, this, ZMax)));
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, RenumberFeatures), SIMPL_BIND_GETTER(CropImageGeometry, this, RenumberFeatures)));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(BooleanFilterParameter::New("Update Origin", "UpdateOrigin", getUpdateOrigin(), FilterParameter::Parameter));
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Update Origin", "UpdateOrigin", getUpdateOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, UpdateOrigin), SIMPL_BIND_GETTER(CropImageGeometry, this, UpdateOrigin)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, SaveAsNewDataContainer), SIMPL_BIND_GETTER(CropImageGeometry, this, SaveAsNewDataContainer)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CropImageGeometry, this, CellAttributeMatrixPath), SIMPL_BIND_GETTER(CropImageGeometry, this, CellAttributeMatrixPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CropImageGeometry, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(CropImageGeometry, this, FeatureIdsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CropImageGeometry, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(CropImageGeometry, this, CellFeatureAttributeMatrixPath)));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CropImageGeometry, this, NewDataContainerName), SIMPL_BIND_GETTER(CropImageGeometry, this, NewDataContainerName)));
   setFilterParameters(parameters);
 }
 
@@ -143,30 +142,6 @@ void CropImageGeometry::readFilterParameters(AbstractFilterParametersReader* rea
   setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", getSaveAsNewDataContainer()) );
   setUpdateOrigin( reader->readValue("UpdateOrigin", getUpdateOrigin()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int CropImageGeometry::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(XMin)
-  SIMPL_FILTER_WRITE_PARAMETER(YMin)
-  SIMPL_FILTER_WRITE_PARAMETER(ZMin)
-  SIMPL_FILTER_WRITE_PARAMETER(XMax)
-  SIMPL_FILTER_WRITE_PARAMETER(YMax)
-  SIMPL_FILTER_WRITE_PARAMETER(ZMax)
-  SIMPL_FILTER_WRITE_PARAMETER(RenumberFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
-  SIMPL_FILTER_WRITE_PARAMETER(UpdateOrigin)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

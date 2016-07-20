@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -87,27 +86,27 @@ NeighborOrientationCorrelation::~NeighborOrientationCorrelation()
 void NeighborOrientationCorrelation::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Minimum Confidence Index", "MinConfidence", getMinConfidence(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Misorientation Tolerance (Degrees)", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Cleanup Level", "Level", getLevel(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Minimum Confidence Index", "MinConfidence", getMinConfidence(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, MinConfidence), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, MinConfidence)));
+  parameters.push_back(DoubleFilterParameter::New("Misorientation Tolerance (Degrees)", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, MisorientationTolerance), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, MisorientationTolerance)));
+  parameters.push_back(IntFilterParameter::New("Cleanup Level", "Level", getLevel(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, Level), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, Level)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Confidence Index", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Confidence Index", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, ConfidenceIndexArrayPath), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, ConfidenceIndexArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, CellPhasesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, QuatsArrayPath), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, QuatsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, CrystalStructuresArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -126,24 +125,6 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
   setLevel( reader->readValue("Level", getLevel()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(MinConfidence)
-  SIMPL_FILTER_WRITE_PARAMETER(Level)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

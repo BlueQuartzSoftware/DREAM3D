@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -82,16 +81,16 @@ void AddBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("PoissonVolFraction");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Add Random Noise", "PoissonNoise", getPoissonNoise(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Volume Fraction of Random Noise", "PoissonVolFraction", getPoissonVolFraction(), FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Add Random Noise", "PoissonNoise", getPoissonNoise(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, PoissonNoise), SIMPL_BIND_GETTER(AddBadData, this, PoissonNoise)));
+  parameters.push_back(DoubleFilterParameter::New("Volume Fraction of Random Noise", "PoissonVolFraction", getPoissonVolFraction(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, PoissonVolFraction), SIMPL_BIND_GETTER(AddBadData, this, PoissonVolFraction)));
   linkedProps.clear();
   linkedProps << "BoundaryVolFraction";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Add Boundary Noise", "BoundaryNoise", getBoundaryNoise(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Volume Fraction of Boundary Noise", "BoundaryVolFraction", getBoundaryVolFraction(), FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Add Boundary Noise", "BoundaryNoise", getBoundaryNoise(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, BoundaryNoise), SIMPL_BIND_GETTER(AddBadData, this, BoundaryNoise)));
+  parameters.push_back(DoubleFilterParameter::New("Volume Fraction of Boundary Noise", "BoundaryVolFraction", getBoundaryVolFraction(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, BoundaryVolFraction), SIMPL_BIND_GETTER(AddBadData, this, BoundaryVolFraction)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Euclidean Distances", "GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Euclidean Distances", "GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AddBadData, this, GBEuclideanDistancesArrayPath), SIMPL_BIND_GETTER(AddBadData, this, GBEuclideanDistancesArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -108,22 +107,6 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
   setBoundaryNoise( reader->readValue("BoundaryNoise", getBoundaryNoise()) );
   setBoundaryVolFraction( reader->readValue("BoundaryVolFraction", getBoundaryVolFraction()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(PoissonNoise)
-  SIMPL_FILTER_WRITE_PARAMETER(PoissonVolFraction)
-  SIMPL_FILTER_WRITE_PARAMETER(BoundaryNoise)
-  SIMPL_FILTER_WRITE_PARAMETER(BoundaryVolFraction)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

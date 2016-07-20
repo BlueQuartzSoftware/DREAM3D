@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -83,6 +82,8 @@ void FindLargestCrossSections::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
     parameter->setPropertyName("Plane");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FindLargestCrossSections, this, Plane));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FindLargestCrossSections, this, Plane));
 
     QVector<QString> choices;
     choices.push_back("XY");
@@ -95,12 +96,12 @@ void FindLargestCrossSections::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindLargestCrossSections, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindLargestCrossSections, this, FeatureIdsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Largest Cross Sections", "LargestCrossSectionsArrayPath", getLargestCrossSectionsArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Largest Cross Sections", "LargestCrossSectionsArrayPath", getLargestCrossSectionsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindLargestCrossSections, this, LargestCrossSectionsArrayPath), SIMPL_BIND_GETTER(FindLargestCrossSections, this, LargestCrossSectionsArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -113,20 +114,6 @@ void FindLargestCrossSections::readFilterParameters(AbstractFilterParametersRead
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setPlane( reader->readValue("Plane", getPlane()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(LargestCrossSectionsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Plane)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -39,7 +39,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -93,22 +92,22 @@ void VectorSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(DoubleFilterParameter::New("Angle Tolerance", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Angle Tolerance", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, AngleTolerance), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, AngleTolerance)));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, UseGoodVoxels)));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Vector Array To Segment", "SelectedVectorArrayPath", getSelectedVectorArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Vector Array To Segment", "SelectedVectorArrayPath", getSelectedVectorArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, SelectedVectorArrayPath), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, SelectedVectorArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, GoodVoxelsArrayPath)));
   }
 
-  parameters.push_back(StringFilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, FeatureIdsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, CellFeatureAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, ActiveArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -127,24 +126,6 @@ void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
   setSelectedVectorArrayPath( reader->readDataArrayPath( "SelectedVectorArrayPath", getSelectedVectorArrayPath() ) );
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VectorSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedVectorArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

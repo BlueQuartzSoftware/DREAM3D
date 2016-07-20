@@ -40,7 +40,6 @@
 #include <QtCore/QFile>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -85,16 +84,16 @@ void SurfaceMeshToNonconformalVtk::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToNonconformalVtk, this, OutputVtkFile), SIMPL_BIND_GETTER(SurfaceMeshToNonconformalVtk, this, OutputVtkFile)));
+  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToNonconformalVtk, this, WriteBinaryFile), SIMPL_BIND_GETTER(SurfaceMeshToNonconformalVtk, this, WriteBinaryFile)));
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SurfaceMeshToNonconformalVtk, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(SurfaceMeshToNonconformalVtk, this, SurfaceMeshFaceLabelsArrayPath)));
   }
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SurfaceMeshToNonconformalVtk, this, SurfaceMeshNodeTypeArrayPath), SIMPL_BIND_GETTER(SurfaceMeshToNonconformalVtk, this, SurfaceMeshNodeTypeArrayPath)));
   }
 
   setFilterParameters(parameters);
@@ -111,21 +110,6 @@ void SurfaceMeshToNonconformalVtk::readFilterParameters(AbstractFilterParameters
   setOutputVtkFile( reader->readString( "OutputVtkFile", getOutputVtkFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputVtkFile)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteBinaryFile)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

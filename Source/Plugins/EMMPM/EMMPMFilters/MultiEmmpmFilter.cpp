@@ -45,7 +45,6 @@
 #include "EMMPM/EMMPMLib/Core/EMMPMUtilities.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
@@ -83,8 +82,8 @@ void MultiEmmpmFilter::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
 
-  parameters.push_back(BooleanFilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", getUsePreviousMuSigma(), FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Output Array Prefix", "OutputArrayPrefix", getOutputArrayPrefix(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", getUsePreviousMuSigma(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, UsePreviousMuSigma), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, UsePreviousMuSigma)));
+  parameters.push_back(StringFilterParameter::New("Output Array Prefix", "OutputArrayPrefix", getOutputArrayPrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, OutputArrayPrefix), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, OutputArrayPrefix)));
 
 
   for ( qint32 i = 0; i < parameters.size(); i++ )
@@ -94,7 +93,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     {
       {
         MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-        parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray, req);
+        parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, InputDataArrayVector), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, InputDataArrayVector));
       }
     }
   }
@@ -105,7 +104,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("OutputDataArrayPath") == 0 )
     {
-      parameters[i] = StringFilterParameter::New("Output Cell Attribute Matrix", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray);
+      parameters[i] = StringFilterParameter::New("Output Cell Attribute Matrix", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, OutputAttributeMatrixName), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, OutputAttributeMatrixName));
     }
   }
 
@@ -135,33 +134,6 @@ void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* read
   setUsePreviousMuSigma(reader->readValue("UsePreviousMuSigma", getUsePreviousMuSigma()));
   setOutputArrayPrefix(reader->readString("OutputArrayPrefix", getOutputArrayPrefix()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int MultiEmmpmFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(InputDataArrayVector)
-  SIMPL_FILTER_WRITE_PARAMETER(NumClasses)
-  SIMPL_FILTER_WRITE_PARAMETER(ExchangeEnergy)
-  SIMPL_FILTER_WRITE_PARAMETER(HistogramLoops)
-  SIMPL_FILTER_WRITE_PARAMETER(SegmentationLoops)
-  SIMPL_FILTER_WRITE_PARAMETER(UseSimulatedAnnealing)
-  SIMPL_FILTER_WRITE_PARAMETER(UseGradientPenalty)
-  SIMPL_FILTER_WRITE_PARAMETER(GradientPenalty)
-  SIMPL_FILTER_WRITE_PARAMETER(UseCurvaturePenalty)
-  SIMPL_FILTER_WRITE_PARAMETER(CurvaturePenalty)
-  SIMPL_FILTER_WRITE_PARAMETER(RMax)
-  SIMPL_FILTER_WRITE_PARAMETER(EMLoopDelay)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(UsePreviousMuSigma)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputArrayPrefix)
-
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
@@ -86,16 +85,17 @@ void FindBasalLoadingFactor::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDirection", getLoadingDirection(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDirection", getLoadingDirection(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindBasalLoadingFactor, this, LoadingDirection), SIMPL_BIND_GETTER(FindBasalLoadingFactor, this, LoadingDirection)));
+
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("AvgQuats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("AvgQuats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBasalLoadingFactor, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindBasalLoadingFactor, this, AvgQuatsArrayPath)));
   }
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Basal Loading Factor", "BasalLoadingFactorArrayPath", getBasalLoadingFactorArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Basal Loading Factor", "BasalLoadingFactorArrayPath", getBasalLoadingFactorArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindBasalLoadingFactor, this, BasalLoadingFactorArrayPath), SIMPL_BIND_GETTER(FindBasalLoadingFactor, this, BasalLoadingFactorArrayPath)));
   }
 
   setFilterParameters(parameters);
@@ -108,20 +108,6 @@ void FindBasalLoadingFactor::readFilterParameters(AbstractFilterParametersReader
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
   setLoadingDirection( reader->readFloatVec3("LoadingDirection", getLoadingDirection() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(BasalLoadingFactorArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(LoadingDirection)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

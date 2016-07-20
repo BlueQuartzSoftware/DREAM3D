@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -94,26 +93,26 @@ void FindSlipTransmissionMetrics::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, NeighborListArrayPath), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, NeighborListArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, AvgQuatsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, FeaturePhasesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, CrystalStructuresArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("F1 List", "F1ListArrayName", getF1ListArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("F1spt List", "F1sptListArrayName", getF1sptListArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("F7 List", "F7ListArrayName", getF7ListArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("mPrime List", "mPrimeListArrayName", getmPrimeListArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("F1 List", "F1ListArrayName", getF1ListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, F1ListArrayName), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, F1ListArrayName)));
+  parameters.push_back(StringFilterParameter::New("F1spt List", "F1sptListArrayName", getF1sptListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, F1sptListArrayName), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, F1sptListArrayName)));
+  parameters.push_back(StringFilterParameter::New("F7 List", "F7ListArrayName", getF7ListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, F7ListArrayName), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, F7ListArrayName)));
+  parameters.push_back(StringFilterParameter::New("mPrime List", "mPrimeListArrayName", getmPrimeListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, mPrimeListArrayName), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, mPrimeListArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -132,25 +131,6 @@ void FindSlipTransmissionMetrics::readFilterParameters(AbstractFilterParametersR
   setF7ListArrayName(reader->readString("F7ListArrayName", getF7ListArrayName() ) );
   setmPrimeListArrayName(reader->readString("mPrimeListArrayName", getmPrimeListArrayName() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(F1ListArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(F1sptListArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(F7ListArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(mPrimeListArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

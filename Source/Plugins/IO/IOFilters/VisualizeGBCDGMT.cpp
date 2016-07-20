@@ -39,7 +39,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -92,17 +91,17 @@ VisualizeGBCDGMT::~VisualizeGBCDGMT()
 void VisualizeGBCDGMT::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter));
-  parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Output GMT File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.dat", "DAT File"));
+  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, PhaseOfInterest), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, PhaseOfInterest)));
+  parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, MisorientationRotation), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, MisorientationRotation)));
+  parameters.push_back(OutputFileFilterParameter::New("Output GMT File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, OutputFile), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, OutputFile), "*.dat", "DAT File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::FaceEnsemble, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, GBCDArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, GBCDArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, CrystalStructuresArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -119,22 +118,6 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
   setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1) );
   setPhaseOfInterest(reader->readValue("PhaseOfInterest", getPhaseOfInterest()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(GBCDArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -160,7 +143,9 @@ void VisualizeGBCDGMT::dataCheck()
     QString ss = QObject::tr( "The output file must be set");
     setErrorCondition(-1000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
+
 
   QFileInfo fi(getOutputFile());
   QDir parentPath = fi.path();

@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -97,32 +96,32 @@ FindBoundaryStrengths::~FindBoundaryStrengths()
 void FindBoundaryStrengths::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction (XYZ)", "Loading", getLoading(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction (XYZ)", "Loading", getLoading(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, Loading), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, Loading)));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshFaceLabelsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, AvgQuatsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, FeaturePhasesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, CrystalStructuresArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("F1s", "SurfaceMeshF1sArrayName", getSurfaceMeshF1sArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("F1spts", "SurfaceMeshF1sptsArrayName", getSurfaceMeshF1sptsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("F7s", "SurfaceMeshF7sArrayName", getSurfaceMeshF7sArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("mPrimes", "SurfaceMeshmPrimesArrayName", getSurfaceMeshmPrimesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("F1s", "SurfaceMeshF1sArrayName", getSurfaceMeshF1sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshF1sArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshF1sArrayName)));
+  parameters.push_back(StringFilterParameter::New("F1spts", "SurfaceMeshF1sptsArrayName", getSurfaceMeshF1sptsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshF1sptsArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshF1sptsArrayName)));
+  parameters.push_back(StringFilterParameter::New("F7s", "SurfaceMeshF7sArrayName", getSurfaceMeshF7sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshF7sArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshF7sArrayName)));
+  parameters.push_back(StringFilterParameter::New("mPrimes", "SurfaceMeshmPrimesArrayName", getSurfaceMeshmPrimesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshmPrimesArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshmPrimesArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -143,26 +142,6 @@ void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader*
   setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
   setLoading( reader->readFloatVec3("Loading", getLoading() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshmPrimesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshF7sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshF1sptsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshF1sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Loading)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

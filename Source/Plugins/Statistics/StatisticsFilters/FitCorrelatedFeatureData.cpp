@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
@@ -92,6 +91,8 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");
     parameter->setPropertyName("DistributionType");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, DistributionType));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, DistributionType));
 
     //parameter->setValueType("unsigned int");
     QVector<QString> choices;
@@ -102,29 +103,29 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Number Of Bins For Correlated Array", "NumberOfCorrelatedBins", getNumberOfCorrelatedBins(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Number Of Bins For Correlated Array", "NumberOfCorrelatedBins", getNumberOfCorrelatedBins(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, NumberOfCorrelatedBins), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, NumberOfCorrelatedBins)));
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, RemoveBiasedFeatures)));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, SelectedFeatureArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, SelectedFeatureArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Array To Correlate With", "CorrelatedFeatureArrayPath", getCorrelatedFeatureArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Array To Correlate With", "CorrelatedFeatureArrayPath", getCorrelatedFeatureArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, CorrelatedFeatureArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, CorrelatedFeatureArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, FeaturePhasesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, BiasedFeaturesArrayPath)));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, NewEnsembleArrayArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, NewEnsembleArrayArrayPath)));
   }
 
   setFilterParameters(parameters);
@@ -145,25 +146,6 @@ void FitCorrelatedFeatureData::readFilterParameters(AbstractFilterParametersRead
   setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
   setNumberOfCorrelatedBins( reader->readValue( "NumberOfCorrelatedBins", getNumberOfCorrelatedBins() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FitCorrelatedFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CorrelatedFeatureArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(DistributionType)
-  SIMPL_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(NumberOfCorrelatedBins)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

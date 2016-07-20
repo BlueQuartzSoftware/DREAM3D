@@ -39,7 +39,6 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -84,16 +83,16 @@ WriteStlFile::~WriteStlFile()
 void WriteStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputPathFilterParameter::New("Output STL Directory", "OutputStlDirectory", getOutputStlDirectory(), FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("STL File Prefix", "OutputStlPrefix", getOutputStlPrefix(), FilterParameter::Parameter));
+  parameters.push_back(OutputPathFilterParameter::New("Output STL Directory", "OutputStlDirectory", getOutputStlDirectory(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteStlFile, this, OutputStlDirectory), SIMPL_BIND_GETTER(WriteStlFile, this, OutputStlDirectory)));
+  parameters.push_back(StringFilterParameter::New("STL File Prefix", "OutputStlPrefix", getOutputStlPrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteStlFile, this, OutputStlPrefix), SIMPL_BIND_GETTER(WriteStlFile, this, OutputStlPrefix)));
   //QStringList linkedProps("SurfaceMeshFacePhasesArrayPath");
-  //parameters.push_back(LinkedBooleanFilterParameter::New("Group Files by Ensemble", "GroupByPhase", getGroupByPhase(), linkedProps, FilterParameter::Parameter));
+  //parameters.push_back(LinkedBooleanFilterParameter::New("Group Files by Ensemble", "GroupByPhase", getGroupByPhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteStlFile, this, GroupByPhase), SIMPL_BIND_GETTER(WriteStlFile, this, GroupByPhase)));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteStlFile, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(WriteStlFile, this, SurfaceMeshFaceLabelsArrayPath)));
   }
-  //parameters.push_back(DataArraySelectionFilterParameter::New("Face Phases", "SurfaceMeshFacePhasesArrayPath", getSurfaceMeshFacePhasesArrayPath(), FilterParameter::RequiredArray));
+  //parameters.push_back(DataArraySelectionFilterParameter::New("Face Phases", "SurfaceMeshFacePhasesArrayPath", getSurfaceMeshFacePhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(WriteStlFile, this, SurfaceMeshFacePhasesArrayPath), SIMPL_BIND_GETTER(WriteStlFile, this, SurfaceMeshFacePhasesArrayPath)));
   setFilterParameters(parameters);
 }
 
@@ -113,16 +112,29 @@ void WriteStlFile::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int WriteStlFile::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+void WriteStlFile::readFilterParameters(QJsonObject &obj)
 {
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFacePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputStlDirectory)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputStlPrefix)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
+  AbstractFilter::readFilterParameters(obj);
+
+  QJsonObject dataPathObj = obj["SurfaceMeshFacePhasesArrayPath"].toObject();
+  DataArrayPath dap;
+  dap.readJson(dataPathObj);
+  setSurfaceMeshFacePhasesArrayPath(dap);
+}
+
+// FP: Check why these values are not connected to a filter parameter!
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WriteStlFile::writeFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::writeFilterParameters(obj);
+
+  DataArrayPath dap = getSurfaceMeshFacePhasesArrayPath();
+  QJsonObject dataPathObj;
+  dap.writeJson(dataPathObj);
+  obj["SurfaceMeshFacePhasesArrayPath"] = dataPathObj;
 }
 
 // -----------------------------------------------------------------------------

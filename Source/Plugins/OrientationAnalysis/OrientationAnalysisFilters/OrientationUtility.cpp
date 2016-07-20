@@ -6,7 +6,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "OrientationAnalysis/FilterParameters/OrientationUtilityFilterParameter.h"
 
@@ -52,17 +51,6 @@ void OrientationUtility::readFilterParameters(AbstractFilterParametersReader* re
   reader->openFilterGroup(this, index);
 
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int OrientationUtility::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -36,7 +36,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -98,23 +97,23 @@ void FindShapes::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindShapes, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindShapes, this, FeatureIdsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindShapes, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindShapes, this, CellFeatureAttributeMatrixName)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindShapes, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindShapes, this, CentroidsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Omega3s", "Omega3sArrayName", getOmega3sArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Axis Lengths", "AxisLengthsArrayName", getAxisLengthsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayName", getAxisEulerAnglesArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Aspect Ratios", "AspectRatiosArrayName", getAspectRatiosArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Volumes", "VolumesArrayName", getVolumesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Omega3s", "Omega3sArrayName", getOmega3sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, Omega3sArrayName), SIMPL_BIND_GETTER(FindShapes, this, Omega3sArrayName)));
+  parameters.push_back(StringFilterParameter::New("Axis Lengths", "AxisLengthsArrayName", getAxisLengthsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, AxisLengthsArrayName), SIMPL_BIND_GETTER(FindShapes, this, AxisLengthsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayName", getAxisEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, AxisEulerAnglesArrayName), SIMPL_BIND_GETTER(FindShapes, this, AxisEulerAnglesArrayName)));
+  parameters.push_back(StringFilterParameter::New("Aspect Ratios", "AspectRatiosArrayName", getAspectRatiosArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, AspectRatiosArrayName), SIMPL_BIND_GETTER(FindShapes, this, AspectRatiosArrayName)));
+  parameters.push_back(StringFilterParameter::New("Volumes", "VolumesArrayName", getVolumesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, VolumesArrayName), SIMPL_BIND_GETTER(FindShapes, this, VolumesArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -133,25 +132,6 @@ void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader, in
   setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(AspectRatiosArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AxisLengthsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(Omega3sArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

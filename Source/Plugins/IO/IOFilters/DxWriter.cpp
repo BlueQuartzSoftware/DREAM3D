@@ -39,7 +39,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -78,12 +77,12 @@ DxWriter::~DxWriter()
 void DxWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.dx", "Open DX Visualization"));
-  parameters.push_back(BooleanFilterParameter::New("Add Surface Layer", "AddSurfaceLayer", getAddSurfaceLayer(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(DxWriter, this, OutputFile), SIMPL_BIND_GETTER(DxWriter, this, OutputFile), "*.dx", "Open DX Visualization"));
+  parameters.push_back(BooleanFilterParameter::New("Add Surface Layer", "AddSurfaceLayer", getAddSurfaceLayer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(DxWriter, this, AddSurfaceLayer), SIMPL_BIND_GETTER(DxWriter, this, AddSurfaceLayer)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(DxWriter, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(DxWriter, this, FeatureIdsArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -98,20 +97,6 @@ void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader, int 
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
   setAddSurfaceLayer( reader->readValue("AddSurfaceLayer", getAddSurfaceLayer()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(AddSurfaceLayer)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

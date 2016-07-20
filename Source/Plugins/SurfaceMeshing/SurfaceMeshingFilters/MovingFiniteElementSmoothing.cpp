@@ -160,13 +160,13 @@ MovingFiniteElementSmoothing::~MovingFiniteElementSmoothing()
 void MovingFiniteElementSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Iteration Steps", "IterationSteps", getIterationSteps(), FilterParameter::Uncategorized));
-  parameters.push_back(BooleanFilterParameter::New("Apply Node Contraints", "NodeConstraints", getNodeConstraints(), FilterParameter::Uncategorized));
-  parameters.push_back(BooleanFilterParameter::New("Constrain Surface Nodes", "ConstrainSurfaceNodes", getConstrainSurfaceNodes(), FilterParameter::Uncategorized));
-  parameters.push_back(BooleanFilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", getConstrainQuadPoints(), FilterParameter::Uncategorized));
-  parameters.push_back(BooleanFilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", getSmoothTripleLines(), FilterParameter::Uncategorized));
+  parameters.push_back(IntFilterParameter::New("Iteration Steps", "IterationSteps", getIterationSteps(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, IterationSteps), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, IterationSteps)));
+  parameters.push_back(BooleanFilterParameter::New("Apply Node Contraints", "NodeConstraints", getNodeConstraints(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, NodeConstraints), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, NodeConstraints)));
+  parameters.push_back(BooleanFilterParameter::New("Constrain Surface Nodes", "ConstrainSurfaceNodes", getConstrainSurfaceNodes(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, ConstrainSurfaceNodes), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, ConstrainSurfaceNodes)));
+  parameters.push_back(BooleanFilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", getConstrainQuadPoints(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, ConstrainQuadPoints), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, ConstrainQuadPoints)));
+  parameters.push_back(BooleanFilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", getSmoothTripleLines(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, SmoothTripleLines), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, SmoothTripleLines)));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath)));
   setFilterParameters(parameters);
 }
 
@@ -183,23 +183,6 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
   setConstrainQuadPoints( reader->readValue("ConstrainQuadPoints", false) );
   setSmoothTripleLines( reader->readValue("SmoothTripleLines", false) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(IterationSteps)
-  SIMPL_FILTER_WRITE_PARAMETER(NodeConstraints)
-  SIMPL_FILTER_WRITE_PARAMETER(ConstrainSurfaceNodes)
-  SIMPL_FILTER_WRITE_PARAMETER(ConstrainQuadPoints)
-  SIMPL_FILTER_WRITE_PARAMETER(SmoothTripleLines)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

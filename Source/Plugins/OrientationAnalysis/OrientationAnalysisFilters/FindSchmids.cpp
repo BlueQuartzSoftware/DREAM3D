@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -111,35 +110,38 @@ void FindSchmids::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDirection", getLoadingDirection(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDirection", getLoadingDirection(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, LoadingDirection), SIMPL_BIND_GETTER(FindSchmids, this, LoadingDirection)));
+
   QStringList linkedProps;
   linkedProps << "PhisArrayName" << "LambdasArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, StoreAngleComponents), SIMPL_BIND_GETTER(FindSchmids, this, StoreAngleComponents)));
   QStringList linkedProps2;
   linkedProps2 << "SlipPlane" << "SlipDirection";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), linkedProps2, FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Slip Plane", "SlipPlane", getSlipPlane(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Slip Direction", "SlipDirection", getSlipDirection(), FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), linkedProps2, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, OverrideSystem), SIMPL_BIND_GETTER(FindSchmids, this, OverrideSystem)));
+  parameters.push_back(FloatVec3FilterParameter::New("Slip Plane", "SlipPlane", getSlipPlane(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, SlipPlane), SIMPL_BIND_GETTER(FindSchmids, this, SlipPlane)));
+
+  parameters.push_back(FloatVec3FilterParameter::New("Slip Direction", "SlipDirection", getSlipDirection(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, SlipDirection), SIMPL_BIND_GETTER(FindSchmids, this, SlipDirection)));
+
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSchmids, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindSchmids, this, FeaturePhasesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSchmids, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindSchmids, this, AvgQuatsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSchmids, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindSchmids, this, CrystalStructuresArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Schmids", "SchmidsArrayName", getSchmidsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Slip Systems", "SlipSystemsArrayName", getSlipSystemsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Poles", "PolesArrayName", getPolesArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Phis", "PhisArrayName", getPhisArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Lambdas", "LambdasArrayName", getLambdasArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Schmids", "SchmidsArrayName", getSchmidsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, SchmidsArrayName), SIMPL_BIND_GETTER(FindSchmids, this, SchmidsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Slip Systems", "SlipSystemsArrayName", getSlipSystemsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, SlipSystemsArrayName), SIMPL_BIND_GETTER(FindSchmids, this, SlipSystemsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Poles", "PolesArrayName", getPolesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, PolesArrayName), SIMPL_BIND_GETTER(FindSchmids, this, PolesArrayName)));
+  parameters.push_back(StringFilterParameter::New("Phis", "PhisArrayName", getPhisArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, PhisArrayName), SIMPL_BIND_GETTER(FindSchmids, this, PhisArrayName)));
+  parameters.push_back(StringFilterParameter::New("Lambdas", "LambdasArrayName", getLambdasArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, LambdasArrayName), SIMPL_BIND_GETTER(FindSchmids, this, LambdasArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -163,30 +165,6 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, i
   setSlipPlane( reader->readFloatVec3("SlipPlane", getSlipPlane() ) );
   setSlipDirection( reader->readFloatVec3("SlipDirection", getSlipDirection() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(LambdasArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PhisArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PolesArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SlipSystemsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SchmidsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(LoadingDirection)
-  SIMPL_FILTER_WRITE_PARAMETER(StoreAngleComponents)
-  SIMPL_FILTER_WRITE_PARAMETER(OverrideSystem)
-  SIMPL_FILTER_WRITE_PARAMETER(SlipPlane)
-  SIMPL_FILTER_WRITE_PARAMETER(SlipDirection)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

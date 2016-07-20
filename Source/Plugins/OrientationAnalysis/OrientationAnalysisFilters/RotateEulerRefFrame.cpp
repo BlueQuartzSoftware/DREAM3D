@@ -44,7 +44,6 @@
 #endif
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
@@ -146,11 +145,11 @@ RotateEulerRefFrame::~RotateEulerRefFrame()
 void RotateEulerRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Rotation Axis (ijk)", "RotationAxis", getRotationAxis(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Rotation Axis (ijk)", "RotationAxis", getRotationAxis(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, RotationAxis), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, RotationAxis)));
+  parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, RotationAngle), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, RotationAngle)));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, CellEulerAnglesArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -165,20 +164,6 @@ void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* r
   setRotationAxis( reader->readFloatVec3("RotationAxis", getRotationAxis() ) );
   setRotationAngle( reader->readValue("RotationAngle", getRotationAngle()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(RotationAxis)
-  SIMPL_FILTER_WRITE_PARAMETER(RotationAngle)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

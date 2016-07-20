@@ -36,7 +36,6 @@
 #include "TriangleNormalFilter.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
@@ -136,7 +135,7 @@ void TriangleNormalFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Face Normals", "SurfaceMeshTriangleNormalsArrayPath", getSurfaceMeshTriangleNormalsArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Face Normals", "SurfaceMeshTriangleNormalsArrayPath", getSurfaceMeshTriangleNormalsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(TriangleNormalFilter, this, SurfaceMeshTriangleNormalsArrayPath), SIMPL_BIND_GETTER(TriangleNormalFilter, this, SurfaceMeshTriangleNormalsArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -149,18 +148,6 @@ void TriangleNormalFilter::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
   setSurfaceMeshTriangleNormalsArrayPath(reader->readDataArrayPath("SurfaceMeshTriangleNormalsArrayPath", getSurfaceMeshTriangleNormalsArrayPath()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleNormalsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -79,12 +78,12 @@ ErodeDilateCoordinationNumber::~ErodeDilateCoordinationNumber()
 void ErodeDilateCoordinationNumber::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Coordination Number to Consider", "CoordinationNumber", getCoordinationNumber(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Coordination Number to Consider", "CoordinationNumber", getCoordinationNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateCoordinationNumber, this, CoordinationNumber), SIMPL_BIND_GETTER(ErodeDilateCoordinationNumber, this, CoordinationNumber)));
+  parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateCoordinationNumber, this, Loop), SIMPL_BIND_GETTER(ErodeDilateCoordinationNumber, this, Loop)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ErodeDilateCoordinationNumber, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(ErodeDilateCoordinationNumber, this, FeatureIdsArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -99,20 +98,6 @@ void ErodeDilateCoordinationNumber::readFilterParameters(AbstractFilterParameter
   setCoordinationNumber( reader->readValue("CoordinationNumber", getCoordinationNumber()) );
   setLoop( reader->readValue("Loop", getLoop()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ErodeDilateCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CoordinationNumber)
-  SIMPL_FILTER_WRITE_PARAMETER(Loop)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

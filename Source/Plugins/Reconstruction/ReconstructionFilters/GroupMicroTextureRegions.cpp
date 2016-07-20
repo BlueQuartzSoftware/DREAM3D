@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -109,34 +108,34 @@ void GroupMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
 
-  parameters.push_front(BooleanFilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", getUseRunningAverage(), FilterParameter::Parameter));
-  parameters.push_front(DoubleFilterParameter::New("C-Axis Alignment Tolerance (Degrees)", "CAxisTolerance", getCAxisTolerance(), FilterParameter::Parameter));
+  parameters.push_front(BooleanFilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", getUseRunningAverage(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, UseRunningAverage), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, UseRunningAverage)));
+  parameters.push_front(DoubleFilterParameter::New("C-Axis Alignment Tolerance (Degrees)", "CAxisTolerance", getCAxisTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, CAxisTolerance), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, CAxisTolerance)));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, FeatureIdsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, FeaturePhasesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Volumes", "VolumesArrayPath", getVolumesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Volumes", "VolumesArrayPath", getVolumesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, VolumesArrayPath), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, VolumesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, AvgQuatsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, CrystalStructuresArrayPath)));
   }
 
-  parameters.push_back(StringFilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "CellParentIdsArrayName", getCellParentIdsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Parent Ids", "FeatureParentIdsArrayName", getFeatureParentIdsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, NewCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, NewCellFeatureAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Parent Ids", "CellParentIdsArrayName", getCellParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, CellParentIdsArrayName), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, CellParentIdsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Feature Parent Ids", "FeatureParentIdsArrayName", getFeatureParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, FeatureParentIdsArrayName), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, FeatureParentIdsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, ActiveArrayName), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, ActiveArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -160,28 +159,6 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
   setCAxisTolerance( reader->readValue("CAxisTolerance", getCAxisTolerance()) );
   setUseRunningAverage( reader->readValue("UseRunningAverage", getUseRunningAverage()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  GroupFeatures::writeFilterParameters(writer, index);
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CAxisTolerance)
-  SIMPL_FILTER_WRITE_PARAMETER(UseRunningAverage)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

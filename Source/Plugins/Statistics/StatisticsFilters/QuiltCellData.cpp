@@ -38,7 +38,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -87,17 +86,17 @@ void QuiltCellData::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntVec3FilterParameter::New("Quilt Step (Voxels)", "QuiltStep", getQuiltStep(), FilterParameter::Parameter));
-  parameters.push_back(IntVec3FilterParameter::New("Patch Size (Voxels)", "PatchSize", getPatchSize(), FilterParameter::Parameter));
+  parameters.push_back(IntVec3FilterParameter::New("Quilt Step (Voxels)", "QuiltStep", getQuiltStep(), FilterParameter::Parameter, SIMPL_BIND_SETTER(QuiltCellData, this, QuiltStep), SIMPL_BIND_GETTER(QuiltCellData, this, QuiltStep)));
+  parameters.push_back(IntVec3FilterParameter::New("Patch Size (Voxels)", "PatchSize", getPatchSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(QuiltCellData, this, PatchSize), SIMPL_BIND_GETTER(QuiltCellData, this, PatchSize)));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(QuiltCellData, this, SelectedCellArrayPath), SIMPL_BIND_GETTER(QuiltCellData, this, SelectedCellArrayPath)));
   }
 
-  parameters.push_back(StringFilterParameter::New("Output DataContainer Name", "OutputDataContainerName", getOutputDataContainerName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Output Data Array Name", "OutputArrayName", getOutputArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Output DataContainer Name", "OutputDataContainerName", getOutputDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuiltCellData, this, OutputDataContainerName), SIMPL_BIND_GETTER(QuiltCellData, this, OutputDataContainerName)));
+  parameters.push_back(StringFilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuiltCellData, this, OutputAttributeMatrixName), SIMPL_BIND_GETTER(QuiltCellData, this, OutputAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Output Data Array Name", "OutputArrayName", getOutputArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuiltCellData, this, OutputArrayName), SIMPL_BIND_GETTER(QuiltCellData, this, OutputArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -115,23 +114,6 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
   setQuiltStep( reader->readIntVec3("QuiltStep", getQuiltStep() ) );
   setPatchSize( reader->readIntVec3("PatchSize", getPatchSize() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(QuiltStep)
-  SIMPL_FILTER_WRITE_PARAMETER(PatchSize)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

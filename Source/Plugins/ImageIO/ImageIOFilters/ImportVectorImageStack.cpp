@@ -45,7 +45,6 @@
 #include <QtGui/QImageReader>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
@@ -106,11 +105,11 @@ void ImportVectorImageStack::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(ImportVectorImageStackFilterParameter::New("Import Image Data", "ImageVector", getImageVector(), FilterParameter::Parameter));
+  parameters.push_back(ImportVectorImageStackFilterParameter::New("Import Image Data", "ImageVector", getImageVector(), FilterParameter::Parameter, this));
 
-  parameters.push_back(StringFilterParameter::New("Data Container Name", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("VectorData", "VectorDataArrayName", getVectorDataArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container Name", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, DataContainerName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, DataContainerName)));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, CellAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("VectorData", "VectorDataArrayName", getVectorDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, VectorDataArrayName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, VectorDataArrayName)));
 
   setFilterParameters(parameters);
 }
@@ -138,33 +137,6 @@ void ImportVectorImageStack::readFilterParameters(AbstractFilterParametersReader
   setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
   setResolution( reader->readFloatVec3("Resolution", getResolution()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ImportVectorImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(VectorDataArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(StartIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(EndIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(StartComp)
-  SIMPL_FILTER_WRITE_PARAMETER(EndComp)
-  SIMPL_FILTER_WRITE_PARAMETER(PaddingDigits)
-  SIMPL_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
-  SIMPL_FILTER_WRITE_PARAMETER(Separator)
-  SIMPL_FILTER_WRITE_PARAMETER(FileSuffix)
-  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
-  SIMPL_FILTER_WRITE_PARAMETER(Origin)
-  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

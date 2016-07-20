@@ -44,7 +44,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -141,11 +140,11 @@ void ReadStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("STL File", "StlFilePath", getStlFilePath(), FilterParameter::Parameter, "*.stl", "STL File"));
-  parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(InputFileFilterParameter::New("STL File", "StlFilePath", getStlFilePath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadStlFile, this, StlFilePath), SIMPL_BIND_GETTER(ReadStlFile, this, StlFilePath), "*.stl", "STL File"));
+  parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, SurfaceMeshDataContainerName), SIMPL_BIND_GETTER(ReadStlFile, this, SurfaceMeshDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Face Normals", "FaceNormalsArrayName", getFaceNormalsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, FaceAttributeMatrixName), SIMPL_BIND_GETTER(ReadStlFile, this, FaceAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Face Normals", "FaceNormalsArrayName", getFaceNormalsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, FaceNormalsArrayName), SIMPL_BIND_GETTER(ReadStlFile, this, FaceNormalsArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -160,21 +159,6 @@ void ReadStlFile::readFilterParameters(AbstractFilterParametersReader* reader, i
   setSurfaceMeshDataContainerName( reader->readString( "SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName() ) );
   setFaceNormalsArrayName(reader->readString("FaceNormalsArrayName", getFaceNormalsArrayName() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ReadStlFile::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(StlFilePath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FaceNormalsArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

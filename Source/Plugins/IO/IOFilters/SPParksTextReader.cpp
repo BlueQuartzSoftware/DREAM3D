@@ -40,7 +40,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -90,14 +89,16 @@ SPParksTextReader::~SPParksTextReader()
 void SPParksTextReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.dump", "SPParks Dump File"));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("One Based Arrays", "OneBasedArrays", getOneBasedArrays(), FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, InputFile), SIMPL_BIND_GETTER(SPParksTextReader, this, InputFile), "*.dump", "SPParks Dump File"));
+  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, Origin), SIMPL_BIND_GETTER(SPParksTextReader, this, Origin)));
+
+  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, Resolution), SIMPL_BIND_GETTER(SPParksTextReader, this, Resolution)));
+
+  parameters.push_back(BooleanFilterParameter::New("One Based Arrays", "OneBasedArrays", getOneBasedArrays(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, OneBasedArrays), SIMPL_BIND_GETTER(SPParksTextReader, this, OneBasedArrays)));
+  parameters.push_back(StringFilterParameter::New("Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, VolumeDataContainerName), SIMPL_BIND_GETTER(SPParksTextReader, this, VolumeDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(SPParksTextReader, this, CellAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(SPParksTextReader, this, FeatureIdsArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -115,24 +116,6 @@ void SPParksTextReader::readFilterParameters(AbstractFilterParametersReader* rea
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
   setOneBasedArrays( reader->readValue("OneBasedArrays", getOneBasedArrays() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SPParksTextReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(Origin)
-  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
-  SIMPL_FILTER_WRITE_PARAMETER(OneBasedArrays)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

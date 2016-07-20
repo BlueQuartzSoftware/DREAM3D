@@ -44,7 +44,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -267,11 +266,13 @@ InsertAtoms::~InsertAtoms()
 void InsertAtoms::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Lattice Constants (Angstroms)", "LatticeConstants", getLatticeConstants(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Lattice Constants (Angstroms)", "LatticeConstants", getLatticeConstants(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertAtoms, this, LatticeConstants), SIMPL_BIND_GETTER(InsertAtoms, this, LatticeConstants)));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");
     parameter->setPropertyName("Basis");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(InsertAtoms, this, Basis));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(InsertAtoms, this, Basis));
 
     QVector<QString> choices;
     choices.push_back("Simple Cubic");
@@ -284,17 +285,17 @@ void InsertAtoms::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertAtoms, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(InsertAtoms, this, SurfaceMeshFaceLabelsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertAtoms, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(InsertAtoms, this, AvgQuatsArrayPath)));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InsertAtoms, this, VertexDataContainerName), SIMPL_BIND_GETTER(InsertAtoms, this, VertexDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Atom Feature Labels", "AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InsertAtoms, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(InsertAtoms, this, VertexAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Atom Feature Labels", "AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InsertAtoms, this, AtomFeatureLabelsArrayName), SIMPL_BIND_GETTER(InsertAtoms, this, AtomFeatureLabelsArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -312,24 +313,6 @@ void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, i
   setLatticeConstants( reader->readFloatVec3("LatticeConstants", getLatticeConstants() ) );
   setBasis( reader->readValue("Basis", getBasis() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int InsertAtoms::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(AtomFeatureLabelsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(LatticeConstants)
-  SIMPL_FILTER_WRITE_PARAMETER(Basis)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

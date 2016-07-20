@@ -46,7 +46,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -261,39 +260,40 @@ FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors()
 void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDir", getLoadingDir(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDir", getLoadingDir(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, LoadingDir), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, LoadingDir)));
+
   QStringList linkedProps("TwinBoundarySchmidFactorsFile");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Twin Boundary Info File", "WriteFile", getWriteFile(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile(), FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Write Twin Boundary Info File", "WriteFile", getWriteFile(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, WriteFile), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, WriteFile)));
+  parameters.push_back(OutputFileFilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, TwinBoundarySchmidFactorsFile), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, TwinBoundarySchmidFactorsFile)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, AvgQuatsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, FeaturePhasesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, CrystalStructuresArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshFaceLabelsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshFaceNormalsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Twin Boundary", "SurfaceMeshTwinBoundaryArrayPath", getSurfaceMeshTwinBoundaryArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Twin Boundary", "SurfaceMeshTwinBoundaryArrayPath", getSurfaceMeshTwinBoundaryArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundaryArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundaryArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Twin Boundary Schmid Factors", "SurfaceMeshTwinBoundarySchmidFactorsArrayName", getSurfaceMeshTwinBoundarySchmidFactorsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Twin Boundary Schmid Factors", "SurfaceMeshTwinBoundarySchmidFactorsArrayName", getSurfaceMeshTwinBoundarySchmidFactorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundarySchmidFactorsArrayName), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundarySchmidFactorsArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -314,27 +314,6 @@ void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParameter
   setLoadingDir( reader->readFloatVec3("LoadingDir", getLoadingDir()));
   setTwinBoundarySchmidFactorsFile( reader->readString("TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(WriteFile)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundarySchmidFactorsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(TwinBoundarySchmidFactorsFile)
-  SIMPL_FILTER_WRITE_PARAMETER(LoadingDir)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

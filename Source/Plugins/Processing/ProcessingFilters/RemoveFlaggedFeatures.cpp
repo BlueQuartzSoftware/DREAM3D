@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -79,17 +78,17 @@ RemoveFlaggedFeatures::~RemoveFlaggedFeatures()
 void RemoveFlaggedFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Fill-in Removed Features", "FillRemovedFeatures", getFillRemovedFeatures(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Fill-in Removed Features", "FillRemovedFeatures", getFillRemovedFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RemoveFlaggedFeatures, this, FillRemovedFeatures), SIMPL_BIND_GETTER(RemoveFlaggedFeatures, this, FillRemovedFeatures)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(RemoveFlaggedFeatures, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(RemoveFlaggedFeatures, this, FeatureIdsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
-    parameters.push_back(DataArraySelectionFilterParameter::New("Flagged Features", "FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Flagged Features", "FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(RemoveFlaggedFeatures, this, FlaggedFeaturesArrayPath), SIMPL_BIND_GETTER(RemoveFlaggedFeatures, this, FlaggedFeaturesArrayPath)));
   }
   setFilterParameters(parameters);
 }
@@ -104,20 +103,6 @@ void RemoveFlaggedFeatures::readFilterParameters(AbstractFilterParametersReader*
   setFlaggedFeaturesArrayPath(reader->readDataArrayPath("FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int RemoveFlaggedFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FillRemovedFeatures)
-  SIMPL_FILTER_WRITE_PARAMETER(FlaggedFeaturesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

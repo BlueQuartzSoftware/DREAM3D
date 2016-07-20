@@ -45,7 +45,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -164,6 +163,8 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
     parameter->setPropertyName("Plane");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, Plane));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, Plane));
 
     QVector<QString> choices;
     choices.push_back("XY");
@@ -173,11 +174,11 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Patch Size 1", "PSize1", getPSize1(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Patch Size 2", "PSize2", getPSize2(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Search Distance 1", "SSize1", getSSize1(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Search Distance 2", "SSize2", getSSize2(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Slice Step", "SliceStep", getSliceStep(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Patch Size 1", "PSize1", getPSize1(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, PSize1), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, PSize1)));
+  parameters.push_back(IntFilterParameter::New("Patch Size 2", "PSize2", getPSize2(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, PSize2), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, PSize2)));
+  parameters.push_back(IntFilterParameter::New("Search Distance 1", "SSize1", getSSize1(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, SSize1), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, SSize1)));
+  parameters.push_back(IntFilterParameter::New("Search Distance 2", "SSize2", getSSize2(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, SSize2), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, SSize2)));
+  parameters.push_back(IntFilterParameter::New("Slice Step", "SliceStep", getSliceStep(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, SliceStep), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, SliceStep)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
@@ -193,10 +194,10 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     daTypes.push_back(SIMPL::TypeNames::Float);
     daTypes.push_back(SIMPL::TypeNames::Double);
     req.daTypes = daTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Track Motion", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Track Motion", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, SelectedArrayPath), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, SelectedArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Motion Direction", "MotionDirectionArrayName", getMotionDirectionArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Motion Direction", "MotionDirectionArrayName", getMotionDirectionArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, MotionDirectionArrayName), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, MotionDirectionArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -213,25 +214,6 @@ void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParamet
   setSSize2( reader->readValue("SSize2", getSSize2()));
   setSliceStep( reader->readValue("SliceStep", getSliceStep()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindRelativeMotionBetweenSlices::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(MotionDirectionArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(Plane)
-  SIMPL_FILTER_WRITE_PARAMETER(PSize1)
-  SIMPL_FILTER_WRITE_PARAMETER(PSize2)
-  SIMPL_FILTER_WRITE_PARAMETER(SSize1)
-  SIMPL_FILTER_WRITE_PARAMETER(SSize2)
-  SIMPL_FILTER_WRITE_PARAMETER(SliceStep)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

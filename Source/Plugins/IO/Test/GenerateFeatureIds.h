@@ -8,7 +8,6 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IOTestFileLocations.h"
@@ -73,13 +72,6 @@ class GenerateFeatureIds : public AbstractFilter
     {
       reader->openFilterGroup(this, index);
       reader->closeFilterGroup();
-    }
-
-    int writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-    {
-      writer->openFilterGroup(this, index);
-      writer->closeFilterGroup();
-      return ++index; // we want to return the next index that was just written to
     }
 
 
@@ -175,13 +167,6 @@ class CreateDataContainer : public AbstractFilter
     {
       reader->openFilterGroup(this, index);
       reader->closeFilterGroup();
-    }
-
-    int writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-    {
-      writer->openFilterGroup(this, index);
-      writer->closeFilterGroup();
-      return ++index; // we want to return the next index that was just written to
     }
 
   protected:

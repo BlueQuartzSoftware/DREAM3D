@@ -37,7 +37,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -90,28 +89,28 @@ void FindMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("AvgMisorientationsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Find Average Misorientation Per Feature", "FindAvgMisors", getFindAvgMisors(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Find Average Misorientation Per Feature", "FindAvgMisors", getFindAvgMisors(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindMisorientations, this, FindAvgMisors), SIMPL_BIND_GETTER(FindMisorientations, this, FindAvgMisors)));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMisorientations, this, NeighborListArrayPath), SIMPL_BIND_GETTER(FindMisorientations, this, NeighborListArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMisorientations, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindMisorientations, this, AvgQuatsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMisorientations, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindMisorientations, this, FeaturePhasesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMisorientations, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindMisorientations, this, CrystalStructuresArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Misorientation List", "MisorientationListArrayName", getMisorientationListArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Average Misorientations", "AvgMisorientationsArrayName", getAvgMisorientationsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Misorientation List", "MisorientationListArrayName", getMisorientationListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMisorientations, this, MisorientationListArrayName), SIMPL_BIND_GETTER(FindMisorientations, this, MisorientationListArrayName)));
+  parameters.push_back(StringFilterParameter::New("Average Misorientations", "AvgMisorientationsArrayName", getAvgMisorientationsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMisorientations, this, AvgMisorientationsArrayName), SIMPL_BIND_GETTER(FindMisorientations, this, AvgMisorientationsArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -129,24 +128,6 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
   setNeighborListArrayPath(reader->readDataArrayPath("NeighborListArrayPath", getNeighborListArrayPath() ) );
   setFindAvgMisors( reader->readValue("FindAvgMisors", getFindAvgMisors()) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgMisorientationsArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationListArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FindAvgMisors)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -39,7 +39,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "EbsdLib/HKL/H5CtfImporter.h"
@@ -97,7 +96,7 @@ void EbsdToH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(EbsdToH5EbsdFilterParameter::New("Import Orientation Data", "OrientationData", getOutputFile(), FilterParameter::Parameter));
+  parameters.push_back(EbsdToH5EbsdFilterParameter::New("Import Orientation Data", "OrientationData", getOutputFile(), FilterParameter::Parameter, this));
 
   setFilterParameters(parameters);
 
@@ -122,29 +121,6 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, 
   setSampleTransformation( reader->readAxisAngle("SampleTransformation", getSampleTransformation(), -1) );
   setEulerTransformation( reader->readAxisAngle("EulerTransformation", getEulerTransformation(), -1) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(ZStartIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(ZEndIndex)
-  SIMPL_FILTER_WRITE_PARAMETER(ZResolution)
-  SIMPL_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  SIMPL_FILTER_WRITE_PARAMETER(InputPath)
-  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
-  SIMPL_FILTER_WRITE_PARAMETER(FileSuffix)
-  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
-  SIMPL_FILTER_WRITE_PARAMETER(PaddingDigits)
-  SIMPL_FILTER_WRITE_PARAMETER(SampleTransformation)
-  SIMPL_FILTER_WRITE_PARAMETER(EulerTransformation)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

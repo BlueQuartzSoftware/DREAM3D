@@ -45,7 +45,6 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
@@ -105,19 +104,21 @@ void InitializeData::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Cell Arrays", "CellAttributeMatrixPaths", getCellAttributeMatrixPaths(), FilterParameter::RequiredArray, req));
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Cell Arrays", "CellAttributeMatrixPaths", getCellAttributeMatrixPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InitializeData, this, CellAttributeMatrixPaths), SIMPL_BIND_GETTER(InitializeData, this, CellAttributeMatrixPaths)));
   }
-  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("X Max (Column)", "XMax", getXMax(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Max (Row)", "YMax", getYMax(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Max (Plane)", "ZMax", getZMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, XMin), SIMPL_BIND_GETTER(InitializeData, this, XMin)));
+  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, YMin), SIMPL_BIND_GETTER(InitializeData, this, YMin)));
+  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, ZMin), SIMPL_BIND_GETTER(InitializeData, this, ZMin)));
+  parameters.push_back(IntFilterParameter::New("X Max (Column)", "XMax", getXMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, XMax), SIMPL_BIND_GETTER(InitializeData, this, XMax)));
+  parameters.push_back(IntFilterParameter::New("Y Max (Row)", "YMax", getYMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, YMax), SIMPL_BIND_GETTER(InitializeData, this, YMax)));
+  parameters.push_back(IntFilterParameter::New("Z Max (Plane)", "ZMax", getZMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, ZMax), SIMPL_BIND_GETTER(InitializeData, this, ZMax)));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Initialization Type");
     parameter->setPropertyName("InitType");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(InitializeData, this, InitType));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(InitializeData, this, InitType));
 
     parameter->setDefaultValue(Manual);
 
@@ -133,9 +134,8 @@ void InitializeData::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(DoubleFilterParameter::New("Initialization Value", "InitValue", getInitValue(), FilterParameter::Parameter, Manual));
-  parameters.push_back(RangeFilterParameter::New("Initialization Range", "InitRange", getInitRange(), FilterParameter::Parameter, RandomWithRange));
-
+  parameters.push_back(DoubleFilterParameter::New("Initialization Value", "InitValue", getInitValue(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, InitValue), SIMPL_BIND_GETTER(InitializeData, this, InitValue), Manual));
+  parameters.push_back(RangeFilterParameter::New("Initialization Range", "InitRange", getInitRange(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, InitRange), SIMPL_BIND_GETTER(InitializeData, this, InitRange), RandomWithRange));
   setFilterParameters(parameters);
 }
 
@@ -156,27 +156,6 @@ void InitializeData::readFilterParameters(AbstractFilterParametersReader* reader
   setInitValue(reader->readValue("InitValue", getInitValue()));
   setInitRange(reader->readPairOfDoubles("InitRange", getInitRange()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int InitializeData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPaths)
-  SIMPL_FILTER_WRITE_PARAMETER(XMin)
-  SIMPL_FILTER_WRITE_PARAMETER(YMin)
-  SIMPL_FILTER_WRITE_PARAMETER(ZMin)
-  SIMPL_FILTER_WRITE_PARAMETER(XMax)
-  SIMPL_FILTER_WRITE_PARAMETER(YMax)
-  SIMPL_FILTER_WRITE_PARAMETER(ZMax)
-  SIMPL_FILTER_WRITE_PARAMETER(InitType)
-  SIMPL_FILTER_WRITE_PARAMETER(InitValue)
-  SIMPL_FILTER_WRITE_PARAMETER(InitRange)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

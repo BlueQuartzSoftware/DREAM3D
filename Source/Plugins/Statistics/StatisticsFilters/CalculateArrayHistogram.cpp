@@ -38,7 +38,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -89,22 +88,22 @@ CalculateArrayHistogram::~CalculateArrayHistogram()
 void CalculateArrayHistogram::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Number of Bins", "NumberOfBins", getNumberOfBins(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Number of Bins", "NumberOfBins", getNumberOfBins(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NumberOfBins), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NumberOfBins)));
   QStringList linkedProps;
   linkedProps << "MinRange" << "MaxRange";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Min Value", "MinRange", getMinRange(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Max Value", "MaxRange", getMaxRange(), FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, UserDefinedRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, UserDefinedRange)));
+  parameters.push_back(DoubleFilterParameter::New("Min Value", "MinRange", getMinRange(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, MinRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, MinRange)));
+  parameters.push_back(DoubleFilterParameter::New("Max Value", "MaxRange", getMaxRange(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, MaxRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, MaxRange)));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataContainer), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataContainer)));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Histogram", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Histogram", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, SelectedArrayPath), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, SelectedArrayPath)));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container ", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Attribute Matrix", "NewAttributeMatrixName", getNewAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Histogram", "NewDataArrayName", getNewDataArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container ", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataContainerName), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataContainerName)));
+  parameters.push_back(StringFilterParameter::New("Attribute Matrix", "NewAttributeMatrixName", getNewAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewAttributeMatrixName), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Histogram", "NewDataArrayName", getNewDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataArrayName), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataArrayName)));
   setFilterParameters(parameters);
 }
 
@@ -127,19 +126,21 @@ void CalculateArrayHistogram::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CalculateArrayHistogram::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+void CalculateArrayHistogram::readFilterParameters(QJsonObject &obj)
 {
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NumberOfBins)
-  SIMPL_FILTER_WRITE_PARAMETER(Normalize)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(NewAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainer)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
+  AbstractFilter::readFilterParameters(obj);
+  setNormalize(static_cast<bool>(obj["Normalize"].toInt()));
+}
+
+// FP: Check why these values are not connected to a filter parameter!
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::writeFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::writeFilterParameters(obj);
+  obj["Normalize"] = static_cast<int>(getNormalize());
 }
 
 // -----------------------------------------------------------------------------

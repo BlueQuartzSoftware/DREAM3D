@@ -84,21 +84,6 @@ void GenerateNodeTriangleConnectivity::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GenerateNodeTriangleConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*      SIMPL_FILTER_WRITE_PARAMETER(TriangleId)
-      SIMPL_FILTER_WRITE_PARAMETER(RegionId)*/
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::initialize()
 {
 
