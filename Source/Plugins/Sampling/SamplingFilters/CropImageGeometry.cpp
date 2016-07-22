@@ -479,7 +479,7 @@ void CropImageGeometry::execute()
     {
       setErrorCondition(-601);
       QString ss = QObject::tr("The FeatureIds array with name '%1' was not found in the destination DataContainer. The expected path was '%2'")
-                   .arg(dap.getDataArrayName()).arg(dap.serializeDataArrayPath("/"));
+                   .arg(dap.getDataArrayName()).arg(dap.serialize("/"));
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
@@ -495,7 +495,7 @@ void CropImageGeometry::execute()
       else
       {
         setErrorCondition(-601);
-        QString ss = QObject::tr("The total number of Features from %1 is %2, but a value of %3 was found in DataArray %4.").arg(cellFeatureAttrMat->getName()).arg(totalFeatures).arg(currentFeatureId).arg(getFeatureIdsArrayPath().serializeDataArrayPath("/"));
+        QString ss = QObject::tr("The total number of Features from %1 is %2, but a value of %3 was found in DataArray %4.").arg(cellFeatureAttrMat->getName()).arg(totalFeatures).arg(currentFeatureId).arg(getFeatureIdsArrayPath().serialize("/"));
         qDebug() << ss;
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;

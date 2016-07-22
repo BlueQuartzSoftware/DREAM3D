@@ -239,7 +239,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   {
     if (TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))
     {
-      QString ss = QObject::tr("Selected array cannot be of type bool.  The path is %1").arg(getSelectedArrayPath().serializeDataArrayPath());
+      QString ss = QObject::tr("Selected array cannot be of type bool.  The path is %1").arg(getSelectedArrayPath().serialize());
       setErrorCondition(-11001);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }

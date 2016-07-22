@@ -221,7 +221,7 @@ void MultiThresholdObjects::execute()
     if (err < 0)
     {
       DataArrayPath tempPath(comp_0.dataContainerName, comp_0.attributeMatrixName, comp_0.attributeArrayName);
-      QString ss = QObject::tr("Error Executing threshold filter on first array. The path is %1").arg(tempPath.serializeDataArrayPath());
+      QString ss = QObject::tr("Error Executing threshold filter on first array. The path is %1").arg(tempPath.serialize());
       setErrorCondition(-13001);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -250,7 +250,7 @@ void MultiThresholdObjects::execute()
       if (err < 0)
       {
         DataArrayPath tempPath(compRef.dataContainerName, compRef.attributeMatrixName, compRef.attributeArrayName);
-        QString ss = QObject::tr("Error Executing threshold filter on array. The path is %1").arg(tempPath.serializeDataArrayPath());
+        QString ss = QObject::tr("Error Executing threshold filter on array. The path is %1").arg(tempPath.serialize());
         setErrorCondition(-13002);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
