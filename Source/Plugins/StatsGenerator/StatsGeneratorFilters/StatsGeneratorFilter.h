@@ -48,7 +48,7 @@ class StatsGeneratorFilter : public AbstractFilter
   public:
     SIMPL_SHARED_POINTERS(StatsGeneratorFilter)
     SIMPL_STATIC_NEW_MACRO(StatsGeneratorFilter)
-    SIMPL_TYPE_MACRO_SUPER(StatsGeneratorFilter, AbstractFilter)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(StatsGeneratorFilter, AbstractFilter)
 
     virtual ~StatsGeneratorFilter();
 
