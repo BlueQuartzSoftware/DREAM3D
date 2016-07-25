@@ -133,6 +133,54 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
   reader->closeFilterGroup();
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::readFilterParameters(QJsonObject &obj)
+{
+
+  // Clear the array as we are going to populate the entire array with new objects
+  if (nullptr != m_StatsDataArray) {
+    m_StatsDataArray = StatsDataArray::NullPointer();
+  }
+
+  m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET");
+
+  m_StatsDataArray->readFromJson(obj);
+  size_t numTuples = m_StatsDataArray->getNumberOfTuples();
+  readArray(obj, numTuples);
+
+  QVector<FilterParameter::Pointer> filterParameters = getFilterParameters();
+  for (int i=0; i<filterParameters.size(); i++)
+  {
+    FilterParameter::Pointer fp = filterParameters[i];
+    fp->readJson(obj);
+  }
+
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::writeFilterParameters(QJsonObject &obj)
+{
+  QVector<FilterParameter::Pointer> filterParameters = getFilterParameters();
+  for (int i=0; i<filterParameters.size(); i++)
+  {
+    FilterParameter::Pointer fp = filterParameters[i];
+    fp->writeJson(obj);
+  }
+
+  if(nullptr != m_StatsDataArray.get())
+  {
+    m_StatsDataArray->writeToJson(obj, m_CrystalStructures);
+  }
+
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

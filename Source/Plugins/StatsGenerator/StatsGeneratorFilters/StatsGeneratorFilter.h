@@ -79,61 +79,73 @@ class StatsGeneratorFilter : public AbstractFilter
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getCompiledLibraryName();
+    virtual const QString getCompiledLibraryName() override;
 
     /**
      * @brief getBrandingString Returns the branding string for the filter, which is a tag
      * used to denote the filter's association with specific plugins
      * @return Branding string
     */
-    virtual const QString getBrandingString();
+    virtual const QString getBrandingString() override;
 
     /**
      * @brief getFilterVersion Returns a version string for this filter. Default
      * value is an empty string.
      * @return
      */
-    virtual const QString getFilterVersion();
+    virtual const QString getFilterVersion() override;
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
     /**
      * @brief getGroupName Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getGroupName();
+    virtual const QString getGroupName() override;
 
     /**
      * @brief getSubGroupName Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getSubGroupName();
+    virtual const QString getSubGroupName() override;
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() override;
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters();
+    virtual void setupFilterParameters() override;
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+
+    /**
+     * @brief readFilterParameters
+     * @param obj
+     */
+    virtual void readFilterParameters(QJsonObject &obj) override;
+
+    /**
+    * @brief writeFilterParametersToJson Writes the filter parameters to a file
+    * @param root The root json object
+    */
+    virtual void writeFilterParameters(QJsonObject &obj) override;
 
     /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
-    virtual void execute();
+    virtual void execute() override;
 
     /**
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
-    virtual void preflight();
+    virtual void preflight() override;
 
   signals:
     /**
