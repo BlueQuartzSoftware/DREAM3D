@@ -37,7 +37,10 @@
 #ifndef _asciiwizarddata_h_
 #define _asciiwizarddata_h_
 
+#include <QtCore/QVector>
 #include <QtCore/QStringList>
+#include <QtCore/QMetaType>
+
 
 class ASCIIWizardData
 {
