@@ -395,11 +395,13 @@ void ImportASCIIDataWidget::on_removeFileBtn_pressed()
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
+  ASCIIWizardData data;
+  int numOfLines = -1;
+
   if (NULL != m_ImportWizard)
   {
-    int numOfLines = m_LineCounter->getNumberOfLines();
+    numOfLines = m_LineCounter->getNumberOfLines();
 
-    ASCIIWizardData data;
     data.consecutiveDelimiters = m_ImportWizard->getConsecutiveDelimiters();
     data.delimiters = m_ImportWizard->getDelimiters();
     data.inputFilePath = m_ImportWizard->getInputFilePath();
@@ -408,14 +410,15 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     data.numberOfLines = numOfLines;
     data.dataTypes = m_ImportWizard->getDataTypes();
     data.tupleDims = m_ImportWizard->getTupleDims();
+  }
 
-    QVariant v;
-    v.setValue(data);
-    bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-    if (false == ok)
-    {
-      //FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
-    }
+  // Now set the value into the filter.
+  QVariant v;
+  v.setValue(data);
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  if (false == ok)
+  {
+    //FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 }
 
