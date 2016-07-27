@@ -104,8 +104,16 @@ void ImportASCIIDataWidget::setupGui()
   // If the filter was loaded from a pipeline file, fill in the information in the widget
   if (m_Filter->getWizardData().isEmpty() == false)
   {
+
+    ASCIIWizardData wizardData = m_Filter->getWizardData();
+    m_ImportWizard = new ImportASCIIDataWizard(&wizardData, this);
+
     int beginIndex = m_Filter->getWizardData().beginIndex;
     int numOfDataLines = m_Filter->getWizardData().numberOfLines - beginIndex + 1;
+
+    m_LineCounter = new LineCounterObject(m_FilePath, m_Filter->getWizardData().numberOfLines);
+
+
     QVector<size_t> tupleDimsArray = m_Filter->getWizardData().tupleDims;
 
     if (tupleDimsArray.size() > 0)

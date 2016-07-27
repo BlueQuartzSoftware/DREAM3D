@@ -11,13 +11,11 @@ This **Filter** reads ASCII data from any text-based file and imports the data i
 
 ### Separating the Data ###
 
-After clicking the **Import Data...** button and selecting a file, a wizard appears.  The user can choose whether their data is **Delimited** or **Fixed Width**:
+After clicking the **Import Data...** button and selecting a file, a wizard appears. The user can choose how the data is delimited: comma (,), tab, semicolon (;) or space ( ). The user may also elect to treat consecutive delimiters as one delimiter.
 
 ![Selecting how the data is separated](Import_ASCII_1.png)
 
 ### Selecting the Delimiter ###
-
-If the user chose **Delimited**, the next screen allows the user to pick delimiters.  The options are **Tab**, **Semicolon**, **Comma**, and **Space**.  The user may also elect to treat consecutive delimiters as one delimiter.
 
 ![Selecting the delimiting character(s)](Import_ASCII_2.png)
 

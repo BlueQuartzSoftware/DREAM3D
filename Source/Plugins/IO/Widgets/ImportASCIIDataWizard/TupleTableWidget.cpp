@@ -111,6 +111,22 @@ void TupleTableWidget::addTupleDimensions(QVector<size_t> tupleDims)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TupleTableWidget::clearTupleDimensions()
+{
+
+  while(tupleTable->columnCount() > 0)
+  {
+    tupleTable->removeColumn(0);
+    if (tupleTable->columnCount() == 0)
+    {
+      tupleTable->removeRow(0);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TupleTableWidget::addColumn(int value)
 {
   int col = tupleTable->columnCount();

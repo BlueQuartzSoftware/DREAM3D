@@ -146,6 +146,7 @@ void ImportASCIIData::readFilterParameters(QJsonObject &obj)
     {
       tupleDims.push_back(static_cast<size_t>(jsonArray[i].toInt()));
     }
+
     m_WizardData.tupleDims = tupleDims;
   }
 }
@@ -252,14 +253,18 @@ void ImportASCIIData::dataCheck()
   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixPath);
   if (NULL == am.get())
   {
-    QString ss = "The attribute matrix input is empty.  Please select an attribute matrix.";
+    QString ss = "The attribute matrix input is empty. Please select an attribute matrix.";
     setErrorCondition(EMPTY_ATTR_MATRIX);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   else if (am->getTupleDimensions() != tDims)
   {
+
     QString ss = "The attribute matrix '" + m_AttributeMatrixPath.getAttributeMatrixName() + "' does not have the same tuple dimensions as the data in the file '" + fi.fileName() + "'.";
+    QTextStream out(&ss);
+    out << m_AttributeMatrixPath.getAttributeMatrixName() << " tuple dims: " << am->getTupleDimensions().at(0) << "\n";
+    out << fi.fileName() << "tuple dims: " << tDims[0] << "\n";
     setErrorCondition(INCONSISTENT_TUPLES);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -472,7 +477,11 @@ void ImportASCIIData::execute()
 
       if (dataTypes.size() != tokens.size())
       {
-        QString ss = "Line " + QString::number(lineNum) + " has an inconsistent number of columns.";
+        QString ss = "Line " + QString::number(lineNum) + " has an inconsistent number of columns.\n";
+        QTextStream out(&ss);
+        out << "Expecting " << dataTypes.size() << " but found " << tokens.size() << "\n";
+        out << "Input line was:\n";
+        out << line;
         setErrorCondition(INCONSISTENT_COLS);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
