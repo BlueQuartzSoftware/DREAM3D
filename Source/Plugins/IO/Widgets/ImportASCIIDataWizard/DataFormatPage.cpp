@@ -155,6 +155,9 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
 
   wizard()->button(QWizard::FinishButton)->setEnabled(true);
 
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clear();
+
   tupleCountLabel->setText(QString::number(m_NumLines - value + 1));
 
   bool tabAsDelimiter = field("tabAsDelimiter").toBool();
