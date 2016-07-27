@@ -265,7 +265,7 @@ int32_t DxWriter::writeFile()
   }
 
   int64_t index = 0;
-  for (int64_t z = 0; z < dims[2]; ++z)
+  for (int64_t x = 0; x < dims[0]; ++x)
   {
     // Add a leading surface Row for this plane if needed
     if (m_AddSurfaceLayer)
@@ -284,8 +284,9 @@ int32_t DxWriter::writeFile()
         out << "-5 ";
       }
       // Write the actual voxel data
-      for (int64_t x = 0; x < dims[0]; ++x)
+      for (int64_t z = 0; z < dims[2]; ++z)
       {
+        index = (z * dims[0] * dims[1]) + (dims[0] * y) + x;
         if (m_FeatureIds[index] == 0)
         {
           out << "0" << " ";
@@ -294,7 +295,6 @@ int32_t DxWriter::writeFile()
         {
           out << m_FeatureIds[index] << " ";
         }
-        ++index;
       }
       // write trailing surface voxel for this row
       if (m_AddSurfaceLayer)

@@ -451,34 +451,58 @@ int32_t DxReader::readFile()
   bool ok = false;
   QByteArray buf = m_InStream.readLine();
 
+  size_t xIdx = 0, yIdx = 0, zIdx = 0;
+  size_t count = 0;
+
   while (buf.size() > 0 && m_InStream.atEnd() == false)
   {
     // Get the remaining lines of the header and ignore
     buf = buf.simplified();
     QList<QByteArray> tokens = buf.split(' ');
 
-    int64_t total = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-    if (index == total || ( finished_header && tokens.size() != 0 && tokens[0] == "attribute"))
+    size_t total = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
+    if (count == total || (finished_header && tokens.size() != 0 && tokens[0] == "attribute"))
     {
       finished_data = true;
     }
 
-    // Allocate the DataArray at this point:
     if (finished_header && !finished_data)
     {
       qint32 size = tokens.size();
       for (qint32 in_spins = 0; in_spins < size; in_spins++)
       {
         int32_t fId = tokens[in_spins].toInt(&ok, 10);
+        count++;
+        index = (zIdx * tDims[0] * tDims[1]) + (tDims[0] * yIdx) + xIdx;
+
         m_FeatureIds[index] = fId;
-        ++index;
+
+        zIdx++; // Increment zIdx and then check all the indices and wrap back to zero if needed.
+
+        if(zIdx == tDims[2])
+        {
+          zIdx = 0;
+          yIdx++;
+        }
+
+        if(yIdx == tDims[1])
+        {
+          yIdx = 0;
+          xIdx++;
+        }
+
+        if(xIdx == tDims[0])
+        {
+          xIdx = 0;
+          Q_ASSERT(count == total);
+        }
       }
 
     }
     buf = m_InStream.readLine();
   }
 
-  if (index != static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements()))
+  if (count != static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements()))
   {
     QString ss = QObject::tr("Data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
     setErrorCondition(-495);
@@ -488,18 +512,6 @@ int32_t DxReader::readFile()
   }
 
   m_InStream.close();
-
-
-  // Find the unique set of feature ids
-  //  QSet<int32_t> featureIdSet;
-  //  for (int64_t i = 0; i < totalPoints; ++i)
-  //  {
-  //    featureIdSet.insert(m_FeatureIds[i]);
-  //  }
-  //  for (QSet<int32_t>::iterator iter = featureIdSet.begin(); iter != featureIdSet.end(); ++iter )
-  //  {
-  //    qDebug() << "Feature ID: " << (*iter) ;
-  //  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
