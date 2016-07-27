@@ -71,6 +71,7 @@ class TupleTableWidget : public QWidget, private Ui::TupleTableWidget
     QVector<size_t> getData();
 
     void addTupleDimensions(QVector<size_t> tupleDims);
+    void clearTupleDimensions();
 
   public slots:
     void on_addTupleBtn_pressed();

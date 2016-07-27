@@ -51,6 +51,7 @@ struct ImportASCIIDataBundle
 Q_DECLARE_METATYPE(ImportASCIIDataBundle)
 
 class ASCIIDataModel;
+class ASCIIWizardData;
 
 class ImportASCIIDataWizard : public QWizard
 {
@@ -70,6 +71,12 @@ class ImportASCIIDataWizard : public QWizard
     * @param parent The parent QWidget for this Widget
     */
     ImportASCIIDataWizard(const QString &inputFilePath, int numLines, QWidget* parent = NULL);
+
+    /**
+     * @brief ImportASCIIDataWizard
+     * @param wizardData
+     */
+    ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidget* parent = NULL);
 
     virtual ~ImportASCIIDataWizard();
 

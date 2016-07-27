@@ -68,7 +68,7 @@ void DelimitedPage::setupGui()
   refreshModel();
 
   dataView->setModel(model);
-  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  //dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   registerField("tabAsDelimiter", tabCheckBox);
   registerField("semicolonAsDelimiter", semicolonCheckBox);

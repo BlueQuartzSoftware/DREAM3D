@@ -37,7 +37,11 @@
 #ifndef _asciiwizarddata_h_
 #define _asciiwizarddata_h_
 
+#include <QtCore/QDebug>
+#include <QtCore/QVector>
 #include <QtCore/QStringList>
+#include <QtCore/QMetaType>
+
 
 class ASCIIWizardData
 {
@@ -66,6 +70,19 @@ public:
       return true;
     }
     return false;
+  }
+
+  void debug()
+  {
+      qDebug() << "inputFilePath: " << inputFilePath;
+      qDebug() << "dataHeaders: " << dataHeaders;
+      qDebug() << "beginIndex: " << beginIndex;
+      qDebug() << "numberOfLines: " << numberOfLines;
+      qDebug() << "dataTypes:" << dataTypes;
+      qDebug() << "delimiters: " << delimiters;
+      qDebug() << "consecutiveDelimiters: " << consecutiveDelimiters;
+      qDebug() << "tupleDims:" << tupleDims;
+
   }
 };
 
