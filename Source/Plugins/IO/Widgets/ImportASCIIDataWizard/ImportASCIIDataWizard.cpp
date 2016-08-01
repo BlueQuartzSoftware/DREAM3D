@@ -40,6 +40,7 @@
 #include "DelimitedPage.h"
 #include "DataFormatPage.h"
 #include "ASCIIDataModel.h"
+#include "ASCIIWizardData.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -64,6 +65,87 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, int n
 
   DataFormatPage* dfPage = new DataFormatPage(inputFilePath, numLines, this);
   setPage(DataFormat, dfPage);
+
+#ifndef Q_OS_MAC
+  setWizardStyle(ModernStyle);
+#else
+  setWizardStyle(MacStyle);
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidget* parent) :
+QWizard(parent)
+{
+  setWindowTitle("ASCII Data Import Wizard");
+  setOptions(QWizard::NoBackButtonOnStartPage /*| QWizard::HaveHelpButton */);
+  setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+  resize(721, 683);
+
+  // This adds the refresh button that refreshes the preview table.  We may use this on a future release.
+  //m_RefreshBtn = new QPushButton("Refresh", this);
+  //connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
+  //setButton(QWizard::HelpButton, m_RefreshBtn);
+
+  DelimitedPage* dPage = new DelimitedPage(m_InputFilePath, m_NumLines, this);
+  setPage(Delimited, dPage);
+
+  DataFormatPage* dfPage = new DataFormatPage(m_InputFilePath, m_NumLines, this);
+  setPage(DataFormat, dfPage);
+  dfPage->getTupleTable()->clearTupleDimensions();
+  dfPage->getTupleTable()->addTupleDimensions(wizardData->tupleDims);
+
+
+  setField("consecutiveDelimiters", wizardData->consecutiveDelimiters);
+
+  setField("tabAsDelimiter", false);
+  setField("semicolonAsDelimiter", false);
+  setField("commaAsDelimiter", false);
+  setField("spaceAsDelimiter", false);
+
+
+  if(wizardData->delimiters.contains('\t'))
+  {
+    setField("tabAsDelimiter", true);
+  }
+  if(wizardData->delimiters.contains(';'))
+  {
+     setField("semicolonAsDelimiter", true);
+  }
+  if(wizardData->delimiters.contains(','))
+  {
+    setField("commaAsDelimiter", true);
+  }
+  if(wizardData->delimiters.contains(' '))
+  {
+    setField("spaceAsDelimiter", true);
+  }
+
+  m_InputFilePath = wizardData->inputFilePath;
+
+  QStringList dataHeaders = wizardData->dataHeaders;
+
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  if(model->columnCount() < dataHeaders.size())
+  {
+    model->clearContents();
+    model->insertColumns(0, dataHeaders.size());
+  }
+  for(int col = 0; col < dataHeaders.size(); col++)
+  {
+    model->setHeaderData(col, Qt::Horizontal, dataHeaders.at(col), Qt::DisplayRole);
+  }
+
+  setField("startRow", wizardData->beginIndex);
+  m_NumLines = wizardData->numberOfLines;
+
+  QStringList dataTypes = wizardData->dataTypes;
+  for(int i = 0; i < dataTypes.size(); i++)
+  {
+    model->setColumnDataType(i, dataTypes.at(i));
+  }
 
 #ifndef Q_OS_MAC
   setWizardStyle(ModernStyle);

@@ -72,7 +72,7 @@ void DataFormatPage::setupGui()
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   dataView->setModel(model);
-  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+//  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
   connect(tupleDimsTable, SIGNAL(tupleDimsChanged(QVector<size_t>)), this, SLOT(checkTupleDimensions(QVector<size_t>)));
@@ -154,6 +154,9 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   }
 
   wizard()->button(QWizard::FinishButton)->setEnabled(true);
+
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clear();
 
   tupleCountLabel->setText(QString::number(m_NumLines - value + 1));
 

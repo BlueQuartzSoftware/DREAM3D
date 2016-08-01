@@ -42,29 +42,44 @@
 
 class LineCounterObject : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  LineCounterObject(const QString &filePath, QObject *parent = NULL);
+  public:
 
-  virtual ~LineCounterObject();
+    /**
+   * @brief LineCounterObject
+   * @param filePath
+   * @param parent
+   */
+    LineCounterObject(const QString &filePath, QObject *parent = NULL);
 
-  int getNumberOfLines();
+    /**
+   * @brief LineCounterObject
+   * @param filePath
+   * @param numLines
+   * @param parent
+   */
+    LineCounterObject(const QString &filePath, int numLines, QObject *parent = NULL);
 
-protected slots:
-  void run();
+    virtual ~LineCounterObject();
 
-signals:
-  void finished();
-  void progressUpdateGenerated(double percentage);
 
-private:
-  QString                                               m_FilePath;
+    int getNumberOfLines();
 
-  int                                                   m_NumOfLines;
+  protected slots:
+    void run();
 
-  LineCounterObject(const LineCounterObject&); // Copy Constructor Not Implemented
-  void operator=(const LineCounterObject&); // Operator '=' Not Implemented
+  signals:
+    void finished();
+    void progressUpdateGenerated(double percentage);
+
+  private:
+    QString                                               m_FilePath;
+
+    int                                                   m_NumOfLines;
+
+    LineCounterObject(const LineCounterObject&); // Copy Constructor Not Implemented
+    void operator=(const LineCounterObject&); // Operator '=' Not Implemented
 };
 
 #endif /* _linecounterobject_h_ */

@@ -2,10 +2,12 @@ Read Dx File (Feature Ids) {#dxreader}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Input)
 
 ## Description ##
-This **Filter** reads from a Dx file. This is a file in a format generated using the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
+
+This **Filter** reads from a Dx file. This is a file in a format generated using the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. **Note that the data is read according to the OpenDX specifications where the Z dimension is moving the fastest, then Y, then X.**
 
 ## Example Input##
 

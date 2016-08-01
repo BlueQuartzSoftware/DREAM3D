@@ -53,6 +53,17 @@ LineCounterObject::LineCounterObject(const QString &filePath, QObject* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+LineCounterObject::LineCounterObject(const QString &filePath, int numLines, QObject* parent) :
+  QObject(parent),
+  m_FilePath(filePath),
+  m_NumOfLines(numLines)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 LineCounterObject::~LineCounterObject()
 {
 
