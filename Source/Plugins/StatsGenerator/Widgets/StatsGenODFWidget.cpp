@@ -655,7 +655,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 
   if (fi.suffix().compare(Ebsd::Ang::FileExt) == 0)
   {
-    QMessageBox::critical(this, "ANG File Loading not Supported",
+    QMessageBox::critical(this, "ANG File Loading NOT Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
     emit bulkLoadEvent(true);
     return;

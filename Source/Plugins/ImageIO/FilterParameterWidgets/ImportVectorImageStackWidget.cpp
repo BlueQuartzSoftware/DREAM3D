@@ -559,33 +559,6 @@ void ImportVectorImageStackWidget::findMaxSliceAndPrefix()
 {
   if (m_InputDir->text().length() == 0) { return; }
   QDir dir(m_InputDir->text());
-#if 0
-  m_FileExt->setText("");
-  {
-    QString ext = ".ang";
-    QStringList filters;
-    filters << "*" + ext;
-    dir.setNameFilters(filters);
-    QFileInfoList angList = dir.entryInfoList();
-    if (angList.size() != 0)
-    {
-      m_FileExt->setText("ang");
-    }
-  }
-  if (m_FileExt->text().isEmpty() == true)
-  {
-    QString ext = ".ctf";
-    QStringList filters;
-    filters << "*" + ext;
-    dir.setNameFilters(filters);
-    QFileInfoList angList = dir.entryInfoList();
-    if (angList.size() != 0)
-    {
-      m_FileExt->setText("ctf");
-    }
-  }
-  // Add in more file formats to look for here
-#endif
 
   // Final check to make sure we have a valid file extension
   if (m_FileExt->text().isEmpty() == true)

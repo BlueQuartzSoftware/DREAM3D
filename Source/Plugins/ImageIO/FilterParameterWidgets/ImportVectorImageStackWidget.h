@@ -155,7 +155,7 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
     void setWidgetListEnabled(bool v);
 
     /**
-     * @brief Method to attempt the extraction of the .ang max slice value and prefix
+     * @brief Method to attempt the extraction of the file max slice value and prefix
      */
     void findMaxSliceAndPrefix();
 
