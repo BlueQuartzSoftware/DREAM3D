@@ -107,7 +107,7 @@ void EstablishMatrixPhase::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "OutputCellAttributeMatrixPath", getOutputCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, OutputCellAttributeMatrixPath), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, OutputCellAttributeMatrixPath)));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "OutputCellAttributeMatrixPath", getOutputCellAttributeMatrixPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, OutputCellAttributeMatrixPath), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, OutputCellAttributeMatrixPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, FeatureIdsArrayName)));

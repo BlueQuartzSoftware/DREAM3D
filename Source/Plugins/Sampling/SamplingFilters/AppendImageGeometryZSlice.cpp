@@ -76,11 +76,11 @@ void AppendImageGeometryZSlice::setupFilterParameters()
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input Cell Data", "InputAttributeMatrix", getInputAttributeMatrix(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, InputAttributeMatrix), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, InputAttributeMatrix)));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input Cell Data", "InputAttributeMatrix", getInputAttributeMatrix(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, InputAttributeMatrix), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, InputAttributeMatrix), req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Destination Cell Data", "DestinationAttributeMatrix", getDestinationAttributeMatrix(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, DestinationAttributeMatrix), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, DestinationAttributeMatrix)));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Destination Cell Data", "DestinationAttributeMatrix", getDestinationAttributeMatrix(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, DestinationAttributeMatrix), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, DestinationAttributeMatrix), req));
   }
 
   parameters.push_back(BooleanFilterParameter::New("Check Resolution", "CheckResolution", getCheckResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, CheckResolution), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, CheckResolution)));

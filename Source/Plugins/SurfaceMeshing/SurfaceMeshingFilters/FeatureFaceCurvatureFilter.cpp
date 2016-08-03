@@ -121,7 +121,7 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixPath", getFaceAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, FaceAttributeMatrixPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, FaceAttributeMatrixPath)));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixPath", getFaceAttributeMatrixPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, FaceAttributeMatrixPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, FaceAttributeMatrixPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);

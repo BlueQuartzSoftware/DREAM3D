@@ -87,7 +87,7 @@ void FindMicroTextureRegions::setupFilterParameters()
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::UnknownGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, CellFeatureAttributeMatrixName)));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, CellFeatureAttributeMatrixName), req));
   }
 
   parameters.push_back(StringFilterParameter::New("MicroTextureRegionNumCells", "MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, MicroTextureRegionNumCellsArrayName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, MicroTextureRegionNumCellsArrayName)));

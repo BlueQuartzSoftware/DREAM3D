@@ -83,7 +83,7 @@ void FeatureDataCSVWriter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, CellFeatureAttributeMatrixPath)));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, CellFeatureAttributeMatrixPath), req));
   }
   setFilterParameters(parameters);
 }
