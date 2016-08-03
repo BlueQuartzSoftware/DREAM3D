@@ -86,7 +86,7 @@ void MinNeighbors::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", getMinNumNeighbors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, MinNumNeighbors), SIMPL_BIND_GETTER(MinNeighbors, this, MinNumNeighbors)));
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, ApplyToSinglePhase), SIMPL_BIND_GETTER(MinNeighbors, this, ApplyToSinglePhase)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, ApplyToSinglePhase), SIMPL_BIND_GETTER(MinNeighbors, this, ApplyToSinglePhase), linkedProps));
   parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, PhaseNumber), SIMPL_BIND_GETTER(MinNeighbors, this, PhaseNumber)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

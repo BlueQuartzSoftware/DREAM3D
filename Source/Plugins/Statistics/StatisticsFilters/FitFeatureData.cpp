@@ -104,7 +104,7 @@ void FitFeatureData::setupFilterParameters()
     parameters.push_back(parameter);
   }
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FitFeatureData, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FitFeatureData, this, RemoveBiasedFeatures)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FitFeatureData, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FitFeatureData, this, RemoveBiasedFeatures), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Feature);

@@ -113,7 +113,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
   FilterParameterVector parameters;
   QStringList linkedProps("EstimatedPrimaryFeatures");
   linkedProps << "InputStatsFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Estimate Number of Features", "EstimateNumberOfFeatures", getEstimateNumberOfFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, EstimateNumberOfFeatures), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, EstimateNumberOfFeatures)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Estimate Number of Features", "EstimateNumberOfFeatures", getEstimateNumberOfFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, EstimateNumberOfFeatures), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, EstimateNumberOfFeatures), linkedProps));
   parameters.push_back(InputFileFilterParameter::New("Input Statistics File", "InputStatsFile", getInputStatsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, InputStatsFile), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, InputStatsFile), "*.dream3d"));
   PreflightUpdatedValueFilterParameter::Pointer param = PreflightUpdatedValueFilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", getEstimatedPrimaryFeatures(), FilterParameter::Parameter, SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, EstimatedPrimaryFeatures));
   param->setReadOnly(true);

@@ -86,7 +86,7 @@ void MinSize::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", getMinAllowedFeatureSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, MinAllowedFeatureSize), SIMPL_BIND_GETTER(MinSize, this, MinAllowedFeatureSize)));
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, ApplyToSinglePhase), SIMPL_BIND_GETTER(MinSize, this, ApplyToSinglePhase)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, ApplyToSinglePhase), SIMPL_BIND_GETTER(MinSize, this, ApplyToSinglePhase), linkedProps));
   parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, PhaseNumber), SIMPL_BIND_GETTER(MinSize, this, PhaseNumber)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

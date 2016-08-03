@@ -134,7 +134,7 @@ void WarpRegularGrid::setupFilterParameters()
   parameters.push_back(FourthOrderPolynomialFilterParameter::New("Fourth Order B Coefficients", "FourthOrderBCoeff", getFourthOrderBCoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, FourthOrderBCoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, FourthOrderBCoeff), 2));
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, SaveAsNewDataContainer), SIMPL_BIND_GETTER(WarpRegularGrid, this, SaveAsNewDataContainer)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, SaveAsNewDataContainer), SIMPL_BIND_GETTER(WarpRegularGrid, this, SaveAsNewDataContainer), linkedProps));
   parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(WarpRegularGrid, this, NewDataContainerName), SIMPL_BIND_GETTER(WarpRegularGrid, this, NewDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

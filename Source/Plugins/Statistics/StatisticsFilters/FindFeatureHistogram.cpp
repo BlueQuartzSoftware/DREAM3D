@@ -94,7 +94,7 @@ void FindFeatureHistogram::setupFilterParameters()
     parameters.push_back(parameter);
   }
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureHistogram, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FindFeatureHistogram, this, RemoveBiasedFeatures)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureHistogram, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FindFeatureHistogram, this, RemoveBiasedFeatures), linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Bin", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindFeatureHistogram, this, SelectedFeatureArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, SelectedFeatureArrayPath), req));

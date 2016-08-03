@@ -96,7 +96,7 @@ void LaplacianSmoothing::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "MuFactor";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Taubin Smoothing", "UseTaubinSmoothing", getUseTaubinSmoothing(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, UseTaubinSmoothing), SIMPL_BIND_GETTER(LaplacianSmoothing, this, UseTaubinSmoothing)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Taubin Smoothing", "UseTaubinSmoothing", getUseTaubinSmoothing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, UseTaubinSmoothing), SIMPL_BIND_GETTER(LaplacianSmoothing, this, UseTaubinSmoothing), linkedProps));
   parameters.push_back(DoubleFilterParameter::New("Mu Factor", "MuFactor", getMuFactor(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, MuFactor), SIMPL_BIND_GETTER(LaplacianSmoothing, this, MuFactor)));
   parameters.push_back(DoubleFilterParameter::New("Triple Line Lambda", "TripleLineLambda", getTripleLineLambda(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, TripleLineLambda), SIMPL_BIND_GETTER(LaplacianSmoothing, this, TripleLineLambda)));
   parameters.push_back(DoubleFilterParameter::New("Quadruple Points Lambda", "QuadPointLambda", getQuadPointLambda(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, QuadPointLambda), SIMPL_BIND_GETTER(LaplacianSmoothing, this, QuadPointLambda)));

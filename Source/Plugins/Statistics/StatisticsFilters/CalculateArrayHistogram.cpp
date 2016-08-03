@@ -91,12 +91,12 @@ void CalculateArrayHistogram::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Number of Bins", "NumberOfBins", getNumberOfBins(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NumberOfBins), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NumberOfBins)));
   QStringList linkedProps;
   linkedProps << "MinRange" << "MaxRange";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, UserDefinedRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, UserDefinedRange)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, UserDefinedRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, UserDefinedRange), linkedProps));
   parameters.push_back(DoubleFilterParameter::New("Min Value", "MinRange", getMinRange(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, MinRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, MinRange)));
   parameters.push_back(DoubleFilterParameter::New("Max Value", "MaxRange", getMaxRange(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, MaxRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, MaxRange)));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataContainer), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataContainer)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataContainer), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataContainer), linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Histogram", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, SelectedArrayPath), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, SelectedArrayPath), req));

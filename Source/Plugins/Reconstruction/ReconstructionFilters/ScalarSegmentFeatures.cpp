@@ -191,7 +191,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
   FilterParameterVector parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(DoubleFilterParameter::New("Scalar Tolerance", "ScalarTolerance", getScalarTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ScalarTolerance), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ScalarTolerance)));
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, UseGoodVoxels)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, UseGoodVoxels), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

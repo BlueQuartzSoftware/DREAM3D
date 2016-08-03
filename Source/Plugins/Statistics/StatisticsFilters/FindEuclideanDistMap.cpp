@@ -289,16 +289,16 @@ void FindEuclideanDistMap::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(BooleanFilterParameter::New("Calculate Manhattan Distance Only", "CalcOnlyManhattanDist", getCalcOnlyManhattanDist(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, CalcOnlyManhattanDist), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, CalcOnlyManhattanDist)));
   QStringList linkedProps("GBEuclideanDistancesArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Boundaries", "DoBoundaries", getDoBoundaries(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoBoundaries), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoBoundaries)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Boundaries", "DoBoundaries", getDoBoundaries(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoBoundaries), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoBoundaries), linkedProps));
   linkedProps.clear();
   linkedProps << "TJEuclideanDistancesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Triple Lines", "DoTripleLines", getDoTripleLines(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoTripleLines), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoTripleLines)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Triple Lines", "DoTripleLines", getDoTripleLines(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoTripleLines), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoTripleLines), linkedProps));
   linkedProps.clear();
   linkedProps << "QPEuclideanDistancesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Quadruple Points", "DoQuadPoints", getDoQuadPoints(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoQuadPoints), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoQuadPoints)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Quadruple Points", "DoQuadPoints", getDoQuadPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoQuadPoints), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoQuadPoints), linkedProps));
   linkedProps.clear();
   linkedProps << "NearestNeighborsArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store the Nearest Boundary Cells", "SaveNearestNeighbors", getSaveNearestNeighbors(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, SaveNearestNeighbors), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, SaveNearestNeighbors)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store the Nearest Boundary Cells", "SaveNearestNeighbors", getSaveNearestNeighbors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, SaveNearestNeighbors), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, SaveNearestNeighbors), linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

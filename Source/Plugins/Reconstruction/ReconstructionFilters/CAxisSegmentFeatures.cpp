@@ -106,7 +106,7 @@ void CAxisSegmentFeatures::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(DoubleFilterParameter::New("C-Axis Misorientation Tolerance (Degrees)", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CAxisSegmentFeatures, this, MisorientationTolerance), SIMPL_BIND_GETTER(CAxisSegmentFeatures, this, MisorientationTolerance)));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CAxisSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(CAxisSegmentFeatures, this, UseGoodVoxels)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CAxisSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(CAxisSegmentFeatures, this, UseGoodVoxels), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

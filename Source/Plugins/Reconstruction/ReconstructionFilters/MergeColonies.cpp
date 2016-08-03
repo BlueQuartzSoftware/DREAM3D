@@ -183,7 +183,7 @@ void MergeColonies::setupFilterParameters()
   parameters.push_front(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, AxisTolerance), SIMPL_BIND_GETTER(MergeColonies, this, AxisTolerance)));
   parameters.push_front(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, AngleTolerance), SIMPL_BIND_GETTER(MergeColonies, this, AngleTolerance)));
   QStringList linkedProps("GlobAlphaArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Identify Glob Alpha", "IdentifyGlobAlpha", getIdentifyGlobAlpha(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, IdentifyGlobAlpha), SIMPL_BIND_GETTER(MergeColonies, this, IdentifyGlobAlpha)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Identify Glob Alpha", "IdentifyGlobAlpha", getIdentifyGlobAlpha(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, IdentifyGlobAlpha), SIMPL_BIND_GETTER(MergeColonies, this, IdentifyGlobAlpha), linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(MergeColonies, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, FeaturePhasesArrayPath), req));

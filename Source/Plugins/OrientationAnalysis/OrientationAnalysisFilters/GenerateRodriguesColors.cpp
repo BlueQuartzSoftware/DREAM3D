@@ -103,7 +103,7 @@ void GenerateRodriguesColors::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateRodriguesColors, this, UseGoodVoxels), SIMPL_BIND_GETTER(GenerateRodriguesColors, this, UseGoodVoxels)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateRodriguesColors, this, UseGoodVoxels), SIMPL_BIND_GETTER(GenerateRodriguesColors, this, UseGoodVoxels), linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);

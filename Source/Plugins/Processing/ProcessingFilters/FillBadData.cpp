@@ -85,7 +85,7 @@ void FillBadData::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", getMinAllowedDefectSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FillBadData, this, MinAllowedDefectSize), SIMPL_BIND_GETTER(FillBadData, this, MinAllowedDefectSize)));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects as New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FillBadData, this, StoreAsNewPhase), SIMPL_BIND_GETTER(FillBadData, this, StoreAsNewPhase)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects as New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FillBadData, this, StoreAsNewPhase), SIMPL_BIND_GETTER(FillBadData, this, StoreAsNewPhase), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

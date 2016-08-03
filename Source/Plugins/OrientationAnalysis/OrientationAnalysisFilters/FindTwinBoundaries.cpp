@@ -245,7 +245,7 @@ void FindTwinBoundaries::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundaries, this, AngleTolerance), SIMPL_BIND_GETTER(FindTwinBoundaries, this, AngleTolerance)));
   QStringList linkedProps;
   linkedProps << "SurfaceMeshFaceNormalsArrayPath" << "SurfaceMeshTwinBoundaryIncoherenceArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Coherence", "FindCoherence", getFindCoherence(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundaries, this, FindCoherence), SIMPL_BIND_GETTER(FindTwinBoundaries, this, FindCoherence)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Coherence", "FindCoherence", getFindCoherence(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundaries, this, FindCoherence), SIMPL_BIND_GETTER(FindTwinBoundaries, this, FindCoherence), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);

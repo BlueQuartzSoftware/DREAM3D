@@ -96,7 +96,7 @@ void FeatureInfoReader::setupFilterParameters()
   parameters.push_back(InputFileFilterParameter::New("Input Feature Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, InputFile), SIMPL_BIND_GETTER(FeatureInfoReader, this, InputFile), "*.txt"));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayName" << "CellEulerAnglesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Create Element Level Arrays", "CreateCellLevelArrays", getCreateCellLevelArrays(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, CreateCellLevelArrays), SIMPL_BIND_GETTER(FeatureInfoReader, this, CreateCellLevelArrays)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Create Element Level Arrays", "CreateCellLevelArrays", getCreateCellLevelArrays(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, CreateCellLevelArrays), SIMPL_BIND_GETTER(FeatureInfoReader, this, CreateCellLevelArrays), linkedProps));
   parameters.push_back(BooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, RenumberFeatures), SIMPL_BIND_GETTER(FeatureInfoReader, this, RenumberFeatures)));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {

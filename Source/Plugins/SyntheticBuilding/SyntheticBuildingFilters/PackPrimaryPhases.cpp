@@ -344,7 +344,7 @@ void PackPrimaryPhases::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(BooleanFilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", getPeriodicBoundaries(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, PeriodicBoundaries), SIMPL_BIND_GETTER(PackPrimaryPhases, this, PeriodicBoundaries)));
   QStringList linkedProps("MaskArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, UseMask), SIMPL_BIND_GETTER(PackPrimaryPhases, this, UseMask)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, UseMask), SIMPL_BIND_GETTER(PackPrimaryPhases, this, UseMask), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
@@ -394,11 +394,11 @@ void PackPrimaryPhases::setupFilterParameters()
 
   linkedProps.clear();
   linkedProps << "FeatureInputFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Features", "HaveFeatures", getHaveFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, HaveFeatures), SIMPL_BIND_GETTER(PackPrimaryPhases, this, HaveFeatures)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Features", "HaveFeatures", getHaveFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, HaveFeatures), SIMPL_BIND_GETTER(PackPrimaryPhases, this, HaveFeatures), linkedProps));
   parameters.push_back(InputFileFilterParameter::New("Feature Input File", "FeatureInputFile", getFeatureInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, FeatureInputFile), SIMPL_BIND_GETTER(PackPrimaryPhases, this, FeatureInputFile), "*.txt", "Text File"));
   linkedProps.clear();
   linkedProps << "CsvOutputFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, WriteGoalAttributes), SIMPL_BIND_GETTER(PackPrimaryPhases, this, WriteGoalAttributes)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, WriteGoalAttributes), SIMPL_BIND_GETTER(PackPrimaryPhases, this, WriteGoalAttributes), linkedProps));
   parameters.push_back(OutputFileFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", getCsvOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, CsvOutputFile), SIMPL_BIND_GETTER(PackPrimaryPhases, this, CsvOutputFile), "*.csv", "Comma Separated Data"));
 
 #if PPP_SHOW_DEBUG_OUTPUTS

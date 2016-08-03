@@ -94,7 +94,7 @@ void VectorSegmentFeatures::setupFilterParameters()
 
   parameters.push_back(DoubleFilterParameter::New("Angle Tolerance", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, AngleTolerance), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, AngleTolerance)));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, UseGoodVoxels)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, UseGoodVoxels), linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
