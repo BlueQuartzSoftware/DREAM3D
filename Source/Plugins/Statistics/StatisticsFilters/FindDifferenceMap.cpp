@@ -152,7 +152,7 @@ void FindDifferenceMap::setupFilterParameters()
   }
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Difference Map", "DifferenceMapArrayPath", getDifferenceMapArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindDifferenceMap, this, DifferenceMapArrayPath), SIMPL_BIND_GETTER(FindDifferenceMap, this, DifferenceMapArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Difference Map", "DifferenceMapArrayPath", getDifferenceMapArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindDifferenceMap, this, DifferenceMapArrayPath), SIMPL_BIND_GETTER(FindDifferenceMap, this, DifferenceMapArrayPath), req));
   }
   setFilterParameters(parameters);
 }

@@ -89,7 +89,7 @@ void FindBoundaryElementFractions::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Surface Element Fractions", "BoundaryCellFractionsArrayPath", getBoundaryCellFractionsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindBoundaryElementFractions, this, BoundaryCellFractionsArrayPath), SIMPL_BIND_GETTER(FindBoundaryElementFractions, this, BoundaryCellFractionsArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Surface Element Fractions", "BoundaryCellFractionsArrayPath", getBoundaryCellFractionsArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryElementFractions, this, BoundaryCellFractionsArrayPath), SIMPL_BIND_GETTER(FindBoundaryElementFractions, this, BoundaryCellFractionsArrayPath), req));
   }
   setFilterParameters(parameters);
 }

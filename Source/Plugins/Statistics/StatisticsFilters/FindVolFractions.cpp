@@ -84,7 +84,7 @@ void FindVolFractions::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Volume Fractions", "VolFractionsArrayPath", getVolFractionsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindVolFractions, this, VolFractionsArrayPath), SIMPL_BIND_GETTER(FindVolFractions, this, VolFractionsArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Volume Fractions", "VolFractionsArrayPath", getVolFractionsArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindVolFractions, this, VolFractionsArrayPath), SIMPL_BIND_GETTER(FindVolFractions, this, VolFractionsArrayPath), req));
   }
   setFilterParameters(parameters);
 }

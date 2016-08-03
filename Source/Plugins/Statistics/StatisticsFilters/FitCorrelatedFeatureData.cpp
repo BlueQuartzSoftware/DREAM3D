@@ -125,7 +125,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
   }
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, NewEnsembleArrayArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, NewEnsembleArrayArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, NewEnsembleArrayArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, NewEnsembleArrayArrayPath), req));
   }
 
   setFilterParameters(parameters);

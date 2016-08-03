@@ -91,7 +91,7 @@ void FindAvgScalarValueForFeatures::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Scalar Feature Averages", "NewFeatureArrayArrayPath", getNewFeatureArrayArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindAvgScalarValueForFeatures, this, NewFeatureArrayArrayPath), SIMPL_BIND_GETTER(FindAvgScalarValueForFeatures, this, NewFeatureArrayArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Scalar Feature Averages", "NewFeatureArrayArrayPath", getNewFeatureArrayArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindAvgScalarValueForFeatures, this, NewFeatureArrayArrayPath), SIMPL_BIND_GETTER(FindAvgScalarValueForFeatures, this, NewFeatureArrayArrayPath), req));
   }
   setFilterParameters(parameters);
 }

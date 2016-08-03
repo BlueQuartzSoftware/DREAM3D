@@ -299,20 +299,20 @@ void FindDistsToCharactGBs::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest Tilt Boundary", "DistToTiltArrayPath", getDistToTiltArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindDistsToCharactGBs, this, DistToTiltArrayPath), SIMPL_BIND_GETTER(FindDistsToCharactGBs, this, DistToTiltArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest Tilt Boundary", "DistToTiltArrayPath", getDistToTiltArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindDistsToCharactGBs, this, DistToTiltArrayPath), SIMPL_BIND_GETTER(FindDistsToCharactGBs, this, DistToTiltArrayPath), req));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest Twist Boundary", "DistToTwistArrayPath", getDistToTwistArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindDistsToCharactGBs, this, DistToTwistArrayPath), SIMPL_BIND_GETTER(FindDistsToCharactGBs, this, DistToTwistArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest Twist Boundary", "DistToTwistArrayPath", getDistToTwistArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindDistsToCharactGBs, this, DistToTwistArrayPath), SIMPL_BIND_GETTER(FindDistsToCharactGBs, this, DistToTwistArrayPath), req));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest Symmetric Boundary", "DistToSymmetricArrayPath", getDistToSymmetricArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindDistsToCharactGBs, this, DistToSymmetricArrayPath), SIMPL_BIND_GETTER(FindDistsToCharactGBs, this, DistToSymmetricArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest Symmetric Boundary", "DistToSymmetricArrayPath", getDistToSymmetricArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindDistsToCharactGBs, this, DistToSymmetricArrayPath), SIMPL_BIND_GETTER(FindDistsToCharactGBs, this, DistToSymmetricArrayPath), req));
   }
   {
     QString degSymbol = QChar(0x00B0);
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest 180" + degSymbol + "-tilt  Boundary", "DistTo180TiltArrayPath", getDistTo180TiltArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindDistsToCharactGBs, this, DistTo180TiltArrayPath), SIMPL_BIND_GETTER(FindDistsToCharactGBs, this, DistTo180TiltArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Distance to Nearest 180" + degSymbol + "-tilt  Boundary", "DistTo180TiltArrayPath", getDistTo180TiltArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindDistsToCharactGBs, this, DistTo180TiltArrayPath), SIMPL_BIND_GETTER(FindDistsToCharactGBs, this, DistTo180TiltArrayPath), req));
   }
   setFilterParameters(parameters);
 }

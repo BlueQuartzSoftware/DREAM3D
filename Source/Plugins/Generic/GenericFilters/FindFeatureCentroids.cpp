@@ -84,7 +84,7 @@ void FindFeatureCentroids::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindFeatureCentroids, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindFeatureCentroids, this, CentroidsArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureCentroids, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindFeatureCentroids, this, CentroidsArrayPath), req));
   }
   setFilterParameters(parameters);
 }

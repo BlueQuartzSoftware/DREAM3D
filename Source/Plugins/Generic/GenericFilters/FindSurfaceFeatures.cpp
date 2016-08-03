@@ -86,7 +86,7 @@ void FindSurfaceFeatures::setupFilterParameters()
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindSurfaceFeatures, this, SurfaceFeaturesArrayPath), SIMPL_BIND_GETTER(FindSurfaceFeatures, this, SurfaceFeaturesArrayPath)));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSurfaceFeatures, this, SurfaceFeaturesArrayPath), SIMPL_BIND_GETTER(FindSurfaceFeatures, this, SurfaceFeaturesArrayPath), req));
   }
   setFilterParameters(parameters);
 }
