@@ -89,7 +89,7 @@ void EnsembleInfoReader::setupFilterParameters()
   parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EnsembleInfoReader, this, InputFile), SIMPL_BIND_GETTER(EnsembleInfoReader, this, InputFile), "*.ini *.txt"));
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EnsembleInfoReader, this, DataContainerName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, DataContainerName)));
+    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, DataContainerName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, DataContainerName), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, CellEnsembleAttributeMatrixName)));

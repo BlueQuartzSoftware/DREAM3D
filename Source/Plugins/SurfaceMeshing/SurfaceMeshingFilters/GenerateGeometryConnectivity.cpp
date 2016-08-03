@@ -76,7 +76,7 @@ void GenerateGeometryConnectivity::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", getGenerateTriangleNeighbors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateGeometryConnectivity, this, GenerateTriangleNeighbors), SIMPL_BIND_GETTER(GenerateGeometryConnectivity, this, GenerateTriangleNeighbors)));
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateGeometryConnectivity, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(GenerateGeometryConnectivity, this, SurfaceDataContainerName)));
+    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateGeometryConnectivity, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(GenerateGeometryConnectivity, this, SurfaceDataContainerName), req));
   }
   setFilterParameters(parameters);
 }
