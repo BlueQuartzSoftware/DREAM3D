@@ -89,20 +89,20 @@ void BadDataNeighborOrientationCheck::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, QuatsArrayPath), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, QuatsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, QuatsArrayPath), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, QuatsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, GoodVoxelsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, GoodVoxelsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, CellPhasesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, CellPhasesArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, CrystalStructuresArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, CrystalStructuresArrayPath), req));
   }
   setFilterParameters(parameters);
 }

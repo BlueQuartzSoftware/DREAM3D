@@ -114,7 +114,7 @@ void EstablishMatrixPhase::setupFilterParameters()
   parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, CellPhasesArrayName), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, CellPhasesArrayName)));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, MaskArrayPath), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, MaskArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, MaskArrayPath), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, MaskArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, OutputCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, OutputCellFeatureAttributeMatrixName)));
@@ -127,7 +127,7 @@ void EstablishMatrixPhase::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, InputStatsArrayPath), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, InputStatsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, InputStatsArrayPath), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, InputStatsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
@@ -135,7 +135,7 @@ void EstablishMatrixPhase::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, InputPhaseTypesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, InputPhaseTypesArrayPath), req));
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));

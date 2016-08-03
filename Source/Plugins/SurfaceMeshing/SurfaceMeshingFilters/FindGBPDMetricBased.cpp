@@ -437,39 +437,39 @@ void FindGBPDMetricBased::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Node Types", "NodeTypesArrayPath", getNodeTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, NodeTypesArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, NodeTypesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Node Types", "NodeTypesArrayPath", getNodeTypesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, NodeTypesArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, NodeTypesArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFaceLabelsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFaceNormalsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFaceNormalsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFaceAreasArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFaceAreasArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFaceAreasArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFaceAreasArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::FaceFeature, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFeatureFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFeatureFaceLabelsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SurfaceMeshFeatureFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SurfaceMeshFeatureFaceLabelsArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, FeatureEulerAnglesArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, FeatureEulerAnglesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, FeatureEulerAnglesArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, FeatureEulerAnglesArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, FeaturePhasesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, FeaturePhasesArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, CrystalStructuresArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, CrystalStructuresArrayPath), req));
   }
   setFilterParameters(parameters);
 }

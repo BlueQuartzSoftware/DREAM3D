@@ -82,13 +82,13 @@ void RemoveFlaggedFeatures::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(RemoveFlaggedFeatures, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(RemoveFlaggedFeatures, this, FeatureIdsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(RemoveFlaggedFeatures, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(RemoveFlaggedFeatures, this, FeatureIdsArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
-    parameters.push_back(DataArraySelectionFilterParameter::New("Flagged Features", "FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(RemoveFlaggedFeatures, this, FlaggedFeaturesArrayPath), SIMPL_BIND_GETTER(RemoveFlaggedFeatures, this, FlaggedFeaturesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Flagged Features", "FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(RemoveFlaggedFeatures, this, FlaggedFeaturesArrayPath), SIMPL_BIND_GETTER(RemoveFlaggedFeatures, this, FlaggedFeaturesArrayPath), req));
   }
   setFilterParameters(parameters);
 }

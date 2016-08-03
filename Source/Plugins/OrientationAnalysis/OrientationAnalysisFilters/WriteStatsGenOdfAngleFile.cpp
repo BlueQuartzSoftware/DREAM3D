@@ -113,15 +113,15 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, CellEulerAnglesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, CellEulerAnglesArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, CellPhasesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, CellPhasesArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, GoodVoxelsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, GoodVoxelsArrayPath), req));
   }
 
   setFilterParameters(parameters);

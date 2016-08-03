@@ -83,7 +83,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AlignSectionsFeatureCentroid, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(AlignSectionsFeatureCentroid, this, GoodVoxelsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(AlignSectionsFeatureCentroid, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(AlignSectionsFeatureCentroid, this, GoodVoxelsArrayPath), req));
   }
   setFilterParameters(parameters);
 }

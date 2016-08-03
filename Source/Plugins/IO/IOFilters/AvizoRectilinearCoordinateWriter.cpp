@@ -89,7 +89,7 @@ void AvizoRectilinearCoordinateWriter::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AvizoRectilinearCoordinateWriter, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(AvizoRectilinearCoordinateWriter, this, FeatureIdsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(AvizoRectilinearCoordinateWriter, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(AvizoRectilinearCoordinateWriter, this, FeatureIdsArrayPath), req));
   }
 
   setFilterParameters(parameters);

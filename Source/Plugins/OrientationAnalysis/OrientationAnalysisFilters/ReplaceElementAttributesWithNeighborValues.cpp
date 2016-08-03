@@ -275,7 +275,7 @@ void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Comparison Array", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, ConfidenceIndexArrayPath), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, ConfidenceIndexArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Comparison Array", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, ConfidenceIndexArrayPath), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, ConfidenceIndexArrayPath), req));
   }
   setFilterParameters(parameters);
 }

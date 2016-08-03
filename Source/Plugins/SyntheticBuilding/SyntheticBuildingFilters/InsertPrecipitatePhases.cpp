@@ -133,24 +133,24 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, FeatureIdsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, FeatureIdsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, CellPhasesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, CellPhasesArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Cells", "BoundaryCellsArrayPath", getBoundaryCellsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, BoundaryCellsArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, BoundaryCellsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Cells", "BoundaryCellsArrayPath", getBoundaryCellsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, BoundaryCellsArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, BoundaryCellsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, MaskArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, MaskArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, MaskArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, MaskArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, FeaturePhasesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, FeaturePhasesArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
@@ -159,7 +159,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, InputStatsArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, InputStatsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, InputStatsArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, InputStatsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
@@ -167,7 +167,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, InputPhaseTypesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, InputPhaseTypesArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
@@ -175,11 +175,11 @@ void InsertPrecipitatePhases::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Shape Types", "InputShapeTypesArrayPath", getInputShapeTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, InputShapeTypesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, InputShapeTypesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Shape Types", "InputShapeTypesArrayPath", getInputShapeTypesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, InputShapeTypesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, InputShapeTypesArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, NumFeaturesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, NumFeaturesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, NumFeaturesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, NumFeaturesArrayPath), req));
   }
   linkedProps.clear();
   linkedProps << "PrecipInputFile";

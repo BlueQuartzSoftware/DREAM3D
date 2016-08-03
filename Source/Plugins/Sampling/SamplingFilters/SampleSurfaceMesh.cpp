@@ -149,7 +149,7 @@ void SampleSurfaceMesh::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SampleSurfaceMesh, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(SampleSurfaceMesh, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(SampleSurfaceMesh, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(SampleSurfaceMesh, this, SurfaceMeshFaceLabelsArrayPath), req));
   }
   setFilterParameters(parameters);
 }

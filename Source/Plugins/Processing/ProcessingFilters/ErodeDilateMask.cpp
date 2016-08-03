@@ -104,7 +104,7 @@ void ErodeDilateMask::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ErodeDilateMask, this, MaskArrayPath), SIMPL_BIND_GETTER(ErodeDilateMask, this, MaskArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(ErodeDilateMask, this, MaskArrayPath), SIMPL_BIND_GETTER(ErodeDilateMask, this, MaskArrayPath), req));
   }
   setFilterParameters(parameters);
 }

@@ -88,7 +88,7 @@ void AvizoUniformCoordinateWriter::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AvizoUniformCoordinateWriter, this, WriteBinaryFile), SIMPL_BIND_GETTER(AvizoUniformCoordinateWriter, this, WriteBinaryFile)));
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AvizoUniformCoordinateWriter, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(AvizoUniformCoordinateWriter, this, FeatureIdsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(AvizoUniformCoordinateWriter, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(AvizoUniformCoordinateWriter, this, FeatureIdsArrayPath), req));
   }
 
   setFilterParameters(parameters);

@@ -107,7 +107,7 @@ void ConvertOrientations::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req;
     req.daTypes = QVector<QString>(2, SIMPL::TypeNames::Double);
     req.daTypes[1] = SIMPL::TypeNames::Float;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Input Orientations", "InputOrientationArrayPath", getInputOrientationArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ConvertOrientations, this, InputOrientationArrayPath), SIMPL_BIND_GETTER(ConvertOrientations, this, InputOrientationArrayPath), 0));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Input Orientations", "InputOrientationArrayPath", getInputOrientationArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(ConvertOrientations, this, InputOrientationArrayPath), SIMPL_BIND_GETTER(ConvertOrientations, this, InputOrientationArrayPath), req, 0));
   }
 
   parameters.push_back(StringFilterParameter::New("Output Orientations", "OutputOrientationArrayName", getOutputOrientationArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ConvertOrientations, this, OutputOrientationArrayName), SIMPL_BIND_GETTER(ConvertOrientations, this, OutputOrientationArrayName), 0));

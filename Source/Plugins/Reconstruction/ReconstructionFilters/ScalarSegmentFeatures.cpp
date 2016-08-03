@@ -195,11 +195,11 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Scalar Array to Segment", "ScalarArrayPath", getScalarArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ScalarArrayPath), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ScalarArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Scalar Array to Segment", "ScalarArrayPath", getScalarArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ScalarArrayPath), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ScalarArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, GoodVoxelsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, GoodVoxelsArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, FeatureIdsArrayName)));

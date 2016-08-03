@@ -205,7 +205,7 @@ void FindProjectedImageStatistics::setupFilterParameters()
     daTypes.push_back(SIMPL::TypeNames::Float);
     daTypes.push_back(SIMPL::TypeNames::Double);
     req.daTypes = daTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Quantify", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, SelectedArrayPath), SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, SelectedArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Quantify", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, SelectedArrayPath), SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, SelectedArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Projected Image Min", "ProjectedImageMinArrayName", getProjectedImageMinArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, ProjectedImageMinArrayName), SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, ProjectedImageMinArrayName)));

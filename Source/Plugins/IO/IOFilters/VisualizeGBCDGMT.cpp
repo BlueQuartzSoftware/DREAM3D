@@ -97,11 +97,11 @@ void VisualizeGBCDGMT::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::FaceEnsemble, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, GBCDArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, GBCDArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, GBCDArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, GBCDArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, CrystalStructuresArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, CrystalStructuresArrayPath), req));
   }
   setFilterParameters(parameters);
 }

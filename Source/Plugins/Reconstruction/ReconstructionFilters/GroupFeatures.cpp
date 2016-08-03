@@ -82,11 +82,11 @@ void GroupFeatures::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GroupFeatures, this, NonContiguousNeighborListArrayPath), SIMPL_BIND_GETTER(GroupFeatures, this, NonContiguousNeighborListArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GroupFeatures, this, NonContiguousNeighborListArrayPath), SIMPL_BIND_GETTER(GroupFeatures, this, NonContiguousNeighborListArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GroupFeatures, this, ContiguousNeighborListArrayPath), SIMPL_BIND_GETTER(GroupFeatures, this, ContiguousNeighborListArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GroupFeatures, this, ContiguousNeighborListArrayPath), SIMPL_BIND_GETTER(GroupFeatures, this, ContiguousNeighborListArrayPath), req));
   }
   setFilterParameters(parameters);
 }

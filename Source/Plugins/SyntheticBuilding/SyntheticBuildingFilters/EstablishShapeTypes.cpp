@@ -83,7 +83,7 @@ void EstablishShapeTypes::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EstablishShapeTypes, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(EstablishShapeTypes, this, InputPhaseTypesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(EstablishShapeTypes, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(EstablishShapeTypes, this, InputPhaseTypesArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Shape Types", "ShapeTypesArrayName", getShapeTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishShapeTypes, this, ShapeTypesArrayName), SIMPL_BIND_GETTER(EstablishShapeTypes, this, ShapeTypesArrayName)));

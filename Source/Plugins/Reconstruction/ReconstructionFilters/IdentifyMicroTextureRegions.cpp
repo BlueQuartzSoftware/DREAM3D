@@ -265,15 +265,15 @@ void IdentifyMicroTextureRegions::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("C-Axis Locations", "CAxisLocationsArrayPath", getCAxisLocationsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CAxisLocationsArrayPath), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CAxisLocationsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("C-Axis Locations", "CAxisLocationsArrayPath", getCAxisLocationsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CAxisLocationsArrayPath), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CAxisLocationsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CellPhasesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CellPhasesArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CrystalStructuresArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CrystalStructuresArrayPath), req));
   }
 
   parameters.push_back(StringFilterParameter::New("MTR Ids", "MTRIdsArrayName", getMTRIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, MTRIdsArrayName), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, MTRIdsArrayName)));

@@ -97,11 +97,11 @@ void SineParamsSegmentFeatures::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Sine Parameters", "SineParamsArrayPath", getSineParamsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Sine Parameters", "SineParamsArrayPath", getSineParamsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath), req));
   }
 
   parameters.push_back(StringFilterParameter::New("FeatureIds", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, FeatureIdsArrayName)));

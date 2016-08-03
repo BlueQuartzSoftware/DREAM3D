@@ -80,13 +80,13 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSurfaceAreaToVolume, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindSurfaceAreaToVolume, this, FeatureIdsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindSurfaceAreaToVolume, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindSurfaceAreaToVolume, this, FeatureIdsArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
-    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Cells", "NumCellsArrayPath", getNumCellsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSurfaceAreaToVolume, this, NumCellsArrayPath), SIMPL_BIND_GETTER(FindSurfaceAreaToVolume, this, NumCellsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Cells", "NumCellsArrayPath", getNumCellsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindSurfaceAreaToVolume, this, NumCellsArrayPath), SIMPL_BIND_GETTER(FindSurfaceAreaToVolume, this, NumCellsArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Surface Area to Volume Ratio", "SurfaceAreaVolumeRatioArrayName", getSurfaceAreaVolumeRatioArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSurfaceAreaToVolume, this, SurfaceAreaVolumeRatioArrayName), SIMPL_BIND_GETTER(FindSurfaceAreaToVolume, this, SurfaceAreaVolumeRatioArrayName)));

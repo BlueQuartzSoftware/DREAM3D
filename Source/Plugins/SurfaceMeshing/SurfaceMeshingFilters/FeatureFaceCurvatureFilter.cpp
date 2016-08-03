@@ -125,19 +125,19 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceLabelsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Ids", "SurfaceMeshFeatureFaceIdsArrayPath", getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFeatureFaceIdsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFeatureFaceIdsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Ids", "SurfaceMeshFeatureFaceIdsArrayPath", getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFeatureFaceIdsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFeatureFaceIdsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceNormalsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceNormalsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshTriangleCentroidsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshTriangleCentroidsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshTriangleCentroidsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshTriangleCentroidsArrayPath), req));
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));

@@ -109,19 +109,19 @@ void FitCorrelatedFeatureData::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, SelectedFeatureArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, SelectedFeatureArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, SelectedFeatureArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, SelectedFeatureArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Array To Correlate With", "CorrelatedFeatureArrayPath", getCorrelatedFeatureArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, CorrelatedFeatureArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, CorrelatedFeatureArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Array To Correlate With", "CorrelatedFeatureArrayPath", getCorrelatedFeatureArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, CorrelatedFeatureArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, CorrelatedFeatureArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, FeaturePhasesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, FeaturePhasesArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, BiasedFeaturesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, BiasedFeaturesArrayPath), req));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);

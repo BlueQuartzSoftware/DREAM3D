@@ -126,7 +126,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, InputStatsArrayPath), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, InputStatsArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, InputStatsArrayPath), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, InputStatsArrayPath), req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
@@ -134,7 +134,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, InputPhaseTypesArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, InputPhaseTypesArrayPath), req));
   }
 
   parameters.push_back(StringFilterParameter::New("Synthetic Volume Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, DataContainerName), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, DataContainerName)));
