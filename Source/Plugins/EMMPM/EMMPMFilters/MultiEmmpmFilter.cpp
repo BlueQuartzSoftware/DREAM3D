@@ -93,7 +93,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     {
       {
         MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-        parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, InputDataArrayVector), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, InputDataArrayVector));
+        parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, InputDataArrayVector), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, InputDataArrayVector), req);
       }
     }
   }

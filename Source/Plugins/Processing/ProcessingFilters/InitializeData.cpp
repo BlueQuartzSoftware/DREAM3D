@@ -104,7 +104,7 @@ void InitializeData::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Cell Arrays", "CellAttributeMatrixPaths", getCellAttributeMatrixPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InitializeData, this, CellAttributeMatrixPaths), SIMPL_BIND_GETTER(InitializeData, this, CellAttributeMatrixPaths)));
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Cell Arrays", "CellAttributeMatrixPaths", getCellAttributeMatrixPaths(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InitializeData, this, CellAttributeMatrixPaths), SIMPL_BIND_GETTER(InitializeData, this, CellAttributeMatrixPaths), req));
   }
   parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, XMin), SIMPL_BIND_GETTER(InitializeData, this, XMin)));
   parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, YMin), SIMPL_BIND_GETTER(InitializeData, this, YMin)));

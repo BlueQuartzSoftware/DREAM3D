@@ -93,7 +93,7 @@ void QuickSurfaceMesh::setupFilterParameters()
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Transfer", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, SelectedDataArrayPaths)));
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Transfer", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, SelectedDataArrayPaths), req));
   }
   parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, SurfaceDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));

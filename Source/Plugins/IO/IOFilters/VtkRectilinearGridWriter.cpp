@@ -246,7 +246,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths)));
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths), req));
   }
 
   setFilterParameters(parameters);
