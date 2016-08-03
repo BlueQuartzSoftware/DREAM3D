@@ -157,15 +157,15 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   PhaseType::getPhaseTypeStrings(phaseTypeStrings);
   PhaseTypeSelectionFilterParameter::Pointer phaseType_parameter = PhaseTypeSelectionFilterParameter::New(
         "Phase Types",
-        "PhaseTypesArrayName",
-        "PhaseCount",
         "PhaseTypeData",
-        "CellEnsembleAttributeMatrixPath",
         getCellEnsembleAttributeMatrixPath(),
-        phaseTypeStrings,
         FilterParameter::Parameter,
         SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
-        SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, PhaseTypeData)
+        SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
+        "PhaseTypesArrayName",
+        "PhaseCount",
+        "CellEnsembleAttributeMatrixPath",
+        phaseTypeStrings
         );
   parameters.push_back(phaseType_parameter);
   parameters.push_back(DoubleFilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", getSizeCorrelationResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, SizeCorrelationResolution), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, SizeCorrelationResolution)));
