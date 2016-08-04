@@ -259,9 +259,9 @@ void IdentifyMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(DoubleFilterParameter::New("C-Axis Alignment Tolerance (Degrees)", "CAxisTolerance", getCAxisTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CAxisTolerance), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CAxisTolerance)));
-  parameters.push_back(DoubleFilterParameter::New("Minimum MicroTextured Region Size (Diameter)", "MinMTRSize", getMinMTRSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, MinMTRSize), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, MinMTRSize)));
-  parameters.push_back(DoubleFilterParameter::New("Minimum Volume Fraction in MTR", "MinVolFrac", getMinVolFrac(), FilterParameter::Parameter, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, MinVolFrac), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, MinVolFrac)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("C-Axis Alignment Tolerance (Degrees)", CAxisTolerance, FilterParameter::Parameter, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Minimum MicroTextured Region Size (Diameter)", MinMTRSize, FilterParameter::Parameter, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Minimum Volume Fraction in MTR", MinVolFrac, FilterParameter::Parameter, IdentifyMicroTextureRegions));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;

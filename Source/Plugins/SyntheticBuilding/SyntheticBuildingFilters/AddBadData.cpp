@@ -82,11 +82,11 @@ void AddBadData::setupFilterParameters()
   FilterParameterVector parameters;
   QStringList linkedProps("PoissonVolFraction");
   parameters.push_back(LinkedBooleanFilterParameter::New("Add Random Noise", "PoissonNoise", getPoissonNoise(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, PoissonNoise), SIMPL_BIND_GETTER(AddBadData, this, PoissonNoise), linkedProps));
-  parameters.push_back(DoubleFilterParameter::New("Volume Fraction of Random Noise", "PoissonVolFraction", getPoissonVolFraction(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, PoissonVolFraction), SIMPL_BIND_GETTER(AddBadData, this, PoissonVolFraction)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Volume Fraction of Random Noise", PoissonVolFraction, FilterParameter::Parameter, AddBadData));
   linkedProps.clear();
   linkedProps << "BoundaryVolFraction";
   parameters.push_back(LinkedBooleanFilterParameter::New("Add Boundary Noise", "BoundaryNoise", getBoundaryNoise(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, BoundaryNoise), SIMPL_BIND_GETTER(AddBadData, this, BoundaryNoise), linkedProps));
-  parameters.push_back(DoubleFilterParameter::New("Volume Fraction of Boundary Noise", "BoundaryVolFraction", getBoundaryVolFraction(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, BoundaryVolFraction), SIMPL_BIND_GETTER(AddBadData, this, BoundaryVolFraction)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Volume Fraction of Boundary Noise", BoundaryVolFraction, FilterParameter::Parameter, AddBadData));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

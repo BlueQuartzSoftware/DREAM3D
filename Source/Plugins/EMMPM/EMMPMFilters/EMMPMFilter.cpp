@@ -98,18 +98,18 @@ void EMMPMFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Classes", NumClasses, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(DoubleFilterParameter::New("Exchange Energy", "ExchangeEnergy", getExchangeEnergy(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, ExchangeEnergy), SIMPL_BIND_GETTER(EMMPMFilter, this, ExchangeEnergy)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Exchange Energy", ExchangeEnergy, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Histogram Loops (EM)", HistogramLoops, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Segmentation Loops (MPM)", SegmentationLoops, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(BooleanFilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", getUseSimulatedAnnealing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseSimulatedAnnealing), SIMPL_BIND_GETTER(EMMPMFilter, this, UseSimulatedAnnealing)));
   QStringList linkedProps("GradientPenalty");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Gradient Penalty", "UseGradientPenalty", getUseGradientPenalty(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseGradientPenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, UseGradientPenalty), linkedProps));
-  parameters.push_back(DoubleFilterParameter::New("Gradient Penalty (Beta E)", "GradientPenalty", getGradientPenalty(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, GradientPenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, GradientPenalty)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Gradient Penalty (Beta E)", GradientPenalty, FilterParameter::Parameter, EMMPMFilter));
   linkedProps.clear();
   linkedProps << "CurvaturePenalty" << "RMax" << "EMLoopDelay";
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Curvature Penalty", "UseCurvaturePenalty", getUseCurvaturePenalty(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseCurvaturePenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, UseCurvaturePenalty), linkedProps));
-  parameters.push_back(DoubleFilterParameter::New("Curvature Penalty (Beta C)", "CurvaturePenalty", getCurvaturePenalty(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, CurvaturePenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, CurvaturePenalty)));
-  parameters.push_back(DoubleFilterParameter::New("R Max", "RMax", getRMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, RMax), SIMPL_BIND_GETTER(EMMPMFilter, this, RMax)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Curvature Penalty (Beta C)", CurvaturePenalty, FilterParameter::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("R Max", RMax, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("EM Loop Delay", EMLoopDelay, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

@@ -254,7 +254,7 @@ ReplaceElementAttributesWithNeighborValues::~ReplaceElementAttributesWithNeighbo
 void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Threshold Value", "MinConfidence", getMinConfidence(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, MinConfidence), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, MinConfidence)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold Value", MinConfidence, FilterParameter::Parameter, ReplaceElementAttributesWithNeighborValues));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Comparison Operator");

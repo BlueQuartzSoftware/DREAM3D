@@ -428,7 +428,7 @@ void FindGBPDMetricBased::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, FindGBPDMetricBased));
-  parameters.push_back(DoubleFilterParameter::New("Limiting Distance [deg.]", "LimitDist", getLimitDist(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, LimitDist), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, LimitDist)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Limiting Distance [deg.]", LimitDist, FilterParameter::Parameter, FindGBPDMetricBased));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Sampling Points (on a Hemisphere)", NumSamplPts, FilterParameter::Parameter, FindGBPDMetricBased));
   parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, ExcludeTripleLines), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, ExcludeTripleLines)));
   parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, DistOutputFile), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, DistOutputFile)));

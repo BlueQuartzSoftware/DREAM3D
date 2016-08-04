@@ -196,7 +196,7 @@ void RotateSampleRefFrame::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(FloatVec3FilterParameter::New("Rotation Axis (ijk)", "RotationAxis", getRotationAxis(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RotateSampleRefFrame, this, RotationAxis), SIMPL_BIND_GETTER(RotateSampleRefFrame, this, RotationAxis)));
-  parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RotateSampleRefFrame, this, RotationAngle), SIMPL_BIND_GETTER(RotateSampleRefFrame, this, RotationAngle)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Rotation Angle (Degrees)", RotationAngle, FilterParameter::Parameter, RotateSampleRefFrame));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

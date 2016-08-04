@@ -92,8 +92,8 @@ void CalculateArrayHistogram::setupFilterParameters()
   QStringList linkedProps;
   linkedProps << "MinRange" << "MaxRange";
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, UserDefinedRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, UserDefinedRange), linkedProps));
-  parameters.push_back(DoubleFilterParameter::New("Min Value", "MinRange", getMinRange(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, MinRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, MinRange)));
-  parameters.push_back(DoubleFilterParameter::New("Max Value", "MaxRange", getMaxRange(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, MaxRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, MaxRange)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min Value", MinRange, FilterParameter::Parameter, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Value", MaxRange, FilterParameter::Parameter, CalculateArrayHistogram));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataContainer), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataContainer), linkedProps));

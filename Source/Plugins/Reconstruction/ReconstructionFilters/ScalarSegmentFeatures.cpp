@@ -190,7 +190,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(DoubleFilterParameter::New("Scalar Tolerance", "ScalarTolerance", getScalarTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ScalarTolerance), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ScalarTolerance)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Parameter, ScalarSegmentFeatures));
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, UseGoodVoxels), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

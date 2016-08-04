@@ -134,7 +134,7 @@ void InitializeData::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(DoubleFilterParameter::New("Initialization Value", "InitValue", getInitValue(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, InitValue), SIMPL_BIND_GETTER(InitializeData, this, InitValue), Manual));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Initialization Value", InitValue, FilterParameter::Parameter, InitializeData, Manual));
   parameters.push_back(RangeFilterParameter::New("Initialization Range", "InitRange", getInitRange(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, InitRange), SIMPL_BIND_GETTER(InitializeData, this, InitRange), RandomWithRange));
   setFilterParameters(parameters);
 }
