@@ -91,7 +91,7 @@ void FindSizes::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindSizes, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindSizes, this, CellFeatureAttributeMatrixName), req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindSizes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayName", getEquivalentDiametersArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSizes, this, EquivalentDiametersArrayName), SIMPL_BIND_GETTER(FindSizes, this, EquivalentDiametersArrayName)));

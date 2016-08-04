@@ -106,7 +106,7 @@ void FeatureInfoReader::setupFilterParameters()
     amTypes.push_back(SIMPL::AttributeMatrixType::Edge);
     amTypes.push_back(SIMPL::AttributeMatrixType::Face);
     amTypes.push_back(SIMPL::AttributeMatrixType::Vertex);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Element Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellAttributeMatrixName), req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Element Attribute Matrix", CellAttributeMatrixName, FilterParameter::RequiredArray, FeatureInfoReader, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);

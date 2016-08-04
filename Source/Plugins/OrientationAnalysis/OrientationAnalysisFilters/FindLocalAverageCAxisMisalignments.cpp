@@ -143,7 +143,7 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::UnknownGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, NewCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, NewCellFeatureAttributeMatrixName), req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("New Cell Feature Attribute Matrix Name", NewCellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindLocalAverageCAxisMisalignments, req));
   }
 
   parameters.push_back(StringFilterParameter::New("NumFeaturesPerParent", "NumFeaturesPerParentArrayName", getNumFeaturesPerParentArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, NumFeaturesPerParentArrayName), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, NumFeaturesPerParentArrayName)));

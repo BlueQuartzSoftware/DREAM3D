@@ -114,7 +114,7 @@ void FindEllipsoidError::setupFilterParameters()
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindEllipsoidError, this, CellFeatureAttributeMatrixName), req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
 
   parameters.push_back(StringFilterParameter::New("EllipsoidError", "EllipsoidErrorArrayName", getEllipsoidErrorArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, EllipsoidErrorArrayName), SIMPL_BIND_GETTER(FindEllipsoidError, this, EllipsoidErrorArrayName)));
