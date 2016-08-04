@@ -78,7 +78,7 @@ ErodeDilateCoordinationNumber::~ErodeDilateCoordinationNumber()
 void ErodeDilateCoordinationNumber::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Coordination Number to Consider", "CoordinationNumber", getCoordinationNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateCoordinationNumber, this, CoordinationNumber), SIMPL_BIND_GETTER(ErodeDilateCoordinationNumber, this, CoordinationNumber)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Coordination Number to Consider", CoordinationNumber, FilterParameter::Parameter, ErodeDilateCoordinationNumber));
   parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateCoordinationNumber, this, Loop), SIMPL_BIND_GETTER(ErodeDilateCoordinationNumber, this, Loop)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

@@ -97,10 +97,10 @@ EMMPMFilter::~EMMPMFilter()
 void EMMPMFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Number of Classes", "NumClasses", getNumClasses(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, NumClasses), SIMPL_BIND_GETTER(EMMPMFilter, this, NumClasses)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Classes", NumClasses, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(DoubleFilterParameter::New("Exchange Energy", "ExchangeEnergy", getExchangeEnergy(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, ExchangeEnergy), SIMPL_BIND_GETTER(EMMPMFilter, this, ExchangeEnergy)));
-  parameters.push_back(IntFilterParameter::New("Histogram Loops (EM)", "HistogramLoops", getHistogramLoops(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, HistogramLoops), SIMPL_BIND_GETTER(EMMPMFilter, this, HistogramLoops)));
-  parameters.push_back(IntFilterParameter::New("Segmentation Loops (MPM)", "SegmentationLoops", getSegmentationLoops(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, SegmentationLoops), SIMPL_BIND_GETTER(EMMPMFilter, this, SegmentationLoops)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Histogram Loops (EM)", HistogramLoops, FilterParameter::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Segmentation Loops (MPM)", SegmentationLoops, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(BooleanFilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", getUseSimulatedAnnealing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseSimulatedAnnealing), SIMPL_BIND_GETTER(EMMPMFilter, this, UseSimulatedAnnealing)));
   QStringList linkedProps("GradientPenalty");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Gradient Penalty", "UseGradientPenalty", getUseGradientPenalty(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseGradientPenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, UseGradientPenalty), linkedProps));
@@ -110,7 +110,7 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Curvature Penalty", "UseCurvaturePenalty", getUseCurvaturePenalty(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseCurvaturePenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, UseCurvaturePenalty), linkedProps));
   parameters.push_back(DoubleFilterParameter::New("Curvature Penalty (Beta C)", "CurvaturePenalty", getCurvaturePenalty(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, CurvaturePenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, CurvaturePenalty)));
   parameters.push_back(DoubleFilterParameter::New("R Max", "RMax", getRMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, RMax), SIMPL_BIND_GETTER(EMMPMFilter, this, RMax)));
-  parameters.push_back(IntFilterParameter::New("EM Loop Delay", "EMLoopDelay", getEMLoopDelay(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, EMLoopDelay), SIMPL_BIND_GETTER(EMMPMFilter, this, EMLoopDelay)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("EM Loop Delay", EMLoopDelay, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

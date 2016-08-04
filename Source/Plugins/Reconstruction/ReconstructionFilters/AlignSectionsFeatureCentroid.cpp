@@ -79,7 +79,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
   FilterParameterVector parameters = getFilterParameters();
   QStringList linkedProps("ReferenceSlice");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Reference Slice", "UseReferenceSlice", getUseReferenceSlice(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AlignSectionsFeatureCentroid, this, UseReferenceSlice), SIMPL_BIND_GETTER(AlignSectionsFeatureCentroid, this, UseReferenceSlice), linkedProps));
-  parameters.push_back(IntFilterParameter::New("Reference Slice", "ReferenceSlice", getReferenceSlice(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AlignSectionsFeatureCentroid, this, ReferenceSlice), SIMPL_BIND_GETTER(AlignSectionsFeatureCentroid, this, ReferenceSlice)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Reference Slice", ReferenceSlice, FilterParameter::Parameter, AlignSectionsFeatureCentroid));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

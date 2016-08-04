@@ -479,7 +479,7 @@ FindGBCDMetricBased::~FindGBCDMetricBased()
 void FindGBCDMetricBased::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, PhaseOfInterest), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, PhaseOfInterest)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, FindGBCDMetricBased));
   parameters.push_back(AxisAngleFilterParameter::New("Fixed Misorientation", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, MisorientationRotation), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, MisorientationRotation)));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -506,7 +506,7 @@ void FindGBCDMetricBased::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, NumSamplPts), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, NumSamplPts)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Sampling Points (on a Hemisphere)", NumSamplPts, FilterParameter::Parameter, FindGBCDMetricBased));
   parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, ExcludeTripleLines), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, ExcludeTripleLines)));
   parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, DistOutputFile), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, DistOutputFile), "*.dat", "DAT File"));
   parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, ErrOutputFile), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, ErrOutputFile), "*.dat", "DAT File"));

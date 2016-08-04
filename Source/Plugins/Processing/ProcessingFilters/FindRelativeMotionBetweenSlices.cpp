@@ -174,11 +174,11 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Patch Size 1", "PSize1", getPSize1(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, PSize1), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, PSize1)));
-  parameters.push_back(IntFilterParameter::New("Patch Size 2", "PSize2", getPSize2(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, PSize2), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, PSize2)));
-  parameters.push_back(IntFilterParameter::New("Search Distance 1", "SSize1", getSSize1(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, SSize1), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, SSize1)));
-  parameters.push_back(IntFilterParameter::New("Search Distance 2", "SSize2", getSSize2(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, SSize2), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, SSize2)));
-  parameters.push_back(IntFilterParameter::New("Slice Step", "SliceStep", getSliceStep(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, SliceStep), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, SliceStep)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Patch Size 1", PSize1, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Patch Size 2", PSize2, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Search Distance 1", SSize1, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Search Distance 2", SSize2, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Step", SliceStep, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

@@ -88,7 +88,7 @@ CalculateArrayHistogram::~CalculateArrayHistogram()
 void CalculateArrayHistogram::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Number of Bins", "NumberOfBins", getNumberOfBins(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NumberOfBins), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NumberOfBins)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins", NumberOfBins, FilterParameter::Parameter, CalculateArrayHistogram));
   QStringList linkedProps;
   linkedProps << "MinRange" << "MaxRange";
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Min & Max Range", "UserDefinedRange", getNewDataContainer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, UserDefinedRange), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, UserDefinedRange), linkedProps));

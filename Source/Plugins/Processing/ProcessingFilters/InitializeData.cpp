@@ -106,12 +106,12 @@ void InitializeData::setupFilterParameters()
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(MultiDataArraySelectionFilterParameter::New("Cell Arrays", "CellAttributeMatrixPaths", getCellAttributeMatrixPaths(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(InitializeData, this, CellAttributeMatrixPaths), SIMPL_BIND_GETTER(InitializeData, this, CellAttributeMatrixPaths), req));
   }
-  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, XMin), SIMPL_BIND_GETTER(InitializeData, this, XMin)));
-  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, YMin), SIMPL_BIND_GETTER(InitializeData, this, YMin)));
-  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, ZMin), SIMPL_BIND_GETTER(InitializeData, this, ZMin)));
-  parameters.push_back(IntFilterParameter::New("X Max (Column)", "XMax", getXMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, XMax), SIMPL_BIND_GETTER(InitializeData, this, XMax)));
-  parameters.push_back(IntFilterParameter::New("Y Max (Row)", "YMax", getYMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, YMax), SIMPL_BIND_GETTER(InitializeData, this, YMax)));
-  parameters.push_back(IntFilterParameter::New("Z Max (Plane)", "ZMax", getZMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, ZMax), SIMPL_BIND_GETTER(InitializeData, this, ZMax)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Min (Column)", XMin, FilterParameter::Parameter, InitializeData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Min (Row)", YMin, FilterParameter::Parameter, InitializeData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Min (Plane)", ZMin, FilterParameter::Parameter, InitializeData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Max (Column)", XMax, FilterParameter::Parameter, InitializeData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Max (Row)", YMax, FilterParameter::Parameter, InitializeData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Max (Plane)", ZMax, FilterParameter::Parameter, InitializeData));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();

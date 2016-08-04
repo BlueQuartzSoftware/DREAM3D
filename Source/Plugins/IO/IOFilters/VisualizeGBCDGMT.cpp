@@ -91,7 +91,7 @@ VisualizeGBCDGMT::~VisualizeGBCDGMT()
 void VisualizeGBCDGMT::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, PhaseOfInterest), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, PhaseOfInterest)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, VisualizeGBCDGMT));
   parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, MisorientationRotation), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, MisorientationRotation)));
   parameters.push_back(OutputFileFilterParameter::New("Output GMT File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, OutputFile), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, OutputFile), "*.dat", "DAT File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));

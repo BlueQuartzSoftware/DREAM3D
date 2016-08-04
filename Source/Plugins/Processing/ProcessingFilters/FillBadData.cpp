@@ -82,7 +82,7 @@ FillBadData::~FillBadData()
 void FillBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", getMinAllowedDefectSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FillBadData, this, MinAllowedDefectSize), SIMPL_BIND_GETTER(FillBadData, this, MinAllowedDefectSize)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Allowed Defect Size", MinAllowedDefectSize, FilterParameter::Parameter, FillBadData));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects as New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FillBadData, this, StoreAsNewPhase), SIMPL_BIND_GETTER(FillBadData, this, StoreAsNewPhase), linkedProps));

@@ -91,7 +91,7 @@ void LaplacianSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntFilterParameter::New("Iteration Steps", "IterationSteps", getIterationSteps(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, IterationSteps), SIMPL_BIND_GETTER(LaplacianSmoothing, this, IterationSteps)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Parameter, LaplacianSmoothing));
   parameters.push_back(DoubleFilterParameter::New("Default Lambda", "Lambda", getLambda(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, Lambda), SIMPL_BIND_GETTER(LaplacianSmoothing, this, Lambda)));
 
   QStringList linkedProps;

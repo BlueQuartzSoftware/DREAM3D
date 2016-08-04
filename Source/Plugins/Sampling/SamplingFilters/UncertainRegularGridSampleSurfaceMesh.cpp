@@ -93,9 +93,9 @@ UncertainRegularGridSampleSurfaceMesh::~UncertainRegularGridSampleSurfaceMesh()
 void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(IntFilterParameter::New("X Points", "XPoints", getXPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, XPoints), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, XPoints)));
-  parameters.push_back(IntFilterParameter::New("Y Points", "YPoints", getYPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, YPoints), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, YPoints)));
-  parameters.push_back(IntFilterParameter::New("Z Points", "ZPoints", getZPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, ZPoints), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, ZPoints)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Points", XPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Points", YPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Points", ZPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
   parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, Resolution), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, Resolution)));
 
   parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(UncertainRegularGridSampleSurfaceMesh, this, Origin), SIMPL_BIND_GETTER(UncertainRegularGridSampleSurfaceMesh, this, Origin)));

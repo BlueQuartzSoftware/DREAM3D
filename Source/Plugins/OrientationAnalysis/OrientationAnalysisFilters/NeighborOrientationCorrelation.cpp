@@ -88,7 +88,7 @@ void NeighborOrientationCorrelation::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(DoubleFilterParameter::New("Minimum Confidence Index", "MinConfidence", getMinConfidence(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, MinConfidence), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, MinConfidence)));
   parameters.push_back(DoubleFilterParameter::New("Misorientation Tolerance (Degrees)", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, MisorientationTolerance), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, MisorientationTolerance)));
-  parameters.push_back(IntFilterParameter::New("Cleanup Level", "Level", getLevel(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NeighborOrientationCorrelation, this, Level), SIMPL_BIND_GETTER(NeighborOrientationCorrelation, this, Level)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Cleanup Level", Level, FilterParameter::Parameter, NeighborOrientationCorrelation));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 
   {

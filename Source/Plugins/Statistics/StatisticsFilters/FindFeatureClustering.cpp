@@ -96,8 +96,8 @@ FindFeatureClustering::~FindFeatureClustering()
 void FindFeatureClustering::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Number of Bins for RDF", "NumberOfBins", getNumberOfBins(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureClustering, this, NumberOfBins), SIMPL_BIND_GETTER(FindFeatureClustering, this, NumberOfBins)));
-  parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureClustering, this, PhaseNumber), SIMPL_BIND_GETTER(FindFeatureClustering, this, PhaseNumber)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins for RDF", NumberOfBins, FilterParameter::Parameter, FindFeatureClustering));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Parameter, FindFeatureClustering));
   QStringList linkedProps("BiasedFeaturesArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureClustering, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FindFeatureClustering, this, RemoveBiasedFeatures), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));

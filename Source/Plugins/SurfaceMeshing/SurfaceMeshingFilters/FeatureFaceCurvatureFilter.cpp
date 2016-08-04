@@ -103,7 +103,7 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(IntFilterParameter::New("Neighborhood Ring Count", "NRing", getNRing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, NRing), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, NRing)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Neighborhood Ring Count", NRing, FilterParameter::Parameter, FeatureFaceCurvatureFilter));
   QStringList linkedProps;
   linkedProps << "SurfaceMeshPrincipalCurvature1sArrayName" << "SurfaceMeshPrincipalCurvature2sArrayName";
   linkedProps << "SurfaceMeshPrincipalDirection1sArrayName" << "SurfaceMeshPrincipalDirection2sArrayName";

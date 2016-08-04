@@ -83,11 +83,11 @@ MinSize::~MinSize()
 void MinSize::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", getMinAllowedFeatureSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, MinAllowedFeatureSize), SIMPL_BIND_GETTER(MinSize, this, MinAllowedFeatureSize)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Allowed Feature Size", MinAllowedFeatureSize, FilterParameter::Parameter, MinSize));
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, ApplyToSinglePhase), SIMPL_BIND_GETTER(MinSize, this, ApplyToSinglePhase), linkedProps));
-  parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, PhaseNumber), SIMPL_BIND_GETTER(MinSize, this, PhaseNumber)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Parameter, MinSize));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

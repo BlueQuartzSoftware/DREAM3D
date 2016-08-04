@@ -83,11 +83,11 @@ MinNeighbors::~MinNeighbors()
 void MinNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", getMinNumNeighbors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, MinNumNeighbors), SIMPL_BIND_GETTER(MinNeighbors, this, MinNumNeighbors)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Number Neighbors", MinNumNeighbors, FilterParameter::Parameter, MinNeighbors));
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, ApplyToSinglePhase), SIMPL_BIND_GETTER(MinNeighbors, this, ApplyToSinglePhase), linkedProps));
-  parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinNeighbors, this, PhaseNumber), SIMPL_BIND_GETTER(MinNeighbors, this, PhaseNumber)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Parameter, MinNeighbors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

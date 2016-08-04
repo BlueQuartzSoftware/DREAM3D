@@ -124,7 +124,7 @@ MatchCrystallography::~MatchCrystallography()
 void MatchCrystallography::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Maximum Number of Iterations (Swaps)", "MaxIterations", getMaxIterations(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MatchCrystallography, this, MaxIterations), SIMPL_BIND_GETTER(MatchCrystallography, this, MaxIterations)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Number of Iterations (Swaps)", MaxIterations, FilterParameter::Parameter, MatchCrystallography));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
