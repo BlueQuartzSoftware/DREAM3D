@@ -86,7 +86,7 @@ ChangeResolution::~ChangeResolution()
 void ChangeResolution::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ChangeResolution, this, Resolution), SIMPL_BIND_GETTER(ChangeResolution, this, Resolution)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ChangeResolution));
 
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";

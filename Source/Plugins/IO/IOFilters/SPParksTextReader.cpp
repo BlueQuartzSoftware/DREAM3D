@@ -90,9 +90,9 @@ void SPParksTextReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, InputFile), SIMPL_BIND_GETTER(SPParksTextReader, this, InputFile), "*.dump", "SPParks Dump File"));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, Origin), SIMPL_BIND_GETTER(SPParksTextReader, this, Origin)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, SPParksTextReader));
 
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, Resolution), SIMPL_BIND_GETTER(SPParksTextReader, this, Resolution)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, SPParksTextReader));
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("One Based Arrays", OneBasedArrays, FilterParameter::Parameter, SPParksTextReader));
   parameters.push_back(StringFilterParameter::New("Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, VolumeDataContainerName), SIMPL_BIND_GETTER(SPParksTextReader, this, VolumeDataContainerName)));

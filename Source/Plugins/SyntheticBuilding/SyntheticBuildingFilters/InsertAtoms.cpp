@@ -266,7 +266,7 @@ InsertAtoms::~InsertAtoms()
 void InsertAtoms::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Lattice Constants (Angstroms)", "LatticeConstants", getLatticeConstants(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertAtoms, this, LatticeConstants), SIMPL_BIND_GETTER(InsertAtoms, this, LatticeConstants)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Lattice Constants (Angstroms)", LatticeConstants, FilterParameter::Parameter, InsertAtoms));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");

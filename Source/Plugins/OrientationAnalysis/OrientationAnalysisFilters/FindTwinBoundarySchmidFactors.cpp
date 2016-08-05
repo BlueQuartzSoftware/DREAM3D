@@ -260,7 +260,7 @@ FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors()
 void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDir", getLoadingDir(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, LoadingDir), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, LoadingDir)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDir, FilterParameter::Parameter, FindTwinBoundarySchmidFactors));
 
   QStringList linkedProps("TwinBoundarySchmidFactorsFile");
   parameters.push_back(LinkedBooleanFilterParameter::New("Write Twin Boundary Info File", "WriteFile", getWriteFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, WriteFile), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, WriteFile), linkedProps));

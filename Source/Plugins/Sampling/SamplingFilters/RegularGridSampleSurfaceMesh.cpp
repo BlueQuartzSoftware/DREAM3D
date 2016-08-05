@@ -91,9 +91,9 @@ void RegularGridSampleSurfaceMesh::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("X Points", XPoints, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Points", YPoints, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Points", ZPoints, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, Resolution), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, Resolution)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
 
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, Origin), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, Origin)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
 
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, DataContainerName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));

@@ -131,9 +131,9 @@ void PhReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PhReader, this, InputFile), SIMPL_BIND_GETTER(PhReader, this, InputFile), "*.ph", "CMU Grain Growth"));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PhReader, this, Origin), SIMPL_BIND_GETTER(PhReader, this, Origin)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, PhReader));
 
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PhReader, this, Resolution), SIMPL_BIND_GETTER(PhReader, this, Resolution)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, PhReader));
 
   parameters.push_back(StringFilterParameter::New("Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PhReader, this, VolumeDataContainerName), SIMPL_BIND_GETTER(PhReader, this, VolumeDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));

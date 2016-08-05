@@ -169,7 +169,7 @@ GenerateIPFColors::~GenerateIPFColors()
 void GenerateIPFColors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Reference Direction", "ReferenceDir", getReferenceDir(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateIPFColors, this, ReferenceDir), SIMPL_BIND_GETTER(GenerateIPFColors, this, ReferenceDir)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Reference Direction", ReferenceDir, FilterParameter::Parameter, GenerateIPFColors));
 
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Elements Only (Bad Elements Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateIPFColors, this, UseGoodVoxels), SIMPL_BIND_GETTER(GenerateIPFColors, this, UseGoodVoxels), linkedProps));
