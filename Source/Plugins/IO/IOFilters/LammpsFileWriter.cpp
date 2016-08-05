@@ -85,7 +85,7 @@ void LammpsFileWriter::setupFilterParameters()
 
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Vertex Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(LammpsFileWriter, this, VertexDataContainerName), SIMPL_BIND_GETTER(LammpsFileWriter, this, VertexDataContainerName), req));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Vertex Data Container", VertexDataContainerName, FilterParameter::RequiredArray, LammpsFileWriter, req));
   }
 
   setFilterParameters(parameters);
