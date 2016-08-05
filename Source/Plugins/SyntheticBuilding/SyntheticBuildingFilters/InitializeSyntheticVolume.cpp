@@ -140,7 +140,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.push_back(StringFilterParameter::New("Synthetic Volume Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, DataContainerName), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, CellAttributeMatrixName)));
-  parameters.push_back(IntVec3FilterParameter::New("Dimensions", "Dimensions", getDimensions(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, Dimensions), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, Dimensions)));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, InitializeSyntheticVolume));
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume));
