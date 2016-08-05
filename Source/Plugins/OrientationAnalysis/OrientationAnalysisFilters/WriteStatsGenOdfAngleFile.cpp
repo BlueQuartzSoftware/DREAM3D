@@ -105,7 +105,7 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
   FilterParameterVector parameters;
 
   /* For String input use this code */
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, OutputFile), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, OutputFile)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Convert to Degrees", ConvertToDegrees, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Only Write Good Elements", UseGoodVoxels, FilterParameter::Parameter, WriteStatsGenOdfAngleFile, linkedProps));

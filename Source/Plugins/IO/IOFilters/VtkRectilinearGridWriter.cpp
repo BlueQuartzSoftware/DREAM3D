@@ -241,7 +241,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, OutputFile), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, OutputFile), "*.vtk", "VTK Rectilinear Grid"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, VtkRectilinearGridWriter, "*.vtk", "VTK Rectilinear Grid"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary File", WriteBinaryFile, FilterParameter::Parameter, VtkRectilinearGridWriter));
 
   {

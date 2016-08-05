@@ -86,7 +86,7 @@ void NodesTrianglesToVtk::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Nodes File", NodesFile, FilterParameter::Parameter, NodesTrianglesToVtk));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Triangles File", TrianglesFile, FilterParameter::Parameter, NodesTrianglesToVtk));
-  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, OutputVtkFile), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, OutputVtkFile)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Vtk File", OutputVtkFile, FilterParameter::Parameter, NodesTrianglesToVtk));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary Vtk File", WriteBinaryFile, FilterParameter::Parameter, NodesTrianglesToVtk));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Conformal Mesh", WriteConformalMesh, FilterParameter::Parameter, NodesTrianglesToVtk));
 

@@ -84,7 +84,7 @@ void AvizoRectilinearCoordinateWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AvizoRectilinearCoordinateWriter, this, OutputFile), SIMPL_BIND_GETTER(AvizoRectilinearCoordinateWriter, this, OutputFile), "*.am", "Amira Mesh"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, AvizoRectilinearCoordinateWriter, "*.am", "Amira Mesh"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary File", WriteBinaryFile, FilterParameter::Parameter, AvizoRectilinearCoordinateWriter));
 
   {

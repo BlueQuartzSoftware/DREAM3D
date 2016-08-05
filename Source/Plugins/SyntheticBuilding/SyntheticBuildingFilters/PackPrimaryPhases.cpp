@@ -399,7 +399,7 @@ void PackPrimaryPhases::setupFilterParameters()
   linkedProps.clear();
   linkedProps << "CsvOutputFile";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
-  parameters.push_back(OutputFileFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", getCsvOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, CsvOutputFile), SIMPL_BIND_GETTER(PackPrimaryPhases, this, CsvOutputFile), "*.csv", "Comma Separated Data"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, PackPrimaryPhases, "*.csv", "Comma Separated Data"));
 
 #if PPP_SHOW_DEBUG_OUTPUTS
   parameters.push_back(InputFileFilterParameter::New("Debug VTK File", "VtkOutputFile", getVtkOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK File"));

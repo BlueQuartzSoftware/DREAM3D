@@ -84,7 +84,7 @@ void SurfaceMeshToNonconformalVtk::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToNonconformalVtk, this, OutputVtkFile), SIMPL_BIND_GETTER(SurfaceMeshToNonconformalVtk, this, OutputVtkFile)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Vtk File", OutputVtkFile, FilterParameter::Parameter, SurfaceMeshToNonconformalVtk));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary Vtk File", WriteBinaryFile, FilterParameter::Parameter, SurfaceMeshToNonconformalVtk));
   {
     DataArraySelectionFilterParameter::RequirementType req;

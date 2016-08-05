@@ -93,7 +93,7 @@ void VisualizeGBCDGMT::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, VisualizeGBCDGMT));
   parameters.push_back(SIMPL_NEW_AXISANGLE_FP("Misorientation Axis-Angle", MisorientationRotation, FilterParameter::Parameter, VisualizeGBCDGMT));
-  parameters.push_back(OutputFileFilterParameter::New("Output GMT File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, OutputFile), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, OutputFile), "*.dat", "DAT File"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output GMT File", OutputFile, FilterParameter::Parameter, VisualizeGBCDGMT, "*.dat", "DAT File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::FaceEnsemble, SIMPL::GeometryType::TriangleGeometry);

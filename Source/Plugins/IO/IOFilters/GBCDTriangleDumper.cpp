@@ -82,7 +82,7 @@ GBCDTriangleDumper::~GBCDTriangleDumper()
 void GBCDTriangleDumper::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GBCDTriangleDumper, this, OutputFile), SIMPL_BIND_GETTER(GBCDTriangleDumper, this, OutputFile), "*.ph", "CMU Feature Growth"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, GBCDTriangleDumper, "*.ph", "CMU Feature Growth"));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);

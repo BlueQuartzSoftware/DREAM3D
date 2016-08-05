@@ -264,7 +264,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
 
   QStringList linkedProps("TwinBoundarySchmidFactorsFile");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Twin Boundary Info File", WriteFile, FilterParameter::Parameter, FindTwinBoundarySchmidFactors, linkedProps));
-  parameters.push_back(OutputFileFilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, TwinBoundarySchmidFactorsFile), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, TwinBoundarySchmidFactorsFile)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Twin Boundary Info File", TwinBoundarySchmidFactorsFile, FilterParameter::Parameter, FindTwinBoundarySchmidFactors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);

@@ -80,7 +80,7 @@ LosAlamosFFTWriter::~LosAlamosFFTWriter()
 void LosAlamosFFTWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LosAlamosFFTWriter, this, OutputFile), SIMPL_BIND_GETTER(LosAlamosFFTWriter, this, OutputFile), "*.txt", "FFT Format"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, LosAlamosFFTWriter, "*.txt", "FFT Format"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

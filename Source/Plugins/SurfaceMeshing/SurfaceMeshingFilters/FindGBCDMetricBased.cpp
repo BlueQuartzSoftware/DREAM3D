@@ -508,8 +508,8 @@ void FindGBCDMetricBased::setupFilterParameters()
   }
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Sampling Points (on a Hemisphere)", NumSamplPts, FilterParameter::Parameter, FindGBCDMetricBased));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Exclude Triangles Directly Neighboring Triple Lines", ExcludeTripleLines, FilterParameter::Parameter, FindGBCDMetricBased));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, DistOutputFile), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, DistOutputFile), "*.dat", "DAT File"));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, ErrOutputFile), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, ErrOutputFile), "*.dat", "DAT File"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Distribution File", DistOutputFile, FilterParameter::Parameter, FindGBCDMetricBased, "*.dat", "DAT File"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Distribution Errors File", ErrOutputFile, FilterParameter::Parameter, FindGBCDMetricBased, "*.dat", "DAT File"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Save Relative Errors Instead of Their Absolute Values", SaveRelativeErr, FilterParameter::Parameter, FindGBCDMetricBased));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {

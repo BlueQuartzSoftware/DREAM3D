@@ -188,7 +188,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
   linkedProps.clear();
   linkedProps << "CsvOutputFile";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
-  parameters.push_back(OutputFileFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", getCsvOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, CsvOutputFile), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, CsvOutputFile), "*.csv", "Comma Separated Data"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
   setFilterParameters(parameters);
 }
 
