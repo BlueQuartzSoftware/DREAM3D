@@ -110,7 +110,7 @@ void FeatureInfoReader::setupFilterParameters()
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FeatureInfoReader, this, FeatureIdsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FeatureInfoReader, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellPhasesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellPhasesArrayName)));

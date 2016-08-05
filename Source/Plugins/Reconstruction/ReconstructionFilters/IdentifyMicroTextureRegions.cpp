@@ -265,15 +265,15 @@ void IdentifyMicroTextureRegions::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("C-Axis Locations", "CAxisLocationsArrayPath", getCAxisLocationsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CAxisLocationsArrayPath), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CAxisLocationsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("C-Axis Locations", CAxisLocationsArrayPath, FilterParameter::RequiredArray, IdentifyMicroTextureRegions, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CellPhasesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, IdentifyMicroTextureRegions, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, CrystalStructuresArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, IdentifyMicroTextureRegions, req));
   }
 
   parameters.push_back(StringFilterParameter::New("MTR Ids", "MTRIdsArrayName", getMTRIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, MTRIdsArrayName), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, MTRIdsArrayName)));

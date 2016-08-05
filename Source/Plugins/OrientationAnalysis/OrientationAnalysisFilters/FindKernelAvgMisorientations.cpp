@@ -96,20 +96,20 @@ void FindKernelAvgMisorientations::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, FeatureIdsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindKernelAvgMisorientations, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, CellPhasesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, FindKernelAvgMisorientations, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, QuatsArrayPath), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, QuatsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, FindKernelAvgMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, CrystalStructuresArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindKernelAvgMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Kernel Average Misorientations", "KernelAverageMisorientationsArrayName", getKernelAverageMisorientationsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, KernelAverageMisorientationsArrayName), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, KernelAverageMisorientationsArrayName)));

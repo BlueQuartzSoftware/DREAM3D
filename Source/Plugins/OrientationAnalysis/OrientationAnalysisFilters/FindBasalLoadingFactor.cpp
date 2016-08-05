@@ -90,7 +90,7 @@ void FindBasalLoadingFactor::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("AvgQuats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindBasalLoadingFactor, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindBasalLoadingFactor, this, AvgQuatsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AvgQuats", AvgQuatsArrayPath, FilterParameter::RequiredArray, FindBasalLoadingFactor, req));
   }
 
   {

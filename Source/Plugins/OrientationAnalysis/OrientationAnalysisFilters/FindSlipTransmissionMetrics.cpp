@@ -93,20 +93,20 @@ void FindSlipTransmissionMetrics::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, NeighborListArrayPath), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, NeighborListArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Neighbor List", NeighborListArrayPath, FilterParameter::RequiredArray, FindSlipTransmissionMetrics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, AvgQuatsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, FindSlipTransmissionMetrics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, FeaturePhasesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindSlipTransmissionMetrics, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, CrystalStructuresArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindSlipTransmissionMetrics, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("F1 List", "F1ListArrayName", getF1ListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, F1ListArrayName), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, F1ListArrayName)));

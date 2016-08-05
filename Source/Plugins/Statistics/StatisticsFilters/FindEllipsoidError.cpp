@@ -94,23 +94,23 @@ void FindEllipsoidError::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, FeatureIdsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureIds", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, CentroidsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("NumCells", "NumCellsArrayPath", getNumCellsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, NumCellsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, NumCellsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("NumCells", NumCellsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Axis Eulers", "AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, AxisEulerAnglesArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, AxisEulerAnglesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Axis Eulers", AxisEulerAnglesArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("AxisLengths", "AxisLengthsArrayPath", getAxisLengthsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, AxisLengthsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, AxisLengthsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AxisLengths", AxisLengthsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);

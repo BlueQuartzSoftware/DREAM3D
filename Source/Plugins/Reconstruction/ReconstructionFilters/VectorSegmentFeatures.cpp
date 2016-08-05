@@ -98,11 +98,11 @@ void VectorSegmentFeatures::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Vector Array To Segment", "SelectedVectorArrayPath", getSelectedVectorArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, SelectedVectorArrayPath), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, SelectedVectorArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Vector Array To Segment", SelectedVectorArrayPath, FilterParameter::RequiredArray, VectorSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, GoodVoxelsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, VectorSegmentFeatures, req));
   }
 
   parameters.push_back(StringFilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, FeatureIdsArrayName)));

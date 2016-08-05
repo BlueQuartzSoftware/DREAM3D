@@ -90,7 +90,7 @@ void AddBadData::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Euclidean Distances", "GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(AddBadData, this, GBEuclideanDistancesArrayPath), SIMPL_BIND_GETTER(AddBadData, this, GBEuclideanDistancesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Boundary Euclidean Distances", GBEuclideanDistancesArrayPath, FilterParameter::RequiredArray, AddBadData, req));
   }
   setFilterParameters(parameters);
 }

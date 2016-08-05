@@ -172,11 +172,11 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, FeaturePhasesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, NeighborListArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, NeighborListArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Neighbor List", NeighborListArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
 
   QStringList linkedProps;
@@ -191,30 +191,30 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Size Distribution Fit Type", SizeDistributionFitType, FilterParameter::Parameter, GenerateEnsembleStatistics, choices, false));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, BiasedFeaturesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Biased Features", BiasedFeaturesArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, EquivalentDiametersArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, EquivalentDiametersArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Equivalent Diameters", EquivalentDiametersArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Aspect Ratio Distribution Fit Type", AspectRatioDistributionFitType, FilterParameter::Parameter, GenerateEnsembleStatistics, choices, false));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 2, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Aspect Ratios", "AspectRatiosArrayPath", getAspectRatiosArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, AspectRatiosArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, AspectRatiosArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Aspect Ratios", AspectRatiosArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Omega3 Distribution Fit Type", Omega3DistributionFitType, FilterParameter::Parameter, GenerateEnsembleStatistics, choices, false));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Omega3s", "Omega3sArrayPath", getOmega3sArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, Omega3sArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, Omega3sArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Omega3s", Omega3sArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Neighborhood Distribution Fit Type", NeighborhoodDistributionFitType, FilterParameter::Parameter, GenerateEnsembleStatistics, choices, false));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", getNeighborhoodsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, NeighborhoodsArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, NeighborhoodsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Neighborhoods", NeighborhoodsArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, AxisEulerAnglesArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, AxisEulerAnglesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Axis Euler Angles", AxisEulerAnglesArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
 
   linkedProps.clear();
@@ -224,28 +224,28 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Crystallographic Statistics", "CalculateCrystallographicStats", getCalculateCrystallographicStats(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, CalculateCrystallographicStats), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, CalculateCrystallographicStats), linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, SurfaceFeaturesArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, SurfaceFeaturesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Surface Features", SurfaceFeaturesArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Volumes", "VolumesArrayPath", getVolumesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, VolumesArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, VolumesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Volumes", VolumesArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, FeatureEulerAnglesArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, FeatureEulerAnglesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Euler Angles", FeatureEulerAnglesArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, AvgQuatsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Shared Surface Area List", "SharedSurfaceAreaListArrayPath", getSharedSurfaceAreaListArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, SharedSurfaceAreaListArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, SharedSurfaceAreaListArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Shared Surface Area List", SharedSurfaceAreaListArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, CrystalStructuresArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   // The user types in an array name for the Phase Types
@@ -256,11 +256,11 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, IncludeRadialDistFunc), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, IncludeRadialDistFunc), linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Radial Distribution Function", "RDFArrayPath", getRDFArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, RDFArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, RDFArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Radial Distribution Function", RDFArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 2, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", getMaxMinRDFArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, MaxMinRDFArrayPath), SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, MaxMinRDFArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Max and Min Separation Distances", MaxMinRDFArrayPath, FilterParameter::RequiredArray, GenerateEnsembleStatistics, req));
   }
 
   setFilterParameters(parameters);

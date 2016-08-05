@@ -97,15 +97,15 @@ void FindFeatureHistogram::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureHistogram, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FindFeatureHistogram, this, RemoveBiasedFeatures), linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Bin", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindFeatureHistogram, this, SelectedFeatureArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, SelectedFeatureArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Array To Bin", SelectedFeatureArrayPath, FilterParameter::RequiredArray, FindFeatureHistogram, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindFeatureHistogram, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, FeaturePhasesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeaturePhases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindFeatureHistogram, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(FindFeatureHistogram, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, BiasedFeaturesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("BiasedFeatures", BiasedFeaturesArrayPath, FilterParameter::RequiredArray, FindFeatureHistogram, req));
   }
 
   {

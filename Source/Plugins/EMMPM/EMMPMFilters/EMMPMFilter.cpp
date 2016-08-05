@@ -114,7 +114,7 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Input Attribute Array", "InputDataArrayPath", getInputDataArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(EMMPMFilter, this, InputDataArrayPath), SIMPL_BIND_GETTER(EMMPMFilter, this, InputDataArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Attribute Array", InputDataArrayPath, FilterParameter::RequiredArray, EMMPMFilter, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   {

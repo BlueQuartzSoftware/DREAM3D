@@ -99,7 +99,7 @@ void CalculateArrayHistogram::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataContainer), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataContainer), linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Histogram", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, SelectedArrayPath), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, SelectedArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Histogram", SelectedArrayPath, FilterParameter::RequiredArray, CalculateArrayHistogram, req));
   }
   parameters.push_back(StringFilterParameter::New("Data Container ", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataContainerName), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataContainerName)));
   parameters.push_back(StringFilterParameter::New("Attribute Matrix", "NewAttributeMatrixName", getNewAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewAttributeMatrixName), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewAttributeMatrixName)));

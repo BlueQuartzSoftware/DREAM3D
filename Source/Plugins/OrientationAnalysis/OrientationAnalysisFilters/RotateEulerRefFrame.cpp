@@ -149,7 +149,7 @@ void RotateEulerRefFrame::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Rotation Angle (Degrees)", RotationAngle, FilterParameter::Parameter, RotateEulerRefFrame));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, CellEulerAnglesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, RotateEulerRefFrame, req));
   }
   setFilterParameters(parameters);
 }

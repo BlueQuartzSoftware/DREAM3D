@@ -125,7 +125,7 @@ void WriteImages::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Color Data", "ColorsArrayPath", getColorsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(WriteImages, this, ColorsArrayPath), SIMPL_BIND_GETTER(WriteImages, this, ColorsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Color Data", ColorsArrayPath, FilterParameter::RequiredArray, WriteImages, req));
   }
   setFilterParameters(parameters);
 }
