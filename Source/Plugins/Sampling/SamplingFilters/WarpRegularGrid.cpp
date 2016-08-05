@@ -126,8 +126,8 @@ void WarpRegularGrid::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SecondOrderPolynomialFilterParameter::New("Second Order A Coefficients", "SecondOrderACoeff", getSecondOrderACoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, SecondOrderACoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, SecondOrderACoeff), 0));
-  parameters.push_back(SecondOrderPolynomialFilterParameter::New("Second Order B Coefficients", "SecondOrderBCoeff", getSecondOrderBCoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, SecondOrderBCoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, SecondOrderBCoeff), 0));
+  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order A Coefficients", SecondOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 0));
+  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order B Coefficients", SecondOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 0));
   parameters.push_back(ThirdOrderPolynomialFilterParameter::New("Third Order A Coefficients", "ThirdOrderACoeff", getThirdOrderACoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, ThirdOrderACoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, ThirdOrderACoeff), 1));
   parameters.push_back(ThirdOrderPolynomialFilterParameter::New("Third Order B Coefficients", "ThirdOrderBCoeff", getThirdOrderBCoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, ThirdOrderBCoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, ThirdOrderBCoeff), 1));
   parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order A Coefficients", FourthOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 2));
