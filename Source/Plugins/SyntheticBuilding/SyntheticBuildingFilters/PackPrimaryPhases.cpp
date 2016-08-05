@@ -342,7 +342,7 @@ void PackPrimaryPhases::initialize()
 void PackPrimaryPhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", getPeriodicBoundaries(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, PeriodicBoundaries), SIMPL_BIND_GETTER(PackPrimaryPhases, this, PeriodicBoundaries)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Periodic Boundaries", PeriodicBoundaries, FilterParameter::Parameter, PackPrimaryPhases));
   QStringList linkedProps("MaskArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, UseMask), SIMPL_BIND_GETTER(PackPrimaryPhases, this, UseMask), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));

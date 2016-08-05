@@ -270,7 +270,7 @@ void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, Loop), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, Loop)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Loop Until Gone", Loop, FilterParameter::Parameter, ReplaceElementAttributesWithNeighborValues));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 
   {

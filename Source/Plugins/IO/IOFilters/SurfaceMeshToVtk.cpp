@@ -90,8 +90,8 @@ void SurfaceMeshToVtk::setupFilterParameters()
   QVector<FilterParameter::Pointer> parameters;
 
   parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, OutputVtkFile), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, OutputVtkFile)));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, WriteBinaryFile), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, WriteBinaryFile)));
-  parameters.push_back(BooleanFilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", getWriteConformalMesh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, WriteConformalMesh), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, WriteConformalMesh)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary Vtk File", WriteBinaryFile, FilterParameter::Parameter, SurfaceMeshToVtk));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Conformal Mesh", WriteConformalMesh, FilterParameter::Parameter, SurfaceMeshToVtk));
   {
     DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, SurfaceMeshFaceLabelsArrayPath), req));

@@ -430,10 +430,10 @@ void FindGBPDMetricBased::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, FindGBPDMetricBased));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Limiting Distance [deg.]", LimitDist, FilterParameter::Parameter, FindGBPDMetricBased));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Sampling Points (on a Hemisphere)", NumSamplPts, FilterParameter::Parameter, FindGBPDMetricBased));
-  parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, ExcludeTripleLines), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, ExcludeTripleLines)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Exclude Triangles Directly Neighboring Triple Lines", ExcludeTripleLines, FilterParameter::Parameter, FindGBPDMetricBased));
   parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, DistOutputFile), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, DistOutputFile)));
   parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, ErrOutputFile), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, ErrOutputFile)));
-  parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBPDMetricBased, this, SaveRelativeErr), SIMPL_BIND_GETTER(FindGBPDMetricBased, this, SaveRelativeErr)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Save Relative Errors Instead of Their Absolute Values", SaveRelativeErr, FilterParameter::Parameter, FindGBPDMetricBased));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);

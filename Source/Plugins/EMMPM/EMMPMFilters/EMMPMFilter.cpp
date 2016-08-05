@@ -101,7 +101,7 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Exchange Energy", ExchangeEnergy, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Histogram Loops (EM)", HistogramLoops, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Segmentation Loops (MPM)", SegmentationLoops, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(BooleanFilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", getUseSimulatedAnnealing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseSimulatedAnnealing), SIMPL_BIND_GETTER(EMMPMFilter, this, UseSimulatedAnnealing)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Use Simulated Annealing", UseSimulatedAnnealing, FilterParameter::Parameter, EMMPMFilter));
   QStringList linkedProps("GradientPenalty");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Gradient Penalty", "UseGradientPenalty", getUseGradientPenalty(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseGradientPenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, UseGradientPenalty), linkedProps));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Gradient Penalty (Beta E)", GradientPenalty, FilterParameter::Parameter, EMMPMFilter));

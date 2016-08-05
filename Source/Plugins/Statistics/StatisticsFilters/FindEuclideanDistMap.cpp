@@ -287,7 +287,7 @@ FindEuclideanDistMap::~FindEuclideanDistMap()
 void FindEuclideanDistMap::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Calculate Manhattan Distance Only", "CalcOnlyManhattanDist", getCalcOnlyManhattanDist(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, CalcOnlyManhattanDist), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, CalcOnlyManhattanDist)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Calculate Manhattan Distance Only", CalcOnlyManhattanDist, FilterParameter::Parameter, FindEuclideanDistMap));
   QStringList linkedProps("GBEuclideanDistancesArrayName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Boundaries", "DoBoundaries", getDoBoundaries(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoBoundaries), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoBoundaries), linkedProps));
   linkedProps.clear();

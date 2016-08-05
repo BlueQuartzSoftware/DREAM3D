@@ -102,7 +102,7 @@ void CropImageGeometry::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, RenumberFeatures), SIMPL_BIND_GETTER(CropImageGeometry, this, RenumberFeatures), linkedProps));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(BooleanFilterParameter::New("Update Origin", "UpdateOrigin", getUpdateOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, UpdateOrigin), SIMPL_BIND_GETTER(CropImageGeometry, this, UpdateOrigin)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Update Origin", UpdateOrigin, FilterParameter::Parameter, CropImageGeometry));
   parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, SaveAsNewDataContainer), SIMPL_BIND_GETTER(CropImageGeometry, this, SaveAsNewDataContainer), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

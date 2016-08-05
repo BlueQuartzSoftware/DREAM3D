@@ -79,7 +79,7 @@ void FeatureDataCSVWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(OutputFileFilterParameter::New("Output File", "FeatureDataFile", getFeatureDataFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, FeatureDataFile), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, FeatureDataFile), "*.csv", "Comma Separated Data"));
-  parameters.push_back(BooleanFilterParameter::New("Write Neighbor Data", "WriteNeighborListData", getWriteNeighborListData(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, WriteNeighborListData), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, WriteNeighborListData)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Neighbor Data", WriteNeighborListData, FilterParameter::Parameter, FeatureDataCSVWriter));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);

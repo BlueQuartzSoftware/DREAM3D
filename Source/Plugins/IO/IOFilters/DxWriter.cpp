@@ -78,7 +78,7 @@ void DxWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(DxWriter, this, OutputFile), SIMPL_BIND_GETTER(DxWriter, this, OutputFile), "*.dx", "Open DX Visualization"));
-  parameters.push_back(BooleanFilterParameter::New("Add Surface Layer", "AddSurfaceLayer", getAddSurfaceLayer(), FilterParameter::Parameter, SIMPL_BIND_SETTER(DxWriter, this, AddSurfaceLayer), SIMPL_BIND_GETTER(DxWriter, this, AddSurfaceLayer)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Add Surface Layer", AddSurfaceLayer, FilterParameter::Parameter, DxWriter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

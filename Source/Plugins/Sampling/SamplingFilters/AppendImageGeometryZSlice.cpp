@@ -83,7 +83,7 @@ void AppendImageGeometryZSlice::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Destination Cell Data", DestinationAttributeMatrix, FilterParameter::RequiredArray, AppendImageGeometryZSlice, req));
   }
 
-  parameters.push_back(BooleanFilterParameter::New("Check Resolution", "CheckResolution", getCheckResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, CheckResolution), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, CheckResolution)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Check Resolution", CheckResolution, FilterParameter::Parameter, AppendImageGeometryZSlice));
 
   setFilterParameters(parameters);
 }

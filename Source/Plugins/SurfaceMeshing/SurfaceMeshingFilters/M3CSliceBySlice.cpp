@@ -333,7 +333,7 @@ M3CSliceBySlice::~M3CSliceBySlice()
 void M3CSliceBySlice::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Delete Temp Files", "DeleteTempFiles", getDeleteTempFiles(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, DeleteTempFiles), SIMPL_BIND_GETTER(M3CSliceBySlice, this, DeleteTempFiles)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Temp Files", DeleteTempFiles, FilterParameter::Uncategorized, M3CSliceBySlice));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
   parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(M3CSliceBySlice, this, FeatureIdsArrayPath)));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));

@@ -149,7 +149,7 @@ void ReadEdaxH5Data::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Z Spacing (Microns)", ZSpacing, FilterParameter::Parameter, ReadEdaxH5Data));
   parameters.push_back(FloatVec3FilterParameter::New("Origin (XYZ)", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, Origin), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, Origin)));
 
-  parameters.push_back(BooleanFilterParameter::New("Read Pattern Data", "ReadPatternData", getReadPatternData(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, ReadPatternData), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, ReadPatternData)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Read Pattern Data", ReadPatternData, FilterParameter::Parameter, ReadEdaxH5Data));
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, DataContainerName), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, CellAttributeMatrixName)));

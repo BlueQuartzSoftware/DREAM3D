@@ -507,10 +507,10 @@ void FindGBCDMetricBased::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Sampling Points (on a Hemisphere)", NumSamplPts, FilterParameter::Parameter, FindGBCDMetricBased));
-  parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, ExcludeTripleLines), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, ExcludeTripleLines)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Exclude Triangles Directly Neighboring Triple Lines", ExcludeTripleLines, FilterParameter::Parameter, FindGBCDMetricBased));
   parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, DistOutputFile), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, DistOutputFile), "*.dat", "DAT File"));
   parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, ErrOutputFile), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, ErrOutputFile), "*.dat", "DAT File"));
-  parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, SaveRelativeErr), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, SaveRelativeErr)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Save Relative Errors Instead of Their Absolute Values", SaveRelativeErr, FilterParameter::Parameter, FindGBCDMetricBased));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);

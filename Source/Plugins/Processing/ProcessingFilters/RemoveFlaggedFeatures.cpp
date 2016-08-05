@@ -78,7 +78,7 @@ RemoveFlaggedFeatures::~RemoveFlaggedFeatures()
 void RemoveFlaggedFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Fill-in Removed Features", "FillRemovedFeatures", getFillRemovedFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RemoveFlaggedFeatures, this, FillRemovedFeatures), SIMPL_BIND_GETTER(RemoveFlaggedFeatures, this, FillRemovedFeatures)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Fill-in Removed Features", FillRemovedFeatures, FilterParameter::Parameter, RemoveFlaggedFeatures));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
