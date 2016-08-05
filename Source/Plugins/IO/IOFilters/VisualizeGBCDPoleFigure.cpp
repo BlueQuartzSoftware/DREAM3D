@@ -94,7 +94,7 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, VisualizeGBCDPoleFigure));
-  parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDPoleFigure, this, MisorientationRotation), SIMPL_BIND_GETTER(VisualizeGBCDPoleFigure, this, MisorientationRotation)));
+  parameters.push_back(SIMPL_NEW_AXISANGLE_FP("Misorientation Axis-Angle", MisorientationRotation, FilterParameter::Parameter, VisualizeGBCDPoleFigure));
   parameters.push_back(OutputFileFilterParameter::New("Output Regular Grid VTK File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDPoleFigure, this, OutputFile), SIMPL_BIND_GETTER(VisualizeGBCDPoleFigure, this, OutputFile), "*.vtk", "VTK File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   {

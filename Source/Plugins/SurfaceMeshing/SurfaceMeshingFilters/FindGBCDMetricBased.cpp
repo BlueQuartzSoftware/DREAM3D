@@ -480,7 +480,7 @@ void FindGBCDMetricBased::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, FindGBCDMetricBased));
-  parameters.push_back(AxisAngleFilterParameter::New("Fixed Misorientation", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, MisorientationRotation), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, MisorientationRotation)));
+  parameters.push_back(SIMPL_NEW_AXISANGLE_FP("Fixed Misorientation", MisorientationRotation, FilterParameter::Parameter, FindGBCDMetricBased));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Limiting Distances");
