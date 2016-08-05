@@ -106,14 +106,14 @@ void SurfaceMeshToVtk::setupFilterParameters()
     MultiDataArraySelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
     req.amTypes = QVector<unsigned int>(1, SIMPL::AttributeMatrixType::Vertex);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Vertex Arrays", "SelectedVertexArrays", getSelectedVertexArrays(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, SelectedVertexArrays), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, SelectedVertexArrays), req));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Vertex Arrays", SelectedVertexArrays, FilterParameter::RequiredArray, SurfaceMeshToVtk, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
     req.amTypes = QVector<unsigned int>(1, SIMPL::AttributeMatrixType::Face);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Face Arrays", "SelectedFaceArrays", getSelectedFaceArrays(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, SelectedFaceArrays), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, SelectedFaceArrays), req));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Face Arrays", SelectedFaceArrays, FilterParameter::RequiredArray, SurfaceMeshToVtk, req));
   }
 
 

@@ -171,7 +171,7 @@ void ExportData::setupFilterParameters()
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Export", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(ExportData, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(ExportData, this, SelectedDataArrayPaths), req));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Export", SelectedDataArrayPaths, FilterParameter::RequiredArray, ExportData, req));
   }
   setFilterParameters(parameters);
 }
