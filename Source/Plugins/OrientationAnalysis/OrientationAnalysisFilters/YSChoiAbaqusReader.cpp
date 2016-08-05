@@ -113,8 +113,8 @@ void YSChoiAbaqusReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(YSChoiAbaqusReader, this, InputFile), SIMPL_BIND_GETTER(YSChoiAbaqusReader, this, InputFile)));
-  parameters.push_back(InputFileFilterParameter::New("Input Feature Orientation File", "InputFeatureInfoFile", getInputFeatureInfoFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(YSChoiAbaqusReader, this, InputFeatureInfoFile), SIMPL_BIND_GETTER(YSChoiAbaqusReader, this, InputFeatureInfoFile)));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, YSChoiAbaqusReader));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Feature Orientation File", InputFeatureInfoFile, FilterParameter::Parameter, YSChoiAbaqusReader));
 
   parameters.push_back(StringFilterParameter::New("Data Container Name", "CellEulerAnglesArrayName", getCellEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(YSChoiAbaqusReader, this, CellEulerAnglesArrayName), SIMPL_BIND_GETTER(YSChoiAbaqusReader, this, CellEulerAnglesArrayName)));
   parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(YSChoiAbaqusReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(YSChoiAbaqusReader, this, CellAttributeMatrixName)));

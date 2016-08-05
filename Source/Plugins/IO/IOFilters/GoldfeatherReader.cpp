@@ -111,7 +111,7 @@ void GoldfeatherReader::setupFilterParameters()
 //    ////parameter->setValueType("QString");
 //    parameters.push_back(parameter);
 //  }
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GoldfeatherReader, this, InputFile), SIMPL_BIND_GETTER(GoldfeatherReader, this, InputFile), "*.jg"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, GoldfeatherReader, "*.jg"));
 
 
   parameters.push_back(StringFilterParameter::New("Surface DataContainer", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(GoldfeatherReader, this, SurfaceDataContainerName)));

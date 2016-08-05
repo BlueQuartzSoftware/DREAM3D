@@ -140,7 +140,7 @@ void ReadStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("STL File", "StlFilePath", getStlFilePath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadStlFile, this, StlFilePath), SIMPL_BIND_GETTER(ReadStlFile, this, StlFilePath), "*.stl", "STL File"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("STL File", StlFilePath, FilterParameter::Parameter, ReadStlFile, "*.stl", "STL File"));
   parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, SurfaceMeshDataContainerName), SIMPL_BIND_GETTER(ReadStlFile, this, SurfaceMeshDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, FaceAttributeMatrixName), SIMPL_BIND_GETTER(ReadStlFile, this, FaceAttributeMatrixName)));

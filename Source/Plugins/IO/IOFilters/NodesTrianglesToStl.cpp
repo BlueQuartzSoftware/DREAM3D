@@ -84,8 +84,8 @@ void NodesTrianglesToStl::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Nodes File", "NodesFile", getNodesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, NodesFile), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, NodesFile)));
-  parameters.push_back(InputFileFilterParameter::New("Triangles File", "TrianglesFile", getTrianglesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, TrianglesFile), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, TrianglesFile)));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Nodes File", NodesFile, FilterParameter::Parameter, NodesTrianglesToStl));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Triangles File", TrianglesFile, FilterParameter::Parameter, NodesTrianglesToStl));
   parameters.push_back(OutputPathFilterParameter::New("Output STL Directory", "OutputStlDirectory", getOutputStlDirectory(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, OutputStlDirectory), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, OutputStlDirectory)));
   parameters.push_back(StringFilterParameter::New("Stl File Prefix", "OutputStlPrefix", getOutputStlPrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, OutputStlPrefix), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, OutputStlPrefix)));
 

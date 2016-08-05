@@ -395,7 +395,7 @@ void PackPrimaryPhases::setupFilterParameters()
   linkedProps.clear();
   linkedProps << "FeatureInputFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Features", "HaveFeatures", getHaveFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, HaveFeatures), SIMPL_BIND_GETTER(PackPrimaryPhases, this, HaveFeatures), linkedProps));
-  parameters.push_back(InputFileFilterParameter::New("Feature Input File", "FeatureInputFile", getFeatureInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, FeatureInputFile), SIMPL_BIND_GETTER(PackPrimaryPhases, this, FeatureInputFile), "*.txt", "Text File"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Feature Input File", FeatureInputFile, FilterParameter::Parameter, PackPrimaryPhases, "*.txt", "Text File"));
   linkedProps.clear();
   linkedProps << "CsvOutputFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), FilterParameter::Parameter, SIMPL_BIND_SETTER(PackPrimaryPhases, this, WriteGoalAttributes), SIMPL_BIND_GETTER(PackPrimaryPhases, this, WriteGoalAttributes), linkedProps));

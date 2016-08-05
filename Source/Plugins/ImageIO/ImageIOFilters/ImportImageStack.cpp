@@ -118,7 +118,7 @@ void ImportImageStack::setupFilterParameters()
   }
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportImageStack, 0));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ImportImageStack, 0));
-  parameters.push_back(InputFileFilterParameter::New("Bounds File", "BoundsFile", getBoundsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ImportImageStack, this, BoundsFile), SIMPL_BIND_GETTER(ImportImageStack, this, BoundsFile), "*.txt", "", 1));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Bounds File", BoundsFile, FilterParameter::Parameter, ImportImageStack, "*.txt", "", 1));
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportImageStack, this, DataContainerName), SIMPL_BIND_GETTER(ImportImageStack, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportImageStack, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ImportImageStack, this, CellAttributeMatrixName)));
