@@ -149,7 +149,7 @@ ExportData::~ExportData()
 void ExportData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputPathFilterParameter::New("Output Path", "OutputPath", getOutputPath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ExportData, this, OutputPath), SIMPL_BIND_GETTER(ExportData, this, OutputPath)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, ExportData));
   parameters.push_back(StringFilterParameter::New("File Extension", "FileExtension", getFileExtension(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ExportData, this, FileExtension), SIMPL_BIND_GETTER(ExportData, this, FileExtension)));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Tuples Per Line", MaxValPerLine, FilterParameter::Parameter, ExportData));
   {

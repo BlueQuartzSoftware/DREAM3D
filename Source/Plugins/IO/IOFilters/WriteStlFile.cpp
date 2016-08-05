@@ -83,7 +83,7 @@ WriteStlFile::~WriteStlFile()
 void WriteStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputPathFilterParameter::New("Output STL Directory", "OutputStlDirectory", getOutputStlDirectory(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteStlFile, this, OutputStlDirectory), SIMPL_BIND_GETTER(WriteStlFile, this, OutputStlDirectory)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output STL Directory", OutputStlDirectory, FilterParameter::Parameter, WriteStlFile));
   parameters.push_back(StringFilterParameter::New("STL File Prefix", "OutputStlPrefix", getOutputStlPrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteStlFile, this, OutputStlPrefix), SIMPL_BIND_GETTER(WriteStlFile, this, OutputStlPrefix)));
   //QStringList linkedProps("SurfaceMeshFacePhasesArrayPath");
   //parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Group Files by Ensemble", GroupByPhase, FilterParameter::Parameter, WriteStlFile, linkedProps));

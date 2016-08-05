@@ -115,7 +115,7 @@ void WriteImages::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(OutputPathFilterParameter::New("Output Directory Path", "OutputPath", getOutputPath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteImages, this, OutputPath), SIMPL_BIND_GETTER(WriteImages, this, OutputPath)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Directory Path", OutputPath, FilterParameter::Parameter, WriteImages));
   {
     QStringList linkedProps;
     linkedProps << "ImagePrefix";
