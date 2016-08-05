@@ -105,7 +105,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
   }
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number Of Bins For Correlated Array", NumberOfCorrelatedBins, FilterParameter::Parameter, FitCorrelatedFeatureData));
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, RemoveBiasedFeatures), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Parameter, FitCorrelatedFeatureData, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;

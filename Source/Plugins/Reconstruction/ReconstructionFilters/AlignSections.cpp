@@ -79,7 +79,7 @@ void AlignSections::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("AlignmentShiftFileName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", getWriteAlignmentShifts(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AlignSections, this, WriteAlignmentShifts), SIMPL_BIND_GETTER(AlignSections, this, WriteAlignmentShifts), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Alignment Shift File", WriteAlignmentShifts, FilterParameter::Parameter, AlignSections, linkedProps));
   parameters.push_back(OutputFileFilterParameter::New("Alignment File", "AlignmentShiftFileName", getAlignmentShiftFileName(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AlignSections, this, AlignmentShiftFileName), SIMPL_BIND_GETTER(AlignSections, this, AlignmentShiftFileName), "", "*.txt"));
   setFilterParameters(parameters);
 }

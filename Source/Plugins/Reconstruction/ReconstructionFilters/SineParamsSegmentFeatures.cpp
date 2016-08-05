@@ -93,7 +93,7 @@ void SineParamsSegmentFeatures::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, UseGoodVoxels), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Good Voxels Array", UseGoodVoxels, FilterParameter::Parameter, SineParamsSegmentFeatures, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;

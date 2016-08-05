@@ -119,7 +119,7 @@ void WriteImages::setupFilterParameters()
   {
     QStringList linkedProps;
     linkedProps << "ImagePrefix";
-    parameters.push_back(LinkedBooleanFilterParameter::New("File Prefix", "FilePrefix", getFilePrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteImages, this, FilePrefix), SIMPL_BIND_GETTER(WriteImages, this, FilePrefix), linkedProps));
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("File Prefix", FilePrefix, FilterParameter::Parameter, WriteImages, linkedProps));
   }
   parameters.push_back(StringFilterParameter::New("Image File Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteImages, this, ImagePrefix), SIMPL_BIND_GETTER(WriteImages, this, ImagePrefix)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));

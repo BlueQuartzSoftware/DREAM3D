@@ -289,16 +289,16 @@ void FindEuclideanDistMap::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Calculate Manhattan Distance Only", CalcOnlyManhattanDist, FilterParameter::Parameter, FindEuclideanDistMap));
   QStringList linkedProps("GBEuclideanDistancesArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Boundaries", "DoBoundaries", getDoBoundaries(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoBoundaries), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoBoundaries), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Boundaries", DoBoundaries, FilterParameter::Parameter, FindEuclideanDistMap, linkedProps));
   linkedProps.clear();
   linkedProps << "TJEuclideanDistancesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Triple Lines", "DoTripleLines", getDoTripleLines(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoTripleLines), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoTripleLines), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Triple Lines", DoTripleLines, FilterParameter::Parameter, FindEuclideanDistMap, linkedProps));
   linkedProps.clear();
   linkedProps << "QPEuclideanDistancesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Quadruple Points", "DoQuadPoints", getDoQuadPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, DoQuadPoints), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, DoQuadPoints), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Distance to Quadruple Points", DoQuadPoints, FilterParameter::Parameter, FindEuclideanDistMap, linkedProps));
   linkedProps.clear();
   linkedProps << "NearestNeighborsArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store the Nearest Boundary Cells", "SaveNearestNeighbors", getSaveNearestNeighbors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, SaveNearestNeighbors), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, SaveNearestNeighbors), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store the Nearest Boundary Cells", SaveNearestNeighbors, FilterParameter::Parameter, FindEuclideanDistMap, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

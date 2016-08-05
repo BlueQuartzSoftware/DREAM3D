@@ -129,7 +129,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Periodic Boundaries", PeriodicBoundaries, FilterParameter::Parameter, InsertPrecipitatePhases));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Match Radial Distribution Function", MatchRDF, FilterParameter::Parameter, InsertPrecipitatePhases));
   QStringList linkedProps("MaskArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, UseMask), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, UseMask), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
@@ -183,11 +183,11 @@ void InsertPrecipitatePhases::setupFilterParameters()
   }
   linkedProps.clear();
   linkedProps << "PrecipInputFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Precipitates", "HavePrecips", getHavePrecips(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, HavePrecips), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, HavePrecips), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Precipitates", HavePrecips, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitate Input File", PrecipInputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.txt", "Text File"));
   linkedProps.clear();
   linkedProps << "CsvOutputFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, WriteGoalAttributes), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, WriteGoalAttributes), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(OutputFileFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", getCsvOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, CsvOutputFile), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, CsvOutputFile), "*.csv", "Comma Separated Data"));
   setFilterParameters(parameters);
 }

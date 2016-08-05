@@ -89,7 +89,7 @@ void FindMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("AvgMisorientationsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Find Average Misorientation Per Feature", "FindAvgMisors", getFindAvgMisors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindMisorientations, this, FindAvgMisors), SIMPL_BIND_GETTER(FindMisorientations, this, FindAvgMisors), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Find Average Misorientation Per Feature", FindAvgMisors, FilterParameter::Parameter, FindMisorientations, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);

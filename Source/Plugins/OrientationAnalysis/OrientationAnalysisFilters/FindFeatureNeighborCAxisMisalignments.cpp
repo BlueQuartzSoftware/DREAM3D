@@ -94,7 +94,7 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("AvgCAxisMisalignmentsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Find Average Misalignment Per Feature", "FindAvgMisals", getFindAvgMisals(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, FindAvgMisals), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, FindAvgMisals), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Find Average Misalignment Per Feature", FindAvgMisals, FilterParameter::Parameter, FindFeatureNeighborCAxisMisalignments, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);

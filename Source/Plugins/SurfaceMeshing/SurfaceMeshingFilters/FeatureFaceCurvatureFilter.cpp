@@ -107,16 +107,16 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
   QStringList linkedProps;
   linkedProps << "SurfaceMeshPrincipalCurvature1sArrayName" << "SurfaceMeshPrincipalCurvature2sArrayName";
   linkedProps << "SurfaceMeshPrincipalDirection1sArrayName" << "SurfaceMeshPrincipalDirection2sArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Principal Direction Vectors", "ComputePrincipalDirectionVectors", getComputePrincipalDirectionVectors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, ComputePrincipalDirectionVectors), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, ComputePrincipalDirectionVectors), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Principal Direction Vectors", ComputePrincipalDirectionVectors, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceMeshGaussianCurvaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Gaussian Curvature", "ComputeGaussianCurvature", getComputeGaussianCurvature(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, ComputeGaussianCurvature), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, ComputeGaussianCurvature), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Gaussian Curvature", ComputeGaussianCurvature, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceMeshMeanCurvaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Mean Curvature", "ComputeMeanCurvature", getComputeMeanCurvature(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, ComputeMeanCurvature), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, ComputeMeanCurvature), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Mean Curvature", ComputeMeanCurvature, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceMeshFaceNormalsArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Face Normals for Curve Fitting", "UseNormalsForCurveFitting", getUseNormalsForCurveFitting(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, UseNormalsForCurveFitting), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, UseNormalsForCurveFitting), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Face Normals for Curve Fitting", UseNormalsForCurveFitting, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {

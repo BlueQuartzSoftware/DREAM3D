@@ -108,10 +108,10 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("LocalCAxisMisalignmentsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Local C-Axis Misalignments", "CalcBiasedAvg", getCalcBiasedAvg(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, CalcBiasedAvg), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, CalcBiasedAvg), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Local C-Axis Misalignments", CalcBiasedAvg, FilterParameter::Parameter, FindLocalAverageCAxisMisalignments, linkedProps));
   linkedProps.clear();
   linkedProps << "UnbiasedLocalCAxisMisalignmentsArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Unbiased Local C-Axis Misalignments", "CalcUnbiasedAvg", getCalcUnbiasedAvg(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, CalcUnbiasedAvg), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, CalcUnbiasedAvg), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Unbiased Local C-Axis Misalignments", CalcUnbiasedAvg, FilterParameter::Parameter, FindLocalAverageCAxisMisalignments, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;

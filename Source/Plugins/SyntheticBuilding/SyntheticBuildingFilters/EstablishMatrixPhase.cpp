@@ -102,7 +102,7 @@ void EstablishMatrixPhase::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("MaskArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, UseMask), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, UseMask), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Parameter, EstablishMatrixPhase, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

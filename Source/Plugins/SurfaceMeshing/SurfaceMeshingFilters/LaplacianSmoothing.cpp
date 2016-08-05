@@ -96,7 +96,7 @@ void LaplacianSmoothing::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "MuFactor";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Taubin Smoothing", "UseTaubinSmoothing", getUseTaubinSmoothing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LaplacianSmoothing, this, UseTaubinSmoothing), SIMPL_BIND_GETTER(LaplacianSmoothing, this, UseTaubinSmoothing), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Taubin Smoothing", UseTaubinSmoothing, FilterParameter::Parameter, LaplacianSmoothing, linkedProps));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Mu Factor", MuFactor, FilterParameter::Parameter, LaplacianSmoothing));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Triple Line Lambda", TripleLineLambda, FilterParameter::Parameter, LaplacianSmoothing));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Quadruple Points Lambda", QuadPointLambda, FilterParameter::Parameter, LaplacianSmoothing));

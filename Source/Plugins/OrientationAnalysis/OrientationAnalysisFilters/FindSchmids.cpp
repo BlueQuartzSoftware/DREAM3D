@@ -114,10 +114,10 @@ void FindSchmids::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "PhisArrayName" << "LambdasArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, StoreAngleComponents), SIMPL_BIND_GETTER(FindSchmids, this, StoreAngleComponents), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Angle Components of Schmid Factor", StoreAngleComponents, FilterParameter::Parameter, FindSchmids, linkedProps));
   QStringList linkedProps2;
   linkedProps2 << "SlipPlane" << "SlipDirection";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, OverrideSystem), SIMPL_BIND_GETTER(FindSchmids, this, OverrideSystem), linkedProps2));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Default Slip System", OverrideSystem, FilterParameter::Parameter, FindSchmids, linkedProps2));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Slip Plane", SlipPlane, FilterParameter::Parameter, FindSchmids));
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Slip Direction", SlipDirection, FilterParameter::Parameter, FindSchmids));

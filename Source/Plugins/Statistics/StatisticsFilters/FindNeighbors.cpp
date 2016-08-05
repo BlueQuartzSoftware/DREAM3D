@@ -93,10 +93,10 @@ void FindNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("BoundaryCellsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Boundary Cells Array", "StoreBoundaryCells", getStoreBoundaryCells(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindNeighbors, this, StoreBoundaryCells), SIMPL_BIND_GETTER(FindNeighbors, this, StoreBoundaryCells), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Boundary Cells Array", StoreBoundaryCells, FilterParameter::Parameter, FindNeighbors, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceFeaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Surface Features Array", "StoreSurfaceFeatures", getStoreSurfaceFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindNeighbors, this, StoreSurfaceFeatures), SIMPL_BIND_GETTER(FindNeighbors, this, StoreSurfaceFeatures), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Surface Features Array", StoreSurfaceFeatures, FilterParameter::Parameter, FindNeighbors, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

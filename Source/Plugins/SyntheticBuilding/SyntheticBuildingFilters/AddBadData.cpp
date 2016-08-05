@@ -81,11 +81,11 @@ void AddBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("PoissonVolFraction");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Add Random Noise", "PoissonNoise", getPoissonNoise(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, PoissonNoise), SIMPL_BIND_GETTER(AddBadData, this, PoissonNoise), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Random Noise", PoissonNoise, FilterParameter::Parameter, AddBadData, linkedProps));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Volume Fraction of Random Noise", PoissonVolFraction, FilterParameter::Parameter, AddBadData));
   linkedProps.clear();
   linkedProps << "BoundaryVolFraction";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Add Boundary Noise", "BoundaryNoise", getBoundaryNoise(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddBadData, this, BoundaryNoise), SIMPL_BIND_GETTER(AddBadData, this, BoundaryNoise), linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Add Boundary Noise", BoundaryNoise, FilterParameter::Parameter, AddBadData, linkedProps));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Volume Fraction of Boundary Noise", BoundaryVolFraction, FilterParameter::Parameter, AddBadData));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
