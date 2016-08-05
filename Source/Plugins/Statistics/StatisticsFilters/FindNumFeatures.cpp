@@ -84,7 +84,7 @@ void FindNumFeatures::setupFilterParameters()
 
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNumFeatures, this, NumFeaturesArrayPath), SIMPL_BIND_GETTER(FindNumFeatures, this, NumFeaturesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::CreatedArray, FindNumFeatures, req));
   }
 
   setFilterParameters(parameters);

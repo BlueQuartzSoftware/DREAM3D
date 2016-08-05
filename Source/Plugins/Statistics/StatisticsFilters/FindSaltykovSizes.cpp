@@ -84,7 +84,7 @@ void FindSaltykovSizes::setupFilterParameters()
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Saltykov Equivalent Diameters", "SaltykovEquivalentDiametersArrayPath", getSaltykovEquivalentDiametersArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSaltykovSizes, this, SaltykovEquivalentDiametersArrayPath), SIMPL_BIND_GETTER(FindSaltykovSizes, this, SaltykovEquivalentDiametersArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Saltykov Equivalent Diameters", SaltykovEquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindSaltykovSizes, req));
   }
 
   setFilterParameters(parameters);

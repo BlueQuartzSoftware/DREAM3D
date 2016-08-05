@@ -95,7 +95,7 @@ void FindAvgCAxes::setupFilterParameters()
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Average C-Axes", "AvgCAxesArrayPath", getAvgCAxesArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindAvgCAxes, this, AvgCAxesArrayPath), SIMPL_BIND_GETTER(FindAvgCAxes, this, AvgCAxesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Average C-Axes", AvgCAxesArrayPath, FilterParameter::CreatedArray, FindAvgCAxes, req));
   }
   setFilterParameters(parameters);
 }

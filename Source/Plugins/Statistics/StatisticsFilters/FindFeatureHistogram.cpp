@@ -110,7 +110,7 @@ void FindFeatureHistogram::setupFilterParameters()
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureHistogram, this, NewEnsembleArrayArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, NewEnsembleArrayArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("New Ensemble Array", NewEnsembleArrayArrayPath, FilterParameter::CreatedArray, FindFeatureHistogram, req));
   }
 
   setFilterParameters(parameters);

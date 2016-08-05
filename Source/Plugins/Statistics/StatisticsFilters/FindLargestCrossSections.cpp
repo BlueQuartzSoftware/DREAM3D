@@ -101,7 +101,7 @@ void FindLargestCrossSections::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Largest Cross Sections", "LargestCrossSectionsArrayPath", getLargestCrossSectionsArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindLargestCrossSections, this, LargestCrossSectionsArrayPath), SIMPL_BIND_GETTER(FindLargestCrossSections, this, LargestCrossSectionsArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Largest Cross Sections", LargestCrossSectionsArrayPath, FilterParameter::CreatedArray, FindLargestCrossSections, req));
   }
   setFilterParameters(parameters);
 }

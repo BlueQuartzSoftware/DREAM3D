@@ -95,7 +95,7 @@ void FindBasalLoadingFactor::setupFilterParameters()
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Basal Loading Factor", "BasalLoadingFactorArrayPath", getBasalLoadingFactorArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBasalLoadingFactor, this, BasalLoadingFactorArrayPath), SIMPL_BIND_GETTER(FindBasalLoadingFactor, this, BasalLoadingFactorArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Basal Loading Factor", BasalLoadingFactorArrayPath, FilterParameter::CreatedArray, FindBasalLoadingFactor, req));
   }
 
   setFilterParameters(parameters);

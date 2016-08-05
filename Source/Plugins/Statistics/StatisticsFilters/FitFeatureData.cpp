@@ -121,7 +121,7 @@ void FitFeatureData::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Fit Parameters", "NewEnsembleArrayArray", getNewEnsembleArrayArray(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FitFeatureData, this, NewEnsembleArrayArray), SIMPL_BIND_GETTER(FitFeatureData, this, NewEnsembleArrayArray), req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Fit Parameters", NewEnsembleArrayArray, FilterParameter::CreatedArray, FitFeatureData, req));
   }
   setFilterParameters(parameters);
 }

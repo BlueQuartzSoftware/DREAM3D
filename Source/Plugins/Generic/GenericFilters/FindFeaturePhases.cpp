@@ -91,7 +91,7 @@ void FindFeaturePhases::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeaturePhases, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindFeaturePhases, this, FeaturePhasesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindFeaturePhases, req));
   }
   setFilterParameters(parameters);
 }

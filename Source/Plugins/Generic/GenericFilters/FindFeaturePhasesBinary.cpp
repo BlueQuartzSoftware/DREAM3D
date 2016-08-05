@@ -94,7 +94,7 @@ void FindFeaturePhasesBinary::setupFilterParameters()
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature);
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeaturePhasesBinary, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindFeaturePhasesBinary, this, FeaturePhasesArrayPath), req));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindFeaturePhasesBinary, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeaturePhasesBinary, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(FindFeaturePhasesBinary, this, CellEnsembleAttributeMatrixName)));
