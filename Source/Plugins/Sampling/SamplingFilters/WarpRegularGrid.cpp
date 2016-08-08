@@ -128,8 +128,8 @@ void WarpRegularGrid::setupFilterParameters()
   }
   parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order A Coefficients", SecondOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 0));
   parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order B Coefficients", SecondOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 0));
-  parameters.push_back(ThirdOrderPolynomialFilterParameter::New("Third Order A Coefficients", "ThirdOrderACoeff", getThirdOrderACoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, ThirdOrderACoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, ThirdOrderACoeff), 1));
-  parameters.push_back(ThirdOrderPolynomialFilterParameter::New("Third Order B Coefficients", "ThirdOrderBCoeff", getThirdOrderBCoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, ThirdOrderBCoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, ThirdOrderBCoeff), 1));
+  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order A Coefficients", ThirdOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 1));
+  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order B Coefficients", ThirdOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 1));
   parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order A Coefficients", FourthOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 2));
   parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order B Coefficients", FourthOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 2));
   QStringList linkedProps;
