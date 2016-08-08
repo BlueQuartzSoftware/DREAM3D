@@ -352,9 +352,9 @@ int32_t DxReader::readHeader()
     {
       if (tokens[i] == "counts")
       {
-        nz = tokens[i + 1].toInt(&ok, 10) - 1;
-        ny = tokens[i + 2].toInt(&ok, 10) - 1;
-        nx = tokens[i + 3].toInt(&ok, 10) - 1;
+        nz = tokens[i + 1].toInt(&ok, 10);
+        ny = tokens[i + 2].toInt(&ok, 10);
+        nx = tokens[i + 3].toInt(&ok, 10);
         done = true;
         break;
       }

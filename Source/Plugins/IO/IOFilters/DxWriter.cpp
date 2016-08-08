@@ -222,9 +222,9 @@ int32_t DxWriter::writeFile()
   int64_t fileYDim = dims[1];
   int64_t fileZDim = dims[2];
 
-  int64_t posXDim = fileXDim + 1;
-  int64_t posYDim = fileYDim + 1;
-  int64_t posZDim = fileZDim + 1;
+  int64_t posXDim = fileXDim;
+  int64_t posYDim = fileYDim;
+  int64_t posZDim = fileZDim;
 
   if (m_AddSurfaceLayer)
   {
@@ -232,20 +232,31 @@ int32_t DxWriter::writeFile()
     fileYDim = dims[1] + 2;
     fileZDim = dims[2] + 2;
 
-    posXDim = fileXDim + 1;
-    posYDim = fileYDim + 1;
-    posZDim = fileZDim + 1;
+    posXDim = fileXDim;
+    posYDim = fileYDim;
+    posZDim = fileZDim;
   }
 
   // Write the header
+  out << "# object 1 are the regular positions. The grid is " << posZDim << " " << posYDim << " " << posXDim << ". The origin is\n";
+  out << "# at [0 0 0], and the deltas are 1 in the first and third dimensions, and\n";
+  out << "# 2 in the second dimension\n";
+  out << "#\n";
   out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
   out << "origin 0 0 0" << "\n";
   out << "delta  1 0 0" << "\n";
   out << "delta  0 1 0" << "\n";
   out << "delta  0 0 1" << "\n";
-  out << "\n";
+  out << "#\n";
+  out << "# object 2 are the regular connections\n";
+  out << "#\n";
   out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
-  out << "\n";
+  out << "#\n";
+  out << "# object 3 are the data, which are in a one-to-one correspondence with\n";
+  out << "# the positions (\"dep\" on positions). The positions increment in the order\n";
+  out << "# \"last index varies fastest\", i.e. (x0, y0, z0), (x0, y0, z1), (x0, y0, z2),\n";
+  out << "# (x0, y1, z0), etc.\n";
+  out << "#\n";
   out << "object 3 class array type int rank 0 items " << fileXDim* fileYDim* fileZDim << " data follows" << "\n";
 
   // Add a complete layer of surface voxels
@@ -329,14 +340,16 @@ int32_t DxWriter::writeFile()
       rnIndex++;
     }
   }
-  out << "\n";
-  out << "attribute \"dep\" string \"connections\"" << "\n";
-  out << "\n";
-  out << "object \"DREAM3D Generated\" class feature" << "\n";
+
+  out << "attribute \"dep\" string \"positions\"\n";
+  out << "#\n";
+  out << "# A field is created with three components: \"positions\", \"connections\",\n";
+  out << "# and \"data\"\n";
+  out << "object \"regular positions regular connections\" class field" << "\n";
   out << "component  \"positions\"    value 1" << "\n";
   out << "component  \"connections\"  value 2" << "\n";
   out << "component  \"data\"         value 3" << "\n";
-  out << "" << "\n";
+  out << "#" << "\n";
   out << "end" << "\n";
 
   file.close();
