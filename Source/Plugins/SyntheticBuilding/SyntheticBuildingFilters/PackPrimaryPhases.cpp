@@ -381,16 +381,16 @@ void PackPrimaryPhases::setupFilterParameters()
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, FeatureIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, CellPhasesArrayName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, CellPhasesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, PackPrimaryPhases));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", CellPhasesArrayName, FilterParameter::CreatedArray, PackPrimaryPhases));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, OutputCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, OutputCellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Phases", "FeaturePhasesArrayName", getFeaturePhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, FeaturePhasesArrayName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, FeaturePhasesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix", OutputCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, PackPrimaryPhases));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", FeaturePhasesArrayName, FilterParameter::CreatedArray, PackPrimaryPhases));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, OutputCellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, OutputCellEnsembleAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Number of Features", "NumFeaturesArrayName", getNumFeaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PackPrimaryPhases, this, NumFeaturesArrayName), SIMPL_BIND_GETTER(PackPrimaryPhases, this, NumFeaturesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", OutputCellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, PackPrimaryPhases));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Features", NumFeaturesArrayName, FilterParameter::CreatedArray, PackPrimaryPhases));
 
   linkedProps.clear();
   linkedProps << "FeatureInputFile";

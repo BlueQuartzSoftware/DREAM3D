@@ -137,11 +137,11 @@ void FindSchmids::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindSchmids, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Schmids", "SchmidsArrayName", getSchmidsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, SchmidsArrayName), SIMPL_BIND_GETTER(FindSchmids, this, SchmidsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Slip Systems", "SlipSystemsArrayName", getSlipSystemsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, SlipSystemsArrayName), SIMPL_BIND_GETTER(FindSchmids, this, SlipSystemsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Poles", "PolesArrayName", getPolesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, PolesArrayName), SIMPL_BIND_GETTER(FindSchmids, this, PolesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Phis", "PhisArrayName", getPhisArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, PhisArrayName), SIMPL_BIND_GETTER(FindSchmids, this, PhisArrayName)));
-  parameters.push_back(StringFilterParameter::New("Lambdas", "LambdasArrayName", getLambdasArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, LambdasArrayName), SIMPL_BIND_GETTER(FindSchmids, this, LambdasArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Schmids", SchmidsArrayName, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Slip Systems", SlipSystemsArrayName, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Poles", PolesArrayName, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phis", PhisArrayName, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Lambdas", LambdasArrayName, FilterParameter::CreatedArray, FindSchmids));
   setFilterParameters(parameters);
 }
 

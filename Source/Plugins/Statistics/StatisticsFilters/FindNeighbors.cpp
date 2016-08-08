@@ -108,12 +108,12 @@ void FindNeighbors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, FindNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Boundary Cells", "BoundaryCellsArrayName", getBoundaryCellsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, BoundaryCellsArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, BoundaryCellsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Boundary Cells", BoundaryCellsArrayName, FilterParameter::CreatedArray, FindNeighbors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Number of Neighbors", "NumNeighborsArrayName", getNumNeighborsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, NumNeighborsArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, NumNeighborsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Neighbor List", "NeighborListArrayName", getNeighborListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, NeighborListArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, NeighborListArrayName)));
-  parameters.push_back(StringFilterParameter::New("Shared Surface Area List", "SharedSurfaceAreaListArrayName", getSharedSurfaceAreaListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, SharedSurfaceAreaListArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, SharedSurfaceAreaListArrayName)));
-  parameters.push_back(StringFilterParameter::New("Surface Features", "SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, SurfaceFeaturesArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, SurfaceFeaturesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Neighbors", NumNeighborsArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Neighbor List", NeighborListArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Shared Surface Area List", SharedSurfaceAreaListArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Surface Features", SurfaceFeaturesArrayName, FilterParameter::CreatedArray, FindNeighbors));
   setFilterParameters(parameters);
 }
 

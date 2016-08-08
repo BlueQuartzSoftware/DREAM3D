@@ -114,8 +114,8 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindFeatureNeighborCAxisMisalignments, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("C-Axis Misalignment List", "CAxisMisalignmentListArrayName", getCAxisMisalignmentListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, CAxisMisalignmentListArrayName), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, CAxisMisalignmentListArrayName)));
-  parameters.push_back(StringFilterParameter::New("Avgerage C-Axis Misalignments", "AvgCAxisMisalignmentsArrayName", getAvgCAxisMisalignmentsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, AvgCAxisMisalignmentsArrayName), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, AvgCAxisMisalignmentsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("C-Axis Misalignment List", CAxisMisalignmentListArrayName, FilterParameter::CreatedArray, FindFeatureNeighborCAxisMisalignments));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Avgerage C-Axis Misalignments", AvgCAxisMisalignmentsArrayName, FilterParameter::CreatedArray, FindFeatureNeighborCAxisMisalignments));
   setFilterParameters(parameters);
 }
 

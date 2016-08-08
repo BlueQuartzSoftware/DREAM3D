@@ -95,10 +95,10 @@ void SPParksTextReader::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, SPParksTextReader));
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("One Based Arrays", OneBasedArrays, FilterParameter::Parameter, SPParksTextReader));
-  parameters.push_back(StringFilterParameter::New("Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, VolumeDataContainerName), SIMPL_BIND_GETTER(SPParksTextReader, this, VolumeDataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, SPParksTextReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(SPParksTextReader, this, CellAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(SPParksTextReader, this, FeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, SPParksTextReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, SPParksTextReader));
   setFilterParameters(parameters);
 }
 

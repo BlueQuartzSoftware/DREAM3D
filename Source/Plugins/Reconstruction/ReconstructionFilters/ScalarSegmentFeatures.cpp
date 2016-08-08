@@ -202,10 +202,10 @@ void ScalarSegmentFeatures::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, FeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
   setFilterParameters(parameters);
 }
 

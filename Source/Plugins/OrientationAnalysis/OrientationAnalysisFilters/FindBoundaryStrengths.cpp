@@ -118,10 +118,10 @@ void FindBoundaryStrengths::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindBoundaryStrengths, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("F1s", "SurfaceMeshF1sArrayName", getSurfaceMeshF1sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshF1sArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshF1sArrayName)));
-  parameters.push_back(StringFilterParameter::New("F1spts", "SurfaceMeshF1sptsArrayName", getSurfaceMeshF1sptsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshF1sptsArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshF1sptsArrayName)));
-  parameters.push_back(StringFilterParameter::New("F7s", "SurfaceMeshF7sArrayName", getSurfaceMeshF7sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshF7sArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshF7sArrayName)));
-  parameters.push_back(StringFilterParameter::New("mPrimes", "SurfaceMeshmPrimesArrayName", getSurfaceMeshmPrimesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshmPrimesArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshmPrimesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("F1s", SurfaceMeshF1sArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_STRING_FP("F1spts", SurfaceMeshF1sptsArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_STRING_FP("F7s", SurfaceMeshF7sArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_STRING_FP("mPrimes", SurfaceMeshmPrimesArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
 
   setFilterParameters(parameters);
 }

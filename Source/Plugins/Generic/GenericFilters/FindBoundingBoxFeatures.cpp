@@ -99,7 +99,7 @@ void FindBoundingBoxFeatures::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", PhasesArrayPath, FilterParameter::RequiredArray, FindBoundingBoxFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Biased Features", "BiasedFeaturesArrayName", getBiasedFeaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, BiasedFeaturesArrayName), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, BiasedFeaturesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Biased Features", BiasedFeaturesArrayName, FilterParameter::CreatedArray, FindBoundingBoxFeatures));
   setFilterParameters(parameters);
 }
 

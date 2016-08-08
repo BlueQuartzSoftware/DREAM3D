@@ -100,8 +100,8 @@ void FindNeighborhoods::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", getNeighborhoodsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighborhoods, this, NeighborhoodsArrayName), SIMPL_BIND_GETTER(FindNeighborhoods, this, NeighborhoodsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Neighborhood List", "NeighborhoodListArrayName", getNeighborhoodListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighborhoods, this, NeighborhoodListArrayName), SIMPL_BIND_GETTER(FindNeighborhoods, this, NeighborhoodListArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Neighborhoods", NeighborhoodsArrayName, FilterParameter::CreatedArray, FindNeighborhoods));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Neighborhood List", NeighborhoodListArrayName, FilterParameter::CreatedArray, FindNeighborhoods));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

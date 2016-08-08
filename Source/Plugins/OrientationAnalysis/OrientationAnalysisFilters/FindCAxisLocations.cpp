@@ -86,7 +86,7 @@ void FindCAxisLocations::setupFilterParameters()
 
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("C-Axis Locations", "CAxisLocationsArrayName", getCAxisLocationsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindCAxisLocations, this, CAxisLocationsArrayName), SIMPL_BIND_GETTER(FindCAxisLocations, this, CAxisLocationsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("C-Axis Locations", CAxisLocationsArrayName, FilterParameter::CreatedArray, FindCAxisLocations));
   setFilterParameters(parameters);
 }
 

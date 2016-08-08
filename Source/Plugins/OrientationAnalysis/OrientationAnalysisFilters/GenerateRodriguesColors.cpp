@@ -122,7 +122,7 @@ void GenerateRodriguesColors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, GenerateRodriguesColors, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("CellRodriguesColors", "CellRodriguesColorsArrayName", getCellRodriguesColorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GenerateRodriguesColors, this, CellRodriguesColorsArrayName), SIMPL_BIND_GETTER(GenerateRodriguesColors, this, CellRodriguesColorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("CellRodriguesColors", CellRodriguesColorsArrayName, FilterParameter::CreatedArray, GenerateRodriguesColors));
 
   setFilterParameters(parameters);
 }

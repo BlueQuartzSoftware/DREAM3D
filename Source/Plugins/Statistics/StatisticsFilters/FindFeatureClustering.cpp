@@ -123,10 +123,10 @@ void FindFeatureClustering::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::RequiredArray, FindFeatureClustering, amReq));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Clustering List", "ClusteringListArrayName", getClusteringListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureClustering, this, ClusteringListArrayName), SIMPL_BIND_GETTER(FindFeatureClustering, this, ClusteringListArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Clustering List", ClusteringListArrayName, FilterParameter::CreatedArray, FindFeatureClustering));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Radial Distribution Function", "NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureClustering, this, NewEnsembleArrayArrayName), SIMPL_BIND_GETTER(FindFeatureClustering, this, NewEnsembleArrayArrayName)));
-  parameters.push_back(StringFilterParameter::New("Max and Min Separation Distances", "MaxMinArrayName", getMaxMinArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureClustering, this, MaxMinArrayName), SIMPL_BIND_GETTER(FindFeatureClustering, this, MaxMinArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Radial Distribution Function", NewEnsembleArrayArrayName, FilterParameter::CreatedArray, FindFeatureClustering));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Max and Min Separation Distances", MaxMinArrayName, FilterParameter::CreatedArray, FindFeatureClustering));
   setFilterParameters(parameters);
 }
 

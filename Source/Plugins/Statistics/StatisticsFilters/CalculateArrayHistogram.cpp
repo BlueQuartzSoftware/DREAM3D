@@ -101,9 +101,9 @@ void CalculateArrayHistogram::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Histogram", SelectedArrayPath, FilterParameter::RequiredArray, CalculateArrayHistogram, req));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container ", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataContainerName), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Attribute Matrix", "NewAttributeMatrixName", getNewAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewAttributeMatrixName), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Histogram", "NewDataArrayName", getNewDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateArrayHistogram, this, NewDataArrayName), SIMPL_BIND_GETTER(CalculateArrayHistogram, this, NewDataArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container ", NewDataContainerName, FilterParameter::CreatedArray, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix", NewAttributeMatrixName, FilterParameter::CreatedArray, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Histogram", NewDataArrayName, FilterParameter::CreatedArray, CalculateArrayHistogram));
   setFilterParameters(parameters);
 }
 

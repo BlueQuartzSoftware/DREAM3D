@@ -408,8 +408,8 @@ void FindGBCD::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindGBCD, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Face Ensemble Attribute Matrix", "FaceEnsembleAttributeMatrixName", getFaceEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindGBCD, this, FaceEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(FindGBCD, this, FaceEnsembleAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("GBCD", "GBCDArrayName", getGBCDArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindGBCD, this, GBCDArrayName), SIMPL_BIND_GETTER(FindGBCD, this, GBCDArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Ensemble Attribute Matrix", FaceEnsembleAttributeMatrixName, FilterParameter::CreatedArray, FindGBCD));
+  parameters.push_back(SIMPL_NEW_STRING_FP("GBCD", GBCDArrayName, FilterParameter::CreatedArray, FindGBCD));
   setFilterParameters(parameters);
 }
 

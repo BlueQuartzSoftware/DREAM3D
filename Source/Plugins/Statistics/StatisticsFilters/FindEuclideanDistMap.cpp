@@ -307,10 +307,10 @@ void FindEuclideanDistMap::setupFilterParameters()
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Boundary Euclidean Distances", "GBEuclideanDistancesArrayName", getGBEuclideanDistancesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, GBEuclideanDistancesArrayName), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, GBEuclideanDistancesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Triple Line Euclidean Distances", "TJEuclideanDistancesArrayName", getTJEuclideanDistancesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, TJEuclideanDistancesArrayName), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, TJEuclideanDistancesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Quadruple Point Euclidean Distances", "QPEuclideanDistancesArrayName", getQPEuclideanDistancesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, QPEuclideanDistancesArrayName), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, QPEuclideanDistancesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Nearest Neighbors", "NearestNeighborsArrayName", getNearestNeighborsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindEuclideanDistMap, this, NearestNeighborsArrayName), SIMPL_BIND_GETTER(FindEuclideanDistMap, this, NearestNeighborsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Boundary Euclidean Distances", GBEuclideanDistancesArrayName, FilterParameter::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Triple Line Euclidean Distances", TJEuclideanDistancesArrayName, FilterParameter::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Quadruple Point Euclidean Distances", QPEuclideanDistancesArrayName, FilterParameter::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Nearest Neighbors", NearestNeighborsArrayName, FilterParameter::CreatedArray, FindEuclideanDistMap));
 
   setFilterParameters(parameters);
 }

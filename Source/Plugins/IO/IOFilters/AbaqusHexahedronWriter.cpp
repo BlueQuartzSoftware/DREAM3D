@@ -85,9 +85,9 @@ void AbaqusHexahedronWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Hourglass Stiffness", HourglassStiffness, FilterParameter::Parameter, AbaqusHexahedronWriter, 0));
-  parameters.push_back(StringFilterParameter::New("Job Name", "JobName", getJobName(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AbaqusHexahedronWriter, this, JobName), SIMPL_BIND_GETTER(AbaqusHexahedronWriter, this, JobName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Job Name", JobName, FilterParameter::Parameter, AbaqusHexahedronWriter));
   parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, AbaqusHexahedronWriter));
-  parameters.push_back(StringFilterParameter::New("Output File Prefix", "FilePrefix", getFilePrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AbaqusHexahedronWriter, this, FilePrefix), SIMPL_BIND_GETTER(AbaqusHexahedronWriter, this, FilePrefix)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output File Prefix", FilePrefix, FilterParameter::Parameter, AbaqusHexahedronWriter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

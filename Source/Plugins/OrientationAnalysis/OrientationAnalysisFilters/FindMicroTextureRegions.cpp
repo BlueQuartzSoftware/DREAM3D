@@ -90,8 +90,8 @@ void FindMicroTextureRegions::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindMicroTextureRegions, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("MicroTextureRegionNumCells", "MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, MicroTextureRegionNumCellsArrayName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, MicroTextureRegionNumCellsArrayName)));
-  parameters.push_back(StringFilterParameter::New("MicroTextureRegionFractionOccupied", "MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, MicroTextureRegionFractionOccupiedArrayName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, MicroTextureRegionFractionOccupiedArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("MicroTextureRegionNumCells", MicroTextureRegionNumCellsArrayName, FilterParameter::CreatedArray, FindMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("MicroTextureRegionFractionOccupied", MicroTextureRegionFractionOccupiedArrayName, FilterParameter::CreatedArray, FindMicroTextureRegions));
 
   setFilterParameters(parameters);
 }

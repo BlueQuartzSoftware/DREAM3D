@@ -141,7 +141,7 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(StringFilterParameter::New("Image Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WritePoleFigure, this, ImagePrefix), SIMPL_BIND_GETTER(WritePoleFigure, this, ImagePrefix)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image Prefix", ImagePrefix, FilterParameter::Parameter, WritePoleFigure));
   parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, WritePoleFigure));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Parameter, WritePoleFigure));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));

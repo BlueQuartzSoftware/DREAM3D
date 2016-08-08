@@ -94,9 +94,9 @@ void QuiltCellData::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Array To Quilt", SelectedCellArrayPath, FilterParameter::RequiredArray, QuiltCellData, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("Output DataContainer Name", "OutputDataContainerName", getOutputDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuiltCellData, this, OutputDataContainerName), SIMPL_BIND_GETTER(QuiltCellData, this, OutputDataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuiltCellData, this, OutputAttributeMatrixName), SIMPL_BIND_GETTER(QuiltCellData, this, OutputAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Output Data Array Name", "OutputArrayName", getOutputArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuiltCellData, this, OutputArrayName), SIMPL_BIND_GETTER(QuiltCellData, this, OutputArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output DataContainer Name", OutputDataContainerName, FilterParameter::CreatedArray, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output AttributeMatrix Name", OutputAttributeMatrixName, FilterParameter::CreatedArray, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output Data Array Name", OutputArrayName, FilterParameter::CreatedArray, QuiltCellData));
 
   setFilterParameters(parameters);
 }

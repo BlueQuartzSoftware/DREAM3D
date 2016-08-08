@@ -197,7 +197,7 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Track Motion", SelectedArrayPath, FilterParameter::RequiredArray, FindRelativeMotionBetweenSlices, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Motion Direction", "MotionDirectionArrayName", getMotionDirectionArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindRelativeMotionBetweenSlices, this, MotionDirectionArrayName), SIMPL_BIND_GETTER(FindRelativeMotionBetweenSlices, this, MotionDirectionArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Motion Direction", MotionDirectionArrayName, FilterParameter::CreatedArray, FindRelativeMotionBetweenSlices));
   setFilterParameters(parameters);
 }
 

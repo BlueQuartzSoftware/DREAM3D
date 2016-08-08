@@ -202,7 +202,7 @@ void GenerateFaceSchuhMisorientationColoring::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("CrystalStructures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("SurfaceMeshFaceSchuhMisorientationColors", "SurfaceMeshFaceSchuhMisorientationColorsArrayName", getSurfaceMeshFaceSchuhMisorientationColorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GenerateFaceSchuhMisorientationColoring, this, SurfaceMeshFaceSchuhMisorientationColorsArrayName), SIMPL_BIND_GETTER(GenerateFaceSchuhMisorientationColoring, this, SurfaceMeshFaceSchuhMisorientationColorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMeshFaceSchuhMisorientationColors", SurfaceMeshFaceSchuhMisorientationColorsArrayName, FilterParameter::CreatedArray, GenerateFaceSchuhMisorientationColoring));
 
   setFilterParameters(parameters);
 }

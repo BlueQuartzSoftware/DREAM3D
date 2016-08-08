@@ -95,10 +95,10 @@ void RegularGridSampleSurfaceMesh::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
 
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, DataContainerName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, DataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, CellAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, FeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
   setFilterParameters(parameters);
 }
 

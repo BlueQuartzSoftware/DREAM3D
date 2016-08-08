@@ -105,9 +105,9 @@ void VectorSegmentFeatures::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, VectorSegmentFeatures, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, FeatureIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, VectorSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, VectorSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, VectorSegmentFeatures));
 
   setFilterParameters(parameters);
 }

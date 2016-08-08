@@ -187,7 +187,7 @@ void GenerateIPFColors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateIPFColors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("IPF Colors", "CellIPFColorsArrayName", getCellIPFColorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GenerateIPFColors, this, CellIPFColorsArrayName), SIMPL_BIND_GETTER(GenerateIPFColors, this, CellIPFColorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors", CellIPFColorsArrayName, FilterParameter::CreatedArray, GenerateIPFColors));
   setFilterParameters(parameters);
 }
 

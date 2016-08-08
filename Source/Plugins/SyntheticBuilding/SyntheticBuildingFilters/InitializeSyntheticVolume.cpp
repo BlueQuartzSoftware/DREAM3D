@@ -137,9 +137,9 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("Synthetic Volume Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, DataContainerName), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, DataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, CellAttributeMatrixName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, InitializeSyntheticVolume));
 

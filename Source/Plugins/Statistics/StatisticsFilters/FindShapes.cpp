@@ -109,11 +109,11 @@ void FindShapes::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindShapes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Omega3s", "Omega3sArrayName", getOmega3sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, Omega3sArrayName), SIMPL_BIND_GETTER(FindShapes, this, Omega3sArrayName)));
-  parameters.push_back(StringFilterParameter::New("Axis Lengths", "AxisLengthsArrayName", getAxisLengthsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, AxisLengthsArrayName), SIMPL_BIND_GETTER(FindShapes, this, AxisLengthsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayName", getAxisEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, AxisEulerAnglesArrayName), SIMPL_BIND_GETTER(FindShapes, this, AxisEulerAnglesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Aspect Ratios", "AspectRatiosArrayName", getAspectRatiosArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, AspectRatiosArrayName), SIMPL_BIND_GETTER(FindShapes, this, AspectRatiosArrayName)));
-  parameters.push_back(StringFilterParameter::New("Volumes", "VolumesArrayName", getVolumesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindShapes, this, VolumesArrayName), SIMPL_BIND_GETTER(FindShapes, this, VolumesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Omega3s", Omega3sArrayName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Axis Lengths", AxisLengthsArrayName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Aspect Ratios", AspectRatiosArrayName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Volumes", VolumesArrayName, FilterParameter::CreatedArray, FindShapes));
   setFilterParameters(parameters);
 }
 

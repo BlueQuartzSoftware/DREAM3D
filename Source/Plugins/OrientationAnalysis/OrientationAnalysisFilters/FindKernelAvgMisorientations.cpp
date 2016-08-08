@@ -112,7 +112,7 @@ void FindKernelAvgMisorientations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindKernelAvgMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Kernel Average Misorientations", "KernelAverageMisorientationsArrayName", getKernelAverageMisorientationsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, KernelAverageMisorientationsArrayName), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, KernelAverageMisorientationsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Kernel Average Misorientations", KernelAverageMisorientationsArrayName, FilterParameter::CreatedArray, FindKernelAvgMisorientations));
   setFilterParameters(parameters);
 }
 

@@ -118,10 +118,10 @@ void EBSDSegmentFeatures::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, EBSDSegmentFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EBSDSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(EBSDSegmentFeatures, this, FeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, EBSDSegmentFeatures));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EBSDSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(EBSDSegmentFeatures, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EBSDSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(EBSDSegmentFeatures, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, EBSDSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, EBSDSegmentFeatures));
   setFilterParameters(parameters);
 }
 

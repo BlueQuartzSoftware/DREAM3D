@@ -89,7 +89,7 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Cells", NumCellsArrayPath, FilterParameter::RequiredArray, FindSurfaceAreaToVolume, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Surface Area to Volume Ratio", "SurfaceAreaVolumeRatioArrayName", getSurfaceAreaVolumeRatioArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSurfaceAreaToVolume, this, SurfaceAreaVolumeRatioArrayName), SIMPL_BIND_GETTER(FindSurfaceAreaToVolume, this, SurfaceAreaVolumeRatioArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Surface Area to Volume Ratio", SurfaceAreaVolumeRatioArrayName, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
   setFilterParameters(parameters);
 }
 

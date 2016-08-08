@@ -105,9 +105,9 @@ void JumbleOrientations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, JumbleOrientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Euler Angles", "CellEulerAnglesArrayName", getCellEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(JumbleOrientations, this, CellEulerAnglesArrayName), SIMPL_BIND_GETTER(JumbleOrientations, this, CellEulerAnglesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", CellEulerAnglesArrayName, FilterParameter::CreatedArray, JumbleOrientations));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Average Quaternions", "AvgQuatsArrayName", getAvgQuatsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(JumbleOrientations, this, AvgQuatsArrayName), SIMPL_BIND_GETTER(JumbleOrientations, this, AvgQuatsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Average Quaternions", AvgQuatsArrayName, FilterParameter::CreatedArray, JumbleOrientations));
   setFilterParameters(parameters);
 }
 

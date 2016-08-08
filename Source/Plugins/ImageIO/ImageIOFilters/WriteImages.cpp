@@ -121,7 +121,7 @@ void WriteImages::setupFilterParameters()
     linkedProps << "ImagePrefix";
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("File Prefix", FilePrefix, FilterParameter::Parameter, WriteImages, linkedProps));
   }
-  parameters.push_back(StringFilterParameter::New("Image File Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteImages, this, ImagePrefix), SIMPL_BIND_GETTER(WriteImages, this, ImagePrefix)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image File Prefix", ImagePrefix, FilterParameter::Parameter, WriteImages));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);

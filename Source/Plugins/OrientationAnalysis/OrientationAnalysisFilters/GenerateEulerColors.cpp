@@ -110,7 +110,7 @@ void GenerateEulerColors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, GenerateEulerColors, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("CellEulerColors", "CellEulerColorsArrayName", getCellEulerColorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GenerateEulerColors, this, CellEulerColorsArrayName), SIMPL_BIND_GETTER(GenerateEulerColors, this, CellEulerColorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("CellEulerColors", CellEulerColorsArrayName, FilterParameter::CreatedArray, GenerateEulerColors));
 
   setFilterParameters(parameters);
 }

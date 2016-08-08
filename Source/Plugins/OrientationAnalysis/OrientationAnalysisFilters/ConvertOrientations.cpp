@@ -110,7 +110,7 @@ void ConvertOrientations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Orientations", InputOrientationArrayPath, FilterParameter::RequiredArray, ConvertOrientations, req, 0));
   }
 
-  parameters.push_back(StringFilterParameter::New("Output Orientations", "OutputOrientationArrayName", getOutputOrientationArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ConvertOrientations, this, OutputOrientationArrayName), SIMPL_BIND_GETTER(ConvertOrientations, this, OutputOrientationArrayName), 0));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output Orientations", OutputOrientationArrayName, FilterParameter::CreatedArray, ConvertOrientations, 0));
 
   setFilterParameters(parameters);
 }

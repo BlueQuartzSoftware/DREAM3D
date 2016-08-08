@@ -83,7 +83,7 @@ void MultiEmmpmFilter::setupFilterParameters()
   FilterParameterVector parameters = getFilterParameters();
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Use Mu/Sigma from Previous Image as Initialization for Current Image", UsePreviousMuSigma, FilterParameter::Parameter, MultiEmmpmFilter));
-  parameters.push_back(StringFilterParameter::New("Output Array Prefix", "OutputArrayPrefix", getOutputArrayPrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, OutputArrayPrefix), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, OutputArrayPrefix)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output Array Prefix", OutputArrayPrefix, FilterParameter::Parameter, MultiEmmpmFilter));
 
 
   for ( qint32 i = 0; i < parameters.size(); i++ )
@@ -104,7 +104,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("OutputDataArrayPath") == 0 )
     {
-      parameters[i] = StringFilterParameter::New("Output Cell Attribute Matrix", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, OutputAttributeMatrixName), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, OutputAttributeMatrixName));
+      parameters[i] = SIMPL_NEW_STRING_FP("Output Cell Attribute Matrix", OutputAttributeMatrixName, FilterParameter::CreatedArray, MultiEmmpmFilter);
     }
   }
 

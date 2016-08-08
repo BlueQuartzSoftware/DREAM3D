@@ -293,7 +293,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Twin Boundary", SurfaceMeshTwinBoundaryArrayPath, FilterParameter::RequiredArray, FindTwinBoundarySchmidFactors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Twin Boundary Schmid Factors", "SurfaceMeshTwinBoundarySchmidFactorsArrayName", getSurfaceMeshTwinBoundarySchmidFactorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundarySchmidFactorsArrayName), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundarySchmidFactorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Twin Boundary Schmid Factors", SurfaceMeshTwinBoundarySchmidFactorsArrayName, FilterParameter::CreatedArray, FindTwinBoundarySchmidFactors));
   setFilterParameters(parameters);
 }
 

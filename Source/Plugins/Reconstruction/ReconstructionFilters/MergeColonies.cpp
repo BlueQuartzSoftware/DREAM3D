@@ -207,12 +207,12 @@ void MergeColonies::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, MergeColonies, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "CellParentIdsArrayName", getCellParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, CellParentIdsArrayName), SIMPL_BIND_GETTER(MergeColonies, this, CellParentIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Glob Alpha", "GlobAlphaArrayName", getGlobAlphaArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, GlobAlphaArrayName), SIMPL_BIND_GETTER(MergeColonies, this, GlobAlphaArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Parent Ids", CellParentIdsArrayName, FilterParameter::CreatedArray, MergeColonies));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Glob Alpha", GlobAlphaArrayName, FilterParameter::CreatedArray, MergeColonies));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, NewCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(MergeColonies, this, NewCellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "FeatureParentIdsArrayName", getFeatureParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, FeatureParentIdsArrayName), SIMPL_BIND_GETTER(MergeColonies, this, FeatureParentIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, ActiveArrayName), SIMPL_BIND_GETTER(MergeColonies, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, MergeColonies));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Parent Ids", FeatureParentIdsArrayName, FilterParameter::CreatedArray, MergeColonies));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, MergeColonies));
   setFilterParameters(parameters);
 }
 

@@ -276,9 +276,9 @@ void IdentifyMicroTextureRegions::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, IdentifyMicroTextureRegions, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("MTR Ids", "MTRIdsArrayName", getMTRIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, MTRIdsArrayName), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, MTRIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, NewCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, NewCellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(IdentifyMicroTextureRegions, this, ActiveArrayName), SIMPL_BIND_GETTER(IdentifyMicroTextureRegions, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("MTR Ids", MTRIdsArrayName, FilterParameter::CreatedArray, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("New Cell Feature Attribute Matrix Name", NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, IdentifyMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, IdentifyMicroTextureRegions));
 
   setFilterParameters(parameters);
 }

@@ -99,11 +99,11 @@ void VtkStructuredPointsReader::setupFilterParameters()
   linkedProps.clear();
   linkedProps << "VolumeDataContainerName" << "CellAttributeMatrixName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Cell Data", ReadCellData, FilterParameter::Parameter, VtkStructuredPointsReader, linkedProps));
-  parameters.push_back(StringFilterParameter::New("Point Data Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, VertexDataContainerName), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, VertexDataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Cell Data Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, VolumeDataContainerName), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, VolumeDataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Point Data Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Data Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Point Data Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, VertexAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Cell Data Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VtkStructuredPointsReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(VtkStructuredPointsReader, this, CellAttributeMatrixName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Point Data Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Data Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
   setFilterParameters(parameters);
 }
 

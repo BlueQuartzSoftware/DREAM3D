@@ -109,10 +109,10 @@ void FindSlipTransmissionMetrics::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindSlipTransmissionMetrics, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("F1 List", "F1ListArrayName", getF1ListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, F1ListArrayName), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, F1ListArrayName)));
-  parameters.push_back(StringFilterParameter::New("F1spt List", "F1sptListArrayName", getF1sptListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, F1sptListArrayName), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, F1sptListArrayName)));
-  parameters.push_back(StringFilterParameter::New("F7 List", "F7ListArrayName", getF7ListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, F7ListArrayName), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, F7ListArrayName)));
-  parameters.push_back(StringFilterParameter::New("mPrime List", "mPrimeListArrayName", getmPrimeListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSlipTransmissionMetrics, this, mPrimeListArrayName), SIMPL_BIND_GETTER(FindSlipTransmissionMetrics, this, mPrimeListArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("F1 List", F1ListArrayName, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
+  parameters.push_back(SIMPL_NEW_STRING_FP("F1spt List", F1sptListArrayName, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
+  parameters.push_back(SIMPL_NEW_STRING_FP("F7 List", F7ListArrayName, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
+  parameters.push_back(SIMPL_NEW_STRING_FP("mPrime List", mPrimeListArrayName, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
   setFilterParameters(parameters);
 }
 

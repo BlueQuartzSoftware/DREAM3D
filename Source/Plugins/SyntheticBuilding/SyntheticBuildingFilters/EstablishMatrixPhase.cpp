@@ -110,15 +110,15 @@ void EstablishMatrixPhase::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", OutputCellAttributeMatrixPath, FilterParameter::RequiredArray, EstablishMatrixPhase, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, FeatureIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, CellPhasesArrayName), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, CellPhasesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, EstablishMatrixPhase));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", CellPhasesArrayName, FilterParameter::CreatedArray, EstablishMatrixPhase));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::RequiredArray, EstablishMatrixPhase, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, OutputCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, OutputCellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Phases", "FeaturePhasesArrayName", getFeaturePhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, FeaturePhasesArrayName), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, FeaturePhasesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix", OutputCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, EstablishMatrixPhase));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", FeaturePhasesArrayName, FilterParameter::CreatedArray, EstablishMatrixPhase));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
@@ -139,8 +139,8 @@ void EstablishMatrixPhase::setupFilterParameters()
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, OutputCellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, OutputCellEnsembleAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Number of Features", "NumFeaturesArrayName", getNumFeaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishMatrixPhase, this, NumFeaturesArrayName), SIMPL_BIND_GETTER(EstablishMatrixPhase, this, NumFeaturesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", OutputCellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, EstablishMatrixPhase));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Features", NumFeaturesArrayName, FilterParameter::CreatedArray, EstablishMatrixPhase));
   setFilterParameters(parameters);
 }
 

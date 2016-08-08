@@ -113,12 +113,12 @@ void FeatureInfoReader::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FeatureInfoReader, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellPhasesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellPhasesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Euler Angles", "CellEulerAnglesArrayName", getCellEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellEulerAnglesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellEulerAnglesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", CellPhasesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", CellEulerAnglesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Phases", "FeaturePhasesArrayName", getFeaturePhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, FeaturePhasesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, FeaturePhasesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Euler Angles", "FeatureEulerAnglesArrayName", getFeatureEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, FeatureEulerAnglesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, FeatureEulerAnglesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", FeaturePhasesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", FeatureEulerAnglesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
   setFilterParameters(parameters);
 }
 

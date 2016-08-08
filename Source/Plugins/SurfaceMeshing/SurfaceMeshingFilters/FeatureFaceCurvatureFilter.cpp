@@ -141,12 +141,12 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Principal Curvature 1", "SurfaceMeshPrincipalCurvature1sArrayName", getSurfaceMeshPrincipalCurvature1sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalCurvature1sArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalCurvature1sArrayName)));
-  parameters.push_back(StringFilterParameter::New("Principal Curvature 2", "SurfaceMeshPrincipalCurvature2sArrayName", getSurfaceMeshPrincipalCurvature2sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalCurvature2sArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalCurvature2sArrayName)));
-  parameters.push_back(StringFilterParameter::New("Principal Direction 1", "SurfaceMeshPrincipalDirection1sArrayName", getSurfaceMeshPrincipalDirection1sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalDirection1sArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalDirection1sArrayName)));
-  parameters.push_back(StringFilterParameter::New("Principal Direction 2", "SurfaceMeshPrincipalDirection2sArrayName", getSurfaceMeshPrincipalDirection2sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalDirection2sArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalDirection2sArrayName)));
-  parameters.push_back(StringFilterParameter::New("Gaussian Curvature", "SurfaceMeshGaussianCurvaturesArrayName", getSurfaceMeshGaussianCurvaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshGaussianCurvaturesArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshGaussianCurvaturesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Mean Curvature", "SurfaceMeshMeanCurvaturesArrayName", getSurfaceMeshMeanCurvaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshMeanCurvaturesArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshMeanCurvaturesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Curvature 1", SurfaceMeshPrincipalCurvature1sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Curvature 2", SurfaceMeshPrincipalCurvature2sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Direction 1", SurfaceMeshPrincipalDirection1sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Direction 2", SurfaceMeshPrincipalDirection2sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Gaussian Curvature", SurfaceMeshGaussianCurvaturesArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Mean Curvature", SurfaceMeshMeanCurvaturesArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
   setFilterParameters(parameters);
 }
 

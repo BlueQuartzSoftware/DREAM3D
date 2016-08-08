@@ -108,7 +108,7 @@ void ChangeResolution::setupFilterParameters()
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, ChangeResolution, req));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ChangeResolution, this, NewDataContainerName), SIMPL_BIND_GETTER(ChangeResolution, this, NewDataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", NewDataContainerName, FilterParameter::CreatedArray, ChangeResolution));
   setFilterParameters(parameters);
 }
 

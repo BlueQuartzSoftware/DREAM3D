@@ -120,11 +120,11 @@ void MergeTwins::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, MergeTwins, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "CellParentIdsArrayName", getCellParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeTwins, this, CellParentIdsArrayName), SIMPL_BIND_GETTER(MergeTwins, this, CellParentIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Parent Ids", CellParentIdsArrayName, FilterParameter::CreatedArray, MergeTwins));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeTwins, this, NewCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(MergeTwins, this, NewCellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "FeatureParentIdsArrayName", getFeatureParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeTwins, this, FeatureParentIdsArrayName), SIMPL_BIND_GETTER(MergeTwins, this, FeatureParentIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeTwins, this, ActiveArrayName), SIMPL_BIND_GETTER(MergeTwins, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Parent Ids", FeatureParentIdsArrayName, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, MergeTwins));
   setFilterParameters(parameters);
 }
 

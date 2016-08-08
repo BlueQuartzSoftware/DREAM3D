@@ -135,10 +135,10 @@ void PhReader::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, PhReader));
 
-  parameters.push_back(StringFilterParameter::New("Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PhReader, this, VolumeDataContainerName), SIMPL_BIND_GETTER(PhReader, this, VolumeDataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, PhReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PhReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(PhReader, this, CellAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(PhReader, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(PhReader, this, FeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, PhReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, PhReader));
   setFilterParameters(parameters);
 }
 

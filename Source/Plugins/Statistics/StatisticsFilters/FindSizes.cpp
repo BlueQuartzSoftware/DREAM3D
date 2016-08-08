@@ -94,9 +94,9 @@ void FindSizes::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindSizes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayName", getEquivalentDiametersArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSizes, this, EquivalentDiametersArrayName), SIMPL_BIND_GETTER(FindSizes, this, EquivalentDiametersArrayName)));
-  parameters.push_back(StringFilterParameter::New("Number of Cells", "NumCellsArrayName", getNumCellsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSizes, this, NumCellsArrayName), SIMPL_BIND_GETTER(FindSizes, this, NumCellsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Volumes", "VolumesArrayName", getVolumesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSizes, this, VolumesArrayName), SIMPL_BIND_GETTER(FindSizes, this, VolumesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Equivalent Diameters", EquivalentDiametersArrayName, FilterParameter::CreatedArray, FindSizes));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Cells", NumCellsArrayName, FilterParameter::CreatedArray, FindSizes));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Volumes", VolumesArrayName, FilterParameter::CreatedArray, FindSizes));
   setFilterParameters(parameters);
 }
 

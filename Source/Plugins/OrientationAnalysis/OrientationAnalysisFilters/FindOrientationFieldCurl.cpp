@@ -167,7 +167,7 @@ void FindOrientationFieldCurl::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quats", QuatsArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("DislocationTensors", "DislocationTensorsArrayName", getDislocationTensorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, DislocationTensorsArrayName), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, DislocationTensorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("DislocationTensors", DislocationTensorsArrayName, FilterParameter::CreatedArray, FindOrientationFieldCurl));
 
   setFilterParameters(parameters);
 }

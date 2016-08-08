@@ -178,11 +178,11 @@ void MatchCrystallography::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::RequiredArray, MatchCrystallography, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Euler Angles", "CellEulerAnglesArrayName", getCellEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MatchCrystallography, this, CellEulerAnglesArrayName), SIMPL_BIND_GETTER(MatchCrystallography, this, CellEulerAnglesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", CellEulerAnglesArrayName, FilterParameter::CreatedArray, MatchCrystallography));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Volumes", "VolumesArrayName", getVolumesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MatchCrystallography, this, VolumesArrayName), SIMPL_BIND_GETTER(MatchCrystallography, this, VolumesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayName", getFeatureEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MatchCrystallography, this, FeatureEulerAnglesArrayName), SIMPL_BIND_GETTER(MatchCrystallography, this, FeatureEulerAnglesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Average Quaternions", "AvgQuatsArrayName", getAvgQuatsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MatchCrystallography, this, AvgQuatsArrayName), SIMPL_BIND_GETTER(MatchCrystallography, this, AvgQuatsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Volumes", VolumesArrayName, FilterParameter::CreatedArray, MatchCrystallography));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Average Euler Angles", FeatureEulerAnglesArrayName, FilterParameter::CreatedArray, MatchCrystallography));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Average Quaternions", AvgQuatsArrayName, FilterParameter::CreatedArray, MatchCrystallography));
   setFilterParameters(parameters);
 }
 

@@ -132,10 +132,10 @@ void GroupMicroTextureRegions::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GroupMicroTextureRegions, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, NewCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, NewCellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "CellParentIdsArrayName", getCellParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, CellParentIdsArrayName), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, CellParentIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Feature Parent Ids", "FeatureParentIdsArrayName", getFeatureParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, FeatureParentIdsArrayName), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, FeatureParentIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GroupMicroTextureRegions, this, ActiveArrayName), SIMPL_BIND_GETTER(GroupMicroTextureRegions, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("New Cell Feature Attribute Matrix Name", NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, GroupMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Parent Ids", CellParentIdsArrayName, FilterParameter::CreatedArray, GroupMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Parent Ids", FeatureParentIdsArrayName, FilterParameter::CreatedArray, GroupMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, GroupMicroTextureRegions));
 
   setFilterParameters(parameters);
 }
