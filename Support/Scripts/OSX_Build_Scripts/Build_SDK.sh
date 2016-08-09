@@ -113,9 +113,14 @@ echo "set(DREAM3D_DATA_DIR \${DREAM3D_SDK_ROOT}/DREAM3D_Data CACHE PATH \"\")" >
 # Make sure Qt is installed correctly
 
 if [[ "$HOST_SYSTEM" = "Darwin" ]]; then
-  sed -i -e "s@QT_INSTALL_LOCATION@$SDK_PARENT/$SDK_FOLDER_NAME/Qt$QT_VERSION@g" "${SCRIPT_DIR}/Qt_HeadlessInstall.js"
 
-  # Download the archive if it is not in the proper location
+  JSFILE=/tmp/Qt_HeadlessInstall.js
+  # Make a copy of the template JavaScript file
+  cp ${SCRIPT_DIR}/Qt_HeadlessInstall.js $JSFILE
+  # Substitute the DREAM3D_SDK installation location into the JavaScript file
+  sed -i -e "s@QT_INSTALL_LOCATION@$SDK_PARENT/$SDK_FOLDER_NAME/Qt$QT_VERSION@g" "$JSFILE"
+
+  # Download the Qt archive if it is not in the proper location
   if [[ ! -e $SDK_PARENT/$SDK_FOLDER_NAME/$QT_OSX_BASE_NAME.dmg ]]; then
     echo "-------------------------------------------"
     echo " Downloading Qt $QT_VERSION                "
@@ -128,9 +133,15 @@ if [[ "$HOST_SYSTEM" = "Darwin" ]]; then
   if [[ ! -e  "/Volumes/$QT_OSX_BASE_NAME/$QT_OSX_BASE_NAME.app/Contents/MacOS/$QT_OSX_BASE_NAME" ]]; then
     hdiutil mount $SDK_PARENT/$SDK_FOLDER_NAME/$QT_OSX_BASE_NAME.dmg
   fi
-  /Volumes/$QT_OSX_BASE_NAME/$QT_OSX_BASE_NAME.app/Contents/MacOS/$QT_OSX_BASE_NAME --script ${SCRIPT_DIR}/Qt_HeadlessInstall.js
+
+  # Run the Qt installer
+  /Volumes/$QT_OSX_BASE_NAME/$QT_OSX_BASE_NAME.app/Contents/MacOS/$QT_OSX_BASE_NAME --script $JSFILE
+
+  # Unmount the Qt installer disk image
   hdiutil unmount /Volumes/$QT_OSX_BASE_NAME
-  mv ${SCRIPT_DIR}/Qt_HeadlessInstall.js-e ${SCRIPT_DIR}/Qt_HeadlessInstall.js
+
+  # remove the temp JavaScript file
+  rm $JSFILE
 fi
 
 
