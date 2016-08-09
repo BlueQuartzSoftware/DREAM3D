@@ -94,6 +94,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
   protected slots:
     void on_startRowSpin_valueChanged(int i);
     void on_hasHeadersRadio_toggled(bool checked);
+    void on_amAutomatically_toggled(bool checked);
     void on_headersIndexLineEdit_textChanged(const QString &text);
     void on_editHeadersBtn_clicked();
     void on_dataTypeRadio_clicked();

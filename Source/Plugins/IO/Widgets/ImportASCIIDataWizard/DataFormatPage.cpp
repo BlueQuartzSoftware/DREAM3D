@@ -139,6 +139,15 @@ void DataFormatPage::showEvent(QShowEvent* event)
       wizard()->button(QWizard::FinishButton)->setDisabled(true);
     }
   }
+
+  if (amAutomatically->isChecked())
+  {
+    tupleDimsGB->hide();
+  }
+  else
+  {
+    tupleDimsGB->show();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -176,6 +185,26 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
 
   // Re-check the tuple dimensions
   checkTupleDimensions(tupleDimsTable->getData());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_amAutomatically_toggled(bool checked)
+{
+  if (checked == true)
+  {
+    tupleDimsGB->hide();
+
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+  }
+  else
+  {
+    tupleDimsGB->show();
+
+    // Re-check the tuple dimensions
+    checkTupleDimensions(tupleDimsTable->getData());
+  }
 }
 
 // -----------------------------------------------------------------------------
