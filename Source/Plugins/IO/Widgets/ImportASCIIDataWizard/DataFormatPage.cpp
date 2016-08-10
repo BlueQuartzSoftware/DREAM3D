@@ -183,8 +183,37 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 
-  // Re-check the tuple dimensions
-  checkTupleDimensions(tupleDimsTable->getData());
+  if (isComplete() == true)
+  {
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+  }
+  else
+  {
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataFormatPage::isComplete() const
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+
+  if (amManually->isChecked() && checkTupleDimensions(tupleDimsTable->getData()) == false)
+  {
+    return false;
+  }
+
+  for (int i=0; i<model->columnCount(); i++)
+  {
+    if (model->columnHasErrors(i) == true)
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 // -----------------------------------------------------------------------------
@@ -195,15 +224,19 @@ void DataFormatPage::on_amAutomatically_toggled(bool checked)
   if (checked == true)
   {
     tupleDimsGB->hide();
-
-    wizard()->button(QWizard::FinishButton)->setEnabled(true);
   }
   else
   {
     tupleDimsGB->show();
+  }
 
-    // Re-check the tuple dimensions
-    checkTupleDimensions(tupleDimsTable->getData());
+  if (isComplete() == true)
+  {
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+  }
+  else
+  {
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
   }
 }
 
@@ -247,7 +280,7 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
   if ( text.isEmpty() == false && (lineNum > m_NumLines || ok == false) )
   {
     model->clearHeaders(Qt::Horizontal);
-    validateHeaders(QVector<QString>());
+    checkHeaders(QVector<QString>());
     return;
   }
 
@@ -258,7 +291,7 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
   if (text.isEmpty() == true)
   {
     model->clearHeaders(Qt::Horizontal);
-    validateHeaders(QVector<QString>());
+    checkHeaders(QVector<QString>());
     return;
   }
 
@@ -294,7 +327,16 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
     headers.push_back(header);
   }
 
-  validateHeaders(headers);
+  checkHeaders(headers);
+
+  if (isComplete() == true)
+  {
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+  }
+  else
+  {
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -352,7 +394,28 @@ void DataFormatPage::updateSelection(const QItemSelection &selected, const QItem
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims)
+bool DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims) const
+{
+  if (validateTupleDimensions(tupleDims) == false)
+  {
+    tupleTableErrLabel->setText("The current tuple dimensions do not match the total number of tuples.");
+    tupleTableErrLabel->show();
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    return false;
+  }
+  else
+  {
+    tupleTableErrLabel->setText("");
+    tupleTableErrLabel->hide();
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+    return true;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataFormatPage::validateTupleDimensions(QVector<size_t> tupleDims) const
 {
   int tupleTotal = 1;
 
@@ -365,16 +428,10 @@ void DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims)
   int numOfDataLines = m_NumLines - beginIndex + 1;
   if (tupleTotal != numOfDataLines)
   {
-    tupleTableErrLabel->setText("The current tuple dimensions do not match the total number of tuples.");
-    tupleTableErrLabel->show();
-    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    return false;
   }
-  else
-  {
-    tupleTableErrLabel->setText("");
-    tupleTableErrLabel->hide();
-    wizard()->button(QWizard::FinishButton)->setEnabled(true);
-  }
+
+  return true;
 }
 
 // -----------------------------------------------------------------------------
@@ -494,7 +551,7 @@ void DataFormatPage::launchEditHeadersDialog()
     {
       QVector<QString> headers = m_EditHeadersDialog->getHeaders();
 
-      validateHeaders(headers);
+      checkHeaders(headers);
     }
     else
     {
@@ -505,13 +562,37 @@ void DataFormatPage::launchEditHeadersDialog()
 
       m_EditHeadersDialog->setHeaders(currentHeaders);
     }
+
+    if (isComplete() == true)
+    {
+      wizard()->button(QWizard::FinishButton)->setEnabled(true);
+    }
+    else
+    {
+      wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::validateHeaders(QVector<QString> headers)
+void DataFormatPage::checkHeaders(QVector<QString> headers)
+{
+  if (validateHeaders(headers) == true)
+  {
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+  }
+  else
+  {
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataFormatPage::validateHeaders(QVector<QString> headers)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
@@ -570,25 +651,25 @@ void DataFormatPage::validateHeaders(QVector<QString> headers)
   {
     arrayErrLabel->setText("Column headers cannot be empty.");
     arrayErrLabel->show();
-    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    return false;
   }
   else if (hasSlashes == true)
   {
     arrayErrLabel->setText("Column headers cannot contain slashes.");
     arrayErrLabel->show();
-    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    return false;
   }
   else if (hasDuplicates == true)
   {
     arrayErrLabel->setText("Column headers cannot have the same name.");
     arrayErrLabel->show();
-    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    return false;
   }
   else
   {
     arrayErrLabel->setText("");
     arrayErrLabel->hide();
-    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+    return true;
   }
 }
 

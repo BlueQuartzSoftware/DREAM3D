@@ -77,6 +77,12 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     void launchEditHeadersDialog();
 
     /**
+     * @brief checkHeaders
+     * @param headers
+     */
+    void checkHeaders(QVector<QString> headers);
+
+    /**
     * @brief Controls which page to navigate to after the user clicks "Next" button
     */
     virtual int nextId() const;
@@ -85,6 +91,12 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     * @brief Resets the page when the user hits the "Back" button
     */
     virtual void cleanupPage();
+
+    /**
+     * @brief isComplete
+     * @return
+     */
+    bool isComplete() const;
 
     TupleTableWidget* getTupleTable();
 
@@ -102,13 +114,14 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     void on_dataTypeCB_currentTextChanged(const QString &text);
 
     void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
-    void checkTupleDimensions(QVector<size_t> tupleDims);
+    bool checkTupleDimensions(QVector<size_t> tupleDims) const;
 
   private:
     int                                             m_NumLines;
     EditHeadersDialog*                              m_EditHeadersDialog;
 
-    void validateHeaders(QVector<QString> headers);
+    bool validateHeaders(QVector<QString> headers);
+    bool validateTupleDimensions(QVector<size_t> tupleDims) const;
 
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented
