@@ -195,7 +195,7 @@ void NeighborOrientationCorrelation::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ConfidenceIndexArrayPath.getDataContainerName());
   size_t totalPoints = m_ConfidenceIndexPtr.lock()->getNumberOfTuples();
 
-  m_MisorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  float misorientationToleranceR = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
@@ -277,7 +277,7 @@ void NeighborOrientationCorrelation::execute()
             QuaternionMathF::Copy(quats[neighbor], q2);
 
             if (m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0) { w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3); }
-            if (w > m_MisorientationTolerance)
+            if (w > misorientationToleranceR)
             {
               neighborDiffCount[i]++;
             }
@@ -302,7 +302,7 @@ void NeighborOrientationCorrelation::execute()
                 {
                   w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                 }
-                if (w < m_MisorientationTolerance)
+                if (w < misorientationToleranceR)
                 {
                   neighborSimCount[j]++;
                   neighborSimCount[k]++;
