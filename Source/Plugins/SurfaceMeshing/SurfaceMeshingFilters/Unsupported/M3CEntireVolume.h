@@ -65,7 +65,7 @@
  */
 class M3CEntireVolume : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(M3CEntireVolume)
     SIMPL_STATIC_NEW_MACRO(M3CEntireVolume)

@@ -52,7 +52,7 @@ class H5EbsdVolumeReader;
  */
 class ReadH5Ebsd : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(ReadH5Ebsd)
     SIMPL_STATIC_NEW_MACRO(ReadH5Ebsd)

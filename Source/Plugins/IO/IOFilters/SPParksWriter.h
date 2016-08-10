@@ -47,7 +47,7 @@
  */
 class SPParksWriter : public FileWriter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(SPParksWriter)
     SIMPL_STATIC_NEW_MACRO(SPParksWriter)

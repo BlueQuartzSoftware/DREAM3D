@@ -58,7 +58,7 @@ class ReadEdaxH5DataPrivate;
  */
 class ReadEdaxH5Data : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
     Q_DECLARE_PRIVATE(ReadEdaxH5Data)
 
   public:

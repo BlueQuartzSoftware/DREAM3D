@@ -50,7 +50,7 @@
  */
 class EbsdToH5Ebsd : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(EbsdToH5Ebsd)
     SIMPL_STATIC_NEW_MACRO(EbsdToH5Ebsd)

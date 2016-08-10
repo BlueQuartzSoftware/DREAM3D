@@ -52,7 +52,7 @@ class PhReaderPrivate;
  */
 class PhReader : public FileReader
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
     Q_DECLARE_PRIVATE(PhReader)
   public:
     SIMPL_SHARED_POINTERS(PhReader)

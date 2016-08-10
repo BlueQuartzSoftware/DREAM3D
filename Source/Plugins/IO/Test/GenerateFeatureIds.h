@@ -18,7 +18,7 @@
 // -----------------------------------------------------------------------------
 class GenerateFeatureIds : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(GenerateFeatureIds)
     SIMPL_STATIC_NEW_MACRO(GenerateFeatureIds)
@@ -120,7 +120,7 @@ class GenerateFeatureIds : public AbstractFilter
  */
 class CreateDataContainer : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(CreateDataContainer)
     SIMPL_STATIC_NEW_MACRO(CreateDataContainer)

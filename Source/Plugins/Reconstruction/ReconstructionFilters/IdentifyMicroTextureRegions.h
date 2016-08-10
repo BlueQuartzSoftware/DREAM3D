@@ -50,7 +50,7 @@
  */
 class IdentifyMicroTextureRegions : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     typedef boost::uniform_int<int32_t> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;

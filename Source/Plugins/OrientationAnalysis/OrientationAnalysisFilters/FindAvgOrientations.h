@@ -48,7 +48,7 @@
  */
 class FindAvgOrientations : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(FindAvgOrientations)
     SIMPL_STATIC_NEW_MACRO(FindAvgOrientations)
