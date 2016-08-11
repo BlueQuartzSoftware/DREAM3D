@@ -35,21 +35,33 @@
 
 #include "DataFormatPage.h"
 
+#include <QtCore/QSignalMapper>
 #include <QtCore/QFile>
 
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QDesktopWidget>
+
 #include "SIMPLib/Common/Constants.h"
+#include "SVWidgetsLib/QtSupport/QtSStyles.h"
+#include "SVWidgetsLib/QtSupport/QtSFaderWidget.h"
 
 #include "ImportASCIIDataWizard.h"
 #include "ASCIIDataModel.h"
 #include "EditHeadersDialog.h"
 
+namespace Detail
+{
+  const QString Delimiter(" / ");
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataFormatPage::DataFormatPage(const QString &inputFilePath, int numLines, QWidget* parent) :
+DataFormatPage::DataFormatPage(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent) :
   AbstractWizardPage(inputFilePath, parent),
   m_NumLines(numLines),
-  m_EditHeadersDialog(NULL)
+  m_EditHeadersDialog(NULL),
+  m_Dca(dca)
 {
   setupUi(this);
 
@@ -76,10 +88,14 @@ void DataFormatPage::setupGui()
 
   connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
   connect(tupleDimsTable, SIGNAL(tupleDimsChanged(QVector<size_t>)), this, SLOT(checkTupleDimensions(QVector<size_t>)));
+  connect(amName, SIGNAL(textEdited(const QString&)), this, SLOT(widgetChanged(const QString&)));
 
   headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]*"), headersIndexLineEdit));
 
   registerField("startRow", startRowSpin);
+
+  // Do not allow the user to put a forward slash into the attributeMatrixName line edit
+  amName->setValidator(new QRegularExpressionValidator(QRegularExpression("[^/]*"), this));
 
   QStringList dataTypes;
   dataTypes.push_back(SIMPL::TypeNames::Double);
@@ -103,11 +119,26 @@ void DataFormatPage::setupGui()
   tupleDimsTable->blockSignals(false);
   tupleCountLabel->setText(QString::number(numOfDataLines));
 
+  selectedDCBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle());
+  selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle());
+
+  m_AMMenuMapper = new QSignalMapper(this);
+  connect(m_AMMenuMapper, SIGNAL(mapped(QString)),
+            this, SLOT(amItemSelected(QString)));
+
+  m_DCMenuMapper = new QSignalMapper(this);
+  connect(m_DCMenuMapper, SIGNAL(mapped(QString)),
+            this, SLOT(dcItemSelected(QString)));
+
   editHeadersBtn->setDisabled(true);
   columnDataGroupBox->setDisabled(true);
   
   lineNumErrLabel->hide();
   tupleTableErrLabel->hide();
+  dcSelectionFrame->hide();
+  amSelectionError->hide();
+  amCreationError->hide();
+  applyChangesBtn->hide();
 }
 
 // -----------------------------------------------------------------------------
@@ -148,6 +179,292 @@ void DataFormatPage::showEvent(QShowEvent* event)
   {
     tupleDimsGB->show();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::amItemSelected(QString path)
+{
+  selectedAMBtn->setText(path);
+
+  DataArrayPath dap = DataArrayPath::Deserialize(path, Detail::Delimiter);
+
+  AttributeMatrix::Pointer am = m_Dca->getAttributeMatrix(dap);   // This will always be valid, because we create the selection options
+  if (am->getTupleDimensions() != getTupleTable()->getData())
+  {
+    QString ss = "The attribute matrix '" + dap.getAttributeMatrixName() + "' does not have the same tuple dimensions as the data in the file.";
+    amSelectionError->setText(ss);
+    amSelectionError->show();
+  }
+  else
+  {
+    amSelectionError->hide();
+  }
+
+  ImportASCIIDataWizard* importWizard = dynamic_cast<ImportASCIIDataWizard*>(wizard());
+  if (importWizard == nullptr) { return; }
+
+  QStringList headers = importWizard->getHeaders();
+
+  QStringList amArrays = am->getAttributeArrayNames();
+  for (int i = 0; i < amArrays.size(); i++)
+  {
+    QString amArrayName = amArrays[i];
+    for (int j = 0; j < headers.size(); j++)
+    {
+      QString headerName = headers[j];
+      if (amArrayName == headerName)
+      {
+        QString ss = "The header name \"" + headerName + "\" matches an array name that already exists in the selected attribute matrix.";
+        amSelectionError->setText(ss);
+        amSelectionError->show();
+      }
+      else
+      {
+        amSelectionError->hide();
+      }
+    }
+  }
+
+  if (isComplete() == true)
+  {
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+  }
+  else
+  {
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::dcItemSelected(QString path)
+{
+  selectedDCBtn->setText(path);
+
+  DataArrayPath dap = DataArrayPath::Deserialize(path, Detail::Delimiter);
+  dap.setAttributeMatrixName(amName->text());
+
+  AttributeMatrix::Pointer am = m_Dca->getAttributeMatrix(dap);
+  if (am != nullptr)
+  {
+    QString ss = "An attribute matrix with that name already exists in the selected data container.  Choose a different attribute matrix name.";
+    amCreationError->setText(ss);
+    amCreationError->show();
+    return;
+  }
+
+  amCreationError->hide();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::widgetChanged(const QString& text)
+{
+  Q_UNUSED(text)
+
+  amName->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+  amName->setToolTip("Press the 'Return' key to apply your changes");
+  if (applyChangesBtn->isVisible() == false)
+  {
+    applyChangesBtn->setVisible(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_amName_returnPressed()
+{
+  on_applyChangesBtn_clicked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_applyChangesBtn_clicked()
+{
+  amName->setStyleSheet(QString(""));
+
+  QPointer<QtSFaderWidget> faderWidget = new QtSFaderWidget(applyChangesBtn);
+  m_FaderWidget = faderWidget;
+
+  if (m_FaderWidget != nullptr)
+  {
+    m_FaderWidget->close();
+  }
+  m_FaderWidget = new QtSFaderWidget(applyChangesBtn);
+  m_FaderWidget->setFadeOut();
+  connect(m_FaderWidget, SIGNAL(animationComplete()),
+    this, SLOT(hideButton()));
+  m_FaderWidget->start();
+
+  dcItemSelected(selectedDCBtn->text());
+
+  if (isComplete() == true)
+  {
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+  }
+  else
+  {
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::hideButton()
+{
+  amName->setToolTip("");
+  applyChangesBtn->setVisible(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_selectedAMBtn_pressed()
+{
+  // Get the menu and clear it out
+  QMenu* menu = selectedAMBtn->menu();
+  if(!menu)
+  {
+    menu = new QMenu();
+    selectedAMBtn->setMenu(menu);
+    menu->installEventFilter(this);
+  }
+  if(menu) {
+    menu->clear();
+  }
+
+  // Get the DataContainerArray object
+  // Loop over the data containers until we find the proper data container
+  QList<DataContainer::Pointer> containers = m_Dca->getDataContainers();
+
+  QListIterator<DataContainer::Pointer> containerIter(containers);
+  while(containerIter.hasNext())
+  {
+    DataContainer::Pointer dc = containerIter.next();
+
+    QMenu* dcMenu = new QMenu(dc->getName());
+    menu->addMenu(dcMenu);
+
+    // We found the proper Data Container, now populate the AttributeMatrix List
+    DataContainer::AttributeMatrixMap_t attrMats = dc->getAttributeMatrices();
+    QMapIterator<QString, AttributeMatrix::Pointer> attrMatsIter(attrMats);
+    while(attrMatsIter.hasNext() )
+    {
+      attrMatsIter.next();
+      QString amName = attrMatsIter.key();
+
+      QAction* action = new QAction(amName, dcMenu);
+      DataArrayPath daPath(dc->getName(), amName, "");
+      QString path = daPath.serialize(Detail::Delimiter);
+      action->setData(path);
+
+      connect(action, SIGNAL(triggered(bool)), m_AMMenuMapper, SLOT(map()));
+      m_AMMenuMapper->setMapping(action, path);
+      dcMenu->addAction(action);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_selectedDCBtn_pressed()
+{
+  // Get the menu and clear it out
+  QMenu* menu = selectedDCBtn->menu();
+  if(!menu)
+  {
+    menu = new QMenu();
+    selectedDCBtn->setMenu(menu);
+    menu->installEventFilter(this);
+  }
+  if(menu) {
+    menu->clear();
+  }
+
+  // Get the DataContainerArray object
+  // Loop over the data containers until we find the proper data container
+  QList<DataContainer::Pointer> containers = m_Dca->getDataContainers();
+
+  QListIterator<DataContainer::Pointer> containerIter(containers);
+  while(containerIter.hasNext())
+  {
+    DataContainer::Pointer dc = containerIter.next();
+
+    QString dcName = dc->getName();
+    QAction* action = new QAction(dcName, menu);
+    DataArrayPath dcPath(dcName, "", "");
+    QString path = dcPath.serialize(Detail::Delimiter);
+    action->setData(path);
+
+    connect(action, SIGNAL(triggered(bool)), m_DCMenuMapper, SLOT(map()));
+    m_DCMenuMapper->setMapping(action, path);
+    menu->addAction(action);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataFormatPage::eventFilter(QObject* obj, QEvent* event)
+{
+  if (event->type() == QEvent::Show)
+  {
+    if (obj == selectedAMBtn->menu())
+    {
+      QPoint pos = adjustedMenuPosition(selectedAMBtn);
+      selectedAMBtn->menu()->move(pos);
+      return true;
+    }
+    else if (obj == selectedDCBtn->menu())
+    {
+      QPoint pos = adjustedMenuPosition(selectedDCBtn);
+      selectedDCBtn->menu()->move(pos);
+      return true;
+    }
+  }
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QPoint DataFormatPage::adjustedMenuPosition(QPushButton* pushButton)
+{
+  QSize menuSize = pushButton->menu()->sizeHint();
+  QPoint point = QCursor::pos();
+  point.setX(QCursor::pos().x() - menuSize.width() / 2);
+
+  int desktopWidth = QApplication::desktop()->availableGeometry(pushButton).width();
+  int desktopHeight = QApplication::desktop()->availableGeometry(pushButton).height();
+
+  // If the menu is going to go off the screen in the X-axis, reposition it until it's completely on the screen
+  while (point.x() + menuSize.width() > desktopWidth)
+  {
+    point.setX(point.x() - 1);
+  }
+
+  QPoint localButtonCoords = pushButton->geometry().bottomLeft();
+  QPoint globalButtonCoords = mapToGlobal(localButtonCoords);
+  //qDebug() << "QApplication::desktop()->geometry().width(): " << desktopWidth << "," << desktopHeight;
+  //qDebug() << "localButtonCoords: " << localButtonCoords << "\tglobalButtonCoords: " << globalButtonCoords;
+
+  point.setY(globalButtonCoords.y());
+
+  // If the menu is going to go off the screen in the Y-axis, reposition it until it's completely on the screen
+  while (point.y() + menuSize.height() > desktopHeight)
+  {
+    point.setY(point.y() - 1);
+  }
+
+  return point;
 }
 
 // -----------------------------------------------------------------------------
@@ -200,7 +517,12 @@ bool DataFormatPage::isComplete() const
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  if (amManually->isChecked() && checkTupleDimensions(tupleDimsTable->getData()) == false)
+  if (amSelectionError->isVisible() || amCreationError->isVisible() || tupleTableErrLabel->isVisible())
+  {
+    return false;
+  }
+
+  if ((amAutomatically->isChecked() == false && selectedAMBtn->text().isEmpty()) || (amAutomatically->isChecked() == true && (selectedDCBtn->text().isEmpty() || amName->text().isEmpty())))
   {
     return false;
   }
@@ -219,15 +541,19 @@ bool DataFormatPage::isComplete() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::on_amAutomatically_toggled(bool checked)
+void DataFormatPage::on_amAutomatically_stateChanged(int state)
 {
-  if (checked == true)
+  if (state == Qt::Checked)
   {
     tupleDimsGB->hide();
+    amSelectionFrame->hide();
+    dcSelectionFrame->show();
   }
   else
   {
     tupleDimsGB->show();
+    amSelectionFrame->show();
+    dcSelectionFrame->hide();
   }
 
   if (isComplete() == true)
@@ -679,6 +1005,37 @@ bool DataFormatPage::validateHeaders(QVector<QString> headers)
 TupleTableWidget* DataFormatPage::getTupleTable()
 {
   return tupleDimsTable;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataFormatPage::getAutomaticAM()
+{
+  return amAutomatically->isChecked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath DataFormatPage::getSelectedPath()
+{
+  if (amAutomatically->isChecked())
+  {
+    return DataArrayPath::Deserialize(selectedDCBtn->text(), Detail::Delimiter);
+  }
+  else
+  {
+    return DataArrayPath::Deserialize(selectedAMBtn->text(), Detail::Delimiter);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataFormatPage::getAMName()
+{
+  return amName->text();
 }
 
 // -----------------------------------------------------------------------------

@@ -106,13 +106,12 @@ void ImportASCIIDataWidget::setupGui()
   {
 
     ASCIIWizardData wizardData = m_Filter->getWizardData();
-    m_ImportWizard = new ImportASCIIDataWizard(&wizardData, this);
+    m_ImportWizard = new ImportASCIIDataWizard(&wizardData, m_Filter->getDataContainerArray(), this);
 
     int beginIndex = m_Filter->getWizardData().beginIndex;
     int numOfDataLines = m_Filter->getWizardData().numberOfLines - beginIndex + 1;
 
     m_LineCounter = new LineCounterObject(m_FilePath, m_Filter->getWizardData().numberOfLines);
-
 
     QVector<size_t> tupleDimsArray = m_Filter->getWizardData().tupleDims;
 
@@ -330,7 +329,7 @@ void ImportASCIIDataWidget::lineCountDidFinish()
 
   int numOfLines = m_LineCounter->getNumberOfLines();
 
-  m_ImportWizard = new ImportASCIIDataWizard(m_FilePath, numOfLines, this);
+  m_ImportWizard = new ImportASCIIDataWizard(m_FilePath, numOfLines, m_Filter->getDataContainerArray(), this);
   int result = m_ImportWizard->exec();
 
   if (result == QDialog::Accepted)
@@ -418,6 +417,8 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     data.numberOfLines = numOfLines;
     data.dataTypes = m_ImportWizard->getDataTypes();
     data.tupleDims = m_ImportWizard->getTupleDims();
+    data.automaticAM = m_ImportWizard->getAutomaticAM();
+    data.selectedPath = m_ImportWizard->getSelectedPath();
   }
 
   // Now set the value into the filter.
