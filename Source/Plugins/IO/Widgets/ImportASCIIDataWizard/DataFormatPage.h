@@ -150,7 +150,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     /**
      * @brief on_amName_returnPressed
      */
-    void on_amName_returnPressed();
+//    void on_amName_returnPressed();
 
     /**
      * @brief on_applyChangesBtn_clicked
