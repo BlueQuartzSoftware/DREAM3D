@@ -61,7 +61,7 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
     void plotSizeDistribution();
-    void updateSizeDistributionPlot();
+    int updateSizeDistributionPlot();
     int computeBinsAndCutOffs( float mu, float sigma,
                                float minCutOff, float maxCutOff,
                                float binStepSize,
@@ -75,7 +75,7 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
     QString getComboString();
     QString getTabTitle();
 
-    void calculateNumberOfBins();
+    int calculateNumberOfBins();
     int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
     int gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize);
 
@@ -90,6 +90,7 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
     void on_m_MinSigmaCutOff_textChanged(const QString& text);
     void on_m_MaxSigmaCutOff_textChanged(const QString& text);
     void on_m_BinStepSize_valueChanged(double v);
+    void on_m_FeatureESD_editingFinished();
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);
 
@@ -139,6 +140,9 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
 
     QDoubleValidator* m_MuValidator;
     QDoubleValidator* m_SigmaValidator;
+    QDoubleValidator* m_MinCutoffValidator;
+    QDoubleValidator* m_MaxCutoffValidator;
+    bool              m_EsdUpdated;
 
     PrimaryPhaseWidget(const PrimaryPhaseWidget&); // Copy Constructor Not Implemented
     void operator=(const PrimaryPhaseWidget&); // Operator '=' Not Implemented

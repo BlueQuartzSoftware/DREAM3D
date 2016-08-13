@@ -65,7 +65,8 @@
 #include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
 
-
+#define SG_MU_DEFAULT  1.0
+#define SG_SIGMA_DEFAULT 0.1
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot_grid.h>
@@ -110,7 +111,8 @@ PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent) :
   m_CutOffMax(NULL),
   m_grid(NULL),
   m_MuValidator(NULL),
-  m_SigmaValidator(NULL)
+  m_SigmaValidator(NULL),
+  m_EsdUpdated(false)
 {
   setupUi(this);
   setupGui();
@@ -156,6 +158,8 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setupGui()
 {
+  distributionTypeCombo->hide();
+  delete distHLayout;
   distributionTypeCombo->addItem(SIMPL::StringConstants::BetaDistribution.toLatin1().data());
   distributionTypeCombo->addItem(SIMPL::StringConstants::LogNormalDistribution.toLatin1().data());
   distributionTypeCombo->addItem(SIMPL::StringConstants::PowerLawDistribution.toLatin1().data());
@@ -180,22 +184,26 @@ void PrimaryPhaseWidget::setupGui()
 
   m_MuValidator = new QDoubleValidator(m_Mu_SizeDistribution);
   m_MuValidator->setLocale(loc);
-  m_MuValidator->setRange(0.0001, 10.0, 4);
-
+  m_MuValidator->setRange(0.0001, 100.0, 6);
   m_Mu_SizeDistribution->setValidator(m_MuValidator);
 
   m_SigmaValidator = new QDoubleValidator(m_Sigma_SizeDistribution);
   m_SigmaValidator->setLocale(loc);
-  m_SigmaValidator->setRange(0.0000, 1.0, 4);
+  m_SigmaValidator->setRange(0.001, 50.0, 6);
   m_Sigma_SizeDistribution->setValidator(m_SigmaValidator);
 
-  QDoubleValidator* minVal = new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff);
-  minVal->setLocale(loc);
-  m_MinSigmaCutOff->setValidator(minVal);
+  m_MinCutoffValidator = new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 6, m_MinSigmaCutOff);
+  m_MinCutoffValidator->setLocale(loc);
+  m_MinSigmaCutOff->setValidator(m_MinCutoffValidator);
 
-  QDoubleValidator* maxVal = new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff);
-  maxVal->setLocale(loc);
-  m_MaxSigmaCutOff->setValidator(maxVal);
+  m_MaxCutoffValidator = new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 6, m_MinSigmaCutOff);
+  m_MaxCutoffValidator->setLocale(loc);
+  m_MaxSigmaCutOff->setValidator(m_MaxCutoffValidator);
+
+  // These must go after all the Validators are setup because when they are set
+  // a signal is going to get fired
+  m_Mu_SizeDistribution->setText(loc.toString(SG_MU_DEFAULT));
+  m_Sigma_SizeDistribution->setText(loc.toString(SG_SIGMA_DEFAULT));
 
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);
@@ -283,6 +291,10 @@ void PrimaryPhaseWidget::setupGui()
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
   m_SizeDistributionPlot->setTitle("Size Distribution");
+  m_SizeDistributionPlot->setAxisTitle(QwtPlot::xBottom, QString("Equivalent Sphere Diameter (ESD)"));
+  m_SizeDistributionPlot->setAxisTitle(QwtPlot::yLeft, QString("Probability of Sampling ESD from the Distribution"));
+
+
 
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);
@@ -389,29 +401,29 @@ int PrimaryPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& sigma, f
 
   bool ok = false;
   mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
-  if (ok == false)
+  if (ok == false || mu == 0.0f)
   {
-    return 0;
+    return -1;
   }
   sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
-  if (ok == false)
+  if (ok == false || sigma == 0.0f)
   {
-    return 0;
+    return -1;
   }
   minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
-  if (ok == false)
+  if (ok == false < minCutOff < 1)
   {
-    return 0;
+    return -1;
   }
   maxCutOff = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
-  if (ok == false)
+  if (ok == false || maxCutOff < 1 || maxCutOff < minCutOff)
   {
-    return 0;
+    return -1;
   }
   stepSize = loc.toFloat(m_BinStepSize->text(), &ok);
-  if (ok == false)
+  if (ok == false || stepSize == 0.0f)
   {
-    return 0;
+    return -1;
   }
   return 1;
 }
@@ -519,9 +531,39 @@ bool PrimaryPhaseWidget::validateValue(QDoubleValidator* val, QLineEdit* lineEdi
 bool PrimaryPhaseWidget::validateMuSigma()
 {
   bool muValid = validateValue(m_MuValidator, m_Mu_SizeDistribution);
+  if(!muValid)
+  {
+    m_NumberBinsGenerated->setText("Error: Mu not valid");
+    m_GenerateDefaultData->setEnabled(false);
+    return false;
+  }
   bool sigmaValid = validateValue(m_SigmaValidator, m_Sigma_SizeDistribution);
+  if(!sigmaValid)
+  {
+    m_NumberBinsGenerated->setText("Error: Sigma not valid");
+    m_GenerateDefaultData->setEnabled(false);
+    return false;
+  }
+  bool minValid = validateValue(m_MinCutoffValidator, m_MinSigmaCutOff);
+  if(!minValid)
+  {
+    m_NumberBinsGenerated->setText("Error: Min Cutoff not valid");
+    m_GenerateDefaultData->setEnabled(false);
+    return false;
+  }
+  bool maxValid = validateValue(m_MaxCutoffValidator, m_MaxSigmaCutOff);
+  if(!maxValid)
+  {
+    m_NumberBinsGenerated->setText("Error: Max Cutoff not valid");
+    m_GenerateDefaultData->setEnabled(false);
+    return false;
+  }
 
-  if (muValid && sigmaValid)
+  bool ok = false;
+  float min = m_MinSigmaCutOff->text().toFloat(&ok);
+  float max = m_MaxSigmaCutOff->text().toFloat(&ok);
+
+  if (muValid && sigmaValid && minValid && maxValid && ok && max >= min)
   {
     m_GenerateDefaultData->setEnabled(true);
     return true;
@@ -535,6 +577,20 @@ bool PrimaryPhaseWidget::validateMuSigma()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_FeatureESD_editingFinished()
+{
+  QLocale loc = QLocale::system();
+  bool ok = false;
+  float esd = loc.toFloat(m_FeatureESD->text(), &ok);
+  float mu = logf(esd);
+  m_EsdUpdated = true;
+  m_Mu_SizeDistribution->setText(loc.toString(mu));
+  m_EsdUpdated = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& text)
 {
   Q_UNUSED(text)
@@ -542,9 +598,27 @@ void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& tex
   {
     return;
   }
-  updateSizeDistributionPlot();
-  m_Mu_SizeDistribution->setFocus();
-  calculateNumberOfBins();
+
+  if(!m_EsdUpdated)
+  {
+    QLocale loc = QLocale::system();
+    m_FeatureESD->blockSignals(true);
+    bool ok = false;
+    float mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
+    float esd = std::expf(mu);
+    m_FeatureESD->setText(loc.toString(esd));
+    m_FeatureESD->blockSignals(false);
+  }
+
+  if (updateSizeDistributionPlot() < 0)
+  {
+    return;
+  }
+  //m_Mu_SizeDistribution->setFocus();
+  if(calculateNumberOfBins() < 0)
+  {
+    return;
+  }
   emit phaseParametersChanged();
 }
 
@@ -558,9 +632,15 @@ void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& 
   {
     return;
   }
-  updateSizeDistributionPlot();
+  if (updateSizeDistributionPlot() < 0)
+  {
+    return;
+  }
   m_Sigma_SizeDistribution->setFocus();
-  calculateNumberOfBins();
+  if(calculateNumberOfBins() < 0)
+  {
+    return;
+  }
   emit phaseParametersChanged();
 }
 
@@ -570,9 +650,19 @@ void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& 
 void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
 {
   Q_UNUSED(text)
-  updateSizeDistributionPlot();
+  if (!validateMuSigma())
+  {
+    return;
+  }
+  if (updateSizeDistributionPlot() < 0)
+  {
+    return;
+  }
   m_MinSigmaCutOff->setFocus();
-  calculateNumberOfBins();
+  if(calculateNumberOfBins() < 0)
+  {
+    return;
+  }
   emit phaseParametersChanged();
 }
 
@@ -582,9 +672,19 @@ void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
 void PrimaryPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
 {
   Q_UNUSED(text)
-  updateSizeDistributionPlot();
+  if (!validateMuSigma())
+  {
+    return;
+  }
+  if (updateSizeDistributionPlot() < 0)
+  {
+    return;
+  }
   m_MaxSigmaCutOff->setFocus();
-  calculateNumberOfBins();
+  if(calculateNumberOfBins() < 0)
+  {
+    return;
+  }
   emit phaseParametersChanged();
 }
 
@@ -594,14 +694,21 @@ void PrimaryPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
 void PrimaryPhaseWidget::on_m_BinStepSize_valueChanged(double v)
 {
   Q_UNUSED(v)
-  calculateNumberOfBins();
+  if (!validateMuSigma())
+  {
+    return;
+  }
+  if(calculateNumberOfBins() < 0)
+  {
+    return;
+  }
   emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::calculateNumberOfBins()
+int PrimaryPhaseWidget::calculateNumberOfBins()
 {
   float mu = 1.0;
   float sigma = 1.0;
@@ -610,20 +717,23 @@ void PrimaryPhaseWidget::calculateNumberOfBins()
   float stepSize = 1.0;
   float max, min;
   int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
-  if (err == 0)
+  if (err < 0)
   {
-    return;
+    return err;
   }
 
   int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
-  if(err < 0)
+  if(n < 0)
   {
     m_NumberBinsGenerated->setText("Error");
+    err = n;
   }
   else
   {
     m_NumberBinsGenerated->setText(QString::number(n));
+    err = 1;
   }
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -688,7 +798,7 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::updateSizeDistributionPlot()
+int PrimaryPhaseWidget::updateSizeDistributionPlot()
 {
   float mu = 1.0;
   float sigma = 1.0;
@@ -696,9 +806,9 @@ void PrimaryPhaseWidget::updateSizeDistributionPlot()
   float maxCutOff = 1.0;
   float stepSize = 1.0;
   int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
-  if (err == 0)
+  if (err < 0)
   {
-    return;
+    return err;
   }
 
   QwtArray<float> xCo;
@@ -709,7 +819,7 @@ void PrimaryPhaseWidget::updateSizeDistributionPlot()
   QwtArray<float> x;
   QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
-  if (err < 0) { return; }
+  if (err < 0) { return err; }
 
   if (NULL == m_SizeDistributionCurve)
   {
@@ -725,7 +835,9 @@ void PrimaryPhaseWidget::updateSizeDistributionPlot()
     m_CutOffMin = new QwtPlotMarker();
     m_CutOffMin->attach(m_SizeDistributionPlot);
   }
-  m_CutOffMin->setLabel(QString::fromLatin1("Cut Off Min Feature Diameter"));
+
+  QString str = QString("Min Feature ESD = %1").arg(xCo[0]);
+  m_CutOffMin->setLabel(str);
   m_CutOffMin->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
   m_CutOffMin->setLabelOrientation(Qt::Vertical);
   m_CutOffMin->setLineStyle(QwtPlotMarker::VLine);
@@ -737,7 +849,9 @@ void PrimaryPhaseWidget::updateSizeDistributionPlot()
     m_CutOffMax = new QwtPlotMarker();
     m_CutOffMax->attach(m_SizeDistributionPlot);
   }
-  m_CutOffMax->setLabel(QString::fromLatin1("Cut Off Max Feature Diameter"));
+
+  str = QString("Max Feature ESD = %1").arg(xCo[1]);
+  m_CutOffMax->setLabel(str);
   m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
   m_CutOffMax->setLabelOrientation(Qt::Vertical);
   m_CutOffMax->setLineStyle(QwtPlotMarker::VLine);
@@ -762,6 +876,7 @@ void PrimaryPhaseWidget::updateSizeDistributionPlot()
   m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
 
   m_SizeDistributionPlot->replot();
+  return 1;
 }
 
 // -----------------------------------------------------------------------------
@@ -841,7 +956,11 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
   float minCutOff = 1.0f;
   float maxCutOff = 1.0f;
   float binStep = 1.0f;
-  gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, binStep);
+  err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, binStep);
+  if(err == 0)
+  {
+    return -10;
+  }
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
 
   QwtArray<float> xCo;

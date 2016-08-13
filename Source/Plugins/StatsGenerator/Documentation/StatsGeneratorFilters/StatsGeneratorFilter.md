@@ -12,8 +12,8 @@ The StatsGenerator **Filter** was created to allow users to quickly generate a s
 The set(s) of statistics that can be generated in this program correspond to the set(s) used by "**Feature** packing algorithms" in DREAM.3D.  DREAM.3D chooses to classify **Features** in *Phase Types*, which define the set of statistics used to describe the key metrics for those **Features**.  The *Phase Types* that can currently be selected in DREAM.3D are _Primary_, _Precipitate_ and _Matrix_.  The statistics that describe each of these *Phase Types* are listed below:
 
 + **Primary**: {Volume fraction}, {crystal structures}, size, shape (aspect ratios), Omega3, number of neighbors, ODF (crystallographic orientation), MDF, axis ODF (morphological orientation)  
-+ **Precipitate**: {Volume fraction}, {crystal structures}, {fraction on **Feature** boundary}, size, shape (aspect ratios), Omega3, radial distribtion function (RDF), ODF (crystallographic orientation), MDF, axis ODF (morphological orientation)  
-+ **Matrix**: {Volume fraction}, {crystal structure} 
++ **Precipitate**: {Volume fraction}, {crystal structures}, {fraction on **Feature** boundary}, size, shape (aspect ratios), Omega3, radial distribtion function (RDF), ODF (crystallographic orientation), MDF, axis ODF (morphological orientation)
++ **Matrix**: {Volume fraction}, {crystal structure}
 
 *Stats designated with a { } are located on the Phase Properties Manager*
 
@@ -39,7 +39,7 @@ The *Phase Properties Manager* is a pop-up window where the user can enter infor
 ![Size Distribution GUI](Images/image001.png)
 @image latex Images/image001.png "Size Distribution GUI" width=6in 
 
-The plot displayed on this tab is the _actual size distribution_ of the **Features** that will be placed for this phase.  The X-axis is the _equivalent sphere diameter_ (ESD) of the **Feature**.  ESD indicates the diameter of a sphere that has the equivalent volume of the **Feature**.  The units of ESD in this plot are in arbitrary units of length (i.e., meters, millimeters, microns, nanometers, etc).  The Y-axis of the plot is the probability of sampling that ESD from the distribution.  The parameters listed below are what define the size distribution and how it is binned for correlation with other statistical descriptors to be described later.  When entering the parameters that define the size distribution, it is generally a good work flow to iteratively adjust the parameters while watching the plot until the plot appears "satisfactory" with respect to the location of the peak and the length of the "tails", rather that be overly concerned witht the parameter values themselves.
+The plot displayed on this tab is the _actual size distribution_ of the **Features** that will be placed for this phase.  The X-axis is the _equivalent sphere diameter_ (ESD) of the **Feature**.  ESD indicates the diameter of a sphere that has the equivalent volume of the **Feature**.  The units of ESD in this plot are in arbitrary units of length (i.e., meters, millimeters, microns, nanometers, etc).  The Y-axis of the plot is the probability of sampling that ESD from the distribution.  The parameters listed below are what define the size distribution and how it is binned for correlation with other statistical descriptors to be described later.  When entering the parameters that define the size distribution, it is generally a good work flow to iteratively adjust the parameters while watching the plot until the plot appears "satisfactory" with respect to the location of the peak and the length of the "tails", rather that be overly concerned with the parameter values themselves.
 
 
 These parameters define the size distribution itself:
@@ -50,7 +50,10 @@ These parameters define the size distribution itself:
 These parameters control the binning of the **Feature** size distribution:
   + **Bin Step Size**: The size of bin to use in segregating the **Feature** size distribution into classes for correlating other statistics to **Feature** size. The point of creating size classes in the **Feature** size distribution is that it allows the user to give different shape or number of neighbors distributions to features at different points along the **Feature** size distribution. For example, the user can set to small **Features** to be spherical while making large **Features** elongated by modifying the statistics associated with **Features** in the lower bins differently than those in the higher bins.  If the user has no desire to have different statistics for different sizes, then a large value can be used to create a single size class.  Note that the *Bins to be Created* value is displayed in the bottom left corner, which tells the user for the given *Bin Step Size* how many size classes will be created along the **Feature** size distribution
 
-These options set the initial defaults for the correlated statistics: 
+![Equation to calculate the number of bins](Images/numbin_eqn.png)
+@image latex Images/numbin_eqn.png "Equation to calculate the number of bins" width=3in 
+
+These options set the initial defaults for the correlated statistics:
   + **Preset Statistic Models**: Allows the user to select a _morphological type_ of microstructure to populate the default data. The two options currently provided are:
     - **Equiaxed**: Populates the statistics tabs with data that is designed to generate a random equiaxed microstructure
     - **Rolled**: Populates the statistic tabs with data that is designed to generate a rolled microstructure with elongated grains with user defined aspect ratios.  If this preset is selected, the user is prompted to enter:
