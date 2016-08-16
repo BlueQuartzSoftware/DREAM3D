@@ -12,16 +12,16 @@ You do not need an account at github to download it but it does help if you are 
 
 Use git clone the DREAM.3D repository:
 
-	git clone -b develop https://www.github.com/bluequartzsoftware/dream3d
+    git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D
 
 In addition there are 3 other repositories that are required to build DREAM.3D:
 
-	git clone -b develop https://www.github.com/bluequartzsoftware/CMP
+    git clone -b develop https://www.github.com/bluequartzsoftware/CMP
     git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL
     git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView
 
 
-## I do NOT have GIt Installed on My System ##
+## I do NOT have Git Installed on My System ##
 
 The user will need to download 4 zip archives directly from each of the project web pages:
 
@@ -40,7 +40,7 @@ The following images shows what the user interface should look like:
 
 All 4 of these repositories should be cloned/downloaded so that the final folder structure looks like the following:
 
-	CMP
+    CMP
     DREAM3D
     SIMPL
     SIMPLView
