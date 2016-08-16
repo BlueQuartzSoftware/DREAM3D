@@ -96,37 +96,37 @@ FindFeatureClustering::~FindFeatureClustering()
 void FindFeatureClustering::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Number of Bins for RDF", "NumberOfBins", getNumberOfBins(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureClustering, this, NumberOfBins), SIMPL_BIND_GETTER(FindFeatureClustering, this, NumberOfBins)));
-  parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureClustering, this, PhaseNumber), SIMPL_BIND_GETTER(FindFeatureClustering, this, PhaseNumber)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins for RDF", NumberOfBins, FilterParameter::Parameter, FindFeatureClustering));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Parameter, FindFeatureClustering));
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureClustering, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FindFeatureClustering, this, RemoveBiasedFeatures)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Parameter, FindFeatureClustering, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureClustering, this, EquivalentDiametersArrayPath), SIMPL_BIND_GETTER(FindFeatureClustering, this, EquivalentDiametersArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Equivalent Diameters", EquivalentDiametersArrayPath, FilterParameter::RequiredArray, FindFeatureClustering, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureClustering, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindFeatureClustering, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindFeatureClustering, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureClustering, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindFeatureClustering, this, CentroidsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindFeatureClustering, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureClustering, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FindFeatureClustering, this, BiasedFeaturesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Biased Features", BiasedFeaturesArrayPath, FilterParameter::RequiredArray, FindFeatureClustering, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType amReq = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::RequiredArray, amReq, SIMPL_BIND_SETTER(FindFeatureClustering, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(FindFeatureClustering, this, CellEnsembleAttributeMatrixName)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::RequiredArray, FindFeatureClustering, amReq));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Clustering List", "ClusteringListArrayName", getClusteringListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureClustering, this, ClusteringListArrayName), SIMPL_BIND_GETTER(FindFeatureClustering, this, ClusteringListArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Clustering List", ClusteringListArrayName, FilterParameter::CreatedArray, FindFeatureClustering));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Radial Distribution Function", "NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureClustering, this, NewEnsembleArrayArrayName), SIMPL_BIND_GETTER(FindFeatureClustering, this, NewEnsembleArrayArrayName)));
-  parameters.push_back(StringFilterParameter::New("Max and Min Separation Distances", "MaxMinArrayName", getMaxMinArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureClustering, this, MaxMinArrayName), SIMPL_BIND_GETTER(FindFeatureClustering, this, MaxMinArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Radial Distribution Function", NewEnsembleArrayArrayName, FilterParameter::CreatedArray, FindFeatureClustering));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Max and Min Separation Distances", MaxMinArrayName, FilterParameter::CreatedArray, FindFeatureClustering));
   setFilterParameters(parameters);
 }
 

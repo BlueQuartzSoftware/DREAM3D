@@ -84,12 +84,12 @@ void VASPReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VASPReader, this, InputFile), SIMPL_BIND_GETTER(VASPReader, this, InputFile), "*"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, VASPReader, "*"));
 
-  parameters.push_back(StringFilterParameter::New("Vertex Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VASPReader, this, VertexDataContainerName), SIMPL_BIND_GETTER(VASPReader, this, VertexDataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VASPReader, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(VASPReader, this, VertexAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("AtomVelocities", "AtomVelocitiesArrayName", getAtomVelocitiesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VASPReader, this, AtomVelocitiesArrayName), SIMPL_BIND_GETTER(VASPReader, this, AtomVelocitiesArrayName)));
-  parameters.push_back(StringFilterParameter::New("AtomTypes", "AtomTypesArrayName", getAtomTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VASPReader, this, AtomTypesArrayName), SIMPL_BIND_GETTER(VASPReader, this, AtomTypesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VASPReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, VASPReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("AtomVelocities", AtomVelocitiesArrayName, FilterParameter::CreatedArray, VASPReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("AtomTypes", AtomTypesArrayName, FilterParameter::CreatedArray, VASPReader));
 
   setFilterParameters(parameters);
 }

@@ -94,28 +94,28 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("AvgCAxisMisalignmentsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Find Average Misalignment Per Feature", "FindAvgMisals", getFindAvgMisals(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, FindAvgMisals), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, FindAvgMisals)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Find Average Misalignment Per Feature", FindAvgMisals, FilterParameter::Parameter, FindFeatureNeighborCAxisMisalignments, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, NeighborListArrayPath), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, NeighborListArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Neighbor List", NeighborListArrayPath, FilterParameter::RequiredArray, FindFeatureNeighborCAxisMisalignments, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, FindFeatureNeighborCAxisMisalignments, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindFeatureNeighborCAxisMisalignments, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindFeatureNeighborCAxisMisalignments, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("C-Axis Misalignment List", "CAxisMisalignmentListArrayName", getCAxisMisalignmentListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, CAxisMisalignmentListArrayName), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, CAxisMisalignmentListArrayName)));
-  parameters.push_back(StringFilterParameter::New("Avgerage C-Axis Misalignments", "AvgCAxisMisalignmentsArrayName", getAvgCAxisMisalignmentsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureNeighborCAxisMisalignments, this, AvgCAxisMisalignmentsArrayName), SIMPL_BIND_GETTER(FindFeatureNeighborCAxisMisalignments, this, AvgCAxisMisalignmentsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("C-Axis Misalignment List", CAxisMisalignmentListArrayName, FilterParameter::CreatedArray, FindFeatureNeighborCAxisMisalignments));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Avgerage C-Axis Misalignments", AvgCAxisMisalignmentsArrayName, FilterParameter::CreatedArray, FindFeatureNeighborCAxisMisalignments));
   setFilterParameters(parameters);
 }
 

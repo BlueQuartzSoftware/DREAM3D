@@ -85,11 +85,11 @@ void StatsGeneratorFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(StatsGeneratorFilterParameter::New("StatsGenerator", "StatsGenerator", "", FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Statistics Data Container", "StatsGeneratorDataContainerName", getStatsGeneratorDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, StatsGeneratorDataContainerName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, StatsGeneratorDataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, CellEnsembleAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Statistics", "StatsDataArrayName", getStatsDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, StatsDataArrayName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, StatsDataArrayName)));
-  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, CrystalStructuresArrayName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, CrystalStructuresArrayName)));
-  parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, PhaseTypesArrayName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, PhaseTypesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Statistics Data Container", StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Statistics", StatsDataArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures", CrystalStructuresArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Types", PhaseTypesArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
   setFilterParameters(parameters);
 }
 

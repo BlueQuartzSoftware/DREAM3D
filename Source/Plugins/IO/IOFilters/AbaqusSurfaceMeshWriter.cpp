@@ -80,11 +80,11 @@ AbaqusSurfaceMeshWriter::~AbaqusSurfaceMeshWriter()
 void AbaqusSurfaceMeshWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AbaqusSurfaceMeshWriter, this, OutputFile), SIMPL_BIND_GETTER(AbaqusSurfaceMeshWriter, this, OutputFile), "*.inp"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, AbaqusSurfaceMeshWriter, "*.inp"));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AbaqusSurfaceMeshWriter, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(AbaqusSurfaceMeshWriter, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, AbaqusSurfaceMeshWriter, req));
   }
   setFilterParameters(parameters);
 }

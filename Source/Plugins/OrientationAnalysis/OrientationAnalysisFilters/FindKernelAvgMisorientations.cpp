@@ -91,28 +91,28 @@ FindKernelAvgMisorientations::~FindKernelAvgMisorientations()
 void FindKernelAvgMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntVec3FilterParameter::New("Kernel Radius", "KernelSize", getKernelSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, KernelSize), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, KernelSize)));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Kernel Radius", KernelSize, FilterParameter::Parameter, FindKernelAvgMisorientations));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindKernelAvgMisorientations, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, FindKernelAvgMisorientations, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, QuatsArrayPath), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, QuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, FindKernelAvgMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindKernelAvgMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Kernel Average Misorientations", "KernelAverageMisorientationsArrayName", getKernelAverageMisorientationsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindKernelAvgMisorientations, this, KernelAverageMisorientationsArrayName), SIMPL_BIND_GETTER(FindKernelAvgMisorientations, this, KernelAverageMisorientationsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Kernel Average Misorientations", KernelAverageMisorientationsArrayName, FilterParameter::CreatedArray, FindKernelAvgMisorientations));
   setFilterParameters(parameters);
 }
 

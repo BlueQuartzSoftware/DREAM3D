@@ -90,35 +90,35 @@ void FindEllipsoidError::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("IdealFeatureIdsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", "WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEllipsoidError, this, WriteIdealEllipseFeatureIds), SIMPL_BIND_GETTER(FindEllipsoidError, this, WriteIdealEllipseFeatureIds)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", WriteIdealEllipseFeatureIds, FilterParameter::Parameter, FindEllipsoidError, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureIds", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, CentroidsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("NumCells", "NumCellsArrayPath", getNumCellsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, NumCellsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, NumCellsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("NumCells", NumCellsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Axis Eulers", "AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, AxisEulerAnglesArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, AxisEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Axis Eulers", AxisEulerAnglesArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("AxisLengths", "AxisLengthsArrayPath", getAxisLengthsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, AxisLengthsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, AxisLengthsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AxisLengths", AxisLengthsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindEllipsoidError, this, CellFeatureAttributeMatrixName)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("EllipsoidError", "EllipsoidErrorArrayName", getEllipsoidErrorArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, EllipsoidErrorArrayName), SIMPL_BIND_GETTER(FindEllipsoidError, this, EllipsoidErrorArrayName)));
-  parameters.push_back(StringFilterParameter::New("IdealFeatureIds", "IdealFeatureIdsArrayName", getIdealFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, IdealFeatureIdsArrayName), SIMPL_BIND_GETTER(FindEllipsoidError, this, IdealFeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("EllipsoidError", EllipsoidErrorArrayName, FilterParameter::CreatedArray, FindEllipsoidError));
+  parameters.push_back(SIMPL_NEW_STRING_FP("IdealFeatureIds", IdealFeatureIdsArrayName, FilterParameter::CreatedArray, FindEllipsoidError));
 
   setFilterParameters(parameters);
 }

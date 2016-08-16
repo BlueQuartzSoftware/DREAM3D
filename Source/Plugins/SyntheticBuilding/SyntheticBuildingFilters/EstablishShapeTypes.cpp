@@ -83,12 +83,12 @@ void EstablishShapeTypes::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EstablishShapeTypes, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(EstablishShapeTypes, this, InputPhaseTypesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, EstablishShapeTypes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Shape Types", "ShapeTypesArrayName", getShapeTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishShapeTypes, this, ShapeTypesArrayName), SIMPL_BIND_GETTER(EstablishShapeTypes, this, ShapeTypesArrayName)));
-  ShapeTypeSelectionFilterParameter::Pointer sType_parameter = ShapeTypeSelectionFilterParameter::New( "Shape Types", "ShapeTypeData", "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", FilterParameter::CreatedArray,
-                                                                                                        SIMPL_BIND_SETTER(EstablishShapeTypes, this, ShapeTypeData), SIMPL_BIND_GETTER(EstablishShapeTypes, this, ShapeTypeData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Shape Types", ShapeTypesArrayName, FilterParameter::CreatedArray, EstablishShapeTypes));
+  //ShapeTypeSelectionFilterParameter::Pointer sType_parameter = ShapeTypeSelectionFilterParameter::New( "Shape Types", "ShapeTypeData", "UInt32Vector_t", FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishShapeTypes, this, ShapeTypeData), SIMPL_BIND_GETTER(EstablishShapeTypes, this, ShapeTypeData), "PhaseCount", "InputPhaseTypesArrayPath");
+  ShapeTypeSelectionFilterParameter::Pointer sType_parameter = SIMPL_NEW_SHAPETYPE_SELECTION_FP("Shape Types", ShapeTypeData, FilterParameter::CreatedArray, EstablishShapeTypes, "PhaseCount", "InputPhaseTypesArrayPath");
   parameters.push_back(sType_parameter);
   setFilterParameters(parameters);
 }

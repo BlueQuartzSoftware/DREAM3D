@@ -84,16 +84,16 @@ void SurfaceMeshToNonconformalVtk::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToNonconformalVtk, this, OutputVtkFile), SIMPL_BIND_GETTER(SurfaceMeshToNonconformalVtk, this, OutputVtkFile)));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToNonconformalVtk, this, WriteBinaryFile), SIMPL_BIND_GETTER(SurfaceMeshToNonconformalVtk, this, WriteBinaryFile)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Vtk File", OutputVtkFile, FilterParameter::Parameter, SurfaceMeshToNonconformalVtk));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary Vtk File", WriteBinaryFile, FilterParameter::Parameter, SurfaceMeshToNonconformalVtk));
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SurfaceMeshToNonconformalVtk, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(SurfaceMeshToNonconformalVtk, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("SurfaceMeshFaceLabels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, SurfaceMeshToNonconformalVtk, req));
   }
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SurfaceMeshToNonconformalVtk, this, SurfaceMeshNodeTypeArrayPath), SIMPL_BIND_GETTER(SurfaceMeshToNonconformalVtk, this, SurfaceMeshNodeTypeArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("SurfaceMeshNodeType", SurfaceMeshNodeTypeArrayPath, FilterParameter::RequiredArray, SurfaceMeshToNonconformalVtk, req));
   }
 
   setFilterParameters(parameters);

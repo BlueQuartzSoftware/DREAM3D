@@ -85,23 +85,23 @@ FindNeighborhoods::~FindNeighborhoods()
 void FindNeighborhoods::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Multiples of Average Diameter", "MultiplesOfAverage", getMultiplesOfAverage(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindNeighborhoods, this, MultiplesOfAverage), SIMPL_BIND_GETTER(FindNeighborhoods, this, MultiplesOfAverage)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Multiples of Average Diameter", MultiplesOfAverage, FilterParameter::Parameter, FindNeighborhoods));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindNeighborhoods, this, EquivalentDiametersArrayPath), SIMPL_BIND_GETTER(FindNeighborhoods, this, EquivalentDiametersArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Equivalent Diameters", EquivalentDiametersArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindNeighborhoods, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindNeighborhoods, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindNeighborhoods, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindNeighborhoods, this, CentroidsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", getNeighborhoodsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighborhoods, this, NeighborhoodsArrayName), SIMPL_BIND_GETTER(FindNeighborhoods, this, NeighborhoodsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Neighborhood List", "NeighborhoodListArrayName", getNeighborhoodListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighborhoods, this, NeighborhoodListArrayName), SIMPL_BIND_GETTER(FindNeighborhoods, this, NeighborhoodListArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Neighborhoods", NeighborhoodsArrayName, FilterParameter::CreatedArray, FindNeighborhoods));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Neighborhood List", NeighborhoodListArrayName, FilterParameter::CreatedArray, FindNeighborhoods));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

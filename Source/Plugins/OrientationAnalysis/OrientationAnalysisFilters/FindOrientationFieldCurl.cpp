@@ -152,22 +152,22 @@ void FindOrientationFieldCurl::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntVec3FilterParameter::New("Curl Radius (Pixels)", "CurlSize", getCurlSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, CurlSize), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, CurlSize)));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Curl Radius (Pixels)", CurlSize, FilterParameter::Parameter, FindOrientationFieldCurl));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 4, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quats", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, QuatsArrayPath), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, QuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quats", QuatsArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("DislocationTensors", "DislocationTensorsArrayName", getDislocationTensorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, DislocationTensorsArrayName), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, DislocationTensorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("DislocationTensors", DislocationTensorsArrayName, FilterParameter::CreatedArray, FindOrientationFieldCurl));
 
   setFilterParameters(parameters);
 }

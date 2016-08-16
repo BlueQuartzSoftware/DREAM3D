@@ -93,20 +93,20 @@ void SineParamsSegmentFeatures::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, UseGoodVoxels)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Good Voxels Array", UseGoodVoxels, FilterParameter::Parameter, SineParamsSegmentFeatures, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Sine Parameters", "SineParamsArrayPath", getSineParamsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Sine Parameters", SineParamsArrayPath, FilterParameter::RequiredArray, SineParamsSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("GoodVoxels", GoodVoxelsArrayPath, FilterParameter::RequiredArray, SineParamsSegmentFeatures, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("FeatureIds", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, FeatureIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("FeatureIds", FeatureIdsArrayName, FilterParameter::CreatedArray, SineParamsSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, SineParamsSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, SineParamsSegmentFeatures));
 
   setFilterParameters(parameters);
 }

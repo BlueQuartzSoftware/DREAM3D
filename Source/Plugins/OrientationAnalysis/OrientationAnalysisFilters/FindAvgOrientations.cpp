@@ -90,30 +90,30 @@ void FindAvgOrientations::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindAvgOrientations, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindAvgOrientations, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindAvgOrientations, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindAvgOrientations, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(FindAvgOrientations, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, FindAvgOrientations, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindAvgOrientations, this, QuatsArrayPath), SIMPL_BIND_GETTER(FindAvgOrientations, this, QuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, FindAvgOrientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindAvgOrientations, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindAvgOrientations, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindAvgOrientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
 
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindAvgOrientations, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindAvgOrientations, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::CreatedArray, FindAvgOrientations, req));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Average Euler Angles", "AvgEulerAnglesArrayPath", getAvgEulerAnglesArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindAvgOrientations, this, AvgEulerAnglesArrayPath), SIMPL_BIND_GETTER(FindAvgOrientations, this, AvgEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Average Euler Angles", AvgEulerAnglesArrayPath, FilterParameter::CreatedArray, FindAvgOrientations, req));
   }
   setFilterParameters(parameters);
 }

@@ -85,17 +85,17 @@ void FindAvgCAxes::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindAvgCAxes, this, QuatsArrayPath), SIMPL_BIND_GETTER(FindAvgCAxes, this, QuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, FindAvgCAxes, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindAvgCAxes, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindAvgCAxes, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindAvgCAxes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Average C-Axes", "AvgCAxesArrayPath", getAvgCAxesArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindAvgCAxes, this, AvgCAxesArrayPath), SIMPL_BIND_GETTER(FindAvgCAxes, this, AvgCAxesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Average C-Axes", AvgCAxesArrayPath, FilterParameter::CreatedArray, FindAvgCAxes, req));
   }
   setFilterParameters(parameters);
 }

@@ -149,9 +149,9 @@ ExportData::~ExportData()
 void ExportData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputPathFilterParameter::New("Output Path", "OutputPath", getOutputPath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ExportData, this, OutputPath), SIMPL_BIND_GETTER(ExportData, this, OutputPath)));
-  parameters.push_back(StringFilterParameter::New("File Extension", "FileExtension", getFileExtension(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ExportData, this, FileExtension), SIMPL_BIND_GETTER(ExportData, this, FileExtension)));
-  parameters.push_back(IntFilterParameter::New("Maximum Tuples Per Line", "MaxValPerLine", getMaxValPerLine(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ExportData, this, MaxValPerLine), SIMPL_BIND_GETTER(ExportData, this, MaxValPerLine)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, ExportData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Parameter, ExportData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Tuples Per Line", MaxValPerLine, FilterParameter::Parameter, ExportData));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();  //Delimiter choice
     parameter->setHumanLabel("Delimiter");
@@ -171,7 +171,7 @@ void ExportData::setupFilterParameters()
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Export", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ExportData, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(ExportData, this, SelectedDataArrayPaths)));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Export", SelectedDataArrayPaths, FilterParameter::RequiredArray, ExportData, req));
   }
   setFilterParameters(parameters);
 }

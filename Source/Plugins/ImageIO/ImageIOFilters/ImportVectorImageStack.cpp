@@ -107,9 +107,9 @@ void ImportVectorImageStack::setupFilterParameters()
 
   parameters.push_back(ImportVectorImageStackFilterParameter::New("Import Image Data", "ImageVector", getImageVector(), FilterParameter::Parameter, this));
 
-  parameters.push_back(StringFilterParameter::New("Data Container Name", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, DataContainerName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, DataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, CellAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("VectorData", "VectorDataArrayName", getVectorDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, VectorDataArrayName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, VectorDataArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Name", DataContainerName, FilterParameter::CreatedArray, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_STRING_FP("VectorData", VectorDataArrayName, FilterParameter::CreatedArray, ImportVectorImageStack));
 
   setFilterParameters(parameters);
 }

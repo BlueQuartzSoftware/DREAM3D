@@ -85,8 +85,8 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Binary Nodes Input File", "BinaryNodesFile", getBinaryNodesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(BinaryNodesTrianglesReader, this, BinaryNodesFile), SIMPL_BIND_GETTER(BinaryNodesTrianglesReader, this, BinaryNodesFile), "*.raw", "Raw Files"));
-  parameters.push_back(InputFileFilterParameter::New("Binary Triangles Input File", "BinaryTrianglesFile", getBinaryTrianglesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(BinaryNodesTrianglesReader, this, BinaryTrianglesFile), SIMPL_BIND_GETTER(BinaryNodesTrianglesReader, this, BinaryTrianglesFile), "*.raw", "Raw Files"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Binary Nodes Input File", BinaryNodesFile, FilterParameter::Parameter, BinaryNodesTrianglesReader, "*.raw", "Raw Files"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Binary Triangles Input File", BinaryTrianglesFile, FilterParameter::Parameter, BinaryNodesTrianglesReader, "*.raw", "Raw Files"));
 
   setFilterParameters(parameters);
 }

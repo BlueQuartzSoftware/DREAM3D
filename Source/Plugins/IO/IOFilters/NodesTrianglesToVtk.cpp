@@ -84,11 +84,11 @@ void NodesTrianglesToVtk::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Nodes File", "NodesFile", getNodesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, NodesFile), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, NodesFile)));
-  parameters.push_back(InputFileFilterParameter::New("Triangles File", "TrianglesFile", getTrianglesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, TrianglesFile), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, TrianglesFile)));
-  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, OutputVtkFile), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, OutputVtkFile)));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, WriteBinaryFile), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, WriteBinaryFile)));
-  parameters.push_back(BooleanFilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", getWriteConformalMesh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToVtk, this, WriteConformalMesh), SIMPL_BIND_GETTER(NodesTrianglesToVtk, this, WriteConformalMesh)));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Nodes File", NodesFile, FilterParameter::Parameter, NodesTrianglesToVtk));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Triangles File", TrianglesFile, FilterParameter::Parameter, NodesTrianglesToVtk));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Vtk File", OutputVtkFile, FilterParameter::Parameter, NodesTrianglesToVtk));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary Vtk File", WriteBinaryFile, FilterParameter::Parameter, NodesTrianglesToVtk));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Conformal Mesh", WriteConformalMesh, FilterParameter::Parameter, NodesTrianglesToVtk));
 
   setFilterParameters(parameters);
 }

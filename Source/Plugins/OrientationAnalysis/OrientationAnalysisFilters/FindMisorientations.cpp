@@ -89,28 +89,28 @@ void FindMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("AvgMisorientationsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Find Average Misorientation Per Feature", "FindAvgMisors", getFindAvgMisors(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindMisorientations, this, FindAvgMisors), SIMPL_BIND_GETTER(FindMisorientations, this, FindAvgMisors)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Find Average Misorientation Per Feature", FindAvgMisors, FilterParameter::Parameter, FindMisorientations, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMisorientations, this, NeighborListArrayPath), SIMPL_BIND_GETTER(FindMisorientations, this, NeighborListArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Neighbor List", NeighborListArrayPath, FilterParameter::RequiredArray, FindMisorientations, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMisorientations, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindMisorientations, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, FindMisorientations, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMisorientations, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindMisorientations, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMisorientations, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindMisorientations, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Misorientation List", "MisorientationListArrayName", getMisorientationListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMisorientations, this, MisorientationListArrayName), SIMPL_BIND_GETTER(FindMisorientations, this, MisorientationListArrayName)));
-  parameters.push_back(StringFilterParameter::New("Average Misorientations", "AvgMisorientationsArrayName", getAvgMisorientationsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMisorientations, this, AvgMisorientationsArrayName), SIMPL_BIND_GETTER(FindMisorientations, this, AvgMisorientationsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Misorientation List", MisorientationListArrayName, FilterParameter::CreatedArray, FindMisorientations));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Average Misorientations", AvgMisorientationsArrayName, FilterParameter::CreatedArray, FindMisorientations));
   setFilterParameters(parameters);
 }
 

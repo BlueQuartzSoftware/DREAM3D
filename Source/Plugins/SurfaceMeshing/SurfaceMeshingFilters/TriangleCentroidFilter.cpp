@@ -122,7 +122,7 @@ void TriangleCentroidFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(TriangleCentroidFilter, this, SurfaceMeshTriangleCentroidsArrayPath), SIMPL_BIND_GETTER(TriangleCentroidFilter, this, SurfaceMeshTriangleCentroidsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Face Centroids", SurfaceMeshTriangleCentroidsArrayPath, FilterParameter::CreatedArray, TriangleCentroidFilter, req));
   }
   setFilterParameters(parameters);
 }

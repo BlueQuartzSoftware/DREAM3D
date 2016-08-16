@@ -266,7 +266,7 @@ InsertAtoms::~InsertAtoms()
 void InsertAtoms::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Lattice Constants (Angstroms)", "LatticeConstants", getLatticeConstants(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertAtoms, this, LatticeConstants), SIMPL_BIND_GETTER(InsertAtoms, this, LatticeConstants)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Lattice Constants (Angstroms)", LatticeConstants, FilterParameter::Parameter, InsertAtoms));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");
@@ -285,17 +285,17 @@ void InsertAtoms::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertAtoms, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(InsertAtoms, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, InsertAtoms, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertAtoms, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(InsertAtoms, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, InsertAtoms, req));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InsertAtoms, this, VertexDataContainerName), SIMPL_BIND_GETTER(InsertAtoms, this, VertexDataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InsertAtoms, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(InsertAtoms, this, VertexAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Atom Feature Labels", "AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InsertAtoms, this, AtomFeatureLabelsArrayName), SIMPL_BIND_GETTER(InsertAtoms, this, AtomFeatureLabelsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, InsertAtoms));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Atom Feature Labels", AtomFeatureLabelsArrayName, FilterParameter::CreatedArray, InsertAtoms));
   setFilterParameters(parameters);
 }
 

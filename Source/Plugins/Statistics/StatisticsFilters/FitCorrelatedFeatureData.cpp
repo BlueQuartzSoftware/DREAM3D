@@ -103,29 +103,29 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Number Of Bins For Correlated Array", "NumberOfCorrelatedBins", getNumberOfCorrelatedBins(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, NumberOfCorrelatedBins), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, NumberOfCorrelatedBins)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number Of Bins For Correlated Array", NumberOfCorrelatedBins, FilterParameter::Parameter, FitCorrelatedFeatureData));
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, RemoveBiasedFeatures)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Parameter, FitCorrelatedFeatureData, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, SelectedFeatureArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, SelectedFeatureArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Array To Fit", SelectedFeatureArrayPath, FilterParameter::RequiredArray, FitCorrelatedFeatureData, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Array To Correlate With", "CorrelatedFeatureArrayPath", getCorrelatedFeatureArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, CorrelatedFeatureArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, CorrelatedFeatureArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Array To Correlate With", CorrelatedFeatureArrayPath, FilterParameter::RequiredArray, FitCorrelatedFeatureData, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeaturePhases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FitCorrelatedFeatureData, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, BiasedFeaturesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("BiasedFeatures", BiasedFeaturesArrayPath, FilterParameter::RequiredArray, FitCorrelatedFeatureData, req));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, NewEnsembleArrayArrayPath), SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, NewEnsembleArrayArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("New Ensemble Array", NewEnsembleArrayArrayPath, FilterParameter::CreatedArray, FitCorrelatedFeatureData, req));
   }
 
   setFilterParameters(parameters);

@@ -145,11 +145,11 @@ RotateEulerRefFrame::~RotateEulerRefFrame()
 void RotateEulerRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Rotation Axis (ijk)", "RotationAxis", getRotationAxis(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, RotationAxis), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, RotationAxis)));
-  parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, RotationAngle), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, RotationAngle)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Rotation Axis (ijk)", RotationAxis, FilterParameter::Parameter, RotateEulerRefFrame));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Rotation Angle (Degrees)", RotationAngle, FilterParameter::Parameter, RotateEulerRefFrame));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, CellEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, RotateEulerRefFrame, req));
   }
   setFilterParameters(parameters);
 }

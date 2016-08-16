@@ -72,11 +72,11 @@ GenerateGeometryConnectivity::~GenerateGeometryConnectivity()
 void GenerateGeometryConnectivity::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", getGenerateVertexTriangleLists(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateGeometryConnectivity, this, GenerateVertexTriangleLists), SIMPL_BIND_GETTER(GenerateGeometryConnectivity, this, GenerateVertexTriangleLists)));
-  parameters.push_back(BooleanFilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", getGenerateTriangleNeighbors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateGeometryConnectivity, this, GenerateTriangleNeighbors), SIMPL_BIND_GETTER(GenerateGeometryConnectivity, this, GenerateTriangleNeighbors)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Generate Per Vertex Element List", GenerateVertexTriangleLists, FilterParameter::Parameter, GenerateGeometryConnectivity));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Generate Element Neighbors List", GenerateTriangleNeighbors, FilterParameter::Parameter, GenerateGeometryConnectivity));
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateGeometryConnectivity, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(GenerateGeometryConnectivity, this, SurfaceDataContainerName)));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", SurfaceDataContainerName, FilterParameter::RequiredArray, GenerateGeometryConnectivity, req));
   }
   setFilterParameters(parameters);
 }

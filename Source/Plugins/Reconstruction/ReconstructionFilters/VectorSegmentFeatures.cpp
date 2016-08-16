@@ -92,22 +92,22 @@ void VectorSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(DoubleFilterParameter::New("Angle Tolerance", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, AngleTolerance), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, AngleTolerance)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Angle Tolerance", AngleTolerance, FilterParameter::Parameter, VectorSegmentFeatures));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, UseGoodVoxels)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, VectorSegmentFeatures, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Vector Array To Segment", "SelectedVectorArrayPath", getSelectedVectorArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, SelectedVectorArrayPath), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, SelectedVectorArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Vector Array To Segment", SelectedVectorArrayPath, FilterParameter::RequiredArray, VectorSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, GoodVoxelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, VectorSegmentFeatures, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, FeatureIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, VectorSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, VectorSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, VectorSegmentFeatures));
 
   setFilterParameters(parameters);
 }

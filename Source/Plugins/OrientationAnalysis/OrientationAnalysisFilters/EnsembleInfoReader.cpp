@@ -86,15 +86,15 @@ EnsembleInfoReader::~EnsembleInfoReader()
 void EnsembleInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EnsembleInfoReader, this, InputFile), SIMPL_BIND_GETTER(EnsembleInfoReader, this, InputFile), "*.ini *.txt"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Ensemble Info File", InputFile, FilterParameter::Parameter, EnsembleInfoReader, "*.ini *.txt"));
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EnsembleInfoReader, this, DataContainerName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, DataContainerName)));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", DataContainerName, FilterParameter::RequiredArray, EnsembleInfoReader, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, CellEnsembleAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, CrystalStructuresArrayName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, CrystalStructuresArrayName)));
-  parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, PhaseTypesArrayName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, PhaseTypesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, EnsembleInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures", CrystalStructuresArrayName, FilterParameter::CreatedArray, EnsembleInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Types", PhaseTypesArrayName, FilterParameter::CreatedArray, EnsembleInfoReader));
   setFilterParameters(parameters);
 }
 

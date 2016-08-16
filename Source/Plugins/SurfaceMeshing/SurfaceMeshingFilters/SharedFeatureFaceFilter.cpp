@@ -82,14 +82,14 @@ void SharedFeatureFaceFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SharedFeatureFaceFilter, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(SharedFeatureFaceFilter, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, SharedFeatureFaceFilter, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Face Ids", "SurfaceMeshFeatureFaceIdsArrayName", getSurfaceMeshFeatureFaceIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SharedFeatureFaceFilter, this, SurfaceMeshFeatureFaceIdsArrayName), SIMPL_BIND_GETTER(SharedFeatureFaceFilter, this, SurfaceMeshFeatureFaceIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Face Ids", SurfaceMeshFeatureFaceIdsArrayName, FilterParameter::CreatedArray, SharedFeatureFaceFilter));
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Face Feature Attribute Matrix", "FaceFeatureAttributeMatrixName", getFaceFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SharedFeatureFaceFilter, this, FaceFeatureAttributeMatrixName), SIMPL_BIND_GETTER(SharedFeatureFaceFilter, this, FaceFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Face Labels", "SurfaceMeshFeatureFaceLabelsArrayName", getSurfaceMeshFeatureFaceLabelsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SharedFeatureFaceFilter, this, SurfaceMeshFeatureFaceLabelsArrayName), SIMPL_BIND_GETTER(SharedFeatureFaceFilter, this, SurfaceMeshFeatureFaceLabelsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Number of Triangles", "SurfaceMeshFeatureFaceNumTrianglesArrayName", getSurfaceMeshFeatureFaceNumTrianglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SharedFeatureFaceFilter, this, SurfaceMeshFeatureFaceNumTrianglesArrayName), SIMPL_BIND_GETTER(SharedFeatureFaceFilter, this, SurfaceMeshFeatureFaceNumTrianglesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Feature Attribute Matrix", FaceFeatureAttributeMatrixName, FilterParameter::CreatedArray, SharedFeatureFaceFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Labels", SurfaceMeshFeatureFaceLabelsArrayName, FilterParameter::CreatedArray, SharedFeatureFaceFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Triangles", SurfaceMeshFeatureFaceNumTrianglesArrayName, FilterParameter::CreatedArray, SharedFeatureFaceFilter));
   setFilterParameters(parameters);
 }
 

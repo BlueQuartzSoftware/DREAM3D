@@ -144,15 +144,15 @@ void FindDifferenceMap::setupFilterParameters()
   FilterParameterVector parameters;
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("First Attribute Array", "FirstInputArrayPath", getFirstInputArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindDifferenceMap, this, FirstInputArrayPath), SIMPL_BIND_GETTER(FindDifferenceMap, this, FirstInputArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("First Attribute Array", FirstInputArrayPath, FilterParameter::RequiredArray, FindDifferenceMap, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Second Attribute Array", "SecondInputArrayPath", getSecondInputArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindDifferenceMap, this, SecondInputArrayPath), SIMPL_BIND_GETTER(FindDifferenceMap, this, SecondInputArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Second Attribute Array", SecondInputArrayPath, FilterParameter::RequiredArray, FindDifferenceMap, req));
   }
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Difference Map", "DifferenceMapArrayPath", getDifferenceMapArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindDifferenceMap, this, DifferenceMapArrayPath), SIMPL_BIND_GETTER(FindDifferenceMap, this, DifferenceMapArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Difference Map", DifferenceMapArrayPath, FilterParameter::CreatedArray, FindDifferenceMap, req));
   }
   setFilterParameters(parameters);
 }

@@ -147,10 +147,10 @@ void Stereographic3D::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-  parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(Stereographic3D, this, QuatsArrayPath), SIMPL_BIND_GETTER(Stereographic3D, this, QuatsArrayPath)));
+  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, Stereographic3D, req));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Coordinates", "CoordinatesArrayName", getCoordinatesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(Stereographic3D, this, CoordinatesArrayName), SIMPL_BIND_GETTER(Stereographic3D, this, CoordinatesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Coordinates", CoordinatesArrayName, FilterParameter::CreatedArray, Stereographic3D));
 
   setFilterParameters(parameters);
 }

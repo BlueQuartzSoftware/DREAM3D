@@ -94,23 +94,23 @@ void FindFeatureHistogram::setupFilterParameters()
     parameters.push_back(parameter);
   }
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureHistogram, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FindFeatureHistogram, this, RemoveBiasedFeatures)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Parameter, FindFeatureHistogram, linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Bin", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureHistogram, this, SelectedFeatureArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, SelectedFeatureArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Array To Bin", SelectedFeatureArrayPath, FilterParameter::RequiredArray, FindFeatureHistogram, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureHistogram, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeaturePhases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindFeatureHistogram, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureHistogram, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, BiasedFeaturesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("BiasedFeatures", BiasedFeaturesArrayPath, FilterParameter::RequiredArray, FindFeatureHistogram, req));
   }
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindFeatureHistogram, this, NewEnsembleArrayArrayPath), SIMPL_BIND_GETTER(FindFeatureHistogram, this, NewEnsembleArrayArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("New Ensemble Array", NewEnsembleArrayArrayPath, FilterParameter::CreatedArray, FindFeatureHistogram, req));
   }
 
   setFilterParameters(parameters);

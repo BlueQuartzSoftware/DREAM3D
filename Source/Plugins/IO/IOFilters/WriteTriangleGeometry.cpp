@@ -84,12 +84,12 @@ void WriteTriangleGeometry::setupFilterParameters()
   FilterParameterVector parameters;
 
 
-  parameters.push_back(OutputFileFilterParameter::New("Output Nodes File", "OutputNodesFile", getOutputNodesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteTriangleGeometry, this, OutputNodesFile), SIMPL_BIND_GETTER(WriteTriangleGeometry, this, OutputNodesFile)));
-  parameters.push_back(OutputFileFilterParameter::New("Output Triangles File", "OutputTrianglesFile", getOutputTrianglesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteTriangleGeometry, this, OutputTrianglesFile), SIMPL_BIND_GETTER(WriteTriangleGeometry, this, OutputTrianglesFile)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Nodes File", OutputNodesFile, FilterParameter::Parameter, WriteTriangleGeometry));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Triangles File", OutputTrianglesFile, FilterParameter::Parameter, WriteTriangleGeometry));
 
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("DataContainer", "DataContainerSelection", getDataContainerSelection(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteTriangleGeometry, this, DataContainerSelection), SIMPL_BIND_GETTER(WriteTriangleGeometry, this, DataContainerSelection)));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("DataContainer", DataContainerSelection, FilterParameter::RequiredArray, WriteTriangleGeometry, req));
   }
 
   setFilterParameters(parameters);

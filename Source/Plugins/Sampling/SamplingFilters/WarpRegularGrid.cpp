@@ -126,20 +126,20 @@ void WarpRegularGrid::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SecondOrderPolynomialFilterParameter::New("Second Order A Coefficients", "SecondOrderACoeff", getSecondOrderACoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, SecondOrderACoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, SecondOrderACoeff), 0));
-  parameters.push_back(SecondOrderPolynomialFilterParameter::New("Second Order B Coefficients", "SecondOrderBCoeff", getSecondOrderBCoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, SecondOrderBCoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, SecondOrderBCoeff), 0));
-  parameters.push_back(ThirdOrderPolynomialFilterParameter::New("Third Order A Coefficients", "ThirdOrderACoeff", getThirdOrderACoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, ThirdOrderACoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, ThirdOrderACoeff), 1));
-  parameters.push_back(ThirdOrderPolynomialFilterParameter::New("Third Order B Coefficients", "ThirdOrderBCoeff", getThirdOrderBCoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, ThirdOrderBCoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, ThirdOrderBCoeff), 1));
-  parameters.push_back(FourthOrderPolynomialFilterParameter::New("Fourth Order A Coefficients", "FourthOrderACoeff", getFourthOrderACoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, FourthOrderACoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, FourthOrderACoeff), 2));
-  parameters.push_back(FourthOrderPolynomialFilterParameter::New("Fourth Order B Coefficients", "FourthOrderBCoeff", getFourthOrderBCoeff(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, FourthOrderBCoeff), SIMPL_BIND_GETTER(WarpRegularGrid, this, FourthOrderBCoeff), 2));
+  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order A Coefficients", SecondOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 0));
+  parameters.push_back(SIMPL_NEW_SecondO_POLY_FP("Second Order B Coefficients", SecondOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 0));
+  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order A Coefficients", ThirdOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 1));
+  parameters.push_back(SIMPL_NEW_ThirdO_POLY_FP("Third Order B Coefficients", ThirdOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 1));
+  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order A Coefficients", FourthOrderACoeff, FilterParameter::Parameter, WarpRegularGrid, 2));
+  parameters.push_back(SIMPL_NEW_FourthO_POLY_FP("Fourth Order B Coefficients", FourthOrderBCoeff, FilterParameter::Parameter, WarpRegularGrid, 2));
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(WarpRegularGrid, this, SaveAsNewDataContainer), SIMPL_BIND_GETTER(WarpRegularGrid, this, SaveAsNewDataContainer)));
-  parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(WarpRegularGrid, this, NewDataContainerName), SIMPL_BIND_GETTER(WarpRegularGrid, this, NewDataContainerName)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Parameter, WarpRegularGrid, linkedProps));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", NewDataContainerName, FilterParameter::CreatedArray, WarpRegularGrid));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WarpRegularGrid, this, CellAttributeMatrixPath), SIMPL_BIND_GETTER(WarpRegularGrid, this, CellAttributeMatrixPath)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::RequiredArray, WarpRegularGrid, req));
   }
   setFilterParameters(parameters);
 }

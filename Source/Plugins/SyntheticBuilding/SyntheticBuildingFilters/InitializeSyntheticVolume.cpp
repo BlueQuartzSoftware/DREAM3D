@@ -113,9 +113,10 @@ void InitializeSyntheticVolume::setupFilterParameters()
   FilterParameterVector parameters;
   QStringList linkedProps("EstimatedPrimaryFeatures");
   linkedProps << "InputStatsFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Estimate Number of Features", "EstimateNumberOfFeatures", getEstimateNumberOfFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, EstimateNumberOfFeatures), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, EstimateNumberOfFeatures)));
-  parameters.push_back(InputFileFilterParameter::New("Input Statistics File", "InputStatsFile", getInputStatsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, InputStatsFile), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, InputStatsFile), "*.dream3d"));
-  PreflightUpdatedValueFilterParameter::Pointer param = PreflightUpdatedValueFilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", getEstimatedPrimaryFeatures(), FilterParameter::Parameter, SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, EstimatedPrimaryFeatures));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Estimate Number of Features", EstimateNumberOfFeatures, FilterParameter::Parameter, InitializeSyntheticVolume, linkedProps));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Statistics File", InputStatsFile, FilterParameter::Parameter, InitializeSyntheticVolume, "*.dream3d"));
+
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Estimated Primary Features", EstimatedPrimaryFeatures, FilterParameter::Parameter, InitializeSyntheticVolume);
   param->setReadOnly(true);
   parameters.push_back(param);
 
@@ -126,7 +127,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, InputStatsArrayPath), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, InputStatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
@@ -134,16 +135,16 @@ void InitializeSyntheticVolume::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, InputPhaseTypesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("Synthetic Volume Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, DataContainerName), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, DataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, CellAttributeMatrixName)));
-  parameters.push_back(IntVec3FilterParameter::New("Dimensions", "Dimensions", getDimensions(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, Dimensions), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, Dimensions)));
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, Resolution), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, Resolution)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, InitializeSyntheticVolume));
 
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeSyntheticVolume, this, Origin), SIMPL_BIND_GETTER(InitializeSyntheticVolume, this, Origin)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume));
 
   setFilterParameters(parameters);
 }

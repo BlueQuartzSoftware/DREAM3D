@@ -150,7 +150,7 @@ void TriangleDihedralAngleFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayPath", getSurfaceMeshTriangleDihedralAnglesArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(TriangleDihedralAngleFilter, this, SurfaceMeshTriangleDihedralAnglesArrayPath), SIMPL_BIND_GETTER(TriangleDihedralAngleFilter, this, SurfaceMeshTriangleDihedralAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Face Dihedral Angles", SurfaceMeshTriangleDihedralAnglesArrayPath, FilterParameter::CreatedArray, TriangleDihedralAngleFilter, req));
   }
   setFilterParameters(parameters);
 }

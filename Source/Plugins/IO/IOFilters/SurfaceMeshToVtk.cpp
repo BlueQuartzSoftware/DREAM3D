@@ -89,16 +89,16 @@ void SurfaceMeshToVtk::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, OutputVtkFile), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, OutputVtkFile)));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, WriteBinaryFile), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, WriteBinaryFile)));
-  parameters.push_back(BooleanFilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", getWriteConformalMesh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, WriteConformalMesh), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, WriteConformalMesh)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Vtk File", OutputVtkFile, FilterParameter::Parameter, SurfaceMeshToVtk));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary Vtk File", WriteBinaryFile, FilterParameter::Parameter, SurfaceMeshToVtk));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Conformal Mesh", WriteConformalMesh, FilterParameter::Parameter, SurfaceMeshToVtk));
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("SurfaceMeshFaceLabels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, SurfaceMeshToVtk, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, SurfaceMeshNodeTypeArrayPath), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, SurfaceMeshNodeTypeArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("SurfaceMeshNodeType", SurfaceMeshNodeTypeArrayPath, FilterParameter::RequiredArray, SurfaceMeshToVtk, req));
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
@@ -106,14 +106,14 @@ void SurfaceMeshToVtk::setupFilterParameters()
     MultiDataArraySelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
     req.amTypes = QVector<unsigned int>(1, SIMPL::AttributeMatrixType::Vertex);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Vertex Arrays", "SelectedVertexArrays", getSelectedVertexArrays(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, SelectedVertexArrays), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, SelectedVertexArrays)));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Vertex Arrays", SelectedVertexArrays, FilterParameter::RequiredArray, SurfaceMeshToVtk, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
     req.amTypes = QVector<unsigned int>(1, SIMPL::AttributeMatrixType::Face);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Face Arrays", "SelectedFaceArrays", getSelectedFaceArrays(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, SelectedFaceArrays), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, SelectedFaceArrays)));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Face Arrays", SelectedFaceArrays, FilterParameter::RequiredArray, SurfaceMeshToVtk, req));
   }
 
 

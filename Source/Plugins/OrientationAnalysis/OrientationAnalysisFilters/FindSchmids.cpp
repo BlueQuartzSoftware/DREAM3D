@@ -110,38 +110,38 @@ void FindSchmids::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDirection", getLoadingDirection(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, LoadingDirection), SIMPL_BIND_GETTER(FindSchmids, this, LoadingDirection)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDirection, FilterParameter::Parameter, FindSchmids));
 
   QStringList linkedProps;
   linkedProps << "PhisArrayName" << "LambdasArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, StoreAngleComponents), SIMPL_BIND_GETTER(FindSchmids, this, StoreAngleComponents)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Angle Components of Schmid Factor", StoreAngleComponents, FilterParameter::Parameter, FindSchmids, linkedProps));
   QStringList linkedProps2;
   linkedProps2 << "SlipPlane" << "SlipDirection";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), linkedProps2, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, OverrideSystem), SIMPL_BIND_GETTER(FindSchmids, this, OverrideSystem)));
-  parameters.push_back(FloatVec3FilterParameter::New("Slip Plane", "SlipPlane", getSlipPlane(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, SlipPlane), SIMPL_BIND_GETTER(FindSchmids, this, SlipPlane)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Default Slip System", OverrideSystem, FilterParameter::Parameter, FindSchmids, linkedProps2));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Slip Plane", SlipPlane, FilterParameter::Parameter, FindSchmids));
 
-  parameters.push_back(FloatVec3FilterParameter::New("Slip Direction", "SlipDirection", getSlipDirection(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindSchmids, this, SlipDirection), SIMPL_BIND_GETTER(FindSchmids, this, SlipDirection)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Slip Direction", SlipDirection, FilterParameter::Parameter, FindSchmids));
 
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSchmids, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindSchmids, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindSchmids, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSchmids, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindSchmids, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, FindSchmids, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSchmids, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindSchmids, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindSchmids, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Schmids", "SchmidsArrayName", getSchmidsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, SchmidsArrayName), SIMPL_BIND_GETTER(FindSchmids, this, SchmidsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Slip Systems", "SlipSystemsArrayName", getSlipSystemsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, SlipSystemsArrayName), SIMPL_BIND_GETTER(FindSchmids, this, SlipSystemsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Poles", "PolesArrayName", getPolesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, PolesArrayName), SIMPL_BIND_GETTER(FindSchmids, this, PolesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Phis", "PhisArrayName", getPhisArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, PhisArrayName), SIMPL_BIND_GETTER(FindSchmids, this, PhisArrayName)));
-  parameters.push_back(StringFilterParameter::New("Lambdas", "LambdasArrayName", getLambdasArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSchmids, this, LambdasArrayName), SIMPL_BIND_GETTER(FindSchmids, this, LambdasArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Schmids", SchmidsArrayName, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Slip Systems", SlipSystemsArrayName, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Poles", PolesArrayName, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phis", PhisArrayName, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Lambdas", LambdasArrayName, FilterParameter::CreatedArray, FindSchmids));
   setFilterParameters(parameters);
 }
 

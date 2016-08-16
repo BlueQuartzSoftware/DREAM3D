@@ -145,10 +145,10 @@ void FlattenImage::setupFilterParameters()
     cDims.push_back(QVector<size_t>(1, 3));
     cDims.push_back(QVector<size_t>(1, 4));
     req.componentDimensions = cDims;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FlattenImage, this, ImageDataArrayPath), SIMPL_BIND_GETTER(FlattenImage, this, ImageDataArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image Data", ImageDataArrayPath, FilterParameter::RequiredArray, FlattenImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Flat Image Data", "FlatImageDataArrayName", getFlatImageDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FlattenImage, this, FlatImageDataArrayName), SIMPL_BIND_GETTER(FlattenImage, this, FlatImageDataArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Flat Image Data", FlatImageDataArrayName, FilterParameter::CreatedArray, FlattenImage));
   setFilterParameters(parameters);
 }
 

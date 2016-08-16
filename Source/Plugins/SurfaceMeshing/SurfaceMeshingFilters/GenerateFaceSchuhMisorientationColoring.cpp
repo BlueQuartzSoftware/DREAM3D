@@ -187,22 +187,22 @@ void GenerateFaceSchuhMisorientationColoring::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateFaceSchuhMisorientationColoring, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(GenerateFaceSchuhMisorientationColoring, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("SurfaceMeshFaceLabels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("AvgQuats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateFaceSchuhMisorientationColoring, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(GenerateFaceSchuhMisorientationColoring, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AvgQuats", AvgQuatsArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateFaceSchuhMisorientationColoring, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(GenerateFaceSchuhMisorientationColoring, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeaturePhases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateFaceSchuhMisorientationColoring, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(GenerateFaceSchuhMisorientationColoring, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("CrystalStructures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("SurfaceMeshFaceSchuhMisorientationColors", "SurfaceMeshFaceSchuhMisorientationColorsArrayName", getSurfaceMeshFaceSchuhMisorientationColorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GenerateFaceSchuhMisorientationColoring, this, SurfaceMeshFaceSchuhMisorientationColorsArrayName), SIMPL_BIND_GETTER(GenerateFaceSchuhMisorientationColoring, this, SurfaceMeshFaceSchuhMisorientationColorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMeshFaceSchuhMisorientationColors", SurfaceMeshFaceSchuhMisorientationColorsArrayName, FilterParameter::CreatedArray, GenerateFaceSchuhMisorientationColoring));
 
   setFilterParameters(parameters);
 }

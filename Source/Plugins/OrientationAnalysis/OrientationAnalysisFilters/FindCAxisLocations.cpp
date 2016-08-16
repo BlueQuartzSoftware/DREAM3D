@@ -82,11 +82,11 @@ void FindCAxisLocations::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindCAxisLocations, this, QuatsArrayPath), SIMPL_BIND_GETTER(FindCAxisLocations, this, QuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, FindCAxisLocations, req));
 
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("C-Axis Locations", "CAxisLocationsArrayName", getCAxisLocationsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindCAxisLocations, this, CAxisLocationsArrayName), SIMPL_BIND_GETTER(FindCAxisLocations, this, CAxisLocationsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("C-Axis Locations", CAxisLocationsArrayName, FilterParameter::CreatedArray, FindCAxisLocations));
   setFilterParameters(parameters);
 }
 

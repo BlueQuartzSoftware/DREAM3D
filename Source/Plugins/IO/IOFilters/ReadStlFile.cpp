@@ -140,11 +140,11 @@ void ReadStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("STL File", "StlFilePath", getStlFilePath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadStlFile, this, StlFilePath), SIMPL_BIND_GETTER(ReadStlFile, this, StlFilePath), "*.stl", "STL File"));
-  parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, SurfaceMeshDataContainerName), SIMPL_BIND_GETTER(ReadStlFile, this, SurfaceMeshDataContainerName)));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("STL File", StlFilePath, FilterParameter::Parameter, ReadStlFile, "*.stl", "STL File"));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", SurfaceMeshDataContainerName, FilterParameter::CreatedArray, ReadStlFile));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, FaceAttributeMatrixName), SIMPL_BIND_GETTER(ReadStlFile, this, FaceAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Face Normals", "FaceNormalsArrayName", getFaceNormalsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, FaceNormalsArrayName), SIMPL_BIND_GETTER(ReadStlFile, this, FaceNormalsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Attribute Matrix", FaceAttributeMatrixName, FilterParameter::CreatedArray, ReadStlFile));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Normals", FaceNormalsArrayName, FilterParameter::CreatedArray, ReadStlFile));
   setFilterParameters(parameters);
 }
 

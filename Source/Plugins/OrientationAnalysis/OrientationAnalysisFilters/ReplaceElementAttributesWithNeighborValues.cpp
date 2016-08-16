@@ -254,7 +254,7 @@ ReplaceElementAttributesWithNeighborValues::~ReplaceElementAttributesWithNeighbo
 void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Threshold Value", "MinConfidence", getMinConfidence(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, MinConfidence), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, MinConfidence)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold Value", MinConfidence, FilterParameter::Parameter, ReplaceElementAttributesWithNeighborValues));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Comparison Operator");
@@ -270,12 +270,12 @@ void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, Loop), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, Loop)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Loop Until Gone", Loop, FilterParameter::Parameter, ReplaceElementAttributesWithNeighborValues));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Comparison Array", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, ConfidenceIndexArrayPath), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, ConfidenceIndexArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Comparison Array", ConfidenceIndexArrayPath, FilterParameter::RequiredArray, ReplaceElementAttributesWithNeighborValues, req));
   }
   setFilterParameters(parameters);
 }

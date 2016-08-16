@@ -111,19 +111,19 @@ void GoldfeatherReader::setupFilterParameters()
 //    ////parameter->setValueType("QString");
 //    parameters.push_back(parameter);
 //  }
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GoldfeatherReader, this, InputFile), SIMPL_BIND_GETTER(GoldfeatherReader, this, InputFile), "*.jg"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, GoldfeatherReader, "*.jg"));
 
 
-  parameters.push_back(StringFilterParameter::New("Surface DataContainer", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(GoldfeatherReader, this, SurfaceDataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Vertex AttributeMatrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(GoldfeatherReader, this, VertexAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Face AttributeMatrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, FaceAttributeMatrixName), SIMPL_BIND_GETTER(GoldfeatherReader, this, FaceAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("SurfaceMesh PrincipalCurvature 1 Array Name", "SurfaceMeshPrincipalCurvature1sArrayName", getSurfaceMeshPrincipalCurvature1sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, SurfaceMeshPrincipalCurvature1sArrayName), SIMPL_BIND_GETTER(GoldfeatherReader, this, SurfaceMeshPrincipalCurvature1sArrayName)));
-  parameters.push_back(StringFilterParameter::New("SurfaceMesh PrincipalCurvature 2 Array Name", "SurfaceMeshPrincipalCurvature2sArrayName", getSurfaceMeshPrincipalCurvature2sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, SurfaceMeshPrincipalCurvature2sArrayName), SIMPL_BIND_GETTER(GoldfeatherReader, this, SurfaceMeshPrincipalCurvature2sArrayName)));
-  parameters.push_back(StringFilterParameter::New("SurfaceMesh PrincipalDirection 1 Array Name", "SurfaceMeshPrincipalDirection1sArrayName", getSurfaceMeshPrincipalDirection1sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, SurfaceMeshPrincipalDirection1sArrayName), SIMPL_BIND_GETTER(GoldfeatherReader, this, SurfaceMeshPrincipalDirection1sArrayName)));
-  parameters.push_back(StringFilterParameter::New("SurfaceMesh PrincipalDirection 2 Array Name", "SurfaceMeshPrincipalDirection2sArrayName", getSurfaceMeshPrincipalDirection2sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, SurfaceMeshPrincipalDirection2sArrayName), SIMPL_BIND_GETTER(GoldfeatherReader, this, SurfaceMeshPrincipalDirection2sArrayName)));
-  parameters.push_back(StringFilterParameter::New("SurfaceMesh NodeNormals", "SurfaceMeshNodeNormalsArrayName", getSurfaceMeshNodeNormalsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, SurfaceMeshNodeNormalsArrayName), SIMPL_BIND_GETTER(GoldfeatherReader, this, SurfaceMeshNodeNormalsArrayName)));
-  parameters.push_back(StringFilterParameter::New("SurfaceMesh FaceNormals", "SurfaceMeshFaceNormalsArrayName", getSurfaceMeshFaceNormalsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, SurfaceMeshFaceNormalsArrayName), SIMPL_BIND_GETTER(GoldfeatherReader, this, SurfaceMeshFaceNormalsArrayName)));
-  parameters.push_back(StringFilterParameter::New("SurfaceMesh FaceLabels", "SurfaceMeshFaceLabelsArrayName", getSurfaceMeshFaceLabelsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GoldfeatherReader, this, SurfaceMeshFaceLabelsArrayName), SIMPL_BIND_GETTER(GoldfeatherReader, this, SurfaceMeshFaceLabelsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Surface DataContainer", SurfaceDataContainerName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Vertex AttributeMatrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face AttributeMatrix", FaceAttributeMatrixName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMesh PrincipalCurvature 1 Array Name", SurfaceMeshPrincipalCurvature1sArrayName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMesh PrincipalCurvature 2 Array Name", SurfaceMeshPrincipalCurvature2sArrayName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMesh PrincipalDirection 1 Array Name", SurfaceMeshPrincipalDirection1sArrayName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMesh PrincipalDirection 2 Array Name", SurfaceMeshPrincipalDirection2sArrayName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMesh NodeNormals", SurfaceMeshNodeNormalsArrayName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMesh FaceNormals", SurfaceMeshFaceNormalsArrayName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMesh FaceLabels", SurfaceMeshFaceLabelsArrayName, FilterParameter::CreatedArray, GoldfeatherReader));
   setFilterParameters(parameters);
 }
 
