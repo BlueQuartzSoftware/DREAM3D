@@ -582,7 +582,7 @@ void PrimaryPhaseWidget::on_m_FeatureESD_editingFinished()
   QLocale loc = QLocale::system();
   bool ok = false;
   float esd = loc.toFloat(m_FeatureESD->text(), &ok);
-  float mu = logf(esd);
+  float mu = std::log(esd);
   m_EsdUpdated = true;
   m_Mu_SizeDistribution->setText(loc.toString(mu));
   m_EsdUpdated = false;
@@ -605,7 +605,7 @@ void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& tex
     m_FeatureESD->blockSignals(true);
     bool ok = false;
     float mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
-    float esd = std::expf(mu);
+    float esd = std::exp(mu);
     m_FeatureESD->setText(loc.toString(esd));
     m_FeatureESD->blockSignals(false);
   }
