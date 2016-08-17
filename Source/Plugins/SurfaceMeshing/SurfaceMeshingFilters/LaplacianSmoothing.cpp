@@ -70,7 +70,7 @@ LaplacianSmoothing::LaplacianSmoothing() :
   m_SurfaceTripleLineLambda(0.0f),
   m_SurfaceQuadPointLambda(0.0f),
   m_UseTaubinSmoothing(false),
-  m_MuFactor(-1.03),
+  m_MuFactor(-1.03f),
   m_SurfaceMeshNodeType(NULL),
   m_SurfaceMeshFaceLabels(NULL)
 {

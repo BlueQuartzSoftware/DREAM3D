@@ -411,7 +411,7 @@ int PrimaryPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& sigma, f
     return -1;
   }
   minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
-  if (ok == false < minCutOff < 1)
+  if (ok == false || minCutOff < 1)
   {
     return -1;
   }
