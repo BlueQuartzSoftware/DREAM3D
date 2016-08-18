@@ -44,13 +44,13 @@ fi
 if [ -e "$SDK_PARENT/$SDK_ARCHIVE_FILENAME" ];
   then
   echo "Decompressing Archive $SDK_PARENT/$SDK_ARCHIVE_FILENAME"
-  sudo mkdir -p ${SDK_INSTALL}
-  sudo chmod ugo+rwx ${SDK_INSTALL}
+  mkdir -p ${SDK_INSTALL}
+  chmod ugo+rwx ${SDK_INSTALL}
   cd "$SDK_INSTALL/../"
-  sudo tar -xvzf $SDK_ARCHIVE_FILENAME
-  sudo chmod ugo+rwx $SDK_INSTALL
+  tar -xvzf $SDK_ARCHIVE_FILENAME
+  chmod ugo+rwx $SDK_INSTALL
   USER=`whoami`
-  sudo chown -R ${USER} "$SDK_INSTALL"
+  chown -R ${USER} "$SDK_INSTALL"
 fi
 
 #-------------------------------------------------
@@ -188,10 +188,6 @@ ${SCRIPT_DIR}/Build_TBB.sh
 
 # Build ITK.
 ${SCRIPT_DIR}/Build_ITK.sh
-# Update the "install_name" on all the ITK libraries.
-$SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Debug 
-$SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Release 
-
 
 
 # Build Qwt

@@ -86,7 +86,7 @@ function CorrectLibraryDependency()
   # Filter out System Libraries or those located in /Libary/Frameworks
   isSystem=`expr  "${oldPath}" : '/System'`
   isUsrLib=`expr "${oldPath}" : '/usr/lib'`
-  isToolkitsLib=`expr "${oldPath}" : '/Users/Shared/DREAM3D_SDK/hdf5-1.8.16'`
+  isToolkitsLib=`expr "${oldPath}" : '${SDK_INSTALL}/${HDF5_INSTALL}'`
   #isLibFrwk=`expr "${oldPath}" : '/Libraray/Frameworks'`
   isEmbeddedPathExe=`expr "${oldPath}" : '@executable_path/'`
   isEmbeddedPathLdr=`expr "${oldPath}" : '@loader_path/'`
@@ -228,7 +228,7 @@ function UpdateExecutableDependencies()
   # Filter out System Libraries or those located in /Libary/Frameworks
   isSystem=`expr  "${oldPath}" : '/System'`
   isUsrLib=`expr "${oldPath}" : '/usr/lib'`
-  isToolkitsLib=`expr "${oldPath}" : '/Users/Shared/DREAM3D_SDK/hdf5-1.8.16'`
+  isToolkitsLib=`expr "${oldPath}" : '${SDK_INSTALL}/${HDF5_INSTALL}'`
   #isLibFrwk=`expr "${oldPath}" : '/Libraray/Frameworks'`
   isEmbeddedPathExe=`expr "${oldPath}" : '@executable_path/'`
   isEmbeddedPathLdr=`expr "${oldPath}" : '@loader_path/'`
