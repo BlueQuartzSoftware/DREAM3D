@@ -61,6 +61,9 @@ if(DREAM3D_INCLUDE_DEVELOPER_DOCS)
     \"${PROJECT_SOURCE_DIR}/Developer/Compiling_DREAM3D.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/Compiling_External_Libraries.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/Versioning.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/WritingAFilter.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/DataCheck.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/Execute.md\"
   )
 endif()
 
