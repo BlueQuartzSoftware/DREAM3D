@@ -4,8 +4,12 @@ Writing A Filter {#writingafilter}
 This is my intro...
 
 ## Major Functions ##
+A DREAM.3D filter's major functions are [setupFilterParameters()](#setupFilterParameters), [preflight()](#preflight), [dataCheck()](#dataCheck), [execute()](#execute), and [Getter Functions](#getterfunctions)
 
+<a name="setupFilterParameters">
 #### setupFilterParameters() ####
+</a>
+
 This function is where the filter instantiates its filter parameters.  Filter parameters are used as a way to set values into properties either in the DREAM.3D user interface or some other algorithm.  To learn more about filter parameters and the different available types, see [Filter Parameters](#filterparameters).
 
 All filter parameters that are instantiated in this method are stored in a FilterParameterVector, and then set into the filter's *FilterParameters* property.
@@ -70,7 +74,10 @@ SIMPL_NEW_DA_SELECTION_FP's additional parameter, *RequirementType*, determines 
 
 The order that the filter parameters are pushed into the FilterParameterVector determines the order that they appear in the DREAM.3D user interface.
 
+<a name="preflight">
 #### preflight() ####
+</a>
+
 DREAM.3D uses a process called **preflight** to check its current pipeline for errors and warnings whenever any of the filters or values in the current pipeline have changed.  The **preflight** process analyzes the current pipeline for setup errors and other mistakes before the user is given the option to execute the pipeline.
 
 Each filter has its own preflight() function, which gets executed whenever preflight runs.
@@ -95,12 +102,45 @@ The **dataCheck()** function actually preflights the data in the filter, and is 
 The signal **preflightExecuted()** is emitted so that various operations can be performed after the filter's preflight is finished.
 The **setInPreflight(false)** function marks the filter as no longer "in preflight".
 
+<a name="dataCheck">
 #### dataCheck() ####
+</a>
 
+The **dataCheck()** function is the section where the filter's developer can write all the sanity checks for the filter to make sure that the filter will run smoothly and without errors.  These checks will be executed when preflight runs on the filter, and errors and warnings will appear if any of the checks fail.
+
+Some examples of common sanity checks:
+- Created arrays have been given unique names.
+- Arrays needed by the filter currently exist when this filter is running.
+- Created arrays' tuple dimensions match their attribute matrix's tuple dimensions.
+- Values that cannot be negative should be positive, and vice versa.
+- The value that was input into the filter is out-of-range. (i.e. Trying to initialize an unsigned 8-bit integer array with 256).
+
+To learn more about dataCheck(), see [The DataCheck Function](#thedatacheckfunction).
+
+<a name="execute">
 #### execute() ####
+</a>
 
-## Flow Of Events ##
+The **execute()** function runs when the user actually starts the pipeline.  This function is where the filter's developer writes the code that actually accomplishes the filter's objective.
 
-SetupFilterParameters
-Preflight >> DataCheck
-Execute >> DataCheck
+To learn more about execute(), see [The Execute Function](#theexecutefunction).
+
+<a name="getterfunctions">
+#### Getter Functions ####
+</a>
+
+![](Images/FilterList-HTML-PopUp.png)
+
+The **getter functions** allow the filter to procure various values for other areas of DREAM.3D to use.  These functions are:
+
+**getHumanLabel()**: The *Filter Human Label* (or the *Filter Name* in the image above) is the human-readable name of the filter.
+
+**getGroupName()**: The *Filter Group Name* is the name of the group that the filter is categorized in.  In the Filter Library, filters can be found according to Filter Group Name.
+
+**getSubGroupName()**: The *Filter Subgroup Name* is the subgroup that the filter is categorized in.  This is a secondary group within the filter's group.
+
+**getFilterVersion()**: The *Filter Version* is the filter's unique version number.
+
+**getBrandingString()**: The *Branding String* is a custom string that appears in the user interface to further label the filter.
+
+**getCompiledLibraryName()**: The *Compiled Library Name* (or the *Compiled Plugin Name* in the image above) is the name of the plugin group that this filter is categorized in.
