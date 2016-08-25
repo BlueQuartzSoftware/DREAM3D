@@ -161,6 +161,21 @@ unsigned int EditPhaseDialog::getPhaseType()
   return static_cast<unsigned int>(index);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::setPhaseName(QString &name)
+{
+    m_PhaseName->setText(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString EditPhaseDialog::getPhaseName()
+{
+  return m_PhaseName->text();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -187,6 +202,7 @@ void EditPhaseDialog::setupGui()
   pptFractionLabel->setEnabled(false);
   ParentPhaseLabel->setEnabled(false);
   on_phaseFraction_textChanged(QString());
+  m_PhaseName->setText("Name of Phase");
 }
 
 // -----------------------------------------------------------------------------

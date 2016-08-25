@@ -86,7 +86,7 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     void filterNeedsInputParameters(AbstractFilter* filter);
     void on_updatePipelineBtn_clicked();
 
-    /* Menu Slots */
+   // void on_m_GenerateDefaultData_clicked();
     void on_saveH5Btn_clicked();
     void on_actionSaveAs_triggered();
     void on_addPhase_clicked();

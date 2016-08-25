@@ -9,144 +9,123 @@
 #define _primaryphasewidget_h_
 
 #include <QtCore/QObject>
-#include <QtCore/QVector>
 #include <QtCore/QString>
+#include <QtCore/QVector>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
+#include "SIMPLib/SIMPLib.h"
 
-#include "StatsGenerator/Widgets/SGWidget.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
+#include "StatsGenerator/Widgets/SGWidget.h"
 #include "StatsGenerator/ui_PrimaryPhaseWidget.h"
-
 
 #ifndef QwtArray
 #define QwtArray QVector
 #endif
 
-
 class QwtPlotGrid;
 class QwtPlotCurve;
 class QwtPlotMarker;
 class QDoubleValidator;
+class QComboBox;
+class StatsGenPlotWidget;
+class StatsGenODFWidget;
+class SGAxisODFWidget;
 
 
-/*
- * LaTeX to generate the equations
- x^{\left( \mu - max*\sigma \right) }
-
+/**
+ * @brief The PrimaryPhaseWidget class
  */
-
-
 class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    PrimaryPhaseWidget(QWidget* parent = 0);
-    virtual ~PrimaryPhaseWidget();
+public:
+  PrimaryPhaseWidget(QWidget* parent = 0);
+  virtual ~PrimaryPhaseWidget();
 
-    void updatePlots();
+  void updatePlots();
 
-    SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
-    void setCrystalStructure(unsigned int xtal);
-    unsigned int getCrystalStructure() const;
-    void setPhaseIndex(int index);
-    int getPhaseIndex() const;
-    SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
-    SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-    SIMPL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
-    SIMPL_INSTANCE_PROPERTY(bool, BulkLoadFailure)
+  SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
 
-    void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
+  virtual void setCrystalStructure(unsigned int xtal);
+  virtual void setPhaseIndex(int index);
 
-    void plotSizeDistribution();
-    int updateSizeDistributionPlot();
-    int computeBinsAndCutOffs( float mu, float sigma,
-                               float minCutOff, float maxCutOff,
-                               float binStepSize,
-                               QwtArray<float>& binsizes,
-                               QwtArray<float>& xCo,
-                               QwtArray<float>& yCo,
-                               float& xMax, float& yMax,
-                               QwtArray<float>& x,
-                               QwtArray<float>& y);
+  SIMPL_INSTANCE_PROPERTY(QList<StatsGenPlotWidget*>, SGPlotWidgets)
 
-    QString getComboString();
-    QString getTabTitle();
+  void setOmega3PlotWidget(StatsGenPlotWidget* w);
+  StatsGenPlotWidget* getOmega3PlotWidget();
 
-    int calculateNumberOfBins();
-    int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
-    int gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize);
+  void setBOverAPlotPlotWidget(StatsGenPlotWidget* w);
+  StatsGenPlotWidget* getBOverAPlotPlotWidget();
 
-    int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
+  void setCOverAPlotWidget(StatsGenPlotWidget* w);
+  StatsGenPlotWidget* getCOverAPlotWidget();
 
-  public slots:
+  void setODFWidgetWidget(StatsGenODFWidget* w);
+  StatsGenODFWidget* getODFWidgetWidget();
 
-  protected slots:
-    void on_m_GenerateDefaultData_clicked();
-    void on_m_Mu_SizeDistribution_textChanged(const QString& text);
-    void on_m_Sigma_SizeDistribution_textChanged(const QString& text);
-    void on_m_MinSigmaCutOff_textChanged(const QString& text);
-    void on_m_MaxSigmaCutOff_textChanged(const QString& text);
-    void on_m_BinStepSize_valueChanged(double v);
-    void on_m_FeatureESD_editingFinished();
+  void setAxisODFWidget(SGAxisODFWidget* w);
+  SGAxisODFWidget* getAxisODFWidget();
 
-    void on_microstructurePresetCombo_currentIndexChanged(int index);
+  void setFeatureSizeWidget(StatsGenFeatureSizeWidget* w);
+  StatsGenFeatureSizeWidget* getFeatureSizeWidget();
 
-    void dataWasEdited();
-    void bulkLoadEvent(bool fail);
+  QTabWidget* getTabWidget();
 
-  protected:
+  QPushButton* getGenerateDefaultDataBtn();
 
-    /**
-      * @brief Enables or Disables all the widgets in a list
-      * @param b
-      */
-    void setWidgetListEnabled(bool b);
+  QComboBox* getMicrostructurePresetCombo();
 
-    void setupGui();
+  virtual void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
-    /**
-      * @brief Enables or disables the various PlotWidgetTabs
-      * @param b Enable or disable the plotwidgets
-      */
-    void setTabsPlotTabsEnabled(bool b);
+  virtual QString getComboString();
 
-    /**
-     * @brief validateValue
-     * @param val
-     * @param lineEdit
-     * @return
-     */
-    bool validateValue(QDoubleValidator* val, QLineEdit* lineEdit);
+  virtual int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
 
-    /**
-     * @brief validateMuSigma
-     * @return
-     */
-    bool validateMuSigma();
+  virtual QIcon getPhaseIcon();
 
-  private:
-    int                  m_PhaseIndex;
-    unsigned int  m_CrystalStructure;
+  virtual void removeNeighborsPlotWidget();
 
-    QList<QWidget*>      m_WidgetList;
-    QwtPlotCurve*        m_SizeDistributionCurve;
-    QwtPlotMarker*       m_CutOffMin;
-    QwtPlotMarker*       m_CutOffMax;
-    QwtPlotGrid*         m_grid;
-    AbstractMicrostructurePreset::Pointer m_MicroPreset;
+  virtual void generateDefaultData();
 
-    QDoubleValidator* m_MuValidator;
-    QDoubleValidator* m_SigmaValidator;
-    QDoubleValidator* m_MinCutoffValidator;
-    QDoubleValidator* m_MaxCutoffValidator;
-    bool              m_EsdUpdated;
+protected slots:
 
-    PrimaryPhaseWidget(const PrimaryPhaseWidget&); // Copy Constructor Not Implemented
-    void operator=(const PrimaryPhaseWidget&); // Operator '=' Not Implemented
+  virtual void on_m_GenerateDefaultData_clicked();
+
+  void on_microstructurePresetCombo_currentIndexChanged(int index);
+
+  void dataWasEdited();
+
+  void bulkLoadEvent(bool fail);
+
+
+  signals:
+  void phaseParametersChanged();
+
+protected:
+  /**
+    * @brief Enables or Disables all the widgets in a list
+    * @param b
+    */
+  virtual void setWidgetListEnabled(bool b);
+
+  /**
+   * @brief setupGui
+   */
+  virtual void setupGui();
+
+  /**
+    * @brief Enables or disables the various PlotWidgetTabs
+    * @param b Enable or disable the plotwidgets
+    */
+  virtual void setTabsPlotTabsEnabled(bool b);
+
+private:
+  QList<QWidget*> m_WidgetList;
+
+  PrimaryPhaseWidget(const PrimaryPhaseWidget&); // Copy Constructor Not Implemented
+  void operator=(const PrimaryPhaseWidget&);     // Operator '=' Not Implemented
 };
 
 #endif /* PRIMARYPHASEWIDGET_H_ */
-

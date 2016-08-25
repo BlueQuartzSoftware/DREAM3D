@@ -139,7 +139,7 @@ void StatsGeneratorWidget::setupGui()
     ppw->setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
     ppw->setPhaseFraction(1.0);
     ppw->setTotalPhaseFraction(1.0);
-    phaseTabs->addTab(ppw, "Primary Phase");
+    phaseTabs->addTab(ppw, "Primary");
 
     connect(ppw, SIGNAL(phaseParametersChanged()),
             this, SIGNAL(parametersChanged()));
@@ -245,9 +245,25 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
     iDataArray = cellEnsembleAttrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
     UInt32ArrayType::Pointer phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray);
 
+    iDataArray = cellEnsembleAttrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
+    StringDataArray::Pointer phaseNames = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
+
     statsGenFilter->setStatsDataArray(statsDataArray);
     statsGenFilter->setCrystalStructures(crystalStructures);
     statsGenFilter->setPhaseTypes(phaseTypes);
+    statsGenFilter->setPhaseNames(phaseNames);
+
+//    QString str;
+//    QTextStream out(&str);
+//    for(size_t i = 0; i < phaseNames->getNumberOfTuples(); i++)
+//    {
+//      phaseNames->printTuple(out, i);
+//      out << ", ";
+//      phaseNames->printTuple(out, i);
+//      qDebug() << str;
+//      str.clear();
+//    }
+
   }
 }
 
@@ -303,7 +319,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     if (r == QMessageBox::Ok)
     {
       // The user wants to generate the data. Generate it and move on
-      sgwidget->on_m_GenerateDefaultData_clicked();
+      sgwidget->generateDefaultData();
     }
     else if (r == QMessageBox::Cancel)
     {
@@ -338,6 +354,8 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       ppw->setCrystalStructure(dialog.getCrystalStructure());
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
+      ppw->setPhaseName(dialog.getPhaseName());
+
       QString cName = ppw->getComboString();
       ppw->setObjectName(cName);
       ppw->updatePlots();
@@ -357,6 +375,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
       ppw->setPptFraction(dialog.getPptFraction());
+      ppw->setPhaseName(dialog.getPhaseName());
       QString cName = ppw->getComboString();
       ppw->setObjectName(cName);
       ppw->updatePlots();
@@ -376,6 +395,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       tpw->setPhaseFraction(dialog.getPhaseFraction());
       tpw->setPhaseType(dialog.getPhaseType());
       tpw->setParentPhase(dialog.getParentPhase());
+      tpw->setPhaseName(dialog.getPhaseName());
       QString cName = tpw->getComboString();
       tpw->setObjectName(cName);
       tpw->updatePlots();
@@ -394,6 +414,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       mpw->setCrystalStructure(dialog.getCrystalStructure());
       mpw->setPhaseFraction(dialog.getPhaseFraction());
       mpw->setPhaseType(dialog.getPhaseType());
+      mpw->setPhaseName(dialog.getPhaseName());
       QString cName = mpw->getComboString();
       mpw->setObjectName(cName);
       setWindowModified(true);
@@ -411,6 +432,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       bpw->setCrystalStructure(dialog.getCrystalStructure());
       bpw->setPhaseFraction(dialog.getPhaseFraction());
       bpw->setPhaseType(dialog.getPhaseType());
+      bpw->setPhaseName(dialog.getPhaseName());
       QString cName = bpw->getComboString();
       bpw->setObjectName(cName);
       setWindowModified(true);
@@ -448,6 +470,8 @@ void StatsGeneratorWidget::on_editPhase_clicked()
   dialog.setPhaseType(sgwidget->getPhaseType());
   dialog.setOtherPhaseFractionTotal(static_cast<float>(phaseFractionTotal));
   dialog.setCrystalStructure(sgwidget->getCrystalStructure());
+  QString phaseName = sgwidget->getPhaseName();
+  dialog.setPhaseName(phaseName);
 
   if(dialog.getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
   {
@@ -480,6 +504,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       ppw->setCrystalStructure(dialog.getCrystalStructure());
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
+      ppw->setPhaseName(dialog.getPhaseName());
       QString cName = ppw->getComboString();
       setWindowModified(true);
       ppw->updatePlots();
@@ -491,6 +516,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
       ppw->setPptFraction(dialog.getPptFraction());
+      ppw->setPhaseName(dialog.getPhaseName());
       QString cName = ppw->getComboString();
       setWindowModified(true);
       ppw->updatePlots();
@@ -502,6 +528,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       tpw->setPhaseFraction(dialog.getPhaseFraction());
       tpw->setPhaseType(dialog.getPhaseType());
       tpw->setParentPhase(dialog.getParentPhase());
+      tpw->setPhaseName(dialog.getPhaseName());
       QString cName = tpw->getComboString();
       setWindowModified(true);
       tpw->updatePlots();
@@ -512,6 +539,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       mpw->setCrystalStructure(dialog.getCrystalStructure());
       mpw->setPhaseFraction(dialog.getPhaseFraction());
       mpw->setPhaseType(dialog.getPhaseType());
+      mpw->setPhaseName(dialog.getPhaseName());
       QString cName = mpw->getComboString();
       setWindowModified(true);
     }
@@ -521,6 +549,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       bpw->setCrystalStructure(dialog.getCrystalStructure());
       bpw->setPhaseFraction(dialog.getPhaseFraction());
       bpw->setPhaseType(dialog.getPhaseType());
+      bpw->setPhaseName(dialog.getPhaseName());
       QString cName = bpw->getComboString();
       setWindowModified(true);
     }
@@ -645,6 +674,10 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
   phaseTypes->setValue(0, SIMPL::PhaseType::UnknownPhaseType);
   cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
+
+  StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
+  phaseNames->setValue(0, SIMPL::PhaseType::UnknownPhase);
+  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
 
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < phaseTabs->count(); ++p)

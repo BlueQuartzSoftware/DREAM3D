@@ -43,8 +43,9 @@
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 
 #include "StatsGenerator/Widgets/SGWidget.h"
+#include "StatsGenerator/Widgets/PrimaryPhaseWidget.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
-#include "StatsGenerator/ui_PrecipitatePhaseWidget.h"
+//#include "StatsGenerator/ui_PrecipitatePhaseWidget.h"
 
 
 #ifndef QwtArray
@@ -52,15 +53,13 @@
 #endif
 
 
-
-class QwtPlotGrid;
-class QwtPlotCurve;
-class QwtPlotMarker;
+class StatsGenRDFWidget;
 
 /*
  *
  */
-class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidget
+class PrecipitatePhaseWidget : public PrimaryPhaseWidget
+    //, private Ui::PrimaryPhaseWidget
 {
 
     Q_OBJECT
@@ -71,82 +70,37 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
 
     void updatePlots();
 
-    SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
-    void setCrystalStructure(unsigned int xtal);
-    unsigned int getCrystalStructure() const;
-    void setPhaseIndex(int index);
-    int getPhaseIndex() const;
-    SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
-    SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+    void setCrystalStructure(unsigned int xtal) override;
+
+    void setPhaseIndex(int index) override;
+
     SIMPL_INSTANCE_PROPERTY(float, PptFraction)
-    SIMPL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
-    SIMPL_INSTANCE_PROPERTY(bool, BulkLoadFailure)
 
-    void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
+    void extractStatsData(AttributeMatrix::Pointer attrMat, int index) override;
 
-    void plotSizeDistribution();
-    void updateSizeDistributionPlot();
-    int computeBinsAndCutOffs( float mu, float sigma,
-                               float minCutOff, float maxCutOff,
-                               float binStepSize,
-                               QwtArray<float>& binsizes,
-                               QwtArray<float>& xCo,
-                               QwtArray<float>& yCo,
-                               float& xMax, float& yMax,
-                               QwtArray<float>& x,
-                               QwtArray<float>& y);
+    int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false) override;
 
-    QString getComboString();
-    QString getTabTitle();
+    virtual QIcon getPhaseIcon() override;
 
-    void calculateNumberOfBins();
-    int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
-    int gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize);
+    virtual void generateDefaultData() override;
 
-    int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
-
-  public slots:
-    void on_m_GenerateDefaultData_clicked();
 
   protected slots:
-    void on_m_Mu_SizeDistribution_textChanged(const QString& text);
-    void on_m_Sigma_SizeDistribution_textChanged(const QString& text);
-    void on_m_MinSigmaCutOff_textChanged(const QString& text);
-    void on_m_MaxSigmaCutOff_textChanged(const QString& text);
-    void on_m_BinStepSize_valueChanged(double v);
 
-    void on_microstructurePresetCombo_currentIndexChanged(int index);
+    virtual void on_m_GenerateDefaultData_clicked() override;
 
-    void dataWasEdited();
-    void bulkLoadEvent(bool fail);
+  signals:
+  void phaseParametersChanged();
 
   protected:
 
-    /**
-      * @brief Enables or Disables all the widgets in a list
-      * @param b
-      */
-    void setWidgetListEnabled(bool b);
+    void setupGui() override;
 
-    void setupGui();
-
-    /**
-      * @brief Enables or disables the various PlotWidgetTabs
-      * @param b Enable or disable the plotwidgets
-      */
-    void setTabsPlotTabsEnabled(bool b);
 
   private:
-    int                  m_PhaseIndex;
-    unsigned int  m_CrystalStructure;
+    QList<QWidget*> m_WidgetList;
 
-    QList<QWidget*>      m_WidgetList;
-    QwtPlotCurve*        m_SizeDistributionCurve;
-    QwtPlotMarker*       m_CutOffMin;
-    QwtPlotMarker*       m_CutOffMax;
-    QwtPlotGrid*         m_grid;
-
-    AbstractMicrostructurePreset::Pointer m_MicroPreset;
+    StatsGenRDFWidget* m_RdfPlot = nullptr;
 
     PrecipitatePhaseWidget(const PrecipitatePhaseWidget&); // Copy Constructor Not Implemented
     void operator=(const PrecipitatePhaseWidget&); // Operator '=' Not Implemented

@@ -66,7 +66,8 @@ StatsGeneratorFilter::StatsGeneratorFilter() :
   m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName),
   m_StatsDataArrayName(SIMPL::EnsembleData::Statistics),
   m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures),
-  m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
+  m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes),
+  m_PhaseNamesArrayName(SIMPL::EnsembleData::PhaseName)
 {
   setupFilterParameters();
 }
@@ -196,6 +197,10 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
   m_PhaseTypes = UInt32ArrayType::CreateArray(numTuples, SIMPL::EnsembleData::PhaseTypes, true);
   m_PhaseTypes->initializeWithValue(SIMPL::PhaseType::UnknownPhaseType);
 
+  m_PhaseNames = StringDataArray::CreateArray(numTuples, SIMPL::EnsembleData::PhaseName, true);
+  m_PhaseNames->initializeWithValue(QString("Unknown Phase"));
+#warning Implement Reading of PhaseName
+
   // Start from index 1. Index 0 is always junk.
   for (int index = 1; index < phaseCount; index++)
   {
@@ -244,6 +249,11 @@ void StatsGeneratorFilter::dataCheck()
     if (nullptr != m_PhaseTypes)
     {
       cellEnsembleAttrMat->addAttributeArray(getPhaseTypesArrayName(), m_PhaseTypes);
+    }
+
+    if(nullptr != m_PhaseNames)
+    {
+      cellEnsembleAttrMat->addAttributeArray(getPhaseNamesArrayName(), m_PhaseNames);
     }
   }
   else
@@ -435,6 +445,10 @@ AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterP
     {
       filter->setPhaseTypes(std::dynamic_pointer_cast<UInt32ArrayType>(m_PhaseTypes->deepCopy(getInPreflight())));
     }
+    if(m_PhaseNames)
+    {
+      filter->setPhaseNames(std::dynamic_pointer_cast<StringDataArray>(m_PhaseNames->deepCopy(getInPreflight())));
+    }
     if (m_StatsDataArray)
     {
       filter->setStatsDataArray(std::dynamic_pointer_cast<StatsDataArray>(m_StatsDataArray->deepCopy(getInPreflight())));
@@ -447,13 +461,17 @@ AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getCompiledLibraryName()
-{ return StatsGeneratorConstants::StatsGeneratorBaseName; }
+{
+  return StatsGeneratorConstants::StatsGeneratorBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getBrandingString()
-{ return "StatsGenerator"; }
+{
+  return "StatsGenerator";
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -462,7 +480,7 @@ const QString StatsGeneratorFilter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  StatsGenerator::Version::Major() << "." << StatsGenerator::Version::Minor() << "." << StatsGenerator::Version::Patch();
+  vStream << StatsGenerator::Version::Major() << "." << StatsGenerator::Version::Minor() << "." << StatsGenerator::Version::Patch();
   return version;
 }
 
@@ -470,17 +488,22 @@ const QString StatsGeneratorFilter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getGroupName()
-{ return SIMPL::FilterGroups::SyntheticBuildingFilters; }
+{
+  return SIMPL::FilterGroups::SyntheticBuildingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::GenerationFilters; }
+{
+  return SIMPL::FilterSubGroups::GenerationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getHumanLabel()
-{ return "StatsGenerator"; }
-
+{
+  return "StatsGenerator";
+}

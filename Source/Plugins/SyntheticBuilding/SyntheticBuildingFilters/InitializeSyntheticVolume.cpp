@@ -54,6 +54,7 @@
 #include "SIMPLib/StatsData/TransformationStatsData.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -75,8 +76,10 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   AbstractFilter(),
   m_DataContainerName(SIMPL::Defaults::SyntheticVolumeDataContainerName),
   m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
+  m_EnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName),
   m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes),
+  m_InputPhaseNamesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseName),
   m_EstimateNumberOfFeatures(false),
   m_InputStatsFile(""),
   m_EstimatedPrimaryFeatures("")
@@ -112,7 +115,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("EstimatedPrimaryFeatures");
-  linkedProps << "InputStatsFile";
+  linkedProps << "InputStatsFile" << "InputPhaseTypesArrayPath";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Estimate Number of Features", EstimateNumberOfFeatures, FilterParameter::Parameter, InitializeSyntheticVolume, linkedProps));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Statistics File", InputStatsFile, FilterParameter::Parameter, InitializeSyntheticVolume, "*.dream3d"));
 
@@ -121,6 +124,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.push_back(param);
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
+
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
     QVector<uint32_t> geomTypes;
@@ -137,13 +141,22 @@ void InitializeSyntheticVolume::setupFilterParameters()
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
-
+//  {
+//    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
+//    QVector<uint32_t> geomTypes;
+//    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
+//    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+//    req.dcGeometryTypes = geomTypes;
+//    req.daTypes = QVector<QString>(1, SIMPL::TypeNames::StringArray);
+//    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Names", InputPhaseNamesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
+//  }
   parameters.push_back(SIMPL_NEW_STRING_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Ensemble Attribute Matrix", EnsembleAttributeMatrixName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
+
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, InitializeSyntheticVolume));
-
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume));
 
   setFilterParameters(parameters);
@@ -210,14 +223,35 @@ void InitializeSyntheticVolume::dataCheck()
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0 && cellAttrMat.get() == NULL) { return; }
 
+#if 0
+  // Get the number of tuples from the Ensemble Attribute Matrix from the Synthetic Stats Side of things
+  AttributeMatrix::Pointer ensembleAM = getDataContainerArray()->getAttributeMatrix(getInputPhaseTypesArrayPath());
+  tDims.resize(1);
+  tDims[0] = ensembleAM->getNumTuples();
+
+  // Create our own Ensemble Attribute Matrix
+  AttributeMatrix::Pointer ensembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+  if(getErrorCondition() < 0 && cellAttrMat.get() == NULL) { return; }
+
   QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
   UInt32ArrayType::Pointer phaseType = getDataContainerArray()->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   if(getErrorCondition() < 0 && phaseType.get() == NULL) { return; }
+  IDataArray::Pointer phaseTypesCopy = phaseType->deepCopy(getInPreflight());
+  ensembleAttrMat->addAttributeArray(phaseTypesCopy->getName(), phaseTypesCopy);
+
+
+  ensembleAM = getDataContainerArray()->getAttributeMatrix(getInputPhaseNamesArrayPath());
+  StringDataArray::Pointer phaseNames = getDataContainerArray()->getPrereqArrayFromPath<StringDataArray, AbstractFilter>(this, getInputPhaseNamesArrayPath(), cDims);
+  if(getErrorCondition() < 0 && phaseNames.get() == NULL) { return; }
+  IDataArray::Pointer phaseNamesCopy = phaseNames->deepCopy(getInPreflight());
+  ensembleAttrMat->addAttributeArray(phaseNamesCopy->getName(), phaseNamesCopy);
+
 
   QVector<size_t> statsDims(1, 1);
   StatsDataArray::Pointer statsPtr = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
   if(getErrorCondition() < 0 && statsPtr.get() == NULL) { return; }
 
+#endif
   if(m_EstimateNumberOfFeatures)
   {
     m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Resolution);
@@ -380,7 +414,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
   float vol = 0.0f;
   float diam = 0.0f;
   bool volgood = false;
-  for (int32_t j = 0; j < primaryphases.size(); ++j)
+  for (size_t j = 0; j < primaryphases.size(); ++j)
   {
     float curphasetotalvol = totalvol * primaryphasefractions[j];
     while (currentvol < curphasetotalvol)

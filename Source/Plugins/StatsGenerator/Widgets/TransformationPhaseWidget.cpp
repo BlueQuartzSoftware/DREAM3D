@@ -71,24 +71,6 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 
-#define CHECK_ERROR_ON_WRITE(var, msg)\
-  if (err < 0) {\
-    QMessageBox::critical(this, tr("StatsGenerator"),\
-                          tr("There was an error writing the " msg " to the HDF5 file"),\
-                          QMessageBox::Ok,\
-                          QMessageBox::Ok);\
-    return err;\
-  }
-
-
-#define CHECK_STATS_READ_ERROR(err, group, dataset)\
-  if (err < 0) {\
-    qDebug() << "TransformationPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-    qDebug() << "  File: " << __FILE__ << "\n";\
-    qDebug() << "  Line: " << __LINE__ << "\n";\
-    return err;\
-  }
-
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_TransformationPhaseWidget.cpp"
 
@@ -97,19 +79,15 @@
 // -----------------------------------------------------------------------------
 TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent) :
   SGWidget(parent),
-  m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
-  m_PhaseFraction(1.0),
-  m_TotalPhaseFraction(1.0),
   m_ParentPhase(0),
-  m_DataHasBeenGenerated(false),
-  m_BulkLoadFailure(false),
-  m_PhaseIndex(0),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
   m_SizeDistributionCurve(NULL),
   m_CutOffMin(NULL),
   m_CutOffMax(NULL),
   m_grid(NULL)
 {
+  setTabTitle("Transformation");
+  setPhaseType(SIMPL::PhaseType::PrimaryPhase);
+  setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();
 }
@@ -120,34 +98,6 @@ TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent) :
 TransformationPhaseWidget::~TransformationPhaseWidget()
 {
 
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TransformationPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int index)
-{
-  //qDebug() << "on_microstructurePresetCombo_currentIndexChanged" << "\n";
-  QString presetName = microstructurePresetCombo->currentText();
-
-  //Factory Method to get an instantiated object of the correct type?
-  MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  m_MicroPreset = manager->createNewPreset(presetName);
-  m_MicroPreset->displayUserInputDialog();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* microstructurePresetCombo)
-{
-  AbstractMicrostructurePresetFactory::Pointer presetFactory = T::New();
-  MicrostructurePresetManager::registerFactory(presetFactory);
-  QString displayString = presetFactory->displayName();
-  microstructurePresetCombo->addItem(displayString);
-  return presetFactory;
 }
 
 // -----------------------------------------------------------------------------
@@ -320,25 +270,6 @@ unsigned int TransformationPhaseWidget::getCrystalStructure() const
   return m_CrystalStructure;
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString TransformationPhaseWidget::getComboString()
-{
-  QString s = QString::number(m_PhaseIndex);
-  s.append(" - ");
-  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
-  {
-    s.append("Cubic");
-  }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
-  {
-    s.append("Hexagonal");
-  }
-  return s;
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -432,6 +363,14 @@ void TransformationPhaseWidget::updatePlots()
 
     progress.setValue(4);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TransformationPhaseWidget::generateDefaultData()
+{
+  on_m_GenerateDefaultData_clicked();
 }
 
 // -----------------------------------------------------------------------------
@@ -784,6 +723,7 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
     TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
+    statsData->setName(getPhaseName());
 
     transformationStatsData->setPhaseFraction(calcPhaseFraction);
     transformationStatsData->setParentPhase(m_ParentPhase);
@@ -858,6 +798,7 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   }
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
   TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
+  setPhaseName(statsData->getName());
 
   m_PhaseFraction = transformationStatsData->getPhaseFraction();
 
@@ -940,14 +881,5 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   setTabsPlotTabsEnabled(true);
   m_DataHasBeenGenerated = true;
 
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString TransformationPhaseWidget::getTabTitle()
-{
-  return QString("Transformation");
 }
 

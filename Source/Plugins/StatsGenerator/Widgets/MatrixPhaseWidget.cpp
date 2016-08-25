@@ -60,25 +60,6 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 
-
-#define CHECK_ERROR_ON_WRITE(var, msg)\
-  if (err < 0) {\
-    QMessageBox::critical(this, tr("StatsGenerator"),\
-                          tr("There was an error writing the " msg " to the HDF5 file"),\
-                          QMessageBox::Ok,\
-                          QMessageBox::Ok);\
-    return err;\
-  }
-
-
-#define CHECK_STATS_READ_ERROR(err, group, dataset)\
-  if (err < 0) {\
-    qDebug() << "MatrixPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-    qDebug() << "  File: " << __FILE__ << "\n";\
-    qDebug() << "  Line: " << __LINE__ << "\n";\
-    return err;\
-  }
-
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_MatrixPhaseWidget.cpp"
 
@@ -87,13 +68,10 @@
 // -----------------------------------------------------------------------------
 MatrixPhaseWidget::MatrixPhaseWidget(QWidget* parent) :
   SGWidget(parent),
-  m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-  m_PhaseIndex(0),
-  m_PhaseFraction(1.0),
-  m_TotalPhaseFraction(1.0),
   m_grid(NULL)
 {
+  setTabTitle("Matrix");
+
   setupUi(this);
   setupGui();
 }
@@ -118,29 +96,11 @@ void MatrixPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString MatrixPhaseWidget::getComboString()
-{
-  QString s = QString::number(m_PhaseIndex);
-  s.append(" - ");
-  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
-  {
-    s.append("Cubic");
-  }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
-  {
-    s.append("Hexagonal");
-  }
-  return s;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
   Q_UNUSED(preflight)
 
-  if (m_PhaseIndex < 1)
+  if (getPhaseIndex() < 1)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
                           tr("The Phase Index is Less than 1. This is not allowed."),
@@ -148,7 +108,7 @@ int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool pr
     return -1;
   }
   int retErr = 0;
-  float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
+  float calcPhaseFraction = getPhaseFraction() / getTotalPhaseFraction();
 
   //size_t ensembles = attrMat->getNumTuples();
 
@@ -158,17 +118,18 @@ int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool pr
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
-  crystalStructures[m_PhaseIndex] = m_CrystalStructure;
-  phaseTypes[m_PhaseIndex] = m_PhaseType;
+  crystalStructures[getPhaseIndex()] = getCrystalStructure();
+  phaseTypes[getPhaseIndex()] = getPhaseType();
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if (NULL != statsDataArray)
   {
-    StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
+    StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
     MatrixStatsData* matrixStatsData = MatrixStatsData::SafePointerDownCast(statsData.get());
     if(NULL != matrixStatsData)
     {
       matrixStatsData->setPhaseFraction(calcPhaseFraction);
+      statsData->setName(getPhaseName());
     }
     else
     {
@@ -187,11 +148,11 @@ void MatrixPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int i
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
-  m_CrystalStructure = attributeArray[index];
+  setCrystalStructure(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
-  m_PhaseType = attributeArray[index];
+  setCrystalStructure(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
@@ -202,24 +163,18 @@ void MatrixPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int i
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
   MatrixStatsData* matrixStatsData = MatrixStatsData::SafePointerDownCast(statsData.get());
 
-  m_PhaseFraction = matrixStatsData->getPhaseFraction();
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MatrixPhaseWidget::dataWasEdited()
-{
+  setPhaseFraction(matrixStatsData->getPhaseFraction());
+  setPhaseName(statsData->getName());
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString MatrixPhaseWidget::getTabTitle()
+QIcon MatrixPhaseWidget::getPhaseIcon()
 {
-  return QString("Matrix");
+  QIcon icon;
+  icon.addFile(QStringLiteral(":/StatsGenerator/icons/Matrix.png"), QSize(), QIcon::Normal, QIcon::Off);
+  icon.addFile(QStringLiteral(":/StatsGenerator/icons/Matrix_Selected.png"), QSize(), QIcon::Normal, QIcon::On);
+  return icon;
 }
-

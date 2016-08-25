@@ -90,15 +90,14 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
                                QwtArray<float>& x,
                                QwtArray<float>& y);
 
-    QString getComboString();
-    QString getTabTitle();
-
 
     void calculateNumberOfBins();
     int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
     int gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize);
 
     int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
+
+    virtual void generateDefaultData();
 
   protected slots:
     void on_m_GenerateDefaultData_clicked();
@@ -108,10 +107,11 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
     void on_m_MaxSigmaCutOff_textChanged(const QString& text);
     void on_m_BinStepSize_valueChanged(double v);
 
-    void on_microstructurePresetCombo_currentIndexChanged(int index);
-
     void dataWasEdited();
     void bulkLoadEvent(bool fail);
+
+  signals:
+    void phaseParametersChanged();
 
   protected:
 

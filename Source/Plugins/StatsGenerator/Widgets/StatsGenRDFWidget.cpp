@@ -410,3 +410,11 @@ RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
 
   return rdf;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatsGenRDFWidget::getTabTitle()
+{
+  return QString("Radial Distribution Function");
+}

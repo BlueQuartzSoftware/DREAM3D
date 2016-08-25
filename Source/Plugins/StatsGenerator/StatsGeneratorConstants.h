@@ -19,6 +19,9 @@ namespace StatsGeneratorConstants
   {
   	const QString StatsGeneratorFilters("StatsGenerator");
   }
+
+  static const float k_Mu = 1.0f;
+  static const float k_Sigma = 0.1f;
 }
 
 /**

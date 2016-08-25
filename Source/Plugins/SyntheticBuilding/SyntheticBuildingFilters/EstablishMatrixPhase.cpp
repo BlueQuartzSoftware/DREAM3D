@@ -73,6 +73,7 @@ EstablishMatrixPhase::EstablishMatrixPhase() :
   m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
   m_UseMask(false), m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes),
+  m_InputPhaseNamesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseName),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_Mask(NULL),
@@ -137,7 +138,14 @@ void EstablishMatrixPhase::setupFilterParameters()
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, EstablishMatrixPhase, req));
   }
-
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
+    QVector<uint32_t> geomTypes;
+    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
+    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+    req.dcGeometryTypes = geomTypes;
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Names", InputPhaseNamesArrayPath, FilterParameter::RequiredArray, EstablishMatrixPhase, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", OutputCellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, EstablishMatrixPhase));
   parameters.push_back(SIMPL_NEW_STRING_FP("Number of Features", NumFeaturesArrayName, FilterParameter::CreatedArray, EstablishMatrixPhase));
@@ -238,9 +246,22 @@ void EstablishMatrixPhase::dataCheck()
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
-  tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
-  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
+
+  AttributeMatrix::Pointer outEnsembleAttrMat = AttributeMatrix::NullPointer();
+  if(m->doesAttributeMatrixExist(getOutputCellEnsembleAttributeMatrixName()))
+  {
+    outEnsembleAttrMat = m->getPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), -350);
+  }
+  else
+  {
+    tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
+    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+  }
+
+  tempPath = getOutputCellAttributeMatrixPath();
+  tempPath.setAttributeMatrixName(getOutputCellEnsembleAttributeMatrixName());
+  tempPath.setDataArrayName(SIMPL::EnsembleData::PhaseName);
+  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 
   // Feature Data
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName() );
@@ -279,6 +300,16 @@ void EstablishMatrixPhase::execute()
 
   establish_matrix();
   if(getErrorCondition() < 0) { return; }
+
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
+  AttributeMatrix::Pointer ensembleAttrMat = getDataContainerArray()->getAttributeMatrix(getInputPhaseNamesArrayPath());
+  IDataArray::Pointer inputPhaseNames =  ensembleAttrMat->getAttributeArray(getInputPhaseNamesArrayPath().getDataArrayName());
+  if(inputPhaseNames.get() != nullptr)
+  {
+    AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(m_OutputCellEnsembleAttributeMatrixName);
+    IDataArray::Pointer outputPhaseNames = inputPhaseNames->deepCopy();
+    cellEnsembleAttrMat->addAttributeArray(outputPhaseNames->getName(), outputPhaseNames);
+  }
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -346,7 +377,7 @@ void  EstablishMatrixPhase::establish_matrix()
       totalmatrixfractions = totalmatrixfractions + mp->getPhaseFraction();
     }
   }
-  for (int32_t i = 0; i < matrixphases.size(); i++)
+  for (size_t i = 0; i < matrixphases.size(); i++)
   {
     matrixphasefractions[i] = matrixphasefractions[i] / totalmatrixfractions;
     if (i > 0) { matrixphasefractions[i] = matrixphasefractions[i] + matrixphasefractions[i - 1]; }
@@ -424,16 +455,22 @@ const QString EstablishMatrixPhase::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString EstablishMatrixPhase::getGroupName()
-{ return SIMPL::FilterGroups::SyntheticBuildingFilters; }
+{
+  return SIMPL::FilterGroups::SyntheticBuildingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EstablishMatrixPhase::getSubGroupName()
-{ return SIMPL::FilterSubGroups::PackingFilters; }
+{
+  return SIMPL::FilterSubGroups::PackingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EstablishMatrixPhase::getHumanLabel()
-{ return "Establish Matrix Phase"; }
+{
+  return "Establish Matrix Phase";
+}

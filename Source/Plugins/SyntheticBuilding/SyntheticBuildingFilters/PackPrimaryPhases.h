@@ -41,6 +41,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 #include "SIMPLib/Geometry/ShapeOps/ShapeOps.h"
 #include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
 
@@ -94,6 +95,9 @@ class PackPrimaryPhases : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
+    Q_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, InputShapeTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputShapeTypesArrayPath READ getInputShapeTypesArrayPath WRITE setInputShapeTypesArrayPath)
@@ -405,6 +409,7 @@ class PackPrimaryPhases : public AbstractFilter
 
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_STRINGARRAY_VARIABLE(PhaseNames)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     StatsDataArray::WeakPointer m_StatsDataArray;

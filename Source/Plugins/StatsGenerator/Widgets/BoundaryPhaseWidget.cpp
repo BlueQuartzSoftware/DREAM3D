@@ -59,24 +59,6 @@
 #include <qwt_plot_marker.h>
 
 
-#define CHECK_ERROR_ON_WRITE(var, msg)\
-  if (err < 0) {\
-    QMessageBox::critical(this, tr("StatsGenerator"),\
-                          tr("There was an error writing the " msg " to the HDF5 file"),\
-                          QMessageBox::Ok,\
-                          QMessageBox::Ok);\
-    return err;\
-  }
-
-
-#define CHECK_STATS_READ_ERROR(err, group, dataset)\
-  if (err < 0) {\
-    qDebug() << "MatrixPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-    qDebug() << "  File: " << __FILE__ << "\n";\
-    qDebug() << "  Line: " << __LINE__ << "\n";\
-    return err;\
-  }
-
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_BoundaryPhaseWidget.cpp"
 
@@ -85,13 +67,11 @@
 // -----------------------------------------------------------------------------
 BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget* parent) :
   SGWidget(parent),
-  m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-  m_PhaseIndex(0),
-  m_PhaseFraction(1.0),
-  m_TotalPhaseFraction(1.0),
   m_grid(NULL)
 {
+  setTabTitle("Boundary");
+  setPhaseType(SIMPL::PhaseType::PrimaryPhase);
+  setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();
 }
@@ -116,29 +96,11 @@ void BoundaryPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString BoundaryPhaseWidget::getComboString()
-{
-  QString s = QString::number(m_PhaseIndex);
-  s.append(" - ");
-  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
-  {
-    s.append("Cubic");
-  }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
-  {
-    s.append("Hexagonal");
-  }
-  return s;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
   Q_UNUSED(preflight)
 
-  if (m_PhaseIndex < 1)
+  if (getPhaseIndex() < 1)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
                           tr("The Phase Index is Less than 1. This is not allowed."),
@@ -146,7 +108,7 @@ int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool 
     return -1;
   }
   int retErr = 0;
-  float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
+  float calcPhaseFraction = getPhaseFraction() / getTotalPhaseFraction();
 
   //size_t ensembles = attrMat->getNumTuples();
 
@@ -156,16 +118,17 @@ int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
-  crystalStructures[m_PhaseIndex] = m_CrystalStructure;
-  phaseTypes[m_PhaseIndex] = m_PhaseType;
+  crystalStructures[getPhaseIndex()] = getCrystalStructure();
+  phaseTypes[getPhaseIndex()] = getPhaseType();
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if (NULL != statsDataArray)
   {
-    StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
+    StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
     BoundaryStatsData* boundaryStatsData = BoundaryStatsData::SafePointerDownCast(statsData.get());
 
     boundaryStatsData->setPhaseFraction(calcPhaseFraction);
+    statsData->setName(getPhaseName());
   }
   return retErr;
 }
@@ -180,11 +143,11 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
-  m_CrystalStructure = attributeArray[index];
+  setCrystalStructure(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
-  m_PhaseType = attributeArray[index];
+  setPhaseType(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
@@ -195,23 +158,18 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
   BoundaryStatsData* boundaryStatsData = BoundaryStatsData::SafePointerDownCast(statsData.get());
 
-  m_PhaseFraction = boundaryStatsData->getPhaseFraction();
+  setPhaseName(statsData->getName());
+  setPhaseFraction(boundaryStatsData->getPhaseFraction());
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BoundaryPhaseWidget::dataWasEdited()
+QIcon BoundaryPhaseWidget::getPhaseIcon()
 {
-
+  QIcon icon;
+  icon.addFile(QStringLiteral(":/StatsGenerator/icons/Boundary.png"), QSize(), QIcon::Normal, QIcon::Off);
+  icon.addFile(QStringLiteral(":/StatsGenerator/icons/Boundary_Selected.png"), QSize(), QIcon::Normal, QIcon::On);
+  return icon;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString BoundaryPhaseWidget::getTabTitle()
-{
-  return QString("Boundary");
-}
-
