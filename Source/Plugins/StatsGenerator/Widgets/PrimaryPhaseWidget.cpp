@@ -248,7 +248,6 @@ void PrimaryPhaseWidget::removeNeighborsPlotWidget()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setupGui()
 {
-  qDebug() << "PrimaryPhaseWidget::setupGui()";
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
 
@@ -481,8 +480,6 @@ void PrimaryPhaseWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::updatePlots()
 {
-  qDebug() << "PrimaryPhaseWidget::updatePlots()";
-
   if (getDataHasBeenGenerated() == true)
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
