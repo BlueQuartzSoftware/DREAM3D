@@ -40,13 +40,21 @@ namespace BlueQuartz
   const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
 }
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
 
 #define SG_FONT_SIZE 10
 
-#else
+#elif defined (Q_OS_LINUX)
+
+#define SG_FONT_SIZE 10
+
+#elif defined (Q_OS_OSX)
 
 #define SG_FONT_SIZE 14
+
+#else
+
+#define SG_FONT_SIZE 12
 
 #endif
 
