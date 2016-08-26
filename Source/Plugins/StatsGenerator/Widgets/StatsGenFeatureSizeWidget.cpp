@@ -145,7 +145,7 @@ void StatsGenFeatureSizeWidget::setupGui()
   qwtStr.setText(QString("Equivalent Sphere Diameter (ESD)"));
   m_SizeDistributionPlot->setAxisTitle(QwtPlot::xBottom, qwtStr);
 
-  qwtStr.setText(QString("Probability of Sampling ESD from the Distribution"));
+  qwtStr.setText(QString("Probability of Sampling ESD \nfrom the Distribution"));
   m_SizeDistributionPlot->setAxisTitle(QwtPlot::yLeft, qwtStr);
 
 
