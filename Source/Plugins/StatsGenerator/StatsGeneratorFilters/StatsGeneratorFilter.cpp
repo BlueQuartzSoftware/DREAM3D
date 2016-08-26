@@ -199,7 +199,6 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
 
   m_PhaseNames = StringDataArray::CreateArray(numTuples, SIMPL::EnsembleData::PhaseName, true);
   m_PhaseNames->initializeWithValue(QString("Unknown Phase"));
-#warning Implement Reading of PhaseName
 
   // Start from index 1. Index 0 is always junk.
   for (int index = 1; index < phaseCount; index++)
@@ -212,6 +211,9 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
 
     unsigned int pt = m_StatsDataArray->getStatsData(index)->getPhaseType();
     m_PhaseTypes->setValue(index, pt);
+
+    QString phaseName = phaseObject[SIMPL::EnsembleData::PhaseName].toString();
+    m_PhaseNames->setValue(index, phaseName);
   }
 }
 
