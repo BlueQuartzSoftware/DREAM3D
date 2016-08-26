@@ -549,6 +549,16 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   QwtArray<float> x;
   QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
+
+  while(binsizes.size() > x.size()/2)
+  {
+    m_BinStepSize->blockSignals(true);
+    m_BinStepSize->stepUp();
+    m_BinStepSize->blockSignals(false);
+    int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
+    err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
+  }
+
   if (err < 0) { return err; }
 
   if (NULL == m_SizeDistributionCurve)
