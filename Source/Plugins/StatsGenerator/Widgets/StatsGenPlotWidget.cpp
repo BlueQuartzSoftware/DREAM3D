@@ -73,7 +73,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
-
+#include "StatsGenerator/StatsGeneratorConstants.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
 #include "StatsGenerator/Widgets/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
@@ -384,7 +384,10 @@ void StatsGenPlotWidget::setPlotTitle(const QString &title)
 
   m_PlotView->setTitle(plotTitle);
 #else
-  m_PlotView->setTitle(title);
+
+  QwtText qwtStr = QwtText(title);
+  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  m_PlotView->setTitle(qwtStr);
 
 #endif
 }
@@ -394,7 +397,10 @@ void StatsGenPlotWidget::setPlotTitle(const QString &title)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setXAxisName(const QString &name)
 {
-  m_PlotView->setAxisTitle(QwtPlot::xBottom, name);
+    QwtText qwtStr = QwtText(name);
+    qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+    m_PlotView->setTitle(qwtStr);
+    m_PlotView->setAxisTitle(QwtPlot::xBottom, qwtStr);
 }
 
 // -----------------------------------------------------------------------------
@@ -402,7 +408,10 @@ void StatsGenPlotWidget::setXAxisName(const QString &name)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setYAxisName(const QString &name)
 {
-  m_PlotView->setAxisTitle(QwtPlot::yLeft, name);
+    QwtText qwtStr = QwtText(name);
+    qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+    m_PlotView->setTitle(qwtStr);
+    m_PlotView->setAxisTitle(QwtPlot::yLeft, qwtStr);
 }
 
 // -----------------------------------------------------------------------------

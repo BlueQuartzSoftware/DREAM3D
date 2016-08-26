@@ -68,9 +68,9 @@
 #include <qwt_symbol.h>
 #include <qwt_picker_machine.h>
 
-
-
 #include "curvetracker.h"
+
+
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_StatsGenFeatureSizeWidget.cpp"
@@ -137,9 +137,16 @@ void StatsGenFeatureSizeWidget::setupGui()
   m_Sigma_SizeDistribution->setText(loc.toString(StatsGeneratorConstants::k_Sigma));
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
-  m_SizeDistributionPlot->setTitle("Feature ESD Probability Density Function");
-  m_SizeDistributionPlot->setAxisTitle(QwtPlot::xBottom, QString("Equivalent Sphere Diameter (ESD)"));
-  m_SizeDistributionPlot->setAxisTitle(QwtPlot::yLeft, QString("Probability of Sampling ESD from the Distribution"));
+
+  QwtText qwtStr(QString("Feature ESD Probability Density Function"));
+  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  m_SizeDistributionPlot->setTitle(qwtStr);
+
+  qwtStr.setText(QString("Equivalent Sphere Diameter (ESD)"));
+  m_SizeDistributionPlot->setAxisTitle(QwtPlot::xBottom, qwtStr);
+
+  qwtStr.setText(QString("Probability of Sampling ESD from the Distribution"));
+  m_SizeDistributionPlot->setAxisTitle(QwtPlot::yLeft, qwtStr);
 
 
   QwtPlotPicker* plotPicker = new QwtPlotPicker(m_SizeDistributionPlot->xBottom, m_SizeDistributionPlot->yLeft, QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, m_SizeDistributionPlot->canvas());
@@ -595,7 +602,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
 
   QString str = QString("Min Feature ESD = %1").arg(xCo[0]);
   QwtText qwtStr = QwtText(str);
-  qwtStr.setFont(QFont("Arial", 14, QFont::Bold, false));
+  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
   m_CutOffMin->setLabel(qwtStr);
   m_CutOffMin->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
   m_CutOffMin->setLabelOrientation(Qt::Vertical);
@@ -610,7 +617,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   }
   str = QString("Max Feature ESD = %1").arg(xCo[1]);
   qwtStr = QwtText(str);
-  qwtStr.setFont(QFont("Arial", 14, QFont::Bold, false));
+  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
   m_CutOffMax->setLabel(qwtStr);
   m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
   m_CutOffMax->setLabelOrientation(Qt::Vertical);
