@@ -171,11 +171,6 @@ cd $SCRIPT_DIR
 
 #-------------------------------------------------
 # Start building all the packages
-# Build Protocol Buffers
-${SCRIPT_DIR}/Build_ProtoBuf.sh 
-
-# Build Boost
-${SCRIPT_DIR}/Build_Boost.sh 
 
 # Build HDF5
 ${SCRIPT_DIR}/Build_HDF5.sh
@@ -183,12 +178,18 @@ ${SCRIPT_DIR}/Build_HDF5.sh
 # Builds Eigen
 ${SCRIPT_DIR}/Build_Eigen.sh
 
-# Build TBB
-${SCRIPT_DIR}/Build_TBB.sh
-
 # Build ITK.
 ${SCRIPT_DIR}/Build_ITK.sh
 
+# Build Protocol Buffers
+${SCRIPT_DIR}/Build_ProtoBuf.sh 
+
+# Build TBB
+${SCRIPT_DIR}/Build_TBB.sh
+
+
+# Build Boost
+${SCRIPT_DIR}/Build_Boost.sh 
 
 # Build Qwt
 ${SCRIPT_DIR}/Build_Qwt.sh

@@ -31,7 +31,7 @@ if [ ! -e "$SDK_INSTALL/${PB_ARCHIVE_NAME}" ];
   echo "-------------------------------------------"
   echo " Downloading Google Protool Buffers Version ${PB_ARCHIVE_NAME} "
   echo "-------------------------------------------"
-  $DOWNLOAD_PROG  "" -o $SDK_INSTALL/tbb${TBB_VERSION}oss_src.tgz
+  #$DOWNLOAD_PROG  "" -o $SDK_INSTALL/tbb${TBB_VERSION}oss_src.tgz
 fi
 
 
