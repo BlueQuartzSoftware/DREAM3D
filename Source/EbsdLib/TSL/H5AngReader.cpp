@@ -301,7 +301,7 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
       break;
     }
     status = H5Dclose(dataset); // Close the data set
-
+    status = H5Tclose(memtype);
     HKLFamily::Pointer f = HKLFamily::New();
     f->copyFromStruct(&data);
     families.push_back(f);
