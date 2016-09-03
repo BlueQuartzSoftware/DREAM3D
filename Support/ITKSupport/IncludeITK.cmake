@@ -91,13 +91,6 @@ set(DREAM3D_CORE_ITK_MODULES
     #Group Core
     ITKCommon
 
-    #Group IO  ---No ITK Modules---
-    ITKIOImageBase
-    ITKIOBMP
-    ITKIOJPEG
-    ITKIOPNG
-    ITKIOTIFF
-
     #Group Filtering
     ITKImageCompare
     ITKImageIntensity
@@ -134,6 +127,8 @@ list(APPEND DREAM3D_ITK_MODULES
 
 # --------------------------------------------------------------------
 # find ITK libararies
+# Does not register IO factories. It will be done by each plugin that needs it.
+set(ITK_NO_IO_FACTORY_REGISTER_MANAGER TRUE)
 find_package(ITK COMPONENTS ${DREAM3D_ITK_MODULES} REQUIRED)
 message(STATUS "${PROJECT_NAME}: ITK Location ${ITK_DIR} ITK Version: ${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}.${ITK_VERSION_PATCH}")
 
