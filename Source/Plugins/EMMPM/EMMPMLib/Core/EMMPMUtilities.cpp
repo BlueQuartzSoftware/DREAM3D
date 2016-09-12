@@ -104,7 +104,7 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
   unsigned char* raster;
   int l, ld;
   size_t gtindex = 0;
-  size_t* classCounts = NULL;
+  size_t* classCounts = nullptr;
   size_t x = 0;
 
   real_t mu = 0.0;
@@ -122,7 +122,7 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
   classCounts = (size_t*)malloc(data->classes * sizeof(size_t));
   memset(classCounts, 0, data->classes * sizeof(size_t));
 
-  if (data->outputImage == NULL)
+  if (data->outputImage == nullptr)
   {
     data->allocateOutputImage();
   }

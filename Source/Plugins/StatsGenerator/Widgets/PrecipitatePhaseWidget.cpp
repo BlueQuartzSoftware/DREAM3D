@@ -393,7 +393,7 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
   phaseTypes[getPhaseIndex()] = getPhaseType();
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
-  if (NULL != statsDataArray)
+  if (nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
     PrecipitateStatsData* precipitateStatsData = PrecipitateStatsData::SafePointerDownCast(statsData.get());
@@ -464,7 +464,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
-  if (statsDataArray == NULL)
+  if (statsDataArray == nullptr)
   {
     return;
   }

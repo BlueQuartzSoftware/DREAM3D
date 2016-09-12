@@ -65,8 +65,8 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   m_PhaseOfInterest(1),
   m_GBCDArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceEnsembleAttributeMatrixName, SIMPL::EnsembleData::GBCD),
   m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
-  m_GBCD(NULL),
-  m_CrystalStructures(NULL)
+  m_GBCD(nullptr),
+  m_CrystalStructures(nullptr)
 {
   m_MisorientationRotation.angle = 0.0f;
   m_MisorientationRotation.h = 0.0f;
@@ -171,7 +171,7 @@ void VisualizeGBCDGMT::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -179,15 +179,15 @@ void VisualizeGBCDGMT::dataCheck()
   IDataArray::Pointer tmpGBCDPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getGBCDArrayPath());
   if(getErrorCondition() < 0) { return; }
 
-  if (NULL != tmpGBCDPtr.get())
+  if (nullptr != tmpGBCDPtr.get())
   {
     QVector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
     m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  if (NULL != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
+  if (nullptr != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
     QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
     setErrorCondition(-1);
@@ -440,9 +440,9 @@ void VisualizeGBCDGMT::execute()
     }
   }
 
-  FILE* f = NULL;
+  FILE* f = nullptr;
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
-  if (NULL == f)
+  if (nullptr == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
     setErrorCondition(-1);

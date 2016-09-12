@@ -89,13 +89,13 @@ YSChoiAbaqusReader::YSChoiAbaqusReader() :
   m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures),
-  m_FeatureIds(NULL),
-  m_CellPhases(NULL),
-  m_SurfaceFeatures(NULL),
-  m_Quats(NULL),
-  m_AvgQuats(NULL),
-  m_CellEulerAngles(NULL),
-  m_CrystalStructures(NULL)
+  m_FeatureIds(nullptr),
+  m_CellPhases(nullptr),
+  m_SurfaceFeatures(nullptr),
+  m_Quats(nullptr),
+  m_AvgQuats(nullptr),
+  m_CellEulerAngles(nullptr),
+  m_CrystalStructures(nullptr)
 {
   setupFilterParameters();
 }
@@ -159,13 +159,13 @@ void YSChoiAbaqusReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -177,9 +177,9 @@ void YSChoiAbaqusReader::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -191,7 +191,7 @@ void YSChoiAbaqusReader::updateEnsembleInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -219,15 +219,15 @@ void YSChoiAbaqusReader::dataCheck()
 
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == cellAttrMat.get()) { return; }
   tDims.resize(1);
   tDims[0] = 0;
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == cellFeatureAttrMat.get()) { return; }
 
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
-  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == cellEnsembleAttrMat.get()) { return; }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -288,35 +288,35 @@ void YSChoiAbaqusReader::dataCheck()
   QVector<size_t> dims(1, 3);
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName() );
   m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 4;
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getQuatsArrayName() );
   m_QuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getAvgQuatsArrayName() );
   m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellPhasesArrayName() );
   m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getSurfaceFeaturesArrayName() );
   m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this,  tempPath, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   //typedef DataArray<unsigned int> XTalStructArrayType;
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::Cubic_High, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -338,7 +338,7 @@ void YSChoiAbaqusReader::execute()
 
   int xpoints, ypoints, zpoints, totalpoints = 0;
   float resx, resy, resz;
-  float** *mat = NULL;
+  float** *mat = nullptr;
   //const unsigned int size(1024);
   // Read header from data file to figure out how many points there are
   QFile in(getInputFile());

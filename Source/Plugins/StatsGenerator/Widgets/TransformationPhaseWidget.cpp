@@ -80,10 +80,10 @@
 TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent) :
   SGWidget(parent),
   m_ParentPhase(0),
-  m_SizeDistributionCurve(NULL),
-  m_CutOffMin(NULL),
-  m_CutOffMax(NULL),
-  m_grid(NULL)
+  m_SizeDistributionCurve(nullptr),
+  m_CutOffMin(nullptr),
+  m_CutOffMax(nullptr),
+  m_grid(nullptr)
 {
   setTabTitle("Transformation");
   setPhaseType(SIMPL::PhaseType::PrimaryPhase);
@@ -553,7 +553,7 @@ void TransformationPhaseWidget::updateSizeDistributionPlot()
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0) { return; }
 
-  if (NULL == m_SizeDistributionCurve)
+  if (nullptr == m_SizeDistributionCurve)
   {
     m_SizeDistributionCurve = new QwtPlotCurve("Size Distribution");
     m_SizeDistributionCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
@@ -562,7 +562,7 @@ void TransformationPhaseWidget::updateSizeDistributionPlot()
   }
 
   // Place a vertical Line on the plot where the Min and Max Cutoff values are
-  if (NULL == m_CutOffMin)
+  if (nullptr == m_CutOffMin)
   {
     m_CutOffMin = new QwtPlotMarker();
     m_CutOffMin->attach(m_SizeDistributionPlot);
@@ -574,7 +574,7 @@ void TransformationPhaseWidget::updateSizeDistributionPlot()
   m_CutOffMin->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
   m_CutOffMin->setXValue(xCo[0]);
 
-  if (NULL == m_CutOffMax)
+  if (nullptr == m_CutOffMax)
   {
     m_CutOffMax = new QwtPlotMarker();
     m_CutOffMax->attach(m_SizeDistributionPlot);
@@ -719,7 +719,7 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
-  if (NULL != statsDataArray)
+  if (nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
     TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
@@ -792,7 +792,7 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
 
-  if (statsDataArray == NULL)
+  if (statsDataArray == nullptr)
   {
     return;
   }

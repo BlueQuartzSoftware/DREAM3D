@@ -391,13 +391,13 @@ class PackPrimaryPhases : public AbstractFilter
     QString m_EquivalentDiametersArrayName;
     int64_t* m_Neighbors;
 
-    // Cell Data - make sure these are all initialized to NULL in the constructor
+    // Cell Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_DATAARRAY_VARIABLE(bool, Mask)
     int8_t*  m_BoundaryCells;
 
-    // Feature Data - make sure these are all initialized to NULL in the constructor
+    // Feature Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
     DEFINE_DATAARRAY_VARIABLE(float, Centroids)
@@ -407,7 +407,7 @@ class PackPrimaryPhases : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(float, Omega3s)
     DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
 
-    // Ensemble Data - make sure these are all initialized to NULL in the constructor
+    // Ensemble Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     DEFINE_STRINGARRAY_VARIABLE(PhaseNames)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)

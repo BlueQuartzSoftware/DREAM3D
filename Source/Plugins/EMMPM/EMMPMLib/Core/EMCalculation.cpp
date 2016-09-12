@@ -63,7 +63,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // -----------------------------------------------------------------------------
 EMCalculation::EMCalculation() :
   Observable(),
-  m_StatsDelegate(NULL),
+  m_StatsDelegate(nullptr),
   m_ErrorCondition(0)
 {
 
@@ -90,7 +90,7 @@ void EMCalculation::execute()
   EMMPM_Data* data = m_Data.get();
   int k;
   int emiter = data->emIterations;
-  real_t* simAnnealKappas = NULL;
+  real_t* simAnnealKappas = nullptr;
   bool stop = false;
 
   float totalLoops = (float)(data->emIterations * data->mpmIterations + data->mpmIterations);
@@ -168,7 +168,7 @@ void EMCalculation::execute()
     /* Send back the Progress Stats and the segmented image. If we never get into this loop because
     * emiter == 0 then we will still send back the stats just after the end of the EM Loops */
     EMMPMUtilities::ConvertXtToOutputImage(getData());
-    if (m_StatsDelegate != NULL)
+    if (m_StatsDelegate != nullptr)
     {
       m_StatsDelegate->reportProgress(getData());
     }

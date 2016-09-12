@@ -83,7 +83,7 @@ void H5EbsdVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 void* H5EbsdVolumeReader::getPointerByName(const QString& featureName)
 {
-  return NULL;
+  return nullptr;
 }
 
 // -----------------------------------------------------------------------------

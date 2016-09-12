@@ -168,7 +168,7 @@ void VtkStructuredPointsReader::dataCheck()
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
   DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
-  if(getErrorCondition() < 0 && NULL == pointData_DataContainer) { return; }
+  if(getErrorCondition() < 0 && nullptr == pointData_DataContainer) { return; }
 
   ImageGeom::Pointer pointDataGeom = ImageGeom::CreateGeometry(getVertexDataContainerName());
   pointData_DataContainer->setGeometry(pointDataGeom);
@@ -180,7 +180,7 @@ void VtkStructuredPointsReader::dataCheck()
   // Create a Volume Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
   DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
-  if(getErrorCondition() < 0 && NULL == cellData_DataContainer) { return; }
+  if(getErrorCondition() < 0 && nullptr == cellData_DataContainer) { return; }
 
   ImageGeom::Pointer cellDataGeom = ImageGeom::CreateGeometry(getVolumeDataContainerName());
   cellData_DataContainer->setGeometry(cellDataGeom);
@@ -933,14 +933,14 @@ int32_t VtkStructuredPointsReader::readVectorData(std::istream& in, int32_t numP
   // See whether vector has been already read or vector name (if specified)
   // matches name in file.
   //
-  if ( a->GetVectors() != NULL || (this->VectorsName && strcmp(name, this->VectorsName)) )
+  if ( a->GetVectors() != nullptr || (this->VectorsName && strcmp(name, this->VectorsName)) )
   {
     skipVector = 1;
   }
 
   data = vtkDataArray::SafeDownCast(
            this->ReadArray(line, numPts, 3));
-  if ( data != NULL )
+  if ( data != nullptr )
   {
     data->SetName(name);
     if ( ! skipVector )

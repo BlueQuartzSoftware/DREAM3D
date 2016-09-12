@@ -57,8 +57,8 @@ EstablishShapeTypes::EstablishShapeTypes() :
   AbstractFilter(),
   m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes),
   m_ShapeTypesArrayName(SIMPL::EnsembleData::ShapeTypes),
-  m_PhaseTypes(NULL),
-  m_ShapeTypes(NULL)
+  m_PhaseTypes(nullptr),
+  m_ShapeTypes(nullptr)
 {
   setupFilterParameters();
 }
@@ -129,7 +129,7 @@ void EstablishShapeTypes::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
-  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Get the DataContainer first - same as phase types
@@ -138,11 +138,11 @@ void EstablishShapeTypes::dataCheck()
 
   // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array - same as phase types
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getInputPhaseTypesArrayPath().getAttributeMatrixName(), -990);
-  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == cellEnsembleAttrMat.get()) { return; }
   // Now create the output Shape Types Array
   tempPath.update(getInputPhaseTypesArrayPath().getDataContainerName(), getInputPhaseTypesArrayPath().getAttributeMatrixName(), getShapeTypesArrayName() );
   m_ShapeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath, true, cDims); /* Assigns the shared_ptr<>(this, tempPath, true, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -187,7 +187,7 @@ int EstablishShapeTypes::getPhaseCount()
 
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getInputPhaseTypesArrayPath());
 
-  if (NULL == inputAttrMat.get() ) { return 0; }
+  if (nullptr == inputAttrMat.get() ) { return 0; }
 
   if (__SHOW_DEBUG_MSG__)
   {

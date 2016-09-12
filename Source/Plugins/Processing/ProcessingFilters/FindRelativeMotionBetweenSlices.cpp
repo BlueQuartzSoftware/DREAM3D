@@ -140,8 +140,8 @@ FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices() :
   m_SSize2(0),
   m_SliceStep(0),
   m_MotionDirectionArrayName(SIMPL::CellData::MotionDirection),
-  m_InData(NULL),
-  m_MotionDirection(NULL)
+  m_InData(nullptr),
+  m_MotionDirection(nullptr)
 {
   setupFilterParameters();
 }
@@ -235,7 +235,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   QString ss;
 
   m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
-  if( NULL != m_InDataPtr.lock())
+  if( nullptr != m_InDataPtr.lock())
   {
     if (TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))
     {
@@ -248,7 +248,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   QVector<size_t> cDims(1, 3);
   tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getMotionDirectionArrayName() );
   m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSelectedArrayPath().getDataContainerName());
@@ -476,7 +476,7 @@ void FindRelativeMotionBetweenSlices::execute()
     }
   }
 
-  if (NULL == patchPoints || NULL == searchPoints || NULL == validPoints)
+  if (nullptr == patchPoints || nullptr == searchPoints || nullptr == validPoints)
   {
     QString ss = QObject::tr("Unable to establish search space for supplied parameters");
     setErrorCondition(-11001);

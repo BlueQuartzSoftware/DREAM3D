@@ -307,7 +307,7 @@ class ParallelMPMLoop
 // -----------------------------------------------------------------------------
 MPMCalculation::MPMCalculation() :
   Observable(),
-  m_StatsDelegate(NULL),
+  m_StatsDelegate(nullptr),
   m_ErrorCondition(0)
 {
 }
@@ -465,7 +465,7 @@ void MPMCalculation::execute()
     data->progress = currentLoopCount / totalLoops * 100.0;
 
     // notify("", data->progress, UpdateProgressValue);
-    if (m_StatsDelegate != NULL)
+    if (m_StatsDelegate != nullptr)
     {
       m_StatsDelegate->reportProgress(m_Data);
     }

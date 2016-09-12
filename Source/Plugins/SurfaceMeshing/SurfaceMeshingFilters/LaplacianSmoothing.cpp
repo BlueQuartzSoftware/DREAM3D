@@ -71,8 +71,8 @@ LaplacianSmoothing::LaplacianSmoothing() :
   m_SurfaceQuadPointLambda(0.0f),
   m_UseTaubinSmoothing(false),
   m_MuFactor(-1.03f),
-  m_SurfaceMeshNodeType(NULL),
-  m_SurfaceMeshFaceLabels(NULL)
+  m_SurfaceMeshNodeType(nullptr),
+  m_SurfaceMeshFaceLabels(nullptr)
 {
   setupFilterParameters();
 }
@@ -158,13 +158,13 @@ void LaplacianSmoothing::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { nodeDataArrays.push_back(m_SurfaceMeshNodeTypePtr.lock()); }
 
   cDims[0] = 2;
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { faceDataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
 
@@ -276,7 +276,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   float* lambda = lambdas->getPointer(0);
 
   //  Generate the Unique Edges
-  if (NULL == surfaceMesh->getEdges().get())
+  if (nullptr == surfaceMesh->getEdges().get())
   {
     err = surfaceMesh->findEdges();
   }
@@ -402,9 +402,9 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
   int nNodes = nodes.getNumberOfTuples();
   bool m_WriteBinaryFile = true;
 
-  FILE* vtkFile = NULL;
+  FILE* vtkFile = nullptr;
   vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
-  if (NULL == vtkFile)
+  if (nullptr == vtkFile)
   {
     setErrorCondition(-90123);
     QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);

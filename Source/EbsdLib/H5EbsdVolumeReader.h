@@ -124,7 +124,7 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
     */
     virtual void initPointers(size_t numElements);
 
-    /** @brief 'free's the allocated memory and sets the pointer to NULL
+    /** @brief 'free's the allocated memory and sets the pointer to nullptr
     */
     virtual void deletePointers();
 

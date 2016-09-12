@@ -251,7 +251,7 @@ void ImportASCIIData::dataCheck()
   }
 
   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixPath);
-  if (NULL == am.get())
+  if (nullptr == am.get())
   {
     QString ss = "The attribute matrix input is empty. Please select an attribute matrix.";
     setErrorCondition(EMPTY_ATTR_MATRIX);

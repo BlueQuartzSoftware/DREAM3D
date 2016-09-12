@@ -63,9 +63,9 @@ FindFeatureHistogram::FindFeatureHistogram() :
   m_FeaturePhasesArrayPath("", "", ""),
   m_BiasedFeaturesArrayPath("", "", ""),
   m_NewEnsembleArrayArrayPath("", "", ""),
-  m_BiasedFeatures(NULL),
-  m_NewEnsembleArray(NULL),
-  m_FeaturePhases(NULL)
+  m_BiasedFeatures(nullptr),
+  m_NewEnsembleArray(nullptr),
+  m_FeaturePhases(nullptr)
 {
   setupFilterParameters();
 }
@@ -148,7 +148,7 @@ void FindFeatureHistogram::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_SelectedFeatureArrayPath.isEmpty() == true)
@@ -161,14 +161,14 @@ void FindFeatureHistogram::dataCheck()
   getNewEnsembleArrayArrayPath().setDataArrayName(m_SelectedFeatureArrayPath.getDataArrayName() + QString("Histogram"));
   dims[0] = numComp;
   m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int>, AbstractFilter>(this, getNewEnsembleArrayArrayPath(), 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_RemoveBiasedFeatures == true)
   {
     dims[0] = 1;
     m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
@@ -193,7 +193,7 @@ template<typename T>
 void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_t* eIds, int NumberOfBins, bool removeBiasedFeatures, bool* biasedFeatures)
 {
   DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
-  if (NULL == featureArray)
+  if (nullptr == featureArray)
   {
     return;
   }
@@ -240,7 +240,7 @@ void FindFeatureHistogram::execute()
   QString ss;
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayPath.getDataArrayName());
-  if (NULL == inputData.get())
+  if (nullptr == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayPath.getDataArrayName());
     setErrorCondition(-11001);

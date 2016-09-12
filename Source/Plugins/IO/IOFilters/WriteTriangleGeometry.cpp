@@ -141,13 +141,13 @@ void WriteTriangleGeometry::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
-  if (NULL == triangles->getVertices().get())
+  if (nullptr == triangles->getVertices().get())
   {
     setErrorCondition(-386);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
   }
   // We MUST have Triangles defined also.
-  if (NULL == triangles->getTriangles().get())
+  if (nullptr == triangles->getTriangles().get())
   {
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
@@ -205,9 +205,9 @@ void WriteTriangleGeometry::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  FILE* nodesFile = NULL;
+  FILE* nodesFile = nullptr;
   nodesFile = fopen(getOutputNodesFile().toLatin1().data(), "wb");
-  if (NULL == nodesFile)
+  if (nullptr == nodesFile)
   {
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), "Error opening Nodes file for writing", -100);
@@ -237,7 +237,7 @@ void WriteTriangleGeometry::execute()
     return;
   }
   FILE* triFile = fopen(getOutputTrianglesFile().toLatin1().data(), "wb");
-  if (NULL == triFile)
+  if (nullptr == triFile)
   {
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), "Error opening Triangles file for writing", -100);

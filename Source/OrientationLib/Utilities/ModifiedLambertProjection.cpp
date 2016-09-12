@@ -83,9 +83,9 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
   QString ss;
   QString filename("/tmp/");
   filename.append("ModifiedLambert_Square_Coords_").append(coords->getName()).append(".vtk");
-  FILE* f = NULL;
+  FILE* f = nullptr;
   f = fopen(filename.toLatin1().data(), "wb");
-  if(NULL == f)
+  if(nullptr == f)
   {
     ss.str("");
     QString ss = QObject::tr("Could not open vtk viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(filename);

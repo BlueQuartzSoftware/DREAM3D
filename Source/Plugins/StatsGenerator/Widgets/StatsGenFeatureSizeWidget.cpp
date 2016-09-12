@@ -568,7 +568,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
 
   if (err < 0) { return err; }
 
-  if (NULL == m_SizeDistributionCurve)
+  if (nullptr == m_SizeDistributionCurve)
   {
     m_SizeDistributionCurve = new QwtPlotCurve("Size Distribution");
     m_SizeDistributionCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
@@ -594,7 +594,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   }
 
   // Place a vertical Line on the plot where the Min and Max Cutoff values are
-  if (NULL == m_CutOffMin)
+  if (nullptr == m_CutOffMin)
   {
     m_CutOffMin = new QwtPlotMarker();
     m_CutOffMin->attach(m_SizeDistributionPlot);
@@ -610,7 +610,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   m_CutOffMin->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
   m_CutOffMin->setXValue(xCo[0]);
 
-  if (NULL == m_CutOffMax)
+  if (nullptr == m_CutOffMax)
   {
     m_CutOffMax = new QwtPlotMarker();
     m_CutOffMax->attach(m_SizeDistributionPlot);

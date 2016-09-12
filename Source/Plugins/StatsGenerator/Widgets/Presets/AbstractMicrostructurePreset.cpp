@@ -66,7 +66,7 @@ void AbstractMicrostructurePreset::initializeAxisODFTableModel(SGAxisODFWidget* 
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGODFTableModel* model = (widget->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
@@ -85,7 +85,7 @@ void AbstractMicrostructurePreset::initializeODFTableModel(StatsGenODFWidget* wi
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGODFTableModel* model = (widget->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
@@ -104,7 +104,7 @@ void AbstractMicrostructurePreset::initializeMDFTableModel(StatsGenMDFWidget* wi
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGMDFTableModel* model = (widget->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }

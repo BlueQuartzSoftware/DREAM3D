@@ -61,15 +61,15 @@ QString ImportASCIIDataWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent),
-  m_ImportWizard(NULL),
-  m_WorkerThread(NULL),
-  m_LineCounter(NULL)
+  m_ImportWizard(nullptr),
+  m_WorkerThread(nullptr),
+  m_LineCounter(nullptr)
 {
   m_FilterParameter = dynamic_cast<ImportASCIIDataFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIDataFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != nullptr, "nullptr Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIDataFilterParameter object");
 
   m_Filter = dynamic_cast<ImportASCIIData*>(filter);
-  Q_ASSERT_X(m_Filter != NULL, "NULL Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIData filter");
+  Q_ASSERT_X(m_Filter != nullptr, "nullptr Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIData filter");
 
   setupUi(this);
 
@@ -150,10 +150,10 @@ void ImportASCIIDataWidget::setupGui()
 void ImportASCIIDataWidget::on_importFileBtn_pressed()
 {
   // Clean up previous wizard and settings
-  if (NULL != m_ImportWizard)
+  if (nullptr != m_ImportWizard)
   {
     delete m_ImportWizard;
-    m_ImportWizard = NULL;
+    m_ImportWizard = nullptr;
   }
 
   QStringList filterList;
@@ -208,7 +208,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
 
       // Allocate the buffer
       buffer = (char*)malloc(sizeof(char)*actualSize);
-      if (buffer == NULL)
+      if (buffer == nullptr)
       {
         QString errorStr = "Error: Unable to allocate memory to read in data from \"" + m_FilePath + "\"";
         fputs(errorStr.toStdString().c_str(), stderr);
@@ -270,21 +270,21 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       free(buffer);
     }
 
-    if (m_WorkerThread != NULL)
+    if (m_WorkerThread != nullptr)
     {
       m_WorkerThread->wait(); // Wait until the thread is complete
       if (m_WorkerThread->isFinished() == true)
       {
         delete m_WorkerThread;
-        m_WorkerThread = NULL;
+        m_WorkerThread = nullptr;
       }
     }
     m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-    if (NULL != m_LineCounter)
+    if (nullptr != m_LineCounter)
     {
       delete m_LineCounter;
-      m_LineCounter = NULL;
+      m_LineCounter = nullptr;
     }
     m_LineCounter = new LineCounterObject(m_FilePath);
 
@@ -367,10 +367,10 @@ void ImportASCIIDataWidget::lineCountDidFinish()
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::on_editHeadersBtn_pressed()
 {
-  if (NULL != m_ImportWizard)
+  if (nullptr != m_ImportWizard)
   {
     DataFormatPage* dataFrmtPg = dynamic_cast<DataFormatPage*>(m_ImportWizard->page(ImportASCIIDataWizard::DataFormat));
-    if (NULL != dataFrmtPg)
+    if (nullptr != dataFrmtPg)
     {
       dataFrmtPg->launchEditHeadersDialog();
       emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
@@ -384,7 +384,7 @@ void ImportASCIIDataWidget::on_editHeadersBtn_pressed()
 void ImportASCIIDataWidget::on_removeFileBtn_pressed()
 {
   delete m_ImportWizard;
-  m_ImportWizard = NULL;
+  m_ImportWizard = nullptr;
 
   fileImportedLabel->hide();
   warningLabel->hide();
@@ -406,7 +406,7 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
   ASCIIWizardData data;
   int numOfLines = -1;
 
-  if (NULL != m_ImportWizard)
+  if (nullptr != m_ImportWizard)
   {
     numOfLines = m_LineCounter->getNumberOfLines();
 

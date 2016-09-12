@@ -57,7 +57,7 @@ ReadEdaxH5DataWidget::ReadEdaxH5DataWidget(FilterParameter* parameter, AbstractF
   m_FilterParameter = dynamic_cast<ReadEdaxH5DataFilterParameter*>(parameter);
 
   m_Filter = qobject_cast<ReadEdaxH5Data*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "ReadEdaxH5DataWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
+  Q_ASSERT_X(nullptr != m_Filter, "ReadEdaxH5DataWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   setupUi(this);
   setupGui();
@@ -135,14 +135,14 @@ void ReadEdaxH5DataWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == filter)
+  if (nullptr == filter)
   {
-    QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
+    QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was nullptr.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 
   ReadEdaxH5Data* readEdax = qobject_cast<ReadEdaxH5Data*>(filter);
-  Q_ASSERT_X(NULL != readEdax, "ReadEdaxH5DataWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
+  Q_ASSERT_X(nullptr != readEdax, "ReadEdaxH5DataWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   QStringList scanNames;
   for (int i = 0; i < selectedScanNames->count(); i++)
@@ -211,7 +211,7 @@ void ReadEdaxH5DataWidget::updateList()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::on_addScanName_pressed()
 {
-  if (NULL != totalScanNames->currentItem())
+  if (nullptr != totalScanNames->currentItem())
   {
     QModelIndexList indexList = totalScanNames->selectionModel()->selectedRows();
 
@@ -232,7 +232,7 @@ void ReadEdaxH5DataWidget::on_addScanName_pressed()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::on_removeScanName_pressed()
 {
-  if (NULL != selectedScanNames->currentItem())
+  if (nullptr != selectedScanNames->currentItem())
   {
     QModelIndexList indexList = selectedScanNames->selectionModel()->selectedRows();
     QList<QPersistentModelIndex> persistentIndexList;

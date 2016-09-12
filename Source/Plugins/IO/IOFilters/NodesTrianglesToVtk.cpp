@@ -191,7 +191,7 @@ void NodesTrianglesToVtk::execute()
 
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
-  if (nodesFile == NULL)
+  if (nodesFile == nullptr)
   {
 
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
@@ -210,7 +210,7 @@ void NodesTrianglesToVtk::execute()
 
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
-  if (triFile == NULL)
+  if (triFile == nullptr)
   {
 
     QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
@@ -227,9 +227,9 @@ void NodesTrianglesToVtk::execute()
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   // Open the output VTK File for writing
-  FILE* vtkFile = NULL;
+  FILE* vtkFile = nullptr;
   vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
-  if (NULL == vtkFile)
+  if (nullptr == vtkFile)
   {
 
     QString ss = QObject::tr(": Error creating Triangles VTK Visualization '%1'").arg(getOutputVtkFile());

@@ -69,10 +69,10 @@ SineParamsSegmentFeatures::SineParamsSegmentFeatures() :
   m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::GoodVoxels),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   m_ActiveArrayName(SIMPL::FeatureData::Active),
-  m_SineParams(NULL),
-  m_FeatureIds(NULL),
-  m_GoodVoxels(NULL),
-  m_Active(NULL),
+  m_SineParams(nullptr),
+  m_FeatureIds(nullptr),
+  m_GoodVoxels(nullptr),
+  m_Active(nullptr),
   m_MissingGoodVoxels(false)
 {
   setupFilterParameters();
@@ -134,7 +134,7 @@ void SineParamsSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -162,33 +162,33 @@ void SineParamsSegmentFeatures::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  if(getErrorCondition() < 0 || nullptr == m) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == cellFeatureAttrMat.get()) { return; }
 
   ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
 
   QVector<size_t> dims(1, 3);
   m_SineParamsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getSineParamsArrayPath(), dims);
-  if( NULL != m_SineParamsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SineParamsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SineParams = m_SineParamsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
   tempPath.update(getDataContainerName(), m_SineParamsArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(m_UseGoodVoxels == true)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
   m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

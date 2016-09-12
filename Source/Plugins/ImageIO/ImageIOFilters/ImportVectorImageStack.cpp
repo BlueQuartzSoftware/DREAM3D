@@ -76,7 +76,7 @@ ImportVectorImageStack::ImportVectorImageStack() :
   m_PaddingDigits(0),
   m_RefFrameZDir(SIMPL::RefFrameZDir::LowtoHigh),
   m_VectorDataArrayName(SIMPL::CellData::VectorData),
-  m_VectorData(NULL)
+  m_VectorData(nullptr)
 {
 
   m_Origin.x = 0.0;
@@ -164,7 +164,7 @@ void ImportVectorImageStack::dataCheck()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if (getErrorCondition() < 0 || NULL == m.get()) { return; }
+  if (getErrorCondition() < 0 || nullptr == m.get()) { return; }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
@@ -266,7 +266,7 @@ void ImportVectorImageStack::dataCheck()
     // This would be for a gray scale image
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName() );
     m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 // This is code for adding to an existing data container --- kept only for reference in case we want to implement this later
@@ -299,7 +299,7 @@ void ImportVectorImageStack::dataCheck()
 //  // This would be for a gray scale image
 //  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName() );
 //  m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-//  if( NULL != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+//  if( nullptr != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
 //  { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

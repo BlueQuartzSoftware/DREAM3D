@@ -97,7 +97,7 @@ class DxIOTest
     QString filtName = "DxWriter";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    if(NULL == filterFactory.get())
+    if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
       ss << "The DxIOTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
@@ -106,7 +106,7 @@ class DxIOTest
 
     filtName = "DxReader";
     filterFactory = fm->getFactoryForFilter(filtName);
-    if(NULL == filterFactory.get())
+    if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
       ss << "The DxIOTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
@@ -141,7 +141,7 @@ class DxIOTest
       QString filtName = "DxWriter";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if(NULL != filterFactory.get())
+      if(nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -191,7 +191,7 @@ class DxIOTest
       QString filtName = "DxWriter";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if(NULL != filterFactory.get())
+      if(nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -235,7 +235,7 @@ class DxIOTest
     QString filtName = "DxReader";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    if(NULL != filterFactory.get())
+    if(nullptr != filterFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
       dxReader = filterFactory->create();
@@ -260,7 +260,7 @@ class DxIOTest
 
 
     DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-    DREAM3D_REQUIRED_PTR(m.get(), !=, NULL)
+    DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
 
     m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
     DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
@@ -312,7 +312,7 @@ class DxIOTest
     {
       DataContainerArray::Pointer dca = DataContainerArray::New();
 
-      if(NULL != filterFactory.get())
+      if(nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
         dxReader = filterFactory->create(); // Create the reader for the first time
@@ -335,7 +335,7 @@ class DxIOTest
 
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-      DREAM3D_REQUIRED_PTR(m.get(), !=, NULL)
+      DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
 
       m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
       DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
@@ -351,7 +351,7 @@ class DxIOTest
     {
       DataContainerArray::Pointer dca = DataContainerArray::New();
 
-      if(NULL != filterFactory.get())
+      if(nullptr != filterFactory.get())
       {
         bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -372,7 +372,7 @@ class DxIOTest
 
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-      DREAM3D_REQUIRED_PTR(m.get(), !=, NULL)
+      DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
 
       m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
       DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
@@ -388,7 +388,7 @@ class DxIOTest
     {
       DataContainerArray::Pointer dca = DataContainerArray::New();
 
-      if(NULL != filterFactory.get())
+      if(nullptr != filterFactory.get())
       {
         bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile2);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -409,7 +409,7 @@ class DxIOTest
 
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-      DREAM3D_REQUIRED_PTR(m.get(), !=, NULL)
+      DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
 
       m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
       DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize + 2); // Add 2 because we added a suface layer during the writing of the file
@@ -436,7 +436,7 @@ class DxIOTest
 
       DataContainerArray::Pointer dca = DataContainerArray::New();
 
-      if(NULL != filterFactory.get())
+      if(nullptr != filterFactory.get())
       {
         bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile2);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -457,7 +457,7 @@ class DxIOTest
 
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-      DREAM3D_REQUIRED_PTR(m.get(), !=, NULL)
+      DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
 
       m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
       DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize + 2); // Add 2 because we added a suface layer during the writing of the file
@@ -477,7 +477,7 @@ class DxIOTest
       if(QMetaObject::invokeMethod(dxReader.get(), "flushCache", Qt::DirectConnection) == false)
         DREAM3D_REQUIRE_EQUAL(0, 1)
 
-      if(NULL != filterFactory.get())
+      if(nullptr != filterFactory.get())
       {
         bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile2);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -498,7 +498,7 @@ class DxIOTest
 
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-      DREAM3D_REQUIRED_PTR(m.get(), !=, NULL)
+      DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
 
       m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
       DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize + 2); // Add 2 because we added a suface layer during the writing of the file

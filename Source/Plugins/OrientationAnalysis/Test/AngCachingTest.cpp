@@ -101,7 +101,7 @@ int TestFilterAvailability()
   QString filtName = "ReadAngData";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL == filterFactory.get())
+  if (nullptr == filterFactory.get())
   {
     std::stringstream ss;
     ss << "The AngCachingTest Requires the use of the " << filtName.toStdString() << " filter which is found in the OrientationAnalysis Plugin";
@@ -125,7 +125,7 @@ int TestAngReader()
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
-    if (NULL != filterFactory.get())
+    if (nullptr != filterFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
       angReader = filterFactory->create();    // Create the reader for the first time
@@ -162,7 +162,7 @@ int TestAngReader()
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
-    if (NULL != filterFactory.get())
+    if (nullptr != filterFactory.get())
     {
       bool propWasSet = angReader->setProperty("InputFile", CopiedFile1);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -197,7 +197,7 @@ int TestAngReader()
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
-    if (NULL != filterFactory.get())
+    if (nullptr != filterFactory.get())
     {
       bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -258,7 +258,7 @@ int TestAngReader()
 
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
-    if (NULL != filterFactory.get())
+    if (nullptr != filterFactory.get())
     {
       bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -297,7 +297,7 @@ int TestAngReader()
     if (QMetaObject::invokeMethod(angReader.get(), "flushCache", Qt::DirectConnection) == false)
       DREAM3D_REQUIRE_EQUAL(0, 1)
 
-      if (NULL != filterFactory.get())
+      if (nullptr != filterFactory.get())
       {
         bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)

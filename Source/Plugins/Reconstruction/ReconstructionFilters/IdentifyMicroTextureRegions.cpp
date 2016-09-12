@@ -229,16 +229,16 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
   m_MTRIdsArrayName(SIMPL::CellData::ParentIds),
   m_ActiveArrayName(SIMPL::FeatureData::Active),
-  m_CAxisLocations(NULL),
-  m_CellPhases(NULL),
-  m_CrystalStructures(NULL),
-  m_MTRIds(NULL),
-  m_Active(NULL),
-  m_InMTR(NULL),
-  m_VolFrac(NULL),
-  m_AvgCAxis(NULL),
-  m_PatchIds(NULL),
-  m_PatchActive(NULL)
+  m_CAxisLocations(nullptr),
+  m_CellPhases(nullptr),
+  m_CrystalStructures(nullptr),
+  m_MTRIds(nullptr),
+  m_Active(nullptr),
+  m_InMTR(nullptr),
+  m_VolFrac(nullptr),
+  m_AvgCAxis(nullptr),
+  m_PatchIds(nullptr),
+  m_PatchActive(nullptr)
 {
   m_CAxisToleranceRad = 0.0f;
 
@@ -308,7 +308,7 @@ void IdentifyMicroTextureRegions::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -334,7 +334,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCAxisLocationsArrayPath().getDataContainerName());
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCAxisLocationsArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
@@ -345,30 +345,30 @@ void IdentifyMicroTextureRegions::dataCheck()
 
   // Cell Data
   m_CAxisLocationsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCAxisLocationsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CAxisLocationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CAxisLocationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CAxisLocations = m_CAxisLocationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCAxisLocationsArrayPath()); }
 
   cDims[0] = 1;
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
 
   tempPath.update(m_CAxisLocationsArrayPath.getDataContainerName(), getCAxisLocationsArrayPath().getAttributeMatrixName(), getMTRIdsArrayName() );
   m_MTRIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_MTRIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_MTRIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_MTRIds = m_MTRIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // New Feature Data
   tempPath.update(m_CAxisLocationsArrayPath.getDataContainerName(), getNewCellFeatureAttributeMatrixName(), getActiveArrayName() );
   m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
@@ -527,18 +527,18 @@ void IdentifyMicroTextureRegions::execute()
   QVector<size_t> cDims(1, 1);
   tempPath.update("_INTERNAL_USE_ONLY_PatchDataContainer(Temp)", "_INTERNAL_USE_ONLY_PatchAM(Temp)", "_INTERNAL_USE_ONLY_InMTR");
   m_InMTRPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_InMTRPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_InMTRPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_InMTR = m_InMTRPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update("_INTERNAL_USE_ONLY_PatchDataContainer(Temp)", "_INTERNAL_USE_ONLY_PatchAM(Temp)", "_INTERNAL_USE_ONLY_VolFrac");
   m_VolFracPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_VolFracPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_VolFracPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_VolFrac = m_VolFracPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
   tempPath.update("_INTERNAL_USE_ONLY_PatchDataContainer(Temp)", "_INTERNAL_USE_ONLY_PatchAM(Temp)", "_INTERNAL_USE_ONLY_AvgCAxis");
   m_AvgCAxisPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgCAxisPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AvgCAxisPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AvgCAxis = m_AvgCAxisPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Convert user defined tolerance to radians.
@@ -582,11 +582,11 @@ void IdentifyMicroTextureRegions::execute()
   cDims[0] = 1;
   tempPath.update("_INTERNAL_USE_ONLY_PatchDataContainer(Temp)", "_INTERNAL_USE_ONLY_PatchAM(Temp)", "_INTERNAL_USE_ONLY_PatchFeatureIds");
   m_PatchIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_PatchIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_PatchIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_PatchIds = m_PatchIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update("_INTERNAL_USE_ONLY_PatchDataContainer(Temp)", "_INTERNAL_USE_ONLY_PatchFeatureData", "_INTERNAL_USE_ONLY_Active");
   m_PatchActivePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, tempPath, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_PatchActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_PatchActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_PatchActive = m_PatchActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Remove the small patches-----planning to remove/redsesign this

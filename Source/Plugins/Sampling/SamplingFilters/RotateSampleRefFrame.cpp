@@ -501,8 +501,8 @@ void RotateSampleRefFrame::execute()
     // the data container this will over write the current array with
     // the same name.
     IDataArray::Pointer data = p->createNewArray(newNumCellTuples, p->getComponentDimensions(), p->getName());
-    void* source = NULL;
-    void* destination = NULL;
+    void* source = nullptr;
+    void* destination = nullptr;
     int64_t newIndicies_I = 0;
     int32_t nComp = data->getNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(newNumCellTuples); i++)
@@ -511,7 +511,7 @@ void RotateSampleRefFrame::execute()
       if(newIndicies_I >= 0)
       {
         source = p->getVoidPointer((nComp * newIndicies_I));
-        if (NULL == source)
+        if (nullptr == source)
         {
           QString ss = QObject::tr("The index is outside the bounds of the source array");
           setErrorCondition(-11004);

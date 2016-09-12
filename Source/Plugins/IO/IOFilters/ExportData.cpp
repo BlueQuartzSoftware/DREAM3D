@@ -68,7 +68,7 @@ class ExportDataPrivate
     // -----------------------------------------------------------------------------
     bool operator()(IDataArray::Pointer p)
     {
-      return (std::dynamic_pointer_cast<DataArrayType>(p).get() != NULL);
+      return (std::dynamic_pointer_cast<DataArrayType>(p).get() != nullptr);
     }
 
     // -----------------------------------------------------------------------------

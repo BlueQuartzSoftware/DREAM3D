@@ -63,8 +63,8 @@ ErodeDilateMask::ErodeDilateMask() :
   m_YDirOn(true),
   m_ZDirOn(true),
   m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_MaskCopy(NULL),
-  m_Mask(NULL)
+  m_MaskCopy(nullptr),
+  m_Mask(nullptr)
 {
   setupFilterParameters();
 }
@@ -151,7 +151,7 @@ void ErodeDilateMask::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

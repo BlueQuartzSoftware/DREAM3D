@@ -221,7 +221,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[1] = m_Dimensions.y;
   tDims[2] = m_Dimensions.z;
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0 && cellAttrMat.get() == NULL) { return; }
+  if(getErrorCondition() < 0 && cellAttrMat.get() == nullptr) { return; }
 
 #if 0
   // Get the number of tuples from the Ensemble Attribute Matrix from the Synthetic Stats Side of things
@@ -231,25 +231,25 @@ void InitializeSyntheticVolume::dataCheck()
 
   // Create our own Ensemble Attribute Matrix
   AttributeMatrix::Pointer ensembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
-  if(getErrorCondition() < 0 && cellAttrMat.get() == NULL) { return; }
+  if(getErrorCondition() < 0 && cellAttrMat.get() == nullptr) { return; }
 
   QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
   UInt32ArrayType::Pointer phaseType = getDataContainerArray()->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
-  if(getErrorCondition() < 0 && phaseType.get() == NULL) { return; }
+  if(getErrorCondition() < 0 && phaseType.get() == nullptr) { return; }
   IDataArray::Pointer phaseTypesCopy = phaseType->deepCopy(getInPreflight());
   ensembleAttrMat->addAttributeArray(phaseTypesCopy->getName(), phaseTypesCopy);
 
 
   ensembleAM = getDataContainerArray()->getAttributeMatrix(getInputPhaseNamesArrayPath());
   StringDataArray::Pointer phaseNames = getDataContainerArray()->getPrereqArrayFromPath<StringDataArray, AbstractFilter>(this, getInputPhaseNamesArrayPath(), cDims);
-  if(getErrorCondition() < 0 && phaseNames.get() == NULL) { return; }
+  if(getErrorCondition() < 0 && phaseNames.get() == nullptr) { return; }
   IDataArray::Pointer phaseNamesCopy = phaseNames->deepCopy(getInPreflight());
   ensembleAttrMat->addAttributeArray(phaseNamesCopy->getName(), phaseNamesCopy);
 
 
   QVector<size_t> statsDims(1, 1);
   StatsDataArray::Pointer statsPtr = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
-  if(getErrorCondition() < 0 && statsPtr.get() == NULL) { return; }
+  if(getErrorCondition() < 0 && statsPtr.get() == nullptr) { return; }
 
 #endif
   if(m_EstimateNumberOfFeatures)
@@ -312,8 +312,8 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
 
   // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
   QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
-  UInt32ArrayType::Pointer phaseType = dca->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(NULL, getInputPhaseTypesArrayPath(), cDims);
-  if (phaseType.get() == NULL)
+  UInt32ArrayType::Pointer phaseType = dca->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(nullptr, getInputPhaseTypesArrayPath(), cDims);
+  if (phaseType.get() == nullptr)
   {
     QString ss = QObject::tr("Phase types array could not be downcast using std::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputPhaseTypesArrayPath().serialize());
     setErrorCondition(-11002);
@@ -324,7 +324,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
 
   QVector<size_t> statsDims(1, 1);
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
-  if (statsPtr.get() == NULL)
+  if (statsPtr.get() == nullptr)
   {
     QString ss = QObject::tr("Statistics array could not be downcast using std::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputStatsArrayPath().serialize());
     notifyErrorMessage(getHumanLabel(), ss, -11001);
@@ -422,10 +422,10 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
       volgood = false;
       phase = primaryphases[j];
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
-      if (NULL == pp)
+      if (nullptr == pp)
       {
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
-                                 "pointer but this resulted in a NULL pointer.\n")
+                                 "pointer but this resulted in a nullptr pointer.\n")
                      .arg(phase).arg(phase);
         setErrorCondition(-666);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());

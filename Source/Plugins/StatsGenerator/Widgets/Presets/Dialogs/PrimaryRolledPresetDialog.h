@@ -52,7 +52,7 @@ class PrimaryRolledPresetDialog : public QDialog
 {
     Q_OBJECT
   public:
-    PrimaryRolledPresetDialog(QWidget* parent = NULL);
+    PrimaryRolledPresetDialog(QWidget* parent = nullptr);
     virtual ~PrimaryRolledPresetDialog();
 
     float getA();

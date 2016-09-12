@@ -73,7 +73,7 @@ CropImageGeometry::CropImageGeometry() :
   m_SaveAsNewDataContainer(false),
   m_UpdateOrigin(true),
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -179,7 +179,7 @@ void CropImageGeometry::dataCheck()
     image->getDimensions(dx, dy, dz);
 
     destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
-    if(NULL == destCellDataContainer.get() || getErrorCondition() < 0)
+    if(nullptr == destCellDataContainer.get() || getErrorCondition() < 0)
     {
       return;
     }
@@ -194,7 +194,7 @@ void CropImageGeometry::dataCheck()
     destCellAttrMat = srcCellAttrMat;
   }
 
-  if(NULL == destCellDataContainer.get() || NULL == destCellAttrMat.get() || getErrorCondition() < 0)
+  if(nullptr == destCellDataContainer.get() || nullptr == destCellAttrMat.get() || getErrorCondition() < 0)
   {
     return;
   }
@@ -294,13 +294,13 @@ void CropImageGeometry::dataCheck()
   {
     QVector<size_t> cDims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    if(NULL == cellFeatureAttrMat.get()) { return; }
+    if(nullptr == cellFeatureAttrMat.get()) { return; }
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
@@ -356,7 +356,7 @@ void CropImageGeometry::execute()
     cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   }
 
-  if(NULL == destCellDataContainer.get() || NULL == cellAttrMat.get() || getErrorCondition() < 0)
+  if(nullptr == destCellDataContainer.get() || nullptr == cellAttrMat.get() || getErrorCondition() < 0)
   {
     return;
   }
@@ -473,7 +473,7 @@ void CropImageGeometry::execute()
       dap.setDataContainerName(getNewDataContainerName());
     }
     m_FeatureIdsPtr = cellAttrMat->getAttributeArrayAs<Int32ArrayType>(dap.getDataArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     else
     {
@@ -530,10 +530,10 @@ IntVec3_t CropImageGeometry::getCurrentVolumeDataContainerDimensions()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   IntVec3_t data;
-  if (NULL != m.get() )
+  if (nullptr != m.get() )
   {
     ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-    if (image.get() != NULL)
+    if (image.get() != nullptr)
     {
       data.x = image->getXPoints();
       data.y = image->getYPoints();
@@ -562,10 +562,10 @@ FloatVec3_t CropImageGeometry::getCurrentVolumeDataContainerResolutions()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   FloatVec3_t data;
-  if (NULL != m)
+  if (nullptr != m)
   {
     ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-    if (image.get() != NULL)
+    if (image.get() != nullptr)
     {
       data.x = image->getXRes();
       data.y = image->getYRes();

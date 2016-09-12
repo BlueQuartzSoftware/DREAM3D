@@ -63,7 +63,7 @@ class ReadEdaxH5DataWidget : public FilterParameterWidget, private Ui::ReadEdaxH
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    ReadEdaxH5DataWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    ReadEdaxH5DataWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
     virtual ~ReadEdaxH5DataWidget();
 

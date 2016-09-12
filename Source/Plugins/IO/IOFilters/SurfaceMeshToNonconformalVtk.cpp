@@ -64,8 +64,8 @@ SurfaceMeshToNonconformalVtk::SurfaceMeshToNonconformalVtk() :
   m_WriteBinaryFile(false),
   m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshNodeType(NULL)
+  m_SurfaceMeshFaceLabels(nullptr),
+  m_SurfaceMeshNodeType(nullptr)
 {
   setupFilterParameters();
 }
@@ -141,24 +141,24 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
-  if (NULL == triangles->getVertices().get())
+  if (nullptr == triangles->getVertices().get())
   {
     setErrorCondition(-386);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
   }
   // We MUST have Triangles defined also.
-  if (NULL == triangles->getTriangles().get())
+  if (nullptr == triangles->getTriangles().get())
   {
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
   QVector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
   m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -225,9 +225,9 @@ void SurfaceMeshToNonconformalVtk::execute()
   }
 
   // Open the output VTK File for writing
-  FILE* vtkFile = NULL;
+  FILE* vtkFile = nullptr;
   vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
-  if (NULL == vtkFile)
+  if (nullptr == vtkFile)
   {
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
     setErrorCondition(-18542);
@@ -408,7 +408,7 @@ void writePointScalarData(DataContainer::Pointer dc, const QString& vertexAttrib
 {
   IDataArray::Pointer data = dc->getAttributeMatrix(vertexAttributeMatrixName)->getAttributeArray(dataName);
   QString ss;
-  if (NULL != data.get())
+  if (nullptr != data.get())
   {
     T* m = reinterpret_cast<T*>(data->getVoidPointer(0));
     fprintf(vtkFile, "\n");
@@ -447,7 +447,7 @@ void writePointVectorData(DataContainer::Pointer dc, const QString& vertexAttrib
   IDataArray::Pointer data = dc->getAttributeMatrix(vertexAttributeMatrixName)->getAttributeArray(dataName);
   QString buf;
   QTextStream ss(&buf);
-  if (NULL != data.get())
+  if (nullptr != data.get())
   {
     T* m = reinterpret_cast<T*>(data->getVoidPointer(0));
     fprintf(vtkFile, "\n");
@@ -490,7 +490,7 @@ void writePointVectorData(DataContainer::Pointer dc, const QString& vertexAttrib
 int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 {
   int err = 0;
-  if (NULL == vtkFile)
+  if (nullptr == vtkFile)
   {
     return -1;
   }
@@ -574,7 +574,7 @@ void writeCellScalarData(DataContainer::Pointer dc, const QString& faceAttribute
   IDataArray::Pointer data = dc->getAttributeMatrix(faceAttributeMatrixName)->getAttributeArray(dataName);
 
   QString ss;
-  if (NULL != data.get())
+  if (nullptr != data.get())
   {
     int32_t totalCellsWritten = 0;
 
@@ -639,7 +639,7 @@ void writeCellNormalData(DataContainer::Pointer dc, const QString& faceAttribute
   IDataArray::Pointer data = dc->getAttributeMatrix(faceAttributeMatrixName)->getAttributeArray(dataName);
   QString buf;
   QTextStream ss(&buf);
-  if (NULL != data.get())
+  if (nullptr != data.get())
   {
     int32_t totalCellsWritten = 0;
 
@@ -719,7 +719,7 @@ void writeCellVectorData(DataContainer::Pointer dc, const QString& faceAttribute
 
   IDataArray::Pointer data = dc->getAttributeMatrix(faceAttributeMatrixName)->getAttributeArray(dataName);
   QString ss;
-  if (NULL != data.get())
+  if (nullptr != data.get())
   {
     T* m = reinterpret_cast<T*>(data->getVoidPointer(0));
     fprintf(vtkFile, "\n");
@@ -760,7 +760,7 @@ void writeCellVectorData(DataContainer::Pointer dc, const QString& faceAttribute
 int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int32_t>& featureIds)
 {
   int err = 0;
-  if (NULL == vtkFile)
+  if (nullptr == vtkFile)
   {
     return -1;
   }

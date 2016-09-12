@@ -66,7 +66,7 @@ AbaqusHexahedronWriter::AbaqusHexahedronWriter() :
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
   m_HourglassStiffness(250),
   m_JobName(""),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -142,7 +142,7 @@ void AbaqusHexahedronWriter::dataCheck()
 
   QVector<size_t> cDims(1, 1); // The component dimensions of the needed array.
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -308,9 +308,9 @@ int32_t AbaqusHexahedronWriter::writeNodes(const QList<QString>& fileNames, size
   }
 
   int32_t err = 0;
-  FILE* f = NULL;
+  FILE* f = nullptr;
   f = fopen(fileNames.at(0).toLatin1().data(), "wb");
-  if (NULL == f)
+  if (nullptr == f)
   {
     return -1;
   }
@@ -382,9 +382,9 @@ int32_t AbaqusHexahedronWriter::writeElems(const QList<QString>& fileNames, size
   }
 
   int32_t err = 0;
-  FILE* f = NULL;
+  FILE* f = nullptr;
   f = fopen(fileNames.at(1).toLatin1().data(), "wb");
-  if (NULL == f)
+  if (nullptr == f)
   {
     return -1;
   }
@@ -449,9 +449,9 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
   QTextStream ss(&buf);
 
   int32_t err = 0;
-  FILE* f = NULL;
+  FILE* f = nullptr;
   f = fopen(fileNames.at(3).toLatin1().data(), "wb");
-  if (NULL == f)
+  if (nullptr == f)
   {
     return -1;
   }
@@ -539,9 +539,9 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
 int32_t AbaqusHexahedronWriter::writeMaster(const QString& file)
 {
   int32_t err = 0;
-  FILE* f = NULL;
+  FILE* f = nullptr;
   f = fopen(file.toLatin1().data(), "wb");
-  if (NULL == f)
+  if (nullptr == f)
   {
     return -1;
   }
@@ -570,9 +570,9 @@ int32_t AbaqusHexahedronWriter::writeMaster(const QString& file)
 int32_t AbaqusHexahedronWriter::writeSects(const QString& file, size_t totalPoints)
 {
   int32_t err = 0;
-  FILE* f = NULL;
+  FILE* f = nullptr;
   f = fopen(file.toLatin1().data(), "wb");
-  if (NULL == f)
+  if (nullptr == f)
   {
     return -1;
   }

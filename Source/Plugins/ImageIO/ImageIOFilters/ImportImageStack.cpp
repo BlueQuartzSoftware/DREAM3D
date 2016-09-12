@@ -169,7 +169,7 @@ void ImportImageStack::dataCheck()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
 
   if (m_GeometryType == 0)
   {
@@ -304,7 +304,7 @@ void ImportImageStack::dataCheck()
     // This would be for a gray scale image
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName() );
     m_ImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
@@ -346,7 +346,7 @@ void ImportImageStack::execute()
   }
   UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
 
-  uint8_t* imagePtr = NULL;
+  uint8_t* imagePtr = nullptr;
 
   int64_t z = m_InputFileListInfo.StartIndex;
   int64_t zSpot = 0;

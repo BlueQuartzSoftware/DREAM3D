@@ -123,7 +123,7 @@ RotateEulerRefFrame::RotateEulerRefFrame() :
   AbstractFilter(),
   m_RotationAngle(0.0f),
   m_CellEulerAnglesArrayPath("", "", ""),
-  m_CellEulerAngles(NULL)
+  m_CellEulerAngles(nullptr)
 {
   m_RotationAxis.x = 0.0f;
   m_RotationAxis.y = 0.0f;
@@ -183,7 +183,7 @@ void RotateEulerRefFrame::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

@@ -49,7 +49,7 @@ class DataParser
     virtual ~DataParser() {}
 
     virtual bool allocateArray(size_t numberOfElements) { (void)(numberOfElements); return false;}
-    virtual void* getVoidPointer() { return NULL; }
+    virtual void* getVoidPointer() { return nullptr; }
     virtual void  setVoidPointer(void* p) {}
 
     EBSD_INSTANCE_PROPERTY(bool, ManageMemory)
@@ -83,14 +83,14 @@ class Int32Parser : public DataParser
 
     virtual ~Int32Parser()
     {
-      if (m_Ptr != NULL && getManageMemory() == true)
+      if (m_Ptr != nullptr && getManageMemory() == true)
       {
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
         _mm_free(m_Ptr );
 #else
         free(m_Ptr);
 #endif
-        m_Ptr = NULL;
+        m_Ptr = nullptr;
       }
     }
 
@@ -103,7 +103,7 @@ class Int32Parser : public DataParser
 #else
       m_Ptr = static_cast<int32_t*>(malloc(sizeof(int32_t) * numberOfElements));
 #endif
-      return (m_Ptr != NULL);
+      return (m_Ptr != nullptr);
     }
 
     virtual void* getVoidPointer() { return reinterpret_cast<void*>(m_Ptr); }
@@ -151,14 +151,14 @@ class FloatParser : public DataParser
 
     virtual ~FloatParser()
     {
-      if (m_Ptr != NULL && getManageMemory() == true)
+      if (m_Ptr != nullptr && getManageMemory() == true)
       {
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
         _mm_free(m_Ptr );
 #else
         free(m_Ptr);
 #endif
-        m_Ptr = NULL;
+        m_Ptr = nullptr;
       }
     }
 
@@ -171,7 +171,7 @@ class FloatParser : public DataParser
 #else
       m_Ptr = static_cast<float*>(malloc(sizeof(float) * numberOfElements));
 #endif
-      return (m_Ptr != NULL);
+      return (m_Ptr != nullptr);
     }
 
     virtual void* getVoidPointer() { return reinterpret_cast<void*>(m_Ptr); }

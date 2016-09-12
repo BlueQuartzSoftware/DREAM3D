@@ -68,8 +68,8 @@ CalculateArrayHistogram::CalculateArrayHistogram() :
   m_NewDataArrayName(SIMPL::CellData::Histogram),
   m_NewDataContainer(false),
   m_NewDataContainerName(SIMPL::Defaults::NewDataContainerName),
-  m_InDataArray(NULL),
-  m_NewDataArray(NULL)
+  m_InDataArray(nullptr),
+  m_NewDataArray(nullptr)
 {
   setupFilterParameters();
 }
@@ -182,7 +182,7 @@ void CalculateArrayHistogram::dataCheck()
 
   m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
   if (getErrorCondition() < 0) { return; }
-  if (NULL != m_InDataArrayPtr.lock().get())
+  if (nullptr != m_InDataArrayPtr.lock().get())
   {
     int32_t cDims = m_InDataArrayPtr.lock()->getNumberOfComponents();
     if(cDims != 1)
@@ -199,20 +199,20 @@ void CalculateArrayHistogram::dataCheck()
     DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
     if (getErrorCondition() < 0) { return; }
     AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
-    if (getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
+    if (getErrorCondition() < 0 || nullptr == attrMat.get()) { return; }
     tempPath.update(getNewDataContainerName(), getNewAttributeMatrixName(), newArrayName);
   }
   else // use existing data container
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
     AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
-    if (getErrorCondition() < 0 || NULL == attrMat.get())  { return; }
+    if (getErrorCondition() < 0 || nullptr == attrMat.get())  { return; }
     tempPath.update(dc->getName(), getNewAttributeMatrixName(), newArrayName);
   }
 
   // histogram array
   m_NewDataArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_NewDataArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_NewDataArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NewDataArray = m_NewDataArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

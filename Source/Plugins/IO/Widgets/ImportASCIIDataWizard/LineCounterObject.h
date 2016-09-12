@@ -51,7 +51,7 @@ class LineCounterObject : public QObject
    * @param filePath
    * @param parent
    */
-    LineCounterObject(const QString &filePath, QObject *parent = NULL);
+    LineCounterObject(const QString &filePath, QObject *parent = nullptr);
 
     /**
    * @brief LineCounterObject
@@ -59,7 +59,7 @@ class LineCounterObject : public QObject
    * @param numLines
    * @param parent
    */
-    LineCounterObject(const QString &filePath, int numLines, QObject *parent = NULL);
+    LineCounterObject(const QString &filePath, int numLines, QObject *parent = nullptr);
 
     virtual ~LineCounterObject();
 

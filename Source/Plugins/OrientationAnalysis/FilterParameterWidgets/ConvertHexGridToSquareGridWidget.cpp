@@ -58,11 +58,11 @@ QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent),
-  m_StackingGroup(NULL),
+  m_StackingGroup(nullptr),
   m_DidCausePreflight(false)
 {
   m_Filter = qobject_cast<ConvertHexGridToSquareGrid*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGridWidget filter", __FILE__);
+  Q_ASSERT_X(nullptr != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGridWidget filter", __FILE__);
 
   m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(parameter);
 
@@ -620,14 +620,14 @@ void ConvertHexGridToSquareGridWidget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == filter)
+  if (nullptr == filter)
   {
-    QString ss = QObject::tr("Error Setting ConvertHexGridToSquareGrid Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
+    QString ss = QObject::tr("Error Setting ConvertHexGridToSquareGrid Gui values to Filter instance. Filter instance was nullptr.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 
   ConvertHexGridToSquareGrid* f = qobject_cast<ConvertHexGridToSquareGrid*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGrid filter", __FILE__);
+  Q_ASSERT_X(nullptr != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGrid filter", __FILE__);
 
   bool ok = false;
   f->setInputPath(m_InputDir->text());

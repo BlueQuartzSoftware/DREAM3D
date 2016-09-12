@@ -51,7 +51,7 @@
 // -----------------------------------------------------------------------------
 EMMPM::EMMPM() :
   Observable(),
-  m_StatsDelegate(NULL),
+  m_StatsDelegate(nullptr),
   m_ErrorCondition(0)
 {
 
@@ -187,13 +187,13 @@ void EMMPM::execute()
 
 
   /* Initialize the Curvature Penalty variables:  */
-  data->ccost = NULL;
+  data->ccost = nullptr;
   if (data->useCurvaturePenalty)
   {
     CurvatureInitialization::Pointer curvatureInit = CurvatureInitialization::New();
     curvatureInit->initCurvatureVariables(m_Data);
 
-    if (data->ccost == NULL)
+    if (data->ccost == nullptr)
     {
       setErrorCondition(-55100);
       notifyErrorMessage(getHumanLabel(), "Error Allocating Curvature Variables Memory", getErrorCondition());
@@ -203,16 +203,16 @@ void EMMPM::execute()
 
 
   /* Initialize the Edge Gradient Penalty variables */
-  data->nw = NULL;
-  data->ew = NULL;
-  data->sw = NULL;
-  data->nw = NULL;
+  data->nw = nullptr;
+  data->ew = nullptr;
+  data->sw = nullptr;
+  data->nw = nullptr;
   if (data->useGradientPenalty)
   {
     GradientVariablesInitialization::Pointer gradientInit = GradientVariablesInitialization::New();
     gradientInit->initialize(m_Data);
 
-    if (data->ns == NULL || data->ew == NULL || data->nw == NULL || data->sw == NULL)
+    if (data->ns == nullptr || data->ew == nullptr || data->nw == nullptr || data->sw == nullptr)
     {
       setErrorCondition(-55000);
       notifyErrorMessage(getHumanLabel(), "Error Allocating Gradient Variables Memory", getErrorCondition());

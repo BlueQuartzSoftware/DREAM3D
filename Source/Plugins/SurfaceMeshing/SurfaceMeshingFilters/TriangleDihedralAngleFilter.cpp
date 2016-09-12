@@ -129,7 +129,7 @@ class CalculateDihedralAnglesImpl
 TriangleDihedralAngleFilter::TriangleDihedralAngleFilter() :
   SurfaceMeshFilter(),
   m_SurfaceMeshTriangleDihedralAnglesArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceDihedralAngles),
-  m_SurfaceMeshTriangleDihedralAngles(NULL)
+  m_SurfaceMeshTriangleDihedralAngles(nullptr)
 {
   setupFilterParameters();
 }
@@ -188,7 +188,7 @@ void TriangleDihedralAngleFilter::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_SurfaceMeshTriangleDihedralAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleDihedralAnglesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshTriangleDihedralAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshTriangleDihedralAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleDihedralAngles = m_SurfaceMeshTriangleDihedralAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleDihedralAnglesPtr.lock()); }
 

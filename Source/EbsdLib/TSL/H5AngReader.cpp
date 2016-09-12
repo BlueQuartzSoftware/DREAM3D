@@ -314,7 +314,7 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
 #define ANG_READER_ALLOCATE_AND_READ(name, type)\
   if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ang::name) != m_ArrayNames.end()) {\
     type* _##name = allocateArray<type>(totalDataRows);\
-    if (NULL != _##name) {\
+    if (nullptr != _##name) {\
       ::memset(_##name, 0, numBytes);\
       err = QH5Lite::readPointerDataset(gid, Ebsd::Ang::name, _##name);\
       if (err < 0) {\

@@ -247,15 +247,15 @@ FindDistsToCharactGBs::FindDistsToCharactGBs() :
   m_DistToTwistArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, "DistanceToTwist"),
   m_DistToSymmetricArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, "DistanceToSymmetric"),
   m_DistTo180TiltArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, "DistanceTo180tilt"),
-  m_CrystalStructures(NULL),
-  m_FeatureEulerAngles(NULL),
-  m_FeaturePhases(NULL),
-  m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFaceNormals(NULL),
-  m_DistToTilt(NULL),
-  m_DistToTwist(NULL),
-  m_DistToSymmetric(NULL),
-  m_DistTo180Tilt(NULL)
+  m_CrystalStructures(nullptr),
+  m_FeatureEulerAngles(nullptr),
+  m_FeaturePhases(nullptr),
+  m_SurfaceMeshFaceLabels(nullptr),
+  m_SurfaceMeshFaceNormals(nullptr),
+  m_DistToTilt(nullptr),
+  m_DistToTwist(nullptr),
+  m_DistToSymmetric(nullptr),
+  m_DistTo180Tilt(nullptr)
 {
   setupFilterParameters();
 }
@@ -353,56 +353,56 @@ void FindDistsToCharactGBs::dataCheck()
   // Crystal Structures
   QVector<size_t> cDims(1, 1);
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Euler Angels
   cDims[0] = 3;
   m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_FeatureEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_FeatureEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Phases
   cDims[0] = 1;
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_FeaturePhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_FeaturePhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Face Labels
   cDims[0] = 2;
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Face Normals
   cDims[0] = 3;
   m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_SurfaceMeshFaceNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_SurfaceMeshFaceNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Distances
   QVector<IDataArray::Pointer> dataArrays;
   cDims[0] = 1;
   m_DistToTiltPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getDistToTiltArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_DistToTiltPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_DistToTiltPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_DistToTilt = m_DistToTiltPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if (getErrorCondition() >= 0) { dataArrays.push_back(m_DistToTiltPtr.lock()); }
 
   cDims[0] = 1;
   m_DistToTwistPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getDistToTwistArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_DistToTwistPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_DistToTwistPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_DistToTwist = m_DistToTwistPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if (getErrorCondition() >= 0) { dataArrays.push_back(m_DistToTwistPtr.lock()); }
 
   cDims[0] = 1;
   m_DistToSymmetricPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getDistToSymmetricArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_DistToSymmetricPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_DistToSymmetricPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_DistToSymmetric = m_DistToSymmetricPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if (getErrorCondition() >= 0) { dataArrays.push_back(m_DistToSymmetricPtr.lock()); }
 
   cDims[0] = 1;
   m_DistTo180TiltPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getDistTo180TiltArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_DistTo180TiltPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_DistTo180TiltPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_DistTo180Tilt = m_DistTo180TiltPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if (getErrorCondition() >= 0) { dataArrays.push_back(m_DistTo180TiltPtr.lock()); }
 

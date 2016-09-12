@@ -166,11 +166,11 @@ void EMMPMFilter::dataCheck()
 
   QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
   m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(NULL != m_InputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if(nullptr != m_InputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_InputImage = m_InputImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(NULL != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if(nullptr != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_OutputImage = m_OutputImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (getNumClasses() > 15)
@@ -317,9 +317,9 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 
   emmpm->execute();
 
-  // We manually set the pointers to NULL so that the EMMPM_Data class does not try to free the memory
-  data->inputImage = NULL;
-  data->xt = NULL;
+  // We manually set the pointers to nullptr so that the EMMPM_Data class does not try to free the memory
+  data->inputImage = nullptr;
+  data->xt = nullptr;
 
   // Grab the Mu/Sigma values from the current finished segmented image and use those as inputs
   // into the initialization of the next Image to be Segmented

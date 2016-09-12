@@ -588,7 +588,7 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
   strArray->setValue(getPhaseIndex(), getPhaseName());
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
-  if (NULL != statsDataArray)
+  if (nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
     PrimaryStatsData* primaryStatsData = PrimaryStatsData::SafePointerDownCast(statsData.get());
@@ -647,7 +647,7 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
-  if (statsDataArray == NULL)
+  if (statsDataArray == nullptr)
   {
     return;
   }

@@ -37,7 +37,7 @@
 
 
 #define EMMPM_FREE_POINTER(ptr)\
-  if (NULL != (ptr)) { free(ptr); (ptr) = NULL;}
+  if (nullptr != (ptr)) { free(ptr); (ptr) = nullptr;}
 
 
 
@@ -59,15 +59,15 @@ EMMPM_Data::~EMMPM_Data()
   EMMPM_FREE_POINTER(this->input_file_name)
   EMMPM_FREE_POINTER(this->output_file_name)
 
-  if(this->inputImage != NULL)
+  if(this->inputImage != nullptr)
   {
     free(this->inputImage);
-    this->inputImage = NULL;
+    this->inputImage = nullptr;
   }
-  if(this->outputImage != NULL)
+  if(this->outputImage != nullptr)
   {
     free(this->outputImage);
-    this->outputImage = NULL;
+    this->outputImage = nullptr;
   }
 
   EMMPM_FREE_POINTER(this->y)
@@ -93,62 +93,62 @@ EMMPM_Data::~EMMPM_Data()
 // -----------------------------------------------------------------------------
 int EMMPM_Data::allocateDataStructureMemory()
 {
-  if(NULL == this->y)
+  if(nullptr == this->y)
   {
     this->y = (unsigned char*)malloc(this->columns * this->rows * this->dims * sizeof(unsigned char));
   }
-  if(NULL == this->y) { return -1; }
+  if(nullptr == this->y) { return -1; }
 
-  if(NULL == this->xt)
+  if(nullptr == this->xt)
   {
     this->xt = (unsigned char*)malloc(this->columns * this->rows * sizeof(unsigned char));
   }
-  if(NULL == this->xt) { return -1; }
+  if(nullptr == this->xt) { return -1; }
 
-  if(NULL == this->mean)
+  if(nullptr == this->mean)
   {
     this->mean = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(NULL == this->mean) { return -1; }
+  if(nullptr == this->mean) { return -1; }
 
-  if(NULL == this->prev_mu)
+  if(nullptr == this->prev_mu)
   {
     this->prev_mu = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(NULL == this->prev_mu) { return -1; }
+  if(nullptr == this->prev_mu) { return -1; }
 
 
-  if(NULL == this->variance)
+  if(nullptr == this->variance)
   {
     this->variance = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(NULL == this->variance) { return -1; }
+  if(nullptr == this->variance) { return -1; }
 
-  if(NULL == this->prev_variance)
+  if(nullptr == this->prev_variance)
   {
     this->prev_variance = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(NULL == this->prev_variance) { return -1; }
+  if(nullptr == this->prev_variance) { return -1; }
 
-  if(NULL == this->probs)
+  if(nullptr == this->probs)
   {
     this->probs = (real_t*)malloc(this->classes * this->columns * this->rows * sizeof(real_t));
   }
-  if(NULL == this->probs) { return -1; }
+  if(nullptr == this->probs) { return -1; }
 
-  if(NULL == this->histograms)
+  if(nullptr == this->histograms)
   {
     this->histograms = (real_t*)malloc(this->classes * this->dims * 256 * sizeof(real_t));
   }
-  if(NULL == this->histograms) { return -1; }
+  if(nullptr == this->histograms) { return -1; }
 
-  if (NULL == this->couplingBeta)
+  if (nullptr == this->couplingBeta)
   {
     unsigned int cSize = this->classes + 1;
     size_t couplingElements = cSize * cSize;
     this->couplingBeta = static_cast<real_t*>(malloc(sizeof(real_t) * couplingElements));
   }
-  if (NULL == this->couplingBeta) { return -1; }
+  if (nullptr == this->couplingBeta) { return -1; }
 
   return 0;
 }
@@ -158,10 +158,10 @@ int EMMPM_Data::allocateDataStructureMemory()
 // -----------------------------------------------------------------------------
 void EMMPM_Data::allocateOutputImage()
 {
-  if(NULL != this->outputImage)
+  if(nullptr != this->outputImage)
   {
     free(this->outputImage);
-    this->outputImage = NULL;
+    this->outputImage = nullptr;
   }
 
   this->outputImage = reinterpret_cast<unsigned char*>(malloc(this->columns * this->rows * this->dims));
@@ -183,7 +183,7 @@ void EMMPM_Data::initVariables()
   this->columns = 0;
   this->dims = 1;
   this->initType = EMMPM_Basic;
-  this->couplingBeta = NULL;
+  this->couplingBeta = nullptr;
   for (c = 0; c < EMMPM_MAX_CLASSES; c++)
   {
     this->initCoords[c][0] = 0;
@@ -198,27 +198,27 @@ void EMMPM_Data::initVariables()
   this->verbose = 0;
   this->cancel = 0;
 
-  this->mean = NULL;
-  this->variance = NULL;
-  this->prev_mu = NULL;
-  this->prev_variance = NULL;
-  this->probs = NULL;
-  this->ccost = NULL;
+  this->mean = nullptr;
+  this->variance = nullptr;
+  this->prev_mu = nullptr;
+  this->prev_variance = nullptr;
+  this->probs = nullptr;
+  this->ccost = nullptr;
 
-  this->input_file_name = NULL;
-  this->inputImage = NULL;
+  this->input_file_name = nullptr;
+  this->inputImage = nullptr;
   this->inputImageChannels = 0;
-  this->output_file_name = NULL;
-  this->outputImage = NULL;
+  this->output_file_name = nullptr;
+  this->outputImage = nullptr;
 
-  this->y = NULL;
-  this->xt = NULL;
+  this->y = nullptr;
+  this->xt = nullptr;
   this->workingKappa = 0.0;
 
   this->currentEMLoop = 0;
   this->currentMPMLoop = 0;
   this->progress = 0.0;
-  this->userData = NULL;
+  this->userData = nullptr;
   this->inside_em_loop = 0;
   this->inside_mpm_loop = 0;
 
@@ -228,17 +228,17 @@ void EMMPM_Data::initVariables()
   this->beta_e = 0.0;
   this->beta_c = 0.0;
   this->r_max = 0.0;
-  this->ns = NULL;
-  this->ew = NULL;
-  this->sw = NULL;
-  this->nw = NULL;
+  this->ns = nullptr;
+  this->ew = nullptr;
+  this->sw = nullptr;
+  this->nw = nullptr;
 
   this->useStoppingThreshold = 0;
   this->stoppingThreshold = 0.0;
   this->currentMSE = 0.0;
-  this->histograms = NULL;
+  this->histograms = nullptr;
 
-  //this->rngVars = NULL;
+  //this->rngVars = nullptr;
 
   this->tiffResSet = 0;
   this->xResolution = 0;
@@ -251,7 +251,7 @@ void EMMPM_Data::initVariables()
 // -----------------------------------------------------------------------------
 void EMMPM_Data::calculateBetaMatrix(double default_beta)
 {
-  if (NULL == couplingBeta)
+  if (nullptr == couplingBeta)
   {
     return;
   }

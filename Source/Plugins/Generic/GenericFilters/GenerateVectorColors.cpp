@@ -65,9 +65,9 @@ GenerateVectorColors::GenerateVectorColors() :
   m_GoodVoxelsArrayPath("", "", ""),
   m_CellVectorColorsArrayName(SIMPL::CellData::VectorColor),
   m_UseGoodVoxels(false),
-  m_Vectors(NULL),
-  m_GoodVoxels(NULL),
-  m_CellVectorColors(NULL)
+  m_Vectors(nullptr),
+  m_GoodVoxels(nullptr),
+  m_CellVectorColors(nullptr)
 {
   setupFilterParameters();
 }
@@ -136,13 +136,13 @@ void GenerateVectorColors::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_VectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getVectorsArrayPath()); };
 
   tempPath.update(getVectorsArrayPath().getDataContainerName(), getVectorsArrayPath().getAttributeMatrixName(), getCellVectorColorsArrayName() );
   m_CellVectorColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellVectorColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellVectorColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellVectorColors = m_CellVectorColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to ignore it
@@ -151,13 +151,13 @@ void GenerateVectorColors::dataCheck()
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); };
   }
   else
   {
-    m_GoodVoxels = NULL;
+    m_GoodVoxels = nullptr;
   }
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
@@ -191,7 +191,7 @@ void GenerateVectorColors::execute()
   size_t totalPoints = m_VectorsPtr.lock()->getNumberOfTuples();
 
   bool missingGoodVoxels = true;
-  if (NULL != m_GoodVoxels)
+  if (nullptr != m_GoodVoxels)
   {
     missingGoodVoxels = false;
   }

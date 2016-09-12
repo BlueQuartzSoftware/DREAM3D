@@ -136,9 +136,9 @@ void CalculateTriangleGroupCurvatures::operator()() const
     feature1 = fl[0];
   }
 
-  bool computeGaussian = (m_GaussianCurvature.get() != NULL);
-  bool computeMean = (m_MeanCurvature.get() != NULL);
-  bool computeDirection = (m_PrincipleDirection1.get() != NULL);
+  bool computeGaussian = (m_GaussianCurvature.get() != nullptr);
+  bool computeMean = (m_MeanCurvature.get() != nullptr);
+  bool computeDirection = (m_PrincipleDirection1.get() != nullptr);
 
   std::vector<int64_t>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group

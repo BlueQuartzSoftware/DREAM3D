@@ -67,10 +67,10 @@ FitFeatureData::FitFeatureData() :
   m_FeaturePhasesArrayPath("", "", ""),
   m_BiasedFeaturesArrayPath("", "", ""),
   m_NewEnsembleArrayArray("", "", ""),
-  m_InDataArray(NULL),
-  m_BiasedFeatures(NULL),
-  m_FeaturePhases(NULL),
-  m_NewEnsembleArray(NULL)
+  m_InDataArray(nullptr),
+  m_BiasedFeatures(nullptr),
+  m_FeaturePhases(nullptr),
+  m_NewEnsembleArray(nullptr)
 {
   setupFilterParameters();
 }
@@ -158,7 +158,7 @@ void FitFeatureData::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedFeatureArrayPath());
@@ -173,14 +173,14 @@ void FitFeatureData::dataCheck()
   getNewEnsembleArrayArray().setDataArrayName(m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit"));
   cDims[0] = numComp;
   m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getNewEnsembleArrayArray(), 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_RemoveBiasedFeatures == true)
   {
     cDims[0] = 1;
     m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }

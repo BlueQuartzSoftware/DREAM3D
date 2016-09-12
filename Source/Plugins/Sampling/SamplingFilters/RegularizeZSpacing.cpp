@@ -244,8 +244,8 @@ void RegularizeZSpacing::execute()
     // the same name. At least in theory
     IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), p->getComponentDimensions(), p->getName());
     data->resize(totalPoints);
-    void* source = NULL;
-    void* destination = NULL;
+    void* source = nullptr;
+    void* destination = nullptr;
     size_t newIndicies_I = 0;
     int nComp = data->getNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)

@@ -101,7 +101,7 @@ class CalculateCentroidsImpl
 TriangleCentroidFilter::TriangleCentroidFilter() :
   SurfaceMeshFilter(),
   m_SurfaceMeshTriangleCentroidsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceCentroids),
-  m_SurfaceMeshTriangleCentroids(NULL)
+  m_SurfaceMeshTriangleCentroids(nullptr)
 {
   setupFilterParameters();
 }
@@ -160,7 +160,7 @@ void TriangleCentroidFilter::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_SurfaceMeshTriangleCentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleCentroidsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshTriangleCentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshTriangleCentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleCentroids = m_SurfaceMeshTriangleCentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleCentroidsPtr.lock()); }
 

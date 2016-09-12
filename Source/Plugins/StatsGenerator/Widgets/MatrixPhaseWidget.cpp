@@ -68,7 +68,7 @@
 // -----------------------------------------------------------------------------
 MatrixPhaseWidget::MatrixPhaseWidget(QWidget* parent) :
   SGWidget(parent),
-  m_grid(NULL)
+  m_grid(nullptr)
 {
   setTabTitle("Matrix");
 
@@ -122,11 +122,11 @@ int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool pr
   phaseTypes[getPhaseIndex()] = getPhaseType();
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
-  if (NULL != statsDataArray)
+  if (nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
     MatrixStatsData* matrixStatsData = MatrixStatsData::SafePointerDownCast(statsData.get());
-    if(NULL != matrixStatsData)
+    if(nullptr != matrixStatsData)
     {
       matrixStatsData->setPhaseFraction(calcPhaseFraction);
       statsData->setName(getPhaseName());
@@ -156,7 +156,7 @@ void MatrixPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int i
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
-  if (statsDataArray == NULL)
+  if (statsDataArray == nullptr)
   {
     return;
   }

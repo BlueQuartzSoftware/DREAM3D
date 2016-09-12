@@ -73,7 +73,7 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     Q_OBJECT
 
   public:
-    StatsGeneratorWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    StatsGeneratorWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
     virtual ~StatsGeneratorWidget();
 
     void adjustWindowTitle();

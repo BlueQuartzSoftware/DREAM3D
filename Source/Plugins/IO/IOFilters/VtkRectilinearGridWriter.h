@@ -152,9 +152,9 @@ class VtkRectilinearGridWriter : public AbstractFilter
                                     const QString& dataType, bool writeBinary )
     {
       int err = 0;
-      FILE* f = NULL;
+      FILE* f = nullptr;
       f = fopen(filename.toLatin1().data(), "wb");
-      if(NULL == f)
+      if(nullptr == f)
       {
         qDebug() << "Could not open file for writing" ;
         qDebug() << "  FileName: " << filename ;
@@ -164,11 +164,11 @@ class VtkRectilinearGridWriter : public AbstractFilter
       // Write the correct header
       if(writeBinary == true)
       {
-        WRITE_RECTILINEAR_GRID_HEADER("BINARY", NULL, (dims[0] + 1), (dims[1] + 1), (dims[2] + 1) )
+        WRITE_RECTILINEAR_GRID_HEADER("BINARY", nullptr, (dims[0] + 1), (dims[1] + 1), (dims[2] + 1) )
       }
       else
       {
-        WRITE_RECTILINEAR_GRID_HEADER("ASCII", NULL, (dims[0] + 1), (dims[1] + 1), (dims[2] + 1) )
+        WRITE_RECTILINEAR_GRID_HEADER("ASCII", nullptr, (dims[0] + 1), (dims[1] + 1), (dims[2] + 1) )
       }
 
       // Write the XCoords

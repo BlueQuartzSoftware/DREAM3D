@@ -203,7 +203,7 @@ void NodesTrianglesToStl::execute()
 
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
-  if(nodesFile == NULL)
+  if(nodesFile == nullptr)
   {
 
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
@@ -221,7 +221,7 @@ void NodesTrianglesToStl::execute()
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
-  if(triFile == NULL)
+  if(triFile == nullptr)
   {
 
     QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
@@ -419,7 +419,7 @@ void NodesTrianglesToStl::execute()
 // -----------------------------------------------------------------------------
 int NodesTrianglesToStl::writeHeader(FILE* f, const QString& header, int triCount)
 {
-  if (NULL == f)
+  if (nullptr == f)
   {
     return -1;
   }

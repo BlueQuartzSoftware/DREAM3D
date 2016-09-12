@@ -65,7 +65,7 @@ AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
   m_WriteBinaryFile(false),
   m_WriteFeatureIds(true),
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -120,10 +120,10 @@ void AvizoUniformCoordinateWriter::dataCheck()
   setErrorCondition(0);
 
   DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0 || NULL == dc.get()) { return; }
+  if (getErrorCondition() < 0 || nullptr == dc.get()) { return; }
 
   ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if (getErrorCondition() < 0 || nullptr == image.get()) { return; }
 
   if(m_OutputFile.isEmpty() == true)
   {
@@ -135,7 +135,7 @@ void AvizoUniformCoordinateWriter::dataCheck()
   {
     QVector<size_t> dims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }

@@ -64,7 +64,7 @@ ChangeResolution::ChangeResolution() :
   m_RenumberFeatures(true),
   m_SaveAsNewDataContainer(false),
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -180,7 +180,7 @@ void ChangeResolution::dataCheck()
   {
     QVector<size_t> cDims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
@@ -260,7 +260,7 @@ void ChangeResolution::preflight()
   if (m_RenumberFeatures == true)
   {
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    if (NULL != cellFeatureAttrMat.get())
+    if (nullptr != cellFeatureAttrMat.get())
     {
       QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
       cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
@@ -362,8 +362,8 @@ void ChangeResolution::execute()
     // the same name. At least in theory.
     IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), p->getComponentDimensions(), p->getName());
     data->resize(totalPoints);
-    void* source = NULL;
-    void* destination = NULL;
+    void* source = nullptr;
+    void* destination = nullptr;
     size_t newIndicies_I = 0;
     int32_t nComp = data->getNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)

@@ -49,7 +49,7 @@
 DataFormatPage::DataFormatPage(const QString &inputFilePath, int numLines, QWidget* parent) :
   AbstractWizardPage(inputFilePath, parent),
   m_NumLines(numLines),
-  m_EditHeadersDialog(NULL)
+  m_EditHeadersDialog(nullptr)
 {
   setupUi(this);
 
@@ -273,7 +273,7 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_editHeadersBtn_clicked()
 {
-  if (NULL == m_EditHeadersDialog)
+  if (nullptr == m_EditHeadersDialog)
   {
     m_EditHeadersDialog = new EditHeadersDialog(this);
   }
@@ -450,7 +450,7 @@ void DataFormatPage::refreshModel()
 // -----------------------------------------------------------------------------
 void DataFormatPage::launchEditHeadersDialog()
 {
-  if (NULL != m_EditHeadersDialog)
+  if (nullptr != m_EditHeadersDialog)
   {
     ASCIIDataModel* model = ASCIIDataModel::Instance();
     QVector<QString> currentHeaders;

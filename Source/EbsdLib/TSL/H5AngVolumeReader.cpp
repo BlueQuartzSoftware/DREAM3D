@@ -56,17 +56,17 @@ using namespace H5Support_NAMESPACE;
 H5AngVolumeReader::H5AngVolumeReader() :
   H5EbsdVolumeReader()
 {
-  // Init all the arrays to NULL
-  m_Phi1 = NULL;
-  m_Phi = NULL;
-  m_Phi2 = NULL;
-  m_Iq = NULL;
-  m_Ci = NULL;
-  m_PhaseData = NULL;
-  m_X = NULL;
-  m_Y = NULL;
-  m_SEMSignal = NULL;
-  m_Fit = NULL;
+  // Init all the arrays to nullptr
+  m_Phi1 = nullptr;
+  m_Phi = nullptr;
+  m_Phi2 = nullptr;
+  m_Iq = nullptr;
+  m_Ci = nullptr;
+  m_PhaseData = nullptr;
+  m_X = nullptr;
+  m_Y = nullptr;
+  m_SEMSignal = nullptr;
+  m_Fit = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -81,7 +81,7 @@ H5AngVolumeReader::~H5AngVolumeReader()
 #define H5ANGREADER_ALLOCATE_ARRAY(name, type)\
   if (readAllArrays == true || arrayNames.find(Ebsd::Ang::name) != arrayNames.end()) {\
     type* _##name = allocateArray<type>(numElements);\
-    if (NULL != _##name) {\
+    if (nullptr != _##name) {\
       ::memset(_##name, 0, numBytes);\
     }\
     set##name##Pointer(_##name);\
@@ -141,7 +141,7 @@ void* H5AngVolumeReader::getPointerByName(const QString& featureName)
   if (featureName.compare(Ebsd::Ang::YPosition) == 0) { return static_cast<void*>(m_Y);}
   if (featureName.compare(Ebsd::Ang::SEMSignal) == 0) { return static_cast<void*>(m_SEMSignal);}
   if (featureName.compare(Ebsd::Ang::Fit) == 0) { return static_cast<void*>(m_Fit);}
-  return NULL;
+  return nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -253,7 +253,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     xpointsslice = reader->getNumEvenCols();
     ypointsslice = reader->getNumRows();
     float* euler1Ptr = reader->getPhi1Pointer();
-    if (NULL == euler1Ptr) { setErrorCode(-99090); setErrorMessage("Euler1 Pointer was NULL from Reader"); return getErrorCode(); }
+    if (nullptr == euler1Ptr) { setErrorCode(-99090); setErrorMessage("Euler1 Pointer was nullptr from Reader"); return getErrorCode(); }
     float* euler2Ptr = reader->getPhiPointer();
     float* euler3Ptr = reader->getPhi2Pointer();
     float* xPtr = reader->getXPositionPointer();
@@ -285,16 +285,16 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
       for (int i = 0; i < xstop; i++)
       {
         index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
-        if (NULL != euler1Ptr) {m_Phi1[index] = euler1Ptr[readerIndex];}
-        if (NULL != euler2Ptr) {m_Phi[index] = euler2Ptr[readerIndex];}
-        if (NULL != euler3Ptr) {m_Phi2[index] = euler3Ptr[readerIndex];}
-        if (NULL != xPtr) {m_X[index] = xPtr[readerIndex];}
-        if (NULL != yPtr) {m_Y[index] = yPtr[readerIndex];}
-        if (NULL != iqPtr) {m_Iq[index] = iqPtr[readerIndex];}
-        if (NULL != ciPtr) {m_Ci[index] = ciPtr[readerIndex];}
-        if (NULL != phasePtr) {m_PhaseData[index] = phasePtr[readerIndex];} // Phase
-        if (NULL != sigPtr) {m_SEMSignal[index] = sigPtr[readerIndex];}
-        if (NULL != fitPtr) {m_Fit[index] = fitPtr[readerIndex];}
+        if (nullptr != euler1Ptr) {m_Phi1[index] = euler1Ptr[readerIndex];}
+        if (nullptr != euler2Ptr) {m_Phi[index] = euler2Ptr[readerIndex];}
+        if (nullptr != euler3Ptr) {m_Phi2[index] = euler3Ptr[readerIndex];}
+        if (nullptr != xPtr) {m_X[index] = xPtr[readerIndex];}
+        if (nullptr != yPtr) {m_Y[index] = yPtr[readerIndex];}
+        if (nullptr != iqPtr) {m_Iq[index] = iqPtr[readerIndex];}
+        if (nullptr != ciPtr) {m_Ci[index] = ciPtr[readerIndex];}
+        if (nullptr != phasePtr) {m_PhaseData[index] = phasePtr[readerIndex];} // Phase
+        if (nullptr != sigPtr) {m_SEMSignal[index] = sigPtr[readerIndex];}
+        if (nullptr != fitPtr) {m_Fit[index] = fitPtr[readerIndex];}
 
         /* For TSL OIM Files if there is a single phase then the value of the phase
          * data is zero (0). If there are 2 or more phases then the lowest value
@@ -303,7 +303,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if (numPhases == 1 && NULL != phasePtr && m_PhaseData[index] < 1)
+        if (numPhases == 1 && nullptr != phasePtr && m_PhaseData[index] < 1)
         {
           m_PhaseData[index] = 1;
         }

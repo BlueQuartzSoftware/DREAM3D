@@ -124,10 +124,10 @@ void AppendImageGeometryZSlice::dataCheck()
 
   // Validate each AttributeMatrix is associated with an Image Geometry.
   ImageGeom::Pointer inputGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputAttributeMatrix().getDataContainerName());
-  if (NULL == inputGeometry.get() || getErrorCondition() < 0) { return; }
+  if (nullptr == inputGeometry.get() || getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer destGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDestinationAttributeMatrix().getDataContainerName());
-  if (NULL == destGeometry.get() || getErrorCondition() < 0) { return; }
+  if (nullptr == destGeometry.get() || getErrorCondition() < 0) { return; }
 
 
   // Get the Dimensions of the ImageGeometries
@@ -267,7 +267,7 @@ void AppendImageGeometryZSlice::execute()
   {
     IDataArray::Pointer p = destCellAttrMat->getAttributeArray(*iter);
     IDataArray::Pointer inputArray = inputCellAttrMat->getAttributeArray(*iter);
-    if(NULL != inputArray.get())
+    if(nullptr != inputArray.get())
     {
       p->copyData(tupleOffset, inputArray);
     }

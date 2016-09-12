@@ -79,7 +79,7 @@
 // -----------------------------------------------------------------------------
 StatsGenRDFWidget::StatsGenRDFWidget(QWidget* parent) :
   QWidget(parent),
-  m_RDFTableModel(NULL)
+  m_RDFTableModel(nullptr)
 {
   this->setupUi(this);
   this->setupGui();
@@ -90,7 +90,7 @@ StatsGenRDFWidget::StatsGenRDFWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 StatsGenRDFWidget::~StatsGenRDFWidget()
 {
-  if (NULL != m_RDFTableModel)
+  if (nullptr != m_RDFTableModel)
   {
     m_RDFTableModel->deleteLater();
   }

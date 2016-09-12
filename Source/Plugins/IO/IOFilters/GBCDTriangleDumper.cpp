@@ -61,10 +61,10 @@ GBCDTriangleDumper::GBCDTriangleDumper() :
   m_SurfaceMeshFaceNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceAreasArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas),
   m_FeatureEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgEulerAngles),
-  m_SurfaceMeshFaceAreas(NULL),
-  m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFaceNormals(NULL),
-  m_FeatureEulerAngles(NULL)
+  m_SurfaceMeshFaceAreas(nullptr),
+  m_SurfaceMeshFaceLabels(nullptr),
+  m_SurfaceMeshFaceNormals(nullptr),
+  m_FeatureEulerAngles(nullptr)
 {
   setupFilterParameters();
 }
@@ -141,19 +141,19 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
 
   cDims[0] = 3;
   m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceNormalsPtr.lock()); }
 
   cDims[0] = 1;
   m_SurfaceMeshFaceAreasPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceAreasArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceAreasPtr.lock()); }
 
@@ -171,7 +171,7 @@ void GBCDTriangleDumper::dataCheckVoxel()
 
   QVector<size_t> cDims(1, 3);
   m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -204,7 +204,7 @@ void GBCDTriangleDumper::execute()
   int64_t numTri = triangleGeom->getNumberOfTris();
 
   FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
-  if (NULL == f)
+  if (nullptr == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
     setErrorCondition(-87000);
@@ -220,9 +220,9 @@ void GBCDTriangleDumper::execute()
 
   int32_t gid0 = 0; // Feature id 0
   int32_t gid1 = 0; // Feature id 1
-  float* euAng0 = NULL;
-  float* euAng1 = NULL;
-  double* tNorm = NULL;
+  float* euAng0 = nullptr;
+  float* euAng1 = nullptr;
+  double* tNorm = nullptr;
   for (int64_t t = 0; t < numTri; ++t)
   {
     // Get the Feature Ids for the triangle

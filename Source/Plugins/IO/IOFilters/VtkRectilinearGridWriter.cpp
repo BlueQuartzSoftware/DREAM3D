@@ -154,7 +154,7 @@ void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPt
 
   typename ArrayType::Pointer array = std::dynamic_pointer_cast<ArrayType>(iDataPtr);
 
-  if(NULL != array.get())
+  if(nullptr != array.get())
   {
     size_t totalElements = array->getSize();
     T* val = array->getPointer(0);
@@ -330,7 +330,7 @@ void VtkRectilinearGridWriter::dataCheck()
   QString dcName = DataArrayPath::GetAttributeMatrixPath(getSelectedDataArrayPaths()).getDataContainerName();
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(dcName)->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get())
+  if(getErrorCondition() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -387,10 +387,10 @@ void VtkRectilinearGridWriter::execute()
   image->getOrigin(origin);
 
   int err = 0;
-  FILE* f = NULL;
+  FILE* f = nullptr;
   f = fopen(getOutputFile().toLatin1().data(), "wb");
   ScopedFileMonitor fMon(f);
-  if(NULL == f)
+  if(nullptr == f)
   {
     QString ss = QObject::tr("Error opening output vtk file '%1'\n ").arg(m_OutputFile);
     setErrorCondition(-2031001);

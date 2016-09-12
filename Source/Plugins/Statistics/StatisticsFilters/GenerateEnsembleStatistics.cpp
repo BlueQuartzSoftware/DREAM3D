@@ -107,20 +107,20 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics() :
   m_CalculateMDF(false),
   m_CalculateAxisODF(false),
   m_SizeCorrelationResolution(1),
-  m_AvgQuats(NULL),
-  m_FeatureEulerAngles(NULL),
-  m_Volumes(NULL),
-  m_BiasedFeatures(NULL),
-  m_SurfaceFeatures(NULL),
-  m_FeaturePhases(NULL),
-  m_AxisEulerAngles(NULL),
-  m_RadialDistFunc(NULL),
-  m_Omega3s(NULL),
-  m_AspectRatios(NULL),
-  m_EquivalentDiameters(NULL),
-  m_Neighborhoods(NULL),
-  m_CrystalStructures(NULL),
-  m_PhaseTypes(NULL)
+  m_AvgQuats(nullptr),
+  m_FeatureEulerAngles(nullptr),
+  m_Volumes(nullptr),
+  m_BiasedFeatures(nullptr),
+  m_SurfaceFeatures(nullptr),
+  m_FeaturePhases(nullptr),
+  m_AxisEulerAngles(nullptr),
+  m_RadialDistFunc(nullptr),
+  m_Omega3s(nullptr),
+  m_AspectRatios(nullptr),
+  m_EquivalentDiameters(nullptr),
+  m_Neighborhoods(nullptr),
+  m_CrystalStructures(nullptr),
+  m_PhaseTypes(nullptr)
 {
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
@@ -412,7 +412,7 @@ void GenerateEnsembleStatistics::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
 
@@ -420,12 +420,12 @@ void GenerateEnsembleStatistics::dataCheck()
       || m_ComputeAspectRatioDistribution == true || m_ComputeNeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
     m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getBiasedFeaturesArrayPath()); }
 
     m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getEquivalentDiametersArrayPath()); }
   }
@@ -433,7 +433,7 @@ void GenerateEnsembleStatistics::dataCheck()
   if (m_ComputeNeighborhoodDistribution == true)
   {
     m_NeighborhoodsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNeighborhoodsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getNeighborhoodsArrayPath()); }
   }
@@ -442,7 +442,7 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     cDims[0] = 2;
     m_AspectRatiosPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAspectRatiosArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_AspectRatiosPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_AspectRatiosPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAspectRatiosArrayPath()); }
   }
@@ -451,7 +451,7 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     cDims[0] = 1;
     m_Omega3sPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getOmega3sArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getOmega3sArrayPath()); }
   }
@@ -460,7 +460,7 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     cDims[0] = 3;
     m_AxisEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAxisEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAxisEulerAnglesArrayPath()); }
   }
@@ -468,7 +468,7 @@ void GenerateEnsembleStatistics::dataCheck()
   if (m_IncludeRadialDistFunc == true)
   {
     DataArray<float>::Pointer tempPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<float>, AbstractFilter>(this, getRDFArrayPath());
-    if (NULL != tempPtr.get())
+    if (nullptr != tempPtr.get())
     {
       m_RadialDistFuncPtr = tempPtr;
       m_RadialDistFunc = tempPtr->getPointer(0);
@@ -476,7 +476,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
     cDims[0] = 2;
     m_MaxMinRadialDistFuncPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getMaxMinRDFArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_MaxMinRadialDistFuncPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_MaxMinRadialDistFuncPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_MaxMinRadialDistFunc = m_MaxMinRadialDistFuncPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -484,12 +484,12 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     cDims[0] = 1;
     m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
     m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceFeaturesArrayPath()); }
   }
@@ -498,13 +498,13 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     cDims[0] = 1;
     m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVolumesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getVolumesArrayPath()); }
 
     cDims[0] = 3;
     m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureEulerAnglesArrayPath()); }
   }
@@ -513,7 +513,7 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     cDims[0] = 4;
     m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAvgQuatsArrayPath()); }
 
@@ -544,7 +544,7 @@ void GenerateEnsembleStatistics::dataCheck()
     cDims[0] = 1;
     tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getPhaseTypesArrayName() );
     m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, SIMPL::PhaseType::UnknownPhaseType, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
       m_PhaseTypeData.d.resize(m_PhaseTypesPtr.lock()->getNumberOfTuples());
@@ -553,9 +553,9 @@ void GenerateEnsembleStatistics::dataCheck()
 
   // now create and add the stats array itself
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getDataContainerName());
-  if(getErrorCondition() < 0 || m == NULL) { return; }
+  if(getErrorCondition() < 0 || m == nullptr) { return; }
   AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || attrMat == NULL) { return; }
+  if(getErrorCondition() < 0 || attrMat == nullptr) { return; }
 
   m_StatsDataArray = StatsDataArray::CreateArray(m_PhaseTypesPtr.lock()->getNumberOfTuples(), getStatisticsArrayName());
   m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
@@ -1221,9 +1221,9 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
       rdfData->setMinDistance(m_MaxMinRadialDistFunc[i * 2 + 1]);
 
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-      if (NULL == pp)
+      if (nullptr == pp)
       {
-        Q_ASSERT_X(NULL != pp, "StatsDataArray could not be down-cast to a PrecipitatesStatsDataArray", "");
+        Q_ASSERT_X(nullptr != pp, "StatsDataArray could not be down-cast to a PrecipitatesStatsDataArray", "");
       }
       pp->setRadialDistFunction(rdfData);
     }
@@ -1284,16 +1284,16 @@ void GenerateEnsembleStatistics::calculatePPTBoundaryFrac()
 int GenerateEnsembleStatistics::getPhaseCount()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
-  if(NULL == dca.get())
+  if(nullptr == dca.get())
   {
-    //  qDebug() << getNameOfClass() <<  "::getPhaseCount()  dca was NULL";
+    //  qDebug() << getNameOfClass() <<  "::getPhaseCount()  dca was nullptr";
     return -1;
   }
 
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getCellEnsembleAttributeMatrixPath());
-  if (NULL == inputAttrMat.get() )
+  if (nullptr == inputAttrMat.get() )
   {
-    //  qDebug() << getNameOfClass() << "::getPhaseCount()  CellEnsembleAttributeMatrix was NULL";
+    //  qDebug() << getNameOfClass() << "::getPhaseCount()  CellEnsembleAttributeMatrix was nullptr";
     //  qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
     return -2;
   }

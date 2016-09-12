@@ -56,7 +56,7 @@ class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DelimitedPage(const QString &inputFilePath, int numLines, QWidget* parent = NULL);
+    DelimitedPage(const QString &inputFilePath, int numLines, QWidget* parent = nullptr);
 
     virtual ~DelimitedPage();
 

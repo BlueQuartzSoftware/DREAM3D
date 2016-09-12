@@ -163,17 +163,17 @@ void MultiEmmpmFilter::dataCheck()
 
 #if 0
   m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_InputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_InputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   if (getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getInputDataArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if (getErrorCondition() < 0 || nullptr == image.get()) { return; }
 
   m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -198,12 +198,12 @@ void MultiEmmpmFilter::dataCheck()
   DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 
   AttributeMatrix::Pointer inAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, inputAMPath, -301);
-  if(getErrorCondition() < 0 || NULL == inAM.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == inAM.get()) { return; }
 
   // Now create our output attributeMatrix which will contain all of our segmented images
   QVector<size_t> tDims = inAM->getTupleDimensions();
   AttributeMatrix::Pointer outAM = getDataContainerArray()->getDataContainer(inputAMPath.getDataContainerName())->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0 || NULL == outAM.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == outAM.get()) { return; }
 
   // Get the list of checked array names from the input data arrays list
   QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());

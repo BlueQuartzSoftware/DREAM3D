@@ -130,7 +130,7 @@ void LammpsFileWriter::dataCheck()
   if (getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
-  if(NULL == vertices->getVertices().get())
+  if(nullptr == vertices->getVertices().get())
   {
     setErrorCondition(-384);
     notifyErrorMessage(getHumanLabel(), "VertexDataContainer missing Nodes", getErrorCondition());
@@ -167,9 +167,9 @@ void LammpsFileWriter::execute()
   int64_t numAtoms = vertices->getNumberOfVertices();
 
   // Open the output VTK File for writing
-  FILE* lammpsFile = NULL;
+  FILE* lammpsFile = nullptr;
   lammpsFile = fopen(m_LammpsFile.toLatin1().data(), "wb");
-  if (NULL == lammpsFile)
+  if (nullptr == lammpsFile)
   {
     QString ss = QObject::tr(": Error creating LAMMPS output file '%1'").arg(getLammpsFile());
     setErrorCondition(-11000);

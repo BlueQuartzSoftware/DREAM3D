@@ -54,17 +54,17 @@
 AngReader::AngReader() :
   EbsdReader()
 {
-  // Init all the arrays to NULL
-  m_Phi1 = NULL;
-  m_Phi = NULL;
-  m_Phi2 = NULL;
-  m_Iq = NULL;
-  m_Ci = NULL;
-  m_PhaseData = NULL;
-  m_X = NULL;
-  m_Y = NULL;
-  m_SEMSignal = NULL;
-  m_Fit = NULL;
+  // Init all the arrays to nullptr
+  m_Phi1 = nullptr;
+  m_Phi = nullptr;
+  m_Phi2 = nullptr;
+  m_Iq = nullptr;
+  m_Ci = nullptr;
+  m_PhaseData = nullptr;
+  m_X = nullptr;
+  m_Y = nullptr;
+  m_SEMSignal = nullptr;
+  m_Fit = nullptr;
 
   setNumFeatures(10);
 
@@ -169,7 +169,7 @@ void* AngReader::getPointerByName(const QString& featureName)
   if (featureName.compare(Ebsd::Ang::YPosition) == 0) { return static_cast<void*>(m_Y);}
   if (featureName.compare(Ebsd::Ang::SEMSignal) == 0) { return static_cast<void*>(m_SEMSignal);}
   if (featureName.compare(Ebsd::Ang::Fit) == 0) { return static_cast<void*>(m_Fit);}
-  return NULL;
+  return nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -347,12 +347,12 @@ void AngReader::readData(QFile& in, QByteArray& buf)
   }
 
   initPointers(totalDataPoints);
-  if (NULL == m_Phi1 || NULL == m_Phi || NULL == m_Phi2
-      || NULL == m_Iq || NULL == m_SEMSignal || NULL == m_Ci
-      || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
+  if (nullptr == m_Phi1 || nullptr == m_Phi || nullptr == m_Phi2
+      || nullptr == m_Iq || nullptr == m_SEMSignal || nullptr == m_Ci
+      || nullptr == m_PhaseData || m_X == nullptr || m_Y == nullptr)
   {
     ss.string()->clear();
-    ss << "Internal pointers were NULL at " << __FILE__ << "(" << __LINE__ << ")\n";
+    ss << "Internal pointers were nullptr at " << __FILE__ << "(" << __LINE__ << ")\n";
     setErrorMessage( *(ss.string()) );
     setErrorCode(-500);
     return;
@@ -464,42 +464,42 @@ void AngReader::parseHeaderLine(QByteArray& buf)
     // Parsing the phase is complete, now add it to the vector of Phases
     m_PhaseVector.push_back(m_CurrentPhase);
   }
-  else if (word.compare(Ebsd::Ang::MaterialName) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::MaterialName) == 0 && m_CurrentPhase.get() != nullptr)
   {
     if (tokens.size() > 1) { m_CurrentPhase->parseMaterialName(tokens); }
   }
-  else if (word.compare(Ebsd::Ang::Formula) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::Formula) == 0 && m_CurrentPhase.get() != nullptr)
   {
     if (tokens.size() > 1) { m_CurrentPhase->parseFormula(tokens); }
   }
-  else if (word.compare(Ebsd::Ang::Info) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::Info) == 0 && m_CurrentPhase.get() != nullptr)
   {
     if (tokens.size() > 1) { m_CurrentPhase->parseInfo(tokens); }
   }
-  else if (word.compare(Ebsd::Ang::Symmetry) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::Symmetry) == 0 && m_CurrentPhase.get() != nullptr)
   {
     if (tokens.size() > 1) { m_CurrentPhase->setSymmetry(tokens.at(1).toUInt(&ok, 10)); }
   }
-  else if (word.compare(Ebsd::Ang::LatticeConstants) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::LatticeConstants) == 0 && m_CurrentPhase.get() != nullptr)
   {
     if (tokens.size() > 1) { m_CurrentPhase->parseLatticeConstants(tokens); }
   }
-  else if (word.compare(Ebsd::Ang::NumberFamilies) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::NumberFamilies) == 0 && m_CurrentPhase.get() != nullptr)
   {
     if (tokens.size() > 1) { m_CurrentPhase->setNumberFamilies(tokens.at(1).toInt(&ok, 10)); }
   }
-  else if (word.compare(Ebsd::Ang::HKLFamilies) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.compare(Ebsd::Ang::HKLFamilies) == 0 && m_CurrentPhase.get() != nullptr)
   {
     if (tokens.size() > 1) { m_CurrentPhase->parseHKLFamilies(tokens); }
   }
-  else if (word.startsWith(Ebsd::Ang::Categories) == true && m_CurrentPhase.get() != NULL)
+  else if (word.startsWith(Ebsd::Ang::Categories) == true && m_CurrentPhase.get() != nullptr)
   {
     if (tokens.size() > 1) { m_CurrentPhase->parseCategories(tokens); }
   }
   else
   {
     EbsdHeaderEntry::Pointer p = m_HeaderMap[word];
-    if (NULL == p.get())
+    if (nullptr == p.get())
     {
       /*
       std::cout << "---------------------------" << std::endl;

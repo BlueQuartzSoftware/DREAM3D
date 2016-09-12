@@ -62,7 +62,7 @@ AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter() :
   AbstractFilter(),
   m_OutputFile(""),
   m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceLabels(NULL)
+  m_SurfaceMeshFaceLabels(nullptr)
 {
   setupFilterParameters();
 }
@@ -136,7 +136,7 @@ void AbaqusSurfaceMeshWriter::dataCheck()
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
 
@@ -234,7 +234,7 @@ void AbaqusSurfaceMeshWriter::execute()
 // -----------------------------------------------------------------------------
 int32_t AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int64_t nodeCount, int64_t triCount, int featureCount)
 {
-  if (NULL == f)
+  if (nullptr == f)
   {
     return -1;
   }

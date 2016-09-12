@@ -108,8 +108,8 @@ StatsGenPlotWidget::StatsGenPlotWidget(QWidget* parent) :
   m_BinStep(0.5f),
   m_PhaseIndex(-1),
   m_DistributionType(SIMPL::DistributionType::UnknownDistributionType),
-  m_TableModel(NULL),
-  m_grid(NULL),
+  m_TableModel(nullptr),
+  m_grid(nullptr),
   m_StatsType(SIMPL::StatisticsType::UnknownStatisticsGroup),
   m_UserUpdatedData(false),
   m_TableViewWidget(nullptr),
@@ -287,7 +287,7 @@ void StatsGenPlotWidget::resetTableModel()
 {
   QVector<float> bins;
   // Get a copy of the bins from the current TableModel if available
-  if (NULL != m_TableModel)
+  if (nullptr != m_TableModel)
   {
     bins = m_TableModel->getBinNumbers();
   }
@@ -546,7 +546,7 @@ void StatsGenPlotWidget::setupGui()
   initQwtPlot("", "", m_PlotView);
 
   resetTableModel();
-  if (NULL != m_TableModel)
+  if (nullptr != m_TableModel)
   {
     // Update the plots
     updatePlotCurves();
@@ -599,7 +599,7 @@ void StatsGenPlotWidget::updatePlotCurves()
 {
   //qDebug() << "StatsGenPlotWidget::updatePlotCurves" << "\n";
   //Loop over each entry in the table
-  QwtPlotCurve* curve = NULL;
+  QwtPlotCurve* curve = nullptr;
 
   // Delete all the plots
   qint32 nRows = m_PlotCurves.count();

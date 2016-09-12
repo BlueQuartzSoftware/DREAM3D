@@ -66,7 +66,7 @@ WriteImages::WriteImages() :
   m_ImageFormat(0),
   m_Plane(0),
   m_ColorsArrayPath("", "", ""),
-  m_Colors(NULL)
+  m_Colors(nullptr)
 {
   setupFilterParameters();
 }
@@ -219,19 +219,19 @@ void WriteImages::dataCheck()
   if (cDims[0] == 1)
   {
     m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if (nullptr != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else if (cDims[0] == 3)
   {
     m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if (nullptr != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else if (cDims[0] == 4)
   {
     m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if (nullptr != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else

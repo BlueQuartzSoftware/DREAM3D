@@ -42,7 +42,7 @@
 
 #include "ASCIIDataItem.h"
 
-ASCIIDataModel* ASCIIDataModel::self = NULL;
+ASCIIDataModel* ASCIIDataModel::self = nullptr;
 
 // -----------------------------------------------------------------------------
 //
@@ -66,7 +66,7 @@ ASCIIDataModel::~ASCIIDataModel()
 // -----------------------------------------------------------------------------
 ASCIIDataModel* ASCIIDataModel::Instance()
 {
-  if (self == NULL)
+  if (self == nullptr)
   {
     self = new ASCIIDataModel();
   }
@@ -162,7 +162,7 @@ ASCIIDataItem* ASCIIDataModel::getItem(const QModelIndex& index) const
       return item;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 // -----------------------------------------------------------------------------

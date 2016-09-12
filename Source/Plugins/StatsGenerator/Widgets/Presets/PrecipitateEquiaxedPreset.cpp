@@ -76,7 +76,7 @@ void PrecipitateEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* p
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
@@ -115,7 +115,7 @@ void PrecipitateEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* p
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
@@ -154,7 +154,7 @@ void PrecipitateEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* p
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
@@ -194,7 +194,7 @@ void PrecipitateEquiaxedPreset::initializeClusteringTableModel(StatsGenPlotWidge
   plot->setDistributionType(SIMPL::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }

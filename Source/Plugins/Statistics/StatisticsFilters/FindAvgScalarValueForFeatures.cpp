@@ -58,9 +58,9 @@ FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures() :
   m_SelectedCellArrayPath("", "", ""),
   m_FeatureIdsArrayPath("", "", ""),
   m_NewFeatureArrayArrayPath("", "", ""),
-  m_InDataArray(NULL),
-  m_FeatureIds(NULL),
-  m_NewFeatureArray(NULL)
+  m_InDataArray(nullptr),
+  m_FeatureIds(nullptr),
+  m_NewFeatureArray(nullptr)
 {
 
   setupFilterParameters();
@@ -125,17 +125,17 @@ void FindAvgScalarValueForFeatures::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
   m_NewFeatureArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getNewFeatureArrayArrayPath(), 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NewFeatureArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NewFeatureArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NewFeatureArray = m_NewFeatureArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedCellArrayPath());
   if (getErrorCondition() < 0) { return; }
-  if (NULL != m_InDataArrayPtr.lock().get())
+  if (nullptr != m_InDataArrayPtr.lock().get())
   {
     int32_t cDims = m_InDataArrayPtr.lock()->getNumberOfComponents();
     if (cDims != 1)

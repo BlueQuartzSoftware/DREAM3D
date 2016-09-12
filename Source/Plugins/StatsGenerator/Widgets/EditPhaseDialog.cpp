@@ -47,9 +47,9 @@
 EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
   QDialog(parent),
   m_OtherPhaseFractions(0.0),
-  m_PhaseFractionValidator(NULL),
-  m_ParentPhaseValidator(NULL),
-  m_PptFractionValidator(NULL)
+  m_PhaseFractionValidator(nullptr),
+  m_ParentPhaseValidator(nullptr),
+  m_PptFractionValidator(nullptr)
 {
   setupUi(this);
   setupGui();

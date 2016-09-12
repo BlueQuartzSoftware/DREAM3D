@@ -58,8 +58,8 @@ FindCAxisLocations::FindCAxisLocations() :
   AbstractFilter(),
   m_QuatsArrayPath("", "", ""),
   m_CAxisLocationsArrayName(SIMPL::CellData::CAxisLocation),
-  m_Quats(NULL),
-  m_CAxisLocations(NULL)
+  m_Quats(nullptr),
+  m_CAxisLocations(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -119,13 +119,13 @@ void FindCAxisLocations::dataCheck()
 
   QVector<size_t> cDims(1, 4);
   m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
   tempPath.update(m_QuatsArrayPath.getDataContainerName(), m_QuatsArrayPath.getAttributeMatrixName(), getCAxisLocationsArrayName() );
   m_CAxisLocationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CAxisLocationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CAxisLocationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CAxisLocations = m_CAxisLocationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

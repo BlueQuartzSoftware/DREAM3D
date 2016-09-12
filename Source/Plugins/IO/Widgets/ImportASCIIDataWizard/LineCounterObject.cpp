@@ -103,7 +103,7 @@ void LineCounterObject::run()
 
   // Allocate the buffer
   buffer = (char*)malloc(sizeof(char)*actualSize);
-  if (buffer == NULL)
+  if (buffer == nullptr)
   {
     QString errorStr = "Error: Unable to allocate memory to read in data from \"" + m_FilePath + "\"";
     fputs(errorStr.toStdString().c_str(), stderr);

@@ -94,7 +94,7 @@ StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent) :
   QWidget(parent),
   m_PhaseIndex(-1),
   m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-  m_MDFTableModel(NULL)
+  m_MDFTableModel(nullptr)
 {
   this->setupUi(this);
   this->setupGui();
@@ -105,7 +105,7 @@ StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 StatsGenMDFWidget::~StatsGenMDFWidget()
 {
-  if (NULL != m_MDFTableModel)
+  if (nullptr != m_MDFTableModel)
   {
     m_MDFTableModel->deleteLater();
   }

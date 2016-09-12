@@ -80,7 +80,7 @@ InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter
 {
 
   m_Filter = qobject_cast<InitializeSyntheticVolume*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
+  Q_ASSERT_X(nullptr != m_Filter, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
 
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
@@ -280,7 +280,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   }
 
   IDataArray::Pointer iPtr = m_DataContainer->getAttributeMatrix("CellEnsembleData")->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  if (NULL == iPtr.get())
+  if (nullptr == iPtr.get())
   {
     m_DataContainer = DataContainer::NullPointer();
     QMessageBox::critical(this, tr("DREAM.3D"), tr("The Ensemble Array 'PhaseTypes' was not found in the File"), QMessageBox::Ok, QMessageBox::Ok);
@@ -354,14 +354,14 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == filter)
+  if (nullptr == filter)
   {
-    QString ss = QObject::tr("Error Setting InitializeSyntheticVolumeWidget Gui values to Filter instance. Filter instance was NULL.").arg(getFilterParameter()->getPropertyName());
+    QString ss = QObject::tr("Error Setting InitializeSyntheticVolumeWidget Gui values to Filter instance. Filter instance was nullptr.").arg(getFilterParameter()->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 
   InitializeSyntheticVolume* filt = qobject_cast<InitializeSyntheticVolume*>(filter);
-  if(NULL == filt) { Q_ASSERT_X(NULL != filt, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__); }
+  if(nullptr == filt) { Q_ASSERT_X(nullptr != filt, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__); }
 }
 
 
@@ -474,11 +474,11 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
   {
     return -1;
   }
-  if(m_DataContainer.get() == NULL)
+  if(m_DataContainer.get() == nullptr)
   {
     // This will force a read of the DataContainer from the data file
     on_m_InputFile_textChanged(QString(""));
-    if(m_DataContainer.get() == NULL)
+    if(m_DataContainer.get() == nullptr)
     {
       return -1;
     }
@@ -490,7 +490,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
 
   iPtr = m_DataContainer->getCellEnsembleData(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
-  if(NULL == statsDataArrayPtr)
+  if(nullptr == statsDataArrayPtr)
   {
     return -1;
   }

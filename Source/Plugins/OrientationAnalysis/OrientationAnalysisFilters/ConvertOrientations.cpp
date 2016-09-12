@@ -176,7 +176,7 @@ void ConvertOrientations::dataCheck()
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
   FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
-  if(NULL != fArray.get())
+  if(nullptr != fArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
@@ -184,7 +184,7 @@ void ConvertOrientations::dataCheck()
   }
 
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
-  if(NULL != dArray.get())
+  if(nullptr != dArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
@@ -233,7 +233,7 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
   converters[filter->getInputType()]->convertRepresentationTo(ocTypes[filter->getOutputType()]);
 
   ArrayType output = converters[filter->getInputType()]->getOutputData();
-  if(NULL == output.get())
+  if(nullptr == output.get())
   {
     QString ss = QObject::tr("There was an error converting the input data using convertor %1").arg(converters[filter->getInputType()]->getNameOfClass());
     filter->setErrorCondition(-1004);
@@ -265,7 +265,7 @@ void ConvertOrientations::execute()
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
   FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
-  if(NULL != fArray.get())
+  if(nullptr != fArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
@@ -274,7 +274,7 @@ void ConvertOrientations::execute()
   }
 
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
-  if(NULL != dArray.get())
+  if(nullptr != dArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);

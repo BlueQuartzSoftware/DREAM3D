@@ -99,7 +99,7 @@ class GenerateIPFColorsImpl
 
         // Make sure we are using a valid Euler Angles with valid crystal symmetry
         calcIPF = true;
-        if (NULL != m_GoodVoxels) { calcIPF = m_GoodVoxels[i]; }
+        if (nullptr != m_GoodVoxels) { calcIPF = m_GoodVoxels[i]; }
 
         if (calcIPF && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
         {
@@ -143,11 +143,11 @@ GenerateIPFColors::GenerateIPFColors() :
   m_UseGoodVoxels(false),
   m_GoodVoxelsArrayPath("", "", ""),
   m_CellIPFColorsArrayName(SIMPL::CellData::IPFColor),
-  m_CellPhases(NULL),
-  m_CellEulerAngles(NULL),
-  m_CrystalStructures(NULL),
-  m_GoodVoxels(NULL),
-  m_CellIPFColors(NULL)
+  m_CellPhases(nullptr),
+  m_CellEulerAngles(nullptr),
+  m_CrystalStructures(nullptr),
+  m_GoodVoxels(nullptr),
+  m_CellIPFColors(nullptr)
 {
   m_ReferenceDir.x = 0.0f;
   m_ReferenceDir.y = 0.0f;
@@ -227,25 +227,25 @@ void GenerateIPFColors::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArraypaths.push_back(getCellPhasesArrayPath()); }
 
   cDims[0] = 3;
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArraypaths.push_back(getCellEulerAnglesArrayPath()); }
 
   cDims[0] = 1;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), getCellEulerAnglesArrayPath().getAttributeMatrixName(), getCellIPFColorsArrayName() );
   m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellIPFColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellIPFColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (getUseGoodVoxels() == true)
@@ -253,13 +253,13 @@ void GenerateIPFColors::dataCheck()
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArraypaths.push_back(getGoodVoxelsArrayPath()); }
   }
   else
   {
-    m_GoodVoxels = NULL;
+    m_GoodVoxels = nullptr;
   }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArraypaths);

@@ -91,7 +91,7 @@ DxReader::DxReader() :
   m_FileWasRead(false),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   d_ptr(new DxReaderPrivate(this)),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -159,7 +159,7 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 void DxReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -223,7 +223,7 @@ void DxReader::dataCheck()
   QVector<size_t> cDims(1, 1);
   tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);

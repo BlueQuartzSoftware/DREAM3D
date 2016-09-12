@@ -59,7 +59,7 @@ AddOrientationNoise::AddOrientationNoise() :
   AbstractFilter(),
   m_Magnitude(1.0f),
   m_CellEulerAnglesArrayPath("", "", ""),
-  m_CellEulerAngles(NULL)
+  m_CellEulerAngles(nullptr)
 {
   setupFilterParameters();
 }
@@ -112,7 +112,7 @@ void AddOrientationNoise::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() < 0) { return; }
 }

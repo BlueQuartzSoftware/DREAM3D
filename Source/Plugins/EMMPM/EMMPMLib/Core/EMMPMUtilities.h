@@ -59,7 +59,7 @@ class EMMPMLib_EXPORT EMMPMUtilities
     /**
      * @brief This function will copy the internal data structure that represents an
      * segmented image into a possibly newly allocated array. If the outputImage pointer
-     * is NULL then a 'malloc' type function will allocate a new array. If you let this
+     * is nullptr then a 'malloc' type function will allocate a new array. If you let this
      * happen for you then YOU need to call @see FreeTiffImageBuffer yourself
      * when the emmpm algorithm is complete. If you preallocate the array then your
      * own memory clean systems will work just fine.
@@ -104,7 +104,7 @@ class EMMPMLib_EXPORT EMMPMUtilities
      * @brief Prints out the Mean and Variance values for each class. Primarily used
      * for debugging.
      * @param data EMMPM_Data inputs
-     * @param callbacks a non NULL EMMPM_CallbackFunctions structure
+     * @param callbacks a non nullptr EMMPM_CallbackFunctions structure
      */
     static void MonitorMeansAndVariances(EMMPM_Data::Pointer data);
 

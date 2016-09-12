@@ -185,7 +185,7 @@ void InitializeData::dataCheck()
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, attributeMatrixPath, -301);
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, attributeMatrixPath.getDataContainerName());
-  if(NULL == image.get()) { return; }
+  if(nullptr == image.get()) { return; }
 
   if (getXMax() < getXMin())
   {

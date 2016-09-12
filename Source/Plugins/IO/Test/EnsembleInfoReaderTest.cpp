@@ -82,7 +82,7 @@ class EnsembleInfoReaderTest
       QString filtName = "EnsembleInfoReader";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL == filterFactory.get() )
+      if (nullptr == filterFactory.get() )
       {
         std::stringstream ss;
         ss << "The EnsembleInfoReaderTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
@@ -96,9 +96,9 @@ class EnsembleInfoReaderTest
     // -----------------------------------------------------------------------------
     void WriteTestFile(const QString& filePath, const QString& groups)
     {
-      FILE* f = NULL;
+      FILE* f = nullptr;
       f = fopen(filePath.toLatin1().data(), "wb");
-      if (NULL == f)
+      if (nullptr == f)
       {
         QString ss = QObject::tr("Error writing output file '%1'\n ").arg(filePath);
         DREAM3D_REQUIRE_EQUAL(0, 1)
@@ -129,7 +129,7 @@ class EnsembleInfoReaderTest
       QString filtName = "EnsembleInfoReader";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL != filterFactory.get())
+      if (nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -198,7 +198,7 @@ class EnsembleInfoReaderTest
       QString filtName = "EnsembleInfoReader";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL != filterFactory.get())
+      if (nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.

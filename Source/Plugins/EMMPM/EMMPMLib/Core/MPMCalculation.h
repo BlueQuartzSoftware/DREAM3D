@@ -73,8 +73,8 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
     /**
      * @fn void acvmpm(EMMPM_Data* data, EMMPM_CallbackFunctions* callbacks);
      * @brief Runs the MPM portion of the EM/MPM algorithm
-     * @param data a non NULL EMMPM_Data pointer
-     * @param callbacks a non NULL EMMPM_CallbackFunctions
+     * @param data a non nullptr EMMPM_Data pointer
+     * @param callbacks a non nullptr EMMPM_CallbackFunctions
      */
     void execute();
 

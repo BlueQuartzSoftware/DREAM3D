@@ -47,7 +47,7 @@ class EditHeadersDialog : public QDialog, private Ui::EditHeadersDialog
   Q_OBJECT
 
 public:
-  EditHeadersDialog(QWidget* parent = NULL);
+  EditHeadersDialog(QWidget* parent = nullptr);
 
   virtual ~EditHeadersDialog();
 

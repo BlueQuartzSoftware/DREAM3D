@@ -299,8 +299,8 @@ void NearestPointFuseRegularGrids::execute()
             // the data container this will over write the current array with
             // the same name. At least in theory
             IDataArray::Pointer data = refAttrMat->getAttributeArray(*iter);
-            void* source = NULL;
-            void* destination = NULL;
+            void* source = nullptr;
+            void* destination = nullptr;
             int nComp = data->getNumberOfComponents();
 
             source = p->getVoidPointer((nComp * sampleIndex));

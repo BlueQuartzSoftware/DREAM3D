@@ -91,8 +91,8 @@ SGAxisODFWidget::SGAxisODFWidget(QWidget* parent) :
   m_Initializing(true),
   m_PhaseIndex(-1),
   m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic),
-  m_ODFTableModel(NULL),
-  m_MDFWidget(NULL)
+  m_ODFTableModel(nullptr),
+  m_MDFWidget(nullptr)
 {
   this->setupUi(this);
   this->setupGui();
@@ -104,7 +104,7 @@ SGAxisODFWidget::SGAxisODFWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 SGAxisODFWidget::~SGAxisODFWidget()
 {
-  if (NULL != m_ODFTableModel)
+  if (nullptr != m_ODFTableModel)
   {
     m_ODFTableModel->deleteLater();
   }
@@ -461,7 +461,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 // -----------------------------------------------------------------------------
 void SGAxisODFWidget::on_addODFTextureBtn_clicked()
 {
-  TextureDialog t(m_CrystalStructure, NULL);
+  TextureDialog t(m_CrystalStructure, nullptr);
   int r = t.exec();
   if (r == QDialog::Accepted)
   {

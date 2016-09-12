@@ -62,7 +62,7 @@ AddBadData::AddBadData() :
   m_PoissonVolFraction(0.0f),
   m_BoundaryNoise(false),
   m_BoundaryVolFraction(0.0f),
-  m_GBEuclideanDistances(NULL)
+  m_GBEuclideanDistances(nullptr)
 {
   setupFilterParameters();
 }
@@ -135,7 +135,7 @@ void AddBadData::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

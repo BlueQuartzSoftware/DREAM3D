@@ -62,7 +62,7 @@ RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
   m_YPoints(0),
   m_ZPoints(0),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -152,12 +152,12 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if (getErrorCondition() < 0 || NULL == cellAttrMat.get()) { return; }
+  if (getErrorCondition() < 0 || nullptr == cellAttrMat.get()) { return; }
 
   QVector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

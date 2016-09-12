@@ -248,22 +248,22 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles),
   m_Omega3sArrayName(SIMPL::FeatureData::Omega3s),
   m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters),
-  m_Neighbors(NULL),
-  m_FeatureIds(NULL),
-  m_CellPhases(NULL),
-  m_Mask(NULL),
-  m_BoundaryCells(NULL),
-  m_FeaturePhases(NULL),
-  m_Neighborhoods(NULL),
-  m_Centroids(NULL),
-  m_Volumes(NULL),
-  m_AxisLengths(NULL),
-  m_AxisEulerAngles(NULL),
-  m_Omega3s(NULL),
-  m_EquivalentDiameters(NULL),
-  m_PhaseTypes(NULL),
-  m_ShapeTypes(NULL),
-  m_NumFeatures(NULL),
+  m_Neighbors(nullptr),
+  m_FeatureIds(nullptr),
+  m_CellPhases(nullptr),
+  m_Mask(nullptr),
+  m_BoundaryCells(nullptr),
+  m_FeaturePhases(nullptr),
+  m_Neighborhoods(nullptr),
+  m_Centroids(nullptr),
+  m_Volumes(nullptr),
+  m_AxisLengths(nullptr),
+  m_AxisEulerAngles(nullptr),
+  m_Omega3s(nullptr),
+  m_EquivalentDiameters(nullptr),
+  m_PhaseTypes(nullptr),
+  m_ShapeTypes(nullptr),
+  m_NumFeatures(nullptr),
   m_ErrorOutputFile(""),
   m_VtkOutputFile("")
 {
@@ -474,21 +474,21 @@ void PackPrimaryPhases::writeFilterParameters(QJsonObject &obj)
 void PackPrimaryPhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
-  if( NULL != m_FeaturePhasesPtr.lock().get() )
+  if( nullptr != m_FeaturePhasesPtr.lock().get() )
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); }
-  if( NULL != m_NeighborhoodsPtr.lock().get() )
+  if( nullptr != m_NeighborhoodsPtr.lock().get() )
   { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); }
-  if( NULL != m_EquivalentDiametersPtr.lock().get() )
+  if( nullptr != m_EquivalentDiametersPtr.lock().get() )
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); }
-  if( NULL != m_VolumesPtr.lock().get() )
+  if( nullptr != m_VolumesPtr.lock().get() )
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); }
-  if( NULL != m_Omega3sPtr.lock().get() )
+  if( nullptr != m_Omega3sPtr.lock().get() )
   { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); }
-  if( NULL != m_CentroidsPtr.lock().get() )
+  if( nullptr != m_CentroidsPtr.lock().get() )
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); }
-  if( NULL != m_AxisEulerAnglesPtr.lock().get() )
+  if( nullptr != m_AxisEulerAnglesPtr.lock().get() )
   { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); }
-  if( NULL != m_AxisLengthsPtr.lock().get() )
+  if( nullptr != m_AxisLengthsPtr.lock().get() )
   { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); }
 }
 
@@ -509,7 +509,7 @@ void PackPrimaryPhases::dataCheck()
   // Input Ensemble Data that we require
   QVector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
-  if( NULL != m_PhaseTypesPtr.lock().get() )
+  if( nullptr != m_PhaseTypesPtr.lock().get() )
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); }
   if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getInputPhaseTypesArrayPath()); }
 
@@ -518,12 +518,12 @@ void PackPrimaryPhases::dataCheck()
 
 
   m_ShapeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputShapeTypesArrayPath(), cDims);
-  if( NULL != m_ShapeTypesPtr.lock().get() )
+  if( nullptr != m_ShapeTypesPtr.lock().get() )
   { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); }
   if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath()); }
 
   m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
-  if(m_StatsDataArray.lock() == NULL)
+  if(m_StatsDataArray.lock() == nullptr)
   {
     QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
     setErrorCondition(-308);
@@ -534,7 +534,7 @@ void PackPrimaryPhases::dataCheck()
   if(m_UseMask == true)
   {
     m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
-    if( NULL != m_MaskPtr.lock().get() )
+    if( nullptr != m_MaskPtr.lock().get() )
     { m_Mask = m_MaskPtr.lock()->getPointer(0); }
     if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getMaskArrayPath()); }
   }
@@ -543,12 +543,12 @@ void PackPrimaryPhases::dataCheck()
   // Cell Data
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellAttributeMatrixPath().getAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims); /* Assigns the shared_ptr<>(this, tempPath, -1, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() )
+  if( nullptr != m_FeatureIdsPtr.lock().get() )
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellAttributeMatrixPath().getAttributeMatrixName(), getCellPhasesArrayName() );
   m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() )
+  if( nullptr != m_CellPhasesPtr.lock().get() )
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); }
 
   if(getErrorCondition() < 0) { return; }
@@ -578,50 +578,50 @@ void PackPrimaryPhases::dataCheck()
   // Feature Data
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName() );
   m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() )
+  if( nullptr != m_FeaturePhasesPtr.lock().get() )
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_NeighborhoodsArrayName );
   m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims);
-  if( NULL != m_NeighborhoodsPtr.lock().get() )
+  if( nullptr != m_NeighborhoodsPtr.lock().get() )
   { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_EquivalentDiametersArrayName );
   m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_EquivalentDiametersPtr.lock().get() )
+  if( nullptr != m_EquivalentDiametersPtr.lock().get() )
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_VolumesArrayName );
   m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_VolumesPtr.lock().get() )
+  if( nullptr != m_VolumesPtr.lock().get() )
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_Omega3sArrayName );
   m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_Omega3sPtr.lock().get() )
+  if( nullptr != m_Omega3sPtr.lock().get() )
   { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); }
 
   cDims[0] = 3;
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_CentroidsArrayName );
   m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CentroidsPtr.lock().get() )
+  if( nullptr != m_CentroidsPtr.lock().get() )
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisEulerAnglesArrayName );
   m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AxisEulerAnglesPtr.lock().get() )
+  if( nullptr != m_AxisEulerAnglesPtr.lock().get() )
   { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisLengthsArrayName );
   m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AxisLengthsPtr.lock().get() )
+  if( nullptr != m_AxisLengthsPtr.lock().get() )
   { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); }
 
   // Ensemble Data
   cDims[0] = 1;
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellEnsembleAttributeMatrixName(), getNumFeaturesArrayName() );
   m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NumFeaturesPtr.lock().get() )
+  if( nullptr != m_NumFeaturesPtr.lock().get() )
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); }
 
 
@@ -652,9 +652,9 @@ void PackPrimaryPhases::preflight()
   emit preflightExecuted();
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath());
-  if (dc == NULL) { setInPreflight(false); return; }
+  if (dc == nullptr) { setInPreflight(false); return; }
   AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
-  if (attrMat == NULL) { setInPreflight(false); return; }
+  if (attrMat == nullptr) { setInPreflight(false); return; }
 
   attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   attrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -933,10 +933,10 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-      if (NULL == pp)
+      if (nullptr == pp)
       {
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
-                                 "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
+                                 "pointer but this resulted in a nullptr pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
             .arg(i).arg(i).arg(m_PhaseTypes[i]);
         setErrorCondition(-666);
@@ -2729,7 +2729,7 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
 
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
   m_StatsDataArray = std::dynamic_pointer_cast<StatsDataArray>(statsPtr);
-  if(m_StatsDataArray.lock().get() == NULL)
+  if(m_StatsDataArray.lock().get() == nullptr)
   {
     QString ss = QObject::tr("Stats Array Not Initialized correctly");
     setErrorCondition(-308);
@@ -2745,7 +2745,7 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
 
   iPtr = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
-  if(NULL == statsDataArrayPtr)
+  if(nullptr == statsDataArrayPtr)
   {
     return 1;
   }

@@ -56,7 +56,7 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection() :
   m_CorrelatedDataArrayPath("", "", ""),
   m_VectorDataArrayPath("", "", ""),
   m_Logfile("CorrelateValuesWithVectorDirection.log"),
-  m_VectorData(NULL),
+  m_VectorData(nullptr),
   m_MaxCoord(sqrt(SIMPLib::Constants::k_2Pi) / 2.0),
   m_Dimension(72),
   m_StepSize(sqrt(SIMPLib::Constants::k_2Pi) / 72.0)
@@ -123,7 +123,7 @@ void CorrelateValuesWithVectorDirection::dataCheck()
 
   QVector<size_t> dims(1, 3);
   m_VectorDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorDataArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_CorrelatedDataArrayPath.isEmpty() == true)
@@ -134,7 +134,7 @@ void CorrelateValuesWithVectorDirection::dataCheck()
     return;
   }
   IDataArray::Pointer inputData = getDataContainerArray()->getDataContainer(m_CorrelatedDataArrayPath.getDataContainerName())->getAttributeMatrix(m_CorrelatedDataArrayPath.getAttributeMatrixName())->getAttributeArray(m_CorrelatedDataArrayPath.getDataArrayName());
-  if (NULL == inputData.get())
+  if (nullptr == inputData.get())
   {
     QString ss = QObject::tr("Correlated Data array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_CorrelatedDataArrayPath.getDataArrayName());
     setErrorCondition(-11001);
@@ -168,7 +168,7 @@ template<typename T>
 void addToLambert(IDataArray::Pointer correlatedData, size_t bin, size_t point, double* m_LambertProjection)
 {
   DataArray<T>* correlatedArray = DataArray<T>::SafePointerDownCast(correlatedData.get());
-  if (NULL == correlatedArray)
+  if (nullptr == correlatedArray)
   {
     return;
   }
@@ -407,10 +407,10 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
     }
   }
 
-  FILE* f = NULL;
+  FILE* f = nullptr;
   QString m_OutputFile = getLogfile();
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
-  if(NULL == f)
+  if(nullptr == f)
   {
 
     QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
@@ -501,10 +501,10 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
     }
   }
 
-  FILE* f = NULL;
+  FILE* f = nullptr;
   QString m_OutputFile = getLogfile();
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
-  if(NULL == f)
+  if(nullptr == f)
   {
 
     QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
@@ -610,10 +610,10 @@ void CorrelateValuesWithVectorDirection::writePFStats(size_t numComps)
     }
   }
 
-  FILE* f = NULL;
+  FILE* f = nullptr;
   QString m_OutputFile = getLogfile();
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
-  if(NULL == f)
+  if(nullptr == f)
   {
 
     QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);

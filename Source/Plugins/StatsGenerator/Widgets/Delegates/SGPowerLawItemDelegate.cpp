@@ -39,7 +39,7 @@ QWidget* SGPowerLawItemDelegate::createEditor(QWidget* parent, const QStyleOptio
   switch(col)
   {
     case SGPowerLawTableModel::BinNumber:
-      return NULL;
+      return nullptr;
       break;
 
     case SGPowerLawTableModel::Alpha:

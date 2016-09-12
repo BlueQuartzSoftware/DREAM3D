@@ -87,10 +87,10 @@ StatsGeneratorWidget::StatsGeneratorWidget(FilterParameter* parameter, AbstractF
   FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<StatsGeneratorFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != nullptr, "nullptr Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilterParameter object");
 
   m_Filter = dynamic_cast<StatsGeneratorFilter*>(filter);
-  Q_ASSERT_X(m_Filter != NULL, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilter filter");
+  Q_ASSERT_X(m_Filter != nullptr, "nullptr Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilter filter");
 
   m_OpenDialogLastDirectory = QDir::homePath();
   setWidgetIsExpanding(true);
@@ -230,7 +230,7 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   StatsGeneratorFilter* statsGenFilter = dynamic_cast<StatsGeneratorFilter*>(filter);
 
-  if (NULL != statsGenFilter)
+  if (nullptr != statsGenFilter)
   {
     DataContainerArray::Pointer dca = generateDataContainerArray();
     DataContainer::Pointer dc = dca->getDataContainer(SIMPL::Defaults::StatsGenerator);
@@ -749,9 +749,9 @@ void StatsGeneratorWidget::on_saveJsonBtn_clicked()
 
   IDataArray::Pointer ida = am->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray::Pointer sda = std::dynamic_pointer_cast<StatsDataArray>(ida);
-  if(NULL == sda.get())
+  if(nullptr == sda.get())
   {
-    QMessageBox::critical(this, QString("JSON File Save Error"), QString("StatsDataArray was NULL or Invalid") , QMessageBox::Ok);
+    QMessageBox::critical(this, QString("JSON File Save Error"), QString("StatsDataArray was nullptr or Invalid") , QMessageBox::Ok);
     return;
   }
 
@@ -797,7 +797,7 @@ void StatsGeneratorWidget::on_saveH5Btn_clicked()
   writer->setWriteXdmfFile(false);
   writer->setWritePipeline(false);
   writer->execute();
-  // Force the clean up of the writer by assigning a NULL pointer which will
+  // Force the clean up of the writer by assigning a nullptr pointer which will
   // have the effect of executing the destructor of the H5StatsWriter Class
   writer = DataContainerWriter::NullPointer();
 

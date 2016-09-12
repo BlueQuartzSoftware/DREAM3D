@@ -61,8 +61,8 @@ FindBasalLoadingFactor::FindBasalLoadingFactor() :
   AbstractFilter(),
   m_AvgQuatsArrayPath("", "", ""),
   m_BasalLoadingFactorArrayPath("", "", ""),
-  m_BasalLoadingFactor(NULL),
-  m_AvgQuats(NULL)
+  m_BasalLoadingFactor(nullptr),
+  m_AvgQuats(nullptr)
 {
   m_LoadingDirection.x = 1.0f;
   m_LoadingDirection.y = 1.0f;
@@ -127,12 +127,12 @@ void FindBasalLoadingFactor::dataCheck()
 
   QVector<size_t> dims(1, 4);
   m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
   m_BasalLoadingFactorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBasalLoadingFactorArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BasalLoadingFactorPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_BasalLoadingFactorPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BasalLoadingFactor = m_BasalLoadingFactorPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
