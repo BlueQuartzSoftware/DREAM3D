@@ -352,7 +352,7 @@ void ReadEdaxH5Data::dataCheck()
       }
     }
 
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), SIMPL::EnsembleData::MaterialName);
+    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
     cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
     m_EbsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
   }

@@ -197,7 +197,7 @@ void MinSize::execute()
   if (m_ApplyToSinglePhase == true)
   {
     AttributeMatrix::Pointer featAttrMat = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath().getDataContainerName())->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
-    size_t numFeatures = featAttrMat->getNumTuples();
+    size_t numFeatures = featAttrMat->getNumberOfTuples();
     bool unavailablePhase = true;
     for (size_t i = 0; i < numFeatures; i++)
     {

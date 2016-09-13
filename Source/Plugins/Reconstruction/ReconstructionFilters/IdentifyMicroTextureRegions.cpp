@@ -607,7 +607,7 @@ void IdentifyMicroTextureRegions::execute()
 
   // Resize the feature attribute matrix for the MTRs to the number identified from SegmentFeatures(Vector) after filtering for size
   tDims.resize(1);
-  tDims[0] = patchFeatureAttrMat->getNumTuples();
+  tDims[0] = patchFeatureAttrMat->getNumberOfTuples();
   m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFeatureInstancePointers();
 

@@ -301,7 +301,7 @@ void CropImageGeometry::dataCheck()
 
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     if(nullptr == cellFeatureAttrMat.get()) { return; }
-    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+    QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
 }
@@ -363,7 +363,7 @@ void CropImageGeometry::execute()
 
 
   // No matter where the AM is (same DC or new DC), we have the correct DC and AM pointers...now it's time to crop
-  int64_t totalPoints = cellAttrMat->getNumTuples();
+  int64_t totalPoints = cellAttrMat->getNumberOfTuples();
 
   size_t udims[3] =
   { 0, 0, 0 };
@@ -457,7 +457,7 @@ void CropImageGeometry::execute()
 
     // This just sanity checks to make sure there were existing features before the cropping
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
+    size_t totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
     QVector<bool> activeObjects(totalFeatures, false);
     if (0 == totalFeatures)
     {

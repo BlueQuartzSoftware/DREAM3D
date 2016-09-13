@@ -262,7 +262,7 @@ void ChangeResolution::preflight()
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     if (nullptr != cellFeatureAttrMat.get())
     {
-      QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+      QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
       cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
     }
   }
@@ -386,7 +386,7 @@ void ChangeResolution::execute()
   {
     totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
+    size_t totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
     QVector<bool> activeObjects(totalFeatures, false);
     if (0 == totalFeatures)
     {

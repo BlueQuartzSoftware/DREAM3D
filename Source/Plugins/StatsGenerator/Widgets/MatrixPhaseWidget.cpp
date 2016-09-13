@@ -110,7 +110,7 @@ int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool pr
   int retErr = 0;
   float calcPhaseFraction = getPhaseFraction() / getTotalPhaseFraction();
 
-  //size_t ensembles = attrMat->getNumTuples();
+  //size_t ensembles = attrMat->getNumberOfTuples();
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);

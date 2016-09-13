@@ -339,7 +339,7 @@ int32_t FeatureInfoReader::readFile()
 
   if (m_RenumberFeatures == true)
   {
-    size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
+    size_t totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
 
     // Find the unique set of feature ids
     QVector<bool> activeObjects(totalFeatures, false);

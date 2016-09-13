@@ -544,7 +544,7 @@ void MergeColonies::identify_globAlpha()
 {
   //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  //int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  //int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumberOfTuples();
   //QVector<int> betaSize(numParents, 0);
   //QVector<int> totalSize(numParents, 0);
   //for (int64_t i = 0; i < totalPoints; i++)

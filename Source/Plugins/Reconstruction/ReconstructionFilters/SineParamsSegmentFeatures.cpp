@@ -240,7 +240,7 @@ void SineParamsSegmentFeatures::execute()
 
   SegmentFeatures::execute();
 
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumberOfTuples();
   if (totalFeatures < 2)
   {
     setErrorCondition(-87000);

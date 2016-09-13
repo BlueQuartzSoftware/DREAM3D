@@ -895,7 +895,7 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
   cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", false);
 
   // Get the number of Phases
-  size_t ensembles = cellEnsembleAttrMat->getNumTuples();
+  size_t ensembles = cellEnsembleAttrMat->getNumberOfTuples();
 
   QProgressDialog progress("Opening Stats File....", "Cancel", 0, ensembles, this);
   progress.setWindowModality(Qt::WindowModal);

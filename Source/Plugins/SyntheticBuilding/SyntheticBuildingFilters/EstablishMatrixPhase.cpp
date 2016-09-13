@@ -393,7 +393,7 @@ void  EstablishMatrixPhase::establish_matrix()
       {
         j++;
       }
-      if (m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples() <= (firstMatrixFeature + j))
+      if (m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples() <= (firstMatrixFeature + j))
       {
         tDims[0] = (firstMatrixFeature + j) + 1;
         m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);

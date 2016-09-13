@@ -542,7 +542,7 @@ void  InsertPrecipitatePhases::load_precipitates()
     notifyErrorMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", -600);
   }
 
-  m_FirstPrecipitateFeature = cellFeatureAttrMat->getNumTuples();
+  m_FirstPrecipitateFeature = cellFeatureAttrMat->getNumberOfTuples();
 
   QVector<size_t> tDims(1, m_FirstPrecipitateFeature + numPrecips);
   cellFeatureAttrMat->setTupleDimensions(tDims);
@@ -958,7 +958,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 //      tDims[0] = i + 1;
 //      m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
 //      updateFeatureInstancePointers();
-//      numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
+//      numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumberOfTuples();
 //    }
 //  }
 
@@ -2230,7 +2230,7 @@ void InsertPrecipitatePhases::assign_gaps()
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumberOfTuples();
 
   int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -xPoints * yPoints;

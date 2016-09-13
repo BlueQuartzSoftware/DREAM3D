@@ -227,7 +227,7 @@ void InitializeSyntheticVolume::dataCheck()
   // Get the number of tuples from the Ensemble Attribute Matrix from the Synthetic Stats Side of things
   AttributeMatrix::Pointer ensembleAM = getDataContainerArray()->getAttributeMatrix(getInputPhaseTypesArrayPath());
   tDims.resize(1);
-  tDims[0] = ensembleAM->getNumTuples();
+  tDims[0] = ensembleAM->getNumberOfTuples();
 
   // Create our own Ensemble Attribute Matrix
   AttributeMatrix::Pointer ensembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);

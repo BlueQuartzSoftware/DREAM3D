@@ -185,7 +185,7 @@ void FeatureDataCSVWriter::execute()
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getCellFeatureAttributeMatrixPath());
 
   // Write the total number of features
-  outFile << cellFeatureAttrMat->getNumTuples() - 1 << "\n";
+  outFile << cellFeatureAttrMat->getNumberOfTuples() - 1 << "\n";
   // Get all the names of the arrays from the Data Container
   QList<QString> headers = cellFeatureAttrMat->getAttributeArrayNames();
 

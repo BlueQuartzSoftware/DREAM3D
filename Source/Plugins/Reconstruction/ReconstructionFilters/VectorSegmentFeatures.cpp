@@ -365,7 +365,7 @@ void VectorSegmentFeatures::execute()
 
   SegmentFeatures::execute();
 
-  int32_t totalFeatures = static_cast<int32_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
+  int32_t totalFeatures = static_cast<int32_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumberOfTuples());
   if (totalFeatures < 2)
   {
     setErrorCondition(-87000);

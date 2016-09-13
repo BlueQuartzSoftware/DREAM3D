@@ -231,7 +231,7 @@ void MultiThresholdObjects::execute()
   if (m_SelectedThresholds.size() > 1)
   {
     // Get the total number of tuples, create and initialize an array to use for these results
-    int64_t totalTuples = static_cast<int64_t>(m->getAttributeMatrix(amName)->getNumTuples());
+    int64_t totalTuples = static_cast<int64_t>(m->getAttributeMatrix(amName)->getNumberOfTuples());
     BoolArrayType::Pointer currentArrayPtr = BoolArrayType::CreateArray(totalTuples, "_INTERNAL_USE_ONLY_TEMP");
 
     // Loop on the remaining Comparison objects updating our final result array as we go

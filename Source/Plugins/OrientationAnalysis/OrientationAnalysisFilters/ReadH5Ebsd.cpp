@@ -421,7 +421,7 @@ void ReadH5Ebsd::dataCheck()
   if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  StringDataArray::Pointer materialNamesPtr = StringDataArray::CreateArray( cellEnsembleAttrMat->getNumTuples(), getMaterialNameArrayName());
+  StringDataArray::Pointer materialNamesPtr = StringDataArray::CreateArray( cellEnsembleAttrMat->getNumberOfTuples(), getMaterialNameArrayName());
   cellEnsembleAttrMat->addAttributeArray(materialNamesPtr->getName(), materialNamesPtr);
   m_MaterialNamesPtr = materialNamesPtr;
 

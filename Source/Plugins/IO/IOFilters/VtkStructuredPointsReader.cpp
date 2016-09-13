@@ -374,7 +374,7 @@ template<typename T>
 int32_t readDataChunk(AttributeMatrix::Pointer attrMat, std::istream& in, bool inPreflight, bool binary,
                       const QString& scalarName, int32_t scalarNumComp)
 {
-  size_t numTuples = attrMat->getNumTuples();
+  size_t numTuples = attrMat->getNumberOfTuples();
 
   QVector<size_t> tDims = attrMat->getTupleDimensions();
   QVector<size_t> cDims(1, scalarNumComp);
@@ -588,7 +588,7 @@ int32_t VtkStructuredPointsReader:: readFile()
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
     m_CurrentAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
     ncells = tokens[1].toInt(&ok);
-    if (m_CurrentAttrMat->getNumTuples() != ncells)
+    if (m_CurrentAttrMat->getNumberOfTuples() != ncells)
     {
       setErrorCondition(-61006);
       notifyErrorMessage(getHumanLabel(), QString("Number of cells does not match number of tuples in the Attribute Matrix"), getErrorCondition());
@@ -601,7 +601,7 @@ int32_t VtkStructuredPointsReader:: readFile()
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
     m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
     npts = tokens[1].toInt(&ok);
-    if (m_CurrentAttrMat->getNumTuples() != npts)
+    if (m_CurrentAttrMat->getNumberOfTuples() != npts)
     {
       setErrorCondition(-61007);
       notifyErrorMessage(getHumanLabel(), QString("Number of points does not match number of tuples in the Attribute Matrix"), getErrorCondition());

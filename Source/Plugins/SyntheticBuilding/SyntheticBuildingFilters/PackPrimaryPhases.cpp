@@ -1054,7 +1054,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
           QString ss = QObject::tr("Packing Features (1/2) || Generating Feature #%1").arg(gid);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         }
-        if (gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()))
+        if (gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples()))
         {
           tDims[0] = static_cast<size_t>(gid + 1);
           m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
@@ -1076,7 +1076,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   {
     iter = 0;
     int32_t xfeatures = 0, yfeatures = 0, zfeatures = 0;
-    xfeatures = static_cast<int32_t>(powf((m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples() * (m_SizeX / m_SizeY) * (m_SizeX / m_SizeZ)), (1.0f / 3.0f)) + 1);
+    xfeatures = static_cast<int32_t>(powf((m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples() * (m_SizeX / m_SizeY) * (m_SizeX / m_SizeZ)), (1.0f / 3.0f)) + 1);
     yfeatures = static_cast<int32_t>(xfeatures * (m_SizeY / m_SizeX) + 1);
     zfeatures = static_cast<int32_t>(xfeatures * (m_SizeZ / m_SizeX) + 1);
     factor = 0.25f * (1.0f - (float((xfeatures - 2) * (yfeatures - 2) * (zfeatures - 2)) / float(xfeatures * yfeatures * zfeatures)));
@@ -1095,7 +1095,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         {
           QString ss = QObject::tr("Packing Features (2/2) || Generating Feature #%1").arg(gid);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-          if (gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()) )
+          if (gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples()) )
           {
             tDims[0] = static_cast<size_t>(gid + 1);
             m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
@@ -1118,7 +1118,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   tDims[0] = static_cast<size_t>(gid);
   m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
-  totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
   // need to update pointers after resize, buut do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
 
@@ -1660,7 +1660,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, bool add)
   y = m_Centroids[3 * gnum + 1];
   z = m_Centroids[3 * gnum + 2];
   dia = m_EquivalentDiameters[gnum];
-  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
   int32_t increment = 0;
   if (add == true) { increment = 1; }
   if (add == false) { increment = -1; }
@@ -1735,7 +1735,7 @@ float PackPrimaryPhases::check_neighborhooderror(int32_t gadd, int32_t gremove)
     float minFeatureDia = pp->getMinFeatureDiameter();
     float oneOverBinStepSize = 1.0f / pp->getBinStepSize();
 
-    size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+    size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
     for (size_t i = m_FirstPrimaryFeature; i < totalFeatures; i++)
     {
       nnum = 0;
@@ -1893,7 +1893,7 @@ float PackPrimaryPhases::check_sizedisterror(Feature_t* feature)
     {
       curSimFeatureSizeDist[i] = 0.0f;
     }
-    int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+    int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
     float oneOverCurFeatureSizeDistStep = 1.0f / m_FeatureSizeDistStep[iter];
     float halfMinFeatureDiameter = pp->getMinFeatureDiameter() * 0.5f;
     for (int32_t b = m_FirstPrimaryFeature; b < totalFeatures; b++)
@@ -2227,7 +2227,7 @@ void PackPrimaryPhases::assign_voxels()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
-  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumTuples();
+  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumberOfTuples();
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
@@ -2268,7 +2268,7 @@ void PackPrimaryPhases::assign_voxels()
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
 
-  int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
   for (int64_t i = m_FirstPrimaryFeature; i < totalFeatures; i++)
   {
     featuresPerTime++;
@@ -2390,7 +2390,7 @@ void PackPrimaryPhases::assign_voxels()
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   // need to update pointers after removing inactive objects
   updateFeatureInstancePointers();
-  totalFeatures = cellFeatureAttrMat->getNumTuples();
+  totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
   // counting the number of features for each phase
   for (int64_t i = 1; i < totalFeatures; i++)
   {
@@ -2433,8 +2433,8 @@ void PackPrimaryPhases::assign_gaps_only()
   int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
-  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumberOfTuples();
+  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
 
   int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -xPoints * yPoints;
@@ -2551,8 +2551,8 @@ void PackPrimaryPhases::cleanup_features()
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
-  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumberOfTuples();
+  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
@@ -2823,7 +2823,7 @@ void PackPrimaryPhases::write_goal_attributes()
   setErrorCondition(0);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
-  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
