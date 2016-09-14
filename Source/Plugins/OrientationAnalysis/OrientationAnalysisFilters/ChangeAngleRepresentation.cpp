@@ -133,7 +133,7 @@ void ChangeAngleRepresentation::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, ChangeAngleRepresentation, req));
   }
 

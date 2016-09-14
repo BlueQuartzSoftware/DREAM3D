@@ -61,7 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "EMMPMLib/Core/EMMPMUtilities.h"
 
 #define USE_TBB_TASK_GROUP 0
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if EMMPM_USE_PARALLEL_ALGORITHMS
 #include <tbb/task_scheduler_init.h>
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range2d.h>
@@ -274,7 +274,7 @@ class ParallelMPMLoop
     }
 
 
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if EMMPM_USE_PARALLEL_ALGORITHMS
 #if USE_TBB_TASK_GROUP
     void operator()() const
     {
@@ -422,7 +422,7 @@ void MPMCalculation::execute()
     if (data->cancel) { data->progress = 100.0; break; }
     data->inside_mpm_loop = 1;
 
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if EMMPM_USE_PARALLEL_ALGORITHMS
     tbb::task_scheduler_init init;
     int threads = init.default_num_threads();
 #if USE_TBB_TASK_GROUP
@@ -471,7 +471,7 @@ void MPMCalculation::execute()
     }
   }
 #if 0
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if EMMPM_USE_PARALLEL_ALGORITHMS
   std::cout << "Parrallel MPM Loop Time to Complete:";
 #else
   std::cout << "Serial MPM Loop Time To Complete: ";
