@@ -399,7 +399,6 @@ void StatsGenPlotWidget::setXAxisName(const QString &name)
 {
     QwtText qwtStr = QwtText(name);
     qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
-    m_PlotView->setTitle(qwtStr);
     m_PlotView->setAxisTitle(QwtPlot::xBottom, qwtStr);
 }
 
@@ -410,7 +409,6 @@ void StatsGenPlotWidget::setYAxisName(const QString &name)
 {
     QwtText qwtStr = QwtText(name);
     qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
-    m_PlotView->setTitle(qwtStr);
     m_PlotView->setAxisTitle(QwtPlot::yLeft, qwtStr);
 }
 
@@ -425,8 +423,6 @@ void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPl
   pal.setColor(QPalette::Foreground, Qt::white);
   pal.setColor(QPalette::Window, Qt::black);
 
- // plot->setPalette( pal );
-
   plot->plotLayout()->setAlignCanvasToScales( true );
   for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
   {
@@ -439,47 +435,21 @@ void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPl
   canvas->setPalette(pal);
   plot->setCanvas( canvas );
 
-  //plot->setCanvasBackground(QColor(Qt::white));
-
-  //  QwtPlotMagnifier* plotMag =  new QwtPlotMagnifier( canvas );
-  //  plotMag->setWheelModifiers(Qt::KeyboardModifiers(Qt::Key_Shift));
-
-  //(void) new QwtPlotPanner(canvas);
-
   QFont font;
   font.setBold(true);
 
   QwtText xAxis(xAxisName);
- // xAxis.setColor(Qt::black);
   xAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
   xAxis.setFont(font);
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
 
   QwtText yAxis(yAxisName);
- // yAxis.setColor(Qt::black);
   yAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
   yAxis.setFont(font);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
 
-
-//  QwtText title("");
-//  title.setColor(Qt::white);
-//  title.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
-//  font.setPointSize(12);
-//  title.setFont(font);
-//  plot->setTitle(title);
-
-
   const int margin = 0;
   plot->setContentsMargins( margin, margin, margin, margin );
-
-
-//  m_grid = new QwtPlotGrid;
-//  m_grid->enableXMin(true);
-//  m_grid->enableYMin(true);
-//  m_grid->setMajorPen(QPen(Qt::gray, 0, Qt::SolidLine));
-//  m_grid->setMinorPen(QPen(Qt::lightGray, 0, Qt::DotLine));
-
 
 }
 
@@ -597,7 +567,6 @@ void StatsGenPlotWidget::highlightCurve(int index)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::updatePlotCurves()
 {
-  //qDebug() << "StatsGenPlotWidget::updatePlotCurves" << "\n";
   //Loop over each entry in the table
   QwtPlotCurve* curve = nullptr;
 

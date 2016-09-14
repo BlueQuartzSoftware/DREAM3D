@@ -11,21 +11,38 @@ The StatsGenerator **Filter** was created to allow users to quickly generate a s
 
 The set(s) of statistics that can be generated in this program correspond to the set(s) used by "**Feature** packing algorithms" in DREAM.3D.  DREAM.3D chooses to classify **Features** in *Phase Types*, which define the set of statistics used to describe the key metrics for those **Features**.  The *Phase Types* that can currently be selected in DREAM.3D are _Primary_, _Precipitate_ and _Matrix_.  The statistics that describe each of these *Phase Types* are listed below:
 
-+ **Primary**: {Volume fraction}, {crystal structures}, size, shape (aspect ratios), Omega3, number of neighbors, ODF (crystallographic orientation), MDF, axis ODF (morphological orientation)  
-+ **Precipitate**: {Volume fraction}, {crystal structures}, {fraction on **Feature** boundary}, size, shape (aspect ratios), Omega3, radial distribtion function (RDF), ODF (crystallographic orientation), MDF, axis ODF (morphological orientation)
-+ **Matrix**: {Volume fraction}, {crystal structure}
+
+| Primary | Precipitate  | Matrix  |
+|---------|--------------|---------|
+| {Volume fraction} | {Volume fraction} |{Volume fraction} |
+| {crystal structures} | {crystal structures}|{crystal structure} |
+|  | {fraction on **Feature** boundary} | |
+| size | size |  |
+|  shape (aspect ratios) |shape (aspect ratios) |  |
+|  Omega3 |Omega3 |  |
+|  | radial distribtion function (RDF) | |
+|  number of neighbors | |  |
+|  ODF (crystallographic orientation) |ODF (crystallographic orientation) |  |
+|  MDF |MDF |  |
+|  axis ODF (morphological orientation) | axis ODF (morphological orientation)|  |
+
+
 
 *Stats designated with a { } are located on the Phase Properties Manager*
 
 ## Phase Properties ##
 
-![Phase Properties Buttons](Images/image009.png)
-@image latex Images/image009.png "Phase Properties Buttons" width=6in
+
+The user can use the following buttons to add, remove or edit a phase
++ Add ![Phase Properties Buttons](Images/SG_AddPhase.png)
++ Delete ![Phase Properties Buttons](Images/SG_DeletePhase.png)
++ Edit ![Phase Properties Buttons](Images/SG_EditPhase.png)
+
 
 The user can add, remove or modify properties of the phase by clicking the *Phase Properties Buttons* at the bottom of the StatsGenerator GUI. The _plus button_ allows the user to add a phase, the _minus button_ allows the user to remove a phase, and the _cogwheel button_ allows the user to edit the currently selected phase.
 
-![Phase Properties Manager](Images/image002.png)
-@image latex Images/image002.png "Phase Properties Manager" width=6in 
+![Phase Properties Manager](Images/SG_PhaseProperties.png)
+@image latex Images/SG_PhaseProperties.png "Phase Properties Manager" width=6in 
 
 The *Phase Properties Manager* is a pop-up window where the user can enter information about the phase for which statistics are currently being generated. The following items can be set in the manager:
 
@@ -33,6 +50,7 @@ The *Phase Properties Manager* is a pop-up window where the user can enter infor
 + **Fraction**: The _volume fraction_ of the phase. The _Calculated Phase Fraction_ is updated as more phases are added, by scaling the current total of all the phases fractions to 1 (in case the user's total is not equal to 1 when finished)
 + **Select Phase Type**: Specifies the type of the phase. Currently, the three supported types of phases are _Primary_, _Precipitate_ and _Matrix_. Note that the first phase is defaulted to _Primary_ and cannot be changed. If the user does not wish to have a _Primary_ phase, then a second phase can be added and the initial _Primary_ phase can then be removed.
 + **Fraction of Precipitate on Boundary**: If the phase type is set to _Precipitate_, then the user must specify the number fraction (0.0 - 1.0) of the precipitates that are located on grain boundaries of the _Primary_ phase. This value will be scaled to 1 if the user's value is larger than 1. The value is keyed to -1 for _Primary_ phases
++ **Phase Name** Set a name for the phase. Can be any string name the user wants.
 
 ## Size Distribution Tab ##
 
@@ -81,16 +99,20 @@ Anytime the user changes any input fields in the **Size Distribution** tab the *
 
 ## Omega3 Tab ##
 
+The Omega3 tab controls the morphological shape of the features that are generated. Right-Click on the plot area to edit the values.
+
+
++ **Bin**: Calculated from the size distribution and cannot be changed
++ **Alpha**: The &alpha; parameter of a beta distribution. Omega3 is normalized and can only be between 0 and 1 to insure that the beta distribution is a good fit
++ **Beta**: The &beta; parameter of the beta distribution
+
+
 ![Omega3 GUI](Images/image003.png)
 @image latex Images/image003.png "Omega3 GUI" width=6in
 
-![Examples of Omega 3 values and their respective shapes](Images/Omega3_Chart.png)
-![Examples of Omega 3 values and their respective shapes](Images/Omega3Range.png)
+![Examples of object shapes from the class of the superellipsoid shapes. The normalized affine invariant &omega;3 is shown as a function of the shape parameter __n__. Figure courtesy of M. De Graef](Images/Omega3_Chart.png)
+![Examples of object shapes from the class of the superellipsoid shapes. The normalized affine invariant &Omega;3 is shown as a function of the shape parameter __n__. Figure courtesy of M. De Graef](Images/Omega3Range.png)
 
-+ **Bin**: Calculated from the size distribution and cannot be changed
-+ **Alpha**: The _alpha_ parameter of a beta distribution. Omega3 is normalized and can only be between 0 and 1 to insure that the beta distribution is a good fit
-+ **Beta**: The _beta_ parameter of the beta distribution
-+ **Color**: Allows the user to change colors of the curves for image creation or easier identification during stats generation
 
 
 ## Shape Distribution Tab ##
@@ -99,8 +121,8 @@ Anytime the user changes any input fields in the **Size Distribution** tab the *
 @image latex Images/image004.png "Shape Distribution (Aspect Ratios) GUI" width=6in 
 
 + **Bin**: Xalculated from the size distribution and cannot be changed
-+ **Alpha**: The _alpha_ parameter of a beta distribution. B/A, C/A and C/B are normalized and can only be between 0 and 1 to insure that the beta distribution is a good fit
-+ **Beta**: The beta parameter of the beta distribution
++ **Alpha**: The &alpha; parameter of a beta distribution. B/A, C/A and C/B are normalized and can only be between 0 and 1 to insure that the beta distribution is a good fit
++ **Beta**: The &beta; parameter of the beta distribution
 + **Color**: Allows the user to change colors of the curves for image creation or easier identification during stats generation
 
 ## Neighbor Distribution Tab ##
@@ -109,8 +131,8 @@ Anytime the user changes any input fields in the **Size Distribution** tab the *
 @image latex Images/image005.png "Number of Neighbors Distribution GUI" width=6in 
 
 + **Bin**: Calculated from the size distribution and cannot be changed
-+ **Alpha**: The _alpha_ parameter of a power law distribution, which the exponent of a power law distribution
-+ **Beta**: The _beta_ parameter of a power law distribution
++ **Alpha**: The &alpha; parameter of a power law distribution, which the exponent of a power law distribution
++ **Beta**: The &beta; parameter of a power law distribution
 + **Color**: Allows the user to change colors of the curves for image creation or easier identification during stats generation
 
 ## Radial Distribution Function Tab ## 
@@ -135,8 +157,8 @@ The user **MUST** click **Generate RDF** button for the values to get stored.
 
 ## ODF Tab ##
 
-![ODF (Crystallographic Orientation) GUI](Images/image006.png)
-@image latex Images/image006.png "ODF (Crystallographic Orientation) GUI" width=6in 
+![ODF (Crystallographic Orientation) GUI](Images/SG_ODF_1.png)
+@image latex Images/SG_ODF_1.png "ODF (Crystallographic Orientation) GUI" width=6in
 
 ### Weights and Spreads Sub-Tab ###
 
@@ -148,6 +170,11 @@ The user **MUST** click **Generate RDF** button for the values to get stored.
 ### Pole Figure (PF) Sub-Tabs ###
 
 + Three PFs are formed for each of the crystal structures that can be chosen (though they are of different directions for the different crystal structures)
+
+![ODF (Crystallographic Orientation) GUI](Images/SG_ODF_2.png)
+@image latex Images/SG_ODF_2.png "ODF (Crystallographic Orientation) GUI" width=6in
+
+
 
 ### MDF Sub-Tab ###
 
@@ -162,8 +189,8 @@ This sub-tab will display the baseline _misorientation distribution function_ (M
 
 ## Axis ODF Tab ##
 
-![Axis ODF (Morphological Orientation) GUI](Images/image008.png)
-@image latex Images/image008.png "Axis ODF (Morphological Orientation) GUI" width=6in 
+![Axis ODF (Morphological Orientation) GUI](Images/AxisODF_1.png)
+@image latex Images/AxisODF_1.png "Axis ODF (Morphological Orientation) GUI" width=6in 
 
 ### Weights and Spreads Sub-Tab ###
 
@@ -175,6 +202,10 @@ This sub-tab will display the baseline _misorientation distribution function_ (M
 ### Pole Figure (PF) Sub-Tabs ###
 
 + Three PFs are formed, which correspond to the location of the 3 principal axes of the grains to be generated (i.e., A > B > C)
+
+
+![Axis ODF (Morphological Orientation) GUI](Images/AxisODF_2.png)
+@image latex Images/AxisODF_1.png "Axis ODF (Morphological Orientation) GUI" width=6in 
 
 ## Required Geometry ##
 Not Applicable

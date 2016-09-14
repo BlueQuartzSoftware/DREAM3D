@@ -611,7 +611,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   QwtText qwtStr = QwtText(str);
   qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
   m_CutOffMin->setLabel(qwtStr);
-  m_CutOffMin->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
+  m_CutOffMin->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
   m_CutOffMin->setLabelOrientation(Qt::Vertical);
   m_CutOffMin->setLineStyle(QwtPlotMarker::VLine);
   m_CutOffMin->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
@@ -626,7 +626,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   qwtStr = QwtText(str);
   qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
   m_CutOffMax->setLabel(qwtStr);
-  m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
+  m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignTop);
   m_CutOffMax->setLabelOrientation(Qt::Vertical);
   m_CutOffMax->setLineStyle(QwtPlotMarker::VLine);
   m_CutOffMax->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
@@ -640,8 +640,9 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
     yD[i] = static_cast<double>(y[i]);
   }
 
-  float xAxisMin = xCo[0] * .90f;
-  float xAxisMax = xCo[1] * 1.05f;
+  float xAxisMargin = (xCo[1] - xCo[0]) * .05f;
+  float xAxisMin = xCo[0] - xAxisMargin;
+  float xAxisMax = xCo[1] + xAxisMargin;
 
   m_SizeDistributionCurve->setSamples(xD, yD);
   m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, xAxisMin, xAxisMax);
