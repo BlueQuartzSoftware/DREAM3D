@@ -36,14 +36,14 @@
 #include "EMMPMFilter.h"
 
 #include "EMMPM/EMMPMConstants.h"
-#include "EMMPM/EMMPMLib/EMMPMLib.h"
-#include "EMMPM/EMMPMLib/Common/EMTime.h"
 #include "EMMPM/EMMPMLib/Common/EMMPM_Math.h"
-#include "EMMPM/EMMPMLib/Core/EMMPM_Data.h"
-#include "EMMPM/EMMPMLib/Core/EMMPM.h"
+#include "EMMPM/EMMPMLib/Common/EMTime.h"
 #include "EMMPM/EMMPMLib/Common/StatsDelegate.h"
-#include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
+#include "EMMPM/EMMPMLib/Core/EMMPM.h"
 #include "EMMPM/EMMPMLib/Core/EMMPMUtilities.h"
+#include "EMMPM/EMMPMLib/Core/EMMPM_Data.h"
+#include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
+#include "EMMPM/EMMPMLib/EMMPMLib.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -62,25 +62,23 @@
 // Include the MOC generated file for this class
 #include "moc_EMMPMFilter.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EMMPMFilter::EMMPMFilter() :
-  AbstractFilter(),
-  m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData),
-  m_NumClasses(4),
-  m_ExchangeEnergy(0.5f),
-  m_HistogramLoops(5),
-  m_SegmentationLoops(5),
-  m_UseSimulatedAnnealing(false),
-  m_GradientPenalty(1.0f),
-  m_CurvaturePenalty(1.0f),
-  m_RMax(15.0f),
-  m_EMLoopDelay(1),
-  m_OutputDataArrayPath("", "", ""),
-  m_EmmpmInitType(EMMPM_Basic)
+EMMPMFilter::EMMPMFilter()
+: AbstractFilter()
+, m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData)
+, m_NumClasses(4)
+, m_ExchangeEnergy(0.5f)
+, m_HistogramLoops(5)
+, m_SegmentationLoops(5)
+, m_UseSimulatedAnnealing(false)
+, m_GradientPenalty(1.0f)
+, m_CurvaturePenalty(1.0f)
+, m_RMax(15.0f)
+, m_EMLoopDelay(1)
+, m_OutputDataArrayPath("", "", "")
+, m_EmmpmInitType(EMMPM_Basic)
 {
   setupFilterParameters();
 }
@@ -89,7 +87,8 @@ EMMPMFilter::EMMPMFilter() :
 //
 // -----------------------------------------------------------------------------
 EMMPMFilter::~EMMPMFilter()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -106,14 +105,17 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gradient Penalty", UseGradientPenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Gradient Penalty (Beta E)", GradientPenalty, FilterParameter::Parameter, EMMPMFilter));
   linkedProps.clear();
-  linkedProps << "CurvaturePenalty" << "RMax" << "EMLoopDelay";
+  linkedProps << "CurvaturePenalty"
+              << "RMax"
+              << "EMLoopDelay";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Curvature Penalty (Beta C)", CurvaturePenalty, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("R Max", RMax, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("EM Loop Delay", EMLoopDelay, FilterParameter::Parameter, EMMPMFilter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Attribute Array", InputDataArrayPath, FilterParameter::RequiredArray, EMMPMFilter, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -165,21 +167,27 @@ void EMMPMFilter::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputDataArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
-  m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_InputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_InputImage = m_InputImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_InputImagePtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_InputImage = m_InputImagePtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_OutputImage = m_OutputImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
+      this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_OutputImagePtr.lock().get())   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if (getNumClasses() > 15)
+  if(getNumClasses() > 15)
   {
     setErrorCondition(-62000);
     QString ss = QObject::tr("The maximum number of classes is 15");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getNumClasses() < 2)
+  if(getNumClasses() < 2)
   {
     setErrorCondition(-62001);
     QString ss = QObject::tr("The minimum number of classes is 2");
@@ -193,12 +201,12 @@ void EMMPMFilter::dataCheck()
 void EMMPMFilter::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -208,7 +216,10 @@ void EMMPMFilter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   initialize();
 
   // This is the routine that sets up the EM/MPM to segment the image
@@ -231,17 +242,17 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   InitializationFunction::Pointer initFunction = BasicInitialization::New();
 
   // Set the initialization function based on the parameters
-  switch (data->initType)
+  switch(data->initType)
   {
-    case EMMPM_ManualInit:
-      initFunction = InitializationFunction::New();
-      break;
-    case EMMPM_UserInitArea:
-      initFunction = UserDefinedAreasInitialization::New();
-      break;
-    default:
-      initFunction = BasicInitialization::New();
-      break;
+  case EMMPM_ManualInit:
+    initFunction = InitializationFunction::New();
+    break;
+  case EMMPM_UserInitArea:
+    initFunction = UserDefinedAreasInitialization::New();
+    break;
+  default:
+    initFunction = BasicInitialization::New();
+    break;
   }
 
   data->classes = getNumClasses();
@@ -249,7 +260,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   data->emIterations = getHistogramLoops();
   data->mpmIterations = getSegmentationLoops();
 
-  for (int32_t i = 0; i < data->classes; i++)
+  for(int32_t i = 0; i < data->classes; i++)
   {
     int32_t gray = 255 / (data->classes - 1);
     // Generate a Gray Scale Color Table
@@ -271,7 +282,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   data->dims = 1; // We operate on a single channel | single component "image".
   data->inputImageChannels = cDims[0];
 
-  data->simulatedAnnealing = (char)( getUseSimulatedAnnealing() );
+  data->simulatedAnnealing = (char)(getUseSimulatedAnnealing());
   data->useGradientPenalty = getUseGradientPenalty();
   data->beta_e = getGradientPenalty();
   data->useCurvaturePenalty = getUseCurvaturePenalty();
@@ -288,11 +299,11 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 
   // If we are using the "Feedback" loop then we copy the previous Mu/Sigma values into the Mean/Variance
   // variables
-  if (data->initType == EMMPM_ManualInit)
+  if(data->initType == EMMPM_ManualInit)
   {
-    for (int32_t i = 0; i < data->classes; i++)
+    for(int32_t i = 0; i < data->classes; i++)
     {
-      for (uint32_t d = 0; d < data->dims; d++)
+      for(uint32_t d = 0; d < data->dims; d++)
       {
         data->mean[i * data->dims + d] = m_PreviousMu[i * data->dims + d];
         data->variance[i * data->dims + d] = m_PreviousSigma[i * data->dims + d];
@@ -325,20 +336,19 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   // into the initialization of the next Image to be Segmented
   m_PreviousMu.resize(getNumClasses() * data->dims);
   m_PreviousSigma.resize(getNumClasses() * data->dims);
-  if (0)
+  if(0)
   {
     std::cout << "--------------------------------------------------------------" << std::endl;
     for(std::vector<float>::size_type i = 0; i < getNumClasses(); i++)
     {
       std::cout << "Mu: " << data->mean[i] << " Variance: " << sqrtf(data->variance[i]) << std::endl;
-      for (uint32_t d = 0; d < data->dims; d++)
+      for(uint32_t d = 0; d < data->dims; d++)
       {
         m_PreviousMu[i * data->dims + d] = data->mean[i * data->dims + d];
         m_PreviousSigma[i * data->dims + d] = data->variance[i * data->dims + d];
       }
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -353,7 +363,6 @@ AbstractFilter::Pointer EMMPMFilter::newFilterInstance(bool copyFilterParameters
   }
   return filter;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -378,23 +387,29 @@ const QString EMMPMFilter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  EM_MPM::Version::Major() << "." << EM_MPM::Version::Minor() << "." << EM_MPM::Version::Patch();
+  vStream << EM_MPM::Version::Major() << "." << EM_MPM::Version::Minor() << "." << EM_MPM::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getGroupName()
-{ return SIMPL::FilterGroups::ReconstructionFilters; }
+{
+  return SIMPL::FilterGroups::ReconstructionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::SegmentationFilters; }
+{
+  return SIMPL::FilterSubGroups::SegmentationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getHumanLabel()
-{ return "EM/MPM"; }
+{
+  return "[EMMPM] EM/MPM";
+}
