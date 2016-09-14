@@ -87,7 +87,7 @@ QVector<size_t> TupleTableWidget::getData()
   for (int col = 0; col < cCount; col++)
   {
     QTableWidgetItem* item = tupleTable->item(0, col);
-    if (NULL == item)
+    if (nullptr == item)
     {
       return QVector<size_t>();
     }

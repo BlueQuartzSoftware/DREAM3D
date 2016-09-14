@@ -9,6 +9,24 @@ This **Filter** creates an _empty_ volume composed of an **Image Geometry** to s
 
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
+### User Interface ###
+
+![](InitializeSyntheticVolume.png)
+@image latex InitializeSyntheticVolume.png "User Interface" width=6in
+
+### Relationship between Dimensions and Resolution ###
+
+It can be confusing to keep straight the relationship between the **Dimensions** and **Resolution** and how changes will
+effect the number of features that would be generated. The table below illustrates the relationship via images from four
+synthetic generation runs where each run only the dimension or resolution was changed. The inputs were either 128 or 64
+voxels on a side and either 0.5 or 0.25 resolution. The units are arbitrary length units. Examining the images in the table will allow the user to better understand the relationship.
+
+|                    | Resolution (0.5^3) | Resolution (0.25^3) |
+|--------------------|--------------------|---------------------|
+| **Dimensions (128^3)** | ![316 Features](128x50.png)  | ![40 Features](128x25.png)  |
+| **Dimensions (64^3)**  | ![44 Features](64x50.png)   | ![2 Features](64x25.png)   |
+
+
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |

@@ -77,11 +77,11 @@ void NearestPointFuseRegularGrids::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Reference Cell Attribute Matrix", "ReferenceCellAttributeMatrixPath", getReferenceCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(NearestPointFuseRegularGrids, this, ReferenceCellAttributeMatrixPath), SIMPL_BIND_GETTER(NearestPointFuseRegularGrids, this, ReferenceCellAttributeMatrixPath)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Reference Cell Attribute Matrix", ReferenceCellAttributeMatrixPath, FilterParameter::RequiredArray, NearestPointFuseRegularGrids, req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Sampling Cell Attribute Matrix", "SamplingCellAttributeMatrixPath", getSamplingCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(NearestPointFuseRegularGrids, this, SamplingCellAttributeMatrixPath), SIMPL_BIND_GETTER(NearestPointFuseRegularGrids, this, SamplingCellAttributeMatrixPath)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Sampling Cell Attribute Matrix", SamplingCellAttributeMatrixPath, FilterParameter::RequiredArray, NearestPointFuseRegularGrids, req));
   }
   setFilterParameters(parameters);
 }
@@ -299,8 +299,8 @@ void NearestPointFuseRegularGrids::execute()
             // the data container this will over write the current array with
             // the same name. At least in theory
             IDataArray::Pointer data = refAttrMat->getAttributeArray(*iter);
-            void* source = NULL;
-            void* destination = NULL;
+            void* source = nullptr;
+            void* destination = nullptr;
             int nComp = data->getNumberOfComponents();
 
             source = p->getVoidPointer((nComp * sampleIndex));

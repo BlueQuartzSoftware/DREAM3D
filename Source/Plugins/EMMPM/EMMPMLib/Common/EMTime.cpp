@@ -33,7 +33,7 @@ char* formattedTime(const char* formatting, char* output)
 #endif
   TimeType long_time;
   TimeFunc(&long_time);
-  t = NULL;
+  t = nullptr;
 #ifdef _MSC_VER
 #if _MSC_VER < 1400
   t = _localtime64(&long_time);
@@ -80,7 +80,7 @@ unsigned long long int EMMPM_getMilliSeconds()
   return (unsigned long long int)(clock());
 #else
   struct timeval t1;
-  CMP_GET_TIME_OF_DAY(&t1, NULL);
+  CMP_GET_TIME_OF_DAY(&t1, nullptr);
   unsigned long long int seconds = t1.tv_sec ;
   unsigned long long int microSec = t1.tv_usec ;
   seconds *= 1000;

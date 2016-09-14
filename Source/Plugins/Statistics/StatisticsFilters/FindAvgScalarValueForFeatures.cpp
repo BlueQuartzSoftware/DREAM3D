@@ -58,9 +58,9 @@ FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures() :
   m_SelectedCellArrayPath("", "", ""),
   m_FeatureIdsArrayPath("", "", ""),
   m_NewFeatureArrayArrayPath("", "", ""),
-  m_InDataArray(NULL),
-  m_FeatureIds(NULL),
-  m_NewFeatureArray(NULL)
+  m_InDataArray(nullptr),
+  m_FeatureIds(nullptr),
+  m_NewFeatureArray(nullptr)
 {
 
   setupFilterParameters();
@@ -82,16 +82,16 @@ void FindAvgScalarValueForFeatures::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Average", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindAvgScalarValueForFeatures, this, SelectedCellArrayPath), SIMPL_BIND_GETTER(FindAvgScalarValueForFeatures, this, SelectedCellArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Average", SelectedCellArrayPath, FilterParameter::RequiredArray, FindAvgScalarValueForFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindAvgScalarValueForFeatures, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindAvgScalarValueForFeatures, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindAvgScalarValueForFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Scalar Feature Averages", "NewFeatureArrayArrayPath", getNewFeatureArrayArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindAvgScalarValueForFeatures, this, NewFeatureArrayArrayPath), SIMPL_BIND_GETTER(FindAvgScalarValueForFeatures, this, NewFeatureArrayArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Scalar Feature Averages", NewFeatureArrayArrayPath, FilterParameter::CreatedArray, FindAvgScalarValueForFeatures, req));
   }
   setFilterParameters(parameters);
 }
@@ -125,17 +125,17 @@ void FindAvgScalarValueForFeatures::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
   m_NewFeatureArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getNewFeatureArrayArrayPath(), 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NewFeatureArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NewFeatureArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NewFeatureArray = m_NewFeatureArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedCellArrayPath());
   if (getErrorCondition() < 0) { return; }
-  if (NULL != m_InDataArrayPtr.lock().get())
+  if (nullptr != m_InDataArrayPtr.lock().get())
   {
     int32_t cDims = m_InDataArrayPtr.lock()->getNumberOfComponents();
     if (cDims != 1)

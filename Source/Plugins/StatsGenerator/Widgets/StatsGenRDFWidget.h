@@ -82,6 +82,8 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
 
     RdfData::Pointer getStatisticsData();
 
+    QString getTabTitle();
+
   protected slots:
     void on_generateRDFBtn_clicked();
     void on_minDistLE_textChanged(const QString& text);

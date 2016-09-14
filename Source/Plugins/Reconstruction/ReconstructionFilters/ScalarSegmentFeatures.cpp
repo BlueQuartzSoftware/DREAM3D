@@ -168,10 +168,10 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   m_ActiveArrayName(SIMPL::FeatureData::Active),
-  m_GoodVoxels(NULL),
-  m_InputData(NULL),
-  m_FeatureIds(NULL),
-  m_Active(NULL)
+  m_GoodVoxels(nullptr),
+  m_InputData(nullptr),
+  m_FeatureIds(nullptr),
+  m_Active(nullptr)
 {
   setupFilterParameters();
 }
@@ -190,22 +190,22 @@ void ScalarSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(DoubleFilterParameter::New("Scalar Tolerance", "ScalarTolerance", getScalarTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ScalarTolerance), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ScalarTolerance)));
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, UseGoodVoxels)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Parameter, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, ScalarSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Scalar Array to Segment", "ScalarArrayPath", getScalarArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ScalarArrayPath), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ScalarArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Scalar Array to Segment", ScalarArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, GoodVoxelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, FeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
   setFilterParameters(parameters);
 }
 
@@ -232,7 +232,7 @@ void ScalarSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -259,7 +259,7 @@ void ScalarSegmentFeatures::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
@@ -269,11 +269,11 @@ void ScalarSegmentFeatures::dataCheck()
   QVector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName(), m_ScalarArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_InputDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getScalarArrayPath()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_InputDataPtr.lock().get() )
+  if( nullptr != m_InputDataPtr.lock().get() )
   {
     m_InputData = m_InputDataPtr.lock()->getVoidPointer(0);
     if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)
@@ -288,14 +288,14 @@ void ScalarSegmentFeatures::dataCheck()
   if(m_UseGoodVoxels == true)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
   }
 
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
   m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);

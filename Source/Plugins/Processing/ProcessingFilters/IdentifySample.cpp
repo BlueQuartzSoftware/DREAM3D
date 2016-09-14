@@ -57,7 +57,7 @@ IdentifySample::IdentifySample() :
   AbstractFilter(),
   m_FillHoles(false),
   m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_GoodVoxels(NULL)
+  m_GoodVoxels(nullptr)
 {
   setupFilterParameters();
 }
@@ -74,11 +74,11 @@ IdentifySample::~IdentifySample()
 void IdentifySample::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Fill Holes in Largest Feature", "FillHoles", getFillHoles(), FilterParameter::Parameter, SIMPL_BIND_SETTER(IdentifySample, this, FillHoles), SIMPL_BIND_GETTER(IdentifySample, this, FillHoles)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Fill Holes in Largest Feature", FillHoles, FilterParameter::Parameter, IdentifySample));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(IdentifySample, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(IdentifySample, this, GoodVoxelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, IdentifySample, req));
   }
   setFilterParameters(parameters);
 }
@@ -113,7 +113,7 @@ void IdentifySample::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

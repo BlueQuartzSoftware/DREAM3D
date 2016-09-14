@@ -72,7 +72,7 @@ QString EbsdToH5EbsdWidget::m_OpenDialogLastDirectory = "";
 //
 // -----------------------------------------------------------------------------
 EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent),  m_StackingGroup(NULL),
+  FilterParameterWidget(parameter, filter, parent),  m_StackingGroup(nullptr),
   m_TSLchecked(false),
   m_HKLchecked(false),
   m_HEDMchecked(false),
@@ -90,7 +90,7 @@ EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilte
   m_EulerTransformation.l = 1.0f;
 
   m_Filter = qobject_cast<EbsdToH5Ebsd*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
+  Q_ASSERT_X(nullptr != m_Filter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
 
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
@@ -758,14 +758,14 @@ void EbsdToH5EbsdWidget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == filter)
+  if (nullptr == filter)
   {
-    QString ss = QObject::tr("Error Setting EbsdToH5Ebsd Gui values to Filter instance. Filter instance was NULL.").arg(getFilterParameter()->getPropertyName());
+    QString ss = QObject::tr("Error Setting EbsdToH5Ebsd Gui values to Filter instance. Filter instance was nullptr.").arg(getFilterParameter()->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 
   EbsdToH5Ebsd* ebsdConverter = qobject_cast<EbsdToH5Ebsd*>(filter);
-  Q_ASSERT_X(NULL != ebsdConverter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
+  Q_ASSERT_X(nullptr != ebsdConverter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
 
 
   bool ok = false;

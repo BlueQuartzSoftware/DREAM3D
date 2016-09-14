@@ -52,7 +52,7 @@ class H5EbsdVolumeReader;
  */
 class ReadH5Ebsd : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(ReadH5Ebsd)
     SIMPL_STATIC_NEW_MACRO(ReadH5Ebsd)
@@ -251,9 +251,9 @@ class ReadH5Ebsd : public AbstractFilter
     int32_t loadInfo(EbsdReader* reader)
     {
       DataContainer::Pointer vdc = getDataContainerArray()->getDataContainer(getDataContainerName());
-      if(NULL == vdc) { return -1;}
+      if(nullptr == vdc) { return -1;}
       AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
-      if(NULL == attrMatrix.get() ) { return -2; }
+      if(nullptr == attrMatrix.get() ) { return -2; }
 
       reader->setFileName(m_InputFile);
       reader->setSliceStart(m_ZStartIndex);

@@ -86,7 +86,7 @@ int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t
 
   // Make sure we have the proper connectivity built
   ElementDynamicList::Pointer node2TrianglePtr = triangleGeom->getElementsContainingVert();
-  if (node2TrianglePtr.get() == NULL)
+  if (node2TrianglePtr.get() == nullptr)
   {
     err = triangleGeom->findElementsContainingVert();
     if (err < 0)

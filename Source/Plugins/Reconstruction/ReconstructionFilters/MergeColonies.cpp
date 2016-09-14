@@ -150,15 +150,15 @@ MergeColonies::MergeColonies() :
   m_AngleTolerance(1.0f),
   m_RandomizeParentIds(true),
   m_IdentifyGlobAlpha(false),
-  m_FeatureIds(NULL),
-  m_CellPhases(NULL),
-  m_AvgQuats(NULL),
-  m_FeaturePhases(NULL),
-  m_CrystalStructures(NULL),
-  m_CellParentIds(NULL),
-  m_FeatureParentIds(NULL),
-  m_GlobAlpha(NULL),
-  m_Active(NULL)
+  m_FeatureIds(nullptr),
+  m_CellPhases(nullptr),
+  m_AvgQuats(nullptr),
+  m_FeaturePhases(nullptr),
+  m_CrystalStructures(nullptr),
+  m_CellParentIds(nullptr),
+  m_FeatureParentIds(nullptr),
+  m_GlobAlpha(nullptr),
+  m_Active(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -180,39 +180,39 @@ MergeColonies::~MergeColonies()
 void MergeColonies::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_front(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, AxisTolerance), SIMPL_BIND_GETTER(MergeColonies, this, AxisTolerance)));
-  parameters.push_front(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, AngleTolerance), SIMPL_BIND_GETTER(MergeColonies, this, AngleTolerance)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Axis Tolerance (Degrees)", AxisTolerance, FilterParameter::Parameter, MergeColonies));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Angle Tolerance (Degrees)", AngleTolerance, FilterParameter::Parameter, MergeColonies));
   QStringList linkedProps("GlobAlphaArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Identify Glob Alpha", "IdentifyGlobAlpha", getIdentifyGlobAlpha(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(MergeColonies, this, IdentifyGlobAlpha), SIMPL_BIND_GETTER(MergeColonies, this, IdentifyGlobAlpha)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Identify Glob Alpha", IdentifyGlobAlpha, FilterParameter::Parameter, MergeColonies, linkedProps));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, MergeColonies, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, MergeColonies, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, MergeColonies, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, MergeColonies, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MergeColonies, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(MergeColonies, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, MergeColonies, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "CellParentIdsArrayName", getCellParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, CellParentIdsArrayName), SIMPL_BIND_GETTER(MergeColonies, this, CellParentIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Glob Alpha", "GlobAlphaArrayName", getGlobAlphaArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, GlobAlphaArrayName), SIMPL_BIND_GETTER(MergeColonies, this, GlobAlphaArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Parent Ids", CellParentIdsArrayName, FilterParameter::CreatedArray, MergeColonies));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Glob Alpha", GlobAlphaArrayName, FilterParameter::CreatedArray, MergeColonies));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, NewCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(MergeColonies, this, NewCellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Parent Ids", "FeatureParentIdsArrayName", getFeatureParentIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, FeatureParentIdsArrayName), SIMPL_BIND_GETTER(MergeColonies, this, FeatureParentIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MergeColonies, this, ActiveArrayName), SIMPL_BIND_GETTER(MergeColonies, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, MergeColonies));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Parent Ids", FeatureParentIdsArrayName, FilterParameter::CreatedArray, MergeColonies));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, MergeColonies));
   setFilterParameters(parameters);
 }
 
@@ -246,7 +246,7 @@ void MergeColonies::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -272,7 +272,7 @@ void MergeColonies::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
@@ -284,42 +284,42 @@ void MergeColonies::dataCheck()
 
   // Cell Data
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getFeatureIdsArrayPath()); }
 
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getCellPhasesArrayPath()); }
 
   tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getCellParentIdsArrayName() );
   m_CellParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (m_IdentifyGlobAlpha == true)
   {
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getGlobAlphaArrayName() );
     m_GlobAlphaPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GlobAlphaPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GlobAlphaPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GlobAlpha = m_GlobAlphaPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   // Feature Data
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { featureDataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getFeatureParentIdsArrayName() );
   m_FeatureParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 4;
   m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { featureDataArrayPaths.push_back(getAvgQuatsArrayPath()); }
 
@@ -327,12 +327,12 @@ void MergeColonies::dataCheck()
   cDims[0] = 1;
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getNewCellFeatureAttributeMatrixName(), getActiveArrayName() );
   m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -544,7 +544,7 @@ void MergeColonies::identify_globAlpha()
 {
   //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  //int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  //int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumberOfTuples();
   //QVector<int> betaSize(numParents, 0);
   //QVector<int> totalSize(numParents, 0);
   //for (int64_t i = 0; i < totalPoints; i++)

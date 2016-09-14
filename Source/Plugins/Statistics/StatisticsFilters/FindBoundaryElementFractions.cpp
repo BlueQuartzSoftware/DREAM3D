@@ -57,9 +57,9 @@ FindBoundaryElementFractions::FindBoundaryElementFractions() :
   m_FeatureIdsArrayPath("", "", ""),
   m_BoundaryCellsArrayPath("", "", ""),
   m_BoundaryCellFractionsArrayPath("", "", ""),
-  m_FeatureIds(NULL),
-  m_BoundaryCells(NULL),
-  m_BoundaryCellFractions(NULL)
+  m_FeatureIds(nullptr),
+  m_BoundaryCells(nullptr),
+  m_BoundaryCellFractions(nullptr)
 {
   setupFilterParameters();
 }
@@ -80,16 +80,16 @@ void FindBoundaryElementFractions::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryElementFractions, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindBoundaryElementFractions, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindBoundaryElementFractions, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Surface Elements", "BoundaryCellsArrayPath", getBoundaryCellsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryElementFractions, this, BoundaryCellsArrayPath), SIMPL_BIND_GETTER(FindBoundaryElementFractions, this, BoundaryCellsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Surface Elements", BoundaryCellsArrayPath, FilterParameter::RequiredArray, FindBoundaryElementFractions, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Surface Element Fractions", "BoundaryCellFractionsArrayPath", getBoundaryCellFractionsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindBoundaryElementFractions, this, BoundaryCellFractionsArrayPath), SIMPL_BIND_GETTER(FindBoundaryElementFractions, this, BoundaryCellFractionsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Surface Element Fractions", BoundaryCellFractionsArrayPath, FilterParameter::CreatedArray, FindBoundaryElementFractions, req));
   }
   setFilterParameters(parameters);
 }
@@ -123,19 +123,19 @@ void FindBoundaryElementFractions::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
 
   m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getBoundaryCellsArrayPath()); }
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 
   m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBoundaryCellFractionsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BoundaryCellFractionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_BoundaryCellFractionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BoundaryCellFractions = m_BoundaryCellFractionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

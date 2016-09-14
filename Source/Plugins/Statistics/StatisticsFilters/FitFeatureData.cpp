@@ -67,10 +67,10 @@ FitFeatureData::FitFeatureData() :
   m_FeaturePhasesArrayPath("", "", ""),
   m_BiasedFeaturesArrayPath("", "", ""),
   m_NewEnsembleArrayArray("", "", ""),
-  m_InDataArray(NULL),
-  m_BiasedFeatures(NULL),
-  m_FeaturePhases(NULL),
-  m_NewEnsembleArray(NULL)
+  m_InDataArray(nullptr),
+  m_BiasedFeatures(nullptr),
+  m_FeaturePhases(nullptr),
+  m_NewEnsembleArray(nullptr)
 {
   setupFilterParameters();
 }
@@ -104,24 +104,24 @@ void FitFeatureData::setupFilterParameters()
     parameters.push_back(parameter);
   }
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FitFeatureData, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FitFeatureData, this, RemoveBiasedFeatures)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Parameter, FitFeatureData, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array to Fit", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitFeatureData, this, SelectedFeatureArrayPath), SIMPL_BIND_GETTER(FitFeatureData, this, SelectedFeatureArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Array to Fit", SelectedFeatureArrayPath, FilterParameter::RequiredArray, FitFeatureData, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitFeatureData, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FitFeatureData, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FitFeatureData, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FitFeatureData, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FitFeatureData, this, BiasedFeaturesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Biased Features", BiasedFeaturesArrayPath, FilterParameter::RequiredArray, FitFeatureData, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Fit Parameters", "NewEnsembleArrayArray", getNewEnsembleArrayArray(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FitFeatureData, this, NewEnsembleArrayArray), SIMPL_BIND_GETTER(FitFeatureData, this, NewEnsembleArrayArray)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Fit Parameters", NewEnsembleArrayArray, FilterParameter::CreatedArray, FitFeatureData, req));
   }
   setFilterParameters(parameters);
 }
@@ -158,7 +158,7 @@ void FitFeatureData::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedFeatureArrayPath());
@@ -173,14 +173,14 @@ void FitFeatureData::dataCheck()
   getNewEnsembleArrayArray().setDataArrayName(m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit"));
   cDims[0] = numComp;
   m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getNewEnsembleArrayArray(), 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_RemoveBiasedFeatures == true)
   {
     cDims[0] = 1;
     m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }

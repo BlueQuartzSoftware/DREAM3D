@@ -91,22 +91,22 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles),
   m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths),
   m_NumFeaturesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures),
-  m_FeatureIds(NULL),
-  m_CellPhases(NULL),
-  m_Mask(NULL),
-  m_BoundaryCells(NULL),
-  m_AxisEulerAngles(NULL),
-  m_Centroids(NULL),
-  m_AxisLengths(NULL),
-  m_Volumes(NULL),
-  m_Omega3s(NULL),
-  m_EquivalentDiameters(NULL),
-  m_FeaturePhases(NULL),
-  m_NumCells(NULL),
-  m_PhaseTypes(NULL),
-  m_ShapeTypes(NULL),
-  m_NumFeatures(NULL),
-  m_Neighbors(NULL)
+  m_FeatureIds(nullptr),
+  m_CellPhases(nullptr),
+  m_Mask(nullptr),
+  m_BoundaryCells(nullptr),
+  m_AxisEulerAngles(nullptr),
+  m_Centroids(nullptr),
+  m_AxisLengths(nullptr),
+  m_Volumes(nullptr),
+  m_Omega3s(nullptr),
+  m_EquivalentDiameters(nullptr),
+  m_FeaturePhases(nullptr),
+  m_NumCells(nullptr),
+  m_PhaseTypes(nullptr),
+  m_ShapeTypes(nullptr),
+  m_NumFeatures(nullptr),
+  m_Neighbors(nullptr)
 {
 
   initialize();
@@ -126,31 +126,31 @@ InsertPrecipitatePhases::~InsertPrecipitatePhases()
 void InsertPrecipitatePhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", getPeriodicBoundaries(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, PeriodicBoundaries), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, PeriodicBoundaries)));
-  parameters.push_back(BooleanFilterParameter::New("Match Radial Distribution Function", "MatchRDF", getMatchRDF(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, MatchRDF), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, MatchRDF)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Periodic Boundaries", PeriodicBoundaries, FilterParameter::Parameter, InsertPrecipitatePhases));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Match Radial Distribution Function", MatchRDF, FilterParameter::Parameter, InsertPrecipitatePhases));
   QStringList linkedProps("MaskArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, UseMask), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, UseMask)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Cells", "BoundaryCellsArrayPath", getBoundaryCellsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, BoundaryCellsArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, BoundaryCellsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Boundary Cells", BoundaryCellsArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, MaskArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, MaskArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
@@ -159,7 +159,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, InputStatsArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, InputStatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
@@ -167,7 +167,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, InputPhaseTypesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, InputPhaseTypesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
@@ -175,20 +175,20 @@ void InsertPrecipitatePhases::setupFilterParameters()
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Shape Types", "InputShapeTypesArrayPath", getInputShapeTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, InputShapeTypesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, InputShapeTypesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Shape Types", InputShapeTypesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, NumFeaturesArrayPath), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, NumFeaturesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   linkedProps.clear();
   linkedProps << "PrecipInputFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Precipitates", "HavePrecips", getHavePrecips(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, HavePrecips), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, HavePrecips)));
-  parameters.push_back(InputFileFilterParameter::New("Precipitate Input File", "PrecipInputFile", getPrecipInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, PrecipInputFile), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, PrecipInputFile), "*.txt", "Text File"));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Precipitates", HavePrecips, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitate Input File", PrecipInputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.txt", "Text File"));
   linkedProps.clear();
   linkedProps << "CsvOutputFile";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, WriteGoalAttributes), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, WriteGoalAttributes)));
-  parameters.push_back(OutputFileFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", getCsvOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, CsvOutputFile), SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, CsvOutputFile), "*.csv", "Comma Separated Data"));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
   setFilterParameters(parameters);
 }
 
@@ -223,21 +223,21 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 void InsertPrecipitatePhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -264,7 +264,7 @@ void InsertPrecipitatePhases::initialize()
   m_SuperEllipsoidOps = ShapeOps::NullPointer();
   m_OrthoOps = OrthoRhombicOps::New();
 
-  m_Neighbors = NULL;
+  m_Neighbors = nullptr;
   m_StatsDataArray = StatsDataArray::NullPointer();
 
   m_ColumnList.clear();
@@ -310,17 +310,17 @@ void InsertPrecipitatePhases::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
-  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getInputPhaseTypesArrayPath()); }
 
   m_ShapeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputShapeTypesArrayPath(), cDims);
-  if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath()); }
 
   m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
-  if(m_StatsDataArray.lock() == NULL)
+  if(m_StatsDataArray.lock() == nullptr)
   {
     QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
     setErrorCondition(-308);
@@ -330,73 +330,73 @@ void InsertPrecipitatePhases::dataCheck()
 
   // Cell Data
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getFeatureIdsArrayPath()); }
 
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getCellPhasesArrayPath()); }
 
   m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getBoundaryCellsArrayPath()); }
 
   if (m_UseMask == true)
   {
     m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
-    if (NULL != m_MaskPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if (nullptr != m_MaskPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if (getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getMaskArrayPath()); }
   }
 
   // Feature Data
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getNumCellsArrayName() );
   m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims, getNumCellsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getEquivalentDiametersArrayName() );
   m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getEquivalentDiametersArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getVolumesArrayName() );
   m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getVolumesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getOmega3sArrayName() );
   m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getOmega3sArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getCentroidsArrayName() );
   m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getCentroidsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisEulerAnglesArrayName() );
   m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getAxisEulerAnglesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisLengthsArrayName() );
   m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getAxisLengthsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
   cDims[0] = 1;
   m_NumFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getNumFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
@@ -429,7 +429,7 @@ void InsertPrecipitatePhases::preflight()
   emit preflightExecuted();
 
   AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
-  if(attrMat == NULL) { setInPreflight(false); return; }
+  if(attrMat == nullptr) { setInPreflight(false); return; }
 
   attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   attrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -542,7 +542,7 @@ void  InsertPrecipitatePhases::load_precipitates()
     notifyErrorMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", -600);
   }
 
-  m_FirstPrecipitateFeature = cellFeatureAttrMat->getNumTuples();
+  m_FirstPrecipitateFeature = cellFeatureAttrMat->getNumberOfTuples();
 
   QVector<size_t> tDims(1, m_FirstPrecipitateFeature + numPrecips);
   cellFeatureAttrMat->setTupleDimensions(tDims);
@@ -658,10 +658,10 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-      if (NULL == pp)
+      if (nullptr == pp)
       {
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrecipitateStatsData* "
-                                 "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
+                                 "pointer but this resulted in a nullptr pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrecipitateStatsData)\n")
                      .arg(i).arg(i).arg(m_PhaseTypes[i]);
         setErrorCondition(-666);
@@ -958,7 +958,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 //      tDims[0] = i + 1;
 //      m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
 //      updateFeatureInstancePointers();
-//      numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
+//      numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumberOfTuples();
 //    }
 //  }
 
@@ -1146,7 +1146,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         m_Seed++;
 
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[randomfeature]].get());
-        if (NULL == pp)
+        if (nullptr == pp)
         {
           continue;
         }
@@ -2230,7 +2230,7 @@ void InsertPrecipitatePhases::assign_gaps()
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumberOfTuples();
 
   int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -xPoints * yPoints;

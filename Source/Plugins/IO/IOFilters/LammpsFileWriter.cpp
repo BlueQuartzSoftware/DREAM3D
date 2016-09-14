@@ -81,11 +81,11 @@ void LammpsFileWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Lammps File", "LammpsFile", getLammpsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LammpsFileWriter, this, LammpsFile), SIMPL_BIND_GETTER(LammpsFileWriter, this, LammpsFile)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Lammps File", LammpsFile, FilterParameter::Parameter, LammpsFileWriter));
 
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Vertex Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(LammpsFileWriter, this, VertexDataContainerName), SIMPL_BIND_GETTER(LammpsFileWriter, this, VertexDataContainerName)));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Vertex Data Container", VertexDataContainerName, FilterParameter::RequiredArray, LammpsFileWriter, req));
   }
 
   setFilterParameters(parameters);
@@ -130,7 +130,7 @@ void LammpsFileWriter::dataCheck()
   if (getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
-  if(NULL == vertices->getVertices().get())
+  if(nullptr == vertices->getVertices().get())
   {
     setErrorCondition(-384);
     notifyErrorMessage(getHumanLabel(), "VertexDataContainer missing Nodes", getErrorCondition());
@@ -167,9 +167,9 @@ void LammpsFileWriter::execute()
   int64_t numAtoms = vertices->getNumberOfVertices();
 
   // Open the output VTK File for writing
-  FILE* lammpsFile = NULL;
+  FILE* lammpsFile = nullptr;
   lammpsFile = fopen(m_LammpsFile.toLatin1().data(), "wb");
-  if (NULL == lammpsFile)
+  if (nullptr == lammpsFile)
   {
     QString ss = QObject::tr(": Error creating LAMMPS output file '%1'").arg(getLammpsFile());
     setErrorCondition(-11000);

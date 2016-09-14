@@ -76,15 +76,15 @@ FeatureFaceCurvatureFilter::FeatureFaceCurvatureFilter() :
   m_SurfaceMeshFeatureFaceIdsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFeatureFaceId),
   m_SurfaceMeshFaceNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTriangleCentroidsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceCentroids),
-  m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshTriangleCentroids(NULL),
-  m_SurfaceMeshFaceNormals(NULL),
-  m_SurfaceMeshPrincipalCurvature1s(NULL),
-  m_SurfaceMeshPrincipalCurvature2s(NULL),
-  m_SurfaceMeshPrincipalDirection1s(NULL),
-  m_SurfaceMeshPrincipalDirection2s(NULL),
-  m_SurfaceMeshGaussianCurvatures(NULL),
-  m_SurfaceMeshMeanCurvatures(NULL)
+  m_SurfaceMeshFaceLabels(nullptr),
+  m_SurfaceMeshTriangleCentroids(nullptr),
+  m_SurfaceMeshFaceNormals(nullptr),
+  m_SurfaceMeshPrincipalCurvature1s(nullptr),
+  m_SurfaceMeshPrincipalCurvature2s(nullptr),
+  m_SurfaceMeshPrincipalDirection1s(nullptr),
+  m_SurfaceMeshPrincipalDirection2s(nullptr),
+  m_SurfaceMeshGaussianCurvatures(nullptr),
+  m_SurfaceMeshMeanCurvatures(nullptr)
 {
   setupFilterParameters();
 }
@@ -103,50 +103,50 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(IntFilterParameter::New("Neighborhood Ring Count", "NRing", getNRing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, NRing), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, NRing)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Neighborhood Ring Count", NRing, FilterParameter::Parameter, FeatureFaceCurvatureFilter));
   QStringList linkedProps;
   linkedProps << "SurfaceMeshPrincipalCurvature1sArrayName" << "SurfaceMeshPrincipalCurvature2sArrayName";
   linkedProps << "SurfaceMeshPrincipalDirection1sArrayName" << "SurfaceMeshPrincipalDirection2sArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Principal Direction Vectors", "ComputePrincipalDirectionVectors", getComputePrincipalDirectionVectors(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, ComputePrincipalDirectionVectors), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, ComputePrincipalDirectionVectors)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Principal Direction Vectors", ComputePrincipalDirectionVectors, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceMeshGaussianCurvaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Gaussian Curvature", "ComputeGaussianCurvature", getComputeGaussianCurvature(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, ComputeGaussianCurvature), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, ComputeGaussianCurvature)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Gaussian Curvature", ComputeGaussianCurvature, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceMeshMeanCurvaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Compute Mean Curvature", "ComputeMeanCurvature", getComputeMeanCurvature(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, ComputeMeanCurvature), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, ComputeMeanCurvature)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Compute Mean Curvature", ComputeMeanCurvature, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceMeshFaceNormalsArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Face Normals for Curve Fitting", "UseNormalsForCurveFitting", getUseNormalsForCurveFitting(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, UseNormalsForCurveFitting), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, UseNormalsForCurveFitting)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Face Normals for Curve Fitting", UseNormalsForCurveFitting, FilterParameter::Parameter, FeatureFaceCurvatureFilter, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixPath", getFaceAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, FaceAttributeMatrixPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, FaceAttributeMatrixPath)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Attribute Matrix", FaceAttributeMatrixPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Ids", "SurfaceMeshFeatureFaceIdsArrayPath", getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFeatureFaceIdsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFeatureFaceIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Face Ids", SurfaceMeshFeatureFaceIdsArrayPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshFaceNormalsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Normals", SurfaceMeshFaceNormalsArrayPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshTriangleCentroidsArrayPath), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshTriangleCentroidsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Centroids", SurfaceMeshTriangleCentroidsArrayPath, FilterParameter::RequiredArray, FeatureFaceCurvatureFilter, req));
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Principal Curvature 1", "SurfaceMeshPrincipalCurvature1sArrayName", getSurfaceMeshPrincipalCurvature1sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalCurvature1sArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalCurvature1sArrayName)));
-  parameters.push_back(StringFilterParameter::New("Principal Curvature 2", "SurfaceMeshPrincipalCurvature2sArrayName", getSurfaceMeshPrincipalCurvature2sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalCurvature2sArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalCurvature2sArrayName)));
-  parameters.push_back(StringFilterParameter::New("Principal Direction 1", "SurfaceMeshPrincipalDirection1sArrayName", getSurfaceMeshPrincipalDirection1sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalDirection1sArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalDirection1sArrayName)));
-  parameters.push_back(StringFilterParameter::New("Principal Direction 2", "SurfaceMeshPrincipalDirection2sArrayName", getSurfaceMeshPrincipalDirection2sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalDirection2sArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshPrincipalDirection2sArrayName)));
-  parameters.push_back(StringFilterParameter::New("Gaussian Curvature", "SurfaceMeshGaussianCurvaturesArrayName", getSurfaceMeshGaussianCurvaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshGaussianCurvaturesArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshGaussianCurvaturesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Mean Curvature", "SurfaceMeshMeanCurvaturesArrayName", getSurfaceMeshMeanCurvaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshMeanCurvaturesArrayName), SIMPL_BIND_GETTER(FeatureFaceCurvatureFilter, this, SurfaceMeshMeanCurvaturesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Curvature 1", SurfaceMeshPrincipalCurvature1sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Curvature 2", SurfaceMeshPrincipalCurvature2sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Direction 1", SurfaceMeshPrincipalDirection1sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Direction 2", SurfaceMeshPrincipalDirection2sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Gaussian Curvature", SurfaceMeshGaussianCurvaturesArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Mean Curvature", SurfaceMeshMeanCurvaturesArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
   setFilterParameters(parameters);
 }
 
@@ -211,20 +211,20 @@ void FeatureFaceCurvatureFilter::dataCheck()
   tempPath = getFaceAttributeMatrixPath();
   tempPath.setDataArrayName(getSurfaceMeshPrincipalCurvature1sArrayName());
   m_SurfaceMeshPrincipalCurvature1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshPrincipalCurvature1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshPrincipalCurvature1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshPrincipalCurvature1s = m_SurfaceMeshPrincipalCurvature1sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshPrincipalCurvature1sPtr.lock()); }
 
   tempPath.setDataArrayName(getSurfaceMeshPrincipalCurvature2sArrayName());
   m_SurfaceMeshPrincipalCurvature2sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshPrincipalCurvature2sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshPrincipalCurvature2sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshPrincipalCurvature2s = m_SurfaceMeshPrincipalCurvature2sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (m_ComputeGaussianCurvature == true)
   {
     tempPath.setDataArrayName(getSurfaceMeshGaussianCurvaturesArrayName());
     m_SurfaceMeshGaussianCurvaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshGaussianCurvaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_SurfaceMeshGaussianCurvaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_SurfaceMeshGaussianCurvatures = m_SurfaceMeshGaussianCurvaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -232,7 +232,7 @@ void FeatureFaceCurvatureFilter::dataCheck()
   {
     tempPath.setDataArrayName(getSurfaceMeshMeanCurvaturesArrayName());
     m_SurfaceMeshMeanCurvaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshMeanCurvaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_SurfaceMeshMeanCurvaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_SurfaceMeshMeanCurvatures = m_SurfaceMeshMeanCurvaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -241,35 +241,35 @@ void FeatureFaceCurvatureFilter::dataCheck()
     cDims[0] = 3;
     tempPath.setDataArrayName(getSurfaceMeshPrincipalDirection1sArrayName());
     m_SurfaceMeshPrincipalDirection1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshPrincipalDirection1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_SurfaceMeshPrincipalDirection1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_SurfaceMeshPrincipalDirection1s = m_SurfaceMeshPrincipalDirection1sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     tempPath.setDataArrayName(getSurfaceMeshPrincipalDirection2sArrayName());
     m_SurfaceMeshPrincipalDirection2sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshPrincipalDirection2sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_SurfaceMeshPrincipalDirection2sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_SurfaceMeshPrincipalDirection2s = m_SurfaceMeshPrincipalDirection2sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   cDims[0] = 1;
   m_SurfaceMeshFeatureFaceIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFeatureFaceIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFeatureFaceIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFeatureFaceIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {m_SurfaceMeshFeatureFaceIds = m_SurfaceMeshFeatureFaceIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFeatureFaceIdsPtr.lock()); }
 
   cDims[0] = 2;
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
 
   cDims[0] = 3;
   m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceNormalsPtr.lock()); }
 
   m_SurfaceMeshTriangleCentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshTriangleCentroidsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshTriangleCentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshTriangleCentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleCentroids = m_SurfaceMeshTriangleCentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleCentroidsPtr.lock()); }
 
@@ -309,7 +309,7 @@ void FeatureFaceCurvatureFilter::execute()
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   ElementDynamicList::Pointer vertLinks = triangleGeom->getElementsContainingVert();
-  if (NULL == vertLinks.get())
+  if (nullptr == vertLinks.get())
   {
     triangleGeom->findElementsContainingVert();
   }

@@ -91,7 +91,7 @@ DxReader::DxReader() :
   m_FileWasRead(false),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   d_ptr(new DxReaderPrivate(this)),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -128,15 +128,15 @@ SIMPL_PIMPL_PROPERTY_DEF(DxReader, QDateTime, LastRead)
 void DxReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(DxReader, this, InputFile), SIMPL_BIND_GETTER(DxReader, this, InputFile), "*.dx"));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(DxReader, this, Origin), SIMPL_BIND_GETTER(DxReader, this, Origin)));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, DxReader, "*.dx"));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, DxReader));
 
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(DxReader, this, Resolution), SIMPL_BIND_GETTER(DxReader, this, Resolution)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, DxReader));
 
-  parameters.push_back(StringFilterParameter::New("Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(DxReader, this, VolumeDataContainerName), SIMPL_BIND_GETTER(DxReader, this, VolumeDataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, DxReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(DxReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(DxReader, this, CellAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(DxReader, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(DxReader, this, FeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, DxReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, DxReader));
   setFilterParameters(parameters);
 }
 
@@ -159,7 +159,7 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 void DxReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -223,7 +223,7 @@ void DxReader::dataCheck()
   QVector<size_t> cDims(1, 1);
   tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);

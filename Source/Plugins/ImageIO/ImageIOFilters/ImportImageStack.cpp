@@ -97,7 +97,7 @@ ImportImageStack::~ImportImageStack()
 void ImportImageStack::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
-  parameters.push_back(FileListInfoFilterParameter::New("Input File List", "InputFileListInfo", getInputFileListInfo(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ImportImageStack, this, InputFileListInfo), SIMPL_BIND_GETTER(ImportImageStack, this, InputFileListInfo)));
+  parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportImageStack));
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Geometry Type");
@@ -116,13 +116,13 @@ void ImportImageStack::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ImportImageStack, this, Origin), SIMPL_BIND_GETTER(ImportImageStack, this, Origin), 0));
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ImportImageStack, this, Resolution), SIMPL_BIND_GETTER(ImportImageStack, this, Resolution), 0));
-  parameters.push_back(InputFileFilterParameter::New("Bounds File", "BoundsFile", getBoundsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ImportImageStack, this, BoundsFile), SIMPL_BIND_GETTER(ImportImageStack, this, BoundsFile), "*.txt", "", 1));
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportImageStack, this, DataContainerName), SIMPL_BIND_GETTER(ImportImageStack, this, DataContainerName)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportImageStack, 0));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ImportImageStack, 0));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Bounds File", BoundsFile, FilterParameter::Parameter, ImportImageStack, "*.txt", "", 1));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportImageStack));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportImageStack, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ImportImageStack, this, CellAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Image Data", "ImageDataArrayName", getImageDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportImageStack, this, ImageDataArrayName), SIMPL_BIND_GETTER(ImportImageStack, this, ImageDataArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportImageStack));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image Data", ImageDataArrayName, FilterParameter::CreatedArray, ImportImageStack));
   setFilterParameters(parameters);
 }
 
@@ -169,7 +169,7 @@ void ImportImageStack::dataCheck()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
 
   if (m_GeometryType == 0)
   {
@@ -304,7 +304,7 @@ void ImportImageStack::dataCheck()
     // This would be for a gray scale image
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName() );
     m_ImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
@@ -346,7 +346,7 @@ void ImportImageStack::execute()
   }
   UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
 
-  uint8_t* imagePtr = NULL;
+  uint8_t* imagePtr = nullptr;
 
   int64_t z = m_InputFileListInfo.StartIndex;
   int64_t zSpot = 0;

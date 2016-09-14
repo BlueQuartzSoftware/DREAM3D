@@ -69,10 +69,10 @@ SineParamsSegmentFeatures::SineParamsSegmentFeatures() :
   m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::GoodVoxels),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   m_ActiveArrayName(SIMPL::FeatureData::Active),
-  m_SineParams(NULL),
-  m_FeatureIds(NULL),
-  m_GoodVoxels(NULL),
-  m_Active(NULL),
+  m_SineParams(nullptr),
+  m_FeatureIds(nullptr),
+  m_GoodVoxels(nullptr),
+  m_Active(nullptr),
   m_MissingGoodVoxels(false)
 {
   setupFilterParameters();
@@ -93,20 +93,20 @@ void SineParamsSegmentFeatures::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Good Voxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, UseGoodVoxels)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Good Voxels Array", UseGoodVoxels, FilterParameter::Parameter, SineParamsSegmentFeatures, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Sine Parameters", "SineParamsArrayPath", getSineParamsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, SineParamsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Sine Parameters", SineParamsArrayPath, FilterParameter::RequiredArray, SineParamsSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, GoodVoxelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("GoodVoxels", GoodVoxelsArrayPath, FilterParameter::RequiredArray, SineParamsSegmentFeatures, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("FeatureIds", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, FeatureIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SineParamsSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(SineParamsSegmentFeatures, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("FeatureIds", FeatureIdsArrayName, FilterParameter::CreatedArray, SineParamsSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, SineParamsSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, SineParamsSegmentFeatures));
 
   setFilterParameters(parameters);
 }
@@ -134,7 +134,7 @@ void SineParamsSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -162,33 +162,33 @@ void SineParamsSegmentFeatures::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  if(getErrorCondition() < 0 || nullptr == m) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
-  if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == cellFeatureAttrMat.get()) { return; }
 
   ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
 
   QVector<size_t> dims(1, 3);
   m_SineParamsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getSineParamsArrayPath(), dims);
-  if( NULL != m_SineParamsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SineParamsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SineParams = m_SineParamsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
   tempPath.update(getDataContainerName(), m_SineParamsArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(m_UseGoodVoxels == true)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
   m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -240,7 +240,7 @@ void SineParamsSegmentFeatures::execute()
 
   SegmentFeatures::execute();
 
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumberOfTuples();
   if (totalFeatures < 2)
   {
     setErrorCondition(-87000);

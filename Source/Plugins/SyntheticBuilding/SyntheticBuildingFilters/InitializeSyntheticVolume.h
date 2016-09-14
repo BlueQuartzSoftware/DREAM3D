@@ -48,7 +48,7 @@
  */
 class InitializeSyntheticVolume : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(InitializeSyntheticVolume)
     SIMPL_STATIC_NEW_MACRO(InitializeSyntheticVolume)
@@ -61,6 +61,9 @@ class InitializeSyntheticVolume : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+    SIMPL_FILTER_PARAMETER(QString, EnsembleAttributeMatrixName)
+    Q_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
 
     SIMPL_FILTER_PARAMETER(IntVec3_t, Dimensions)
     Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions)
@@ -79,6 +82,8 @@ class InitializeSyntheticVolume : public AbstractFilter
     SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
+    Q_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
 
     SIMPL_FILTER_PARAMETER(bool, EstimateNumberOfFeatures)
     Q_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)

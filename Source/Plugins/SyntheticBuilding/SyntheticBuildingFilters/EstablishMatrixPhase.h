@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _establishmatrixphase_h_
 #define _establishmatrixphase_h_
 
@@ -41,13 +39,15 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
+
 
 /**
  * @brief The EstablishMatrixPhase class. See [Filter documentation](@ref establishmatrixphase) for details.
  */
 class EstablishMatrixPhase : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(EstablishMatrixPhase)
     SIMPL_STATIC_NEW_MACRO(EstablishMatrixPhase)
@@ -87,6 +87,9 @@ class EstablishMatrixPhase : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
+    Q_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -199,17 +202,18 @@ class EstablishMatrixPhase : public AbstractFilter
     float sizez;
     float totalvol;
 
-    // Cell Data - make sure these are all initialized to NULL in the constructor
+    // Cell Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_DATAARRAY_VARIABLE(bool, Mask)
 
-    // Feature Data - make sure these are all initialized to NULL in the constructor
+    // Feature Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
-    // Ensemble Data - make sure these are all initialized to NULL in the constructor
+    // Ensemble Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_STRINGARRAY_VARIABLE(PhaseNames)
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     /**

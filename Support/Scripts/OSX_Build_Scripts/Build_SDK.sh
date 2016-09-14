@@ -44,13 +44,13 @@ fi
 if [ -e "$SDK_PARENT/$SDK_ARCHIVE_FILENAME" ];
   then
   echo "Decompressing Archive $SDK_PARENT/$SDK_ARCHIVE_FILENAME"
-  sudo mkdir -p ${SDK_INSTALL}
-  sudo chmod ugo+rwx ${SDK_INSTALL}
+  mkdir -p ${SDK_INSTALL}
+  chmod ugo+rwx ${SDK_INSTALL}
   cd "$SDK_INSTALL/../"
-  sudo tar -xvzf $SDK_ARCHIVE_FILENAME
-  sudo chmod ugo+rwx $SDK_INSTALL
+  tar -xvzf $SDK_ARCHIVE_FILENAME
+  chmod ugo+rwx $SDK_INSTALL
   USER=`whoami`
-  sudo chown -R ${USER} "$SDK_INSTALL"
+  chown -R ${USER} "$SDK_INSTALL"
 fi
 
 #-------------------------------------------------
@@ -113,9 +113,14 @@ echo "set(DREAM3D_DATA_DIR \${DREAM3D_SDK_ROOT}/DREAM3D_Data CACHE PATH \"\")" >
 # Make sure Qt is installed correctly
 
 if [[ "$HOST_SYSTEM" = "Darwin" ]]; then
-  sed -i -e "s@QT_INSTALL_LOCATION@$SDK_PARENT/$SDK_FOLDER_NAME/Qt$QT_VERSION@g" "${SCRIPT_DIR}/Qt_HeadlessInstall.js"
 
-  # Download the archive if it is not in the proper location
+  JSFILE=/tmp/Qt_HeadlessInstall.js
+  # Make a copy of the template JavaScript file
+  cp ${SCRIPT_DIR}/Qt_HeadlessInstall.js $JSFILE
+  # Substitute the DREAM3D_SDK installation location into the JavaScript file
+  sed -i -e "s@QT_INSTALL_LOCATION@$SDK_PARENT/$SDK_FOLDER_NAME/Qt$QT_VERSION@g" "$JSFILE"
+
+  # Download the Qt archive if it is not in the proper location
   if [[ ! -e $SDK_PARENT/$SDK_FOLDER_NAME/$QT_OSX_BASE_NAME.dmg ]]; then
     echo "-------------------------------------------"
     echo " Downloading Qt $QT_VERSION                "
@@ -128,9 +133,15 @@ if [[ "$HOST_SYSTEM" = "Darwin" ]]; then
   if [[ ! -e  "/Volumes/$QT_OSX_BASE_NAME/$QT_OSX_BASE_NAME.app/Contents/MacOS/$QT_OSX_BASE_NAME" ]]; then
     hdiutil mount $SDK_PARENT/$SDK_FOLDER_NAME/$QT_OSX_BASE_NAME.dmg
   fi
-  /Volumes/$QT_OSX_BASE_NAME/$QT_OSX_BASE_NAME.app/Contents/MacOS/$QT_OSX_BASE_NAME --script ${SCRIPT_DIR}/Qt_HeadlessInstall.js
+
+  # Run the Qt installer
+  /Volumes/$QT_OSX_BASE_NAME/$QT_OSX_BASE_NAME.app/Contents/MacOS/$QT_OSX_BASE_NAME --script $JSFILE
+
+  # Unmount the Qt installer disk image
   hdiutil unmount /Volumes/$QT_OSX_BASE_NAME
-  mv ${SCRIPT_DIR}/Qt_HeadlessInstall.js-e ${SCRIPT_DIR}/Qt_HeadlessInstall.js
+
+  # remove the temp JavaScript file
+  rm $JSFILE
 fi
 
 
@@ -160,11 +171,6 @@ cd $SCRIPT_DIR
 
 #-------------------------------------------------
 # Start building all the packages
-# Build Protocol Buffers
-${SCRIPT_DIR}/Build_ProtoBuf.sh 
-
-# Build Boost
-${SCRIPT_DIR}/Build_Boost.sh 
 
 # Build HDF5
 ${SCRIPT_DIR}/Build_HDF5.sh
@@ -172,16 +178,18 @@ ${SCRIPT_DIR}/Build_HDF5.sh
 # Builds Eigen
 ${SCRIPT_DIR}/Build_Eigen.sh
 
+# Build ITK.
+${SCRIPT_DIR}/Build_ITK.sh
+
+# Build Protocol Buffers
+${SCRIPT_DIR}/Build_ProtoBuf.sh 
+
 # Build TBB
 ${SCRIPT_DIR}/Build_TBB.sh
 
-# Build ITK.
-${SCRIPT_DIR}/Build_ITK.sh
-# Update the "install_name" on all the ITK libraries.
-$SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Debug 
-$SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Release 
 
-
+# Build Boost
+${SCRIPT_DIR}/Build_Boost.sh 
 
 # Build Qwt
 ${SCRIPT_DIR}/Build_Qwt.sh

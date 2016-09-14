@@ -78,7 +78,7 @@
 QEbsdReferenceFrameDialog::QEbsdReferenceFrameDialog(QString filename, QWidget* parent) :
   QDialog(parent),
   m_EbsdFileName(filename),
-  m_OriginGroup(NULL)
+  m_OriginGroup(nullptr)
 {
   setupUi(this);
 
@@ -346,7 +346,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     QString filtName = ChangeAngleRepresentation::ClassName();
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer convertEulerFactory = fm->getFactoryForFilter(filtName);
-    if (NULL != convertEulerFactory.get() )
+    if (nullptr != convertEulerFactory.get() )
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has
       // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -441,7 +441,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(cellAttrMatName);
 
   IDataArray::Pointer arrayPtr = attrMat->getAttributeArray(ipfColorFilter->getCellIPFColorsArrayName());
-  if (NULL == arrayPtr.get())
+  if (nullptr == arrayPtr.get())
   {
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();

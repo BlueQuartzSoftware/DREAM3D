@@ -64,13 +64,13 @@ FindEllipsoidError::FindEllipsoidError() :
   m_IdealFeatureIdsArrayName("IdealFeatureIds"),
   m_EllipsoidErrorArrayName("EllipsoidError"),
   m_WriteIdealEllipseFeatureIds(true),
-  m_FeatureIds(NULL),
-  m_AxisEulerAngles(NULL),
-  m_Centroids(NULL),
-  m_AxisLengths(NULL),
-  m_NumCells(NULL),
-  m_IdealFeatureIds(NULL),
-  m_EllipsoidError(NULL),
+  m_FeatureIds(nullptr),
+  m_AxisEulerAngles(nullptr),
+  m_Centroids(nullptr),
+  m_AxisLengths(nullptr),
+  m_NumCells(nullptr),
+  m_IdealFeatureIds(nullptr),
+  m_EllipsoidError(nullptr),
   m_ScaleFator(1.0f)
 {
   setupFilterParameters();
@@ -90,35 +90,35 @@ void FindEllipsoidError::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("IdealFeatureIdsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", "WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEllipsoidError, this, WriteIdealEllipseFeatureIds), SIMPL_BIND_GETTER(FindEllipsoidError, this, WriteIdealEllipseFeatureIds)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", WriteIdealEllipseFeatureIds, FilterParameter::Parameter, FindEllipsoidError, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureIds", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, CentroidsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("NumCells", "NumCellsArrayPath", getNumCellsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, NumCellsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, NumCellsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("NumCells", NumCellsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Axis Eulers", "AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, AxisEulerAnglesArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, AxisEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Axis Eulers", AxisEulerAnglesArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("AxisLengths", "AxisLengthsArrayPath", getAxisLengthsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, AxisLengthsArrayPath), SIMPL_BIND_GETTER(FindEllipsoidError, this, AxisLengthsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AxisLengths", AxisLengthsArrayPath, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindEllipsoidError, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindEllipsoidError, this, CellFeatureAttributeMatrixName)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindEllipsoidError, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("EllipsoidError", "EllipsoidErrorArrayName", getEllipsoidErrorArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, EllipsoidErrorArrayName), SIMPL_BIND_GETTER(FindEllipsoidError, this, EllipsoidErrorArrayName)));
-  parameters.push_back(StringFilterParameter::New("IdealFeatureIds", "IdealFeatureIdsArrayName", getIdealFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindEllipsoidError, this, IdealFeatureIdsArrayName), SIMPL_BIND_GETTER(FindEllipsoidError, this, IdealFeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("EllipsoidError", EllipsoidErrorArrayName, FilterParameter::CreatedArray, FindEllipsoidError));
+  parameters.push_back(SIMPL_NEW_STRING_FP("IdealFeatureIds", IdealFeatureIdsArrayName, FilterParameter::CreatedArray, FindEllipsoidError));
 
   setFilterParameters(parameters);
 }
@@ -161,31 +161,31 @@ void FindEllipsoidError::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
 
   dims[0] = 3;
   m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
   m_AxisEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAxisEulerAnglesArrayPath(), dims);
-  if( NULL != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
   m_AxisLengthsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAxisLengthsArrayPath(), dims);
-  if( NULL != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
   m_NumCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumCellsArrayPath(), dims);
-  if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (m_WriteIdealEllipseFeatureIds == true)
@@ -193,14 +193,14 @@ void FindEllipsoidError::dataCheck()
     dims[0] = 1;
     tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getIdealFeatureIdsArrayName() );
     m_IdealFeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_IdealFeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_IdealFeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_IdealFeatureIds = m_IdealFeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   dims[0] = 1;
   tempPath.update(m_NumCellsArrayPath.getDataContainerName(), m_NumCellsArrayPath.getAttributeMatrixName(), getEllipsoidErrorArrayName() );
   m_EllipsoidErrorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_EllipsoidErrorPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_EllipsoidErrorPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_EllipsoidError = m_EllipsoidErrorPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 }

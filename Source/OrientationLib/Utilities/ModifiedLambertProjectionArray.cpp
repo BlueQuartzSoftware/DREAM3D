@@ -137,7 +137,7 @@ void ModifiedLambertProjectionArray::fillArrayWithNewModifiedLambertProjection(s
   m_ModifiedLambertProjectionArray.resize(n);
   for (size_t i = 0; i < n; ++i)
   {
-    if (m_ModifiedLambertProjectionArray[i].get() == NULL)
+    if (m_ModifiedLambertProjectionArray[i].get() == nullptr)
     {
       m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
     }
@@ -462,7 +462,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString& dsetName, int lambertSize, d
   dataset = H5Dopen2(gid, dsetName.toLatin1().data(), H5P_DEFAULT);
   filespace = H5Dget_space(dataset); /* Get filespace handle first. */
   rank = H5Sget_simple_extent_ndims(filespace);
-  status = H5Sget_simple_extent_dims(filespace, currentDims, NULL);
+  status = H5Sget_simple_extent_dims(filespace, currentDims, nullptr);
   /*  printf("dataset '%s' rank %d, dims %lu x %lu \n", dsetName, rank, (unsigned long)(dims[0]), (unsigned long)(dims[1]));*/
 
   /* Try extending the dataset*/
@@ -484,11 +484,11 @@ void AppendRowToH5Dataset(hid_t gid, const QString& dsetName, int lambertSize, d
   hyperDims[0] = 1; /* We want 1 single row - so force the dimension correctly */
   hyperDims[1] = currentDims[1] / 2; /* We DO want how ever many columns are needed. */
   /*  printf("dataset '%s' rank %d, dims1 %lu x %lu \n", dsetName, rank, (unsigned long)(dims1[0]), (unsigned long)(dims1[1]));*/
-  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
+  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, nullptr, hyperDims, nullptr);
   /* Define a Memory Space*/
   //  currentDims[0] = 1;
   //  currentDims[1] = currentDims[1] / 2;
-  dataspace = H5Screate_simple(rank, hyperDims, NULL);
+  dataspace = H5Screate_simple(rank, hyperDims, nullptr);
   /* Write the data to the hyperslab.*/
   /*  printf("dataset '%s' rank %d, dims %lu x %lu \n", dsetName, rank, (unsigned long)(dims[0]), (unsigned long)(dims[1]));*/
   status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, north);
@@ -501,7 +501,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString& dsetName, int lambertSize, d
   filespace = H5Dget_space(dataset);
   //offset[0] = currentDims[0]; // Offset to current row being added
   offset[1] = lambertSize; // Offset 0 Column
-  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
+  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, nullptr, hyperDims, nullptr);
   /*
    * Write the data to the hyperslab.
    */
@@ -566,7 +566,7 @@ void Create2DExpandableDataset(hid_t gid, const QString& dsetName, int lambertSi
   filespace = H5Dget_space(dataset);
   offset[0] = 0; // Offset 0 row
   offset[1] = 0; // Offset 0 Column
-  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
+  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, nullptr, hyperDims, nullptr);
 
   /*
    * Write the data to the hyperslab.
@@ -580,7 +580,7 @@ void Create2DExpandableDataset(hid_t gid, const QString& dsetName, int lambertSi
   filespace = H5Dget_space(dataset);
   offset[0] = 0; // Offset 0 row
   offset[1] = lambertSize; // Offset 0 Column
-  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
+  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, nullptr, hyperDims, nullptr);
 
   /*
    * Write the data to the hyperslab.
@@ -624,14 +624,14 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId, QVector<size_t> 
   Create2DExpandableDataset(gid, dsetName, lambertElements, lambertElements * 2, tmp->getNorthSquare()->getPointer(0), tmp->getSouthSquare()->getPointer(0) );
 
 
-  DoubleArrayType* north = NULL;
-  DoubleArrayType* south = NULL;
+  DoubleArrayType* north = nullptr;
+  DoubleArrayType* south = nullptr;
 
 
   // We start numbering our phases at 1. Anything in slot 0 is considered "Dummy" or invalid
   for(qint32 i = 1; i < m_ModifiedLambertProjectionArray.size(); ++i)
   {
-    if (m_ModifiedLambertProjectionArray[i].get() != NULL)
+    if (m_ModifiedLambertProjectionArray[i].get() != nullptr)
     {
       north = m_ModifiedLambertProjectionArray[i]->getNorthSquare().get();
       south = m_ModifiedLambertProjectionArray[i]->getSouthSquare().get();

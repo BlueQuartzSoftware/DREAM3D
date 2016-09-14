@@ -59,7 +59,7 @@ QuiltCellData::QuiltCellData() :
   m_OutputDataContainerName(SIMPL::Defaults::NewImageDataContainerName),
   m_OutputAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_OutputArrayName("Quilt_Data"),
-  m_OutputArray(NULL)
+  m_OutputArray(nullptr)
 {
   m_QuiltStep.x = 2;
   m_QuiltStep.y = 2;
@@ -86,17 +86,17 @@ void QuiltCellData::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntVec3FilterParameter::New("Quilt Step (Voxels)", "QuiltStep", getQuiltStep(), FilterParameter::Parameter, SIMPL_BIND_SETTER(QuiltCellData, this, QuiltStep), SIMPL_BIND_GETTER(QuiltCellData, this, QuiltStep)));
-  parameters.push_back(IntVec3FilterParameter::New("Patch Size (Voxels)", "PatchSize", getPatchSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(QuiltCellData, this, PatchSize), SIMPL_BIND_GETTER(QuiltCellData, this, PatchSize)));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Quilt Step (Voxels)", QuiltStep, FilterParameter::Parameter, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Patch Size (Voxels)", PatchSize, FilterParameter::Parameter, QuiltCellData));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(QuiltCellData, this, SelectedCellArrayPath), SIMPL_BIND_GETTER(QuiltCellData, this, SelectedCellArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Array To Quilt", SelectedCellArrayPath, FilterParameter::RequiredArray, QuiltCellData, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("Output DataContainer Name", "OutputDataContainerName", getOutputDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuiltCellData, this, OutputDataContainerName), SIMPL_BIND_GETTER(QuiltCellData, this, OutputDataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuiltCellData, this, OutputAttributeMatrixName), SIMPL_BIND_GETTER(QuiltCellData, this, OutputAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Output Data Array Name", "OutputArrayName", getOutputArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuiltCellData, this, OutputArrayName), SIMPL_BIND_GETTER(QuiltCellData, this, OutputArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output DataContainer Name", OutputDataContainerName, FilterParameter::CreatedArray, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output AttributeMatrix Name", OutputAttributeMatrixName, FilterParameter::CreatedArray, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output Data Array Name", OutputArrayName, FilterParameter::CreatedArray, QuiltCellData));
 
   setFilterParameters(parameters);
 }
@@ -188,7 +188,7 @@ void QuiltCellData::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
 
   //Establish the dimensions, resolutions and origin of the new data container
   size_t dcDims[3] = { 0, 0, 0};
@@ -219,13 +219,13 @@ void QuiltCellData::dataCheck()
   tDims[1] = m2->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m2->getGeometryAs<ImageGeom>()->getZPoints();
   AttributeMatrix::Pointer newCellAttrMat = m2->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0 || NULL == newCellAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == newCellAttrMat.get()) { return; }
 
   //Get the name and create the array in the new data attrMat
   QVector<size_t> dims(1, 1);
   tempPath.update(getOutputDataContainerName(), getOutputAttributeMatrixName(), getOutputArrayName() );
   m_OutputArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_OutputArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_OutputArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_OutputArray = m_OutputArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -250,7 +250,7 @@ float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t z
 {
   float value = 0.0;
   DataArray<T>* cellArray = DataArray<T>::SafePointerDownCast(inputData.get());
-  if (NULL == cellArray)
+  if (nullptr == cellArray)
   {
     return 0.0;
   }
@@ -338,7 +338,7 @@ void QuiltCellData::execute()
   m2->getGeometryAs<ImageGeom>()->getDimensions(dc2Dims[0], dc2Dims[1], dc2Dims[2]);
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
-  if (NULL == inputData.get())
+  if (nullptr == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayPath.getDataArrayName());
     setErrorCondition(-11001);

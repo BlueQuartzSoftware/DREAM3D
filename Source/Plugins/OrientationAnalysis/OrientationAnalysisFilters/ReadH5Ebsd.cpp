@@ -81,10 +81,10 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_LatticeConstantsArrayName(SIMPL::EnsembleData::LatticeConstants),
   m_CellPhasesArrayName(SIMPL::CellData::Phases),
   m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles),
-  m_CellPhases(NULL),
-  m_CellEulerAngles(NULL),
-  m_CrystalStructures(NULL),
-  m_LatticeConstants(NULL)
+  m_CellPhases(nullptr),
+  m_CellEulerAngles(nullptr),
+  m_CrystalStructures(nullptr),
+  m_LatticeConstants(nullptr)
 {
   m_SampleTransformation.angle = 0.0f;
   m_SampleTransformation.h = 0.0f;
@@ -115,11 +115,11 @@ void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(ReadH5EbsdFilterParameter::New("Read H5Ebsd File", "ReadH5Ebsd", "__NULL__", FilterParameter::Parameter, this));
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadH5Ebsd, this, DataContainerName), SIMPL_BIND_GETTER(ReadH5Ebsd, this, DataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ReadH5Ebsd));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadH5Ebsd, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ReadH5Ebsd, this, CellAttributeMatrixName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ReadH5Ebsd));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadH5Ebsd, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(ReadH5Ebsd, this, CellEnsembleAttributeMatrixName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, ReadH5Ebsd));
   setFilterParameters(parameters);
 }
 
@@ -295,7 +295,7 @@ void ReadH5Ebsd::dataCheck()
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(NULL, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(nullptr, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> tDims(3, 0);
@@ -400,7 +400,7 @@ void ReadH5Ebsd::dataCheck()
     cDims[0] = 3;
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName() );
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -410,7 +410,7 @@ void ReadH5Ebsd::dataCheck()
     cDims[0] = 1;
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellPhasesArrayName() );
     m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -418,17 +418,17 @@ void ReadH5Ebsd::dataCheck()
   cDims[0] = 1;
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  StringDataArray::Pointer materialNamesPtr = StringDataArray::CreateArray( cellEnsembleAttrMat->getNumTuples(), getMaterialNameArrayName());
+  StringDataArray::Pointer materialNamesPtr = StringDataArray::CreateArray( cellEnsembleAttrMat->getNumberOfTuples(), getMaterialNameArrayName());
   cellEnsembleAttrMat->addAttributeArray(materialNamesPtr->getName(), materialNamesPtr);
   m_MaterialNamesPtr = materialNamesPtr;
 
   cDims[0] = 6;
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getLatticeConstantsArrayName() );
   m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -514,7 +514,7 @@ void ReadH5Ebsd::execute()
   }
 
   // Sanity Check the Error Condition or the state of the EBSD Reader Object.
-  if (getErrorCondition() < 0 || NULL == ebsdReader.get())
+  if (getErrorCondition() < 0 || nullptr == ebsdReader.get())
   {
     return;
   }
@@ -568,7 +568,7 @@ void ReadH5Ebsd::execute()
       QString filtName = "RotateSampleRefFrame";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer rotSampleFactory = fm->getFactoryForFilter(filtName);
-      if (NULL != rotSampleFactory.get() )
+      if (nullptr != rotSampleFactory.get() )
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -635,7 +635,7 @@ void ReadH5Ebsd::execute()
       QString filtName = "RotateEulerRefFrame";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer rotEulerFactory = fm->getFactoryForFilter(filtName);
-      if (NULL != rotEulerFactory.get() )
+      if (nullptr != rotEulerFactory.get() )
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -697,7 +697,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
 {
   int32_t err = 0;
   H5EbsdVolumeReader::Pointer ebsdReader = H5AngVolumeReader::New();
-  if (NULL == ebsdReader)
+  if (nullptr == ebsdReader)
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "Could not Create H5AngVolumeReader object.", -1);
@@ -731,7 +731,7 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
 {
   int32_t err = 0;
   H5EbsdVolumeReader::Pointer ebsdReader = H5CtfVolumeReader::New();
-  if (NULL == ebsdReader)
+  if (nullptr == ebsdReader)
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "Could not Create H5CtfVolumeReader object.", -1);
@@ -764,10 +764,10 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
 {
-  float* f1 = NULL;
-  float* f2 = NULL;
-  float* f3 = NULL;
-  int32_t* phasePtr = NULL;
+  float* f1 = nullptr;
+  float* f2 = nullptr;
+  float* f3 = nullptr;
+  int32_t* phasePtr = nullptr;
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
@@ -870,10 +870,10 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
 {
-  float* f1 = NULL;
-  float* f2 = NULL;
-  float* f3 = NULL;
-  int32_t* phasePtr = NULL;
+  float* f1 = nullptr;
+  float* f2 = nullptr;
+  float* f3 = nullptr;
+  int32_t* phasePtr = nullptr;
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();

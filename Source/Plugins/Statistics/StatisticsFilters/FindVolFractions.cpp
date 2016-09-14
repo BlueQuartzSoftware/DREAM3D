@@ -57,8 +57,8 @@ FindVolFractions::FindVolFractions() :
   AbstractFilter(),
   m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
   m_VolFractionsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::VolFractions),
-  m_CellPhases(NULL),
-  m_VolFractions(NULL)
+  m_CellPhases(nullptr),
+  m_VolFractions(nullptr)
 {
   setupFilterParameters();
 }
@@ -79,12 +79,12 @@ void FindVolFractions::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindVolFractions, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(FindVolFractions, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, FindVolFractions, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Volume Fractions", "VolFractionsArrayPath", getVolFractionsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindVolFractions, this, VolFractionsArrayPath), SIMPL_BIND_GETTER(FindVolFractions, this, VolFractionsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Volume Fractions", VolFractionsArrayPath, FilterParameter::CreatedArray, FindVolFractions, req));
   }
   setFilterParameters(parameters);
 }
@@ -119,11 +119,11 @@ void FindVolFractions::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_VolFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getVolFractionsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_VolFractionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_VolFractionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_VolFractions = m_VolFractionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

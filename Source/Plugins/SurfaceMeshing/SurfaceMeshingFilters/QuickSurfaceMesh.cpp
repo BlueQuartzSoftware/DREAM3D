@@ -66,9 +66,9 @@ QuickSurfaceMesh::QuickSurfaceMesh() :
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
   m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels),
   m_NodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType),
-  m_FeatureIds(NULL),
-  m_FaceLabels(NULL),
-  m_NodeTypes(NULL)
+  m_FeatureIds(nullptr),
+  m_FaceLabels(nullptr),
+  m_NodeTypes(nullptr)
 {
   setupFilterParameters();
 }
@@ -89,19 +89,19 @@ void QuickSurfaceMesh::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Transfer", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, SelectedDataArrayPaths)));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Transfer", SelectedDataArrayPaths, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, SurfaceDataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, VertexAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Node Types", "NodeTypesArrayName", getNodeTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, NodeTypesArrayName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, NodeTypesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Node Types", NodeTypesArrayName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, FaceAttributeMatrixName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, FaceAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Face Labels", "FaceLabelsArrayName", getFaceLabelsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, FaceLabelsArrayName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, FaceLabelsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Attribute Matrix", FaceAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Labels", FaceLabelsArrayName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   setFilterParameters(parameters);
 }
 
@@ -127,7 +127,7 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
 void QuickSurfaceMesh::updateVertexInstancePointers()
 {
   setErrorCondition(0);
-  if( NULL != m_NodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -137,7 +137,7 @@ void QuickSurfaceMesh::updateVertexInstancePointers()
 void QuickSurfaceMesh::updateFaceInstancePointers()
 {
   setErrorCondition(0);
-  if( NULL != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -188,7 +188,7 @@ void QuickSurfaceMesh::dataCheck()
   
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
   
@@ -232,13 +232,13 @@ void QuickSurfaceMesh::dataCheck()
   cDims[0] = 2;
   tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName() );
   m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   
   cDims[0] = 1;
   tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getNodeTypesArrayName() );
   m_NodeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   
   for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)

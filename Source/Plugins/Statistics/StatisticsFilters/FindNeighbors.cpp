@@ -68,10 +68,10 @@ FindNeighbors::FindNeighbors() :
   m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures),
   m_StoreBoundaryCells(false),
   m_StoreSurfaceFeatures(false),
-  m_FeatureIds(NULL),
-  m_BoundaryCells(NULL),
-  m_SurfaceFeatures(NULL),
-  m_NumNeighbors(NULL)
+  m_FeatureIds(nullptr),
+  m_BoundaryCells(nullptr),
+  m_SurfaceFeatures(nullptr),
+  m_NumNeighbors(nullptr)
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
@@ -93,27 +93,27 @@ void FindNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("BoundaryCellsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Boundary Cells Array", "StoreBoundaryCells", getStoreBoundaryCells(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindNeighbors, this, StoreBoundaryCells), SIMPL_BIND_GETTER(FindNeighbors, this, StoreBoundaryCells)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Boundary Cells Array", StoreBoundaryCells, FilterParameter::Parameter, FindNeighbors, linkedProps));
   linkedProps.clear();
   linkedProps << "SurfaceFeaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Surface Features Array", "StoreSurfaceFeatures", getStoreSurfaceFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindNeighbors, this, StoreSurfaceFeatures), SIMPL_BIND_GETTER(FindNeighbors, this, StoreSurfaceFeatures)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Surface Features Array", StoreSurfaceFeatures, FilterParameter::Parameter, FindNeighbors, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindNeighbors, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindNeighbors, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindNeighbors, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(FindNeighbors, this, CellFeatureAttributeMatrixPath)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, FindNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Boundary Cells", "BoundaryCellsArrayName", getBoundaryCellsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, BoundaryCellsArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, BoundaryCellsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Boundary Cells", BoundaryCellsArrayName, FilterParameter::CreatedArray, FindNeighbors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Number of Neighbors", "NumNeighborsArrayName", getNumNeighborsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, NumNeighborsArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, NumNeighborsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Neighbor List", "NeighborListArrayName", getNeighborListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, NeighborListArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, NeighborListArrayName)));
-  parameters.push_back(StringFilterParameter::New("Shared Surface Area List", "SharedSurfaceAreaListArrayName", getSharedSurfaceAreaListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, SharedSurfaceAreaListArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, SharedSurfaceAreaListArrayName)));
-  parameters.push_back(StringFilterParameter::New("Surface Features", "SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, SurfaceFeaturesArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, SurfaceFeaturesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Neighbors", NumNeighborsArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Neighbor List", NeighborListArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Shared Surface Area List", SharedSurfaceAreaListArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Surface Features", SurfaceFeaturesArrayName, FilterParameter::CreatedArray, FindNeighbors));
   setFilterParameters(parameters);
 }
 
@@ -158,14 +158,14 @@ void FindNeighbors::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getBoundaryCellsArrayName() );
   if (m_StoreBoundaryCells == true)
   {
     m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -173,14 +173,14 @@ void FindNeighbors::dataCheck()
 
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNumNeighborsArrayName() );
   m_NumNeighborsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NumNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NumNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSurfaceFeaturesArrayName() );
   if (m_StoreSurfaceFeatures == true)
   {
     m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 

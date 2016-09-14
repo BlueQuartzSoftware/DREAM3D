@@ -225,6 +225,7 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
   ${${PLUGIN_NAME}_GEN_HDRS}
+  ${${PLUGIN_NAME}_Widgets_MISC_HDRS}
 
   ${StatsGenerator_DELEGATE_SRCS}
   ${StatsGenerator_DELEGATE_MOC_HDRS}

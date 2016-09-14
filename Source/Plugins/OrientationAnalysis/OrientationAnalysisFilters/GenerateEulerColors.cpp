@@ -68,10 +68,10 @@ GenerateEulerColors::GenerateEulerColors() :
   m_GoodVoxelsArrayPath("", "", ""),
   m_CellEulerColorsArrayName(SIMPL::CellData::EulerColor),
   m_UseGoodVoxels(false),
-  m_CellPhases(NULL),
-  m_CellEulerAngles(NULL),
-  m_CellEulerColors(NULL),
-  m_CrystalStructures(NULL)
+  m_CellPhases(nullptr),
+  m_CellEulerAngles(nullptr),
+  m_CellEulerColors(nullptr),
+  m_CrystalStructures(nullptr)
 {
   setupFilterParameters();
 }
@@ -91,26 +91,26 @@ void GenerateEulerColors::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateEulerColors, this, UseGoodVoxels), SIMPL_BIND_GETTER(GenerateEulerColors, this, UseGoodVoxels)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Good Voxels Only (Bad Voxels Will Be Black)", UseGoodVoxels, FilterParameter::Parameter, GenerateEulerColors, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateEulerColors, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(GenerateEulerColors, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, GenerateEulerColors, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateEulerColors, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(GenerateEulerColors, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateEulerColors, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 3, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateEulerColors, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(GenerateEulerColors, this, CellEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, GenerateEulerColors, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateEulerColors, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(GenerateEulerColors, this, GoodVoxelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, GenerateEulerColors, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("CellEulerColors", "CellEulerColorsArrayName", getCellEulerColorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(GenerateEulerColors, this, CellEulerColorsArrayName), SIMPL_BIND_GETTER(GenerateEulerColors, this, CellEulerColorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("CellEulerColors", CellEulerColorsArrayName, FilterParameter::CreatedArray, GenerateEulerColors));
 
   setFilterParameters(parameters);
 }
@@ -148,20 +148,20 @@ void GenerateEulerColors::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   //typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellEulerColorsArrayName() );
   m_CellEulerColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerColors = m_CellEulerColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
@@ -170,12 +170,12 @@ void GenerateEulerColors::dataCheck()
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     dims[0] = 1;
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else
   {
-    m_GoodVoxels = NULL;
+    m_GoodVoxels = nullptr;
   }
 }
 

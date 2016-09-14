@@ -63,8 +63,8 @@ ErodeDilateBadData::ErodeDilateBadData() :
   m_YDirOn(true),
   m_ZDirOn(true),
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_Neighbors(NULL),
-  m_FeatureIds(NULL)
+  m_Neighbors(nullptr),
+  m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -96,14 +96,14 @@ void ErodeDilateBadData::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Number of Iterations", "NumIterations", getNumIterations(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateBadData, this, NumIterations), SIMPL_BIND_GETTER(ErodeDilateBadData, this, NumIterations)));
-  parameters.push_back(BooleanFilterParameter::New("X Direction", "XDirOn", getXDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateBadData, this, XDirOn), SIMPL_BIND_GETTER(ErodeDilateBadData, this, XDirOn)));
-  parameters.push_back(BooleanFilterParameter::New("Y Direction", "YDirOn", getYDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateBadData, this, YDirOn), SIMPL_BIND_GETTER(ErodeDilateBadData, this, YDirOn)));
-  parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateBadData, this, ZDirOn), SIMPL_BIND_GETTER(ErodeDilateBadData, this, ZDirOn)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Iterations", NumIterations, FilterParameter::Parameter, ErodeDilateBadData));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("X Direction", XDirOn, FilterParameter::Parameter, ErodeDilateBadData));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Y Direction", YDirOn, FilterParameter::Parameter, ErodeDilateBadData));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Z Direction", ZDirOn, FilterParameter::Parameter, ErodeDilateBadData));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ErodeDilateBadData, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(ErodeDilateBadData, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, ErodeDilateBadData, req));
   }
   setFilterParameters(parameters);
 }
@@ -149,7 +149,7 @@ void ErodeDilateBadData::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

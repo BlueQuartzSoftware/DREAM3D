@@ -79,14 +79,14 @@ FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments() :
   m_CrystalStructuresArrayPath("", "", ""),
   m_UnbiasedLocalCAxisMisalignmentsArrayName(SIMPL::FeatureData::UnbiasedLocalCAxisMisalignments),
   m_NumFeaturesPerParentArrayName(SIMPL::FeatureData::NumFeaturesPerParent),
-  m_FeatureIds(NULL),
-  m_CellParentIds(NULL),
-  m_FeatureParentIds(NULL),
-  m_NumFeaturesPerParent(NULL),
-  m_AvgCAxisMisalignments(NULL),
-  m_LocalCAxisMisalignments(NULL),
-  m_UnbiasedLocalCAxisMisalignments(NULL),
-  m_CrystalStructures(NULL)
+  m_FeatureIds(nullptr),
+  m_CellParentIds(nullptr),
+  m_FeatureParentIds(nullptr),
+  m_NumFeaturesPerParent(nullptr),
+  m_AvgCAxisMisalignments(nullptr),
+  m_LocalCAxisMisalignments(nullptr),
+  m_UnbiasedLocalCAxisMisalignments(nullptr),
+  m_CrystalStructures(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -108,47 +108,47 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("LocalCAxisMisalignmentsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Local C-Axis Misalignments", "CalcBiasedAvg", getCalcBiasedAvg(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, CalcBiasedAvg), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, CalcBiasedAvg)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Local C-Axis Misalignments", CalcBiasedAvg, FilterParameter::Parameter, FindLocalAverageCAxisMisalignments, linkedProps));
   linkedProps.clear();
   linkedProps << "UnbiasedLocalCAxisMisalignmentsArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Unbiased Local C-Axis Misalignments", "CalcUnbiasedAvg", getCalcUnbiasedAvg(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, CalcUnbiasedAvg), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, CalcUnbiasedAvg)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Unbiased Local C-Axis Misalignments", CalcUnbiasedAvg, FilterParameter::Parameter, FindLocalAverageCAxisMisalignments, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, NeighborListArrayPath), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, NeighborListArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Neighbor List Array Name", NeighborListArrayPath, FilterParameter::RequiredArray, FindLocalAverageCAxisMisalignments, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("CAxis Misalignment List Array Name", "CAxisMisalignmentListArrayPath", getCAxisMisalignmentListArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, CAxisMisalignmentListArrayPath), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, CAxisMisalignmentListArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("CAxis Misalignment List Array Name", CAxisMisalignmentListArrayPath, FilterParameter::RequiredArray, FindLocalAverageCAxisMisalignments, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureIds", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindLocalAverageCAxisMisalignments, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("CellParentIds", "CellParentIdsArrayPath", getCellParentIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, CellParentIdsArrayPath), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, CellParentIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("CellParentIds", CellParentIdsArrayPath, FilterParameter::RequiredArray, FindLocalAverageCAxisMisalignments, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayPath", getAvgCAxisMisalignmentsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, AvgCAxisMisalignmentsArrayPath), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, AvgCAxisMisalignmentsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AvgCAxisMisalignments", AvgCAxisMisalignmentsArrayPath, FilterParameter::RequiredArray, FindLocalAverageCAxisMisalignments, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureParentIds", "FeatureParentIdsArrayPath", getFeatureParentIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, FeatureParentIdsArrayPath), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, FeatureParentIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureParentIds", FeatureParentIdsArrayPath, FilterParameter::RequiredArray, FindLocalAverageCAxisMisalignments, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindLocalAverageCAxisMisalignments, req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::UnknownGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, NewCellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, NewCellFeatureAttributeMatrixName)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("New Cell Feature Attribute Matrix Name", NewCellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindLocalAverageCAxisMisalignments, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("NumFeaturesPerParent", "NumFeaturesPerParentArrayName", getNumFeaturesPerParentArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, NumFeaturesPerParentArrayName), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, NumFeaturesPerParentArrayName)));
-  parameters.push_back(StringFilterParameter::New("LocalCAxisMisalignments", "LocalCAxisMisalignmentsArrayName", getLocalCAxisMisalignmentsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, LocalCAxisMisalignmentsArrayName), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, LocalCAxisMisalignmentsArrayName)));
-  parameters.push_back(StringFilterParameter::New("UnbiasedLocalCAxisMisalignments", "UnbiasedLocalCAxisMisalignmentsArrayName", getUnbiasedLocalCAxisMisalignmentsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindLocalAverageCAxisMisalignments, this, UnbiasedLocalCAxisMisalignmentsArrayName), SIMPL_BIND_GETTER(FindLocalAverageCAxisMisalignments, this, UnbiasedLocalCAxisMisalignmentsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("NumFeaturesPerParent", NumFeaturesPerParentArrayName, FilterParameter::CreatedArray, FindLocalAverageCAxisMisalignments));
+  parameters.push_back(SIMPL_NEW_STRING_FP("LocalCAxisMisalignments", LocalCAxisMisalignmentsArrayName, FilterParameter::CreatedArray, FindLocalAverageCAxisMisalignments));
+  parameters.push_back(SIMPL_NEW_STRING_FP("UnbiasedLocalCAxisMisalignments", UnbiasedLocalCAxisMisalignmentsArrayName, FilterParameter::CreatedArray, FindLocalAverageCAxisMisalignments));
 
   setFilterParameters(parameters);
 }
@@ -195,10 +195,10 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
   // Cell Data
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_CellParentIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellParentIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Data
@@ -206,7 +206,7 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
   {
     tempPath.update(getNewCellFeatureAttributeMatrixName().getDataContainerName(), getNewCellFeatureAttributeMatrixName().getAttributeMatrixName(), getUnbiasedLocalCAxisMisalignmentsArrayName() );
     m_UnbiasedLocalCAxisMisalignmentsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_UnbiasedLocalCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_UnbiasedLocalCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_UnbiasedLocalCAxisMisalignments = m_UnbiasedLocalCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
     m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
@@ -216,28 +216,28 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
   if (m_CalcBiasedAvg == true)
   {
     m_AvgCAxisMisalignmentsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgCAxisMisalignmentsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_AvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_AvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_AvgCAxisMisalignments = m_AvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     tempPath.update(getNewCellFeatureAttributeMatrixName().getDataContainerName(), getNewCellFeatureAttributeMatrixName().getAttributeMatrixName(), getLocalCAxisMisalignmentsArrayName() );
     m_LocalCAxisMisalignmentsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_LocalCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_LocalCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_LocalCAxisMisalignments = m_LocalCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   m_FeatureParentIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureParentIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // New Feature Data
   tempPath.update(getNewCellFeatureAttributeMatrixName().getDataContainerName(), getNewCellFeatureAttributeMatrixName().getAttributeMatrixName(), getNumFeaturesPerParentArrayName() );
   m_NumFeaturesPerParentPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NumFeaturesPerParentPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NumFeaturesPerParentPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NumFeaturesPerParent = m_NumFeaturesPerParentPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
 //typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this,  getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

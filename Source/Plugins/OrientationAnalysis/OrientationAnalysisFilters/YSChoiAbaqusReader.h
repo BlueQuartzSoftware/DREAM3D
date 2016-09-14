@@ -50,7 +50,7 @@
 
 class  YSChoiAbaqusReader : public FileReader
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(YSChoiAbaqusReader)
     SIMPL_STATIC_NEW_MACRO(YSChoiAbaqusReader)

@@ -66,11 +66,11 @@ QString ImportVectorImageStackWidget::m_OpenDialogLastDirectory = "";
 //
 // -----------------------------------------------------------------------------
 ImportVectorImageStackWidget::ImportVectorImageStackWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent),  m_StackingGroup(NULL),
+  FilterParameterWidget(parameter, filter, parent),  m_StackingGroup(nullptr),
   m_DidCausePreflight(false)
 {
   m_Filter = qobject_cast<ImportVectorImageStack*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "ImportVectorImageStackWidget can ONLY be used with ImportVectorImageStack filter", __FILE__);
+  Q_ASSERT_X(nullptr != m_Filter, "ImportVectorImageStackWidget can ONLY be used with ImportVectorImageStack filter", __FILE__);
 
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
@@ -646,14 +646,14 @@ void ImportVectorImageStackWidget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == filter)
+  if (nullptr == filter)
   {
-    QString ss = QObject::tr("Error Setting ImportImageStack Gui values to Filter instance. Filter instance was NULL.").arg(getFilterParameter()->getPropertyName());
+    QString ss = QObject::tr("Error Setting ImportImageStack Gui values to Filter instance. Filter instance was nullptr.").arg(getFilterParameter()->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 
   ImportVectorImageStack* f = qobject_cast<ImportVectorImageStack*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "ImportVectorImageStackWidget can ONLY be used with ImportVectorImageStack filter", __FILE__);
+  Q_ASSERT_X(nullptr != m_Filter, "ImportVectorImageStackWidget can ONLY be used with ImportVectorImageStack filter", __FILE__);
 
   bool ok = false;
   f->setInputPath(m_InputDir->text());

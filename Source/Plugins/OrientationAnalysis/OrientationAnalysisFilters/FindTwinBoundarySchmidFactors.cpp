@@ -230,13 +230,13 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors() :
   m_SurfaceMeshFaceNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTwinBoundaryArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshTwinBoundary),
   m_SurfaceMeshTwinBoundarySchmidFactorsArrayName(SIMPL::FaceData::SurfaceMeshTwinBoundarySchmidFactors),
-  m_AvgQuats(NULL),
-  m_FeaturePhases(NULL),
-  m_CrystalStructures(NULL),
-  m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFaceNormals(NULL),
-  m_SurfaceMeshTwinBoundary(NULL),
-  m_SurfaceMeshTwinBoundarySchmidFactors(NULL)
+  m_AvgQuats(nullptr),
+  m_FeaturePhases(nullptr),
+  m_CrystalStructures(nullptr),
+  m_SurfaceMeshFaceLabels(nullptr),
+  m_SurfaceMeshFaceNormals(nullptr),
+  m_SurfaceMeshTwinBoundary(nullptr),
+  m_SurfaceMeshTwinBoundarySchmidFactors(nullptr)
 {
   m_LoadingDir.x = 1.0f;
   m_LoadingDir.y = 1.0f;
@@ -260,40 +260,40 @@ FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors()
 void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDir", getLoadingDir(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, LoadingDir), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, LoadingDir)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDir, FilterParameter::Parameter, FindTwinBoundarySchmidFactors));
 
   QStringList linkedProps("TwinBoundarySchmidFactorsFile");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Twin Boundary Info File", "WriteFile", getWriteFile(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, WriteFile), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, WriteFile)));
-  parameters.push_back(OutputFileFilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, TwinBoundarySchmidFactorsFile), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, TwinBoundarySchmidFactorsFile)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Twin Boundary Info File", WriteFile, FilterParameter::Parameter, FindTwinBoundarySchmidFactors, linkedProps));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Twin Boundary Info File", TwinBoundarySchmidFactorsFile, FilterParameter::Parameter, FindTwinBoundarySchmidFactors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, FindTwinBoundarySchmidFactors, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindTwinBoundarySchmidFactors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindTwinBoundarySchmidFactors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, FindTwinBoundarySchmidFactors, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshFaceNormalsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Normals", SurfaceMeshFaceNormalsArrayPath, FilterParameter::RequiredArray, FindTwinBoundarySchmidFactors, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Twin Boundary", "SurfaceMeshTwinBoundaryArrayPath", getSurfaceMeshTwinBoundaryArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundaryArrayPath), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundaryArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Twin Boundary", SurfaceMeshTwinBoundaryArrayPath, FilterParameter::RequiredArray, FindTwinBoundarySchmidFactors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Twin Boundary Schmid Factors", "SurfaceMeshTwinBoundarySchmidFactorsArrayName", getSurfaceMeshTwinBoundarySchmidFactorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundarySchmidFactorsArrayName), SIMPL_BIND_GETTER(FindTwinBoundarySchmidFactors, this, SurfaceMeshTwinBoundarySchmidFactorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Twin Boundary Schmid Factors", SurfaceMeshTwinBoundarySchmidFactorsArrayName, FilterParameter::CreatedArray, FindTwinBoundarySchmidFactors));
   setFilterParameters(parameters);
 }
 
@@ -329,18 +329,18 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 
   QVector<size_t> cDims(1, 4);
   m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAvgQuatsArrayPath()); }
 
   cDims[0] = 1;
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
 
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
@@ -360,24 +360,24 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshFaceLabelsArrayPath()); }
 
   cDims[0] = 3;
   m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshFaceNormalsArrayPath()); }
 
   tempPath.update(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), getSurfaceMeshFaceLabelsArrayPath().getAttributeMatrixName(), getSurfaceMeshTwinBoundarySchmidFactorsArrayName() );
   m_SurfaceMeshTwinBoundarySchmidFactorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshTwinBoundarySchmidFactorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshTwinBoundarySchmidFactorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshTwinBoundarySchmidFactors = m_SurfaceMeshTwinBoundarySchmidFactorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
   m_SurfaceMeshTwinBoundaryPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceMeshTwinBoundaryArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshTwinBoundaryPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshTwinBoundaryPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshTwinBoundary = m_SurfaceMeshTwinBoundaryPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceMeshTwinBoundaryArrayPath()); }
 

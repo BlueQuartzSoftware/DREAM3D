@@ -112,7 +112,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
      */
     void initPointers(size_t numElements);
 
-    /** @brief 'free's the allocated memory and sets the pointer to NULL
+    /** @brief 'free's the allocated memory and sets the pointer to nullptr
      */
     void deletePointers();
 
@@ -134,7 +134,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
     template<typename T>
     T* allocateArray(size_t numberOfElements)
     {
-      T* buffer = NULL;
+      T* buffer = nullptr;
       if(numberOfElements == 0) { return buffer; }
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
       buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
@@ -146,20 +146,20 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
 
     /**
      * @brief Deallocates memory that has been previously allocated. This will set the
-     * value of the pointer passed in as the argument to NULL.
+     * value of the pointer passed in as the argument to nullptr.
      * @param ptr The pointer to be freed.
      */
     template<typename T>
     void deallocateArrayData(T*& ptr)
     {
-      if (ptr != NULL && getManageMemory() == true)
+      if (ptr != nullptr && getManageMemory() == true)
       {
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
         _mm_free(ptr );
 #else
         delete[] ptr;
 #endif
-        ptr = NULL;
+        ptr = nullptr;
         //       m_NumberOfElements = 0;
       }
     }

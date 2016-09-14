@@ -68,7 +68,7 @@ class ReadCtfDataPrivate;
  */
 class ReadCtfData : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
     Q_DECLARE_PRIVATE(ReadCtfData)
 
   public:

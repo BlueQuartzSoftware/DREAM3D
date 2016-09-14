@@ -18,7 +18,7 @@
 // -----------------------------------------------------------------------------
 class GenerateFeatureIds : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(GenerateFeatureIds)
     SIMPL_STATIC_NEW_MACRO(GenerateFeatureIds)
@@ -81,7 +81,7 @@ class GenerateFeatureIds : public AbstractFilter
       m_DataContainerName(SIMPL::Defaults::DataContainerName),
       m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
       m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName),
-      m_FeatureIds(NULL),
+      m_FeatureIds(nullptr),
       m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
     {
     }
@@ -100,7 +100,7 @@ class GenerateFeatureIds : public AbstractFilter
 
       QVector<size_t> dims(1, 1);
       m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
 
@@ -120,7 +120,7 @@ class GenerateFeatureIds : public AbstractFilter
  */
 class CreateDataContainer : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(CreateDataContainer)
     SIMPL_STATIC_NEW_MACRO(CreateDataContainer)

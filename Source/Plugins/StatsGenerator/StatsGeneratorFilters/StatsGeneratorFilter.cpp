@@ -66,7 +66,8 @@ StatsGeneratorFilter::StatsGeneratorFilter() :
   m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName),
   m_StatsDataArrayName(SIMPL::EnsembleData::Statistics),
   m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures),
-  m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
+  m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes),
+  m_PhaseNamesArrayName(SIMPL::EnsembleData::PhaseName)
 {
   setupFilterParameters();
 }
@@ -85,11 +86,11 @@ void StatsGeneratorFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(StatsGeneratorFilterParameter::New("StatsGenerator", "StatsGenerator", "", FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Statistics Data Container", "StatsGeneratorDataContainerName", getStatsGeneratorDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, StatsGeneratorDataContainerName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, StatsGeneratorDataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, CellEnsembleAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Statistics", "StatsDataArrayName", getStatsDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, StatsDataArrayName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, StatsDataArrayName)));
-  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, CrystalStructuresArrayName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, CrystalStructuresArrayName)));
-  parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(StatsGeneratorFilter, this, PhaseTypesArrayName), SIMPL_BIND_GETTER(StatsGeneratorFilter, this, PhaseTypesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Statistics Data Container", StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Statistics", StatsDataArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures", CrystalStructuresArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Types", PhaseTypesArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
   setFilterParameters(parameters);
 }
 
@@ -196,6 +197,9 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
   m_PhaseTypes = UInt32ArrayType::CreateArray(numTuples, SIMPL::EnsembleData::PhaseTypes, true);
   m_PhaseTypes->initializeWithValue(SIMPL::PhaseType::UnknownPhaseType);
 
+  m_PhaseNames = StringDataArray::CreateArray(numTuples, SIMPL::EnsembleData::PhaseName, true);
+  m_PhaseNames->initializeWithValue(QString("Unknown Phase"));
+
   // Start from index 1. Index 0 is always junk.
   for (int index = 1; index < phaseCount; index++)
   {
@@ -207,6 +211,9 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
 
     unsigned int pt = m_StatsDataArray->getStatsData(index)->getPhaseType();
     m_PhaseTypes->setValue(index, pt);
+
+    QString phaseName = phaseObject[SIMPL::EnsembleData::PhaseName].toString();
+    m_PhaseNames->setValue(index, phaseName);
   }
 }
 
@@ -244,6 +251,11 @@ void StatsGeneratorFilter::dataCheck()
     if (nullptr != m_PhaseTypes)
     {
       cellEnsembleAttrMat->addAttributeArray(getPhaseTypesArrayName(), m_PhaseTypes);
+    }
+
+    if(nullptr != m_PhaseNames)
+    {
+      cellEnsembleAttrMat->addAttributeArray(getPhaseNamesArrayName(), m_PhaseNames);
     }
   }
   else
@@ -435,6 +447,10 @@ AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterP
     {
       filter->setPhaseTypes(std::dynamic_pointer_cast<UInt32ArrayType>(m_PhaseTypes->deepCopy(getInPreflight())));
     }
+    if(m_PhaseNames)
+    {
+      filter->setPhaseNames(std::dynamic_pointer_cast<StringDataArray>(m_PhaseNames->deepCopy(getInPreflight())));
+    }
     if (m_StatsDataArray)
     {
       filter->setStatsDataArray(std::dynamic_pointer_cast<StatsDataArray>(m_StatsDataArray->deepCopy(getInPreflight())));
@@ -447,13 +463,17 @@ AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getCompiledLibraryName()
-{ return StatsGeneratorConstants::StatsGeneratorBaseName; }
+{
+  return StatsGeneratorConstants::StatsGeneratorBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getBrandingString()
-{ return "StatsGenerator"; }
+{
+  return "StatsGenerator";
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -462,7 +482,7 @@ const QString StatsGeneratorFilter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  StatsGenerator::Version::Major() << "." << StatsGenerator::Version::Minor() << "." << StatsGenerator::Version::Patch();
+  vStream << StatsGenerator::Version::Major() << "." << StatsGenerator::Version::Minor() << "." << StatsGenerator::Version::Patch();
   return version;
 }
 
@@ -470,17 +490,22 @@ const QString StatsGeneratorFilter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getGroupName()
-{ return SIMPL::FilterGroups::SyntheticBuildingFilters; }
+{
+  return SIMPL::FilterGroups::SyntheticBuildingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::GenerationFilters; }
+{
+  return SIMPL::FilterSubGroups::GenerationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getHumanLabel()
-{ return "StatsGenerator"; }
-
+{
+  return "StatsGenerator";
+}

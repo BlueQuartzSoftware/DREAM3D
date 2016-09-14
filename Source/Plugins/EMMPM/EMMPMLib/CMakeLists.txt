@@ -94,12 +94,13 @@ endif(BUILD_SHARED_LIBS)
 
 
 set(EMMPMLib_HDF5_SUPPORT "1")
-option(EMMPMLib_ENABLE_HDF5 "Enable HDF5 Support in the EMMPMLib" ON)
+#option(EMMPMLib_ENABLE_HDF5 "Enable HDF5 Support in the EMMPMLib" ON)
 
+set(EMMPM_USE_PARALLEL_ALGORITHMS "1")
 
 mark_as_advanced(EMMPMLib_HDF5_SUPPORT)
 mark_as_advanced(EMMPMLib_ENABLE_HDF5)
-
+mark_as_advanced(EMMPM_USE_PARALLEL_ALGORITHMS)
 
 set(PROJECT_PREFIX "EMMPMLib" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set(EMMPMLib_INSTALL_FILES 0)
@@ -136,8 +137,8 @@ endif()
 
 
 # Setup the Include Directories
-## NOTE that we are using the Plugin's CMake variables because we want to be
-## able to use an include path like #include "EMMPMLib/foo.h"
+# NOTE that we are using the Plugin's CMake variables because we want to be
+# able to use an include path like #include "EMMPMLib/foo.h"
 include_directories(${EMMPM_SOURCE_DIR})
 include_directories(${EMMPM_BINARY_DIR})
 include_directories(${SIMPLProj_SOURCE_DIR}/Source)

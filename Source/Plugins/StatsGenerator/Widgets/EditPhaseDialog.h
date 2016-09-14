@@ -79,6 +79,9 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     unsigned int getParentPhase();
     void setParentPhase(unsigned int d);
 
+    void setPhaseName(QString &name);
+    QString getPhaseName();
+
   protected slots:
     void on_phaseFraction_textChanged(const QString& string);
     void on_phaseTypeCombo_currentIndexChanged(int index);

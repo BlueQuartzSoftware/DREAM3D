@@ -62,10 +62,10 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   m_PhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases),
   m_SurfaceFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures),
   m_BiasedFeaturesArrayName(SIMPL::FeatureData::BiasedFeatures),
-  m_Phases(NULL),
-  m_Centroids(NULL),
-  m_SurfaceFeatures(NULL),
-  m_BiasedFeatures(NULL)
+  m_Phases(nullptr),
+  m_Centroids(nullptr),
+  m_SurfaceFeatures(nullptr),
+  m_BiasedFeatures(nullptr)
 {
   setupFilterParameters();
 }
@@ -84,22 +84,22 @@ void FindBoundingBoxFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("PhasesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply Phase by Phase", "CalcByPhase", getCalcByPhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, CalcByPhase), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, CalcByPhase)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Phase by Phase", CalcByPhase, FilterParameter::Parameter, FindBoundingBoxFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, CentroidsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindBoundingBoxFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, SurfaceFeaturesArrayPath), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, SurfaceFeaturesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Surface Features", SurfaceFeaturesArrayPath, FilterParameter::RequiredArray, FindBoundingBoxFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "PhasesArrayPath", getPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, PhasesArrayPath), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, PhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", PhasesArrayPath, FilterParameter::RequiredArray, FindBoundingBoxFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Biased Features", "BiasedFeaturesArrayName", getBiasedFeaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, BiasedFeaturesArrayName), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, BiasedFeaturesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Biased Features", BiasedFeaturesArrayName, FilterParameter::CreatedArray, FindBoundingBoxFeatures));
   setFilterParameters(parameters);
 }
 
@@ -140,25 +140,25 @@ void FindBoundingBoxFeatures::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCentroidsArrayPath()); }
 
   cDims[0] = 1;
   m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSurfaceFeaturesArrayPath()); }
 
   tempPath.update(getCentroidsArrayPath().getDataContainerName(), getCentroidsArrayPath().getAttributeMatrixName(), getBiasedFeaturesArrayName() );
   m_BiasedFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (getCalcByPhase() == true)
   {
     m_PhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_PhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_PhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Phases = m_PhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getPhasesArrayPath()); }
   }

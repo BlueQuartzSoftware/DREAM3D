@@ -317,7 +317,7 @@ void fixInitializerList(QStringListIterator& sourceLines, QStringList& outLines,
     int offset = line.indexOf("m_");
     int offset2 = line.indexOf("(");
     QString var = line.mid(offset + 2, offset2 - offset - 2);
-    if(line.contains("(NULL)") )
+    if(line.contains("(nullptr)") )
     {
       isPointer = true;
     }

@@ -64,8 +64,8 @@ EnsembleInfoReader::EnsembleInfoReader() :
   m_InputFile(""),
   m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures),
   m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes),
-  m_CrystalStructures(NULL),
-  m_PhaseTypes(NULL),
+  m_CrystalStructures(nullptr),
+  m_PhaseTypes(nullptr),
   m_ptype(SIMPL::PhaseType::UnknownPhaseType),
   m_crystruct(999)
 {
@@ -86,15 +86,15 @@ EnsembleInfoReader::~EnsembleInfoReader()
 void EnsembleInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EnsembleInfoReader, this, InputFile), SIMPL_BIND_GETTER(EnsembleInfoReader, this, InputFile), "*.ini *.txt"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Ensemble Info File", InputFile, FilterParameter::Parameter, EnsembleInfoReader, "*.ini *.txt"));
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EnsembleInfoReader, this, DataContainerName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, DataContainerName)));
+    parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", DataContainerName, FilterParameter::RequiredArray, EnsembleInfoReader, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, CellEnsembleAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, CrystalStructuresArrayName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, CrystalStructuresArrayName)));
-  parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EnsembleInfoReader, this, PhaseTypesArrayName), SIMPL_BIND_GETTER(EnsembleInfoReader, this, PhaseTypesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, EnsembleInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures", CrystalStructuresArrayName, FilterParameter::CreatedArray, EnsembleInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Types", PhaseTypesArrayName, FilterParameter::CreatedArray, EnsembleInfoReader));
   setFilterParameters(parameters);
 }
 
@@ -119,13 +119,13 @@ void EnsembleInfoReader::updateEnsembleInstancePointers()
 {
   setErrorCondition(0);
 
-  if (NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
     m_CrystalStructuresPtr.lock()->initializeWithValue(Ebsd::CrystalStructure::UnknownCrystalStructure);
 
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if (NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
     m_PhaseTypesPtr.lock()->initializeWithValue(SIMPL::PhaseType::UnknownPhaseType);
@@ -204,12 +204,12 @@ void EnsembleInfoReader::dataCheck()
   QVector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName() );
   m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, SIMPL::PhaseType::UnknownPhaseType, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

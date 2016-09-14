@@ -56,7 +56,7 @@ SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints() :
   SampleSurfaceMesh(),
   m_InputFilePath(""),
   m_OutputFilePath(""),
-  m_FeatureIds(NULL),
+  m_FeatureIds(nullptr),
   m_NumPoints(0)
 {
   setupFilterParameters();
@@ -75,8 +75,8 @@ SampleSurfaceMeshSpecifiedPoints::~SampleSurfaceMeshSpecifiedPoints()
 void SampleSurfaceMeshSpecifiedPoints::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(InputFileFilterParameter::New("Specified Points File", "InputFilePath", getInputFilePath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SampleSurfaceMeshSpecifiedPoints, this, InputFilePath), SIMPL_BIND_GETTER(SampleSurfaceMeshSpecifiedPoints, this, InputFilePath), "*.raw, *.bin"));
-  parameters.push_back(OutputFileFilterParameter::New("Sampled Values File", "OutputFilePath", getOutputFilePath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SampleSurfaceMeshSpecifiedPoints, this, OutputFilePath), SIMPL_BIND_GETTER(SampleSurfaceMeshSpecifiedPoints, this, OutputFilePath), "*.txt"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Specified Points File", InputFilePath, FilterParameter::Parameter, SampleSurfaceMeshSpecifiedPoints, "*.raw, *.bin"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Sampled Values File", OutputFilePath, FilterParameter::Parameter, SampleSurfaceMeshSpecifiedPoints, "*.txt"));
   setFilterParameters(parameters);
 }
 
@@ -98,7 +98,7 @@ void SampleSurfaceMeshSpecifiedPoints::readFilterParameters(AbstractFilterParame
 void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 {
   setErrorCondition(0);
-  if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -133,7 +133,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   }
 
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
-  if (getErrorCondition() < 0 || NULL == v.get()) { return; }
+  if (getErrorCondition() < 0 || nullptr == v.get()) { return; }
 
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   v->setGeometry(vertices);
@@ -144,7 +144,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   QVector<size_t> cDims(1, 1);
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

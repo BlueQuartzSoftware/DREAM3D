@@ -103,7 +103,7 @@ H5AngImporter::~H5AngImporter()
 #define WRITE_ANG_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
   {\
     m_msgType* dataPtr = reader.get##prpty##Pointer();\
-    if (NULL != dataPtr) {\
+    if (nullptr != dataPtr) {\
       err = QH5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
       if (err < 0) {\
         ss.string()->clear();\
@@ -354,7 +354,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     QVector<m_msgType> tempVar = reader->get##prpty();\
     dims[0] = tempVar.size();\
     m_msgType* dataPtr = tempVar.data();\
-    if (NULL != dataPtr) {\
+    if (nullptr != dataPtr) {\
       err = QH5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
       if (err < 0) {\
         ss.string()->clear();\
@@ -439,10 +439,10 @@ int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
     status = H5Tinsert(memtype, "Solution 2", HOFFSET (HKLFamily_t, s2), H5T_NATIVE_CHAR);
 
     /*
-     * Create dataspace.  Setting maximum size to NULL sets the maximum
+     * Create dataspace.  Setting maximum size to nullptr sets the maximum
      * size to be the current size.
      */
-    space = H5Screate_simple(1, dims, NULL);
+    space = H5Screate_simple(1, dims, nullptr);
 
     /*
      * Create the dataset and write the compound data to it.

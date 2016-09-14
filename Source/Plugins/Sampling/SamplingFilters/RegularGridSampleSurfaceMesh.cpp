@@ -62,7 +62,7 @@ RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
   m_YPoints(0),
   m_ZPoints(0),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -88,17 +88,17 @@ RegularGridSampleSurfaceMesh::~RegularGridSampleSurfaceMesh()
 void RegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(IntFilterParameter::New("X Points", "XPoints", getXPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, XPoints), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, XPoints)));
-  parameters.push_back(IntFilterParameter::New("Y Points", "YPoints", getYPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, YPoints), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, YPoints)));
-  parameters.push_back(IntFilterParameter::New("Z Points", "ZPoints", getZPoints(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, ZPoints), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, ZPoints)));
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, Resolution), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, Resolution)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Points", XPoints, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Points", YPoints, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Points", ZPoints, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
 
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, Origin), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, Origin)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
 
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, DataContainerName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, DataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, CellAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(RegularGridSampleSurfaceMesh, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(RegularGridSampleSurfaceMesh, this, FeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
   setFilterParameters(parameters);
 }
 
@@ -152,12 +152,12 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if (getErrorCondition() < 0 || NULL == cellAttrMat.get()) { return; }
+  if (getErrorCondition() < 0 || nullptr == cellAttrMat.get()) { return; }
 
   QVector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

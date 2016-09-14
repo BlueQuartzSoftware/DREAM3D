@@ -107,10 +107,10 @@ void ConvertOrientations::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req;
     req.daTypes = QVector<QString>(2, SIMPL::TypeNames::Double);
     req.daTypes[1] = SIMPL::TypeNames::Float;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Input Orientations", "InputOrientationArrayPath", getInputOrientationArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ConvertOrientations, this, InputOrientationArrayPath), SIMPL_BIND_GETTER(ConvertOrientations, this, InputOrientationArrayPath), 0));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Orientations", InputOrientationArrayPath, FilterParameter::RequiredArray, ConvertOrientations, req, 0));
   }
 
-  parameters.push_back(StringFilterParameter::New("Output Orientations", "OutputOrientationArrayName", getOutputOrientationArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ConvertOrientations, this, OutputOrientationArrayName), SIMPL_BIND_GETTER(ConvertOrientations, this, OutputOrientationArrayName), 0));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output Orientations", OutputOrientationArrayName, FilterParameter::CreatedArray, ConvertOrientations, 0));
 
   setFilterParameters(parameters);
 }
@@ -176,7 +176,7 @@ void ConvertOrientations::dataCheck()
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
   FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
-  if(NULL != fArray.get())
+  if(nullptr != fArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
@@ -184,7 +184,7 @@ void ConvertOrientations::dataCheck()
   }
 
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
-  if(NULL != dArray.get())
+  if(nullptr != dArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
@@ -233,7 +233,7 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
   converters[filter->getInputType()]->convertRepresentationTo(ocTypes[filter->getOutputType()]);
 
   ArrayType output = converters[filter->getInputType()]->getOutputData();
-  if(NULL == output.get())
+  if(nullptr == output.get())
   {
     QString ss = QObject::tr("There was an error converting the input data using convertor %1").arg(converters[filter->getInputType()]->getNameOfClass());
     filter->setErrorCondition(-1004);
@@ -265,7 +265,7 @@ void ConvertOrientations::execute()
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
   FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
-  if(NULL != fArray.get())
+  if(nullptr != fArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
@@ -274,7 +274,7 @@ void ConvertOrientations::execute()
   }
 
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
-  if(NULL != dArray.get())
+  if(nullptr != dArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);

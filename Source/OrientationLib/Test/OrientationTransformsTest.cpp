@@ -105,7 +105,7 @@ class OrientationTransformsTest
       // Now instantiate the PhWriter Filter from the FilterManager
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL == filterFactory.get() )
+      if (nullptr == filterFactory.get() )
       {
         std::stringstream ss;
         ss << "The OrientationTransformTest Requires the use of the " << filtName.toStdString() << " filter. Did the plugins load?";

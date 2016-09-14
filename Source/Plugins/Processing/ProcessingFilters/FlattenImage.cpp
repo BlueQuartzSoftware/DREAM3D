@@ -105,8 +105,8 @@ FlattenImage::FlattenImage() :
   m_FlattenMethod(SIMPL::FlattenImageMethod::Luminosity),
   m_ImageDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData),
   m_FlatImageDataArrayName(SIMPL::CellData::FlatImageData),
-  m_ImageData(NULL),
-  m_FlatImageData(NULL)
+  m_ImageData(nullptr),
+  m_FlatImageData(nullptr)
 {
   setupFilterParameters();
 }
@@ -145,10 +145,10 @@ void FlattenImage::setupFilterParameters()
     cDims.push_back(QVector<size_t>(1, 3));
     cDims.push_back(QVector<size_t>(1, 4));
     req.componentDimensions = cDims;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FlattenImage, this, ImageDataArrayPath), SIMPL_BIND_GETTER(FlattenImage, this, ImageDataArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image Data", ImageDataArrayPath, FilterParameter::RequiredArray, FlattenImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Flat Image Data", "FlatImageDataArrayName", getFlatImageDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FlattenImage, this, FlatImageDataArrayName), SIMPL_BIND_GETTER(FlattenImage, this, FlatImageDataArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Flat Image Data", FlatImageDataArrayName, FilterParameter::CreatedArray, FlattenImage));
   setFilterParameters(parameters);
 }
 
@@ -184,20 +184,20 @@ void FlattenImage::dataCheck()
 
   IDataArray::Pointer iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageDataArrayPath());
   if (getErrorCondition() < 0) { return; }
-  if (NULL != iDataArray.get())
+  if (nullptr != iDataArray.get())
   {
     numImageComp = iDataArray->getNumberOfComponents();
   }
 
   QVector<size_t> cDims(1, numImageComp);
   m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getImageDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
   tempPath.update(m_ImageDataArrayPath.getDataContainerName(), m_ImageDataArrayPath.getAttributeMatrixName(), getFlatImageDataArrayName() );
   m_FlatImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FlatImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FlatImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FlatImageData = m_FlatImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

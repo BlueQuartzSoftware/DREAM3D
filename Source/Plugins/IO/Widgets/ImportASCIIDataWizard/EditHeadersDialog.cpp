@@ -101,10 +101,10 @@ void EditHeadersDialog::m_ButtonBox_accepted()
   for (int i = 0; i < model->columnCount(); i++)
   {
     QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
-    if (NULL != item)
+    if (nullptr != item)
     {
       QLineEdit* lineEdit = dynamic_cast<QLineEdit*>(item->widget());
-      if (NULL != lineEdit)
+      if (nullptr != lineEdit)
       {
         m_Headers[i] = lineEdit->text();
       }
@@ -140,10 +140,10 @@ void EditHeadersDialog::setHeaders(QVector<QString> headers)
   for (int i = 0; i < headers.size(); i++)
   {
     QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
-    if (NULL != item)
+    if (nullptr != item)
     {
       QLineEdit* lineEdit = dynamic_cast<QLineEdit*>(item->widget());
-      if (NULL != lineEdit)
+      if (nullptr != lineEdit)
       {
         lineEdit->setText(headers[i]);
       }

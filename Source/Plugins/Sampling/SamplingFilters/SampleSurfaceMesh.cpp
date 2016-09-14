@@ -85,7 +85,7 @@ class SampleSurfaceMeshImpl
       FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right");
       float* ll = llPtr->getPointer(0);
       float* ur = urPtr->getPointer(0);
-      float* point = NULL;
+      float* point = nullptr;
       char code = ' ';
 
       for (size_t iter = start; iter < end; iter++)
@@ -128,7 +128,7 @@ class SampleSurfaceMeshImpl
 SampleSurfaceMesh::SampleSurfaceMesh() :
   AbstractFilter(),
   m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceLabels(NULL)
+  m_SurfaceMeshFaceLabels(nullptr)
 {
   setupFilterParameters();
 }
@@ -149,7 +149,7 @@ void SampleSurfaceMesh::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(SampleSurfaceMesh, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(SampleSurfaceMesh, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, SampleSurfaceMesh, req));
   }
   setFilterParameters(parameters);
 }
@@ -186,7 +186,7 @@ void SampleSurfaceMesh::dataCheck()
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
 
@@ -300,7 +300,7 @@ void SampleSurfaceMesh::execute()
 
   // generate the list of sampling points from subclass
   VertexGeom::Pointer points = generate_points();
-  if(getErrorCondition() < 0 || NULL == points.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == points.get()) { return; }
   int64_t numPoints = points->getNumberOfVertices();
 
   // create array to hold which polyhedron (feature) each point falls in

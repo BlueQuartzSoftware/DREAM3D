@@ -71,11 +71,11 @@ FeatureInfoReader::FeatureInfoReader() :
   m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles),
   m_FeaturePhasesArrayName(SIMPL::FeatureData::Phases),
   m_FeatureEulerAnglesArrayName(SIMPL::FeatureData::EulerAngles),
-  m_FeatureIds(NULL),
-  m_CellPhases(NULL),
-  m_CellEulerAngles(NULL),
-  m_FeaturePhases(NULL),
-  m_FeatureEulerAngles(NULL)
+  m_FeatureIds(nullptr),
+  m_CellPhases(nullptr),
+  m_CellEulerAngles(nullptr),
+  m_FeaturePhases(nullptr),
+  m_FeatureEulerAngles(nullptr)
 {
   setupFilterParameters();
 }
@@ -93,11 +93,11 @@ FeatureInfoReader::~FeatureInfoReader()
 void FeatureInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input Feature Info File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, InputFile), SIMPL_BIND_GETTER(FeatureInfoReader, this, InputFile), "*.txt"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Feature Info File", InputFile, FilterParameter::Parameter, FeatureInfoReader, "*.txt"));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayName" << "CellEulerAnglesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Create Element Level Arrays", "CreateCellLevelArrays", getCreateCellLevelArrays(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, CreateCellLevelArrays), SIMPL_BIND_GETTER(FeatureInfoReader, this, CreateCellLevelArrays)));
-  parameters.push_back(BooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureInfoReader, this, RenumberFeatures), SIMPL_BIND_GETTER(FeatureInfoReader, this, RenumberFeatures)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Element Level Arrays", CreateCellLevelArrays, FilterParameter::Parameter, FeatureInfoReader, linkedProps));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Parameter, FeatureInfoReader));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
@@ -106,19 +106,19 @@ void FeatureInfoReader::setupFilterParameters()
     amTypes.push_back(SIMPL::AttributeMatrixType::Edge);
     amTypes.push_back(SIMPL::AttributeMatrixType::Face);
     amTypes.push_back(SIMPL::AttributeMatrixType::Vertex);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Element Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellAttributeMatrixName)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Element Attribute Matrix", CellAttributeMatrixName, FilterParameter::RequiredArray, FeatureInfoReader, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureInfoReader, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FeatureInfoReader, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FeatureInfoReader, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellPhasesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellPhasesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Euler Angles", "CellEulerAnglesArrayName", getCellEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellEulerAnglesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellEulerAnglesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", CellPhasesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", CellEulerAnglesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FeatureInfoReader, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Phases", "FeaturePhasesArrayName", getFeaturePhasesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, FeaturePhasesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, FeaturePhasesArrayName)));
-  parameters.push_back(StringFilterParameter::New("Euler Angles", "FeatureEulerAnglesArrayName", getFeatureEulerAnglesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FeatureInfoReader, this, FeatureEulerAnglesArrayName), SIMPL_BIND_GETTER(FeatureInfoReader, this, FeatureEulerAnglesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", FeaturePhasesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", FeatureEulerAnglesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
   setFilterParameters(parameters);
 }
 
@@ -148,9 +148,9 @@ void FeatureInfoReader::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -199,33 +199,33 @@ void FeatureInfoReader::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (m_CreateCellLevelArrays)
   {
     tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellPhasesArrayName() );
     m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     cDims[0] = 3;
     tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellEulerAnglesArrayName() );
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   cDims[0] = 1;
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName() );
   m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getCellFeatureAttributeMatrixName(), getFeatureEulerAnglesArrayName() );
   m_FeatureEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -339,7 +339,7 @@ int32_t FeatureInfoReader::readFile()
 
   if (m_RenumberFeatures == true)
   {
-    size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
+    size_t totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
 
     // Find the unique set of feature ids
     QVector<bool> activeObjects(totalFeatures, false);

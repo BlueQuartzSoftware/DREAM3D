@@ -85,7 +85,7 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
     virtual ~EbsdToH5EbsdWidget();
 

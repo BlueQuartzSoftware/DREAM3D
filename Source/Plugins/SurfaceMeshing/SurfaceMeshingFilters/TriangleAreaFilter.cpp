@@ -115,7 +115,7 @@ class CalculateAreasImpl
 TriangleAreaFilter::TriangleAreaFilter() :
   SurfaceMeshFilter(),
   m_SurfaceMeshTriangleAreasArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas),
-  m_SurfaceMeshTriangleAreas(NULL)
+  m_SurfaceMeshTriangleAreas(nullptr)
 {
   setupFilterParameters();
 }
@@ -136,7 +136,7 @@ void TriangleAreaFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Face Areas", "SurfaceMeshTriangleAreasArrayPath", getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(TriangleAreaFilter, this, SurfaceMeshTriangleAreasArrayPath), SIMPL_BIND_GETTER(TriangleAreaFilter, this, SurfaceMeshTriangleAreasArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Face Areas", SurfaceMeshTriangleAreasArrayPath, FilterParameter::CreatedArray, TriangleAreaFilter, req));
   }
   setFilterParameters(parameters);
 }
@@ -174,7 +174,7 @@ void TriangleAreaFilter::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_SurfaceMeshTriangleAreasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleAreasArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshTriangleAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshTriangleAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleAreas = m_SurfaceMeshTriangleAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleAreasPtr.lock()); }
 

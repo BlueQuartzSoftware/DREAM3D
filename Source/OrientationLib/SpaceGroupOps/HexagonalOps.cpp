@@ -1454,7 +1454,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConf
     g->run(GenerateIntensityMapImpl(xyz111.get(), &config, intensity111.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
-    g = NULL;
+    g = nullptr;
   }
   else
 #endif
@@ -1546,7 +1546,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConf
     g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
-    g = NULL;
+    g = nullptr;
   }
   else
 #endif

@@ -54,18 +54,18 @@ using namespace H5Support_NAMESPACE;
 H5CtfVolumeReader::H5CtfVolumeReader() :
   H5EbsdVolumeReader()
 {
-  m_Phase = NULL;
-  m_X = NULL;
-  m_Y = NULL;
-  m_Z = NULL;
-  m_Bands = NULL;
-  m_Error = NULL;
-  m_Euler1 = NULL;
-  m_Euler2 = NULL;
-  m_Euler3 = NULL;
-  m_MAD = NULL;
-  m_BC = NULL;
-  m_BS = NULL;
+  m_Phase = nullptr;
+  m_X = nullptr;
+  m_Y = nullptr;
+  m_Z = nullptr;
+  m_Bands = nullptr;
+  m_Error = nullptr;
+  m_Euler1 = nullptr;
+  m_Euler2 = nullptr;
+  m_Euler3 = nullptr;
+  m_MAD = nullptr;
+  m_BC = nullptr;
+  m_BS = nullptr;
 
 }
 
@@ -81,7 +81,7 @@ H5CtfVolumeReader::~H5CtfVolumeReader()
 #define H5CTFREADER_ALLOCATE_ARRAY(name, type)\
   if (readAllArrays == true || arrayNames.find(Ebsd::Ctf::name) != arrayNames.end()) {\
     type* _##name = allocateArray<type>(numElements);\
-    if (NULL != _##name) {\
+    if (nullptr != _##name) {\
       ::memset(_##name, 0, numBytes);\
     }\
     set##name##Pointer(_##name);\
@@ -146,7 +146,7 @@ void* H5CtfVolumeReader::getPointerByName(const QString& featureName)
   if (featureName.compare(Ebsd::Ctf::MAD) == 0) { return static_cast<void*>(m_MAD);}
   if (featureName.compare(Ebsd::Ctf::BC) == 0) { return static_cast<void*>(m_BC);}
   if (featureName.compare(Ebsd::Ctf::BS) == 0) { return static_cast<void*>(m_BS);}
-  return NULL;
+  return nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -283,17 +283,17 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
       for (int i = 0; i < xpointsslice; i++)
       {
         index = static_cast<int>( (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot) );
-        if (NULL != phasePtr) {m_Phase[index] = phasePtr[readerIndex];}
-        if (NULL != xPtr) {m_X[index] = xPtr[readerIndex];}
-        if (NULL != yPtr) {m_Y[index] = yPtr[readerIndex];}
-        if (NULL != bandPtr) {m_Bands[index] = bandPtr[readerIndex];}
-        if (NULL != errorPtr) {m_Error[index] = errorPtr[readerIndex];}
-        if (NULL != euler1Ptr) {m_Euler1[index] = euler1Ptr[readerIndex];}
-        if (NULL != euler2Ptr) {m_Euler2[index] = euler2Ptr[readerIndex];}
-        if (NULL != euler3Ptr) {m_Euler3[index] = euler3Ptr[readerIndex];}
-        if (NULL != madPtr) {m_MAD[index] = madPtr[readerIndex];}
-        if (NULL != bcPtr) {m_BC[index] = bcPtr[readerIndex];}
-        if (NULL != bsPtr) {m_BS[index] = bsPtr[readerIndex];}
+        if (nullptr != phasePtr) {m_Phase[index] = phasePtr[readerIndex];}
+        if (nullptr != xPtr) {m_X[index] = xPtr[readerIndex];}
+        if (nullptr != yPtr) {m_Y[index] = yPtr[readerIndex];}
+        if (nullptr != bandPtr) {m_Bands[index] = bandPtr[readerIndex];}
+        if (nullptr != errorPtr) {m_Error[index] = errorPtr[readerIndex];}
+        if (nullptr != euler1Ptr) {m_Euler1[index] = euler1Ptr[readerIndex];}
+        if (nullptr != euler2Ptr) {m_Euler2[index] = euler2Ptr[readerIndex];}
+        if (nullptr != euler3Ptr) {m_Euler3[index] = euler3Ptr[readerIndex];}
+        if (nullptr != madPtr) {m_MAD[index] = madPtr[readerIndex];}
+        if (nullptr != bcPtr) {m_BC[index] = bcPtr[readerIndex];}
+        if (nullptr != bsPtr) {m_BS[index] = bsPtr[readerIndex];}
 
         /* For HKL OIM Files if there is a single phase then the value of the phase
          * data is one (1). If there are 2 or more phases then the lowest value
@@ -304,7 +304,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
          * even if there is only a single phase. The next if statement converts all zeros to ones
          * if there is a single phase in the OIM data.
          */
-//        if(NULL != phasePtr && m_Phase[index] < 1)
+//        if(nullptr != phasePtr && m_Phase[index] < 1)
 //        {
 //          m_Phase[index] = 1;
 //        }

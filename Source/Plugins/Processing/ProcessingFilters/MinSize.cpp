@@ -62,10 +62,10 @@ MinSize::MinSize() :
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
   m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases),
   m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells),
-  m_Neighbors(NULL),
-  m_FeatureIds(NULL),
-  m_FeaturePhases(NULL),
-  m_NumCells(NULL)
+  m_Neighbors(nullptr),
+  m_FeatureIds(nullptr),
+  m_FeaturePhases(nullptr),
+  m_NumCells(nullptr)
 {
   setupFilterParameters();
 }
@@ -83,24 +83,24 @@ MinSize::~MinSize()
 void MinSize::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", getMinAllowedFeatureSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, MinAllowedFeatureSize), SIMPL_BIND_GETTER(MinSize, this, MinAllowedFeatureSize)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Allowed Feature Size", MinAllowedFeatureSize, FilterParameter::Parameter, MinSize));
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, ApplyToSinglePhase), SIMPL_BIND_GETTER(MinSize, this, ApplyToSinglePhase)));
-  parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MinSize, this, PhaseNumber), SIMPL_BIND_GETTER(MinSize, this, PhaseNumber)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Single Phase Only", ApplyToSinglePhase, FilterParameter::Parameter, MinSize, linkedProps));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Parameter, MinSize));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MinSize, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(MinSize, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, MinSize, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MinSize, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(MinSize, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, MinSize, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Cells", "NumCellsArrayPath", getNumCellsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MinSize, this, NumCellsArrayPath), SIMPL_BIND_GETTER(MinSize, this, NumCellsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Cells", NumCellsArrayPath, FilterParameter::RequiredArray, MinSize, req));
   }
   setFilterParameters(parameters);
 }
@@ -149,18 +149,18 @@ void MinSize::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_NumCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumCellsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getNumCellsArrayPath()); }
 
   if(m_ApplyToSinglePhase == true)
   {
     m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
   }
@@ -197,7 +197,7 @@ void MinSize::execute()
   if (m_ApplyToSinglePhase == true)
   {
     AttributeMatrix::Pointer featAttrMat = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath().getDataContainerName())->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
-    size_t numFeatures = featAttrMat->getNumTuples();
+    size_t numFeatures = featAttrMat->getNumberOfTuples();
     bool unavailablePhase = true;
     for (size_t i = 0; i < numFeatures; i++)
     {

@@ -73,7 +73,7 @@ CropImageGeometry::CropImageGeometry() :
   m_SaveAsNewDataContainer(false),
   m_UpdateOrigin(true),
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -91,34 +91,34 @@ CropImageGeometry::~CropImageGeometry()
 void CropImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, XMin), SIMPL_BIND_GETTER(CropImageGeometry, this, XMin)));
-  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, YMin), SIMPL_BIND_GETTER(CropImageGeometry, this, YMin)));
-  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, ZMin), SIMPL_BIND_GETTER(CropImageGeometry, this, ZMin)));
-  parameters.push_back(IntFilterParameter::New("X Max (Column) [Inclusive]", "XMax", getXMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, XMax), SIMPL_BIND_GETTER(CropImageGeometry, this, XMax)));
-  parameters.push_back(IntFilterParameter::New("Y Max (Row) [Inclusive]", "YMax", getYMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, YMax), SIMPL_BIND_GETTER(CropImageGeometry, this, YMax)));
-  parameters.push_back(IntFilterParameter::New("Z Max (Plane) [Inclusive]", "ZMax", getZMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, ZMax), SIMPL_BIND_GETTER(CropImageGeometry, this, ZMax)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Min (Column)", XMin, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Min (Row)", YMin, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Min (Plane)", ZMin, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Max (Column) [Inclusive]", XMax, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Max (Row) [Inclusive]", YMax, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Max (Plane) [Inclusive]", ZMax, FilterParameter::Parameter, CropImageGeometry));
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, RenumberFeatures), SIMPL_BIND_GETTER(CropImageGeometry, this, RenumberFeatures)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Parameter, CropImageGeometry, linkedProps));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(BooleanFilterParameter::New("Update Origin", "UpdateOrigin", getUpdateOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, UpdateOrigin), SIMPL_BIND_GETTER(CropImageGeometry, this, UpdateOrigin)));
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, SaveAsNewDataContainer), SIMPL_BIND_GETTER(CropImageGeometry, this, SaveAsNewDataContainer)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Update Origin", UpdateOrigin, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save As New Data Container", SaveAsNewDataContainer, FilterParameter::Parameter, CropImageGeometry, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CropImageGeometry, this, CellAttributeMatrixPath), SIMPL_BIND_GETTER(CropImageGeometry, this, CellAttributeMatrixPath)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::RequiredArray, CropImageGeometry, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CropImageGeometry, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(CropImageGeometry, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, CropImageGeometry, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CropImageGeometry, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(CropImageGeometry, this, CellFeatureAttributeMatrixPath)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, CropImageGeometry, req));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CropImageGeometry, this, NewDataContainerName), SIMPL_BIND_GETTER(CropImageGeometry, this, NewDataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", NewDataContainerName, FilterParameter::CreatedArray, CropImageGeometry));
   setFilterParameters(parameters);
 }
 
@@ -179,7 +179,7 @@ void CropImageGeometry::dataCheck()
     image->getDimensions(dx, dy, dz);
 
     destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
-    if(NULL == destCellDataContainer.get() || getErrorCondition() < 0)
+    if(nullptr == destCellDataContainer.get() || getErrorCondition() < 0)
     {
       return;
     }
@@ -194,7 +194,7 @@ void CropImageGeometry::dataCheck()
     destCellAttrMat = srcCellAttrMat;
   }
 
-  if(NULL == destCellDataContainer.get() || NULL == destCellAttrMat.get() || getErrorCondition() < 0)
+  if(nullptr == destCellDataContainer.get() || nullptr == destCellAttrMat.get() || getErrorCondition() < 0)
   {
     return;
   }
@@ -294,14 +294,14 @@ void CropImageGeometry::dataCheck()
   {
     QVector<size_t> cDims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    if(NULL == cellFeatureAttrMat.get()) { return; }
-    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+    if(nullptr == cellFeatureAttrMat.get()) { return; }
+    QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
 }
@@ -356,14 +356,14 @@ void CropImageGeometry::execute()
     cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   }
 
-  if(NULL == destCellDataContainer.get() || NULL == cellAttrMat.get() || getErrorCondition() < 0)
+  if(nullptr == destCellDataContainer.get() || nullptr == cellAttrMat.get() || getErrorCondition() < 0)
   {
     return;
   }
 
 
   // No matter where the AM is (same DC or new DC), we have the correct DC and AM pointers...now it's time to crop
-  int64_t totalPoints = cellAttrMat->getNumTuples();
+  int64_t totalPoints = cellAttrMat->getNumberOfTuples();
 
   size_t udims[3] =
   { 0, 0, 0 };
@@ -457,7 +457,7 @@ void CropImageGeometry::execute()
 
     // This just sanity checks to make sure there were existing features before the cropping
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
+    size_t totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
     QVector<bool> activeObjects(totalFeatures, false);
     if (0 == totalFeatures)
     {
@@ -473,7 +473,7 @@ void CropImageGeometry::execute()
       dap.setDataContainerName(getNewDataContainerName());
     }
     m_FeatureIdsPtr = cellAttrMat->getAttributeArrayAs<Int32ArrayType>(dap.getDataArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     else
     {
@@ -530,10 +530,10 @@ IntVec3_t CropImageGeometry::getCurrentVolumeDataContainerDimensions()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   IntVec3_t data;
-  if (NULL != m.get() )
+  if (nullptr != m.get() )
   {
     ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-    if (image.get() != NULL)
+    if (image.get() != nullptr)
     {
       data.x = image->getXPoints();
       data.y = image->getYPoints();
@@ -562,10 +562,10 @@ FloatVec3_t CropImageGeometry::getCurrentVolumeDataContainerResolutions()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   FloatVec3_t data;
-  if (NULL != m)
+  if (nullptr != m)
   {
     ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-    if (image.get() != NULL)
+    if (image.get() != nullptr)
     {
       data.x = image->getXRes();
       data.y = image->getYRes();

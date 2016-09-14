@@ -58,7 +58,7 @@ MicrostructurePresetManager::Pointer MicrostructurePresetManager::instance()
 {
   static MicrostructurePresetManager::Pointer singleton;
 
-  if (singleton.get() == NULL)
+  if (singleton.get() == nullptr)
   {
     singleton.reset (new MicrostructurePresetManager() );
   }
@@ -84,7 +84,7 @@ void MicrostructurePresetManager::registerKnownFactories()
 // -----------------------------------------------------------------------------
 void MicrostructurePresetManager::registerFactory(AbstractMicrostructurePresetFactory::Pointer importer)
 {
-  if (NULL != importer.get() )
+  if (nullptr != importer.get() )
   {
     // Instantiate the Instance Manager for import delegates
     MicrostructurePresetManager::Pointer idManager = MicrostructurePresetManager::instance();

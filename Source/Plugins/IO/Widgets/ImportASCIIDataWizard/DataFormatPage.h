@@ -61,7 +61,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DataFormatPage(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent = NULL);
+    DataFormatPage(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent = nullptr);
 
     virtual ~DataFormatPage();
 

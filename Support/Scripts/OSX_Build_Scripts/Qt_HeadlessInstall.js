@@ -21,7 +21,7 @@ Controller.prototype.IntroductionPageCallback = function() {
 
 Controller.prototype.TargetDirectoryPageCallback = function()
 {
-    gui.currentPageWidget().TargetDirectoryLineEdit.setText("/Users/Shared/DREAM3D_SDK/Qt5.6.0");
+    gui.currentPageWidget().TargetDirectoryLineEdit.setText("QT_INSTALL_LOCATION");
     gui.clickButton(buttons.NextButton);
 }
 

@@ -76,7 +76,7 @@ ImportVectorImageStack::ImportVectorImageStack() :
   m_PaddingDigits(0),
   m_RefFrameZDir(SIMPL::RefFrameZDir::LowtoHigh),
   m_VectorDataArrayName(SIMPL::CellData::VectorData),
-  m_VectorData(NULL)
+  m_VectorData(nullptr)
 {
 
   m_Origin.x = 0.0;
@@ -107,9 +107,9 @@ void ImportVectorImageStack::setupFilterParameters()
 
   parameters.push_back(ImportVectorImageStackFilterParameter::New("Import Image Data", "ImageVector", getImageVector(), FilterParameter::Parameter, this));
 
-  parameters.push_back(StringFilterParameter::New("Data Container Name", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, DataContainerName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, DataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, CellAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("VectorData", "VectorDataArrayName", getVectorDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportVectorImageStack, this, VectorDataArrayName), SIMPL_BIND_GETTER(ImportVectorImageStack, this, VectorDataArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Name", DataContainerName, FilterParameter::CreatedArray, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_STRING_FP("VectorData", VectorDataArrayName, FilterParameter::CreatedArray, ImportVectorImageStack));
 
   setFilterParameters(parameters);
 }
@@ -164,7 +164,7 @@ void ImportVectorImageStack::dataCheck()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if (getErrorCondition() < 0 || NULL == m.get()) { return; }
+  if (getErrorCondition() < 0 || nullptr == m.get()) { return; }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
@@ -266,7 +266,7 @@ void ImportVectorImageStack::dataCheck()
     // This would be for a gray scale image
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName() );
     m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 // This is code for adding to an existing data container --- kept only for reference in case we want to implement this later
@@ -299,7 +299,7 @@ void ImportVectorImageStack::dataCheck()
 //  // This would be for a gray scale image
 //  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName() );
 //  m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-//  if( NULL != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+//  if( nullptr != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
 //  { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

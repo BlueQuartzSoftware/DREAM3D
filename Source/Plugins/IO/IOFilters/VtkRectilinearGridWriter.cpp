@@ -154,7 +154,7 @@ void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPt
 
   typename ArrayType::Pointer array = std::dynamic_pointer_cast<ArrayType>(iDataPtr);
 
-  if(NULL != array.get())
+  if(nullptr != array.get())
   {
     size_t totalElements = array->getSize();
     T* val = array->getPointer(0);
@@ -241,12 +241,12 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, OutputFile), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, OutputFile), "*.vtk", "VTK Rectilinear Grid"));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, WriteBinaryFile), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, WriteBinaryFile)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, VtkRectilinearGridWriter, "*.vtk", "VTK Rectilinear Grid"));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary File", WriteBinaryFile, FilterParameter::Parameter, VtkRectilinearGridWriter));
 
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths)));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Write", SelectedDataArrayPaths, FilterParameter::RequiredArray, VtkRectilinearGridWriter, req));
   }
 
   setFilterParameters(parameters);
@@ -330,7 +330,7 @@ void VtkRectilinearGridWriter::dataCheck()
   QString dcName = DataArrayPath::GetAttributeMatrixPath(getSelectedDataArrayPaths()).getDataContainerName();
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(dcName)->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get())
+  if(getErrorCondition() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -387,10 +387,10 @@ void VtkRectilinearGridWriter::execute()
   image->getOrigin(origin);
 
   int err = 0;
-  FILE* f = NULL;
+  FILE* f = nullptr;
   f = fopen(getOutputFile().toLatin1().data(), "wb");
   ScopedFileMonitor fMon(f);
-  if(NULL == f)
+  if(nullptr == f)
   {
     QString ss = QObject::tr("Error opening output vtk file '%1'\n ").arg(m_OutputFile);
     setErrorCondition(-2031001);

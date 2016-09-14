@@ -107,7 +107,7 @@ class CtfCachingTest
       QString filtName = "ReadCtfData";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL == filterFactory.get())
+      if (nullptr == filterFactory.get())
       {
         std::stringstream ss;
         ss << "The CtfCachingTest requires the use of the " << filtName.toStdString() << " filter which is found in the OrientationAnalysis Plugin";
@@ -130,7 +130,7 @@ class CtfCachingTest
       {
         DataContainerArray::Pointer dca = DataContainerArray::New();
 
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
           ctfReader = filterFactory->create();    // Create the reader for the first time
@@ -160,7 +160,7 @@ class CtfCachingTest
       {
         DataContainerArray::Pointer dca = DataContainerArray::New();
 
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile1);
           DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -188,7 +188,7 @@ class CtfCachingTest
       {
         DataContainerArray::Pointer dca = DataContainerArray::New();
 
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
           DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -229,7 +229,7 @@ class CtfCachingTest
 
         DataContainerArray::Pointer dca = DataContainerArray::New();
 
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
           DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -261,7 +261,7 @@ class CtfCachingTest
         if (QMetaObject::invokeMethod(ctfReader.get(), "flushCache", Qt::DirectConnection) == false)
           DREAM3D_REQUIRE_EQUAL(0, 1)
 
-              if (NULL != filterFactory.get())
+              if (nullptr != filterFactory.get())
           {
             bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
             DREAM3D_REQUIRE_EQUAL(propWasSet, true)

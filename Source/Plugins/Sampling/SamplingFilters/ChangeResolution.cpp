@@ -64,7 +64,7 @@ ChangeResolution::ChangeResolution() :
   m_RenumberFeatures(true),
   m_SaveAsNewDataContainer(false),
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -86,29 +86,29 @@ ChangeResolution::~ChangeResolution()
 void ChangeResolution::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ChangeResolution, this, Resolution), SIMPL_BIND_GETTER(ChangeResolution, this, Resolution)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ChangeResolution));
 
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(ChangeResolution, this, RenumberFeatures), SIMPL_BIND_GETTER(ChangeResolution, this, RenumberFeatures)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Parameter, ChangeResolution, linkedProps));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(ChangeResolution, this, SaveAsNewDataContainer), SIMPL_BIND_GETTER(ChangeResolution, this, SaveAsNewDataContainer)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Parameter, ChangeResolution, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ChangeResolution, this, CellAttributeMatrixPath), SIMPL_BIND_GETTER(ChangeResolution, this, CellAttributeMatrixPath)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::RequiredArray, ChangeResolution, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ChangeResolution, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(ChangeResolution, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, ChangeResolution, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ChangeResolution, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(ChangeResolution, this, CellFeatureAttributeMatrixPath)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, ChangeResolution, req));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ChangeResolution, this, NewDataContainerName), SIMPL_BIND_GETTER(ChangeResolution, this, NewDataContainerName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", NewDataContainerName, FilterParameter::CreatedArray, ChangeResolution));
   setFilterParameters(parameters);
 }
 
@@ -180,7 +180,7 @@ void ChangeResolution::dataCheck()
   {
     QVector<size_t> cDims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
@@ -260,9 +260,9 @@ void ChangeResolution::preflight()
   if (m_RenumberFeatures == true)
   {
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    if (NULL != cellFeatureAttrMat.get())
+    if (nullptr != cellFeatureAttrMat.get())
     {
-      QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+      QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
       cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
     }
   }
@@ -362,8 +362,8 @@ void ChangeResolution::execute()
     // the same name. At least in theory.
     IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), p->getComponentDimensions(), p->getName());
     data->resize(totalPoints);
-    void* source = NULL;
-    void* destination = NULL;
+    void* source = nullptr;
+    void* destination = nullptr;
     size_t newIndicies_I = 0;
     int32_t nComp = data->getNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
@@ -386,7 +386,7 @@ void ChangeResolution::execute()
   {
     totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
+    size_t totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
     QVector<bool> activeObjects(totalFeatures, false);
     if (0 == totalFeatures)
     {

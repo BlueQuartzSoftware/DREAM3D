@@ -59,7 +59,7 @@ AddOrientationNoise::AddOrientationNoise() :
   AbstractFilter(),
   m_Magnitude(1.0f),
   m_CellEulerAnglesArrayPath("", "", ""),
-  m_CellEulerAngles(NULL)
+  m_CellEulerAngles(nullptr)
 {
   setupFilterParameters();
 }
@@ -76,11 +76,11 @@ AddOrientationNoise::~AddOrientationNoise()
 void AddOrientationNoise::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Magnitude of Orientation Noise (Degrees)", "Magnitude", getMagnitude(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AddOrientationNoise, this, Magnitude), SIMPL_BIND_GETTER(AddOrientationNoise, this, Magnitude)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Magnitude of Orientation Noise (Degrees)", Magnitude, FilterParameter::Parameter, AddOrientationNoise));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AddOrientationNoise, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(AddOrientationNoise, this, CellEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, AddOrientationNoise, req));
   }
   setFilterParameters(parameters);
 }
@@ -112,7 +112,7 @@ void AddOrientationNoise::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() < 0) { return; }
 }

@@ -62,7 +62,7 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     Q_OBJECT
 
   public:
-    InitializeSyntheticVolumeWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    InitializeSyntheticVolumeWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
     virtual ~InitializeSyntheticVolumeWidget();
 
     /**

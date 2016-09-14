@@ -14,7 +14,7 @@ class PreflightVerify : public QObject
 {
     Q_OBJECT
   public:
-    PreflightVerify(QObject* parent = NULL);
+    PreflightVerify(QObject* parent = nullptr);
     virtual ~PreflightVerify();
 
 

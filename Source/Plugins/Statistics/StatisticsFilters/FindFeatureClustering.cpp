@@ -73,12 +73,12 @@ FindFeatureClustering::FindFeatureClustering() :
   m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList),
   m_NewEnsembleArrayArrayName("RDF"),
   m_MaxMinArrayName("RDFMaxMinDistances"),
-  m_FeaturePhases(NULL),
-  m_Centroids(NULL),
-  m_EquivalentDiameters(NULL),
-  m_NewEnsembleArray(NULL),
-  m_MaxMinArray(NULL),
-  m_BiasedFeatures(NULL)
+  m_FeaturePhases(nullptr),
+  m_Centroids(nullptr),
+  m_EquivalentDiameters(nullptr),
+  m_NewEnsembleArray(nullptr),
+  m_MaxMinArray(nullptr),
+  m_BiasedFeatures(nullptr)
 {
   setupFilterParameters();
 }
@@ -96,37 +96,37 @@ FindFeatureClustering::~FindFeatureClustering()
 void FindFeatureClustering::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Number of Bins for RDF", "NumberOfBins", getNumberOfBins(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureClustering, this, NumberOfBins), SIMPL_BIND_GETTER(FindFeatureClustering, this, NumberOfBins)));
-  parameters.push_back(IntFilterParameter::New("Phase Index", "PhaseNumber", getPhaseNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureClustering, this, PhaseNumber), SIMPL_BIND_GETTER(FindFeatureClustering, this, PhaseNumber)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins for RDF", NumberOfBins, FilterParameter::Parameter, FindFeatureClustering));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Parameter, FindFeatureClustering));
   QStringList linkedProps("BiasedFeaturesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindFeatureClustering, this, RemoveBiasedFeatures), SIMPL_BIND_GETTER(FindFeatureClustering, this, RemoveBiasedFeatures)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Remove Biased Features", RemoveBiasedFeatures, FilterParameter::Parameter, FindFeatureClustering, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureClustering, this, EquivalentDiametersArrayPath), SIMPL_BIND_GETTER(FindFeatureClustering, this, EquivalentDiametersArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Equivalent Diameters", EquivalentDiametersArrayPath, FilterParameter::RequiredArray, FindFeatureClustering, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureClustering, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindFeatureClustering, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindFeatureClustering, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureClustering, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindFeatureClustering, this, CentroidsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindFeatureClustering, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindFeatureClustering, this, BiasedFeaturesArrayPath), SIMPL_BIND_GETTER(FindFeatureClustering, this, BiasedFeaturesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Biased Features", BiasedFeaturesArrayPath, FilterParameter::RequiredArray, FindFeatureClustering, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType amReq = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::RequiredArray, amReq, SIMPL_BIND_SETTER(FindFeatureClustering, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(FindFeatureClustering, this, CellEnsembleAttributeMatrixName)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::RequiredArray, FindFeatureClustering, amReq));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Clustering List", "ClusteringListArrayName", getClusteringListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureClustering, this, ClusteringListArrayName), SIMPL_BIND_GETTER(FindFeatureClustering, this, ClusteringListArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Clustering List", ClusteringListArrayName, FilterParameter::CreatedArray, FindFeatureClustering));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Radial Distribution Function", "NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureClustering, this, NewEnsembleArrayArrayName), SIMPL_BIND_GETTER(FindFeatureClustering, this, NewEnsembleArrayArrayName)));
-  parameters.push_back(StringFilterParameter::New("Max and Min Separation Distances", "MaxMinArrayName", getMaxMinArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindFeatureClustering, this, MaxMinArrayName), SIMPL_BIND_GETTER(FindFeatureClustering, this, MaxMinArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Radial Distribution Function", NewEnsembleArrayArrayName, FilterParameter::CreatedArray, FindFeatureClustering));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Max and Min Separation Distances", MaxMinArrayName, FilterParameter::CreatedArray, FindFeatureClustering));
   setFilterParameters(parameters);
 }
 
@@ -172,23 +172,23 @@ void FindFeatureClustering::dataCheck()
   QVector<size_t> cDims(1, 1);
 
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
   m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (m_RemoveBiasedFeatures == true)
   {
     cDims[0] = 1;
     m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -196,13 +196,13 @@ void FindFeatureClustering::dataCheck()
 
   tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getNewEnsembleArrayArrayName() );
   m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 2;
   tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getMaxMinArrayName() );
   m_MaxMinArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, tempPath, 0, cDims);
-  if( NULL != m_MaxMinArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_MaxMinArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_MaxMinArray = m_MaxMinArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;

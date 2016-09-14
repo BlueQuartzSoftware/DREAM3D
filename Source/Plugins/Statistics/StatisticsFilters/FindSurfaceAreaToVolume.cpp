@@ -58,9 +58,9 @@ FindSurfaceAreaToVolume::FindSurfaceAreaToVolume() :
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
   m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells),
   m_SurfaceAreaVolumeRatioArrayName(SIMPL::FeatureData::SurfaceAreaVol),
-  m_FeatureIds(NULL),
-  m_NumCells(NULL),
-  m_SurfaceAreaVolumeRatio(NULL)
+  m_FeatureIds(nullptr),
+  m_NumCells(nullptr),
+  m_SurfaceAreaVolumeRatio(nullptr)
 {
   setupFilterParameters();
 }
@@ -80,16 +80,16 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSurfaceAreaToVolume, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindSurfaceAreaToVolume, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindSurfaceAreaToVolume, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
-    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Cells", "NumCellsArrayPath", getNumCellsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSurfaceAreaToVolume, this, NumCellsArrayPath), SIMPL_BIND_GETTER(FindSurfaceAreaToVolume, this, NumCellsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Cells", NumCellsArrayPath, FilterParameter::RequiredArray, FindSurfaceAreaToVolume, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Surface Area to Volume Ratio", "SurfaceAreaVolumeRatioArrayName", getSurfaceAreaVolumeRatioArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindSurfaceAreaToVolume, this, SurfaceAreaVolumeRatioArrayName), SIMPL_BIND_GETTER(FindSurfaceAreaToVolume, this, SurfaceAreaVolumeRatioArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Surface Area to Volume Ratio", SurfaceAreaVolumeRatioArrayName, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
   setFilterParameters(parameters);
 }
 
@@ -125,18 +125,18 @@ void FindSurfaceAreaToVolume::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
   m_NumCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumCellsArrayPath(), cDims);
-  if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
   tempPath.update(getNumCellsArrayPath().getDataContainerName(), getNumCellsArrayPath().getAttributeMatrixName(), getSurfaceAreaVolumeRatioArrayName() );
   m_SurfaceAreaVolumeRatioPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceAreaVolumeRatioPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceAreaVolumeRatioPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceAreaVolumeRatio = m_SurfaceAreaVolumeRatioPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

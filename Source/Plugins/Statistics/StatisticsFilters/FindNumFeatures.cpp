@@ -56,8 +56,8 @@ FindNumFeatures::FindNumFeatures() :
   AbstractFilter(),
   m_FeaturePhasesArrayPath("", "", ""),
   m_NumFeaturesArrayPath("", "", ""),
-  m_FeaturePhases(NULL),
-  m_NumFeatures(NULL)
+  m_FeaturePhases(nullptr),
+  m_NumFeatures(nullptr)
 {
   setupFilterParameters();
 }
@@ -78,13 +78,13 @@ void FindNumFeatures::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindNumFeatures, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindNumFeatures, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindNumFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
 
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindNumFeatures, this, NumFeaturesArrayPath), SIMPL_BIND_GETTER(FindNumFeatures, this, NumFeaturesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::CreatedArray, FindNumFeatures, req));
   }
 
   setFilterParameters(parameters);
@@ -118,11 +118,11 @@ void FindNumFeatures::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayPath, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, getNumFeaturesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

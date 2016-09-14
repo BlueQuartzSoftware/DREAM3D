@@ -72,13 +72,13 @@ class ImportASCIIDataWizard : public QWizard
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    ImportASCIIDataWizard(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent = NULL);
+    ImportASCIIDataWizard(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent = nullptr);
 
     /**
      * @brief ImportASCIIDataWizard
      * @param wizardData
      */
-    ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataContainerArray::Pointer dca, QWidget* parent = NULL);
+    ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataContainerArray::Pointer dca, QWidget* parent = nullptr);
 
     virtual ~ImportASCIIDataWizard();
 

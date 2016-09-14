@@ -223,8 +223,8 @@ endif()
 
 # --------------------------------------------------------------------
 # Build the SimpleITKExplicit Library.
-option(SIMPLib_USE_ITK "Use ITK For Image Processing" ON)
-if(SIMPLib_USE_ITK)
+option(DREAM3D_USE_ITK "Use ITK For Image Processing" ON)
+if(DREAM3D_USE_ITK)
   set(EXE_DEBUG_EXTENSION "_debug")
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
   get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
@@ -336,8 +336,8 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
 set(SIMPLib_USE_PARALLEL_ALGORITHMS "")
-option(SIMPLib_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms" ON)
-if(SIMPLib_USE_MULTITHREADED_ALGOS)
+option(SIMPL_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms" ON)
+if(SIMPL_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
     if(TBB_FOUND)
         include_directories(${TBB_INCLUDE_DIRS} )
@@ -427,7 +427,7 @@ ENDif(CMAKE_COMPILER_IS_GNUCXX)
 if(MSVC)
  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
  add_definitions(-D_SCL_SECURE_NO_WARNINGS)
- option(SIMPLib_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
+ option(SIMPL_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
 endif()
 
 
@@ -473,35 +473,35 @@ include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 
 # add the Command line utilities
 # Figure out here if we are going to build the command line tools
-option(SIMPLib_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
-if( SIMPLib_BUILD_CLI_TOOLS )
+option(SIMPL_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
+if( SIMPL_BUILD_CLI_TOOLS )
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 endif()
 
 
 #-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
-option(SIMPLib_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
-if(SIMPLib_BUILD_DOCUMENTATION)
+option(SIMPL_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
+if(SIMPL_BUILD_DOCUMENTATION)
   set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
   set(DOX_GENERATE_RTF "NO")
-  option(SIMPLib_GENERATE_RTF "Generate RTF Documentation" OFF)
-  if(SIMPLib_GENERATE_RTF STREQUAL "ON")
+  option(SIMPL_GENERATE_RTF "Generate RTF Documentation" OFF)
+  if(SIMPL_GENERATE_RTF STREQUAL "ON")
     set(DOX_GENERATE_RTF "YES")
   endif()
 
   # By default we generate the Documentation in HTML format
   set(DOX_GENERATE_HTML "NO")
-  option(SIMPLib_GENERATE_HTML "Generate HTML Documentation" ON)
-  if(SIMPLib_GENERATE_HTML STREQUAL "ON")
+  option(SIMPL_GENERATE_HTML "Generate HTML Documentation" ON)
+  if(SIMPL_GENERATE_HTML STREQUAL "ON")
     set(DOX_GENERATE_HTML "YES")
   endif()
 
   #most windows machines do NOT have LATEX built in so default this to OFF
   set(DOX_GENERATE_LATEX "NO")
-  option(SIMPLib_GENERATE_LATEX "Generate PDF Documentation" OFF)
-  if(SIMPLib_GENERATE_LATEX STREQUAL "ON")
+  option(SIMPL_GENERATE_LATEX "Generate PDF Documentation" OFF)
+  if(SIMPL_GENERATE_LATEX STREQUAL "ON")
     set(DOX_GENERATE_LATEX "YES")
     # Check for existence of LaTex executable files
     INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)

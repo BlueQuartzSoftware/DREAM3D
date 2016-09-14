@@ -180,8 +180,8 @@ void MorphFilter::multiSE(EMMPM_Data* data)
 {
   int  k, l;
   int  ri;
-  unsigned char* se = NULL;
-  unsigned char* curve = NULL;
+  unsigned char* se = nullptr;
+  unsigned char* curve = nullptr;
   real_t r, r_sq, pnlty;
   size_t ij, lij, iirijjri;
   size_t se_cols;

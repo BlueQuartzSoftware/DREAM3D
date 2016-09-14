@@ -66,7 +66,7 @@ WriteImages::WriteImages() :
   m_ImageFormat(0),
   m_Plane(0),
   m_ColorsArrayPath("", "", ""),
-  m_Colors(NULL)
+  m_Colors(nullptr)
 {
   setupFilterParameters();
 }
@@ -115,17 +115,17 @@ void WriteImages::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(OutputPathFilterParameter::New("Output Directory Path", "OutputPath", getOutputPath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteImages, this, OutputPath), SIMPL_BIND_GETTER(WriteImages, this, OutputPath)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Directory Path", OutputPath, FilterParameter::Parameter, WriteImages));
   {
     QStringList linkedProps;
     linkedProps << "ImagePrefix";
-    parameters.push_back(LinkedBooleanFilterParameter::New("File Prefix", "FilePrefix", getFilePrefix(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteImages, this, FilePrefix), SIMPL_BIND_GETTER(WriteImages, this, FilePrefix)));
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("File Prefix", FilePrefix, FilterParameter::Parameter, WriteImages, linkedProps));
   }
-  parameters.push_back(StringFilterParameter::New("Image File Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteImages, this, ImagePrefix), SIMPL_BIND_GETTER(WriteImages, this, ImagePrefix)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image File Prefix", ImagePrefix, FilterParameter::Parameter, WriteImages));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Color Data", "ColorsArrayPath", getColorsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteImages, this, ColorsArrayPath), SIMPL_BIND_GETTER(WriteImages, this, ColorsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Color Data", ColorsArrayPath, FilterParameter::RequiredArray, WriteImages, req));
   }
   setFilterParameters(parameters);
 }
@@ -219,19 +219,19 @@ void WriteImages::dataCheck()
   if (cDims[0] == 1)
   {
     m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if (nullptr != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else if (cDims[0] == 3)
   {
     m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if (nullptr != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else if (cDims[0] == 4)
   {
     m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (NULL != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if (nullptr != m_ColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else

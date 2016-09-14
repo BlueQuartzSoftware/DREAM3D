@@ -82,7 +82,7 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
   m_EulerTransformation.k = 0.0f;
   m_EulerTransformation.l = 1.0f;
   m_Filter = qobject_cast<ReadH5Ebsd*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
+  Q_ASSERT_X(nullptr != m_Filter, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   qRegisterMetaType<QSet<QString> >("QSet<QString>");
 
@@ -400,14 +400,14 @@ bool ReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == filter)
+  if (nullptr == filter)
   {
-    QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
+    QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was nullptr.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 
   ReadH5Ebsd* readEbsd = qobject_cast<ReadH5Ebsd*>(filter);
-  Q_ASSERT_X(NULL != readEbsd, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
+  Q_ASSERT_X(nullptr != readEbsd, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   bool ok = false;
   readEbsd->setInputFile(m_InputFile->text() );

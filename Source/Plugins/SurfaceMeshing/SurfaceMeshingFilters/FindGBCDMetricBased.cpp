@@ -449,14 +449,14 @@ FindGBCDMetricBased::FindGBCDMetricBased() :
   m_SurfaceMeshFaceAreasArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFeatureFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "FaceLabels"),
   m_NodeTypesArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType),
-  m_CrystalStructures(NULL),
-  m_FeatureEulerAngles(NULL),
-  m_FeaturePhases(NULL),
-  m_SurfaceMeshFaceAreas(NULL),
-  m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFaceNormals(NULL),
-  m_SurfaceMeshFeatureFaceLabels(NULL),
-  m_NodeTypes(NULL)
+  m_CrystalStructures(nullptr),
+  m_FeatureEulerAngles(nullptr),
+  m_FeaturePhases(nullptr),
+  m_SurfaceMeshFaceAreas(nullptr),
+  m_SurfaceMeshFaceLabels(nullptr),
+  m_SurfaceMeshFaceNormals(nullptr),
+  m_SurfaceMeshFeatureFaceLabels(nullptr),
+  m_NodeTypes(nullptr)
 {
   m_MisorientationRotation.angle = 17.9f;
   m_MisorientationRotation.h = 1.0f;
@@ -479,8 +479,8 @@ FindGBCDMetricBased::~FindGBCDMetricBased()
 void FindGBCDMetricBased::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, PhaseOfInterest), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, PhaseOfInterest)));
-  parameters.push_back(AxisAngleFilterParameter::New("Fixed Misorientation", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, MisorientationRotation), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, MisorientationRotation)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, FindGBCDMetricBased));
+  parameters.push_back(SIMPL_NEW_AXISANGLE_FP("Fixed Misorientation", MisorientationRotation, FilterParameter::Parameter, FindGBCDMetricBased));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Limiting Distances");
@@ -506,47 +506,47 @@ void FindGBCDMetricBased::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, NumSamplPts), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, NumSamplPts)));
-  parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, ExcludeTripleLines), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, ExcludeTripleLines)));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, DistOutputFile), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, DistOutputFile), "*.dat", "DAT File"));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, ErrOutputFile), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, ErrOutputFile), "*.dat", "DAT File"));
-  parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, SaveRelativeErr), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, SaveRelativeErr)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Sampling Points (on a Hemisphere)", NumSamplPts, FilterParameter::Parameter, FindGBCDMetricBased));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Exclude Triangles Directly Neighboring Triple Lines", ExcludeTripleLines, FilterParameter::Parameter, FindGBCDMetricBased));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Distribution File", DistOutputFile, FilterParameter::Parameter, FindGBCDMetricBased, "*.dat", "DAT File"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Distribution Errors File", ErrOutputFile, FilterParameter::Parameter, FindGBCDMetricBased, "*.dat", "DAT File"));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Save Relative Errors Instead of Their Absolute Values", SaveRelativeErr, FilterParameter::Parameter, FindGBCDMetricBased));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Node Types", "NodeTypesArrayPath", getNodeTypesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, NodeTypesArrayPath), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, NodeTypesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Node Types", NodeTypesArrayPath, FilterParameter::RequiredArray, FindGBCDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, FindGBCDMetricBased, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, SurfaceMeshFaceNormalsArrayPath), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, SurfaceMeshFaceNormalsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Normals", SurfaceMeshFaceNormalsArrayPath, FilterParameter::RequiredArray, FindGBCDMetricBased, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, SurfaceMeshFaceAreasArrayPath), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, SurfaceMeshFaceAreasArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Areas", SurfaceMeshFaceAreasArrayPath, FilterParameter::RequiredArray, FindGBCDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::FaceFeature, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, SurfaceMeshFeatureFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, SurfaceMeshFeatureFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Face Labels", SurfaceMeshFeatureFaceLabelsArrayPath, FilterParameter::RequiredArray, FindGBCDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, FeatureEulerAnglesArrayPath), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, FeatureEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Euler Angles", FeatureEulerAnglesArrayPath, FilterParameter::RequiredArray, FindGBCDMetricBased, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindGBCDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindGBCDMetricBased, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindGBCDMetricBased, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindGBCDMetricBased, req));
   }
   setFilterParameters(parameters);
 }
@@ -690,11 +690,11 @@ void FindGBCDMetricBased::dataCheck()
   // Crystal Structures
   QVector<size_t> cDims(1, 1);
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Phase of Interest  (filter params.)
-  if (NULL != m_CrystalStructuresPtr.lock().get())
+  if (nullptr != m_CrystalStructuresPtr.lock().get())
   {
     if (getPhaseOfInterest() >= static_cast<int>(m_CrystalStructuresPtr.lock()->getNumberOfTuples()) || getPhaseOfInterest() <= 0)
     {
@@ -707,43 +707,43 @@ void FindGBCDMetricBased::dataCheck()
   // Euler Angles
   cDims[0] = 3;
   m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_FeatureEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_FeatureEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Phases
   cDims[0] = 1;
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_FeaturePhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_FeaturePhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Face Labels
   cDims[0] = 2;
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Face Normals
   cDims[0] = 3;
   m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_SurfaceMeshFaceNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_SurfaceMeshFaceNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Face Areas
   cDims[0] = 1;
   m_SurfaceMeshFaceAreasPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceAreasArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_SurfaceMeshFaceAreasPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_SurfaceMeshFaceAreasPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Face Labels
   cDims[0] = 2;
   m_SurfaceMeshFeatureFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFeatureFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_SurfaceMeshFeatureFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_SurfaceMeshFeatureFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Node Types
   cDims[0] = 1;
   m_NodeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getNodeTypesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_NodeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if (nullptr != m_NodeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -839,9 +839,9 @@ void FindGBCDMetricBased::execute()
   }
 
   // Open the output files, should be opened and checked before starting computations
-  FILE* fDist = NULL;
+  FILE* fDist = nullptr;
   fDist = fopen(m_DistOutputFile.toLatin1().data(), "wb");
-  if (NULL == fDist)
+  if (nullptr == fDist)
   {
     QString ss = QObject::tr("Error opening distribution output file '%1'").arg(m_DistOutputFile);
     setErrorCondition(-1);
@@ -849,9 +849,9 @@ void FindGBCDMetricBased::execute()
     return;
   }
 
-  FILE* fErr = NULL;
+  FILE* fErr = nullptr;
   fErr = fopen(m_ErrOutputFile.toLatin1().data(), "wb");
-  if (NULL == fErr)
+  if (nullptr == fErr)
   {
     QString ss = QObject::tr("Error opening distribution errors output file '%1'").arg(m_ErrOutputFile);
     setErrorCondition(-1);

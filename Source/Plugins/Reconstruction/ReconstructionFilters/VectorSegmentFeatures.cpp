@@ -68,10 +68,10 @@ VectorSegmentFeatures::VectorSegmentFeatures() :
   m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   m_ActiveArrayName(SIMPL::FeatureData::Active),
-  m_Vectors(NULL),
-  m_FeatureIds(NULL),
-  m_GoodVoxels(NULL),
-  m_Active(NULL),
+  m_Vectors(nullptr),
+  m_FeatureIds(nullptr),
+  m_GoodVoxels(nullptr),
+  m_Active(nullptr),
   m_AngleToleranceRad(0.0f)
 {
 
@@ -92,22 +92,22 @@ void VectorSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(DoubleFilterParameter::New("Angle Tolerance", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, AngleTolerance), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, AngleTolerance)));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Angle Tolerance", AngleTolerance, FilterParameter::Parameter, VectorSegmentFeatures));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, UseGoodVoxels)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, VectorSegmentFeatures, linkedProps));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Vector Array To Segment", "SelectedVectorArrayPath", getSelectedVectorArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, SelectedVectorArrayPath), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, SelectedVectorArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Vector Array To Segment", SelectedVectorArrayPath, FilterParameter::RequiredArray, VectorSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, GoodVoxelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, VectorSegmentFeatures, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("Cell Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, FeatureIdsArrayName)));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, CellFeatureAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(VectorSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(VectorSegmentFeatures, this, ActiveArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, VectorSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, VectorSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, VectorSegmentFeatures));
 
   setFilterParameters(parameters);
 }
@@ -135,7 +135,7 @@ void VectorSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -164,7 +164,7 @@ void VectorSegmentFeatures::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
@@ -173,27 +173,27 @@ void VectorSegmentFeatures::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_VectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getSelectedVectorArrayPath(), cDims);
-  if( NULL != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSelectedVectorArrayPath()); }
 
   cDims[0] = 1;
   tempPath.update(getDataContainerName(), m_SelectedVectorArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName() );
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_UseGoodVoxels == true)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
   }
 
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
   m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
@@ -365,7 +365,7 @@ void VectorSegmentFeatures::execute()
 
   SegmentFeatures::execute();
 
-  int32_t totalFeatures = static_cast<int32_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
+  int32_t totalFeatures = static_cast<int32_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumberOfTuples());
   if (totalFeatures < 2)
   {
     setErrorCondition(-87000);

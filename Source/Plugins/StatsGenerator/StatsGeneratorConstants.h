@@ -17,8 +17,11 @@ namespace StatsGeneratorConstants
 
   namespace FilterGroups
   {
-  	const QString StatsGeneratorFilters("StatsGenerator");
+    const QString StatsGeneratorFilters("StatsGenerator");
   }
+
+  static const float k_Mu = 1.0f;
+  static const float k_Sigma = 0.1f;
 }
 
 /**
@@ -36,5 +39,24 @@ namespace BlueQuartz
   const QString URL("http://www.bluequartz.net");
   const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
 }
+
+#if defined(Q_OS_WIN)
+
+#define SG_FONT_SIZE 10
+
+#elif defined (Q_OS_LINUX)
+
+#define SG_FONT_SIZE 10
+
+#elif defined (Q_OS_OSX)
+
+#define SG_FONT_SIZE 14
+
+#else
+
+#define SG_FONT_SIZE 12
+
+#endif
+
 
 #endif

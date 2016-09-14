@@ -86,7 +86,7 @@ class EMMPMSegmentationTest
         QString filtName = "EMMPMFilter";
         FilterManager* fm = FilterManager::Instance();
         IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-        if (NULL == filterFactory.get())
+        if (nullptr == filterFactory.get())
         {
           std::stringstream ss;
           ss << "Unable to initialize the EMMPMFilter while executing the EMMPMSegmentationTest.";
@@ -99,7 +99,7 @@ class EMMPMSegmentationTest
         QString filtName = "MultiEmmpmFilter";
         FilterManager* fm = FilterManager::Instance();
         IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-        if (NULL == filterFactory.get())
+        if (nullptr == filterFactory.get())
         {
           std::stringstream ss;
           ss << "Unable to initialize the MultiEmmpmFilter while executing the EMMPMSegmentationTest.";
@@ -119,7 +119,7 @@ class EMMPMSegmentationTest
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-      if (NULL != filterFactory.get())
+      if (nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -150,7 +150,7 @@ class EMMPMSegmentationTest
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-      if (NULL != filterFactory.get())
+      if (nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -185,7 +185,7 @@ class EMMPMSegmentationTest
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-      if (NULL != filterFactory.get())
+      if (nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -220,7 +220,7 @@ class EMMPMSegmentationTest
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-      if (NULL != filterFactory.get())
+      if (nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.

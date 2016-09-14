@@ -57,7 +57,7 @@ class AbstractWizardPage : public QWizardPage
     virtual int nextId() const;
 
   protected:
-    AbstractWizardPage(const QString &inputFilePath, QWidget* parent = NULL);
+    AbstractWizardPage(const QString &inputFilePath, QWidget* parent = nullptr);
 
     QString                                         m_InputFilePath;
 

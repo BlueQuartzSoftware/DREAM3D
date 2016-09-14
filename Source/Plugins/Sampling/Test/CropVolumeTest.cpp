@@ -121,7 +121,7 @@ class CropVolumeTest
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
       DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
-      if (NULL != filterFactory.get())
+      if (nullptr != filterFactory.get())
       {
 
         filter = filterFactory->create();
@@ -416,7 +416,7 @@ class CropVolumeTest
       propWasSet = cropVolume->setProperty("CellAttributeMatrixPath", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);
       cropVolume->preflight();
-      // Fails because getPrereqGeometryFromDataContainer catches the NULL DataContainer
+      // Fails because getPrereqGeometryFromDataContainer catches the nullptr DataContainer
       // Error code should be -999
       DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -999)
           resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
@@ -427,7 +427,7 @@ class CropVolumeTest
       propWasSet = cropVolume->setProperty("CellAttributeMatrixPath", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);
       cropVolume->preflight();
-      // Fails because getPrereqAttributeMatrixFromPath catches the NULL AttributeMatrix
+      // Fails because getPrereqAttributeMatrixFromPath catches the nullptr AttributeMatrix
       // Error code should be -301 * 1020 = -307020
       DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -307020)
           resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
@@ -547,7 +547,7 @@ class CropVolumeTest
       QString filtName = "CropImageGeometry";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL != filterFactory.get())
+      if (nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.

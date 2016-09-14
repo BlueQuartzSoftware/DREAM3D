@@ -105,23 +105,23 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
   FilterParameterVector parameters;
 
   /* For String input use this code */
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, OutputFile), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, OutputFile)));
-  parameters.push_back(BooleanFilterParameter::New("Convert to Degrees", "ConvertToDegrees", getConvertToDegrees(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, ConvertToDegrees), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, ConvertToDegrees)));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Convert to Degrees", ConvertToDegrees, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Only Write Good Elements", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, UseGoodVoxels), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, UseGoodVoxels)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Only Write Good Elements", UseGoodVoxels, FilterParameter::Parameter, WriteStatsGenOdfAngleFile, linkedProps));
 
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, CellEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, WriteStatsGenOdfAngleFile, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, WriteStatsGenOdfAngleFile, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, GoodVoxelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, WriteStatsGenOdfAngleFile, req));
   }
 
   setFilterParameters(parameters);
@@ -175,12 +175,12 @@ void WriteStatsGenOdfAngleFile::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
@@ -189,12 +189,12 @@ void WriteStatsGenOdfAngleFile::dataCheck()
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else
   {
-    m_GoodVoxels = NULL;
+    m_GoodVoxels = nullptr;
   }
 
 }

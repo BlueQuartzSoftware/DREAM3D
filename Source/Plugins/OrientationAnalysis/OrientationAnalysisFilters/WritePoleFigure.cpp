@@ -87,10 +87,10 @@ WritePoleFigure::WritePoleFigure() :
   m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
   m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
   m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_CellEulerAngles(NULL),
-  m_CellPhases(NULL),
-  m_CrystalStructures(NULL),
-  m_GoodVoxels(NULL)
+  m_CellEulerAngles(nullptr),
+  m_CellPhases(nullptr),
+  m_CrystalStructures(nullptr),
+  m_GoodVoxels(nullptr)
 {
   setupFilterParameters();
 }
@@ -124,8 +124,8 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Lambert Image Size (Pixels)", "LambertSize", getLambertSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WritePoleFigure, this, LambertSize), SIMPL_BIND_GETTER(WritePoleFigure, this, LambertSize)));
-  parameters.push_back(IntFilterParameter::New("Number of Colors", "NumColors", getNumColors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WritePoleFigure, this, NumColors), SIMPL_BIND_GETTER(WritePoleFigure, this, NumColors)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lambert Image Size (Pixels)", LambertSize, FilterParameter::Parameter, WritePoleFigure));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Colors", NumColors, FilterParameter::Parameter, WritePoleFigure));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Layout");
@@ -141,26 +141,26 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(StringFilterParameter::New("Image Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WritePoleFigure, this, ImagePrefix), SIMPL_BIND_GETTER(WritePoleFigure, this, ImagePrefix)));
-  parameters.push_back(OutputPathFilterParameter::New("Output Path", "OutputPath", getOutputPath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WritePoleFigure, this, OutputPath), SIMPL_BIND_GETTER(WritePoleFigure, this, OutputPath)));
-  parameters.push_back(IntFilterParameter::New("Image Size (Square Pixels)", "ImageSize", getImageSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(WritePoleFigure, this, ImageSize), SIMPL_BIND_GETTER(WritePoleFigure, this, ImageSize)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image Prefix", ImagePrefix, FilterParameter::Parameter, WritePoleFigure));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, WritePoleFigure));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Parameter, WritePoleFigure));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WritePoleFigure, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(WritePoleFigure, this, CellEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WritePoleFigure, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(WritePoleFigure, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WritePoleFigure, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(WritePoleFigure, this, GoodVoxelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WritePoleFigure, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(WritePoleFigure, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   setFilterParameters(parameters);
 }
@@ -218,32 +218,32 @@ void WritePoleFigure::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellEulerAnglesArrayPath()); }
 
   cDims[0] = 1;
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
 
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   cDims[0] = 1;
   m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_GoodVoxelsPtr.lock().get())
+  if (nullptr != m_GoodVoxelsPtr.lock().get())
   {
-    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
   }
   else
   {
-    m_GoodVoxels = NULL;
+    m_GoodVoxels = nullptr;
   }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
@@ -352,7 +352,7 @@ void WritePoleFigure::execute()
 
   bool missingGoodVoxels = true;
 
-  if (NULL != m_GoodVoxels)
+  if (nullptr != m_GoodVoxels)
   {
     missingGoodVoxels = false;
   }

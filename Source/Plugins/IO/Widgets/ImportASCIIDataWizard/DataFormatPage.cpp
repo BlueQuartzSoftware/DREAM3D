@@ -60,7 +60,7 @@ namespace Detail
 DataFormatPage::DataFormatPage(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent) :
   AbstractWizardPage(inputFilePath, parent),
   m_NumLines(numLines),
-  m_EditHeadersDialog(NULL),
+  m_EditHeadersDialog(nullptr),
   m_Dca(dca)
 {
   setupUi(this);
@@ -119,8 +119,8 @@ void DataFormatPage::setupGui()
   tupleDimsTable->blockSignals(false);
   tupleCountLabel->setText(QString::number(numOfDataLines));
 
-  selectedDCBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle());
-  selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle());
+  selectedDCBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
+  selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
 
   m_AMMenuMapper = new QSignalMapper(this);
   connect(m_AMMenuMapper, SIGNAL(mapped(QString)),
@@ -672,7 +672,7 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_editHeadersBtn_clicked()
 {
-  if (NULL == m_EditHeadersDialog)
+  if (nullptr == m_EditHeadersDialog)
   {
     m_EditHeadersDialog = new EditHeadersDialog(this);
   }
@@ -864,7 +864,7 @@ void DataFormatPage::refreshModel()
 // -----------------------------------------------------------------------------
 void DataFormatPage::launchEditHeadersDialog()
 {
-  if (NULL != m_EditHeadersDialog)
+  if (nullptr != m_EditHeadersDialog)
   {
     ASCIIDataModel* model = ASCIIDataModel::Instance();
     QVector<QString> currentHeaders;

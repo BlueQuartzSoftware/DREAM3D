@@ -129,7 +129,7 @@ void CtfReader::setPointerByName(const QString& name, void* p)
   if (iter == m_NamePointerMap.end())
   {
     // Data does not exist in Map
-    DataParser::Pointer dparser = getParser(name, NULL, getXCells() * getYCells());
+    DataParser::Pointer dparser = getParser(name, nullptr, getXCells() * getYCells());
     dparser->setVoidPointer(p);
     m_NamePointerMap[name] = dparser;
   }
@@ -149,7 +149,7 @@ void CtfReader::setPointerByName(const QString& name, void* p)
 // -----------------------------------------------------------------------------
 void* CtfReader::getPointerByName(const QString& featureName)
 {
-  void* ptr = NULL;
+  void* ptr = nullptr;
   if(m_NamePointerMap.contains(featureName) == true)
   {
     ptr = m_NamePointerMap.value(featureName)->getVoidPointer();
@@ -358,9 +358,9 @@ int CtfReader::readData(QFile& in)
     pType = getPointerType(name);
     if(Ebsd::Int32 == pType)
     {
-      Int32Parser::Pointer dparser = Int32Parser::New(NULL, totalScanPoints, name, i);
+      Int32Parser::Pointer dparser = Int32Parser::New(nullptr, totalScanPoints, name, i);
       didAllocate = dparser->allocateArray(totalScanPoints);
-      //Q_ASSERT_X(dparser->getVoidPointer() != NULL, __FILE__, "Could not allocate memory for Integer data in CTF File.");
+      //Q_ASSERT_X(dparser->getVoidPointer() != nullptr, __FILE__, "Could not allocate memory for Integer data in CTF File.");
       if( didAllocate == true)
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(int32_t) * totalScanPoints);
@@ -369,9 +369,9 @@ int CtfReader::readData(QFile& in)
     }
     else if(Ebsd::Float == pType)
     {
-      FloatParser::Pointer dparser = FloatParser::New(NULL, totalScanPoints, name, i);
+      FloatParser::Pointer dparser = FloatParser::New(nullptr, totalScanPoints, name, i);
       didAllocate = dparser->allocateArray(totalScanPoints);
-      //Q_ASSERT_X(dparser->getVoidPointer() != NULL, __FILE__, "Could not allocate memory for Integer data in CTF File.");
+      //Q_ASSERT_X(dparser->getVoidPointer() != nullptr, __FILE__, "Could not allocate memory for Integer data in CTF File.");
       if( didAllocate == true)
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(float) * totalScanPoints);
@@ -484,7 +484,7 @@ int CtfReader::parseHeaderLines(QList<QByteArray>& headerLines)
 
       QByteArray value = line.mid(4); // Get the value part of the line
       EbsdHeaderEntry::Pointer p = m_HeaderMap["Prj"];
-      if(NULL == p.get())
+      if(nullptr == p.get())
       {
         std::cout << "---------------------------" << std::endl;
         std::cout << "Could not find header entry for key 'Prj'" << std::endl;
@@ -549,7 +549,7 @@ int CtfReader::parseHeaderLines(QList<QByteArray>& headerLines)
     else // This is the generic Catch all
     {
       EbsdHeaderEntry::Pointer p = m_HeaderMap[tabTokens[0]];
-      if(NULL == p.get())
+      if(nullptr == p.get())
       {
         std::cout << "---------------------------" << std::endl;
         std::cout << "Could not find header entry for key '" << line[0] << "'" << std::endl;

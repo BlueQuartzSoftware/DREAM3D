@@ -91,7 +91,7 @@ class PhIOTest
       QString filtName = "PhWriter";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL == filterFactory.get() )
+      if (nullptr == filterFactory.get() )
       {
         std::stringstream ss;
         ss << "The PhIOTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
@@ -100,7 +100,7 @@ class PhIOTest
 
       filtName = "PhReader";
       filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL == filterFactory.get() )
+      if (nullptr == filterFactory.get() )
       {
         std::stringstream ss;
         ss << "The PhIOTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
@@ -135,7 +135,7 @@ class PhIOTest
         QString filtName = "PhWriter";
         FilterManager* fm = FilterManager::Instance();
         IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           // If we get this far, the Factory is good so creating the filter should not fail unless something has
           // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -187,7 +187,7 @@ class PhIOTest
         QString filtName = "PhWriter";
         FilterManager* fm = FilterManager::Instance();
         IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           // If we get this far, the Factory is good so creating the filter should not fail unless something has
           // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -235,7 +235,7 @@ class PhIOTest
       QString filtName = "PhReader";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL != filterFactory.get() )
+      if (nullptr != filterFactory.get() )
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
         phReader = filterFactory->create();
@@ -261,7 +261,7 @@ class PhIOTest
 
 
       DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-      DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+      DREAM3D_REQUIRED_PTR(m.get(), != , nullptr)
 
       m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
       DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
@@ -314,7 +314,7 @@ class PhIOTest
       {
         DataContainerArray::Pointer dca = DataContainerArray::New();
 
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
           phReader = filterFactory->create();   // Create the reader for the first time
@@ -338,7 +338,7 @@ class PhIOTest
 
 
         DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-        DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+        DREAM3D_REQUIRED_PTR(m.get(), != , nullptr)
 
             m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
         DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
@@ -354,7 +354,7 @@ class PhIOTest
       {
         DataContainerArray::Pointer dca = DataContainerArray::New();
 
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile);
           DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -376,7 +376,7 @@ class PhIOTest
 
 
         DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-        DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+        DREAM3D_REQUIRED_PTR(m.get(), != , nullptr)
 
             m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
         DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
@@ -392,7 +392,7 @@ class PhIOTest
       {
         DataContainerArray::Pointer dca = DataContainerArray::New();
 
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile2);
           DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -414,7 +414,7 @@ class PhIOTest
 
 
         DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-        DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+        DREAM3D_REQUIRED_PTR(m.get(), != , nullptr)
 
             m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
         DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
@@ -441,7 +441,7 @@ class PhIOTest
 
         DataContainerArray::Pointer dca = DataContainerArray::New();
 
-        if (NULL != filterFactory.get())
+        if (nullptr != filterFactory.get())
         {
           bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile2);
           DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -463,7 +463,7 @@ class PhIOTest
 
 
         DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-        DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+        DREAM3D_REQUIRED_PTR(m.get(), != , nullptr)
 
             m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
         DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
@@ -483,7 +483,7 @@ class PhIOTest
         if (QMetaObject::invokeMethod(phReader.get(), "flushCache", Qt::DirectConnection) == false)
           DREAM3D_REQUIRE_EQUAL(0, 1)
 
-              if (NULL != filterFactory.get())
+              if (nullptr != filterFactory.get())
           {
             bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile2);
             DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -505,7 +505,7 @@ class PhIOTest
 
 
         DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
-        DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
+        DREAM3D_REQUIRED_PTR(m.get(), != , nullptr)
 
             m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
         DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);

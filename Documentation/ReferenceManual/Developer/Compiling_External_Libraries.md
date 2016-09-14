@@ -117,11 +117,13 @@ Windows developers should select the *.zip file and OS X users should select the
 
 ## Windows Notes ##
 
+[http://stackoverflow.com/questions/18732075/install-boost-headers-to-specific-directory-windows](http://stackoverflow.com/questions/18732075/install-boost-headers-to-specific-directory-windows)
+
 	Download the boost-1.60.0.zip file for windows.
 	Decompress and open up a Visual Studio x64 command prompt.
 	CD into the boost-1.60.0 directory.
 	./bootstrap
-	C:\\Users\\mjackson\\Workspace\boost_1_57_0>.\b2 --build-dir=Build toolset=msvc  --prefix=C:/DREAM3D_SDK/boost-1.57.0 variant=debug,release link=static threading=multi address-model=64 install
+	C:\\Users\\mjackson\\Workspace\boost_1_57_0>.\b2 --build-dir=Build toolset=msvc  --prefix=C:/DREAM3D_SDK/boost-1.57.0 --layout=system variant=debug,release link=static threading=multi address-model=64 install
 
 ## OS X Notes ##
 

@@ -123,7 +123,7 @@ RotateEulerRefFrame::RotateEulerRefFrame() :
   AbstractFilter(),
   m_RotationAngle(0.0f),
   m_CellEulerAnglesArrayPath("", "", ""),
-  m_CellEulerAngles(NULL)
+  m_CellEulerAngles(nullptr)
 {
   m_RotationAxis.x = 0.0f;
   m_RotationAxis.y = 0.0f;
@@ -145,11 +145,11 @@ RotateEulerRefFrame::~RotateEulerRefFrame()
 void RotateEulerRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Rotation Axis (ijk)", "RotationAxis", getRotationAxis(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, RotationAxis), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, RotationAxis)));
-  parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, RotationAngle), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, RotationAngle)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Rotation Axis (ijk)", RotationAxis, FilterParameter::Parameter, RotateEulerRefFrame));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Rotation Angle (Degrees)", RotationAngle, FilterParameter::Parameter, RotateEulerRefFrame));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(RotateEulerRefFrame, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(RotateEulerRefFrame, this, CellEulerAnglesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, RotateEulerRefFrame, req));
   }
   setFilterParameters(parameters);
 }
@@ -183,7 +183,7 @@ void RotateEulerRefFrame::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

@@ -233,7 +233,7 @@ void verifyFilterParameters()
           || option->getHumanLabel().compare("Optional Information") == 0)
       { continue; }
 
-      if(NULL != dynamic_cast<SeparatorFilterParameter*>(option))
+      if(nullptr != dynamic_cast<SeparatorFilterParameter*>(option))
       {
         continue;
       }
@@ -305,7 +305,7 @@ void verifyPreflightEmitsProperly()
 
   while(iter.hasNext())
   {
-    PreflightVerify p(NULL);
+    PreflightVerify p(nullptr);
     iter.next();
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
@@ -357,7 +357,7 @@ void TestPreflight()
   while (factoryMapIter != factories.constEnd())
   {
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
-    if(factory.get() != NULL)
+    if(factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
 
@@ -389,10 +389,10 @@ void TestUniqueHumanLabels()
   while (factoryMapIter != factories.constEnd())
   {
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
-    if (factory.get() != NULL)
+    if (factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
-      if (filter.get() != NULL)
+      if (filter.get() != nullptr)
       {
         QString name = filter->getHumanLabel();
         if (filterMap.contains(name))
@@ -426,10 +426,10 @@ void TestUncategorizedFilterParameters()
   while (factoryMapIter != factories.constEnd())
   {
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
-    if (factory.get() != NULL)
+    if (factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
-      if (filter.get() != NULL)
+      if (filter.get() != nullptr)
       {
         QVector<FilterParameter::Pointer> parameters = filter->getFilterParameters();
         foreach(FilterParameter::Pointer fp, parameters)
@@ -461,11 +461,11 @@ void TestNewInstanceAvailable()
     AbstractFilter::Pointer filter = factory->create();
 
     AbstractFilter::Pointer copy = filter->newFilterInstance(true);
-    if(NULL == copy.get())
+    if(nullptr == copy.get())
     {
       std::cout << "Filter: '" << filter->getNameOfClass().toStdString() << "' from Library/Plugin '" << filter->getCompiledLibraryName().toStdString() << " has not implemented the newInstance() function" << std::endl;
     }
-    DREAM3D_REQUIRED_PTR(copy.get(), !=, NULL)
+    DREAM3D_REQUIRED_PTR(copy.get(), !=, nullptr)
   }
 }
 
@@ -482,7 +482,7 @@ void PrintFilterInfo()
   while (factoryMapIter != factories.constEnd())
   {
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
-    if(factory.get() != NULL)
+    if(factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
 

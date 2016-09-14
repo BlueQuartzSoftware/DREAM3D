@@ -65,14 +65,14 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   m_SurfaceMeshF1sptsArrayName(SIMPL::FaceData::SurfaceMeshF1spts),
   m_SurfaceMeshF7sArrayName(SIMPL::FaceData::SurfaceMeshF7s),
   m_SurfaceMeshmPrimesArrayName(SIMPL::FaceData::SurfaceMeshmPrimes),
-  m_FeaturePhases(NULL),
-  m_AvgQuats(NULL),
-  m_CrystalStructures(NULL),
-  m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshF1s(NULL),
-  m_SurfaceMeshF1spts(NULL),
-  m_SurfaceMeshF7s(NULL),
-  m_SurfaceMeshmPrimes(NULL)
+  m_FeaturePhases(nullptr),
+  m_AvgQuats(nullptr),
+  m_CrystalStructures(nullptr),
+  m_SurfaceMeshFaceLabels(nullptr),
+  m_SurfaceMeshF1s(nullptr),
+  m_SurfaceMeshF1spts(nullptr),
+  m_SurfaceMeshF7s(nullptr),
+  m_SurfaceMeshmPrimes(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -96,32 +96,32 @@ FindBoundaryStrengths::~FindBoundaryStrengths()
 void FindBoundaryStrengths::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction (XYZ)", "Loading", getLoading(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, Loading), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, Loading)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction (XYZ)", Loading, FilterParameter::Parameter, FindBoundaryStrengths));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshFaceLabelsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, FindBoundaryStrengths, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, FindBoundaryStrengths, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, FeaturePhasesArrayPath), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, FeaturePhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindBoundaryStrengths, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindBoundaryStrengths, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("F1s", "SurfaceMeshF1sArrayName", getSurfaceMeshF1sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshF1sArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshF1sArrayName)));
-  parameters.push_back(StringFilterParameter::New("F1spts", "SurfaceMeshF1sptsArrayName", getSurfaceMeshF1sptsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshF1sptsArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshF1sptsArrayName)));
-  parameters.push_back(StringFilterParameter::New("F7s", "SurfaceMeshF7sArrayName", getSurfaceMeshF7sArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshF7sArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshF7sArrayName)));
-  parameters.push_back(StringFilterParameter::New("mPrimes", "SurfaceMeshmPrimesArrayName", getSurfaceMeshmPrimesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, SurfaceMeshmPrimesArrayName), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, SurfaceMeshmPrimesArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("F1s", SurfaceMeshF1sArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_STRING_FP("F1spts", SurfaceMeshF1sptsArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_STRING_FP("F7s", SurfaceMeshF7sArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_STRING_FP("mPrimes", SurfaceMeshmPrimesArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
 
   setFilterParameters(parameters);
 }
@@ -160,28 +160,28 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh()
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
 
   tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getSurfaceMeshFaceLabelsArrayPath().getAttributeMatrixName(), getSurfaceMeshF1sArrayName() );
   m_SurfaceMeshF1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshF1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshF1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshF1s = m_SurfaceMeshF1sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getSurfaceMeshFaceLabelsArrayPath().getAttributeMatrixName(), getSurfaceMeshF1sptsArrayName() );
   m_SurfaceMeshF1sptsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshF1sptsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshF1sptsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshF1spts = m_SurfaceMeshF1sptsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getSurfaceMeshFaceLabelsArrayPath().getAttributeMatrixName(), getSurfaceMeshF7sArrayName() );
   m_SurfaceMeshF7sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshF7sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshF7sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshF7s = m_SurfaceMeshF7sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getSurfaceMeshFaceLabelsArrayPath().getAttributeMatrixName(), getSurfaceMeshmPrimesArrayName() );
   m_SurfaceMeshmPrimesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshmPrimesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SurfaceMeshmPrimesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SurfaceMeshmPrimes = m_SurfaceMeshmPrimesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
@@ -200,18 +200,18 @@ void FindBoundaryStrengths::dataCheckVoxel()
 
   QVector<size_t> cDims(1, 4);
   m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAvgQuatsArrayPath()); }
 
   cDims[0] = 1;
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
 
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);

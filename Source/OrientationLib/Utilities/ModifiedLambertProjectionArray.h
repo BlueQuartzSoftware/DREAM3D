@@ -175,11 +175,11 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     virtual void releaseOwnership();
 
     /**
-     * @brief Returns a void pointer pointing to the index of the array. NULL
+     * @brief Returns a void pointer pointing to the index of the array. nullptr
      * pointers are entirely possible. No checks are performed to make sure
      * the index is with in the range of the internal data array.
      * @param i The index to have the returned pointer pointing to.
-     * @return Void Pointer. Possibly NULL.
+     * @return Void Pointer. Possibly nullptr.
      */
     virtual void* getVoidPointer(size_t i);
 

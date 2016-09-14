@@ -47,9 +47,9 @@
 EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
   QDialog(parent),
   m_OtherPhaseFractions(0.0),
-  m_PhaseFractionValidator(NULL),
-  m_ParentPhaseValidator(NULL),
-  m_PptFractionValidator(NULL)
+  m_PhaseFractionValidator(nullptr),
+  m_ParentPhaseValidator(nullptr),
+  m_PptFractionValidator(nullptr)
 {
   setupUi(this);
   setupGui();
@@ -161,6 +161,21 @@ unsigned int EditPhaseDialog::getPhaseType()
   return static_cast<unsigned int>(index);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EditPhaseDialog::setPhaseName(QString &name)
+{
+    m_PhaseName->setText(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString EditPhaseDialog::getPhaseName()
+{
+  return m_PhaseName->text();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -187,6 +202,7 @@ void EditPhaseDialog::setupGui()
   pptFractionLabel->setEnabled(false);
   ParentPhaseLabel->setEnabled(false);
   on_phaseFraction_textChanged(QString());
+  m_PhaseName->setText("Name of Phase");
 }
 
 // -----------------------------------------------------------------------------

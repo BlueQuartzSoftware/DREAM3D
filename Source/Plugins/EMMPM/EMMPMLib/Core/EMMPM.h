@@ -76,7 +76,7 @@ class EMMPMLib_EXPORT EMMPM : public Observable
 
     /**
      * @brief Main entry point for running the EMMPM algorithm. The Inputs and
-     * Files parameters mush be non NULL and properly initialized with input
+     * Files parameters mush be non nullptr and properly initialized with input
      * values and input images. A new output Image will be allocated for you if one
      * is NOT provided. YOU are responsible for cleaning up the memory that is allocated
      * by that process.

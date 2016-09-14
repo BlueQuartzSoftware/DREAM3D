@@ -105,7 +105,7 @@ UInt8ArrayType::Pointer PoleFigureUtilities::CreateColorImage(DoubleArrayType* d
   PoleFigureConfiguration_t config;
   config.imageDim = width;
   config.numColors = nColors;
-  config.eulers = NULL;
+  config.eulers = nullptr;
   config.minScale = min;
   config.maxScale = max;
   config.sphereRadius = 1.0;

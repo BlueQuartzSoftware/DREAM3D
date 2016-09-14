@@ -73,7 +73,7 @@ void AlignSectionsList::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AlignSectionsList, this, InputFile), SIMPL_BIND_GETTER(AlignSectionsList, this, InputFile), "*.txt"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, AlignSectionsList, "*.txt"));
   setFilterParameters(parameters);
 }
 

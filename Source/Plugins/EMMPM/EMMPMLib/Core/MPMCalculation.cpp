@@ -61,7 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "EMMPMLib/Core/EMMPMUtilities.h"
 
 #define USE_TBB_TASK_GROUP 0
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if EMMPM_USE_PARALLEL_ALGORITHMS
 #include <tbb/task_scheduler_init.h>
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range2d.h>
@@ -274,7 +274,7 @@ class ParallelMPMLoop
     }
 
 
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if EMMPM_USE_PARALLEL_ALGORITHMS
 #if USE_TBB_TASK_GROUP
     void operator()() const
     {
@@ -307,7 +307,7 @@ class ParallelMPMLoop
 // -----------------------------------------------------------------------------
 MPMCalculation::MPMCalculation() :
   Observable(),
-  m_StatsDelegate(NULL),
+  m_StatsDelegate(nullptr),
   m_ErrorCondition(0)
 {
 }
@@ -422,7 +422,7 @@ void MPMCalculation::execute()
     if (data->cancel) { data->progress = 100.0; break; }
     data->inside_mpm_loop = 1;
 
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if EMMPM_USE_PARALLEL_ALGORITHMS
     tbb::task_scheduler_init init;
     int threads = init.default_num_threads();
 #if USE_TBB_TASK_GROUP
@@ -465,13 +465,13 @@ void MPMCalculation::execute()
     data->progress = currentLoopCount / totalLoops * 100.0;
 
     // notify("", data->progress, UpdateProgressValue);
-    if (m_StatsDelegate != NULL)
+    if (m_StatsDelegate != nullptr)
     {
       m_StatsDelegate->reportProgress(m_Data);
     }
   }
 #if 0
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if EMMPM_USE_PARALLEL_ALGORITHMS
   std::cout << "Parrallel MPM Loop Time to Complete:";
 #else
   std::cout << "Serial MPM Loop Time To Complete: ";

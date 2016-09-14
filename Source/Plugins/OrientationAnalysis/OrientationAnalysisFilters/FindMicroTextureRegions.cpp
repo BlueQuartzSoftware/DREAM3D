@@ -61,9 +61,9 @@ FindMicroTextureRegions::FindMicroTextureRegions() :
   m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
   m_MicroTextureRegionNumCellsArrayName("MicroTextureRegionNumCells"),
   m_MicroTextureRegionFractionOccupiedArrayName("MicroTextureRegionFractionOccupied"),
-  m_MicroTextureRegionNumCells(NULL),
-  m_MicroTextureRegionFractionOccupied(NULL),
-  m_FeatureIds(NULL)
+  m_MicroTextureRegionNumCells(nullptr),
+  m_MicroTextureRegionFractionOccupied(nullptr),
+  m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -83,15 +83,15 @@ void FindMicroTextureRegions::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, FeatureIdsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureIds", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindMicroTextureRegions, req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::UnknownGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, CellFeatureAttributeMatrixName)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindMicroTextureRegions, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("MicroTextureRegionNumCells", "MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, MicroTextureRegionNumCellsArrayName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, MicroTextureRegionNumCellsArrayName)));
-  parameters.push_back(StringFilterParameter::New("MicroTextureRegionFractionOccupied", "MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindMicroTextureRegions, this, MicroTextureRegionFractionOccupiedArrayName), SIMPL_BIND_GETTER(FindMicroTextureRegions, this, MicroTextureRegionFractionOccupiedArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("MicroTextureRegionNumCells", MicroTextureRegionNumCellsArrayName, FilterParameter::CreatedArray, FindMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_STRING_FP("MicroTextureRegionFractionOccupied", MicroTextureRegionFractionOccupiedArrayName, FilterParameter::CreatedArray, FindMicroTextureRegions));
 
   setFilterParameters(parameters);
 }
@@ -126,21 +126,21 @@ void FindMicroTextureRegions::dataCheck()
   QVector<size_t> dims(1, 1);
   // Cell Data
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
 
   // Feature Data
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getMicroTextureRegionNumCellsArrayName() );
   m_MicroTextureRegionNumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_MicroTextureRegionNumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_MicroTextureRegionNumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_MicroTextureRegionNumCells = m_MicroTextureRegionNumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getMicroTextureRegionFractionOccupiedArrayName() );
   m_MicroTextureRegionFractionOccupiedPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_MicroTextureRegionFractionOccupiedPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_MicroTextureRegionFractionOccupiedPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_MicroTextureRegionFractionOccupied = m_MicroTextureRegionFractionOccupiedPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

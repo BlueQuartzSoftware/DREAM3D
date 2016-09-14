@@ -76,14 +76,14 @@ void AppendImageGeometryZSlice::setupFilterParameters()
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input Cell Data", "InputAttributeMatrix", getInputAttributeMatrix(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, InputAttributeMatrix), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, InputAttributeMatrix)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Input Cell Data", InputAttributeMatrix, FilterParameter::RequiredArray, AppendImageGeometryZSlice, req));
   }
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Destination Cell Data", "DestinationAttributeMatrix", getDestinationAttributeMatrix(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, DestinationAttributeMatrix), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, DestinationAttributeMatrix)));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Destination Cell Data", DestinationAttributeMatrix, FilterParameter::RequiredArray, AppendImageGeometryZSlice, req));
   }
 
-  parameters.push_back(BooleanFilterParameter::New("Check Resolution", "CheckResolution", getCheckResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AppendImageGeometryZSlice, this, CheckResolution), SIMPL_BIND_GETTER(AppendImageGeometryZSlice, this, CheckResolution)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Check Resolution", CheckResolution, FilterParameter::Parameter, AppendImageGeometryZSlice));
 
   setFilterParameters(parameters);
 }
@@ -124,10 +124,10 @@ void AppendImageGeometryZSlice::dataCheck()
 
   // Validate each AttributeMatrix is associated with an Image Geometry.
   ImageGeom::Pointer inputGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputAttributeMatrix().getDataContainerName());
-  if (NULL == inputGeometry.get() || getErrorCondition() < 0) { return; }
+  if (nullptr == inputGeometry.get() || getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer destGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDestinationAttributeMatrix().getDataContainerName());
-  if (NULL == destGeometry.get() || getErrorCondition() < 0) { return; }
+  if (nullptr == destGeometry.get() || getErrorCondition() < 0) { return; }
 
 
   // Get the Dimensions of the ImageGeometries
@@ -267,7 +267,7 @@ void AppendImageGeometryZSlice::execute()
   {
     IDataArray::Pointer p = destCellAttrMat->getAttributeArray(*iter);
     IDataArray::Pointer inputArray = inputCellAttrMat->getAttributeArray(*iter);
-    if(NULL != inputArray.get())
+    if(nullptr != inputArray.get())
     {
       p->copyData(tupleOffset, inputArray);
     }

@@ -124,10 +124,10 @@ FindOrientationFieldCurl::FindOrientationFieldCurl() :
   m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
   m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
   m_DislocationTensorsArrayName(SIMPL::CellData::DislocationTensors),
-  m_CellPhases(NULL),
-  m_DislocationTensors(NULL),
-  m_Quats(NULL),
-  m_CrystalStructures(NULL)
+  m_CellPhases(nullptr),
+  m_DislocationTensors(nullptr),
+  m_Quats(nullptr),
+  m_CrystalStructures(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -152,22 +152,22 @@ void FindOrientationFieldCurl::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntVec3FilterParameter::New("Curl Radius (Pixels)", "CurlSize", getCurlSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, CurlSize), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, CurlSize)));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Curl Radius (Pixels)", CurlSize, FilterParameter::Parameter, FindOrientationFieldCurl));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, CellPhasesArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, CrystalStructuresArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 4, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Quats", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, QuatsArrayPath), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, QuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quats", QuatsArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
 
-  parameters.push_back(StringFilterParameter::New("DislocationTensors", "DislocationTensorsArrayName", getDislocationTensorsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindOrientationFieldCurl, this, DislocationTensorsArrayName), SIMPL_BIND_GETTER(FindOrientationFieldCurl, this, DislocationTensorsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("DislocationTensors", DislocationTensorsArrayName, FilterParameter::CreatedArray, FindOrientationFieldCurl));
 
   setFilterParameters(parameters);
 }
@@ -202,29 +202,29 @@ void FindOrientationFieldCurl::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCellPhasesArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
 
   dims[0] = 9;
   tempPath.update(m_CellPhasesArrayPath.getDataContainerName(), m_CellPhasesArrayPath.getAttributeMatrixName(), getDislocationTensorsArrayName() );
   m_DislocationTensorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_DislocationTensorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_DislocationTensorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_DislocationTensors = m_DislocationTensorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
 //typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
                            ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 4;
   m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

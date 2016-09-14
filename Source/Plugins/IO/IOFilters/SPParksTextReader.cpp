@@ -89,16 +89,16 @@ SPParksTextReader::~SPParksTextReader()
 void SPParksTextReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, InputFile), SIMPL_BIND_GETTER(SPParksTextReader, this, InputFile), "*.dump", "SPParks Dump File"));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, Origin), SIMPL_BIND_GETTER(SPParksTextReader, this, Origin)));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, SPParksTextReader, "*.dump", "SPParks Dump File"));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, SPParksTextReader));
 
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, Resolution), SIMPL_BIND_GETTER(SPParksTextReader, this, Resolution)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, SPParksTextReader));
 
-  parameters.push_back(BooleanFilterParameter::New("One Based Arrays", "OneBasedArrays", getOneBasedArrays(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SPParksTextReader, this, OneBasedArrays), SIMPL_BIND_GETTER(SPParksTextReader, this, OneBasedArrays)));
-  parameters.push_back(StringFilterParameter::New("Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, VolumeDataContainerName), SIMPL_BIND_GETTER(SPParksTextReader, this, VolumeDataContainerName)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("One Based Arrays", OneBasedArrays, FilterParameter::Parameter, SPParksTextReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, SPParksTextReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(SPParksTextReader, this, CellAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(SPParksTextReader, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(SPParksTextReader, this, FeatureIdsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, SPParksTextReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, SPParksTextReader));
   setFilterParameters(parameters);
 }
 
@@ -125,7 +125,7 @@ void SPParksTextReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
 
-  //if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  //if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   //{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -348,7 +348,7 @@ int32_t SPParksTextReader::readFile()
 
     if (Ebsd::Int32 == pType)
     {
-      Int32Parser::Pointer dparser = Int32Parser::New(NULL, totalPoints, name, i - 2);
+      Int32Parser::Pointer dparser = Int32Parser::New(nullptr, totalPoints, name, i - 2);
       if ((didAllocate = dparser->allocateArray(totalPoints)) == true)
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(int32_t) * totalPoints);
@@ -357,7 +357,7 @@ int32_t SPParksTextReader::readFile()
     }
     else if (Ebsd::Float == pType)
     {
-      FloatParser::Pointer dparser = FloatParser::New(NULL, totalPoints, name, i - 2);
+      FloatParser::Pointer dparser = FloatParser::New(nullptr, totalPoints, name, i - 2);
       if ((didAllocate = dparser->allocateArray(totalPoints)) == true)
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(float) * totalPoints);
@@ -397,7 +397,7 @@ int32_t SPParksTextReader::readFile()
   }
 
   DataParser::Pointer parser = m_NamePointerMap["type"];
-  if (NULL != parser.get() )
+  if (nullptr != parser.get() )
   {
     QVector<size_t> cDims(1, 1);
     // Create a new DataArray that wraps the already allocated memory
@@ -406,7 +406,7 @@ int32_t SPParksTextReader::readFile()
     parser->setManageMemory(false);
 
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-    if (NULL != attrMat.get())
+    if (nullptr != attrMat.get())
     {
       attrMat->addAttributeArray(typePtr->getName(), typePtr);
     }

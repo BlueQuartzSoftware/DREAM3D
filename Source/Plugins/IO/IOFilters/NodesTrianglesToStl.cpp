@@ -84,10 +84,10 @@ void NodesTrianglesToStl::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("Nodes File", "NodesFile", getNodesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, NodesFile), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, NodesFile)));
-  parameters.push_back(InputFileFilterParameter::New("Triangles File", "TrianglesFile", getTrianglesFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, TrianglesFile), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, TrianglesFile)));
-  parameters.push_back(OutputPathFilterParameter::New("Output STL Directory", "OutputStlDirectory", getOutputStlDirectory(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, OutputStlDirectory), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, OutputStlDirectory)));
-  parameters.push_back(StringFilterParameter::New("Stl File Prefix", "OutputStlPrefix", getOutputStlPrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(NodesTrianglesToStl, this, OutputStlPrefix), SIMPL_BIND_GETTER(NodesTrianglesToStl, this, OutputStlPrefix)));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Nodes File", NodesFile, FilterParameter::Parameter, NodesTrianglesToStl));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Triangles File", TrianglesFile, FilterParameter::Parameter, NodesTrianglesToStl));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output STL Directory", OutputStlDirectory, FilterParameter::Parameter, NodesTrianglesToStl));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Stl File Prefix", OutputStlPrefix, FilterParameter::Parameter, NodesTrianglesToStl));
 
   setFilterParameters(parameters);
 }
@@ -203,7 +203,7 @@ void NodesTrianglesToStl::execute()
 
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
-  if(nodesFile == NULL)
+  if(nodesFile == nullptr)
   {
 
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
@@ -221,7 +221,7 @@ void NodesTrianglesToStl::execute()
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
-  if(triFile == NULL)
+  if(triFile == nullptr)
   {
 
     QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
@@ -419,7 +419,7 @@ void NodesTrianglesToStl::execute()
 // -----------------------------------------------------------------------------
 int NodesTrianglesToStl::writeHeader(FILE* f, const QString& header, int triCount)
 {
-  if (NULL == f)
+  if (nullptr == f)
   {
     return -1;
   }

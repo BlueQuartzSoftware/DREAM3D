@@ -35,6 +35,8 @@
 
 #include "SGWidget.h"
 
+// Needed for AxisAngle_t and Crystal Symmetry constants
+#include "EbsdLib/EbsdConstants.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_SGWidget.cpp"
@@ -43,7 +45,16 @@
 //
 // -----------------------------------------------------------------------------
 SGWidget::SGWidget(QWidget* parent) :
-  QWidget(parent)
+  QWidget(parent),
+  m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
+  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
+  m_PhaseIndex(0),
+  m_PhaseFraction(1.0),
+  m_TotalPhaseFraction(1.0),
+  m_DataHasBeenGenerated(false),
+  m_BulkLoadFailure(false),
+  m_TabTitle("Unknown Phase"),
+  m_PhaseName("Unknown Phase")
 {
 
 }
@@ -82,25 +93,17 @@ int SGWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::on_m_GenerateDefaultData_clicked()
+void SGWidget::generateDefaultData()
 {
-// Q_ASSERT(false);
+
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SGWidget::dataWasEdited()
-{
-  Q_ASSERT(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString SGWidget::getTabTitle()
-{
-  return QString("Unknown Phase Type");
-}
+//// -----------------------------------------------------------------------------
+////
+//// -----------------------------------------------------------------------------
+//void SGWidget::dataWasEdited()
+//{
+//  Q_ASSERT(false);
+//}
 
 

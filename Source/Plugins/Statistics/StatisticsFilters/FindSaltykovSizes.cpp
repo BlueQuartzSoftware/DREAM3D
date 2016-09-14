@@ -58,8 +58,8 @@ FindSaltykovSizes::FindSaltykovSizes() :
   AbstractFilter(),
   m_EquivalentDiametersArrayPath(SIMPL::FeatureData::EquivalentDiameters),
   m_SaltykovEquivalentDiametersArrayPath(SIMPL::FeatureData::SaltykovEquivalentDiameters),
-  m_EquivalentDiameters(NULL),
-  m_SaltykovEquivalentDiameters(NULL)
+  m_EquivalentDiameters(nullptr),
+  m_SaltykovEquivalentDiameters(nullptr)
 {
   setupFilterParameters();
 }
@@ -79,12 +79,12 @@ void FindSaltykovSizes::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindSaltykovSizes, this, EquivalentDiametersArrayPath), SIMPL_BIND_GETTER(FindSaltykovSizes, this, EquivalentDiametersArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Equivalent Diameters", EquivalentDiametersArrayPath, FilterParameter::RequiredArray, FindSaltykovSizes, req));
   }
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Saltykov Equivalent Diameters", "SaltykovEquivalentDiametersArrayPath", getSaltykovEquivalentDiametersArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindSaltykovSizes, this, SaltykovEquivalentDiametersArrayPath), SIMPL_BIND_GETTER(FindSaltykovSizes, this, SaltykovEquivalentDiametersArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Saltykov Equivalent Diameters", SaltykovEquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindSaltykovSizes, req));
   }
 
   setFilterParameters(parameters);
@@ -117,10 +117,10 @@ void FindSaltykovSizes::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_SaltykovEquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getSaltykovEquivalentDiametersArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SaltykovEquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_SaltykovEquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_SaltykovEquivalentDiameters = m_SaltykovEquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

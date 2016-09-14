@@ -206,7 +206,7 @@ class VtkStruturedPointsReaderTest
       WriteScalars<double>(f, "double", "Data_double", dims, binary);
 
       fclose(f);
-      f = NULL;
+      f = nullptr;
     }
 
     // -----------------------------------------------------------------------------
@@ -229,7 +229,7 @@ class VtkStruturedPointsReaderTest
       QString filtName = "VtkStructuredPointsReader";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (NULL != filterFactory.get() )
+      if (nullptr != filterFactory.get() )
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.

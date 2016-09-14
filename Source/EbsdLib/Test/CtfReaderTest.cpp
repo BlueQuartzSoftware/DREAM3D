@@ -81,17 +81,17 @@ public:
 
     float *euler1 =
         reinterpret_cast<float *>(reader.getPointerByName(Ebsd::Ctf::Euler1));
-    DREAM3D_REQUIRE(euler1 != NULL)
+    DREAM3D_REQUIRE(euler1 != nullptr)
     DREAM3D_REQUIRE(euler1[1] == 103.85f)
 
     float *euler2 =
         reinterpret_cast<float *>(reader.getPointerByName(Ebsd::Ctf::Euler2));
-    DREAM3D_REQUIRE(euler2 != NULL)
+    DREAM3D_REQUIRE(euler2 != nullptr)
     DREAM3D_REQUIRE(euler2[1] == 40.207f)
 
     float *euler3 =
         reinterpret_cast<float *>(reader.getPointerByName(Ebsd::Ctf::Euler3));
-    DREAM3D_REQUIRE(euler3 != NULL)
+    DREAM3D_REQUIRE(euler3 != nullptr)
     DREAM3D_REQUIRE(euler3[1] == 29.394f)
   }
 
@@ -127,17 +127,17 @@ public:
 
     float *euler1 =
         reinterpret_cast<float *>(reader.getPointerByName(Ebsd::Ctf::Euler1));
-    DREAM3D_REQUIRE(euler1 != NULL)
+    DREAM3D_REQUIRE(euler1 != nullptr)
     DREAM3D_REQUIRE(euler1[1] == 5.673f)
 
     float *euler2 =
         reinterpret_cast<float *>(reader.getPointerByName(Ebsd::Ctf::Euler2));
-    DREAM3D_REQUIRE(euler2 != NULL)
+    DREAM3D_REQUIRE(euler2 != nullptr)
     DREAM3D_REQUIRE(euler2[1] == 0.2549f)
 
     float *euler3 =
         reinterpret_cast<float *>(reader.getPointerByName(Ebsd::Ctf::Euler3));
-    DREAM3D_REQUIRE(euler3 != NULL)
+    DREAM3D_REQUIRE(euler3 != nullptr)
     DREAM3D_REQUIRE(euler3[1] == 0.2423f)
   }
 
@@ -173,17 +173,17 @@ public:
 
     float *euler1 =
         reinterpret_cast<float *>(reader.getPointerByName(Ebsd::Ctf::Euler1));
-    DREAM3D_REQUIRE(euler1 != NULL)
+    DREAM3D_REQUIRE(euler1 != nullptr)
     DREAM3D_REQUIRE(euler1[1] == 103.85f)
 
     float *euler2 =
         reinterpret_cast<float *>(reader.getPointerByName(Ebsd::Ctf::Euler2));
-    DREAM3D_REQUIRE(euler2 != NULL)
+    DREAM3D_REQUIRE(euler2 != nullptr)
     DREAM3D_REQUIRE(euler2[1] == 40.207f)
 
     float *euler3 =
         reinterpret_cast<float *>(reader.getPointerByName(Ebsd::Ctf::Euler3));
-    DREAM3D_REQUIRE(euler3 != NULL)
+    DREAM3D_REQUIRE(euler3 != nullptr)
     DREAM3D_REQUIRE(euler3[1] == 29.394f)
   }
 

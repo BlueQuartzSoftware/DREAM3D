@@ -53,7 +53,7 @@ class DxReaderPrivate;
  */
 class DxReader : public FileReader
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
     Q_DECLARE_PRIVATE(DxReader)
   public:
     SIMPL_SHARED_POINTERS(DxReader)

@@ -50,7 +50,7 @@
  */
 class GroupFeatures : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(GroupFeatures)
     SIMPL_STATIC_NEW_MACRO(GroupFeatures)

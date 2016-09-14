@@ -115,7 +115,7 @@ ReadStlFile::ReadStlFile() :
   m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName),
   m_StlFilePath(""),
   m_FaceNormalsArrayName(SIMPL::FaceData::SurfaceMeshFaceNormals),
-  m_FaceNormals(NULL),
+  m_FaceNormals(nullptr),
   m_minXcoord(std::numeric_limits<float>::max()),
   m_maxXcoord(-std::numeric_limits<float>::max()),
   m_minYcoord(std::numeric_limits<float>::max()),
@@ -140,11 +140,11 @@ void ReadStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(InputFileFilterParameter::New("STL File", "StlFilePath", getStlFilePath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadStlFile, this, StlFilePath), SIMPL_BIND_GETTER(ReadStlFile, this, StlFilePath), "*.stl", "STL File"));
-  parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, SurfaceMeshDataContainerName), SIMPL_BIND_GETTER(ReadStlFile, this, SurfaceMeshDataContainerName)));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("STL File", StlFilePath, FilterParameter::Parameter, ReadStlFile, "*.stl", "STL File"));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", SurfaceMeshDataContainerName, FilterParameter::CreatedArray, ReadStlFile));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, FaceAttributeMatrixName), SIMPL_BIND_GETTER(ReadStlFile, this, FaceAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Face Normals", "FaceNormalsArrayName", getFaceNormalsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadStlFile, this, FaceNormalsArrayName), SIMPL_BIND_GETTER(ReadStlFile, this, FaceNormalsArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Attribute Matrix", FaceAttributeMatrixName, FilterParameter::CreatedArray, ReadStlFile));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Normals", FaceNormalsArrayName, FilterParameter::CreatedArray, ReadStlFile));
   setFilterParameters(parameters);
 }
 
@@ -168,7 +168,7 @@ void ReadStlFile::updateFaceInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_FaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -216,7 +216,7 @@ void ReadStlFile::dataCheck()
   QVector<size_t> cDims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName() );
   m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -258,7 +258,7 @@ void ReadStlFile::readFile()
 
   // Open File
   FILE* f = fopen(m_StlFilePath.toLatin1().data(), "rb");
-  if (NULL == f)
+  if (nullptr == f)
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "Error opening STL file", -1003);

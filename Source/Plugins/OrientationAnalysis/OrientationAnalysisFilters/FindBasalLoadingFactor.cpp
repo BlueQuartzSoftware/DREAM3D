@@ -61,8 +61,8 @@ FindBasalLoadingFactor::FindBasalLoadingFactor() :
   AbstractFilter(),
   m_AvgQuatsArrayPath("", "", ""),
   m_BasalLoadingFactorArrayPath("", "", ""),
-  m_BasalLoadingFactor(NULL),
-  m_AvgQuats(NULL)
+  m_BasalLoadingFactor(nullptr),
+  m_AvgQuats(nullptr)
 {
   m_LoadingDirection.x = 1.0f;
   m_LoadingDirection.y = 1.0f;
@@ -85,17 +85,17 @@ void FindBasalLoadingFactor::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDirection", getLoadingDirection(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindBasalLoadingFactor, this, LoadingDirection), SIMPL_BIND_GETTER(FindBasalLoadingFactor, this, LoadingDirection)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDirection, FilterParameter::Parameter, FindBasalLoadingFactor));
 
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("AvgQuats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBasalLoadingFactor, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(FindBasalLoadingFactor, this, AvgQuatsArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("AvgQuats", AvgQuatsArrayPath, FilterParameter::RequiredArray, FindBasalLoadingFactor, req));
   }
 
   {
     DataArrayCreationFilterParameter::RequirementType req;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Basal Loading Factor", "BasalLoadingFactorArrayPath", getBasalLoadingFactorArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(FindBasalLoadingFactor, this, BasalLoadingFactorArrayPath), SIMPL_BIND_GETTER(FindBasalLoadingFactor, this, BasalLoadingFactorArrayPath)));
+    parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Basal Loading Factor", BasalLoadingFactorArrayPath, FilterParameter::CreatedArray, FindBasalLoadingFactor, req));
   }
 
   setFilterParameters(parameters);
@@ -127,12 +127,12 @@ void FindBasalLoadingFactor::dataCheck()
 
   QVector<size_t> dims(1, 4);
   m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
   m_BasalLoadingFactorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBasalLoadingFactorArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BasalLoadingFactorPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_BasalLoadingFactorPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BasalLoadingFactor = m_BasalLoadingFactorPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

@@ -68,7 +68,7 @@ PrimaryRolledPreset::~PrimaryRolledPreset()
 // -----------------------------------------------------------------------------
 void PrimaryRolledPreset::displayUserInputDialog()
 {
-  PrimaryRolledPresetDialog d(NULL);
+  PrimaryRolledPresetDialog d(nullptr);
   bool keepGoing = true;
   while (keepGoing)
   {
@@ -106,7 +106,7 @@ void PrimaryRolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, Q
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
@@ -145,7 +145,7 @@ void PrimaryRolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, Q
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
@@ -184,7 +184,7 @@ void PrimaryRolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, Q
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
@@ -223,7 +223,7 @@ void PrimaryRolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot,
   plot->setDistributionType(SIMPL::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
@@ -271,7 +271,7 @@ void PrimaryRolledPreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGODFTableModel* model = (widget->tableModel());
-  if (NULL == model)
+  if (nullptr == model)
   {
     return;
   }
