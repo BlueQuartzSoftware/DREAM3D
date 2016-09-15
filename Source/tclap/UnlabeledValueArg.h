@@ -83,7 +83,7 @@ class UnlabeledValueArg : public ValueArg<T>
 				           T value,
 				           const std::string& typeDesc,
 						   bool ignoreable = false,
-				           Visitor* v = NULL); 
+				           Visitor* v = nullptr); 
 
 		/**
 		 * UnlabeledValueArg constructor.
@@ -114,7 +114,7 @@ class UnlabeledValueArg : public ValueArg<T>
 				           const std::string& typeDesc,
 						   CmdLineInterface& parser,
 						   bool ignoreable = false,
-				           Visitor* v = NULL ); 					
+				           Visitor* v = nullptr ); 					
 						
 		/**
 		 * UnlabeledValueArg constructor.
@@ -141,7 +141,7 @@ class UnlabeledValueArg : public ValueArg<T>
 				           T value,
 				           Constraint<T>* constraint,
 						   bool ignoreable = false,
-				           Visitor* v = NULL ); 
+				           Visitor* v = nullptr ); 
 
 		
 		/**
@@ -171,7 +171,7 @@ class UnlabeledValueArg : public ValueArg<T>
 				           Constraint<T>* constraint,
 						   CmdLineInterface& parser,
 						   bool ignoreable = false,
-				           Visitor* v = NULL);
+				           Visitor* v = nullptr);
 						
 		/**
 		 * Handles the processing of the argument.

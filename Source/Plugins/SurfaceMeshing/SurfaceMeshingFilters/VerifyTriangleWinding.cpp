@@ -216,7 +216,7 @@ VerifyTriangleWinding::VerifyTriangleWinding() :
   m_SurfaceMeshNodeFacesArrayName(SIMPL::VertexData::SurfaceMeshNodeFaces),
   m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceLabels(NULL)
+  m_SurfaceMeshFaceLabels(nullptr)
 {
   setupFilterParameters();
 }
@@ -267,7 +267,7 @@ void VerifyTriangleWinding::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   IGeometry::Pointer geom = sm->getGeometry();
-  if(NULL == geom.get())
+  if(nullptr == geom.get())
   {
     setErrorCondition(-385);
     QString ss = QObject::tr("DataContainer Geometry is missing.");
@@ -276,7 +276,7 @@ void VerifyTriangleWinding::dataCheck()
   }
 
   TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
-  if(NULL == triangles.get())
+  if(nullptr == triangles.get())
   {
     setErrorCondition(-384);
     QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
@@ -285,13 +285,13 @@ void VerifyTriangleWinding::dataCheck()
   }
 
   // We MUST have Nodes
-  if (NULL == triangles->getVertices().get())
+  if (nullptr == triangles->getVertices().get())
   {
     setErrorCondition(-386);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
   }
   // We MUST have Triangles defined also.
-  if (NULL == triangles->getTriangles().get())
+  if (nullptr == triangles->getTriangles().get())
   {
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
@@ -300,7 +300,7 @@ void VerifyTriangleWinding::dataCheck()
   {
     QVector<size_t> dims(1, 2);
     m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);} /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
@@ -341,11 +341,11 @@ void VerifyTriangleWinding::execute()
   notifyStatusMessage(getHumanLabel(), "Generating Face List for each Node");
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  if (NULL == facesPtr->getFacesContainingVert()) { facesPtr->findFacesContainingVert(); }
+  if (nullptr == facesPtr->getFacesContainingVert()) { facesPtr->findFacesContainingVert(); }
   if (getCancel() == true) { return; }
-  if (NULL == facesPtr->getFaceNeighbors()) { facesPtr->findFaceNeighbors(); }
+  if (nullptr == facesPtr->getFaceNeighbors()) { facesPtr->findFaceNeighbors(); }
   if (getCancel() == true) { return; }
-  if(facesPtr->getUniqueEdges() == NULL) { facesPtr->generateUniqueEdgeIds(); }
+  if(facesPtr->getUniqueEdges() == nullptr) { facesPtr->generateUniqueEdgeIds(); }
 
   // Execute the actual verification step.
   notifyStatusMessage(getHumanLabel(), "Generating Connectivity Complete. Starting Analysis");
@@ -362,7 +362,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t& trianglesToLabel
 {
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   FaceArray::Pointer masterFaceList = sm->getFaces();
-  if(NULL == masterFaceList.get())
+  if(nullptr == masterFaceList.get())
   {
     setErrorCondition(-556);
     notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Faces", -556);
@@ -478,7 +478,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
     DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
     // get the triangle definitions - use the pointer to the start of the Struct Array
     FaceArray::Pointer masterFaceList = sm->getFaces();
-    if(NULL == masterFaceList.get())
+    if(nullptr == masterFaceList.get())
     {
       setErrorCondition(-556);
       notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Faces", -556);
@@ -489,7 +489,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
     int numFaces = masterFaceList->getNumberOfTuples();
 
     VertexArray::Pointer masterNodeListPtr = sm->getVertices();
-    if(NULL == masterNodeListPtr.get())
+    if(nullptr == masterNodeListPtr.get())
     {
       setErrorCondition(-555);
       notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
@@ -623,7 +623,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
 
         //   qDebug() << " $ tIndex: " << triangleIndex << "\n";
         FaceArray::Pointer facesPtr = sm->getFaces();
-        if(facesPtr == NULL)
+        if(facesPtr == nullptr)
         {
           break;
         }

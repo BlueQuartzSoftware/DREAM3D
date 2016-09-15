@@ -185,7 +185,7 @@ int EMMPMInputParser::parseMuSigmaValues(const std::string& values, EMMPM_Data* 
 char* EMMPMInputParser::copyFilenameToNewCharBuffer(const std::string& fname)
 {
   std::string::size_type size = fname.size() + 1;
-  char* buf = NULL;
+  char* buf = nullptr;
   if (size > 1)
   {
     buf = (char*)malloc(size);
@@ -200,7 +200,7 @@ char* EMMPMInputParser::copyFilenameToNewCharBuffer(const std::string& fname)
 // -----------------------------------------------------------------------------
 int EMMPMInputParser::parseCLIArguments(int argc, char* argv[], EMMPM_Data* inputs)
 {
-  if ( NULL == inputs)
+  if ( nullptr == inputs)
   {
     printf("The EMMPM_Inputs pointer was null. Returning early.\n");
     return -1;
@@ -279,14 +279,14 @@ int EMMPMInputParser::parseCLIArguments(int argc, char* argv[], EMMPM_Data* inpu
     inputs->simulatedAnnealing = simAnneal.getValue();
 
     inputs->input_file_name = copyFilenameToNewCharBuffer(in_inputFile.getValue() );
-    if (inputs->input_file_name == NULL)
+    if (inputs->input_file_name == nullptr)
     {
       std::cout << "There was an error parsing the input file name. Did you use the '-i' argument to set an input file?" << std::endl;
       return -1;
     }
 
     inputs->output_file_name = copyFilenameToNewCharBuffer(in_outputFile.getValue() );
-    if (inputs->output_file_name == NULL)
+    if (inputs->output_file_name == nullptr)
     {
       std::cout << "There was an error parsing the output file name. Did you use the '-o' argument to set an input file?" << std::endl;
       return -1;

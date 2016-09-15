@@ -258,7 +258,7 @@ int ReadEulerFile(const QString& filename, QMap<int, EulerSet>& gidToEulerMap)
 {
   int err = -1;
   FILE* f = fopen(filename.toLatin1().data(), "rb");
-  if (NULL == f)
+  if (nullptr == f)
   {
     qDebug() << "Could not open Euler Angle File '" << filename << "'";
     return err;
