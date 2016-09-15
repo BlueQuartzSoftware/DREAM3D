@@ -59,7 +59,7 @@ These release notes summarize the major changes for each officially released ver
 + Fixed crash when using QImage to save an image whose total byte count would exceed the 32 bit signed integer limit.
 + Fixed issue where user adjusted start and end slices would be ignored or reset in the "Read H5Ebsd" **Filter** GUI.
 + Fixed issue in EbsdLib where the BS, BC and Grain ID columns from CTF data were not being read correctly from the H5Ebsd file.
-+ Fixed crashes in FilterParameterUtilities due to missing checks for NULL pointers.
++ Fixed crashes in FilterParameterUtilities due to missing checks for nullptr pointers.
 + Fixed error when trying to import EBSD files into an H5Ebsd file when the full output path was not available on the file system.
 + Fixed issue where some **Filter** parameters that represent extremely large numbers (> 2^33) were not read from the JSON files correctly.
 + Fixed issue where the red and blue channels were swapped when using the QImage based image importers.

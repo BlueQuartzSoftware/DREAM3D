@@ -45,11 +45,11 @@ set(${PLUGIN_NAME}_Widgets_SRCS
   ${${PLUGIN_NAME}_Widgets_SRCS}
   ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SGWidget.cpp
   ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/StatsGenODFWidget.cpp
-  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/curvetracker.cpp
+  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SGCurveTracker.cpp
 )
 
 set(${PLUGIN_NAME}_Widgets_MISC_HDRS
-  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/curvetracker.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SGCurveTracker.h
 )
 
 set(StatsGenerator_DELEGATE_SRCS

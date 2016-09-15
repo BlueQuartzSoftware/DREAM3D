@@ -98,6 +98,7 @@ public:
     return err;
   }
 
+
   /**
   * @brief GenLogNormalPlotData Generates Log Normal plot data that is normalized based on the "size" argument.
   * @param avg The Average
@@ -112,7 +113,8 @@ public:
    f(x) = w*\frac{1}{x\sigma\sqrt{2\pi}}e^{-\frac{(ln(x) - \mu)^2}{2\sigma^2}}
   * @return
   */
-  template <typename Vector> static int GenLogNormalPlotData(float mu, float sigma, Vector& x, Vector& y, int size)
+  template <typename Vector>
+  static int GenLogNormalPlotData(float mu, float sigma, Vector& x, Vector& y, int size, float minCutOff = 5.0f, float maxCutOff = 5.0f)
   {
     int err = 0;
     float max, min;
@@ -120,8 +122,8 @@ public:
     float root2pi = powf((float)(M_2PI), 0.5);
     x.resize(size);
     y.resize(size);
-    min = exp(mu - (5 * sigma));
-    max = exp(mu + (5 * sigma));
+    min = exp(mu - (minCutOff * sigma));
+    max = exp(mu + (maxCutOff * sigma));
 
     float mmSize = (max - min) / static_cast<float>(size);
     float mmSizeOver2 = mmSize * 0.5;
@@ -197,20 +199,21 @@ public:
    * @param sigma
    * @param cutoff
    * @param binstep
-   * @param x Type that adheres to the QVector API
-   * @param y Type that adheres to the QVector API
+   * @param x Type that adheres to the QVector API. Will be resize to 2 elements
+   * @param y Type that adheres to the QVector API. Will be resize to 2 elements
    * @param yMax
-   * @param numsizebins
-   * @param binsizes Type that adheres to the QVector API
+   * @param numsizebins Will be set to the number of bins
+   * @param binsizes Type that adheres to the QVector API. Will be resized to numsizebins and filled with the lower value of each bin.
    * @return
    */
-  template <typename J, typename Vector> static int GenCutOff(J mu, J sigma, J minCutOff, J maxCutOff, J binstep, Vector& x, Vector& y, J yMax, int& numsizebins, Vector& binsizes)
+  template <typename J, typename Vector>
+  static int GenCutOff(J mu, J sigma, J minCutOff, J maxCutOff, J binstep, Vector& x, Vector& y, J yMax, int& numSizeBins, Vector& binSizes)
   {
     J max, min;
-    numsizebins = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, binstep, max, min);
-    if(numsizebins < 0)
+    numSizeBins = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, binstep, max, min);
+    if(numSizeBins < 0)
     {
-      numsizebins = 0;
+      numSizeBins = 0;
       return -1;
     }
     int err = 0;
@@ -223,10 +226,10 @@ public:
     y[0] = 0.0;
     y[1] = yMax;
 
-    binsizes.resize(numsizebins);
-    for(int i = 0; i < numsizebins; i++)
+    binSizes.resize(numSizeBins);
+    for(int i = 0; i < numSizeBins; i++)
     {
-      binsizes[i] = min + (i * binstep);
+      binSizes[i] = min + (i * binstep);
     }
     return err;
   }

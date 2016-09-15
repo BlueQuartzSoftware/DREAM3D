@@ -98,8 +98,6 @@ PrecipitatePhaseWidget::~PrecipitatePhaseWidget()
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::setupGui()
 {
-  qDebug() << "PrecipitatePhaseWidget::setupGui()";
-
   QLocale loc = QLocale::system();
 
   getMicrostructurePresetCombo()->blockSignals(true);
