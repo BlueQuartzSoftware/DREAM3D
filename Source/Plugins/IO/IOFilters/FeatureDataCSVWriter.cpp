@@ -44,6 +44,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -61,7 +62,8 @@ FeatureDataCSVWriter::FeatureDataCSVWriter() :
   m_CellFeatureAttributeMatrixPath("", "", ""),
   m_FeatureDataFile(""),
   m_WriteNeighborListData(false),
-  m_Delimiter(',')
+  m_Delimiter(','),
+  m_DelimiterChoice(0)
 {
   setupFilterParameters();
 }
@@ -80,11 +82,23 @@ void FeatureDataCSVWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FeatureDataFile, FilterParameter::Parameter, FeatureDataCSVWriter, "*.csv", "Comma Separated Data"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Neighbor Data", WriteNeighborListData, FilterParameter::Parameter, FeatureDataCSVWriter));
+  
+  {
+	  QVector<QString> choices;
+	  choices.push_back(",");
+	  choices.push_back(";");
+	  choices.push_back(":");
+	  choices.push_back("Tab");
+
+	  parameters.push_back(SIMPL_NEW_CHOICE_FP("Delimiter", DelimiterChoice, FilterParameter::Parameter, FeatureDataCSVWriter, choices, false));
+  }
+  
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, FeatureDataCSVWriter, req));
   }
+
   setFilterParameters(parameters);
 }
 
@@ -134,6 +148,25 @@ void FeatureDataCSVWriter::dataCheck()
   if (fi.suffix().compare("") == 0)
   {
     setFeatureDataFile(getFeatureDataFile().append(".csv"));
+  }
+
+  switch (getDelimiterChoice())
+  {
+  case DelimiterChoicesEnum::COMMA:
+	  setDelimiter(',');
+	  break;
+  case DelimiterChoicesEnum::SEMICOLON:
+	  setDelimiter(';');
+	  break;
+  case DelimiterChoicesEnum::COLON:
+	  setDelimiter(':');
+	  break;
+  case DelimiterChoicesEnum::TAB:
+	  setDelimiter('\t');
+	  break;
+  default:
+	  setDelimiter(',');
+	  break;
   }
 }
 
