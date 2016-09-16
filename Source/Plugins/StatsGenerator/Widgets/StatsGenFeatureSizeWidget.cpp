@@ -365,7 +365,7 @@ void StatsGenFeatureSizeWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -387,7 +387,7 @@ void StatsGenFeatureSizeWidget::on_m_Sigma_SizeDistribution_textChanged(const QS
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -409,7 +409,7 @@ void StatsGenFeatureSizeWidget::on_m_MinSigmaCutOff_textChanged(const QString& t
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -431,7 +431,7 @@ void StatsGenFeatureSizeWidget::on_m_MaxSigmaCutOff_textChanged(const QString& t
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -452,7 +452,7 @@ void StatsGenFeatureSizeWidget::on_m_BinStepSize_valueChanged(double v)
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 

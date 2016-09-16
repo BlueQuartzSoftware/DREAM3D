@@ -89,12 +89,14 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     void on_m_MDFUpdateBtn_clicked();
     void on_loadMDFBtn_clicked();
 
+    void tableDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+
   signals:
-    void mdfParametersChanged();
+    void dataChanged();
 
   private:
-    SGMDFTableModel* m_MDFTableModel;
-    QwtPlotCurve*    m_PlotCurve;
+    SGMDFTableModel* m_MDFTableModel = nullptr;
+    QwtPlotCurve*    m_PlotCurve = nullptr;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGenMDFWidget(const StatsGenMDFWidget&); // Copy Constructor Not Implemented

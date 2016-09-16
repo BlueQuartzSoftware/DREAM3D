@@ -44,7 +44,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtCore/QSettings>
-
+#include <QtCore/QModelIndex>
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
@@ -232,6 +232,19 @@ void SGAxisODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SGAxisODFWidget::tableDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+  Q_UNUSED(topLeft);
+  Q_UNUSED(bottomRight);
+
+  on_m_CalculateODFBtn_clicked();
+  emit dataChanged();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SGAxisODFWidget::setupGui()
 {
   setPlotTabTitles("A-Axis PF", "B-Axis PF", "C-Axis PF");
@@ -245,6 +258,10 @@ void SGAxisODFWidget::setupGui()
   m_ODFTableModel = new SGODFTableModel;
   m_ODFTableModel->setInitialValues();
   m_ODFTableView->setModel(m_ODFTableModel);
+
+  connect(m_ODFTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+          this, SLOT(tableDataChanged(const QModelIndex&, const QModelIndex&)));
+
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
 
@@ -453,7 +470,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, imageLayout->currentIndex());
   m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
 
-  emit axisODFParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -483,7 +500,7 @@ void SGAxisODFWidget::on_addODFTextureBtn_clicked()
     QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
     m_ODFTableView->setCurrentIndex(index);
   }
-  emit axisODFParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -500,7 +517,7 @@ void SGAxisODFWidget::on_deleteODFTextureBtn_clicked()
   {
     m_ODFTableView->resizeColumnsToContents();
   }
-  emit axisODFParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------

@@ -96,9 +96,10 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void on_deleteODFTextureBtn_clicked();
     void on_loadODFTextureBtn_clicked();
     void on_savePoleFigureImage_clicked();
+    void tableDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
   signals:
-    void axisODFParametersChanged();
+    void dataChanged();
 
   protected:
     SIMPL_INSTANCE_PROPERTY(bool, Initializing)

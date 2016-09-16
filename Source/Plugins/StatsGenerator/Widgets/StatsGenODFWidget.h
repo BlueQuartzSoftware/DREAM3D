@@ -118,7 +118,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void on_angleFilePath_textChanged();
 
   signals:
-    void odfParametersChanged();
+    void dataChanged();
     void bulkLoadEvent(bool fail);
 
   protected:

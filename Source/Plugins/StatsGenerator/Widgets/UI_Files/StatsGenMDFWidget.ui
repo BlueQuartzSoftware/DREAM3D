@@ -138,47 +138,30 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="loadMDFBtn">
+        <widget class="QPushButton" name="m_MDFUpdateBtn">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text">
-          <string>Load List From File</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="m_MDFUpdateBtn">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="minimumSize">
           <size>
-           <width>24</width>
-           <height>24</height>
+           <width>0</width>
+           <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>24</width>
-           <height>24</height>
+           <width>16777215</width>
+           <height>16777215</height>
           </size>
          </property>
          <property name="toolTip">
           <string>Refresh MDF Plot</string>
          </property>
          <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../../../../../../SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-           <normaloff>:/refresh.png</normaloff>:/refresh.png</iconset>
+          <string>Update...</string>
          </property>
          <property name="iconSize">
           <size>
@@ -186,8 +169,27 @@
            <height>24</height>
           </size>
          </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
          <property name="flat">
-          <bool>true</bool>
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="loadMDFBtn">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>Import MDF data from a file.</string>
+         </property>
+         <property name="text">
+          <string>Import...</string>
          </property>
         </widget>
        </item>
