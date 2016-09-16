@@ -63,8 +63,8 @@ class FeatureDataCSVWriter : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, WriteNeighborListData)
     Q_PROPERTY(bool WriteNeighborListData READ getWriteNeighborListData WRITE setWriteNeighborListData)
 
-	SIMPL_FILTER_PARAMETER(int, DelimiterChoice)
-	Q_PROPERTY(int DelimiterChoice READ getDelimiterChoice WRITE setDelimiterChoice)
+    SIMPL_FILTER_PARAMETER(int, DelimiterChoice)
+    Q_PROPERTY(int DelimiterChoice READ getDelimiterChoice WRITE setDelimiterChoice)
 
     SIMPL_INSTANCE_PROPERTY(char, Delimiter)
 
@@ -163,13 +163,13 @@ class FeatureDataCSVWriter : public AbstractFilter
     void initialize();
 
 
-	enum DelimiterChoicesEnum : int
-	{
-		COMMA = 0,
-		SEMICOLON = 1,
-		COLON = 2,
-		TAB = 3
-	};
+    enum DelimiterChoicesEnum : int
+    {
+      COMMA = 0,
+      SEMICOLON = 1,
+      COLON = 2,
+      TAB = 3
+    };
 
   private:
     FeatureDataCSVWriter(const FeatureDataCSVWriter&); // Copy Constructor Not Implemented

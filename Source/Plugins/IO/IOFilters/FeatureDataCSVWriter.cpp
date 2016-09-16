@@ -62,8 +62,8 @@ FeatureDataCSVWriter::FeatureDataCSVWriter() :
   m_CellFeatureAttributeMatrixPath("", "", ""),
   m_FeatureDataFile(""),
   m_WriteNeighborListData(false),
-  m_Delimiter(','),
-  m_DelimiterChoice(0)
+  m_DelimiterChoice(0),
+  m_Delimiter(',')
 {
   setupFilterParameters();
 }
@@ -84,13 +84,13 @@ void FeatureDataCSVWriter::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Neighbor Data", WriteNeighborListData, FilterParameter::Parameter, FeatureDataCSVWriter));
   
   {
-	  QVector<QString> choices;
-	  choices.push_back(",");
-	  choices.push_back(";");
-	  choices.push_back(":");
-	  choices.push_back("Tab");
+    QVector<QString> choices;
+    choices.push_back(",");
+    choices.push_back(";");
+    choices.push_back(":");
+    choices.push_back("Tab");
 
-	  parameters.push_back(SIMPL_NEW_CHOICE_FP("Delimiter", DelimiterChoice, FilterParameter::Parameter, FeatureDataCSVWriter, choices, false));
+    parameters.push_back(SIMPL_NEW_CHOICE_FP("Delimiter", DelimiterChoice, FilterParameter::Parameter, FeatureDataCSVWriter, choices, false));
   }
   
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
@@ -152,21 +152,21 @@ void FeatureDataCSVWriter::dataCheck()
 
   switch (getDelimiterChoice())
   {
-  case DelimiterChoicesEnum::COMMA:
-	  setDelimiter(',');
-	  break;
-  case DelimiterChoicesEnum::SEMICOLON:
-	  setDelimiter(';');
-	  break;
-  case DelimiterChoicesEnum::COLON:
-	  setDelimiter(':');
-	  break;
-  case DelimiterChoicesEnum::TAB:
-	  setDelimiter('\t');
-	  break;
-  default:
-	  setDelimiter(',');
-	  break;
+    case DelimiterChoicesEnum::COMMA:
+      setDelimiter(',');
+      break;
+    case DelimiterChoicesEnum::SEMICOLON:
+      setDelimiter(';');
+      break;
+    case DelimiterChoicesEnum::COLON:
+      setDelimiter(':');
+      break;
+    case DelimiterChoicesEnum::TAB:
+      setDelimiter('\t');
+      break;
+    default:
+      setDelimiter(',');
+      break;
   }
 }
 
