@@ -130,7 +130,13 @@ list(APPEND DREAM3D_ITK_MODULES
 # Does not register IO factories. It will be done by each plugin that needs it.
 set(ITK_NO_IO_FACTORY_REGISTER_MANAGER TRUE)
 find_package(ITK COMPONENTS ${DREAM3D_ITK_MODULES} REQUIRED)
-message(STATUS "${PROJECT_NAME}: ITK Location ${ITK_DIR} ITK Version: ${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}.${ITK_VERSION_PATCH}")
+
+get_property(Itk_STATUS_PRINTED GLOBAL PROPERTY Itk_STATUS_PRINTED)
+if(NOT Itk_STATUS_PRINTED)
+  message(STATUS "${PROJECT_NAME}: ITK Location ${ITK_DIR} ITK Version: ${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}.${ITK_VERSION_PATCH}")
+  set_property(GLOBAL PROPERTY Itk_STATUS_PRINTED TRUE)
+endif()
+
 
 # Include the ITK file
 include(${ITK_USE_FILE})

@@ -134,5 +134,5 @@ echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "# ITK (www.itk.org) For Image Processing Plugin" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "set(ITK_DIR \"\${DREAM3D_SDK_ROOT}/${ITK_INSTALL}-\${BUILD_TYPE}\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(SIMPLib_USE_ITK \"ON\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(DREAM3D_USE_ITK \"ON\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 
