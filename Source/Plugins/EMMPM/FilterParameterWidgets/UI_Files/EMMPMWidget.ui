@@ -334,56 +334,33 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <property name="spacing">
-      <number>12</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QCheckBox" name="enableManualInit">
-       <property name="font">
-        <font>
-         <pointsize>13</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="text">
-        <string>Enable Manual Initialization</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_9">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
    <item row="3" column="0">
     <widget class="QTableWidget" name="tableWidget"/>
    </item>
-   <item row="2" column="0">
+   <item row="1" column="0">
     <widget class="QCheckBox" name="useSimulatedAnnealing">
      <property name="styleSheet">
       <string notr="true"/>
      </property>
      <property name="text">
       <string>Use Simulated Annealing</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="enableManualInit">
+     <property name="font">
+      <font>
+       <pointsize>13</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Enable Manual Initialization</string>
      </property>
     </widget>
    </item>
