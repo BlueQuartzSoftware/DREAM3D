@@ -64,12 +64,22 @@ function ConfigureITK()
   lower=`echo $2 | tr '[:upper:]' '[:lower:]'`
   upper=`echo $2 | tr '[:lower:]' '[:upper:]'`
   cacheFile=CMakeCache.txt
-  echo "BUILD_DOCUMENTATION:BOOL=OFF" > $cacheFile
+  echo "# This is the CMakeCache file." > $cacheFile
+  echo "BUILD_SHARED_LIBS:BOOL=ON" >> $cacheFile
+  echo "CMAKE_BUILD_TYPE:STRING=$2" >> $cacheFile
+#    -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+
+  echo "CMAKE_CXX_FLAGS:STRING=-stdlib=libc++ -std=c++11" >> cacheFile
+  echo "CMAKE_OSX_DEPLOYMENT_TARGET=$OSX_DEPLOYMENT_TARGET" >> $cacheFile
+  echo "CMAKE_OSX_SYSROOT:Path=$OSX_SDK" >> $cacheFile
+  echo "CMAKE_CXX_STANDARD:STRING=11" >> $cacheFile
+  echo "CMAKE_CXX_STANDARD_REQUIRED:BOOL=ON" >> $cacheFile 
+
+
+  echo "BUILD_DOCUMENTATION:BOOL=OFF" >> $cacheFile
   echo "ITK_USE_SYSTEM_HDF5:BOOL=ON" >> $cacheFile
   echo "BUILD_EXAMPLES:BOOL=OFF" >> $cacheFile
-  echo "BUILD_SHARED_LIBS:BOOL=ON" >> $cacheFile
   echo "BUILD_TESTING:BOOL=OFF" >> $cacheFile
-  echo "CMAKE_BUILD_TYPE:STRING=$2" >> $cacheFile
   echo "DITK_LEGACY_REMOVE:BOOL=ON" >> $cacheFile
   echo "KWSYS_USE_MD5:BOOL=ON" >> $cacheFile
   echo "Module_ITKReview:BOOL=ON" >> $cacheFile
@@ -79,16 +89,11 @@ function ConfigureITK()
   echo "ITKGroup_Registration:BOOL=ON" >> $cacheFile
   echo "ITKGroup_Segmentation:BOOL=ON" >> $cacheFile
   echo "Module_SCIFIO:BOOL=ON" >> $cacheFile
-  echo "ITK_USE_SYSTEM_HDF5:BOOL=ON" >> $cacheFile
+
   echo "CMAKE_SKIP_INSTALL_RPATH:BOOL=OFF" >> $cacheFile
   echo "CMAKE_SKIP_RPATH:BOOL=OFF" >> $cacheFile
   echo "USE_COMPILER_HIDDEN_VISIBILITY:BOOL=OFF" >> $cacheFile
-  echo "CMAKE_CXX_STANDARD:STRING=11" >> $cacheFile
-  echo "CMAKE_CXX_STANDARD_REQUIRED:BOOL=ON" >> $cacheFile
-  echo "CMAKE_OSX_DEPLOYMENT_TARGET=$OSX_DEPLOYMENT_TARGET" >> $cacheFile
-  echo "CMAKE_OSX_SYSROOT:Path=$OSX_SDK" >> $cacheFile
-  echo "CMAKE_CXX_FLAGS:STRING=-stdlib=libc++ -std=c++11" >> cacheFile
-  echo "Module_SCIFIO:BOOL=ON" >> $cacheFile
+
 
   echo "HDF5_DIR:STRING=$SDK_INSTALL/$1-$2/share/cmake" >> $cacheFile
   echo "HDF5_CXX_COMPILER_EXECUTABLE:FILEPATH=HDF5_CXX_COMPILER_EXECUTABLE-NOTFOUND" >> $cacheFile
@@ -114,7 +119,7 @@ function ConfigureITK()
     echo "HDF5_hdf5_cpp_LIBRARY_${upper}:FILEPATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp.dylib" >> $cacheFile
   fi
 
-  ${SDK_INSTALL}/$CMAKE_FOLDER_NAME/CMake.app/Contents/bin/cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++ -std=c++11" ../$ITK_FOLDER_NAME
+  ${SDK_INSTALL}/$CMAKE_FOLDER_NAME/CMake.app/Contents/bin/cmake ../$ITK_FOLDER_NAME
   make -j$PARALLEL_BUILD
   cd ../
 }
@@ -129,4 +134,5 @@ echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "# ITK (www.itk.org) For Image Processing Plugin" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "set(ITK_DIR \"\${DREAM3D_SDK_ROOT}/${ITK_INSTALL}-\${BUILD_TYPE}\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(SIMPLib_USE_ITK \"ON\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(DREAM3D_USE_ITK \"ON\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+

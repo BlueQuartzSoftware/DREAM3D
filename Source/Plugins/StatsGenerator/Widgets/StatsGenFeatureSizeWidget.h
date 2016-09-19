@@ -189,7 +189,7 @@ signals:
 
   void userEnteredValidData(bool);
 
-  void phaseParametersChanged();
+  void dataChanged();
 
   void binSelected(int index);
 

@@ -141,7 +141,7 @@ void StatsGeneratorWidget::setupGui()
     ppw->setTotalPhaseFraction(1.0);
     phaseTabs->addTab(ppw, "Primary");
 
-    connect(ppw, SIGNAL(phaseParametersChanged()),
+    connect(ppw, SIGNAL(dataChanged()),
             this, SIGNAL(parametersChanged()));
   }
   else

@@ -101,7 +101,7 @@ protected slots:
 
 
   signals:
-  void phaseParametersChanged();
+  void dataChanged();
 
 protected:
   /**

@@ -112,7 +112,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
 
   signals:
-    void userEditedData();
+    void dataChanged();
 
   public slots:
     void updatePlotCurves();

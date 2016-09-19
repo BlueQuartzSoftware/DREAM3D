@@ -36,7 +36,11 @@
 message(STATUS "********* STARTING DREAM3D CONFIGURATION ***********************")
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
-  message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
+  get_property(DREAM3D_SDK_STATUS_PRINTED GLOBAL PROPERTY DREAM3D_SDK_STATUS_PRINTED)
+  if(NOT DREAM3D_SDK_STATUS_PRINTED)
+    message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
+    set_property(GLOBAL PROPERTY DREAM3D_SDK_STATUS_PRINTED TRUE)
+  endif()
 endif()
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
@@ -214,11 +218,11 @@ if("${SIMPLPluginList}" STREQUAL "")
 endif()
 
 
-get_property(SIMPLLibSearchDirs GLOBAL PROPERTY SIMPLLibSearchDirs)
-if("${SIMPLLibSearchDirs}" STREQUAL "")
-  set_property(GLOBAL PROPERTY SIMPLLibSearchDirs "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt")
-  get_property(SIMPLLibSearchDirs GLOBAL PROPERTY SIMPLLibSearchDirs)
-  file(WRITE "${SIMPLLibSearchDirs}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY};")
+get_property(SIMPLibSearchDirs GLOBAL PROPERTY SIMPLibSearchDirs)
+if("${SIMPLibSearchDirs}" STREQUAL "")
+  set_property(GLOBAL PROPERTY SIMPLibSearchDirs "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt")
+  get_property(SIMPLibSearchDirs GLOBAL PROPERTY SIMPLibSearchDirs)
+  file(WRITE "${SIMPLibSearchDirs}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY};")
 endif()
 
 # --------------------------------------------------------------------
@@ -257,7 +261,7 @@ set(DREAM3D_SUPPORT_DIR ${PROJECT_SOURCE_DIR}/Support)
 
 set(CMP_ENABLE_PLUGINS "1")
 set(CMP_PLUGIN_LIST_FILE "${SIMPLPluginList}")
-set(CMP_PLUGIN_SEARCHDIR_FILE "${SIMPLLibSearchDirs}")
+set(CMP_PLUGIN_SEARCHDIR_FILE "${SIMPLibSearchDirs}")
 file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/plugins;")
 file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
 set(CMP_LIB_SEARCH_DIRS "")
@@ -331,6 +335,7 @@ set(Boost_NO_BOOST_CMAKE 1)
 FIND_PACKAGE(Boost)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+list(APPEND CMP_LIB_SEARCH_DIRS ${Boost_LIBRARY_DIRS})
 
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
@@ -369,7 +374,11 @@ endif()
 # Find the Doxygen package
 FIND_PACKAGE(Doxygen)
 if(DOXYGEN_FOUND)
-  message(STATUS "Doxygen Found at ${DOXYGEN_EXECUTABLE}")
+  get_property(Doxygen_STATUS_PRINTED GLOBAL PROPERTY Doxygen_STATUS_PRINTED)
+  if(NOT Doxygen_STATUS_PRINTED)
+    message(STATUS "Doxygen Found at ${DOXYGEN_EXECUTABLE}")
+    set_property(GLOBAL PROPERTY Doxygen_STATUS_PRINTED TRUE)
+  endif()
 else()
   message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
 endif()
@@ -579,13 +588,18 @@ endif()
 #-- This is example code that loops over all the DocGroups and each .md BUILD_WITH_INSTALL_RPATH
 #-- the filter DocGroup
 if (0)
-get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
-foreach(DocGroup ${DREAM3DDoc_GROUPS})
-  #message(STATUS "  DocGroup: ${DocGroup}" )
-  get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup})
-  foreach(docListItem ${DocGroupList})
-    #message(STATUS "    ${docListItem}")
+  get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
+  foreach(DocGroup ${DREAM3DDoc_GROUPS})
+    #message(STATUS "  DocGroup: ${DocGroup}" )
+    get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup})
+    foreach(docListItem ${DocGroupList})
+      #message(STATUS "    ${docListItem}")
+    endforeach()
   endforeach()
-endforeach()
 endif()
+
+
+#----------------------------------------------------------------------------------------
+# After we are all done, then update the LibrarySearchDirs.txt file
+  file(APPEND "${SIMPLibSearchDirs}" "${CMP_LIB_SEARCH_DIRS};")
 

@@ -233,8 +233,8 @@ void StatsGenODFWidget::enableMDFTab(bool b)
   m_MDFWidget = new StatsGenMDFWidget();
   m_MDFWidget->setODFTableModel(m_ODFTableModel);
   tabWidget->addTab(m_MDFWidget, QString("MDF"));
-  connect(m_MDFWidget, SIGNAL(mdfParametersChanged()),
-          this, SIGNAL(odfParametersChanged()));
+  connect(m_MDFWidget, SIGNAL(dataChanged()),
+          this, SIGNAL(dataChanged()));
 }
 
 // -----------------------------------------------------------------------------
@@ -562,7 +562,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     m_MDFWidget->updateMDFPlot(odf);
   }
 
-  emit odfParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -592,7 +592,7 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
     QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
     m_ODFTableView->setCurrentIndex(index);
   }
-  emit odfParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -619,7 +619,7 @@ void StatsGenODFWidget::on_angleFilePath_textChanged()
   m_OdfBulkTableModel->setInitialValues();
 
   emit bulkLoadEvent(true);
-  emit odfParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -876,7 +876,7 @@ void StatsGenODFWidget::on_deleteODFTextureBtn_clicked()
   {
     m_ODFTableView->resizeColumnsToContents();
   }
-  emit odfParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -905,7 +905,7 @@ void StatsGenODFWidget::on_bulkLoadGroupBox_clicked ( bool checked )
   QAbstractItemDelegate* idelegate = m_OdfBulkTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
   emit bulkLoadEvent(!(m_OdfBulkTableModel->rowCount() > 0));
-  emit odfParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -918,7 +918,7 @@ void StatsGenODFWidget::on_weightSpreadGroupBox_clicked ( bool checked )
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
   emit bulkLoadEvent(false);
-  emit odfParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------

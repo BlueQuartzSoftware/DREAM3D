@@ -64,9 +64,10 @@
 //-- C++11 Includes
 #include <memory>
 
-
+#ifndef SHARED_IS_NULL
 #define SHARED_IS_NULL(ptr)\
   (  (ptr).get() == nullptr )
+#endif
 
 /**
  * @brief Creates a static method that returns a nullptr pointer wrapped in a
