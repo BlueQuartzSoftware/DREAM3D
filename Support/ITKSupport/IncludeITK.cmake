@@ -135,6 +135,13 @@ get_property(Itk_STATUS_PRINTED GLOBAL PROPERTY Itk_STATUS_PRINTED)
 if(NOT Itk_STATUS_PRINTED)
   message(STATUS "${PROJECT_NAME}: ITK Location ${ITK_DIR} ITK Version: ${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}.${ITK_VERSION_PATCH}")
   set_property(GLOBAL PROPERTY Itk_STATUS_PRINTED TRUE)
+
+  # Now append ITK_RUNTIME_LIBRARY_DIRS path to the SIMPLibSearchDirs property
+  get_property(SIMPLibSearchDirs GLOBAL PROPERTY SIMPLibSearchDirs)
+  if(NOT "${SIMPLibSearchDirs}" STREQUAL "")
+    file(APPEND "${SIMPLibSearchDirs}" "${ITK_RUNTIME_LIBRARY_DIRS};")
+  endif()
+
 endif()
 
 
@@ -173,6 +180,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 include_directories(${ITK_INCLUDE_DIRS})
+
 
 
 
