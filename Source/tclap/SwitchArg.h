@@ -69,7 +69,7 @@ class SwitchArg : public Arg
 			      const std::string& name, 
 			      const std::string& desc,
 			      bool def = false,
-				  Visitor* v = NULL);
+				  Visitor* v = nullptr);
 
 				  
 		/**
@@ -90,7 +90,7 @@ class SwitchArg : public Arg
 			      const std::string& desc,
 				  CmdLineInterface& parser,
 			      bool def = false,
-				  Visitor* v = NULL);
+				  Visitor* v = nullptr);
 				  
 				  
         /**

@@ -49,7 +49,7 @@ GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity() :
   AbstractFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(SIMPL::CellData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshTriangleEdgesArrayName(SIMPL::CellData::SurfaceMeshTriangleEdges),
-  m_SurfaceMeshTriangleEdges(NULL)
+  m_SurfaceMeshTriangleEdges(nullptr)
 {
   setupFilterParameters();
 }
@@ -97,7 +97,7 @@ void GenerateNodeTriangleConnectivity::dataCheck()
   setErrorCondition(0);
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  if(NULL == sm)
+  if(nullptr == sm)
   {
     setErrorCondition(-384);
     notifyErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
@@ -105,14 +105,14 @@ void GenerateNodeTriangleConnectivity::dataCheck()
   else
   {
     // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
+    if(sm->getVertices().get() == nullptr)
     {
       setErrorCondition(-384);
       notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
     }
 
     // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
+    if(sm->getFaces().get() == nullptr)
     {
       setErrorCondition(-384);
       notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
@@ -122,7 +122,7 @@ void GenerateNodeTriangleConnectivity::dataCheck()
       // This depends on the triangles array already being created
       int size = sm->getFaces()->GetNumberOfTuples();
       m_SurfaceMeshTriangleEdgesPtr = sattrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName,  m_SurfaceMeshTriangleEdgesArrayName, 0, size, 3); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_SurfaceMeshTriangleEdgesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      if( nullptr != m_SurfaceMeshTriangleEdgesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       { m_SurfaceMeshTriangleEdges = m_SurfaceMeshTriangleEdgesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
 
@@ -162,10 +162,10 @@ void GenerateNodeTriangleConnectivity::execute()
 
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
-  if(NULL == m)
+  if(nullptr == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Object was NULL", -999);
+    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Object was nullptr", -999);
     return;
   }
   setErrorCondition(0);
@@ -199,7 +199,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
 
   // Get our Reference counted Array of Triangle Structures
   StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
-  if(NULL == trianglesPtr.get())
+  if(nullptr == trianglesPtr.get())
   {
     setErrorCondition(-556);
     notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Triangles", -556);

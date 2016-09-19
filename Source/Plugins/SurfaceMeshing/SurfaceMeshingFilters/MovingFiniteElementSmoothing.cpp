@@ -142,7 +142,7 @@ MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
   m_SmoothTripleLines(true),
   m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeTypeArrayName(SIMPL::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeType(NULL)
+  m_SurfaceMeshNodeType(nullptr)
 {
   setupFilterParameters();
 }
@@ -204,14 +204,14 @@ void MovingFiniteElementSmoothing::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
-  if(sm->getVertices().get() == NULL)
+  if(sm->getVertices().get() == nullptr)
   {
     setErrorCondition(-384);
     notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
 
   // We MUST have Triangles defined also.
-  if(sm->getFaces().get() == NULL)
+  if(sm->getFaces().get() == nullptr)
   {
     setErrorCondition(-385);
     notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
@@ -223,13 +223,13 @@ void MovingFiniteElementSmoothing::dataCheck()
     //int size = sm->getVertices()->getNumberOfTuples();
     QVector<size_t> dims(1, 1);
     m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )
   {
-    if(sm->getEdges().get() == NULL)
+    if(sm->getEdges().get() == nullptr)
     {
       setErrorCondition(-385);
       notifyErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", getErrorCondition());
@@ -353,10 +353,10 @@ void MovingFiniteElementSmoothing::execute()
   {
     IDataArray::Pointer edgesDataArray = m->getPointData(SIMPL::CellData::SurfaceMeshEdges);
     IDataArray::Pointer iEdgesDataArray = m->getPointData(SIMPL::CellData::SurfaceMeshInternalEdges);
-    if((edgesDataArray.get() == NULL || iEdgesDataArray.get() == NULL) && m_SmoothTripleLines == true)
+    if((edgesDataArray.get() == nullptr || iEdgesDataArray.get() == nullptr) && m_SmoothTripleLines == true)
     {
       setErrorCondition(-596);
-      notifyErrorMessage(getHumanLabel(), "Either the Edges or Internal Edges array was NULL which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.", -556);
+      notifyErrorMessage(getHumanLabel(), "Either the Edges or Internal Edges array was nullptr which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.", -556);
       return;
     }
 

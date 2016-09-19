@@ -46,7 +46,7 @@
 IOSupport::IOSupport() :
   Observable(),
   m_ErrorCondition(0),
-  m_DataContainer(NULL),
+  m_DataContainer(nullptr),
   m_DataContainerType(DREAM3D::DataContainerType::UnknownDataContainer),
   m_HdfFileId(-1),
   m_HdfGroupId(-1)

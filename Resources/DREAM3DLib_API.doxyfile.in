@@ -268,7 +268,7 @@ PREDEFINED  = "EBSD_INSTANCE_PROPERTY(type, prpty)= \
                 /** Returns if this class is a type of another class */ \
                   virtual int IsA(const char *type) \
                   { } \
-                  /** A safe way to downcast from a super class to a sub class. Returns a NULL Pointer on Fail*/ \
+                  /** A safe way to downcast from a super class to a sub class. Returns a nullptr Pointer on Fail*/ \
                   template <class Target, class Source>\
                   static Target polymorphic_downcast(Source* x) { }" \
               "DREAM3D_TYPE_MACRO(class)=\

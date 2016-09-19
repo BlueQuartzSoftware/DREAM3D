@@ -70,7 +70,7 @@ class MultiSwitchArg : public SwitchArg
 				const std::string& name,
 				const std::string& desc,
 				int init = 0,
-				Visitor* v = NULL);
+				Visitor* v = nullptr);
 
 
 		/**
@@ -92,7 +92,7 @@ class MultiSwitchArg : public SwitchArg
 				const std::string& desc,
 				CmdLineInterface& parser,
 				int init = 0,
-				Visitor* v = NULL);
+				Visitor* v = nullptr);
 
 
 		/**

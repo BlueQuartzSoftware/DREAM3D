@@ -73,7 +73,7 @@ class CLIStatsDelegate : public StatsDelegate
     virtual void reportProgress(EMMPM_Data::Pointer data)
     {
       // Check to make sure we are at the end of an em loop
-      if ( data->inside_mpm_loop == 0 && NULL != data->outputImage)
+      if ( data->inside_mpm_loop == 0 && nullptr != data->outputImage)
       {
         char buff[256];
         memset(buff, 0, 256);

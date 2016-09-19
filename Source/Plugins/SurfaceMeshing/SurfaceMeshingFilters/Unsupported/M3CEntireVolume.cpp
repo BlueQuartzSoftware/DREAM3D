@@ -64,9 +64,9 @@ M3CEntireVolume::M3CEntireVolume() :
   m_SurfaceMeshInternalEdgesArrayName(SIMPL::CellData::SurfaceMeshInternalEdges),
   m_AddSurfaceLayer(true),
   m_GrainIdsArrayName(SIMPL::CellData::GrainIds),
-  m_GrainIds(NULL),
+  m_GrainIds(nullptr),
   m_SurfaceMeshNodeTypeArrayName(SIMPL::CellData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeType(NULL)
+  m_SurfaceMeshNodeType(nullptr)
 {
   setupFilterParameters();
 }
@@ -123,12 +123,12 @@ void M3CEntireVolume::dataCheck()
   VoxelDataContainer* m = getVoxelDataContainer();
 
   m_GrainIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_GrainIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_GrainIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_GrainIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_GrainIds = m_GrainIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  if (NULL == sm)
+  if (nullptr == sm)
   {
     setErrorCondition(-384);
     notifyErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
@@ -141,7 +141,7 @@ void M3CEntireVolume::dataCheck()
     StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, SIMPL::CellData::SurfaceMeshInternalEdges);
 
     m_SurfaceMeshNodeTypePtr = sattrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_CellAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, 0, 1, 1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    if( nullptr != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     sm->setNodes(vertices);
@@ -176,19 +176,19 @@ void M3CEntireVolume::execute()
 
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
+  if(nullptr == m)
   {
     setErrorCondition(-1);
-    ss << " VoxelDataContainer was NULL";
+    ss << " VoxelDataContainer was nullptr";
     notifyErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
 
-  if(getSurfaceMeshDataContainer() == NULL)
+  if(getSurfaceMeshDataContainer() == nullptr)
   {
     setErrorCondition(-1);
-    ss << " SurfaceMeshDataContainer was NULL";
+    ss << " SurfaceMeshDataContainer was nullptr";
     notifyErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
@@ -628,7 +628,7 @@ voxel* M3CEntireVolume::initialize_micro_from_dx_file(int& xDim, int& yDim, int&
   int err = reader.readFile();
   if(err < 0)
   {
-    return NULL;
+    return nullptr;
   }
   voxel* p = reader.getVoxels();
   reader.getDimensions(xDim, yDim, zDim);
@@ -754,12 +754,12 @@ void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8])
   int j, k, dummy;
 
   // Read edge and spin table in 2d for bound case...
-  if( (f1 = fopen("edgeTable_2d_4_3dMesh.txt", "r")) == NULL)
+  if( (f1 = fopen("edgeTable_2d_4_3dMesh.txt", "r")) == nullptr)
   {
     printf("\nThe input file doesn't exist!\n");
     exit(1);
   }
-  if( (f2 = fopen("neighspinTable_2d_4_3dMesh.txt", "r")) == NULL)
+  if( (f2 = fopen("neighspinTable_2d_4_3dMesh.txt", "r")) == nullptr)
   {
     printf("\nThe input file doesn't exist!\n");
     exit(1);
@@ -5304,19 +5304,19 @@ void M3CEntireVolume::get_output(node* v, segment* fe, isegment* ie, patch* t, i
 
   // Open the streams for 3 output files...
 
-  if((f1 = fopen(mp->nodes_file.c_str(), "w")) == NULL)
+  if((f1 = fopen(mp->nodes_file.c_str(), "w")) == nullptr)
   {
     printf("\nCannot create the output nodes file! '%s'\n", mp->nodes_file.c_str());
     return;
   }
 
-  if((f2 = fopen(mp->edges_file.c_str(), "w")) == NULL)
+  if((f2 = fopen(mp->edges_file.c_str(), "w")) == nullptr)
   {
     printf("\nCannot create the output edges file! '%s'\n", mp->edges_file.c_str());
     return;
   }
 
-  if((f3 = fopen(mp->triangles_file.c_str(), "w")) == NULL)
+  if((f3 = fopen(mp->triangles_file.c_str(), "w")) == nullptr)
   {
     printf("\nCannot create the output file! '%s'\n", mp->triangles_file.c_str());
     return;

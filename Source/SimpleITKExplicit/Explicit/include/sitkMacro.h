@@ -67,7 +67,7 @@ class GenericException;
 #if defined(SITK_HAS_CXX11_NULLPTR) && !defined(SITK_HAS_TR1_SUB_INCLUDE)
 #define SITK_NULLPTR nullptr
 #else
-#define SITK_NULLPTR NULL
+#define SITK_NULLPTR nullptr
 #endif
 
 

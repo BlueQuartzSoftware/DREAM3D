@@ -58,6 +58,7 @@
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
+#include "StatsGenerator/Widgets/SGCurveTracker.h"
 
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
@@ -65,11 +66,11 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 #include <qwt_plot_shapeitem.h>
+#include <qwt_plot_layout.h>
+#include <qwt_plot_canvas.h>
 #include <qwt_symbol.h>
 #include <qwt_picker_machine.h>
-
-#include "curvetracker.h"
-
+#include <qwt_scale_widget.h>
 
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
@@ -148,6 +149,16 @@ void StatsGenFeatureSizeWidget::setupGui()
   qwtStr.setText(QString("Probability of Sampling ESD \nfrom the Distribution"));
   m_SizeDistributionPlot->setAxisTitle(QwtPlot::yLeft, qwtStr);
 
+  m_SizeDistributionPlot->plotLayout()->setAlignCanvasToScales( true );
+  for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
+  {
+    m_SizeDistributionPlot->axisWidget(axis)->setMargin( 0 );
+  }
+  QwtPlotCanvas *canvas = new QwtPlotCanvas();
+  canvas->setAutoFillBackground( false );
+  canvas->setFrameStyle( QFrame::NoFrame );
+  //canvas->setPalette(pal);
+  m_SizeDistributionPlot->setCanvas( canvas );
 
   QwtPlotPicker* plotPicker = new QwtPlotPicker(m_SizeDistributionPlot->xBottom, m_SizeDistributionPlot->yLeft, QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, m_SizeDistributionPlot->canvas());
   QwtPickerMachine* pickerMachine = new QwtPickerClickPointMachine();
@@ -354,7 +365,7 @@ void StatsGenFeatureSizeWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -376,7 +387,7 @@ void StatsGenFeatureSizeWidget::on_m_Sigma_SizeDistribution_textChanged(const QS
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -398,7 +409,7 @@ void StatsGenFeatureSizeWidget::on_m_MinSigmaCutOff_textChanged(const QString& t
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -420,7 +431,7 @@ void StatsGenFeatureSizeWidget::on_m_MaxSigmaCutOff_textChanged(const QString& t
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -441,7 +452,7 @@ void StatsGenFeatureSizeWidget::on_m_BinStepSize_valueChanged(double v)
   {
     return;
   }
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 
@@ -502,21 +513,16 @@ int StatsGenFeatureSizeWidget::computeBinsAndCutOffs( float mu, float sigma,
   int err = 0;
   int size = 250;
 
-
-  err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
+  err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size, minCutOff, maxCutOff);
   if (err == 1)
   {
     //TODO: Present Error Message
     return -1;
   }
 
+  xMax = x.last();
   for (int i = 0; i < size; ++i)
   {
-    //   qDebug() << x[i] << "  " << y[i] << "\n";
-    if (x[i] > xMax)
-    {
-      xMax = x[i];
-    }
     if (y[i] > yMax)
     {
       yMax = y[i];
@@ -557,6 +563,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
 
+  // Adjust the BinStepSize so that there are at least 2x as many x points as bins.
   while(binsizes.size() > x.size()/2)
   {
     m_BinStepSize->blockSignals(true);
@@ -604,7 +611,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   QwtText qwtStr = QwtText(str);
   qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
   m_CutOffMin->setLabel(qwtStr);
-  m_CutOffMin->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
+  m_CutOffMin->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
   m_CutOffMin->setLabelOrientation(Qt::Vertical);
   m_CutOffMin->setLineStyle(QwtPlotMarker::VLine);
   m_CutOffMin->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
@@ -619,7 +626,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   qwtStr = QwtText(str);
   qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
   m_CutOffMax->setLabel(qwtStr);
-  m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
+  m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignTop);
   m_CutOffMax->setLabelOrientation(Qt::Vertical);
   m_CutOffMax->setLineStyle(QwtPlotMarker::VLine);
   m_CutOffMax->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
@@ -633,11 +640,13 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
     yD[i] = static_cast<double>(y[i]);
   }
 
-  m_SizeDistributionCurve->setSamples(xD, yD);
-  m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, xCo[0] - (xCo[0] * 0.1), xCo[1] * 1.10);
-  m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
+  float xAxisMargin = (xCo[1] - xCo[0]) * .05f;
+  float xAxisMin = xCo[0] - xAxisMargin;
+  float xAxisMax = xCo[1] + xAxisMargin;
 
-  //float barWidth = ((xCo[1] - xCo[0])/binsizes.count() ) * 0.98;
+  m_SizeDistributionCurve->setSamples(xD, yD);
+  m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, xAxisMin, xAxisMax);
+  m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax * 1.05);
 
   for(int i = 0; i < m_BarChartItems.count(); i++)
   {
@@ -646,8 +655,6 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   }
 
   m_BarChartItems.clear();
-
-  //qDebug() << "x.first():" << x.first() << "\tx.last():" << x.last();
 
   float xMin = x.first();
   xMax = x.last();

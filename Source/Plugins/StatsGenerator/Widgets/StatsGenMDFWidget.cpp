@@ -49,6 +49,7 @@
 #include <QtCore/QString>
 #include <QtCore/QSettings>
 #include <QtCore/QVector>
+#include <QtCore/QModelIndex>
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
@@ -93,8 +94,7 @@
 StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent) :
   QWidget(parent),
   m_PhaseIndex(-1),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-  m_MDFTableModel(nullptr)
+  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
   this->setupUi(this);
   this->setupGui();
@@ -128,9 +128,25 @@ void StatsGenMDFWidget::setupGui()
   m_MDFTableModel = new SGMDFTableModel;
   m_MDFTableModel->setInitialValues();
   m_MDFTableView->setModel(m_MDFTableModel);
+
+  connect(m_MDFTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+          this, SLOT(tableDataChanged(const QModelIndex&, const QModelIndex&)));
+
   QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
   m_PlotCurve = new QwtPlotCurve;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenMDFWidget::tableDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+  Q_UNUSED(topLeft);
+  Q_UNUSED(bottomRight);
+
+  on_m_MDFUpdateBtn_clicked();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -210,7 +226,7 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 
   updateMDFPlot(odf);
 
-  emit mdfParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -301,7 +317,7 @@ void StatsGenMDFWidget::on_addMDFRowBtn_clicked()
   m_MDFTableView->setFocus();
   QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
   m_MDFTableView->setCurrentIndex(index);
-  emit mdfParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -318,7 +334,7 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
   {
     m_MDFTableView->resizeColumnsToContents();
   }
-  emit mdfParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------

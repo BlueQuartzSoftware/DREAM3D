@@ -315,7 +315,7 @@ M3CSliceBySlice::M3CSliceBySlice() :
   m_DeleteTempFiles(true),
   m_FeatureIdsArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
   m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -379,7 +379,7 @@ void M3CSliceBySlice::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -1696,12 +1696,12 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
   int chaser;
   int featurenameFlag, NodeFlag, flip;
   int bflag, nbflag;
-  int* burnt = NULL;
-  int* burnt_list = NULL;
-  int* count = NULL;
+  int* burnt = nullptr;
+  int* burnt_list = nullptr;
+  int* count = nullptr;
   int numN, sumN;
   int from;
-  int* loop = NULL;
+  int* loop = nullptr;
   size_t ctid;
   int front, back;
   int te0, te1, te2, tv0, tcVertex, tv2;
@@ -2153,12 +2153,12 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
   //int end;
   int from, to;
   int flip;
-  int* burnt = NULL;
-  int* burnt_list = NULL;
-  int* count = NULL;
+  int* burnt = nullptr;
+  int* burnt_list = nullptr;
+  int* count = nullptr;
   QVector<int> countVec;
   int numN;
-  int* burnt_loop = NULL;
+  int* burnt_loop = nullptr;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
 
   int index;
@@ -2767,7 +2767,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   SurfaceMesh::NodesFile::NodesFileRecord_t record;
 
   size_t totalWritten = 0;
-  FILE* f = NULL;
+  FILE* f = nullptr;
 
   // qDebug() << "M3CSliceBySlice writing Nodes file " << cNodeID << "\n";
 
@@ -2775,7 +2775,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   if (zID == 0)
   {
     f = fopen(nodesFile.toLatin1().data(), "wb");
-    if (NULL == f)
+    if (nullptr == f)
     {
       return -1;
     }
@@ -2784,7 +2784,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   if (zID > 0)
   {
     f = fopen(nodesFile.toLatin1().data(), "ab");
-    if (NULL == f)
+    if (nullptr == f)
     {
       return -1;
     }
@@ -2845,7 +2845,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   int end = nt;
   int n1, n2, n3;
 
-  FILE* f = NULL;
+  FILE* f = nullptr;
 
   int32_t* nodeID = cVertexNodeIdPtr->getPointer(0);
   SurfaceMesh::M3C::Patch* cTriangle = cTrianglePtr->getPointer(0);
@@ -2856,7 +2856,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   if (zID == 0)
   {
     f = fopen(trianglesFile.toLatin1().data(), "wb");
-    if (NULL == f)
+    if (nullptr == f)
     {
       return -1;
     }
@@ -2868,7 +2868,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   if (zID > 0)
   {
     f = fopen(trianglesFile.toLatin1().data(), "ab");
-    if (NULL == f)
+    if (nullptr == f)
     {
       return -1;
     }
@@ -2947,7 +2947,7 @@ void M3CSliceBySlice::analyzeWinding()
     //  qDebug() << "Current Label: " << currentLabel;
     //  int seedTriIndex = masterTriangleIndex;
 
-    if (NULL == t.get() )
+    if (nullptr == t.get() )
     {
       qDebug() << "Could not find a triangle with the winding set. This should NOT happen";
       BOOST_ASSERT(1 == 0);

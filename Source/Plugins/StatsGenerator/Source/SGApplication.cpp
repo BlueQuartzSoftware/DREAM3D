@@ -113,7 +113,7 @@ void SGApplication::windowClosed(StatsGeneratorUI* window)
 // -----------------------------------------------------------------------------
 QString SGApplication::newTempFile(QString directory)
 {
-  StatsGeneratorUI* sg = NULL;
+  StatsGeneratorUI* sg = nullptr;
   int i = 1;
   bool fileExists = false;
   QString name;

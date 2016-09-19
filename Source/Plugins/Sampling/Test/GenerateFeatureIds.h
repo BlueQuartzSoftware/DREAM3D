@@ -86,7 +86,7 @@ class GenerateFeatureIds : public AbstractFilter
       m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
       m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName),
       m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
-      m_FeatureIds(NULL)
+      m_FeatureIds(nullptr)
     {
     }
 
@@ -103,7 +103,7 @@ class GenerateFeatureIds : public AbstractFilter
 
       QVector<size_t> dims(1, 1);
       m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
 
