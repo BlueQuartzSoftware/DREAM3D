@@ -50,6 +50,7 @@
 
 #include "EMMPM/EMMPMFilters/EMMPMFilter.h"
 #include "EMMPM/FilterParameters/EMMPMFilterParameter.h"
+#include "EMMPMLib/Core/EMMPM_Data.h"
 
 #include "SVWidgetsLib/Core/SVWidgetsLibConstants.h"
 
@@ -64,9 +65,9 @@ EMMPMWidget::EMMPMWidget(FilterParameter* parameter, AbstractFilter* filter, QWi
   m_DidCausePreflight(false)
 {
   m_FilterParameter = dynamic_cast<EMMPMFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != nullptr, "nullptr Pointer", "EMMPMWidget can ONLY be used with a EMMPMFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != nullptr, "NULL Pointer", "EMMPMWidget can ONLY be used with a EMMPMFilterParameter object");
   m_Filter = dynamic_cast<EMMPMFilter*>(filter);
-  Q_ASSERT_X(getFilter() != nullptr, "nullptr Pointer", "EMMPMWidget can ONLY be used with a EMMPMFilter object");
+  Q_ASSERT_X(getFilter() != nullptr, "NULL Pointer", "EMMPMWidget can ONLY be used with a EMMPMFilter object");
 
   setupUi(this);
   setupGui();
@@ -141,18 +142,197 @@ void EMMPMWidget::setupGui()
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-//  if (getFilterParameter() != nullptr)
-//  {
-//    label->setText(getFilterParameter()->getHumanLabel() );
-//  }
+  if(m_Filter != nullptr)
+  {
+    m_NumClasses->setValue(m_Filter->getNumClasses());
+    m_Beta->setText(QString::number(m_Filter->getExchangeEnergy()));
+    m_EmIterations->setValue(m_Filter->getHistogramLoops());
+    m_MpmIterations->setValue(m_Filter->getSegmentationLoops());
 
-//  if(getFilter() != nullptr)
-//  {
-//    QString path = m_Filter->getInputFile();
+    EMMPM_InitializationType initType = m_Filter->getEmmpmInitType();
+    if (initType == EMMPM_InitializationType::EMMPM_ManualInit)
+    {
+      enableManualInit->setChecked(true);
+    }
+    else
+    {
+      enableManualInit->setChecked(false);
+    }
 
-//    filePath->setText(path);
-//    on_filePath_fileDropped(path);
-//  }
+    useSimulatedAnnealing->setChecked(m_Filter->getUseSimulatedAnnealing());
+
+    tableWidget->blockSignals(true);
+    {
+      DynamicTableData emmpmTableData = m_Filter->getEMMPMTableData();
+
+      std::vector<std::vector<double> > data = emmpmTableData.getTableData();
+      for (int row = 0; row < data.size(); row++)
+      {
+        tableWidget->insertRow(row);
+        for (int col = 0; col < data[row].size(); col++)
+        {
+          if (tableWidget->columnCount() == col)
+          {
+            tableWidget->insertColumn(col);
+          }
+
+          QTableWidgetItem* item = new QTableWidgetItem(QString::number(data[row][col]));
+          if (initType != EMMPM_InitializationType::EMMPM_ManualInit && (col == 2 || col == 3))
+          {
+            item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+          }
+          tableWidget->setItem(row, col, item);
+        }
+      }
+
+      tableWidget->setVerticalHeaderLabels(emmpmTableData.getRowHeaders());
+      tableWidget->setHorizontalHeaderLabels(emmpmTableData.getColHeaders());
+    }
+    tableWidget->blockSignals(false);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicTableData EMMPMWidget::getDynamicTableData(QTableWidget* tableWidget)
+{
+  QStringList rHeaders, cHeaders;
+  for (int i = 0; i < tableWidget->rowCount(); i++)
+  {
+    QTableWidgetItem* vItem = tableWidget->verticalHeaderItem(i);
+    if (nullptr != vItem)
+    {
+      QString vName = vItem->data(Qt::DisplayRole).toString();
+      rHeaders << vName;
+    }
+  }
+  for (int i = 0; i < tableWidget->columnCount(); i++)
+  {
+    QTableWidgetItem* cItem = tableWidget->horizontalHeaderItem(i);
+    if (nullptr != cItem)
+    {
+      QString cName = cItem->data(Qt::DisplayRole).toString();
+      cHeaders << cName;
+    }
+  }
+
+  int rCount = tableWidget->rowCount(), cCount = tableWidget->columnCount();
+  std::vector<std::vector<double> > data(rCount, std::vector<double>(cCount));
+
+  for (int row = 0; row < rCount; row++)
+  {
+    for (int col = 0; col < cCount; col++)
+    {
+      bool ok = false;
+      QTableWidgetItem* item = tableWidget->item(row, col);
+      if (nullptr == item)
+      {
+        return std::vector < std::vector<double> >();
+      }
+      data[row][col] = item->data(Qt::DisplayRole).toDouble(&ok);
+
+      if (ok == false)
+      {
+        qDebug() << "Could not set the model data into the DynamicTableData object.";
+        data.clear();
+      }
+    }
+  }
+
+  DynamicTableData dataObj;
+  dataObj.setTableData(data);
+  dataObj.setRowHeaders(rHeaders);
+  dataObj.setColHeaders(cHeaders);
+
+  return dataObj;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EMMPMWidget::on_tableWidget_cellChanged(int row, int column)
+{
+  Q_UNUSED(row)
+  Q_UNUSED(column)
+
+  DynamicTableData newData = getDynamicTableData(tableWidget);
+  m_Filter->setEMMPMTableData(newData);
+
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EMMPMWidget::on_m_NumClasses_valueChanged(int i)
+{
+  if (tableWidget->rowCount() < i)
+  {
+    EMMPM_InitializationType initType = m_Filter->getEmmpmInitType();
+    for (int row = tableWidget->rowCount(); row < i; row++)
+    {
+      tableWidget->insertRow(row);
+
+      QTableWidgetItem* item = new QTableWidgetItem("0");
+      tableWidget->setItem(row, 0, item);
+
+      item = new QTableWidgetItem("4.5");
+      tableWidget->setItem(row, 1, item);
+
+      item = new QTableWidgetItem("128");
+      if (initType != EMMPM_InitializationType::EMMPM_ManualInit)
+      {
+        item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+      }
+      tableWidget->setItem(row, 2, item);
+
+      item = new QTableWidgetItem("20");
+      if (initType != EMMPM_InitializationType::EMMPM_ManualInit)
+      {
+        item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+      }
+      tableWidget->setItem(row, 3, item);
+    }
+  }
+  else
+  {
+    for (int row = tableWidget->rowCount() - 1; row >= i; row--)
+    {
+      tableWidget->removeRow(row);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EMMPMWidget::on_enableManualInit_toggled(bool checked)
+{
+  if (checked == true)
+  {
+    for (int row=0; row<tableWidget->rowCount(); row++)
+    {
+      QTableWidgetItem* item = tableWidget->item(row, 2);
+      item->setFlags(item->flags() | Qt::ItemIsEnabled);
+
+      item = tableWidget->item(row, 3);
+      item->setFlags(item->flags() | Qt::ItemIsEnabled);
+    }
+  }
+  else
+  {
+    for (int row=0; row<tableWidget->rowCount(); row++)
+    {
+      QTableWidgetItem* item = tableWidget->item(row, 2);
+      item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+
+      item = tableWidget->item(row, 3);
+      item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -178,7 +358,27 @@ void EMMPMWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   Q_UNUSED(filter)
 
-//  m_Filter->setInputFile(filePath->text());
-//  updateProxyFromModel(); // Will update m_DcaProxy with the latest selections from the Model
-//  m_Filter->setInputFileDataContainerArrayProxy(m_DcaProxy);
+  m_Filter->setNumClasses(m_NumClasses->value());
+
+  bool ok = false;
+  float val = m_Beta->text().toFloat(&ok);
+  if (ok)
+  {
+    m_Filter->setExchangeEnergy(val);
+  }
+
+  m_Filter->setHistogramLoops(m_EmIterations->value());
+  m_Filter->setSegmentationLoops(m_MpmIterations->value());
+  m_Filter->setUseSimulatedAnnealing(useSimulatedAnnealing->isChecked());
+
+  EMMPM_InitializationType initType = EMMPM_InitializationType::EMMPM_Basic;
+  if (enableManualInit->isChecked())
+  {
+    initType = EMMPM_InitializationType::EMMPM_ManualInit;
+  }
+
+  DynamicTableData tableData = getDynamicTableData(tableWidget);
+  m_Filter->setEMMPMTableData(tableData);
+
+  m_Filter->setEmmpmInitType(initType);
 }

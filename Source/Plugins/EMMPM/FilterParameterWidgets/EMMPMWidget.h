@@ -49,10 +49,11 @@
 
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
-#include "SVWidgetsLib/ui_EMMPMWidget.h"
+#include "EMMPM/ui_EMMPMWidget.h"
 
 class EMMPMFilterParameter;
 class EMMPMFilter;
+class DynamicTableData;
 
 /**
 * @brief
@@ -98,6 +99,10 @@ class EMMPMWidget : public FilterParameterWidget, private Ui::EMMPMWidget
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
+    void on_tableWidget_cellChanged(int row, int column);
+    void on_m_NumClasses_valueChanged(int i);
+    void on_enableManualInit_toggled(bool checked);
+
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
@@ -106,6 +111,8 @@ class EMMPMWidget : public FilterParameterWidget, private Ui::EMMPMWidget
     EMMPMFilter*   m_Filter;
     EMMPMFilterParameter*  m_FilterParameter;
     bool m_DidCausePreflight;
+
+    DynamicTableData getDynamicTableData(QTableWidget* tableWidget);
 
     EMMPMWidget(const EMMPMWidget&); // Copy Constructor Not Implemented
     void operator=(const EMMPMWidget&); // Operator '=' Not Implemented

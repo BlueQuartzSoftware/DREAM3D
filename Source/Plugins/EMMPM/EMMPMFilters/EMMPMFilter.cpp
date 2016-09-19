@@ -44,6 +44,7 @@
 #include "EMMPM/EMMPMLib/Core/EMMPM_Data.h"
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/EMMPMLib.h"
+#include "EMMPM/FilterParameters/EMMPMFilterParameter.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -51,7 +52,9 @@
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/ConstrainedDoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/ConstrainedIntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -66,20 +69,39 @@
 //
 // -----------------------------------------------------------------------------
 EMMPMFilter::EMMPMFilter()
-: AbstractFilter()
-, m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData)
-, m_NumClasses(4)
-, m_ExchangeEnergy(0.5f)
-, m_HistogramLoops(5)
-, m_SegmentationLoops(5)
-, m_UseSimulatedAnnealing(false)
-, m_GradientPenalty(1.0f)
-, m_CurvaturePenalty(1.0f)
-, m_RMax(15.0f)
-, m_EMLoopDelay(1)
-, m_OutputDataArrayPath("", "", "")
-, m_EmmpmInitType(EMMPM_Basic)
+: AbstractFilter(),
+  m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData),
+  m_NumClasses(2),
+  m_ExchangeEnergy(0.5f),
+  m_HistogramLoops(5),
+  m_SegmentationLoops(5),
+  m_UseSimulatedAnnealing(false),
+  m_GradientBetaE(1.0f),
+  m_CurvatureBetaC(1.0f),
+  m_CurvatureRMax(15.0f),
+  m_CurvatureEMLoopDelay(1),
+  m_OutputDataArrayPath("", "", ""),
+  m_EmmpmInitType(EMMPM_Basic)
 {
+  std::vector<std::vector<double> > data(2, std::vector<double>(4));
+  data[0][0] = 0;
+  data[0][1] = 4.5;
+  data[0][2] = 128;
+  data[0][3] = 20;
+  data[1][0] = 0;
+  data[1][1] = 4.5;
+  data[1][2] = 128;
+  data[1][3] = 20;
+  m_EMMPMTableData.setTableData(data);
+
+  QStringList rHeaders;
+  rHeaders << "0" << "1";
+  m_EMMPMTableData.setRowHeaders(rHeaders);
+
+  QStringList cHeaders;
+  cHeaders << "Chem. Pntl" << "Min Std Dev" << "Mean" << "Std Dev";
+  m_EMMPMTableData.setColHeaders(cHeaders);
+
   setupFilterParameters();
 }
 
@@ -96,22 +118,30 @@ EMMPMFilter::~EMMPMFilter()
 void EMMPMFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Classes", NumClasses, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Exchange Energy", ExchangeEnergy, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Histogram Loops (EM)", HistogramLoops, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Segmentation Loops (MPM)", SegmentationLoops, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Use Simulated Annealing", UseSimulatedAnnealing, FilterParameter::Parameter, EMMPMFilter));
-  QStringList linkedProps("GradientPenalty");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gradient Penalty", UseGradientPenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Gradient Penalty (Beta E)", GradientPenalty, FilterParameter::Parameter, EMMPMFilter));
-  linkedProps.clear();
-  linkedProps << "CurvaturePenalty"
-              << "RMax"
-              << "EMLoopDelay";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Curvature Penalty (Beta C)", CurvaturePenalty, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("R Max", RMax, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("EM Loop Delay", EMLoopDelay, FilterParameter::Parameter, EMMPMFilter));
+
+  {
+    EMMPMFilterParameter::Pointer parameter = EMMPMFilterParameter::New();
+    parameter->setHumanLabel("EMMPM Widget");
+    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setFilter(this);
+    parameters.push_back(parameter);
+  }
+
+  {
+    QStringList linkedProps;
+    linkedProps << "GradientBetaE";
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gradient Penalty", UseGradientPenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
+  }
+  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta E", GradientBetaE, FilterParameter::Parameter, EMMPMFilter));
+  {
+    QStringList linkedProps;
+    linkedProps << "CurvatureBetaC" << "CurvatureRMax" << "CurvatureEMLoopDelay";
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
+  }
+  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta C", CurvatureBetaC, FilterParameter::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("R Max", CurvatureRMax, FilterParameter::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_CONSTRAINED_INT_FP("EM Loop Delay", CurvatureEMLoopDelay, FilterParameter::Parameter, EMMPMFilter));
+
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -139,11 +169,11 @@ void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, i
   setSegmentationLoops(reader->readValue("SegmentationLoops", getSegmentationLoops()));
   setUseSimulatedAnnealing(reader->readValue("UseSimulatedAnnealing", getUseSimulatedAnnealing()));
   setUseGradientPenalty(reader->readValue("UseGradientPenalty", getUseGradientPenalty()));
-  setGradientPenalty(reader->readValue("GradientPenalty", getGradientPenalty()));
+  setGradientBetaE(reader->readValue("GradientPenalty", getGradientBetaE()));
   setUseCurvaturePenalty(reader->readValue("UseCurvaturePenalty", getUseCurvaturePenalty()));
-  setCurvaturePenalty(reader->readValue("CurvaturePenalty", getCurvaturePenalty()));
-  setRMax(reader->readValue("RMax", getRMax()));
-  setEMLoopDelay(reader->readValue("EMLoopDelay", getEMLoopDelay()));
+  setCurvatureBetaC(reader->readValue("CurvaturePenalty", getCurvatureBetaC()));
+  setCurvatureRMax(reader->readValue("RMax", getCurvatureRMax()));
+  setCurvatureEMLoopDelay(reader->readValue("EMLoopDelay", getCurvatureEMLoopDelay()));
   setOutputDataArrayPath(reader->readDataArrayPath("OutputDataArrayPath", getOutputDataArrayPath()));
   reader->closeFilterGroup();
 }
@@ -284,11 +314,11 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 
   data->simulatedAnnealing = (char)(getUseSimulatedAnnealing());
   data->useGradientPenalty = getUseGradientPenalty();
-  data->beta_e = getGradientPenalty();
+  data->beta_e = getGradientBetaE();
   data->useCurvaturePenalty = getUseCurvaturePenalty();
-  data->beta_c = getCurvaturePenalty();
-  data->r_max = getRMax();
-  data->ccostLoopDelay = getEMLoopDelay();
+  data->beta_c = getCurvatureBetaC();
+  data->r_max = getCurvatureRMax();
+  data->ccostLoopDelay = getCurvatureEMLoopDelay();
 
   // Assign our data array allocated input and output images into the EMMPM_Data class
   data->inputImage = m_InputImage;

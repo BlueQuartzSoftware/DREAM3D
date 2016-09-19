@@ -35,6 +35,8 @@
 
 #include "EMMPMFilterParameter.h"
 
+#include "EMMPM/EMMPMFilters/MultiEmmpmFilter.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -80,16 +82,40 @@ QString EMMPMFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 void EMMPMFilterParameter::readJson(const QJsonObject &json)
 {
-//  QJsonValue jsonValue = json[getPropertyName()];
-//  if(!jsonValue.isUndefined() )
-//  {
-//    QJsonObject jsonObject = jsonValue.toObject();
-//    DataContainerArrayProxy proxy;
-//    proxy.readJson(jsonObject);
-//    m_Filter->setInputFileDataContainerArrayProxy(proxy);
-//  }
+  m_Filter->setNumClasses(json["NumClasses"].toInt());
+  m_Filter->setExchangeEnergy(static_cast<float>(json["ExchangeEnergy"].toDouble()));
+  m_Filter->setHistogramLoops(json["HistogramLoops"].toInt());
+  m_Filter->setSegmentationLoops(json["SegmentationLoops"].toInt());
+  m_Filter->setUseSimulatedAnnealing(json["UseSimulatedAnnealing"].toBool());
+  m_Filter->setEmmpmInitType(static_cast<EMMPM_InitializationType>(json["EmmpmInitType"].toInt()));
 
-//  m_Filter->setInputFile(json["InputFile"].toString());
+  DynamicTableData tableData;
+  QJsonObject tableDataObj = json["EMMPMTableData"].toObject();
+  tableData.readJson(tableDataObj);
+  m_Filter->setEMMPMTableData(tableData);
+
+  MultiEmmpmFilter* multiFilter = dynamic_cast<MultiEmmpmFilter*>(m_Filter);
+  if (multiFilter != nullptr)
+  {
+    {
+      QJsonArray arrayObj = json["InputDataArrayVector"].toArray();
+      QVector<DataArrayPath> pathVector;
+      for (int i=0; i<arrayObj.size(); i++)
+      {
+        QJsonObject obj = arrayObj.at(i).toObject();
+        DataArrayPath dap;
+        dap.readJson(obj);
+        pathVector.push_back(dap);
+      }
+
+      multiFilter->setInputDataArrayVector(pathVector);
+    }
+
+
+    multiFilter->setOutputAttributeMatrixName(json["OutputAttributeMatrixName"].toString());
+    multiFilter->setOutputArrayPrefix(json["OutputArrayPrefix"].toString());
+    multiFilter->setUsePreviousMuSigma(json["UsePreviousMuSigma"].toBool());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -97,10 +123,38 @@ void EMMPMFilterParameter::readJson(const QJsonObject &json)
 // -----------------------------------------------------------------------------
 void EMMPMFilterParameter::writeJson(QJsonObject &json)
 {
-//  DataContainerArrayProxy proxy = m_Filter->getInputFileDataContainerArrayProxy();
-//  QJsonObject obj;
-//  proxy.writeJson(obj);
-//  json[getPropertyName()] = obj;
-//  json["InputFile"] = m_Filter->getInputFile();
+  json["NumClasses"] = m_Filter->getNumClasses();
+  json["ExchangeEnergy"] = static_cast<double>(m_Filter->getExchangeEnergy());
+  json["HistogramLoops"] = m_Filter->getHistogramLoops();
+  json["SegmentationLoops"] = m_Filter->getSegmentationLoops();
+  json["UseSimulatedAnnealing"] = m_Filter->getUseSimulatedAnnealing();
+  json["EmmpmInitType"] = static_cast<int>(m_Filter->getEmmpmInitType());
+
+  DynamicTableData tableData = m_Filter->getEMMPMTableData();
+  QJsonObject tableDataObj;
+  tableData.writeJson(tableDataObj);
+  json["EMMPMTableData"] = tableDataObj;
+
+  MultiEmmpmFilter* multiFilter = dynamic_cast<MultiEmmpmFilter*>(m_Filter);
+  if (multiFilter != nullptr)
+  {
+    {
+      QVector<DataArrayPath> pathVector = multiFilter->getInputDataArrayVector();
+      QJsonArray arrayObj;
+
+      for (int i=0; i<pathVector.size(); i++)
+      {
+        DataArrayPath dap = pathVector[i];
+        QJsonObject obj;
+        dap.writeJson(obj);
+        arrayObj.push_back(obj);
+      }
+      json["InputDataArrayVector"] = arrayObj;
+    }
+
+    json["OutputAttributeMatrixName"] = multiFilter->getOutputAttributeMatrixName();
+    json["OutputArrayPrefix"] = multiFilter->getOutputArrayPrefix();
+    json["UsePreviousMuSigma"] = multiFilter->getUsePreviousMuSigma();
+  }
 }
 

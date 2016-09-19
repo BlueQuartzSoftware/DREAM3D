@@ -40,6 +40,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/DynamicTableData.h"
 
 #include "EMMPMLib/Core/EMMPM_Constants.h"
 
@@ -72,26 +73,29 @@ class EMMPMFilter : public AbstractFilter
     SIMPL_FILTER_PARAMETER(int, SegmentationLoops)
     Q_PROPERTY(int SegmentationLoops READ getSegmentationLoops WRITE setSegmentationLoops)
 
+    SIMPL_FILTER_PARAMETER(DynamicTableData, EMMPMTableData)
+    Q_PROPERTY(DynamicTableData EMMPMTableData READ getEMMPMTableData WRITE setEMMPMTableData)
+
     SIMPL_FILTER_PARAMETER(bool, UseSimulatedAnnealing)
     Q_PROPERTY(bool UseSimulatedAnnealing READ getUseSimulatedAnnealing WRITE setUseSimulatedAnnealing)
 
     SIMPL_FILTER_PARAMETER(bool, UseGradientPenalty)
     Q_PROPERTY(bool UseGradientPenalty READ getUseGradientPenalty WRITE setUseGradientPenalty)
 
-    SIMPL_FILTER_PARAMETER(float, GradientPenalty)
-    Q_PROPERTY(float GradientPenalty READ getGradientPenalty WRITE setGradientPenalty)
+    SIMPL_FILTER_PARAMETER(double, GradientBetaE)
+    Q_PROPERTY(double GradientBetaE READ getGradientBetaE WRITE setGradientBetaE)
 
     SIMPL_FILTER_PARAMETER(bool, UseCurvaturePenalty)
     Q_PROPERTY(bool UseCurvaturePenalty READ getUseCurvaturePenalty WRITE setUseCurvaturePenalty)
 
-    SIMPL_FILTER_PARAMETER(float, CurvaturePenalty)
-    Q_PROPERTY(float CurvaturePenalty READ getCurvaturePenalty WRITE setCurvaturePenalty)
+    SIMPL_FILTER_PARAMETER(double, CurvatureBetaC)
+    Q_PROPERTY(double CurvatureBetaC READ getCurvatureBetaC WRITE setCurvatureBetaC)
 
-    SIMPL_FILTER_PARAMETER(float, RMax)
-    Q_PROPERTY(float RMax READ getRMax WRITE setRMax)
+    SIMPL_FILTER_PARAMETER(double, CurvatureRMax)
+    Q_PROPERTY(double CurvatureRMax READ getCurvatureRMax WRITE setCurvatureRMax)
 
-    SIMPL_FILTER_PARAMETER(int, EMLoopDelay)
-    Q_PROPERTY(int EMLoopDelay READ getEMLoopDelay WRITE setEMLoopDelay)
+    SIMPL_FILTER_PARAMETER(int, CurvatureEMLoopDelay)
+    Q_PROPERTY(int CurvatureEMLoopDelay READ getCurvatureEMLoopDelay WRITE setCurvatureEMLoopDelay)
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
     Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)

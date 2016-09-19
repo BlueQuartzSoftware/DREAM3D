@@ -6,18 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>470</width>
-    <height>752</height>
+    <width>461</width>
+    <height>395</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>EMMPM Widget</string>
   </property>
   <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
+   <enum>QFrame::NoFrame</enum>
   </property>
   <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
+   <enum>QFrame::Plain</enum>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
@@ -32,1122 +32,363 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="2" column="0">
-    <widget class="QtSDisclosableGroupBox" name="optionsGroupBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>235</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QGroupBox
-{
-/*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #DCDCDC); */
-background-image: url(:/DisclosableGroupBoxHeader.png);
-background-position: top ;
-background-repeat: repeat-x;
-padding: 30 0 0 0px;
-font: 85% italic 12pt &quot;Arial&quot;;
-font-weight: bold;
-border: 0px solid gray;
-margin: 0px;
-color: white;
-}
- 
-QGroupBox::title
-{    
-subcontrol-origin: padding;    
-subcontrol-position: top left;    
-padding: 5 5px;    
-background-color: rgba(255, 255, 255, 0);
-}
-QGroupBox::indicator {    
-width: 17px;    
-height: 17px;
-}
-
-QGroupBox::indicator:unchecked {
- image: url(:/bullet_triangle_grey.png);
-}
-QGroupBox::indicator:unchecked:pressed {
- image: url(:/bullet_triangle_grey.png);
-}
-QGroupBox::indicator:checked { 
-image: url(:/bullet_triangle_grey_down.png);
-}
-QGroupBox::indicator:checked:pressed { 
-image: url(:/bullet_triangle_grey_down.png);
-}
-</string>
-     </property>
-     <property name="title">
-      <string>Options</string>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <property name="leftMargin">
-       <number>3</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>3</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_10">
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QCheckBox" name="useSimulatedAnnealing">
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Use Simulated Annealing</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gridLayout_11">
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <property name="spacing">
-         <number>5</number>
-        </property>
-        <item row="1" column="0" colspan="2">
-         <widget class="QCheckBox" name="useGradientPenalty">
-          <property name="toolTip">
-           <string>Use the Gradient or Edge penalty function</string>
-          </property>
-          <property name="statusTip">
-           <string>Use the Gradient or Edge penalty function</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Use Gradient Penalty</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="gradientBetaE">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>The weight of the Gradient or Edge cost</string>
-          </property>
-          <property name="statusTip">
-           <string>The weight of the Gradient or Edge cost</string>
-          </property>
-          <property name="decimals">
-           <number>4</number>
-          </property>
-          <property name="maximum">
-           <double>9999.989999999999782</double>
-          </property>
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="betaELabel">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>The weight of the Gradient or Edge cost</string>
-          </property>
-          <property name="statusTip">
-           <string>The weight of the Gradient or Edge cost</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Beta E</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gridLayout_12">
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <property name="spacing">
-         <number>5</number>
-        </property>
-        <item row="0" column="0" colspan="2">
-         <widget class="QCheckBox" name="useCurvaturePenalty">
-          <property name="font">
-           <font>
-            <pointsize>-1</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="toolTip">
-           <string>Use a Curvature Penalty function</string>
-          </property>
-          <property name="statusTip">
-           <string>Use a Curvature Penalty function</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Use Curvature Penalty</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_21">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>The weight of the curvature Penalty</string>
-          </property>
-          <property name="statusTip">
-           <string>The weight of the curvature Penalty</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Beta C</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QDoubleSpinBox" name="curvatureBetaC">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>The weight of the curvature Penalty</string>
-          </property>
-          <property name="statusTip">
-           <string>The weight of the curvature Penalty</string>
-          </property>
-          <property name="decimals">
-           <number>4</number>
-          </property>
-          <property name="maximum">
-           <double>9999.989999999999782</double>
-          </property>
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_22">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>The maximum radius to use for the curvature morphological filter</string>
-          </property>
-          <property name="statusTip">
-           <string>The maximum radius to use for the curvature morphological filter</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>R Max</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="curvatureRMax">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>The maximum radius to use for the curvature morphological filter</string>
-          </property>
-          <property name="statusTip">
-           <string>The maximum radius to use for the curvature morphological filter</string>
-          </property>
-          <property name="correctionMode">
-           <enum>QAbstractSpinBox::CorrectToPreviousValue</enum>
-          </property>
-          <property name="decimals">
-           <number>4</number>
-          </property>
-          <property name="value">
-           <double>15.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_23">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>Number of EM loops to delay before applying the curvature penalty</string>
-          </property>
-          <property name="statusTip">
-           <string>Number of EM loops to delay before applying the curvature penalty</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>EM Loop Delay</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QSpinBox" name="ccostLoopDelay">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Number of EM loops to delay before applying the curvature penalty</string>
-          </property>
-          <property name="statusTip">
-           <string>Number of EM loops to delay before applying the curvature penalty</string>
-          </property>
-          <property name="minimum">
-           <number>0</number>
-          </property>
-          <property name="value">
-           <number>1</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gridLayout_14">
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item row="0" column="0" colspan="2">
-         <widget class="QCheckBox" name="useStoppingCriteria">
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Use Histogram Stopping Criterion</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="m_StoppingThresholdLabel">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Threshold</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="m_StoppingThreshold">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>Enter a value for the stopping criteria. When the calculated MSE is less than this value the segmentation will end</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_9">
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QCheckBox" name="enableUserDefinedAreas">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>26</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Predefine areas of the image to determine the initial mean and variance for each class.</string>
-          </property>
-          <property name="statusTip">
-           <string>Predefine areas of the image to determine the initial mean and variance for each class.</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>User Initialization Areas</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="showUserDefinedAreas">
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Show Regions</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="addUserInitArea">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>User Initialization Lasso button. Click to start a new predefined area.</string>
-          </property>
-          <property name="statusTip">
-           <string>User Initialization Lasso button. Click to start a new predefined area.</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>:/addUserInitArea.png</normaloff>:/addUserInitArea.png</iconset>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gridLayout_13">
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_24">
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Memory Installed:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="memoryInstalled">
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label">
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Estimated Memory Use:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="estimatedMemory">
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="0" column="0">
-    <widget class="QtSDisclosableGroupBox" name="parameters_groupbox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+    <layout class="QGridLayout" name="gridLayout_4">
+     <property name="bottomMargin">
+      <number>0</number>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>225</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QGroupBox
-{
-/*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #DCDCDC); */
-background-image: url(:/DisclosableGroupBoxHeader.png);
-background-position: top ;
-background-repeat: repeat-x;
-padding: 30 0 0 0px;
-font: 85% italic 12pt &quot;Arial&quot;;
-font-weight: bold;
-border: 0px solid gray;
-margin: 0px;
-color: white;
-}
- 
-QGroupBox::title
-{    
-subcontrol-origin: padding;    
-subcontrol-position: top left;    
-padding: 5 5px;    
-background-color: rgba(255, 255, 255, 0);
-}
-
-QGroupBox::indicator {    
-width: 17px;    
-height: 17px;
-}
-
-QGroupBox::indicator:unchecked {
- image: url(:/bullet_triangle_grey.png);
-}
-QGroupBox::indicator:unchecked:pressed {
- image: url(:/bullet_triangle_grey.png);
-}
-QGroupBox::indicator:checked { 
-image: url(:/bullet_triangle_grey_down.png);
-}
-QGroupBox::indicator:checked:pressed { 
-image: url(:/bullet_triangle_grey_down.png);
-}
-</string>
-     </property>
-     <property name="title">
-      <string>Parameters</string>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_15">
-      <property name="leftMargin">
-       <number>3</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>3</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <property name="horizontalSpacing">
-       <number>4</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>6</number>
-      </property>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="m_EmIterations">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>The number of EM Loops to use when segmenting</string>
-        </property>
-        <property name="statusTip">
-         <string>The number of EM Loops to use when segmenting</string>
-        </property>
-        <property name="minimum">
-         <number>0</number>
-        </property>
-        <property name="maximum">
-         <number>32000</number>
-        </property>
-        <property name="value">
-         <number>5</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_11">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>The number of EM Loops to use when segmenting</string>
-        </property>
-        <property name="statusTip">
-         <string>The number of EM Loops to use when segmenting</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-        </property>
-        <property name="text">
-         <string>Histogram Loops:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="m_NumClasses">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>The number of EM/MPM classes to segment into</string>
-        </property>
-        <property name="statusTip">
-         <string>The number of EM/MPM classes to segment into</string>
-        </property>
-        <property name="minimum">
-         <number>2</number>
-        </property>
-        <property name="maximum">
-         <number>15</number>
-        </property>
-        <property name="value">
-         <number>2</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="label_10">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>The number of MPM Loops to use when Segmenting</string>
-        </property>
-        <property name="statusTip">
-         <string>The number of MPM Loops to use when Segmenting</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-        </property>
-        <property name="text">
-         <string>Segmentation Loops:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_12">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>The number of EM/MPM classes to segment into</string>
-        </property>
-        <property name="statusTip">
-         <string>The number of EM/MPM classes to segment into</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-        </property>
-        <property name="text">
-         <string>Classes:</string>
-        </property>
-        <property name="scaledContents">
-         <bool>false</bool>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QSpinBox" name="m_MpmIterations">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>The number of MPM Loops to use when Segmenting</string>
-        </property>
-        <property name="statusTip">
-         <string>The number of MPM Loops to use when Segmenting</string>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>32000</number>
-        </property>
-        <property name="value">
-         <number>5</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" colspan="4">
-       <widget class="QTableView" name="perClassTableView">
-        <property name="autoScroll">
-         <bool>false</bool>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::AllEditTriggers</set>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <property name="verticalScrollMode">
-         <enum>QAbstractItemView::ScrollPerPixel</enum>
-        </property>
-        <property name="horizontalScrollMode">
-         <enum>QAbstractItemView::ScrollPerPixel</enum>
-        </property>
-        <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_8">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>The value of Beta for the EM/MPM Algorithm</string>
-        </property>
-        <property name="statusTip">
-         <string>The value of Beta for the EM/MPM Algorithm</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-        </property>
-        <property name="text">
-         <string>Exchange Energy:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLineEdit" name="m_Beta">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>The value of Beta for the EM/MPM Algorithm</string>
-        </property>
-        <property name="statusTip">
-         <string>The value of Beta for the EM/MPM Algorithm</string>
-        </property>
-        <property name="text">
-         <string>0.5</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2" colspan="2">
-       <widget class="QComboBox" name="colorTablePresets">
-        <item>
-         <property name="text">
-          <string>Color</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Gray Scale</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>Color Table:</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_12">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Classes:</string>
+       </property>
+       <property name="scaledContents">
+        <bool>false</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="m_Beta">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>60</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="text">
+        <string>0.5</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="m_NumClasses">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>60</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="minimum">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <number>15</number>
+       </property>
+       <property name="value">
+        <number>2</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_8">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Exchange Energy:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_11">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Histogram Loops:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="m_EmIterations">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>60</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>32000</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_10">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Segmentation Loops:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QSpinBox" name="m_MpmIterations">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>60</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string/>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>32000</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QtSDisclosableGroupBox" name="manualInitGroupBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="spacing">
+      <number>12</number>
      </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QCheckBox" name="enableManualInit">
+       <property name="font">
+        <font>
+         <pointsize>13</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Enable Manual Initialization</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_9">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="QTableWidget" name="tableWidget"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="useSimulatedAnnealing">
      <property name="styleSheet">
-      <string notr="true">QGroupBox
-{
-/*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #DCDCDC); */
-background-image: url(:/DisclosableGroupBoxHeader.png);
-background-position: top ;
-background-repeat: repeat-x;
-padding: 30 0 0 0px;
-font: 85% italic 12pt &quot;Arial&quot;;
-font-weight: bold;
-border: 0px solid gray;
-margin: 0px;
-color: white;
-}
- 
-QGroupBox::title
-{    
-subcontrol-origin: padding;    
-subcontrol-position: top left;    
-padding: 5 5px;    
-background-color: rgba(255, 255, 255, 0);
-}
-
-QGroupBox::indicator {    
-width: 17px;    
-height: 17px;
-}
-
-QGroupBox::indicator:unchecked {
- image: url(:/bullet_triangle_grey.png);
-}
-QGroupBox::indicator:unchecked:pressed {
- image: url(:/bullet_triangle_grey.png);
-}
-QGroupBox::indicator:checked { 
-image: url(:/bullet_triangle_grey_down.png);
-}
-QGroupBox::indicator:checked:pressed { 
-image: url(:/bullet_triangle_grey_down.png);
-}
-</string>
+      <string notr="true"/>
      </property>
-     <property name="title">
-      <string>Manual Initialization</string>
+     <property name="text">
+      <string>Use Simulated Annealing</string>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_9">
-      <property name="leftMargin">
-       <number>3</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>3</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <property name="horizontalSpacing">
-       <number>6</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>2</number>
-      </property>
-      <item row="1" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <property name="spacing">
-         <number>12</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QCheckBox" name="enableManualInit">
-          <property name="styleSheet">
-           <string notr="true">QCheckBox {
-font-weight: bold;
-font-size: 10px;
-}</string>
-          </property>
-          <property name="text">
-           <string>Enable Manual Initialization</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_9">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="0">
-       <widget class="QTableView" name="manualInitTableView">
-        <property name="autoScroll">
-         <bool>false</bool>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::AllEditTriggers</set>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <property name="verticalScrollMode">
-         <enum>QAbstractItemView::ScrollPerPixel</enum>
-        </property>
-        <property name="horizontalScrollMode">
-         <enum>QAbstractItemView::ScrollPerPixel</enum>
-        </property>
-        <property name="showGrid">
-         <bool>true</bool>
-        </property>
-        <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>65</number>
-        </attribute>
-        <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QtSDisclosableGroupBox</class>
-   <extends>QGroupBox</extends>
-   <header location="global">QtSDisclosableGroupBox.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../../../../../../SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
  </resources>

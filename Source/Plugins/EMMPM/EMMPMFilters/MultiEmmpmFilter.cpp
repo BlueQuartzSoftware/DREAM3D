@@ -125,11 +125,11 @@ void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* read
   setSegmentationLoops(reader->readValue("SegmentationLoops", getSegmentationLoops()));
   setUseSimulatedAnnealing(reader->readValue("UseSimulatedAnnealing", getUseSimulatedAnnealing()));
   setUseGradientPenalty(reader->readValue("UseGradientPenalty", getUseGradientPenalty()));
-  setGradientPenalty(reader->readValue("GradientPenalty", getGradientPenalty()));
+  setGradientBetaE(reader->readValue("GradientPenalty", getGradientBetaE()));
   setUseCurvaturePenalty(reader->readValue("UseCurvaturePenalty", getUseCurvaturePenalty()));
-  setCurvaturePenalty(reader->readValue("CurvaturePenalty", getCurvaturePenalty()));
-  setRMax(reader->readValue("RMax", getRMax()));
-  setEMLoopDelay(reader->readValue("EMLoopDelay", getEMLoopDelay()));
+  setCurvatureBetaC(reader->readValue("CurvaturePenalty", getCurvatureBetaC()));
+  setCurvatureRMax(reader->readValue("RMax", getCurvatureRMax()));
+  setCurvatureEMLoopDelay(reader->readValue("EMLoopDelay", getCurvatureEMLoopDelay()));
   setOutputAttributeMatrixName(reader->readString("OutputAttributeMatrixName", getOutputAttributeMatrixName()));
   setUsePreviousMuSigma(reader->readValue("UsePreviousMuSigma", getUsePreviousMuSigma()));
   setOutputArrayPrefix(reader->readString("OutputArrayPrefix", getOutputArrayPrefix()));
@@ -349,11 +349,11 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
     SIMPL_COPY_INSTANCEVAR(SegmentationLoops)
     SIMPL_COPY_INSTANCEVAR(UseSimulatedAnnealing)
     SIMPL_COPY_INSTANCEVAR(UseGradientPenalty)
-    SIMPL_COPY_INSTANCEVAR(GradientPenalty)
+    SIMPL_COPY_INSTANCEVAR(GradientBetaE)
     SIMPL_COPY_INSTANCEVAR(UseCurvaturePenalty)
-    SIMPL_COPY_INSTANCEVAR(CurvaturePenalty)
-    SIMPL_COPY_INSTANCEVAR(RMax)
-    SIMPL_COPY_INSTANCEVAR(EMLoopDelay)
+    SIMPL_COPY_INSTANCEVAR(CurvatureBetaC)
+    SIMPL_COPY_INSTANCEVAR(CurvatureRMax)
+    SIMPL_COPY_INSTANCEVAR(CurvatureEMLoopDelay)
     SIMPL_COPY_INSTANCEVAR(OutputAttributeMatrixName)
   }
   return filter;
