@@ -144,7 +144,9 @@ void EMMPMWidget::setupGui()
 
   if(m_Filter != nullptr)
   {
+    m_NumClasses->blockSignals(true);
     m_NumClasses->setValue(m_Filter->getNumClasses());
+    m_NumClasses->blockSignals(false);
     m_Beta->setText(QString::number(m_Filter->getExchangeEnergy()));
     m_EmIterations->setValue(m_Filter->getHistogramLoops());
     m_MpmIterations->setValue(m_Filter->getSegmentationLoops());

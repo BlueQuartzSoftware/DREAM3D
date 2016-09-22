@@ -43,6 +43,7 @@
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 
 #include "EMMPMLib/Core/EMMPM_Constants.h"
+#include "EMMPM/EMMPMLib/Core/EMMPM_Data.h"
 
 /**
  * @brief The EMMPMFilter class. See [Filter documentation](@ref emmpmfilter) for details.
@@ -203,12 +204,38 @@ class EMMPMFilter : public AbstractFilter
      */
     virtual void segment(EMMPM_InitializationType initType);
 
+    /**
+     * @brief getPreviousMu
+     * @return
+     */
+    std::vector<float> getPreviousMu();
+
+    /**
+     * @brief setPreviousMu
+     * @param prevMu
+     */
+    void setPreviousMu(std::vector<float> prevMu);
+
+    /**
+     * @brief getPreviousSigma
+     * @return
+     */
+    std::vector<float> getPreviousSigma();
+
+    /**
+     * @brief setPreviousSigma
+     * @param prevSigma
+     */
+    void setPreviousSigma(std::vector<float> prevSigma);
+
   private:
     DEFINE_DATAARRAY_VARIABLE(uint8_t, InputImage)
     DEFINE_DATAARRAY_VARIABLE(uint8_t, OutputImage)
 
     std::vector<float> m_PreviousMu;
     std::vector<float> m_PreviousSigma;
+
+    EMMPM_Data::Pointer m_Data;
 
     EMMPMFilter(const EMMPMFilter&); // Copy Constructor Not Implemented
     void operator=(const EMMPMFilter&); // Operator '=' Not Implemented

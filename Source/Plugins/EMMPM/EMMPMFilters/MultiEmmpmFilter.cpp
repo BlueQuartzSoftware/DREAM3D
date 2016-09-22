@@ -141,8 +141,7 @@ void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::initialize()
 {
-  m_PreviousMu.clear();
-  m_PreviousSigma.clear();
+  EMMPMFilter::initialize();
 }
 
 // -----------------------------------------------------------------------------
@@ -166,7 +165,7 @@ void MultiEmmpmFilter::dataCheck()
   if (nullptr != m_InputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to m_Data from the DataArray<T> object */
   if (getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getInputDataArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
@@ -176,7 +175,7 @@ void MultiEmmpmFilter::dataCheck()
   if (nullptr != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to m_Data from the DataArray<T> object */
 
 #endif
 
@@ -213,7 +212,7 @@ void MultiEmmpmFilter::dataCheck()
     return;
   }
 
-  // Get the list of checked array names from the input data arrays list
+  // Get the list of checked array names from the input m_Data arrays list
   QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
 
   for(int32_t i = 0; i < arrayNames.size(); i++)
