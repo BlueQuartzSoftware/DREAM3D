@@ -35,12 +35,11 @@
 
 #include "GenerateRodriguesColors.h"
 
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
@@ -54,9 +53,9 @@
 #include "OrientationLib/SpaceGroupOps/TetragonalLowOps.h"
 #include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
 #include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
+#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
 #include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
 #include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
-#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -66,24 +65,22 @@
 // Include the MOC generated file for this class
 #include "moc_GenerateRodriguesColors.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateRodriguesColors::GenerateRodriguesColors() :
-  AbstractFilter(),
-  m_CellPhasesArrayPath("", "", ""),
-  m_CrystalStructuresArrayPath("", "", ""),
-  m_CellEulerAnglesArrayPath("", "", ""),
-  m_GoodVoxelsArrayPath("", "", ""),
-  m_CellRodriguesColorsArrayName(SIMPL::CellData::RodriguesColor),
-  m_UseGoodVoxels(false),
-  m_CellPhases(nullptr),
-  m_CellEulerAngles(nullptr),
-  m_CrystalStructures(nullptr),
-  m_CellRodriguesColors(nullptr),
-  m_GoodVoxels(nullptr)
+GenerateRodriguesColors::GenerateRodriguesColors()
+: AbstractFilter()
+, m_CellPhasesArrayPath("", "", "")
+, m_CrystalStructuresArrayPath("", "", "")
+, m_CellEulerAnglesArrayPath("", "", "")
+, m_GoodVoxelsArrayPath("", "", "")
+, m_CellRodriguesColorsArrayName(SIMPL::CellData::RodriguesColor)
+, m_UseGoodVoxels(false)
+, m_CellPhases(nullptr)
+, m_CellEulerAngles(nullptr)
+, m_CrystalStructures(nullptr)
+, m_CellRodriguesColors(nullptr)
+, m_GoodVoxels(nullptr)
 {
   setupFilterParameters();
 }
@@ -133,12 +130,12 @@ void GenerateRodriguesColors::setupFilterParameters()
 void GenerateRodriguesColors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels() ) );
-  setCellRodriguesColorsArrayName(reader->readString("CellRodriguesColorsArrayName", getCellRodriguesColorsArrayName() ) );
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
+  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels()));
+  setCellRodriguesColorsArrayName(reader->readString("CellRodriguesColorsArrayName", getCellRodriguesColorsArrayName()));
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -147,7 +144,6 @@ void GenerateRodriguesColors::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 void GenerateRodriguesColors::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -159,38 +155,52 @@ void GenerateRodriguesColors::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> dims(1, 1);
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  //typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  // typedef DataArray<unsigned int> XTalStructArrayType;
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                    dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellRodriguesColorsArrayName() );
-  m_CellRodriguesColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellRodriguesColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellRodriguesColors = m_CellRodriguesColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
+                                                                                                           dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellEulerAnglesPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellRodriguesColorsArrayName());
+  m_CellRodriguesColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
+      this, tempPath, 0, dims);                        /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellRodriguesColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellRodriguesColors = m_CellRodriguesColorsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
-  if (getUseGoodVoxels() == true)
+  if(getUseGoodVoxels() == true)
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     dims[0] = 1;
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                       dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_GoodVoxelsPtr.lock().get())                                                               /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else
   {
     m_GoodVoxels = nullptr;
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -214,12 +224,15 @@ void GenerateRodriguesColors::execute()
   QString ss;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   int64_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
   bool missingGoodVoxels = true;
-  if (nullptr != m_GoodVoxels)
+  if(nullptr != m_GoodVoxels)
   {
     missingGoodVoxels = false;
   }
@@ -243,7 +256,7 @@ void GenerateRodriguesColors::execute()
   SIMPL::Rgb argb = 0x00000000;
 
   // Write the IPF Coloring Cell Data
-  for (int64_t i = 0; i < totalPoints; i++)
+  for(int64_t i = 0; i < totalPoints; i++)
   {
     phase = m_CellPhases[i];
     index = i * 3;
@@ -252,11 +265,10 @@ void GenerateRodriguesColors::execute()
     m_CellRodriguesColors[index + 2] = 0;
 
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
-    if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
-        && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
+    if((missingGoodVoxels == true || m_GoodVoxels[i] == true) && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
     {
       FOrientArrayType rod(4);
-      FOrientTransformsType::eu2ro( FOrientArrayType( m_CellEulerAngles + index, 3), rod);
+      FOrientTransformsType::eu2ro(FOrientArrayType(m_CellEulerAngles + index, 3), rod);
 
       argb = ops[m_CrystalStructures[phase]]->generateRodriguesColor(rod[0], rod[1], rod[2]);
       m_CellRodriguesColors[index] = RgbColor::dRed(argb);
@@ -305,7 +317,7 @@ const QString GenerateRodriguesColors::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 
@@ -313,19 +325,22 @@ const QString GenerateRodriguesColors::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateRodriguesColors::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
-
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateRodriguesColors::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographyFilters; }
-
+{
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateRodriguesColors::getHumanLabel()
-{ return "Generate Rodrigues Colors"; }
-
+{
+  return "Generate Rodrigues Colors";
+}

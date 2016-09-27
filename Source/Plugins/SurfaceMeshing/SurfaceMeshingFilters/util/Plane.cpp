@@ -19,36 +19,36 @@
 namespace PlaneDetail
 {
 
-//double EPSILON = 0.0001;
-  double   EPSILON = 0.0001f;
-  double PI = 3.141592654;
-  double SMALL_EPSILON = 0.0000000001;
-
+// double EPSILON = 0.0001;
+double EPSILON = 0.0001f;
+double PI = 3.141592654;
+double SMALL_EPSILON = 0.0000000001;
 }
 
 using namespace m3c_basics::exceptions;
 using namespace PlaneDetail;
-//using namespace m3c_basics::math_vectors;
-
-
+// using namespace m3c_basics::math_vectors;
 
 //####################RUCTORS ####################
 Plane::Plane(VectorType& normal, double d)
-  : m_normal(normal), m_d(d)
+: m_normal(normal)
+, m_d(d)
 {
   ensure_invariant();
 }
 
 Plane::Plane(VectorType& normal, VectorType& x)
-  : m_normal(normal), m_center(x), m_d(normal.dot(x))
+: m_normal(normal)
+, m_center(x)
+, m_d(normal.dot(x))
 {
   ensure_invariant();
 }
 
-Plane::Plane(VectorType& normal, float* x) :
-  m_normal(normal),
-  m_center(x),
-  m_d(normal.dot(x))
+Plane::Plane(VectorType& normal, float* x)
+: m_normal(normal)
+, m_center(x)
+, m_d(normal.dot(x))
 {
   ensure_invariant();
 }
@@ -58,11 +58,11 @@ Plane::CP Plane::classify_point(VectorType& p)
 {
   double value = m_normal.dot(p) - m_d;
 
-  if (fabs(value) < EPSILON)
+  if(fabs(value) < EPSILON)
   {
     return CP_COPLANAR;
   }
-  else if (value > 0)
+  else if(value > 0)
   {
     return CP_FRONT;
   }
@@ -95,7 +95,10 @@ void Plane::ensure_invariant()
     m_normal /= length;
     m_d /= length;
   }
-  else { throw InvalidParameterException("The plane's normal must be non-zero"); }
+  else
+  {
+    throw InvalidParameterException("The plane's normal must be non-zero");
+  }
 }
 
 //#################### GLOBAL OPERATORS ####################
@@ -103,19 +106,18 @@ std::ostream& operator<<(std::ostream& os, Plane::CP rhs)
 {
   switch(rhs)
   {
-    case Plane::CP_BACK:
-      os << "CP_BACK";
-      break;
-    case Plane::CP_COPLANAR:
-      os << "CP_COPLANAR";
-      break;
-    case Plane::CP_FRONT:
-      os << "CP_FRONT";
-      break;
-    case Plane::CP_STRADDLE:
-      os << "CP_STRADDLE";
-      break;
+  case Plane::CP_BACK:
+    os << "CP_BACK";
+    break;
+  case Plane::CP_COPLANAR:
+    os << "CP_COPLANAR";
+    break;
+  case Plane::CP_FRONT:
+    os << "CP_FRONT";
+    break;
+  case Plane::CP_STRADDLE:
+    os << "CP_STRADDLE";
+    break;
   }
   return os;
 }
-

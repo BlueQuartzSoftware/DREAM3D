@@ -38,9 +38,9 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/FilterParameters/ShapeTypeSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/ShapeTypeSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -48,17 +48,15 @@
 // Include the MOC generated file for this class
 #include "moc_EstablishShapeTypes.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EstablishShapeTypes::EstablishShapeTypes() :
-  AbstractFilter(),
-  m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes),
-  m_ShapeTypesArrayName(SIMPL::EnsembleData::ShapeTypes),
-  m_PhaseTypes(nullptr),
-  m_ShapeTypes(nullptr)
+EstablishShapeTypes::EstablishShapeTypes()
+: AbstractFilter()
+, m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
+, m_ShapeTypesArrayName(SIMPL::EnsembleData::ShapeTypes)
+, m_PhaseTypes(nullptr)
+, m_ShapeTypes(nullptr)
 {
   setupFilterParameters();
 }
@@ -78,7 +76,8 @@ void EstablishShapeTypes::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
     QVector<uint32_t> geomTypes;
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
@@ -87,8 +86,10 @@ void EstablishShapeTypes::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Shape Types", ShapeTypesArrayName, FilterParameter::CreatedArray, EstablishShapeTypes));
-  //ShapeTypeSelectionFilterParameter::Pointer sType_parameter = ShapeTypeSelectionFilterParameter::New( "Shape Types", "ShapeTypeData", "UInt32Vector_t", FilterParameter::CreatedArray, SIMPL_BIND_SETTER(EstablishShapeTypes, this, ShapeTypeData), SIMPL_BIND_GETTER(EstablishShapeTypes, this, ShapeTypeData), "PhaseCount", "InputPhaseTypesArrayPath");
-  ShapeTypeSelectionFilterParameter::Pointer sType_parameter = SIMPL_NEW_SHAPETYPE_SELECTION_FP("Shape Types", ShapeTypeData, FilterParameter::CreatedArray, EstablishShapeTypes, "PhaseCount", "InputPhaseTypesArrayPath");
+  // ShapeTypeSelectionFilterParameter::Pointer sType_parameter = ShapeTypeSelectionFilterParameter::New( "Shape Types", "ShapeTypeData", "UInt32Vector_t", FilterParameter::CreatedArray,
+  // SIMPL_BIND_SETTER(EstablishShapeTypes, this, ShapeTypeData), SIMPL_BIND_GETTER(EstablishShapeTypes, this, ShapeTypeData), "PhaseCount", "InputPhaseTypesArrayPath");
+  ShapeTypeSelectionFilterParameter::Pointer sType_parameter =
+      SIMPL_NEW_SHAPETYPE_SELECTION_FP("Shape Types", ShapeTypeData, FilterParameter::CreatedArray, EstablishShapeTypes, "PhaseCount", "InputPhaseTypesArrayPath");
   parameters.push_back(sType_parameter);
   setFilterParameters(parameters);
 }
@@ -99,8 +100,8 @@ void EstablishShapeTypes::setupFilterParameters()
 void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
-  setShapeTypesArrayName(reader->readString("ShapeTypesArrayName", getShapeTypesArrayName() ) );
+  setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath()));
+  setShapeTypesArrayName(reader->readString("ShapeTypesArrayName", getShapeTypesArrayName()));
   QVector<uint32_t> data = getShapeTypeData().d;
   data = reader->readArray("ShapeTypeData", data);
   UInt32Vector_t vec;
@@ -114,7 +115,6 @@ void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 void EstablishShapeTypes::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -129,21 +129,32 @@ void EstablishShapeTypes::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
-  if( nullptr != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_PhaseTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Get the DataContainer first - same as phase types
   DataContainer::Pointer m = dca->getPrereqDataContainer<AbstractFilter>(this, getInputPhaseTypesArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array - same as phase types
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getInputPhaseTypesArrayPath().getAttributeMatrixName(), -990);
-  if(getErrorCondition() < 0 || nullptr == cellEnsembleAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == cellEnsembleAttrMat.get())
+  {
+    return;
+  }
   // Now create the output Shape Types Array
-  tempPath.update(getInputPhaseTypesArrayPath().getDataContainerName(), getInputPhaseTypesArrayPath().getAttributeMatrixName(), getShapeTypesArrayName() );
-  m_ShapeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath, true, cDims); /* Assigns the shared_ptr<>(this, tempPath, true, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getInputPhaseTypesArrayPath().getDataContainerName(), getInputPhaseTypesArrayPath().getAttributeMatrixName(), getShapeTypesArrayName());
+  m_ShapeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(
+      this, tempPath, true, cDims);           /* Assigns the shared_ptr<>(this, tempPath, true, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ShapeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -166,7 +177,10 @@ void EstablishShapeTypes::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Copy the data from the internal QVector into the actual ShapeTypes array from the data container
   for(int32_t i = 0; i < m_ShapeTypeData.d.size(); i++)
@@ -187,23 +201,25 @@ int EstablishShapeTypes::getPhaseCount()
 
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getInputPhaseTypesArrayPath());
 
-  if (nullptr == inputAttrMat.get() ) { return 0; }
+  if(nullptr == inputAttrMat.get())
+  {
+    return 0;
+  }
 
-  if (__SHOW_DEBUG_MSG__)
+  if(__SHOW_DEBUG_MSG__)
   {
     qDebug() << "  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
     qDebug() << "Name" << inputAttrMat->getName();
   }
 
-  if (inputAttrMat->getType() < SIMPL::AttributeMatrixType::VertexEnsemble
-      || inputAttrMat->getType() > SIMPL::AttributeMatrixType::CellEnsemble )
+  if(inputAttrMat->getType() < SIMPL::AttributeMatrixType::VertexEnsemble || inputAttrMat->getType() > SIMPL::AttributeMatrixType::CellEnsemble)
   {
     return 0;
   }
 
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
   size_t phaseCount = 1;
-  for (int32_t i = 0; i < tupleDims.size(); i++)
+  for(int32_t i = 0; i < tupleDims.size(); i++)
   {
     phaseCount = phaseCount * tupleDims[i];
   }
@@ -247,23 +263,29 @@ const QString EstablishShapeTypes::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SyntheticBuilding::Version::Major() << "." << SyntheticBuilding::Version::Minor() << "." << SyntheticBuilding::Version::Patch();
+  vStream << SyntheticBuilding::Version::Major() << "." << SyntheticBuilding::Version::Minor() << "." << SyntheticBuilding::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getGroupName()
-{return SIMPL::FilterGroups::SyntheticBuildingFilters;}
+{
+  return SIMPL::FilterGroups::SyntheticBuildingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getSubGroupName()
-{ return SIMPL::FilterSubGroups::GenerationFilters; }
+{
+  return SIMPL::FilterSubGroups::GenerationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getHumanLabel()
-{return "Establish Shape Types";}
+{
+  return "Establish Shape Types";
+}

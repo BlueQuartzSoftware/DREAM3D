@@ -6,12 +6,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-
 #include <stdio.h>
 #include <string.h>
 
 #include <string>
-
 
 #include "EMMPMLib/Common/EMTime.h"
 #include "EMMPMLib/Common/MSVCDefines.h"
@@ -41,16 +39,13 @@ char* formattedTime(const char* formatting, char* output)
   t = &time;
   tError = _localtime64_s(&time, &long_time);
 #endif
-#else  // Non windows platforms
+#else // Non windows platforms
   t = localtime(&long_time);
 #endif
   memset(output, 0, 128);
-  snprintf(output, 128, formatting, t->tm_year + 1900, t->tm_mon + 1,
-           t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec  );
+  snprintf(output, 128, formatting, t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
   return output;
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -81,8 +76,8 @@ unsigned long long int EMMPM_getMilliSeconds()
 #else
   struct timeval t1;
   CMP_GET_TIME_OF_DAY(&t1, nullptr);
-  unsigned long long int seconds = t1.tv_sec ;
-  unsigned long long int microSec = t1.tv_usec ;
+  unsigned long long int seconds = t1.tv_sec;
+  unsigned long long int microSec = t1.tv_usec;
   seconds *= 1000;
   microSec /= 1000;
   return seconds + microSec; // Both in milliseconds at this point.

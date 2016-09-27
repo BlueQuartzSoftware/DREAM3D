@@ -41,41 +41,41 @@
 #include <iostream>
 
 //-- Qt Includes
-#include <QtCore/QVector>
 #include <QtConcurrent/QtConcurrentMap>
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtCore/QString>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 #include <QtGui/QCloseEvent>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QFileDialog>
 #include <QtWidgets/QAbstractItemDelegate>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
 #include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
 #include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
+#include <qwt_plot.h>
 #include <qwt_plot_canvas.h>
+#include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
+#include <qwt_scale_draw.h>
 #include <qwt_symbol.h>
 
-#include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/TSL/AngReader.h"
 
-#include "OrientationLib/Texture/Texture.hpp"
-#include "OrientationLib/Texture/StatsGen.hpp"
 #include "OrientationLib/IO/AngleFileLoader.h"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Texture/StatsGen.hpp"
+#include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/Utilities/PoleFigureImageUtilities.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 #include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorUtilities.h"
-#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
+#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/Widgets/TextureDialog.h"
 
 #define SHOW_POLE_FIGURES 1
@@ -87,27 +87,26 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenODFWidget::StatsGenODFWidget(QWidget* parent) :
-  QWidget(parent),
-  m_EnableAxisDecorations(false),
-  m_Initializing(true),
-  m_PhaseIndex(-1),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-  m_ODFTableModel(nullptr),
-  m_MDFWidget(nullptr)
+StatsGenODFWidget::StatsGenODFWidget(QWidget* parent)
+: QWidget(parent)
+, m_EnableAxisDecorations(false)
+, m_Initializing(true)
+, m_PhaseIndex(-1)
+, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+, m_ODFTableModel(nullptr)
+, m_MDFWidget(nullptr)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   this->setupUi(this);
   this->setupGui();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 StatsGenODFWidget::~StatsGenODFWidget()
 {
-  if (nullptr != m_ODFTableModel)
+  if(nullptr != m_ODFTableModel)
   {
     m_ODFTableModel->deleteLater();
   }
@@ -134,39 +133,39 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, unsign
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getODF_Weights();
   }
-  if (arrays.size() > 0)
+  if(arrays.size() > 0)
   {
     QVector<float> e1(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( e1.data(), arrays[0]->getVoidPointer(0), sizeof(float)*e1.size() );
+    ::memcpy(e1.data(), arrays[0]->getVoidPointer(0), sizeof(float) * e1.size());
 
     QVector<float> e2(static_cast<int>(arrays[1]->getNumberOfTuples()));
-    ::memcpy( e2.data(), arrays[1]->getVoidPointer(0), sizeof(float)*e2.size() );
+    ::memcpy(e2.data(), arrays[1]->getVoidPointer(0), sizeof(float) * e2.size());
 
     QVector<float> e3(static_cast<int>(arrays[2]->getNumberOfTuples()));
-    ::memcpy( e3.data(), arrays[2]->getVoidPointer(0), sizeof(float)*e3.size() );
+    ::memcpy(e3.data(), arrays[2]->getVoidPointer(0), sizeof(float) * e3.size());
 
     QVector<float> weights(static_cast<int>(arrays[4]->getNumberOfTuples()));
-    ::memcpy( weights.data(), arrays[4]->getVoidPointer(0), sizeof(float)*weights.size() );
+    ::memcpy(weights.data(), arrays[4]->getVoidPointer(0), sizeof(float) * weights.size());
 
     QVector<float> sigmas(static_cast<int>(arrays[3]->getNumberOfTuples()));
-    ::memcpy( sigmas.data(), arrays[3]->getVoidPointer(0), sizeof(float)*sigmas.size() );
+    ::memcpy(sigmas.data(), arrays[3]->getVoidPointer(0), sizeof(float) * sigmas.size());
 
     // Convert from Radians to Degrees for the Euler Angles
-    for (int i = 0; i < e1.size(); ++i)
+    for(int i = 0; i < e1.size(); ++i)
     {
       e1[i] = static_cast<float>(e1[i] * 180.0f / M_PI);
       e2[i] = static_cast<float>(e2[i] * 180.0f / M_PI);
       e3[i] = static_cast<float>(e3[i] * 180.0f / M_PI);
     }
 
-    if (e1.size() > 0)
+    if(e1.size() > 0)
     {
       // Load the data into the table model
       m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
     }
   }
   // Write the MDF Data if we have that functionality enabled
-  if (m_MDFWidget != nullptr)
+  if(m_MDFWidget != nullptr)
   {
     m_MDFWidget->extractStatsData(index, statsData, phaseType);
   }
@@ -188,7 +187,7 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
 
   SGODFTableModel* tableModel = nullptr;
 
-  if (weightSpreadGroupBox->isChecked() )
+  if(weightSpreadGroupBox->isChecked())
   {
     tableModel = m_ODFTableModel;
   }
@@ -204,7 +203,7 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   sigmas = tableModel->getData(SGODFTableModel::Sigma);
 
   // Convert from Degrees to Radians
-  for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
+  for(QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
     e1s[i] = static_cast<float>(e1s[i] * M_PI / 180.0);
     e2s[i] = static_cast<float>(e2s[i] * M_PI / 180.0);
@@ -214,7 +213,7 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   StatsGeneratorUtilities::GenerateODFBinData(statsData, phaseType, m_CrystalStructure, e1s, e2s, e3s, weights, sigmas, !preflight);
 
   // Write the MDF Data if we have that functionality enabled
-  if (m_MDFWidget != nullptr)
+  if(m_MDFWidget != nullptr)
   {
     m_MDFWidget->getMisorientationData(statsData, phaseType, !preflight);
   }
@@ -226,15 +225,14 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::enableMDFTab(bool b)
 {
-  if (nullptr != m_MDFWidget)
+  if(nullptr != m_MDFWidget)
   {
     m_MDFWidget->deleteLater();
   }
   m_MDFWidget = new StatsGenMDFWidget();
   m_MDFWidget->setODFTableModel(m_ODFTableModel);
   tabWidget->addTab(m_MDFWidget, QString("MDF"));
-  connect(m_MDFWidget, SIGNAL(dataChanged()),
-          this, SIGNAL(dataChanged()));
+  connect(m_MDFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 }
 
 // -----------------------------------------------------------------------------
@@ -242,10 +240,10 @@ void StatsGenODFWidget::enableMDFTab(bool b)
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::setCrystalStructure(unsigned int value)
 {
-  if (m_CrystalStructure != value)
+  if(m_CrystalStructure != value)
   {
     this->m_CrystalStructure = value;
-    if (m_MDFWidget != nullptr)
+    if(m_MDFWidget != nullptr)
     {
       m_MDFWidget->setCrystalStructure(m_CrystalStructure);
     }
@@ -253,7 +251,6 @@ void StatsGenODFWidget::setCrystalStructure(unsigned int value)
     QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
     m_ODFTableView->setItemDelegate(idelegate);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -270,7 +267,7 @@ unsigned int StatsGenODFWidget::getCrystalStructure()
 void StatsGenODFWidget::setPhaseIndex(int value)
 {
   this->m_PhaseIndex = value;
-  if (m_MDFWidget != nullptr)
+  if(m_MDFWidget != nullptr)
   {
     m_MDFWidget->setPhaseIndex(m_PhaseIndex);
   }
@@ -298,7 +295,7 @@ void StatsGenODFWidget::setupGui()
   m_OdfBulkTableModel = new SGODFTableModel;
   m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
   m_OdfBulkTableModel->setInitialValues();
-  //m_ODFTableView->setModel(m_OdfBulkTableModel);
+  // m_ODFTableView->setModel(m_OdfBulkTableModel);
 
   m_ODFTableModel = new SGODFTableModel;
   m_ODFTableModel->setCrystalStructure(m_CrystalStructure);
@@ -316,7 +313,7 @@ void StatsGenODFWidget::setupGui()
 
   // In release mode hide the Lambert Square Size.
   QString releaseType = QString::fromLatin1("Official");
-  if (releaseType.compare("Official") == 0)
+  if(releaseType.compare("Official") == 0)
   {
     pfLambertSize->hide();
     pfLambertLabel->hide();
@@ -344,7 +341,6 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Backbone, m_EnableAxisDecorations);
   plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Ticks, m_EnableAxisDecorations);
   plot->axisScaleDraw(QwtPlot::xBottom)->enableComponent(QwtAbstractScaleDraw::Labels, m_EnableAxisDecorations);
-
 
   drawODFPlotGrid(plot);
 }
@@ -431,7 +427,6 @@ void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -456,7 +451,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   SGODFTableModel* tableModel = nullptr;
 
   int npoints = 0;
-  if (weightSpreadGroupBox->isChecked() )
+  if(weightSpreadGroupBox->isChecked())
   {
     tableModel = m_ODFTableModel;
     npoints = pfSamplePoints->value();
@@ -491,13 +486,11 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   PoleFigureConfiguration_t config;
   QVector<UInt8ArrayType::Pointer> figures;
 
-  if (Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
+  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(CubicOps::k_OdfSize);
-    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                     weights.data(), sigmas.data(), true,
-                                     odf.data(), numEntries);
+    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
 
     err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
@@ -509,13 +502,11 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
     figures = ops.generatePoleFigure(config);
   }
-  else if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
+  else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(HexagonalOps::k_OdfSize);
-    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
-                                   weights.data(), sigmas.data(), true,
-                                   odf.data(), numEntries);
+    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
 
     err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
@@ -527,13 +518,11 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
     figures = ops.generatePoleFigure(config);
   }
-  else if ( Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
+  else if(Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
   {
     // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(OrthoRhombicOps::k_OdfSize);
-    Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                            weights.data(), sigmas.data(), true,
-                                            odf.data(), numEntries);
+    Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
 
     err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
@@ -546,9 +535,9 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     figures = ops.generatePoleFigure(config);
   }
 
-  if (err == 1)
+  if(err == 1)
   {
-    //TODO: Present Error Message
+    // TODO: Present Error Message
     return;
   }
 
@@ -556,7 +545,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
 
   // Enable the MDF tab
-  if (m_MDFWidget != nullptr)
+  if(m_MDFWidget != nullptr)
   {
     m_MDFWidget->setEnabled(true);
     m_MDFWidget->updateMDFPlot(odf);
@@ -572,9 +561,12 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 {
   TextureDialog t(m_CrystalStructure, nullptr);
   int r = t.exec();
-  if (r == QDialog::Accepted)
+  if(r == QDialog::Accepted)
   {
-    if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) { return; }
+    if(!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount()))
+    {
+      return;
+    }
     // Gather values from the dialog and push them to the Table Model
     float e1 = 0.0;
     float e2 = 0.0;
@@ -613,7 +605,11 @@ void StatsGenODFWidget::on_angleFilePath_textChanged()
   // If the text has changed, we don't know if the file exists/is valid,
   // so blow away the bulk table model, if it exists, and emit that
   // the user needs to select a valid file and reload
-  if (m_OdfBulkTableModel) { delete m_OdfBulkTableModel; m_OdfBulkTableModel = nullptr; }
+  if(m_OdfBulkTableModel)
+  {
+    delete m_OdfBulkTableModel;
+    m_OdfBulkTableModel = nullptr;
+  }
   m_OdfBulkTableModel = new SGODFTableModel;
   m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
   m_OdfBulkTableModel->setInitialValues();
@@ -653,7 +649,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   progress.setMinimumDuration(2000);
   progress.show();
 
-  if (fi.suffix().compare(Ebsd::Ang::FileExt) == 0)
+  if(fi.suffix().compare(Ebsd::Ang::FileExt) == 0)
   {
     QMessageBox::critical(this, "ANG File Loading NOT Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
@@ -719,7 +715,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     }
 #endif
   }
-  else if (fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
+  else if(fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
   {
     QMessageBox::critical(this, "CTF File Loading not Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
@@ -797,25 +793,25 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     int index = delimiter->currentIndex();
     switch(index)
     {
-      case 0:
-        delim = " ";
-        break;
-      case 1:
-        delim = "\t";
-        break;
-      case 2:
-        delim = ",";
-        break;
-      case 3:
-        delim = ";";
-        break;
-      default:
-        delim = " ";
+    case 0:
+      delim = " ";
+      break;
+    case 1:
+      delim = "\t";
+      break;
+    case 2:
+      delim = ",";
+      break;
+    case 3:
+      delim = ";";
+      break;
+    default:
+      delim = " ";
     }
 
     loader->setDelimiter(delim);
     FloatArrayType::Pointer data = loader->loadData();
-    if (loader->getErrorCode() < 0)
+    if(loader->getErrorCode() < 0)
     {
       QMessageBox::critical(this, "Error Loading Angle data", loader->getErrorMessage(), QMessageBox::Ok);
       emit bulkLoadEvent(true);
@@ -842,7 +838,11 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 
   // Just blow away our table and create a new one. Quicker than removing all the rows
   // first, the repopulating them
-  if (m_OdfBulkTableModel) { delete m_OdfBulkTableModel; m_OdfBulkTableModel = nullptr; }
+  if(m_OdfBulkTableModel)
+  {
+    delete m_OdfBulkTableModel;
+    m_OdfBulkTableModel = nullptr;
+  }
   m_OdfBulkTableModel = new SGODFTableModel;
   m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
   m_OdfBulkTableModel->setInitialValues();
@@ -868,11 +868,17 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 void StatsGenODFWidget::on_deleteODFTextureBtn_clicked()
 {
   QItemSelectionModel* selectionModel = m_ODFTableView->selectionModel();
-  if (!selectionModel->hasSelection()) { return; }
+  if(!selectionModel->hasSelection())
+  {
+    return;
+  }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) { return; }
+  if(!index.isValid())
+  {
+    return;
+  }
   m_ODFTableModel->removeRow(index.row(), index.parent());
-  if (m_ODFTableModel->rowCount() > 0)
+  if(m_ODFTableModel->rowCount() > 0)
   {
     m_ODFTableView->resizeColumnsToContents();
   }
@@ -898,7 +904,7 @@ StatsGenMDFWidget* StatsGenODFWidget::getMDFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_bulkLoadGroupBox_clicked ( bool checked )
+void StatsGenODFWidget::on_bulkLoadGroupBox_clicked(bool checked)
 {
   weightSpreadGroupBox->setChecked(!checked);
   m_ODFTableView->setModel(m_OdfBulkTableModel);
@@ -911,7 +917,7 @@ void StatsGenODFWidget::on_bulkLoadGroupBox_clicked ( bool checked )
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_weightSpreadGroupBox_clicked ( bool checked )
+void StatsGenODFWidget::on_weightSpreadGroupBox_clicked(bool checked)
 {
   bulkLoadGroupBox->setChecked(!checked);
   m_ODFTableView->setModel(m_ODFTableModel);

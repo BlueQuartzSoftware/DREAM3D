@@ -39,14 +39,14 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -54,25 +54,24 @@
 // Include the MOC generated file for this class
 #include "moc_VectorSegmentFeatures.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VectorSegmentFeatures::VectorSegmentFeatures() :
-  SegmentFeatures(),
-  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName),
-  m_SelectedVectorArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::VectorData),
-  m_AngleTolerance(5.0f),
-  m_RandomizeFeatureIds(true),
-  m_UseGoodVoxels(true),
-  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
-  m_ActiveArrayName(SIMPL::FeatureData::Active),
-  m_Vectors(nullptr),
-  m_FeatureIds(nullptr),
-  m_GoodVoxels(nullptr),
-  m_Active(nullptr),
-  m_AngleToleranceRad(0.0f)
+VectorSegmentFeatures::VectorSegmentFeatures()
+: SegmentFeatures()
+, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
+, m_SelectedVectorArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::VectorData)
+, m_AngleTolerance(5.0f)
+, m_RandomizeFeatureIds(true)
+, m_UseGoodVoxels(true)
+, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
+, m_ActiveArrayName(SIMPL::FeatureData::Active)
+, m_Vectors(nullptr)
+, m_FeatureIds(nullptr)
+, m_GoodVoxels(nullptr)
+, m_Active(nullptr)
+, m_AngleToleranceRad(0.0f)
 {
 
   setupFilterParameters();
@@ -118,13 +117,13 @@ void VectorSegmentFeatures::setupFilterParameters()
 void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName() ) );
-  setCellFeatureAttributeMatrixName(reader->readString("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName() ) );
-  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels() ) );
-  setSelectedVectorArrayPath( reader->readDataArrayPath( "SelectedVectorArrayPath", getSelectedVectorArrayPath() ) );
-  setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
+  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName()));
+  setCellFeatureAttributeMatrixName(reader->readString("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
+  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
+  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels()));
+  setSelectedVectorArrayPath(reader->readDataArrayPath("SelectedVectorArrayPath", getSelectedVectorArrayPath()));
+  setAngleTolerance(reader->readValue("AngleTolerance", getAngleTolerance()));
   reader->closeFilterGroup();
 }
 
@@ -135,8 +134,10 @@ void VectorSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Active = m_ActivePtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -161,10 +162,16 @@ void VectorSegmentFeatures::dataCheck()
   setDataContainerName(m_SelectedVectorArrayPath.getDataContainerName());
 
   SegmentFeatures::dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get())
+  {
+    return;
+  }
 
   QVector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
@@ -173,28 +180,45 @@ void VectorSegmentFeatures::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   m_VectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getSelectedVectorArrayPath(), cDims);
-  if( nullptr != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getSelectedVectorArrayPath()); }
+  if(nullptr != m_VectorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Vectors = m_VectorsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getSelectedVectorArrayPath());
+  }
 
   cDims[0] = 1;
-  tempPath.update(getDataContainerName(), m_SelectedVectorArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName() );
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getDataContainerName(), m_SelectedVectorArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName());
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_UseGoodVoxels == true)
   {
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                       cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0)
+    {
+      dataArrayPaths.push_back(getGoodVoxelsArrayPath());
+    }
   }
 
-  tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
-  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName());
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true,
+                                                                                                             cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Active = m_ActivePtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -231,7 +255,7 @@ void VectorSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
   int64_t* gid = rndNumbers->getPointer(0);
   gid[0] = 0;
 
-  for (int64_t i = 1; i < totalFeatures; ++i)
+  for(int64_t i = 1; i < totalFeatures; ++i)
   {
     gid[i] = i;
   }
@@ -240,10 +264,10 @@ void VectorSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
   int64_t temp = 0;
 
   //--- Shuffle elements by randomly exchanging each with one other.
-  for (int64_t i = 1; i < totalFeatures; i++)
+  for(int64_t i = 1; i < totalFeatures; i++)
   {
     r = numberGenerator(); // Random remaining position.
-    if (r >= totalFeatures)
+    if(r >= totalFeatures)
     {
       continue;
     }
@@ -253,7 +277,7 @@ void VectorSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
   }
 
   // Now adjust all the Grain Id values for each Voxel
-  for (int64_t i = 0; i < totalPoints; ++i)
+  for(int64_t i = 0; i < totalPoints; ++i)
   {
     m_FeatureIds[i] = gid[m_FeatureIds[i]];
   }
@@ -271,19 +295,25 @@ int64_t VectorSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   int64_t seed = -1;
   // start with the next voxel after the last seed
   size_t randpoint = static_cast<size_t>(nextSeed);
-  while (seed == -1 && randpoint < totalPoints)
+  while(seed == -1 && randpoint < totalPoints)
   {
-    if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
+    if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
-      if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
+      if(m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
       {
         seed = randpoint;
       }
-      else { randpoint += 1; }
+      else
+      {
+        randpoint += 1;
+      }
     }
-    else { randpoint += 1; }
+    else
+    {
+      randpoint += 1;
+    }
   }
-  if (seed >= 0)
+  if(seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
     QVector<size_t> tDims(1, gnum + 1);
@@ -299,9 +329,9 @@ int64_t VectorSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
 {
   bool group = false;
-  float v1[3] = { 0.0f, 0.0f, 0.0f };
-  float v2[3] = { 0.0f, 0.0f, 0.0f };
-  if (m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
+  float v1[3] = {0.0f, 0.0f, 0.0f};
+  float v2[3] = {0.0f, 0.0f, 0.0f};
+  if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
   {
     v1[0] = m_Vectors[3 * referencepoint + 0];
     v1[1] = m_Vectors[3 * referencepoint + 1];
@@ -309,12 +339,21 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
     v2[0] = m_Vectors[3 * neighborpoint + 0];
     v2[1] = m_Vectors[3 * neighborpoint + 1];
     v2[2] = m_Vectors[3 * neighborpoint + 2];
-    if (v1[2] < 0) { MatrixMath::Multiply3x1withConstant(v1, -1); }
-    if (v2[2] < 0) { MatrixMath::Multiply3x1withConstant(v2, -1); }
+    if(v1[2] < 0)
+    {
+      MatrixMath::Multiply3x1withConstant(v1, -1);
+    }
+    if(v2[2] < 0)
+    {
+      MatrixMath::Multiply3x1withConstant(v2, -1);
+    }
     float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
     w = acosf(w);
-    if (w > SIMPLib::Constants::k_PiOver2) { w = SIMPLib::Constants::k_Pi - w; }
-    if (w < m_AngleToleranceRad)
+    if(w > SIMPLib::Constants::k_PiOver2)
+    {
+      w = SIMPLib::Constants::k_Pi - w;
+    }
+    if(w < m_AngleToleranceRad)
     {
       group = true;
       m_FeatureIds[neighborpoint] = gnum;
@@ -335,7 +374,7 @@ void VectorSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin,
   m_Distribution = std::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
   m_RandomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
   m_NumberGenerator = std::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
-  m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
+  m_RandomNumberGenerator->seed(static_cast<size_t>(QDateTime::currentMSecsSinceEpoch())); // seed with the current time
 }
 
 // -----------------------------------------------------------------------------
@@ -345,7 +384,10 @@ void VectorSegmentFeatures::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
@@ -366,7 +408,7 @@ void VectorSegmentFeatures::execute()
   SegmentFeatures::execute();
 
   int32_t totalFeatures = static_cast<int32_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumberOfTuples());
-  if (totalFeatures < 2)
+  if(totalFeatures < 2)
   {
     setErrorCondition(-87000);
     notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high", getErrorCondition());
@@ -374,7 +416,7 @@ void VectorSegmentFeatures::execute()
   }
 
   // By default we randomize grains
-  if (true == m_RandomizeFeatureIds)
+  if(true == m_RandomizeFeatureIds)
   {
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
@@ -419,23 +461,29 @@ const QString VectorSegmentFeatures::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
+  vStream << Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VectorSegmentFeatures::getGroupName()
-{ return SIMPL::FilterGroups::ReconstructionFilters; }
+{
+  return SIMPL::FilterGroups::ReconstructionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VectorSegmentFeatures::getSubGroupName()
-{return SIMPL::FilterSubGroups::SegmentationFilters;}
+{
+  return SIMPL::FilterSubGroups::SegmentationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VectorSegmentFeatures::getHumanLabel()
-{ return "Segment Features (Vector)"; }
+{
+  return "Segment Features (Vector)";
+}

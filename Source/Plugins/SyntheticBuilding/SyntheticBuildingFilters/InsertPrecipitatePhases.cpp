@@ -44,12 +44,12 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -59,54 +59,52 @@
 // Include the MOC generated file for this class
 #include "moc_InsertPrecipitatePhases.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InsertPrecipitatePhases::InsertPrecipitatePhases() :
-  AbstractFilter(),
-  m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList),
-  m_ErrorOutputFile(""),
-  m_CsvOutputFile(""),
-  m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_UseMask(false),
-  m_HavePrecips(false),
-  m_PrecipInputFile(""),
-  m_PeriodicBoundaries(false),
-  m_MatchRDF(false),
-  m_WriteGoalAttributes(false),
-  m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics),
-  m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes),
-  m_InputShapeTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::ShapeTypes),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_CellPhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
-  m_BoundaryCellsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::BoundaryCells),
-  m_FeaturePhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases),
-  m_NumCellsArrayName(SIMPL::FeatureData::NumCells),
-  m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters),
-  m_VolumesArrayName(SIMPL::FeatureData::Volumes),
-  m_Omega3sArrayName(SIMPL::FeatureData::Omega3s),
-  m_CentroidsArrayName(SIMPL::FeatureData::Centroids),
-  m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles),
-  m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths),
-  m_NumFeaturesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures),
-  m_FeatureIds(nullptr),
-  m_CellPhases(nullptr),
-  m_Mask(nullptr),
-  m_BoundaryCells(nullptr),
-  m_AxisEulerAngles(nullptr),
-  m_Centroids(nullptr),
-  m_AxisLengths(nullptr),
-  m_Volumes(nullptr),
-  m_Omega3s(nullptr),
-  m_EquivalentDiameters(nullptr),
-  m_FeaturePhases(nullptr),
-  m_NumCells(nullptr),
-  m_PhaseTypes(nullptr),
-  m_ShapeTypes(nullptr),
-  m_NumFeatures(nullptr),
-  m_Neighbors(nullptr)
+InsertPrecipitatePhases::InsertPrecipitatePhases()
+: AbstractFilter()
+, m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList)
+, m_ErrorOutputFile("")
+, m_CsvOutputFile("")
+, m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_UseMask(false)
+, m_HavePrecips(false)
+, m_PrecipInputFile("")
+, m_PeriodicBoundaries(false)
+, m_MatchRDF(false)
+, m_WriteGoalAttributes(false)
+, m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
+, m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
+, m_InputShapeTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::ShapeTypes)
+, m_FeatureIdsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_CellPhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
+, m_BoundaryCellsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::BoundaryCells)
+, m_FeaturePhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
+, m_NumCellsArrayName(SIMPL::FeatureData::NumCells)
+, m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
+, m_VolumesArrayName(SIMPL::FeatureData::Volumes)
+, m_Omega3sArrayName(SIMPL::FeatureData::Omega3s)
+, m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
+, m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
+, m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
+, m_NumFeaturesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures)
+, m_FeatureIds(nullptr)
+, m_CellPhases(nullptr)
+, m_Mask(nullptr)
+, m_BoundaryCells(nullptr)
+, m_AxisEulerAngles(nullptr)
+, m_Centroids(nullptr)
+, m_AxisLengths(nullptr)
+, m_Volumes(nullptr)
+, m_Omega3s(nullptr)
+, m_EquivalentDiameters(nullptr)
+, m_FeaturePhases(nullptr)
+, m_NumCells(nullptr)
+, m_PhaseTypes(nullptr)
+, m_ShapeTypes(nullptr)
+, m_NumFeatures(nullptr)
+, m_Neighbors(nullptr)
 {
 
   initialize();
@@ -132,15 +130,18 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Boundary Cells", BoundaryCellsArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
@@ -149,12 +150,14 @@ void InsertPrecipitatePhases::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
     QVector<uint32_t> geomTypes;
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
@@ -162,7 +165,8 @@ void InsertPrecipitatePhases::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
     QVector<uint32_t> geomTypes;
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
@@ -170,7 +174,8 @@ void InsertPrecipitatePhases::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
     QVector<uint32_t> geomTypes;
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
@@ -178,7 +183,8 @@ void InsertPrecipitatePhases::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Shape Types", InputShapeTypesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   linkedProps.clear();
@@ -198,22 +204,22 @@ void InsertPrecipitatePhases::setupFilterParameters()
 void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setNumFeaturesArrayPath(reader->readDataArrayPath("NumFeaturesArrayPath", getNumFeaturesArrayPath() ) );
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
-  setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
-  setInputShapeTypesArrayPath(reader->readDataArrayPath("InputShapeTypesArrayPath", getInputShapeTypesArrayPath() ) );
-  setBoundaryCellsArrayPath(reader->readDataArrayPath("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setNumFeaturesArrayPath(reader->readDataArrayPath("NumFeaturesArrayPath", getNumFeaturesArrayPath()));
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
+  setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath()));
+  setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath()));
+  setInputShapeTypesArrayPath(reader->readDataArrayPath("InputShapeTypesArrayPath", getInputShapeTypesArrayPath()));
+  setBoundaryCellsArrayPath(reader->readDataArrayPath("BoundaryCellsArrayPath", getBoundaryCellsArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath()));
   setPeriodicBoundaries(reader->readValue("PeriodicBoundaries", getPeriodicBoundaries()));
   setMatchRDF(reader->readValue("MatchRDF", getMatchRDF()));
   setUseMask(reader->readValue("UseMask", getUseMask()));
   setHavePrecips(reader->readValue("HavePrecips", getHavePrecips()));
-  setPrecipInputFile( reader->readString( "PrecipInputFile", getPrecipInputFile() ) );
-  setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", getWriteGoalAttributes()) );
-  setCsvOutputFile( reader->readString( "CsvOutputFile", getCsvOutputFile() ) );
+  setPrecipInputFile(reader->readString("PrecipInputFile", getPrecipInputFile()));
+  setWriteGoalAttributes(reader->readValue("WriteGoalAttributes", getWriteGoalAttributes()));
+  setCsvOutputFile(reader->readString("CsvOutputFile", getCsvOutputFile()));
   reader->closeFilterGroup();
 }
 
@@ -223,22 +229,38 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 void InsertPrecipitatePhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
-  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( nullptr != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( nullptr != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( nullptr != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( nullptr != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( nullptr != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( nullptr != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_FeaturePhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  }                                         /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_NumCellsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
+  }                                                    /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_EquivalentDiametersPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
+  }                                        /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_VolumesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Volumes = m_VolumesPtr.lock()->getPointer(0);
+  }                                        /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_Omega3sPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
+  }                                          /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_CentroidsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
+  }                                                /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_AxisEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
+  }                                            /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_AxisLengthsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -246,7 +268,7 @@ void InsertPrecipitatePhases::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::initialize()
 {
-  m_FirstPrecipitateFeature  = 1;
+  m_FirstPrecipitateFeature = 1;
   m_SizeX = m_SizeY = m_SizeZ = 0.0f;
   m_XRes = m_YRes = m_ZRes = m_TotalVol = m_UseableTotalVol = 0.0f;
   m_TotalVol = 0.0f;
@@ -310,14 +332,24 @@ void InsertPrecipitatePhases::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
-  if( nullptr != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getInputPhaseTypesArrayPath()); }
+  if(nullptr != m_PhaseTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    ensembleDataArrayPaths.push_back(getInputPhaseTypesArrayPath());
+  }
 
   m_ShapeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputShapeTypesArrayPath(), cDims);
-  if( nullptr != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath()); }
+  if(nullptr != m_ShapeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath());
+  }
 
   m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
   if(m_StatsDataArray.lock() == nullptr)
@@ -326,87 +358,140 @@ void InsertPrecipitatePhases::dataCheck()
     setErrorCondition(-308);
     notifyErrorMessage(getHumanLabel(), ss, -308);
   }
-  if(getErrorCondition() >= 0) { ensembleDataArrayPaths.push_back(getInputStatsArrayPath()); }
+  if(getErrorCondition() >= 0)
+  {
+    ensembleDataArrayPaths.push_back(getInputStatsArrayPath());
+  }
 
   // Cell Data
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getFeatureIdsArrayPath()); }
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    cellDataArrayPaths.push_back(getFeatureIdsArrayPath());
+  }
 
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getCellPhasesArrayPath()); }
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    cellDataArrayPaths.push_back(getCellPhasesArrayPath());
+  }
 
-  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getBoundaryCellsArrayPath()); }
+  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(),
+                                                                                                          cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_BoundaryCellsPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    cellDataArrayPaths.push_back(getBoundaryCellsArrayPath());
+  }
 
-  if (m_UseMask == true)
+  if(m_UseMask == true)
   {
     m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
-    if (nullptr != m_MaskPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if (getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getMaskArrayPath()); }
+    if(nullptr != m_MaskPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_Mask = m_MaskPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0)
+    {
+      cellDataArrayPaths.push_back(getMaskArrayPath());
+    }
   }
 
   // Feature Data
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getNumCellsArrayName() );
-  m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims, getNumCellsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getNumCellsArrayName());
+  m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims, getNumCellsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NumCellsPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getEquivalentDiametersArrayName() );
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getEquivalentDiametersArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getEquivalentDiametersArrayName());
+  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims, getEquivalentDiametersArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_EquivalentDiametersPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getVolumesArrayName() );
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getVolumesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getVolumesArrayName());
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims, getVolumesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_VolumesPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Volumes = m_VolumesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getOmega3sArrayName() );
-  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getOmega3sArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getOmega3sArrayName());
+  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims, getOmega3sArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_Omega3sPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
-  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getCentroidsArrayName() );
-  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getCentroidsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getCentroidsArrayName());
+  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims, getCentroidsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CentroidsPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisEulerAnglesArrayName() );
-  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getAxisEulerAnglesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisEulerAnglesArrayName());
+  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims, getAxisEulerAnglesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AxisEulerAnglesPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisLengthsArrayName() );
-  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims, getAxisLengthsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisLengthsArrayName());
+  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims, getAxisLengthsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AxisLengthsPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
   cDims[0] = 1;
-  m_NumFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getNumFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_NumFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumFeaturesArrayPath(),
+                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NumFeaturesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
+  if(m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The Csv output file must be set").arg(ClassName());
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (m_HavePrecips == true && getPrecipInputFile().isEmpty() == true)
+  if(m_HavePrecips == true && getPrecipInputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The precipitate file must be set");
     setErrorCondition(-1);
@@ -429,7 +514,11 @@ void InsertPrecipitatePhases::preflight()
   emit preflightExecuted();
 
   AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
-  if(attrMat == nullptr) { setInPreflight(false); return; }
+  if(attrMat == nullptr)
+  {
+    setInPreflight(false);
+    return;
+  }
 
   attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   attrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -450,59 +539,73 @@ void InsertPrecipitatePhases::execute()
 
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   m_TotalPoints = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
 
-  if (m_HavePrecips == false)
+  if(m_HavePrecips == false)
   {
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Generating and Placing Precipitates");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
     Int32ArrayType::Pointer exclusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
     exclusionZonesPtr->initializeWithZeros();
     place_precipitates(exclusionZonesPtr);
-    if(getErrorCondition() < 0) { return; }
-    if (getCancel() == true) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
+    if(getCancel() == true)
+    {
+      return;
+    }
   }
 
-  if (m_HavePrecips == true)
+  if(m_HavePrecips == true)
   {
     load_precipitates();
-    if (getCancel() == true) { return; }
+    if(getCancel() == true)
+    {
+      return;
+    }
   }
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Assigning Voxels");
   assign_voxels();
-  if (getCancel() == true) { return; }
+  if(getCancel() == true)
+  {
+    return;
+  }
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Filling Gaps");
   assign_gaps();
-  if (getCancel() == true) { return; }
+  if(getCancel() == true)
+  {
+    return;
+  }
 
   // At this point we are done reassigning values to all arrays, so we are safe to copy
   // down the Feature phases to the cells ; the Feature phases are correct from the
   // generate_precipitate() function, but the cell phases are best done after all
   // assignment since cell values may be cleaned up after Feature generation
   size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  for (size_t i = 0; i < numTuples; i++)
+  for(size_t i = 0; i < numTuples; i++)
   {
     m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]];
   }
 
-
-  if (m_WriteGoalAttributes == true)
+  if(m_WriteGoalAttributes == true)
   {
     write_goal_attributes();
   }
@@ -523,13 +626,13 @@ void InsertPrecipitatePhases::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void  InsertPrecipitatePhases::load_precipitates()
+void InsertPrecipitatePhases::load_precipitates()
 {
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
 
   std::ifstream inFile;
   inFile.open(getPrecipInputFile().toLatin1().data(), std::ios_base::binary);
-  if (!inFile)
+  if(!inFile)
   {
     QString ss = QObject::tr("Failed to open: %1").arg(getPrecipInputFile());
     setErrorCondition(-1);
@@ -537,7 +640,7 @@ void  InsertPrecipitatePhases::load_precipitates()
   }
   int32_t numPrecips = 0;
   inFile >> numPrecips;
-  if (0 == numPrecips)
+  if(0 == numPrecips)
   {
     notifyErrorMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", -600);
   }
@@ -556,7 +659,7 @@ void  InsertPrecipitatePhases::load_precipitates()
   float phi1 = 0.0f, PHI = 0.0f, phi2 = 0.0f;
   int32_t currentFeature = m_FirstPrecipitateFeature;
   const float fourThirds = 4.0f / 3.0f;
-  for (int32_t i = 0; i < numPrecips; i++)
+  for(int32_t i = 0; i < numPrecips; i++)
   {
     inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
     vol = fourThirds * SIMPLib::Constants::k_Pi * axisA * axisB * axisC;
@@ -587,7 +690,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   bool write_test_outputs = false;
 
   std::ofstream outFile;
-  if (m_ErrorOutputFile.isEmpty() == false)
+  if(m_ErrorOutputFile.isEmpty() == false)
   {
     outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
     writeErrorFile = true;
@@ -601,12 +704,12 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
-  size_t udims[3] =
-  { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  { static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]), };
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+  };
 
   m_XPoints = static_cast<int64_t>(dims[0]);
   m_YPoints = static_cast<int64_t>(dims[1]);
@@ -619,13 +722,16 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   m_SizeY = dims[1] * m_YRes;
   m_SizeZ = dims[2] * m_ZRes;
   m_TotalVol = m_SizeX * m_SizeY * m_SizeZ;
-  if (m_UseMask == false) { m_UseableTotalVol = m_TotalVol; }
-  else if (m_UseMask == true)
+  if(m_UseMask == false)
+  {
+    m_UseableTotalVol = m_TotalVol;
+  }
+  else if(m_UseMask == true)
   {
     float cellVol = m_XRes * m_YRes * m_ZRes;
-    for (int64_t i = 0; i < m_TotalPoints; i++)
+    for(int64_t i = 0; i < m_TotalPoints; i++)
     {
-      if (m_Mask[i] == true)
+      if(m_Mask[i] == true)
       {
         m_UseableTotalVol += cellVol;
       }
@@ -637,7 +743,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   int32_t currentnumfeatures = static_cast<int32_t>(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
   size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
   QVector<size_t> tDims(1, 1);
-  if (currentnumfeatures == 0)
+  if(currentnumfeatures == 0)
   {
     m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
@@ -653,17 +759,19 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   int32_t acceptedmoves = 0;
   double totalprecipitatefractions = 0.0;
 
-  for (size_t i = 1; i < numensembles; ++i)
+  for(size_t i = 1; i < numensembles; ++i)
   {
-    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
+    if(m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-      if (nullptr == pp)
+      if(nullptr == pp)
       {
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrecipitateStatsData* "
                                  "pointer but this resulted in a nullptr pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrecipitateStatsData)\n")
-                     .arg(i).arg(i).arg(m_PhaseTypes[i]);
+                         .arg(i)
+                         .arg(i)
+                         .arg(m_PhaseTypes[i]);
         setErrorCondition(-666);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
@@ -675,14 +783,17 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     }
   }
 
-  for (size_t i = 0; i < m_PrecipitatePhases.size(); i++)
+  for(size_t i = 0; i < m_PrecipitatePhases.size(); i++)
   {
     m_PrecipitatePhaseFractions[i] = static_cast<float>(m_PrecipitatePhaseFractions[i] / totalprecipitatefractions);
   }
 
-  if (getCancel() == true) { return; }
+  if(getCancel() == true)
+  {
+    return;
+  }
 
-  //This is the set that we are going to keep updated with the points that are not in an exclusion zone
+  // This is the set that we are going to keep updated with the points that are not in an exclusion zone
   std::map<size_t, size_t> availablePoints;
   std::map<size_t, size_t> availablePointsInv;
 
@@ -694,7 +805,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   m_FeatureSizeDist.resize(m_PrecipitatePhases.size());
   m_SimFeatureSizeDist.resize(m_PrecipitatePhases.size());
   m_FeatureSizeDistStep.resize(m_PrecipitatePhases.size());
-  for (size_t i = 0; i < m_PrecipitatePhases.size(); i++)
+  for(size_t i = 0; i < m_PrecipitatePhases.size(); i++)
   {
     phase = m_PrecipitatePhases[i];
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
@@ -707,15 +818,15 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     float avg = GSdist[0]->getValue(0);
     float stdev = GSdist[1]->getValue(0);
     float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
-    for (size_t j = 0; j < m_FeatureSizeDist[i].size(); j++)
+    for(size_t j = 0; j < m_FeatureSizeDist[i].size(); j++)
     {
       input = (float(j + 1) * m_FeatureSizeDistStep[i]) + (pp->getMinFeatureDiameter() / 2.0f);
       float logInput = logf(input);
-      if (logInput <= avg)
+      if(logInput <= avg)
       {
         m_FeatureSizeDist[i][j] = 0.5f - 0.5f * (SIMPLibMath::erf((avg - logInput) / denominatorConst)) - previoustotal;
       }
-      if (logInput > avg)
+      if(logInput > avg)
       {
         m_FeatureSizeDist[i][j] = 0.5f + 0.5f * (SIMPLibMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
       }
@@ -723,7 +834,10 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     }
   }
 
-  if (getCancel() == true) { return; }
+  if(getCancel() == true)
+  {
+    return;
+  }
 
   // adding precipitates until the volume fraction of precipitates matches the target (while making sure to keep the size distribution error within tolerance)
   Precip_t precip;
@@ -732,11 +846,11 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   float change = 0.0f;
   float factor = 1.0f;
   size_t iter = 0;
-  for (size_t j = 0; j < m_PrecipitatePhases.size(); ++j)
+  for(size_t j = 0; j < m_PrecipitatePhases.size(); ++j)
   {
     curphasevol[j] = 0;
     float curphasetotalvol = static_cast<float>(m_UseableTotalVol * totalprecipitatefractions * m_PrecipitatePhaseFractions[j]);
-    while (curphasevol[j] < (factor * curphasetotalvol))
+    while(curphasevol[j] < (factor * curphasetotalvol))
     {
       iter++;
       m_Seed++;
@@ -744,9 +858,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       generate_precipitate(phase, &precip, m_ShapeTypes[phase], m_OrthoOps);
       m_CurrentSizeDistError = check_sizedisterror(&precip);
       change = (m_CurrentSizeDistError) - (m_OldSizeDistError);
-      if (change > 0.0f || m_CurrentSizeDistError > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
+      if(change > 0.0f || m_CurrentSizeDistError > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
       {
-        if (currentnumfeatures % 100 == 0)
+        if(currentnumfeatures % 100 == 0)
         {
           QString ss = QObject::tr("Packing Precipitates || Generating Feature #%1").arg(currentnumfeatures);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -758,7 +872,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         transfer_attributes(currentnumfeatures, &precip);
         m_OldSizeDistError = m_CurrentSizeDistError;
         curphasevol[j] = curphasevol[j] + m_Volumes[currentnumfeatures];
-        //FIXME: Initialize the Feature with some sort of default data
+        // FIXME: Initialize the Feature with some sort of default data
         iter = 0;
         m_NumFeatures[phase]++;
         currentnumfeatures++;
@@ -770,11 +884,11 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   // initializing the target RDF vector - this is the radial distribution function we are trying to match to
-  if (m_MatchRDF == true)
+  if(m_MatchRDF == true)
   {
-    for (size_t i = 1; i < numensembles; ++i)
+    for(size_t i = 1; i < numensembles; ++i)
     {
-      if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
+      if(m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
         RdfData::Pointer rdfTarget = pp->getRadialDistFunction();
@@ -788,7 +902,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
         m_RdfTargetDist[0] = 0;
 
-        for (int32_t j = 0; j < m_numRDFbins; j++)
+        for(int32_t j = 0; j < m_numRDFbins; j++)
         {
           m_RdfTargetDist[j + 1] = freqs[j];
         }
@@ -807,9 +921,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   // determine initial set of available points
   m_AvailablePointsCount = 0;
-  for (int64_t i = 0; i < m_TotalPoints; i++)
+  for(int64_t i = 0; i < m_TotalPoints; i++)
   {
-    if ((exclusionZones[i] == 0 && m_UseMask == false) || (exclusionZones[i] == 0 && m_UseMask == true && m_Mask[i] == true))
+    if((exclusionZones[i] == 0 && m_UseMask == false) || (exclusionZones[i] == 0 && m_UseMask == true && m_Mask[i] == true))
     {
       availablePoints[i] = m_AvailablePointsCount;
       availablePointsInv[m_AvailablePointsCount] = i;
@@ -832,9 +946,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   int64_t boundaryVoxels = 0;
 
-  for (int64_t i = 1; i < m_TotalPoints; i++)
+  for(int64_t i = 1; i < m_TotalPoints; i++)
   {
-    if (m_BoundaryCells[i] != 0)
+    if(m_BoundaryCells[i] != 0)
     {
       boundaryVoxels++;
     }
@@ -842,129 +956,133 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   float boundaryFraction = (float)boundaryVoxels / (float)m_TotalPoints;
 
-  //boolean used to determine if current placement is acceptable if the precipitates are being treated as "hard"
-//  bool good = false;
+  // boolean used to determine if current placement is acceptable if the precipitates are being treated as "hard"
+  //  bool good = false;
 
-//  int32_t progFeature = 0;
-//  int32_t progPrecipInc = static_cast<int32_t>(numfeatures * 0.01f);
-//  for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
-//  {
-//    if (int32_t(i) > progFeature + progPrecipInc)
-//    {
-//      QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
-//      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-//      progFeature = i;
-//    }
+  //  int32_t progFeature = 0;
+  //  int32_t progPrecipInc = static_cast<int32_t>(numfeatures * 0.01f);
+  //  for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
+  //  {
+  //    if (int32_t(i) > progFeature + progPrecipInc)
+  //    {
+  //      QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
+  //      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  //      progFeature = i;
+  //    }
 
-//    m_Centroids[3 * i] = m_SizeX * 0.5;
-//    m_Centroids[3 * i + 1] = m_SizeY * 0.5;
-//    m_Centroids[3 * i + 2] = m_SizeZ * 0.5;
-//    insert_precipitate(i);
+  //    m_Centroids[3 * i] = m_SizeX * 0.5;
+  //    m_Centroids[3 * i + 1] = m_SizeY * 0.5;
+  //    m_Centroids[3 * i + 2] = m_SizeZ * 0.5;
+  //    insert_precipitate(i);
 
-//    good = false;
-//    int32_t iterCount = 0;
-//    while (good == false && iterCount < 100000 )
-//    {
-//      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
-//      precipboundaryfraction = pp->getPrecipBoundaryFraction();
-//      random = static_cast<float>(rg.genrand_res53());
+  //    good = false;
+  //    int32_t iterCount = 0;
+  //    while (good == false && iterCount < 100000 )
+  //    {
+  //      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
+  //      precipboundaryfraction = pp->getPrecipBoundaryFraction();
+  //      random = static_cast<float>(rg.genrand_res53());
 
-//      if (boundaryFraction != 0)
-//      {
-//        if (random <= precipboundaryfraction)
-//        {
-//          // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-//          if (availablePointsCount > 0)
-//          {
-//            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-//            featureOwnersIdx = availablePointsInv[key];
-//            while (m_BoundaryCells[featureOwnersIdx] == 0)
-//            {
-//              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-//              featureOwnersIdx = availablePointsInv[key];
-//            }
-//          }
-//          else
-//          {
-//            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-//            while (m_BoundaryCells[featureOwnersIdx] == 0)
-//            {
-//              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-//            }
-//          }
+  //      if (boundaryFraction != 0)
+  //      {
+  //        if (random <= precipboundaryfraction)
+  //        {
+  //          // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
+  //          if (availablePointsCount > 0)
+  //          {
+  //            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+  //            featureOwnersIdx = availablePointsInv[key];
+  //            while (m_BoundaryCells[featureOwnersIdx] == 0)
+  //            {
+  //              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+  //              featureOwnersIdx = availablePointsInv[key];
+  //            }
+  //          }
+  //          else
+  //          {
+  //            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+  //            while (m_BoundaryCells[featureOwnersIdx] == 0)
+  //            {
+  //              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+  //            }
+  //          }
 
-//        }
-//        else if (random > precipboundaryfraction)
-//        {
-//          if (availablePointsCount > 0)
-//          {
-//            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-//            featureOwnersIdx = availablePointsInv[key];
-//            while (m_BoundaryCells[featureOwnersIdx] != 0)
-//            {
-//              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-//              featureOwnersIdx = availablePointsInv[key];
-//            }
-//          }
-//          else
-//          {
-//            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-//            while (m_BoundaryCells[featureOwnersIdx] != 0)
-//            {
-//              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-//            }
-//          }
-//        }
-//      }
-//      else
-//      {
-//        if (precipboundaryfraction > 0)
-//        {
-//          QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
-//          notifyWarningMessage(getHumanLabel(), msg, -5010);
-//        }
+  //        }
+  //        else if (random > precipboundaryfraction)
+  //        {
+  //          if (availablePointsCount > 0)
+  //          {
+  //            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+  //            featureOwnersIdx = availablePointsInv[key];
+  //            while (m_BoundaryCells[featureOwnersIdx] != 0)
+  //            {
+  //              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+  //              featureOwnersIdx = availablePointsInv[key];
+  //            }
+  //          }
+  //          else
+  //          {
+  //            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+  //            while (m_BoundaryCells[featureOwnersIdx] != 0)
+  //            {
+  //              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+  //            }
+  //          }
+  //        }
+  //      }
+  //      else
+  //      {
+  //        if (precipboundaryfraction > 0)
+  //        {
+  //          QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match
+  //          the precipitate fraction");
+  //          notifyWarningMessage(getHumanLabel(), msg, -5010);
+  //        }
 
-//        if (availablePointsCount > 0)
-//        {
-//          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-//          featureOwnersIdx = availablePointsInv[key];
-//        }
-//        else
-//        {
-//          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-//        }
-//      }
+  //        if (availablePointsCount > 0)
+  //        {
+  //          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+  //          featureOwnersIdx = availablePointsInv[key];
+  //        }
+  //        else
+  //        {
+  //          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+  //        }
+  //      }
 
-//      column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
-//      row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
-//      plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
-//      xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
-//      yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
-//      zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
-//      //m_Centroids[3 * i] = xc;
-//      //m_Centroids[3 * i + 1] = yc;
-//      //m_Centroids[3 * i + 2] = zc;
-//      move_precipitate(i, xc, yc, zc);
-//      //    insert_precipitate(i);
-//      good = check_for_overlap(i, exclusionZonesPtr);
-//      iterCount++;
-//      if(getCancel() == true) { return; }
-//    }
-//    if (getCancel() == true) { return; }
-//    update_exclusionZones(i, -1000, exclusionZonesPtr);
-//    update_availablepoints(availablePoints, availablePointsInv);
-//    if (iterCount >= 100000)
-//    {
-//      tDims[0] = i + 1;
-//      m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
-//      updateFeatureInstancePointers();
-//      numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumberOfTuples();
-//    }
-//  }
+  //      column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
+  //      row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
+  //      plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
+  //      xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
+  //      yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
+  //      zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
+  //      //m_Centroids[3 * i] = xc;
+  //      //m_Centroids[3 * i + 1] = yc;
+  //      //m_Centroids[3 * i + 2] = zc;
+  //      move_precipitate(i, xc, yc, zc);
+  //      //    insert_precipitate(i);
+  //      good = check_for_overlap(i, exclusionZonesPtr);
+  //      iterCount++;
+  //      if(getCancel() == true) { return; }
+  //    }
+  //    if (getCancel() == true) { return; }
+  //    update_exclusionZones(i, -1000, exclusionZonesPtr);
+  //    update_availablepoints(availablePoints, availablePointsInv);
+  //    if (iterCount >= 100000)
+  //    {
+  //      tDims[0] = i + 1;
+  //      m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
+  //      updateFeatureInstancePointers();
+  //      numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumberOfTuples();
+  //    }
+  //  }
 
-  for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
+  for(size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
   {
-    if(getCancel()) { return; }
+    if(getCancel())
+    {
+      return;
+    }
     QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
@@ -972,16 +1090,16 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     precipboundaryfraction = pp->getPrecipBoundaryFraction();
     random = static_cast<float>(rg.genrand_res53());
 
-    if (boundaryFraction != 0)
+    if(boundaryFraction != 0)
     {
-      if (random <= precipboundaryfraction)
+      if(random <= precipboundaryfraction)
       {
         // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-        if (m_AvailablePointsCount > 0)
+        if(m_AvailablePointsCount > 0)
         {
           key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
           featureOwnersIdx = availablePointsInv[key];
-          while (m_BoundaryCells[featureOwnersIdx] == 0)
+          while(m_BoundaryCells[featureOwnersIdx] == 0)
           {
             key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
             featureOwnersIdx = availablePointsInv[key];
@@ -990,19 +1108,19 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         else
         {
           featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-          while (m_BoundaryCells[featureOwnersIdx] == 0)
+          while(m_BoundaryCells[featureOwnersIdx] == 0)
           {
             featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
           }
         }
       }
-      else if (random > precipboundaryfraction)
+      else if(random > precipboundaryfraction)
       {
-        if (m_AvailablePointsCount > 0)
+        if(m_AvailablePointsCount > 0)
         {
           key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
           featureOwnersIdx = availablePointsInv[key];
-          while (m_BoundaryCells[featureOwnersIdx] != 0)
+          while(m_BoundaryCells[featureOwnersIdx] != 0)
           {
             key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
             featureOwnersIdx = availablePointsInv[key];
@@ -1011,7 +1129,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         else
         {
           featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-          while (m_BoundaryCells[featureOwnersIdx] != 0)
+          while(m_BoundaryCells[featureOwnersIdx] != 0)
           {
             featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
           }
@@ -1021,13 +1139,14 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     else
     {
 
-      if (precipboundaryfraction > 0)
+      if(precipboundaryfraction > 0)
       {
-        QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
+        QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the "
+                    "precipitate fraction");
         notifyWarningMessage(getHumanLabel(), msg, -5010);
       }
 
-      if (m_AvailablePointsCount > 0)
+      if(m_AvailablePointsCount > 0)
       {
         key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
         featureOwnersIdx = availablePointsInv[key];
@@ -1054,8 +1173,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
 
-
-  if (m_MatchRDF == true)
+  if(m_MatchRDF == true)
   {
     /*RANDOM: Figure out the RDF for randomly distributed particles.
     We always keep the same stepsize as the target RDF,
@@ -1087,17 +1205,17 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     size_t numPPTfeatures = static_cast<size_t>(numfeatures - m_FirstPrecipitateFeature);
 
     // Scale the randomRDF to have the same number of particles (and therfore distances) as the current distribution.
-    for (size_t i = 0; i < m_RdfRandom.size(); i++)
+    for(size_t i = 0; i < m_RdfRandom.size(); i++)
     {
       m_RdfRandom[i] = m_RdfRandom[i] * numPPTfeatures * (numPPTfeatures - 1);
     }
 
-    if (write_test_outputs == true)
+    if(write_test_outputs == true)
     {
 
       std::ofstream testFile6;
       testFile6.open("/Users/Shared/Data/PW_Work/OUTFILE/randomRDFCurrent.txt");
-      for (size_t i = 0; i < m_RdfRandom.size(); i++)
+      for(size_t i = 0; i < m_RdfRandom.size(); i++)
       {
         testFile6 << "\n" << m_RdfRandom[i];
       }
@@ -1105,18 +1223,18 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     }
   }
 
-  if (m_MatchRDF == true)
+  if(m_MatchRDF == true)
   {
     // calculate the initial current RDF - this will change as we move particles around
-    for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
+    for(size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
     {
       m_oldRDFerror = check_RDFerror(int32_t(i), -1000, false);
     }
 
-    if (true)
+    if(true)
     {
       std::ofstream testFile;
-      if (write_test_outputs == true)
+      if(write_test_outputs == true)
       {
         testFile.open("/Users/Shared/Data/PW_Work/OUTFILE/BC.txt");
       }
@@ -1125,44 +1243,50 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       // The totalAdjustments are roughly equal to the prefactor (1000, right now) times the number of precipitates.
       // This is not based on convergence or any physics - it's just a factor and there's probably room for improvement here
       int32_t totalAdjustments = static_cast<int32_t>(1000 * ((numfeatures - m_FirstPrecipitateFeature) - 1));
-      for (int32_t iteration = 0; iteration < totalAdjustments; ++iteration)
+      for(int32_t iteration = 0; iteration < totalAdjustments; ++iteration)
       {
         QString ss;
         ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing Features Iteration %1/%2").arg(iteration).arg(totalAdjustments);
-        if (iteration % 100 == 0) { notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss); }
+        if(iteration % 100 == 0)
+        {
+          notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        }
 
-        if (writeErrorFile == true && iteration % 25 == 0)
+        if(writeErrorFile == true && iteration % 25 == 0)
         {
           outFile << iteration << " " << m_oldRDFerror << " " << acceptedmoves << "\n";
         }
 
         // JUMP - this one feature to a random spot in the volume
         randomfeature = m_FirstPrecipitateFeature + int32_t(rg.genrand_res53() * (int32_t(numfeatures) - m_FirstPrecipitateFeature));
-        if (randomfeature < m_FirstPrecipitateFeature) { randomfeature = m_FirstPrecipitateFeature; }
-        if (randomfeature >= static_cast<int32_t>(numfeatures))
+        if(randomfeature < m_FirstPrecipitateFeature)
+        {
+          randomfeature = m_FirstPrecipitateFeature;
+        }
+        if(randomfeature >= static_cast<int32_t>(numfeatures))
         {
           randomfeature = static_cast<int32_t>(numfeatures) - 1;
         }
         m_Seed++;
 
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[randomfeature]].get());
-        if (nullptr == pp)
+        if(nullptr == pp)
         {
           continue;
         }
 
         precipboundaryfraction = pp->getPrecipBoundaryFraction();
         random = static_cast<float>(rg.genrand_res53());
-        if (boundaryFraction != 0)
+        if(boundaryFraction != 0)
         {
-          if (random <= precipboundaryfraction)
+          if(random <= precipboundaryfraction)
           {
             // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-            if (m_AvailablePointsCount > 0)
+            if(m_AvailablePointsCount > 0)
             {
               key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
               featureOwnersIdx = availablePointsInv[key];
-              while (m_BoundaryCells[featureOwnersIdx] == 0)
+              while(m_BoundaryCells[featureOwnersIdx] == 0)
               {
                 key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
                 featureOwnersIdx = availablePointsInv[key];
@@ -1171,20 +1295,19 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
             else
             {
               featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-              while (m_BoundaryCells[featureOwnersIdx] == 0)
+              while(m_BoundaryCells[featureOwnersIdx] == 0)
               {
                 featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
               }
             }
-
           }
-          else if (random > precipboundaryfraction)
+          else if(random > precipboundaryfraction)
           {
-            if (m_AvailablePointsCount > 0)
+            if(m_AvailablePointsCount > 0)
             {
               key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
               featureOwnersIdx = availablePointsInv[key];
-              while (m_BoundaryCells[featureOwnersIdx] != 0)
+              while(m_BoundaryCells[featureOwnersIdx] != 0)
               {
                 key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
                 featureOwnersIdx = availablePointsInv[key];
@@ -1193,7 +1316,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
             else
             {
               featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-              while (m_BoundaryCells[featureOwnersIdx] != 0)
+              while(m_BoundaryCells[featureOwnersIdx] != 0)
               {
                 featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
               }
@@ -1203,13 +1326,14 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         else
         {
 
-          if (precipboundaryfraction > 0)
+          if(precipboundaryfraction > 0)
           {
-            QString msg("There are no Feature boundaries to place precipitates on and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
+            QString msg("There are no Feature boundaries to place precipitates on and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the "
+                        "precipitate fraction");
             notifyWarningMessage(getHumanLabel(), msg, -5010);
           }
 
-          if (m_AvailablePointsCount > 0)
+          if(m_AvailablePointsCount > 0)
           {
             key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
             featureOwnersIdx = availablePointsInv[key];
@@ -1251,25 +1375,23 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
           m_PointsToAdd.clear();
         }
 
-        if (write_test_outputs == true && iteration % 100 == 0)
+        if(write_test_outputs == true && iteration % 100 == 0)
         {
           testFile << "\n" << m_oldRDFerror;
         }
-
       }
-      if (write_test_outputs == true)
+      if(write_test_outputs == true)
       {
         testFile.close();
       }
-
     }
   }
 
-  if (write_test_outputs == true)
+  if(write_test_outputs == true)
   {
     std::ofstream testFile3;
     testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
-    for (size_t i = 0; i < m_RdfCurrentDistNorm.size(); i++)
+    for(size_t i = 0; i < m_RdfCurrentDistNorm.size(); i++)
     {
       testFile3 << "\n" << m_RdfCurrentDistNorm[i];
     }
@@ -1277,14 +1399,14 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
     std::ofstream testFile2;
     testFile2.open("/Users/Shared/Data/PW_Work/OUTFILE/target.txt");
-    for (size_t i = 0; i < m_RdfTargetDist.size(); i++)
+    for(size_t i = 0; i < m_RdfTargetDist.size(); i++)
     {
       testFile2 << "\n" << m_RdfTargetDist[i];
     }
     testFile2.close();
   }
 
-  //std::cout << "Done Jumping" << std::endl;
+  // std::cout << "Done Jumping" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -1302,29 +1424,35 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
   float diam = 0.0f;
   float vol = 0.0f;
   bool volgood = false;
-  float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (SIMPLib::Constants::k_Pi));
+  float fourThirdsPi = static_cast<float>((4.0f / 3.0f) * (SIMPLib::Constants::k_Pi));
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
   float avg = GSdist[0]->getValue(0);
   float stdev = GSdist[1]->getValue(0);
-  while (volgood == false)
+  while(volgood == false)
   {
     volgood = true;
     diam = static_cast<float>(rg.genrand_norm(avg, stdev));
     diam = expf(diam);
-    if (diam >= pp->getMaxFeatureDiameter()) { volgood = false; }
-    if (diam < pp->getMinFeatureDiameter()) { volgood = false; }
+    if(diam >= pp->getMaxFeatureDiameter())
+    {
+      volgood = false;
+    }
+    if(diam < pp->getMinFeatureDiameter())
+    {
+      volgood = false;
+    }
     vol = fourThirdsPi * ((diam / 2.0f) * (diam / 2.0f) * (diam / 2.0f));
   }
   int32_t diameter = int32_t((diam - pp->getMinFeatureDiameter()) / pp->getBinStepSize());
   float r2 = 0.0f, r3 = 1.0f;
   VectorOfFloatArray bovera = pp->getFeatureSize_BOverA();
   VectorOfFloatArray covera = pp->getFeatureSize_COverA();
-  if (diameter >= static_cast<int32_t>(bovera[0]->getSize()))
+  if(diameter >= static_cast<int32_t>(bovera[0]->getSize()))
   {
     diameter = static_cast<int32_t>(bovera[0]->getSize()) - 1;
   }
-  while (r2 < r3)
+  while(r2 < r3)
   {
     r2 = 0.0f, r3 = 0.0f;
     a2 = bovera[0]->getValue(diameter);
@@ -1333,15 +1461,15 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
     b3 = covera[1]->getValue(diameter);
     int32_t tmpDiameter = diameter;
     int32_t increment = -1;
-    while (a2 == 0 || b2 == 0 || a3 == 0 || b3 == 0)
+    while(a2 == 0 || b2 == 0 || a3 == 0 || b3 == 0)
     {
       tmpDiameter += increment;
-      if (tmpDiameter < 0)
+      if(tmpDiameter < 0)
       {
         tmpDiameter = diameter + 1;
         increment = 1;
       }
-      if (tmpDiameter >= static_cast<int32_t>(bovera[0]->getSize()))
+      if(tmpDiameter >= static_cast<int32_t>(bovera[0]->getSize()))
       {
         a2 = 1.0f;
         b2 = 0.0f;
@@ -1362,19 +1490,26 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
   float random = static_cast<float>(rg.genrand_res53());
   float totaldensity = 0.0f;
   int32_t bin = 0;
-  for (int32_t j = 0; j < numbins; j++)
+  for(int32_t j = 0; j < numbins; j++)
   {
     float density = axisodf->getValue(j);
     float td1 = totaldensity;
     totaldensity = totaldensity + density;
-    if (random < totaldensity && random >= td1) { bin = j; break; }
+    if(random < totaldensity && random >= td1)
+    {
+      bin = j;
+      break;
+    }
   }
   FOrientArrayType eulers = OrthoOps->determineEulerAngles(m_Seed, bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if (shapeclass == SIMPL::ShapeType::EllipsoidShape) { omega3f = 1; }
+  if(shapeclass == SIMPL::ShapeType::EllipsoidShape)
+  {
+    omega3f = 1;
+  }
 
   precip->m_Volumes = vol;
   precip->m_EquivalentDiameters = diam;
@@ -1416,12 +1551,12 @@ void InsertPrecipitatePhases::move_precipitate(int32_t gnum, float xc, float yc,
   float oxc = m_Centroids[3 * gnum];
   float oyc = m_Centroids[3 * gnum + 1];
   float ozc = m_Centroids[3 * gnum + 2];
-  occolumn = static_cast<int64_t>( (oxc - (m_XRes / 2.0f)) / m_XRes );
-  ocrow = static_cast<int64_t>( (oyc - (m_YRes / 2.0f)) / m_YRes );
-  ocplane = static_cast<int64_t>( (ozc - (m_ZRes / 2.0f)) / m_ZRes );
-  nccolumn = static_cast<int64_t>( (xc - (m_XRes / 2.0f)) / m_XRes );
-  ncrow = static_cast<int64_t>( (yc - (m_YRes / 2.0f)) / m_YRes );
-  ncplane = static_cast<int64_t>( (zc - (m_ZRes / 2.0f)) / m_ZRes );
+  occolumn = static_cast<int64_t>((oxc - (m_XRes / 2.0f)) / m_XRes);
+  ocrow = static_cast<int64_t>((oyc - (m_YRes / 2.0f)) / m_YRes);
+  ocplane = static_cast<int64_t>((ozc - (m_ZRes / 2.0f)) / m_ZRes);
+  nccolumn = static_cast<int64_t>((xc - (m_XRes / 2.0f)) / m_XRes);
+  ncrow = static_cast<int64_t>((yc - (m_YRes / 2.0f)) / m_YRes);
+  ncplane = static_cast<int64_t>((zc - (m_ZRes / 2.0f)) / m_ZRes);
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
@@ -1430,7 +1565,7 @@ void InsertPrecipitatePhases::move_precipitate(int32_t gnum, float xc, float yc,
   m_Centroids[3 * gnum + 2] = zc;
   size_t size = m_ColumnList[gnum].size();
 
-  for (size_t i = 0; i < size; i++)
+  for(size_t i = 0; i < size; i++)
   {
     int64_t& cl = m_ColumnList[gnum][i];
     cl += shiftcolumn;
@@ -1450,28 +1585,48 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
   int32_t* exclusionZones = exclusionZonesPtr->getPointer(0);
   int64_t col = 0, row = 0, plane = 0;
 
-  if (gadd > 0)
+  if(gadd > 0)
   {
     size_t size = m_ColumnList[gadd].size();
     std::vector<int64_t>& cl = m_ColumnList[gadd];
     std::vector<int64_t>& rl = m_RowList[gadd];
     std::vector<int64_t>& pl = m_PlaneList[gadd];
-    for (size_t i = 0; i < size; i++)
+    for(size_t i = 0; i < size; i++)
     {
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-      if (m_PeriodicBoundaries == true)
+      if(m_PeriodicBoundaries == true)
       {
-        if (col < 0) { col = col + m_XPoints; }
-        if (col > m_XPoints - 1) { col = col - m_XPoints; }
-        if (row < 0) { row = row + m_YPoints; }
-        if (row > m_YPoints - 1) { row = row - m_YPoints; }
-        if (plane < 0) { plane = plane + m_ZPoints; }
-        if (plane > m_ZPoints - 1) { plane = plane - m_ZPoints; }
+        if(col < 0)
+        {
+          col = col + m_XPoints;
+        }
+        if(col > m_XPoints - 1)
+        {
+          col = col - m_XPoints;
+        }
+        if(row < 0)
+        {
+          row = row + m_YPoints;
+        }
+        if(row > m_YPoints - 1)
+        {
+          row = row - m_YPoints;
+        }
+        if(plane < 0)
+        {
+          plane = plane + m_ZPoints;
+        }
+        if(plane > m_ZPoints - 1)
+        {
+          plane = plane - m_ZPoints;
+        }
         featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-        if (exclusionZones[featureOwnersIdx] > 0) {  }
-        if (exclusionZones[featureOwnersIdx] == 0)
+        if(exclusionZones[featureOwnersIdx] > 0)
+        {
+        }
+        if(exclusionZones[featureOwnersIdx] == 0)
         {
           m_PointsToRemove.push_back(featureOwnersIdx);
         }
@@ -1479,11 +1634,13 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
       }
       else
       {
-        if (col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
+        if(col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
         {
           featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-          if (exclusionZones[featureOwnersIdx] > 0) {  }
-          if (exclusionZones[featureOwnersIdx] == 0)
+          if(exclusionZones[featureOwnersIdx] > 0)
+          {
+          }
+          if(exclusionZones[featureOwnersIdx] == 0)
           {
             m_PointsToRemove.push_back(featureOwnersIdx);
           }
@@ -1492,41 +1649,63 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
       }
     }
   }
-  if (gremove > 0)
+  if(gremove > 0)
   {
     size_t size = m_ColumnList[gremove].size();
     std::vector<int64_t>& cl = m_ColumnList[gremove];
     std::vector<int64_t>& rl = m_RowList[gremove];
     std::vector<int64_t>& pl = m_PlaneList[gremove];
-    for (size_t i = 0; i < size; i++)
+    for(size_t i = 0; i < size; i++)
     {
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-      if (m_PeriodicBoundaries == true)
+      if(m_PeriodicBoundaries == true)
       {
-        if (col < 0) { col = col + m_XPoints; }
-        if (col > m_XPoints - 1) { col = col - m_XPoints; }
-        if (row < 0) { row = row + m_YPoints; }
-        if (row > m_YPoints - 1) { row = row - m_YPoints; }
-        if (plane < 0) { plane = plane + m_ZPoints; }
-        if (plane > m_ZPoints - 1) { plane = plane - m_ZPoints; }
+        if(col < 0)
+        {
+          col = col + m_XPoints;
+        }
+        if(col > m_XPoints - 1)
+        {
+          col = col - m_XPoints;
+        }
+        if(row < 0)
+        {
+          row = row + m_YPoints;
+        }
+        if(row > m_YPoints - 1)
+        {
+          row = row - m_YPoints;
+        }
+        if(plane < 0)
+        {
+          plane = plane + m_ZPoints;
+        }
+        if(plane > m_ZPoints - 1)
+        {
+          plane = plane - m_ZPoints;
+        }
         featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-        if (exclusionZones[featureOwnersIdx] > 1) { }
+        if(exclusionZones[featureOwnersIdx] > 1)
+        {
+        }
         exclusionZones[featureOwnersIdx]--;
-        if (exclusionZones[featureOwnersIdx] == 0)
+        if(exclusionZones[featureOwnersIdx] == 0)
         {
           m_PointsToAdd.push_back(featureOwnersIdx);
         }
       }
       else
       {
-        if (col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
+        if(col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
         {
           featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-          if (exclusionZones[featureOwnersIdx] > 1) { }
+          if(exclusionZones[featureOwnersIdx] > 1)
+          {
+          }
           exclusionZones[featureOwnersIdx]--;
-          if (exclusionZones[featureOwnersIdx] == 0)
+          if(exclusionZones[featureOwnersIdx] == 0)
           {
             m_PointsToAdd.push_back(featureOwnersIdx);
           }
@@ -1539,7 +1718,7 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
 //// -----------------------------------------------------------------------------
 ////
 //// -----------------------------------------------------------------------------
-//bool InsertPrecipitatePhases::check_for_overlap(size_t gNum, Int32ArrayType::Pointer exclusionZonesPtr)
+// bool InsertPrecipitatePhases::check_for_overlap(size_t gNum, Int32ArrayType::Pointer exclusionZonesPtr)
 //{
 //  size_t featureOwnersIdx = 0;
 //  int32_t* exclusionZones = exclusionZonesPtr->getPointer(0);
@@ -1588,21 +1767,21 @@ void InsertPrecipitatePhases::update_availablepoints(std::map<size_t, size_t>& a
   size_t addSize = m_PointsToAdd.size();
   size_t featureOwnersIdx = 0;
   size_t key = 0, val = 0;
-  for (size_t i = 0; i < addSize; i++)
+  for(size_t i = 0; i < addSize; i++)
   {
     featureOwnersIdx = m_PointsToAdd[i];
     availablePoints[featureOwnersIdx] = m_AvailablePointsCount;
     availablePointsInv[m_AvailablePointsCount] = featureOwnersIdx;
     m_AvailablePointsCount++;
   }
-  for (size_t i = 0; i < removeSize; i++)
+  for(size_t i = 0; i < removeSize; i++)
   {
     featureOwnersIdx = m_PointsToRemove[i];
     key = availablePoints[featureOwnersIdx];
     //  availablePoints.erase(featureOwnersIdx);
     val = availablePointsInv[m_AvailablePointsCount - 1];
     //  availablePointsInv.erase(availablePointsCount-1);
-    if (key < m_AvailablePointsCount - 1)
+    if(key < m_AvailablePointsCount - 1)
     {
       availablePointsInv[key] = val;
       availablePoints[val] = key;
@@ -1627,16 +1806,19 @@ void InsertPrecipitatePhases::determine_currentRDF(int32_t gnum, int32_t add, bo
   int32_t rdfBin = 0;
 
   int32_t phase = m_FeaturePhases[gnum];
-  while (phase != m_PrecipitatePhases[iter]) { iter++; }
+  while(phase != m_PrecipitatePhases[iter])
+  {
+    iter++;
+  }
 
   x = m_Centroids[3 * gnum];
   y = m_Centroids[3 * gnum + 1];
   z = m_Centroids[3 * gnum + 2];
   size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
-  for (size_t n = size_t(m_FirstPrecipitateFeature); n < numFeatures; n++)
+  for(size_t n = size_t(m_FirstPrecipitateFeature); n < numFeatures; n++)
   {
-    if (m_FeaturePhases[n] == phase && n != gnum)
+    if(m_FeaturePhases[n] == phase && n != gnum)
     {
       xn = m_Centroids[3 * n];
       yn = m_Centroids[3 * n + 1];
@@ -1645,18 +1827,20 @@ void InsertPrecipitatePhases::determine_currentRDF(int32_t gnum, int32_t add, bo
 
       rdfBin = (r - m_rdfMin) / m_StepSize;
 
-      if (r < m_rdfMin)
-      { rdfBin = -1;}
-      //if (r < 6.0)
+      if(r < m_rdfMin)
+      {
+        rdfBin = -1;
+      }
+      // if (r < 6.0)
       //{
       //  int stop = 0;
       //}
-      //if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
-      if (double_count == true)
+      // if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
+      if(double_count == true)
       {
         m_RdfCurrentDist[rdfBin + 1] += 2 * add;
       }
-      else if (double_count == false)
+      else if(double_count == false)
       {
         m_RdfCurrentDist[rdfBin + 1] += add;
       }
@@ -1686,10 +1870,9 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int32_t add, bool
 
   size_t ln = static_cast<size_t>(largeNumber);
 
-
-  for (size_t n = 0; n < ln; n++)
+  for(size_t n = 0; n < ln; n++)
   {
-    if (n != gnum)
+    if(n != gnum)
     {
       xn = m_RandomCentroids[3 * n];
       yn = m_RandomCentroids[3 * n + 1];
@@ -1698,19 +1881,18 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int32_t add, bool
 
       rdfBin = (r - m_rdfMin) / m_StepSize;
 
-      if (r < m_rdfMin)
+      if(r < m_rdfMin)
       {
         rdfBin = -1;
       }
-      if (double_count == true)
+      if(double_count == true)
       {
         m_RdfRandom[rdfBin + 1] += 2 * add;
       }
-      else if (double_count == false)
+      else if(double_count == false)
       {
         m_RdfRandom[rdfBin + 1] += add;
       }
-
     }
   }
 }
@@ -1742,7 +1924,7 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
   //    rdf[i] = rdf[i]/normfactor;
   //  }
 
-  for (size_t i = 0; i < rdf.size(); i++)
+  for(size_t i = 0; i < rdf.size(); i++)
   {
     rdf[i] = rdf[i] / m_RdfRandom[i];
   }
@@ -1758,16 +1940,16 @@ float InsertPrecipitatePhases::check_RDFerror(int32_t gadd, int32_t gremove, boo
   float rdferror = 0.0f;
   float bhattdist = 0.0f;
 
-  if (gadd > 0)
+  if(gadd > 0)
   {
     determine_currentRDF(gadd, 1, double_count);
   }
-  if (gremove > 0)
+  if(gremove > 0)
   {
     determine_currentRDF(gremove, -1, double_count);
   }
 
-  if (m_RdfCurrentDistNorm.size() > m_RdfTargetDist.size())
+  if(m_RdfCurrentDistNorm.size() > m_RdfTargetDist.size())
   {
     compare_1Ddistributions(m_RdfTargetDist, m_RdfCurrentDistNorm, bhattdist);
   }
@@ -1795,13 +1977,13 @@ void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1,
   //  {sum_array2 += *j;}
 
   size_t array1Size = array1.size();
-  for (size_t i = 0; i < array1Size; i++)
+  for(size_t i = 0; i < array1Size; i++)
   {
     sum_array1 = sum_array1 + array1[i];
     sum_array2 = sum_array2 + array2[i];
   }
 
-  for (size_t i = 0; i < array1Size; i++)
+  for(size_t i = 0; i < array1Size; i++)
   {
     array1[i] = array1[i] / sum_array1;
     array2[i] = array2[i] / sum_array2;
@@ -1812,14 +1994,14 @@ void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float& bhattdist)
+void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<float>> array1, std::vector<std::vector<float>> array2, float& bhattdist)
 {
   bhattdist = 0;
   size_t array1Size = array1.size();
-  for (size_t i = 0; i < array1Size; i++)
+  for(size_t i = 0; i < array1Size; i++)
   {
     size_t array2Size = array1[i].size();
-    for (size_t j = 0; j < array2Size; j++)
+    for(size_t j = 0; j < array2Size; j++)
     {
       bhattdist = bhattdist + sqrtf((array1[i][j] * array2[i][j]));
     }
@@ -1829,34 +2011,34 @@ void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<fl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2, float& bhattdist)
+void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float>>> array1, std::vector<std::vector<std::vector<float>>> array2, float& bhattdist)
 {
   bhattdist = 0;
-  std::vector<std::vector<float> > counts1(array1.size());
-  std::vector<std::vector<float> > counts2(array2.size());
+  std::vector<std::vector<float>> counts1(array1.size());
+  std::vector<std::vector<float>> counts2(array2.size());
   size_t array1Size = array1.size();
-  for (size_t i = 0; i < array1Size; i++)
+  for(size_t i = 0; i < array1Size; i++)
   {
     counts1[i].resize(array1[i].size());
     counts2[i].resize(array2[i].size());
     size_t array2Size = array1[i].size();
-    for (size_t j = 0; j < array2Size; j++)
+    for(size_t j = 0; j < array2Size; j++)
     {
       size_t array3Size = array1[i][j].size();
-      for (size_t k = 0; k < array3Size; k++)
+      for(size_t k = 0; k < array3Size; k++)
       {
         counts1[i][j] += array1[i][j][k];
         counts2[i][j] += array2[i][j][k];
       }
     }
   }
-  for (size_t i = 0; i < array1Size; i++)
+  for(size_t i = 0; i < array1Size; i++)
   {
     size_t array2Size = array1[i].size();
-    for (size_t j = 0; j < array2Size; j++)
+    for(size_t j = 0; j < array2Size; j++)
     {
       size_t array3Size = array1[i][j].size();
-      for (size_t k = 0; k < array3Size; k++)
+      for(size_t k = 0; k < array3Size; k++)
       {
         bhattdist = bhattdist + sqrtf(((array1[i][j][k] / counts1[i][j]) * (array2[i][j][k] / counts2[i][j])));
       }
@@ -1869,7 +2051,7 @@ void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<st
 // -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::check_sizedisterror(Precip_t* precip)
 {
-  //DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  // DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
@@ -1880,7 +2062,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip_t* precip)
   int count = 0;
   int phase;
   size_t featureSizeDist_Size = m_FeatureSizeDist.size();
-  for (size_t iter = 0; iter < featureSizeDist_Size; ++iter)
+  for(size_t iter = 0; iter < featureSizeDist_Size; ++iter)
   {
     phase = m_PrecipitatePhases[iter];
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
@@ -1889,7 +2071,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip_t* precip)
     std::vector<float>::size_type curFeatureSizeDistSize = curFeatureSizeDist.size();
     std::vector<float>& curSimFeatureSizeDist = m_SimFeatureSizeDist[iter];
     // Initialize all Values to Zero
-    for (size_t i = 0; i < curFeatureSizeDistSize; i++)
+    for(size_t i = 0; i < curFeatureSizeDistSize; i++)
     {
       curSimFeatureSizeDist[i] = 0.0f;
     }
@@ -1897,15 +2079,21 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip_t* precip)
     size_t nFeatureTuples = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
     float oneOverCurFeatureSizeDistStep = 1.0f / m_FeatureSizeDistStep[iter];
     float halfMinFeatureDiameter = pp->getMinFeatureDiameter() * 0.5f;
-    for (size_t b = m_FirstPrecipitateFeature; b < nFeatureTuples; b++)
+    for(size_t b = m_FirstPrecipitateFeature; b < nFeatureTuples; b++)
     {
       index = b;
       if(m_FeaturePhases[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
         dia = (dia - halfMinFeatureDiameter) * oneOverCurFeatureSizeDistStep;
-        if(dia < 0) { dia = 0; }
-        if(dia > curFeatureSizeDistSize - 1.0f) { dia = curFeatureSizeDistSize - 1.0f; }
+        if(dia < 0)
+        {
+          dia = 0;
+        }
+        if(dia > curFeatureSizeDistSize - 1.0f)
+        {
+          dia = curFeatureSizeDistSize - 1.0f;
+        }
         curSimFeatureSizeDist[int(dia)]++;
         count++;
       }
@@ -1915,20 +2103,29 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip_t* precip)
     {
       dia = precip->m_EquivalentDiameters;
       dia = (dia - halfMinFeatureDiameter) * oneOverCurFeatureSizeDistStep;
-      if(dia < 0) { dia = 0; }
-      if(dia > curFeatureSizeDistSize - 1.0f) { dia = curFeatureSizeDistSize - 1.0f; }
+      if(dia < 0)
+      {
+        dia = 0;
+      }
+      if(dia > curFeatureSizeDistSize - 1.0f)
+      {
+        dia = curFeatureSizeDistSize - 1.0f;
+      }
       curSimFeatureSizeDist[int(dia)]++;
       count++;
     }
     float oneOverCount = 1.0f / count;
 
-    if (count == 0)
+    if(count == 0)
     {
-      for (size_t i = 0; i < curFeatureSizeDistSize; i++) { curSimFeatureSizeDist[i] = 0.0; }
+      for(size_t i = 0; i < curFeatureSizeDistSize; i++)
+      {
+        curSimFeatureSizeDist[i] = 0.0;
+      }
     }
     else
     {
-      for (size_t i = 0; i < curFeatureSizeDistSize; i++)
+      for(size_t i = 0; i < curFeatureSizeDistSize; i++)
       {
         curSimFeatureSizeDist[i] = curSimFeatureSizeDist[i] * oneOverCount;
       }
@@ -1951,8 +2148,8 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   int64_t centercolumn = 0, centerrow = 0, centerplane = 0;
   int64_t xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
   float xc = 0.0f, yc = 0.0f, zc = 0.0f;
-  float coordsRotated[3] = { 0.0f, 0.0f, 0.0f };
-  float coords[3] = { 0.0f, 0.0f, 0.0f };
+  float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
+  float coords[3] = {0.0f, 0.0f, 0.0f};
   float volcur = m_Volumes[gnum];
   float bovera = m_AxisLengths[3 * gnum + 1];
   float covera = m_AxisLengths[3 * gnum + 2];
@@ -1961,7 +2158,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
 
   // Bail if the shapeclass is not one of our enumerated types
-  if (shapeclass >= SIMPL::ShapeType::ShapeTypeEnd)
+  if(shapeclass >= SIMPL::ShapeType::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     setErrorCondition(-666);
@@ -1970,7 +2167,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   }
 
   // init any values for each of the Shape Ops
-  for (size_t iter = 0; iter < m_ShapeOps.size(); iter++)
+  for(size_t iter = 0; iter < m_ShapeOps.size(); iter++)
   {
     m_ShapeOps[iter]->init();
   }
@@ -1988,7 +2185,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);
-  float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float ga[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   FOrientArrayType om(9, 0.0);
   FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * gnum]), 3), om);
   om.toGMatrix(ga);
@@ -1996,26 +2193,44 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   xc = m_Centroids[3 * gnum];
   yc = m_Centroids[3 * gnum + 1];
   zc = m_Centroids[3 * gnum + 2];
-  centercolumn = static_cast<int64_t>( (xc - (m_XRes / 2)) / m_XRes );
-  centerrow = static_cast<int64_t>( (yc - (m_YRes / 2)) / m_YRes );
-  centerplane = static_cast<int64_t>( (zc - (m_ZRes / 2)) / m_ZRes );
+  centercolumn = static_cast<int64_t>((xc - (m_XRes / 2)) / m_XRes);
+  centerrow = static_cast<int64_t>((yc - (m_YRes / 2)) / m_YRes);
+  centerplane = static_cast<int64_t>((zc - (m_ZRes / 2)) / m_ZRes);
   xmin = int64_t(centercolumn - ((radcur1 / m_XRes) + 1));
   xmax = int64_t(centercolumn + ((radcur1 / m_XRes) + 1));
   ymin = int64_t(centerrow - ((radcur1 / m_YRes) + 1));
   ymax = int64_t(centerrow + ((radcur1 / m_YRes) + 1));
   zmin = int64_t(centerplane - ((radcur1 / m_ZRes) + 1));
   zmax = int64_t(centerplane + ((radcur1 / m_ZRes) + 1));
-  if (xmin < -m_XPoints) { xmin = -m_XPoints; }
-  if (xmax > 2 * m_XPoints - 1) { xmax = (2 * m_XPoints - 1); }
-  if (ymin < -m_YPoints) { ymin = -m_YPoints; }
-  if (ymax > 2 * m_YPoints - 1) { ymax = (2 * m_YPoints - 1); }
-  if (zmin < -m_ZPoints) { zmin = -m_ZPoints; }
-  if (zmax > 2 * m_ZPoints - 1) { zmax = (2 * m_ZPoints - 1); }
-  for (int64_t iter1 = xmin; iter1 < xmax + 1; iter1++)
+  if(xmin < -m_XPoints)
   {
-    for (int64_t iter2 = ymin; iter2 < ymax + 1; iter2++)
+    xmin = -m_XPoints;
+  }
+  if(xmax > 2 * m_XPoints - 1)
+  {
+    xmax = (2 * m_XPoints - 1);
+  }
+  if(ymin < -m_YPoints)
+  {
+    ymin = -m_YPoints;
+  }
+  if(ymax > 2 * m_YPoints - 1)
+  {
+    ymax = (2 * m_YPoints - 1);
+  }
+  if(zmin < -m_ZPoints)
+  {
+    zmin = -m_ZPoints;
+  }
+  if(zmax > 2 * m_ZPoints - 1)
+  {
+    zmax = (2 * m_ZPoints - 1);
+  }
+  for(int64_t iter1 = xmin; iter1 < xmax + 1; iter1++)
+  {
+    for(int64_t iter2 = ymin; iter2 < ymax + 1; iter2++)
     {
-      for (int64_t iter3 = zmin; iter3 < zmax + 1; iter3++)
+      for(int64_t iter3 = zmin; iter3 < zmax + 1; iter3++)
       {
         column = iter1;
         row = iter2;
@@ -2032,7 +2247,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
         float axis2comp = coordsRotated[1] / radcur2;
         float axis3comp = coordsRotated[2] / radcur3;
         inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-        if (inside >= 0)
+        if(inside >= 0)
         {
           m_ColumnList[gnum].push_back(column);
           m_RowList[gnum].push_back(row);
@@ -2054,11 +2269,8 @@ void InsertPrecipitatePhases::assign_voxels()
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   int64_t index;
@@ -2071,17 +2283,17 @@ void InsertPrecipitatePhases::assign_voxels()
   int64_t column = 0, row = 0, plane = 0;
   float inside = 0.0f;
   float xc = 0.0f, yc = 0.0f, zc = 0.0f;
-  float coordsRotated[3] = { 0.0f, 0.0f, 0.0f };
-  float coords[3] = { 0.0f, 0.0f, 0.0f };
+  float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
+  float coords[3] = {0.0f, 0.0f, 0.0f};
   int64_t xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
   size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
   m_GSizes.resize(numFeatures);
 
-  for (size_t i = size_t(m_FirstPrecipitateFeature); i < numFeatures; i++)
+  for(size_t i = size_t(m_FirstPrecipitateFeature); i < numFeatures; i++)
   {
     m_GSizes[i] = 0;
   }
-  for (size_t i = size_t(m_FirstPrecipitateFeature); i < numFeatures; i++)
+  for(size_t i = size_t(m_FirstPrecipitateFeature); i < numFeatures; i++)
   {
     float volcur = m_Volumes[i];
     float bovera = m_AxisLengths[3 * i + 1];
@@ -2095,7 +2307,7 @@ void InsertPrecipitatePhases::assign_voxels()
     uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[i]];
 
     // init any values for each of the Shape Ops
-    for (size_t iter = 0; iter < m_ShapeOps.size(); iter++)
+    for(size_t iter = 0; iter < m_ShapeOps.size(); iter++)
     {
       m_ShapeOps[iter]->init();
     }
@@ -2110,64 +2322,136 @@ void InsertPrecipitatePhases::assign_voxels()
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
-    float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    float ga[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
     FOrientArrayType om(9, 0.0);
     FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
     om.toGMatrix(ga);
 
-    column = static_cast<int64_t>( (xc - (xRes / 2.0f)) / xRes );
-    row = static_cast<int64_t>( (yc - (yRes / 2.0f)) / yRes );
-    plane = static_cast<int64_t>( (zc - (zRes / 2.0f)) / zRes );
+    column = static_cast<int64_t>((xc - (xRes / 2.0f)) / xRes);
+    row = static_cast<int64_t>((yc - (yRes / 2.0f)) / yRes);
+    plane = static_cast<int64_t>((zc - (zRes / 2.0f)) / zRes);
     xmin = static_cast<int64_t>(column - ((radcur1 / xRes) + 1));
     xmax = static_cast<int64_t>(column + ((radcur1 / xRes) + 1));
     ymin = static_cast<int64_t>(row - ((radcur1 / yRes) + 1));
     ymax = static_cast<int64_t>(row + ((radcur1 / yRes) + 1));
     zmin = static_cast<int64_t>(plane - ((radcur1 / zRes) + 1));
     zmax = static_cast<int64_t>(plane + ((radcur1 / zRes) + 1));
-    if (m_PeriodicBoundaries == true)
+    if(m_PeriodicBoundaries == true)
     {
-      if (xmin < -dims[0]) { xmin = -dims[0]; }
-      if (xmax > 2 * dims[0] - 1) { xmax = (2 * dims[0] - 1); }
-      if (ymin < -dims[1]) { ymin = -dims[1]; }
-      if (ymax > 2 * dims[1] - 1) { ymax = (2 * dims[1] - 1); }
-      if (zmin < -dims[2]) { zmin = -dims[2]; }
-      if (zmax > 2 * dims[2] - 1) { zmax = (2 * dims[2] - 1); }
-    }
-    if (m_PeriodicBoundaries == false)
-    {
-      if (xmin < 0) { xmin = 0; }
-      if (xmax > dims[0] - 1) { xmax = dims[0] - 1; }
-      if (ymin < 0) { ymin = 0; }
-      if (ymax > dims[1] - 1) { ymax = dims[1] - 1; }
-      if (zmin < 0) { zmin = 0; }
-      if (zmax > dims[2] - 1) { zmax = dims[2] - 1; }
-    }
-    for (int64_t iter1 = xmin; iter1 < xmax + 1; iter1++)
-    {
-      for (int64_t iter2 = ymin; iter2 < ymax + 1; iter2++)
+      if(xmin < -dims[0])
       {
-        for (int64_t iter3 = zmin; iter3 < zmax + 1; iter3++)
+        xmin = -dims[0];
+      }
+      if(xmax > 2 * dims[0] - 1)
+      {
+        xmax = (2 * dims[0] - 1);
+      }
+      if(ymin < -dims[1])
+      {
+        ymin = -dims[1];
+      }
+      if(ymax > 2 * dims[1] - 1)
+      {
+        ymax = (2 * dims[1] - 1);
+      }
+      if(zmin < -dims[2])
+      {
+        zmin = -dims[2];
+      }
+      if(zmax > 2 * dims[2] - 1)
+      {
+        zmax = (2 * dims[2] - 1);
+      }
+    }
+    if(m_PeriodicBoundaries == false)
+    {
+      if(xmin < 0)
+      {
+        xmin = 0;
+      }
+      if(xmax > dims[0] - 1)
+      {
+        xmax = dims[0] - 1;
+      }
+      if(ymin < 0)
+      {
+        ymin = 0;
+      }
+      if(ymax > dims[1] - 1)
+      {
+        ymax = dims[1] - 1;
+      }
+      if(zmin < 0)
+      {
+        zmin = 0;
+      }
+      if(zmax > dims[2] - 1)
+      {
+        zmax = dims[2] - 1;
+      }
+    }
+    for(int64_t iter1 = xmin; iter1 < xmax + 1; iter1++)
+    {
+      for(int64_t iter2 = ymin; iter2 < ymax + 1; iter2++)
+      {
+        for(int64_t iter3 = zmin; iter3 < zmax + 1; iter3++)
         {
           column = iter1;
           row = iter2;
           plane = iter3;
-          if (iter1 < 0) { column = iter1 + dims[0]; }
-          if (iter1 > dims[0] - 1) { column = iter1 - dims[0]; }
-          if (iter2 < 0) { row = iter2 + dims[1]; }
-          if (iter2 > dims[1] - 1) { row = iter2 - dims[1]; }
-          if (iter3 < 0) { plane = iter3 + dims[2]; }
-          if (iter3 > dims[2] - 1) { plane = iter3 - dims[2]; }
+          if(iter1 < 0)
+          {
+            column = iter1 + dims[0];
+          }
+          if(iter1 > dims[0] - 1)
+          {
+            column = iter1 - dims[0];
+          }
+          if(iter2 < 0)
+          {
+            row = iter2 + dims[1];
+          }
+          if(iter2 > dims[1] - 1)
+          {
+            row = iter2 - dims[1];
+          }
+          if(iter3 < 0)
+          {
+            plane = iter3 + dims[2];
+          }
+          if(iter3 > dims[2] - 1)
+          {
+            plane = iter3 - dims[2];
+          }
           index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
           inside = -1.0f;
           coords[0] = float(column) * xRes;
           coords[1] = float(row) * yRes;
           coords[2] = float(plane) * zRes;
-          if (iter1 < 0) { coords[0] = coords[0] - m_SizeX; }
-          if (iter1 > dims[0] - 1) { coords[0] = coords[0] + m_SizeX; }
-          if (iter2 < 0) { coords[1] = coords[1] - m_SizeY; }
-          if (iter2 > dims[1] - 1) { coords[1] = coords[1] + m_SizeY; }
-          if (iter3 < 0) { coords[2] = coords[2] - m_SizeZ; }
-          if (iter3 > dims[2] - 1) { coords[2] = coords[2] + m_SizeZ; }
+          if(iter1 < 0)
+          {
+            coords[0] = coords[0] - m_SizeX;
+          }
+          if(iter1 > dims[0] - 1)
+          {
+            coords[0] = coords[0] + m_SizeX;
+          }
+          if(iter2 < 0)
+          {
+            coords[1] = coords[1] - m_SizeY;
+          }
+          if(iter2 > dims[1] - 1)
+          {
+            coords[1] = coords[1] + m_SizeY;
+          }
+          if(iter3 < 0)
+          {
+            coords[2] = coords[2] - m_SizeZ;
+          }
+          if(iter3 > dims[2] - 1)
+          {
+            coords[2] = coords[2] + m_SizeZ;
+          }
           coords[0] = coords[0] - xc;
           coords[1] = coords[1] - yc;
           coords[2] = coords[2] - zc;
@@ -2176,15 +2460,15 @@ void InsertPrecipitatePhases::assign_voxels()
           float axis2comp = coordsRotated[1] / radcur2;
           float axis3comp = coordsRotated[2] / radcur3;
           inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-          if (inside >= 0)
+          if(inside >= 0)
           {
             int64_t currentpoint = index;
-            if (m_FeatureIds[currentpoint] > m_FirstPrecipitateFeature)
+            if(m_FeatureIds[currentpoint] > m_FirstPrecipitateFeature)
             {
-              //oldname = m_FeatureIds[currentpoint];
+              // oldname = m_FeatureIds[currentpoint];
               m_FeatureIds[currentpoint] = -2;
             }
-            if (m_FeatureIds[currentpoint] < m_FirstPrecipitateFeature && m_FeatureIds[currentpoint] != -2)
+            if(m_FeatureIds[currentpoint] < m_FirstPrecipitateFeature && m_FeatureIds[currentpoint] != -2)
             {
               m_FeatureIds[currentpoint] = static_cast<int32_t>(i);
             }
@@ -2196,11 +2480,17 @@ void InsertPrecipitatePhases::assign_voxels()
 
   QVector<bool> activeObjects(numFeatures, false);
   int32_t gnum = 0;
-  for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
+  for(size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
   {
-    if (m_UseMask == true && m_Mask[i] == false) { m_FeatureIds[i] = 0; }
+    if(m_UseMask == true && m_Mask[i] == false)
+    {
+      m_FeatureIds[i] = 0;
+    }
     gnum = m_FeatureIds[i];
-    if (gnum >= 0) { activeObjects[gnum] = true; }
+    if(gnum >= 0)
+    {
+      activeObjects[gnum] = true;
+    }
   }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
@@ -2232,7 +2522,7 @@ void InsertPrecipitatePhases::assign_gaps()
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumberOfTuples();
 
-  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   neighpoints[0] = -xPoints * yPoints;
   neighpoints[1] = -xPoints;
   neighpoints[2] = -1;
@@ -2246,43 +2536,61 @@ void InsertPrecipitatePhases::assign_gaps()
 
   std::vector<int32_t> n(totalFeatures + 1, 0);
 
-  while (gapVoxelCount != 0)
+  while(gapVoxelCount != 0)
   {
     iterationCounter++;
     gapVoxelCount = 0;
     int64_t zStride, yStride;
-    for (int64_t i = 0; i < zPoints; i++)
+    for(int64_t i = 0; i < zPoints; i++)
     {
       zStride = i * xPoints * yPoints;
-      for (int64_t j = 0; j < yPoints; j++)
+      for(int64_t j = 0; j < yPoints; j++)
       {
         yStride = j * xPoints;
-        for (int64_t k = 0; k < xPoints; k++)
+        for(int64_t k = 0; k < xPoints; k++)
         {
           featurename = m_FeatureIds[zStride + yStride + k];
-          if (featurename < 0)
+          if(featurename < 0)
           {
             gapVoxelCount++;
             current = 0;
             most = 0;
-            for (int32_t l = 0; l < 6; l++)
+            for(int32_t l = 0; l < 6; l++)
             {
               good = true;
               neighpoint = zStride + yStride + k + neighpoints[l];
-              if (l == 0 && i == 0) { good = false; }
-              if (l == 5 && i == (zPoints - 1)) { good = false; }
-              if (l == 1 && j == 0) { good = false; }
-              if (l == 4 && j == (yPoints - 1)) { good = false; }
-              if (l == 2 && k == 0) { good = false; }
-              if (l == 3 && k == (xPoints - 1)) { good = false; }
-              if (good == true)
+              if(l == 0 && i == 0)
+              {
+                good = false;
+              }
+              if(l == 5 && i == (zPoints - 1))
+              {
+                good = false;
+              }
+              if(l == 1 && j == 0)
+              {
+                good = false;
+              }
+              if(l == 4 && j == (yPoints - 1))
+              {
+                good = false;
+              }
+              if(l == 2 && k == 0)
+              {
+                good = false;
+              }
+              if(l == 3 && k == (xPoints - 1))
+              {
+                good = false;
+              }
+              if(good == true)
               {
                 feature = m_FeatureIds[neighpoint];
-                if (feature > 0)
+                if(feature > 0)
                 {
                   n[feature]++;
                   current = n[feature];
-                  if (current > most)
+                  if(current > most)
                   {
                     most = current;
                     m_Neighbors[zStride + yStride + k] = neighpoint;
@@ -2290,41 +2598,65 @@ void InsertPrecipitatePhases::assign_gaps()
                 }
               }
             }
-            for (int32_t l = 0; l < 6; l++)
+            for(int32_t l = 0; l < 6; l++)
             {
               good = true;
               neighpoint = zStride + yStride + k + neighpoints[l];
-              if (l == 0 && i == 0) { good = false; }
-              if (l == 5 && i == (zPoints - 1)) { good = false; }
-              if (l == 1 && j == 0) { good = false; }
-              if (l == 4 && j == (yPoints - 1)) { good = false; }
-              if (l == 2 && k == 0) { good = false; }
-              if (l == 3 && k == (xPoints - 1)) { good = false; }
-              if (good == true)
+              if(l == 0 && i == 0)
+              {
+                good = false;
+              }
+              if(l == 5 && i == (zPoints - 1))
+              {
+                good = false;
+              }
+              if(l == 1 && j == 0)
+              {
+                good = false;
+              }
+              if(l == 4 && j == (yPoints - 1))
+              {
+                good = false;
+              }
+              if(l == 2 && k == 0)
+              {
+                good = false;
+              }
+              if(l == 3 && k == (xPoints - 1))
+              {
+                good = false;
+              }
+              if(good == true)
               {
                 feature = m_FeatureIds[neighpoint];
-                if (feature > 0) { n[feature] = 0; }
+                if(feature > 0)
+                {
+                  n[feature] = 0;
+                }
               }
             }
           }
         }
       }
     }
-    for (size_t j = 0; j < totalPoints; j++)
+    for(size_t j = 0; j < totalPoints; j++)
     {
       featurename = m_FeatureIds[j];
       neighbor = m_Neighbors[j];
-      if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
+      if(featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
       {
         m_FeatureIds[j] = m_FeatureIds[neighbor];
       }
     }
-    if (iterationCounter >= 1)
+    if(iterationCounter >= 1)
     {
       QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
-    if(getCancel() == true) { return; }
+    if(getCancel() == true)
+    {
+      return;
+    }
   }
 }
 
@@ -2384,9 +2716,8 @@ void InsertPrecipitatePhases::write_goal_attributes()
     return;
   }
 
-
   QFile outFile(getCsvOutputFile());
-  if (!outFile.open(QIODevice::WriteOnly))
+  if(!outFile.open(QIODevice::WriteOnly))
   {
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
     setErrorCondition(-200);
@@ -2406,7 +2737,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
 
   std::vector<IDataArray::Pointer> data;
 
-  //For checking if an array is a neighborlist
+  // For checking if an array is a neighborlist
   NeighborList<float>::Pointer neighborlistPtr = NeighborList<float>::New();
 
   // Print the FeatureIds Header before the rest of the headers
@@ -2418,7 +2749,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
     IDataArray::Pointer p = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
-      if (p->getNumberOfComponents() == 1)
+      if(p->getNumberOfComponents() == 1)
       {
         dStream << space << (*iter);
       }
@@ -2435,7 +2766,6 @@ void InsertPrecipitatePhases::write_goal_attributes()
   }
   dStream << "\n";
 
-
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->getNumberOfTuples();
 
@@ -2444,12 +2774,12 @@ void InsertPrecipitatePhases::write_goal_attributes()
   // Skip the first feature
   for(size_t i = m_FirstPrecipitateFeature; i < numTuples; ++i)
   {
-    if (((float)i / numTuples) * 100.0f > threshold)
+    if(((float)i / numTuples) * 100.0f > threshold)
     {
       QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       threshold = threshold + 5.0f;
-      if (threshold < ((float)i / numTuples) * 100.0f)
+      if(threshold < ((float)i / numTuples) * 100.0f)
       {
         threshold = ((float)i / numTuples) * 100.0f;
       }
@@ -2503,23 +2833,29 @@ const QString InsertPrecipitatePhases::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SyntheticBuilding::Version::Major() << "." << SyntheticBuilding::Version::Minor() << "." << SyntheticBuilding::Version::Patch();
+  vStream << SyntheticBuilding::Version::Major() << "." << SyntheticBuilding::Version::Minor() << "." << SyntheticBuilding::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InsertPrecipitatePhases::getGroupName()
-{ return SIMPL::FilterGroups::SyntheticBuildingFilters; }
+{
+  return SIMPL::FilterGroups::SyntheticBuildingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InsertPrecipitatePhases::getSubGroupName()
-{ return SIMPL::FilterSubGroups::PackingFilters; }
+{
+  return SIMPL::FilterSubGroups::PackingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InsertPrecipitatePhases::getHumanLabel()
-{ return "Insert Precipitate Phases"; }
+{
+  return "Insert Precipitate Phases";
+}

@@ -45,10 +45,10 @@
 
 #include "FilterParameters/ImportASCIIDataFilterParameter.h"
 
-#include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
-#include "Widgets/ImportASCIIDataWizard/DataFormatPage.h"
-#include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
 #include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
+#include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
+#include "Widgets/ImportASCIIDataWizard/DataFormatPage.h"
+#include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
 #include "Widgets/ImportASCIIDataWizard/LineCounterObject.h"
 
 #include "IOFilters/ImportASCIIData.h"
@@ -59,11 +59,11 @@ QString ImportASCIIDataWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent),
-  m_ImportWizard(nullptr),
-  m_WorkerThread(nullptr),
-  m_LineCounter(nullptr)
+ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
+: FilterParameterWidget(parameter, filter, parent)
+, m_ImportWizard(nullptr)
+, m_WorkerThread(nullptr)
+, m_LineCounter(nullptr)
 {
   m_FilterParameter = dynamic_cast<ImportASCIIDataFilterParameter*>(parameter);
   Q_ASSERT_X(m_FilterParameter != nullptr, "nullptr Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIDataFilterParameter object");
@@ -81,7 +81,6 @@ ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, Abstrac
 // -----------------------------------------------------------------------------
 ImportASCIIDataWidget::~ImportASCIIDataWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -90,19 +89,16 @@ ImportASCIIDataWidget::~ImportASCIIDataWidget()
 void ImportASCIIDataWidget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
-  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
-    this, SLOT(beforePreflight()));
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(getFilter(), SIGNAL(preflightExecuted()),
-    this, SLOT(afterPreflight()));
+  connect(getFilter(), SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
-    this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   // If the filter was loaded from a pipeline file, fill in the information in the widget
-  if (m_Filter->getWizardData().isEmpty() == false)
+  if(m_Filter->getWizardData().isEmpty() == false)
   {
 
     ASCIIWizardData wizardData = m_Filter->getWizardData();
@@ -113,13 +109,12 @@ void ImportASCIIDataWidget::setupGui()
 
     m_LineCounter = new LineCounterObject(m_FilePath, m_Filter->getWizardData().numberOfLines);
 
-
     QVector<size_t> tupleDimsArray = m_Filter->getWizardData().tupleDims;
 
-    if (tupleDimsArray.size() > 0)
+    if(tupleDimsArray.size() > 0)
     {
       QString tupleDimsStr = "";
-      for (int i = 0; i < tupleDimsArray.size(); i++)
+      for(int i = 0; i < tupleDimsArray.size(); i++)
       {
         tupleDimsStr.append("[" + QString::number(tupleDimsArray[i]) + "]");
       }
@@ -150,7 +145,7 @@ void ImportASCIIDataWidget::setupGui()
 void ImportASCIIDataWidget::on_importFileBtn_pressed()
 {
   // Clean up previous wizard and settings
-  if (nullptr != m_ImportWizard)
+  if(nullptr != m_ImportWizard)
   {
     delete m_ImportWizard;
     m_ImportWizard = nullptr;
@@ -164,12 +159,12 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
   dialog->setWindowTitle("Select File To Import");
   dialog->setLabelText(QFileDialog::Accept, "Import");
 
-  if (dialog->exec())
+  if(dialog->exec())
   {
     m_FilePath = dialog->selectedFiles()[0];
     QFileInfo fi(m_FilePath);
 
-    if (m_FilePath.isEmpty() == true)
+    if(m_FilePath.isEmpty() == true)
     {
       return;
     }
@@ -189,7 +184,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       int64_t fileSize = qFile.size();
 
       // Open the file
-      if (qFile.open(QIODevice::ReadOnly) == false)
+      if(qFile.open(QIODevice::ReadOnly) == false)
       {
         QString errorStr = "Error: Unable to open file \"" + m_FilePath + "\"";
         fputs(errorStr.toStdString().c_str(), stderr);
@@ -197,7 +192,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       }
 
       int64_t actualSize;
-      if (fileSize <= bufferSize)
+      if(fileSize <= bufferSize)
       {
         actualSize = fileSize;
       }
@@ -207,8 +202,8 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       }
 
       // Allocate the buffer
-      buffer = (char*)malloc(sizeof(char)*actualSize);
-      if (buffer == nullptr)
+      buffer = (char*)malloc(sizeof(char) * actualSize);
+      if(buffer == nullptr)
       {
         QString errorStr = "Error: Unable to allocate memory to read in data from \"" + m_FilePath + "\"";
         fputs(errorStr.toStdString().c_str(), stderr);
@@ -217,7 +212,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
 
       // Copy the file contents into the buffer
       result = qFile.read(buffer, actualSize);
-      if (result != actualSize)
+      if(result != actualSize)
       {
         QString errorStr = "Error: There was an error reading the data from \"" + m_FilePath + "\"";
         fputs(errorStr.toStdString().c_str(), stderr);
@@ -228,38 +223,39 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       bool hasNewLines = false;
       bool hasCarriageReturns = false;
       bool hasTabs = false;
-      for (int i = 0; i < actualSize; i++)
+      for(int i = 0; i < actualSize; i++)
       {
         char currentChar = buffer[i];
 
-        if (currentChar < 32 && currentChar != 9 && currentChar != 10 && currentChar != 13)
+        if(currentChar < 32 && currentChar != 9 && currentChar != 10 && currentChar != 13)
         {
           // This is an unprintable character, so throw up an error dialog and STOP
           QString errorStr = "Unprintable characters have been detected in the file \"" + m_FilePath + "\"\n\nPlease import a different file.";
           QMessageBox::critical(this, tr("ASCII Data Import Error"), tr(errorStr.toStdString().c_str()), QMessageBox::Ok, QMessageBox::Ok);
           return;
         }
-        else if (currentChar == 9)
+        else if(currentChar == 9)
         {
           hasTabs = true;
         }
-        else if (currentChar == 10)
+        else if(currentChar == 10)
         {
           hasNewLines = true;
         }
-        else if (currentChar == 13)
+        else if(currentChar == 13)
         {
           hasCarriageReturns = true;
         }
       }
 
-      if (hasNewLines == false && hasCarriageReturns == false && hasTabs == false)
+      if(hasNewLines == false && hasCarriageReturns == false && hasTabs == false)
       {
         // This might be a binary file, so throw up a warning dialog
-        QString warningStr = "The file \"" + m_FilePath + "\" might be a binary file, because line-feed, tab, or carriage return characters have not been detected.\nWarning: Using this file may crash the program or cause unexpected results.\n\nWould you still like to continue importing the file?";
+        QString warningStr = "The file \"" + m_FilePath + "\" might be a binary file, because line-feed, tab, or carriage return characters have not been detected.\nWarning: Using this file may "
+                                                          "crash the program or cause unexpected results.\n\nWould you still like to continue importing the file?";
         int ret = QMessageBox::warning(this, tr("ASCII Data Import Warning"), tr(warningStr.toStdString().c_str()), QMessageBox::No | QMessageBox::Yes, QMessageBox::Yes);
 
-        if (ret == QMessageBox::No)
+        if(ret == QMessageBox::No)
         {
           return;
         }
@@ -270,10 +266,10 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       free(buffer);
     }
 
-    if (m_WorkerThread != nullptr)
+    if(m_WorkerThread != nullptr)
     {
       m_WorkerThread->wait(); // Wait until the thread is complete
-      if (m_WorkerThread->isFinished() == true)
+      if(m_WorkerThread->isFinished() == true)
       {
         delete m_WorkerThread;
         m_WorkerThread = nullptr;
@@ -281,7 +277,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
     }
     m_WorkerThread = new QThread(); // Create a new Thread Resource
 
-    if (nullptr != m_LineCounter)
+    if(nullptr != m_LineCounter)
     {
       delete m_LineCounter;
       m_LineCounter = nullptr;
@@ -289,20 +285,16 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
     m_LineCounter = new LineCounterObject(m_FilePath);
 
     // When the thread starts its event loop, start the LineCounter going
-    connect(m_WorkerThread, SIGNAL(started()),
-            m_LineCounter, SLOT(run()));
+    connect(m_WorkerThread, SIGNAL(started()), m_LineCounter, SLOT(run()));
 
     // When the LineCounter ends then tell the QThread to stop its event loop
-    connect(m_LineCounter, SIGNAL(finished() ),
-            m_WorkerThread, SLOT(quit()) );
+    connect(m_LineCounter, SIGNAL(finished()), m_WorkerThread, SLOT(quit()));
 
     // When the QThread finishes, tell this object that it has finished.
-    connect(m_WorkerThread, SIGNAL(finished()),
-            this, SLOT( lineCountDidFinish() ) );
+    connect(m_WorkerThread, SIGNAL(finished()), this, SLOT(lineCountDidFinish()));
 
     // Connection to send progress updates
-    connect(m_LineCounter, SIGNAL(progressUpdateGenerated(double)),
-            this, SLOT( updateProgress(double) ) );
+    connect(m_LineCounter, SIGNAL(progressUpdateGenerated(double)), this, SLOT(updateProgress(double)));
 
     // Move the QFile object into the thread that we just created.
     m_LineCounter->moveToThread(m_WorkerThread);
@@ -333,7 +325,7 @@ void ImportASCIIDataWidget::lineCountDidFinish()
   m_ImportWizard = new ImportASCIIDataWizard(m_FilePath, numOfLines, this);
   int result = m_ImportWizard->exec();
 
-  if (result == QDialog::Accepted)
+  if(result == QDialog::Accepted)
   {
     int beginIndex = m_ImportWizard->getBeginningLineNum();
     int numOfDataLines = numOfLines - beginIndex + 1;
@@ -341,7 +333,7 @@ void ImportASCIIDataWidget::lineCountDidFinish()
     QVector<size_t> dims = m_ImportWizard->getTupleDims();
 
     QString tupleDimsStr = "";
-    for (int i = 0; i < dims.size(); i++)
+    for(int i = 0; i < dims.size(); i++)
     {
       tupleDimsStr.append("[" + QString::number(dims[i]) + "]");
     }
@@ -367,10 +359,10 @@ void ImportASCIIDataWidget::lineCountDidFinish()
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::on_editHeadersBtn_pressed()
 {
-  if (nullptr != m_ImportWizard)
+  if(nullptr != m_ImportWizard)
   {
     DataFormatPage* dataFrmtPg = dynamic_cast<DataFormatPage*>(m_ImportWizard->page(ImportASCIIDataWizard::DataFormat));
-    if (nullptr != dataFrmtPg)
+    if(nullptr != dataFrmtPg)
     {
       dataFrmtPg->launchEditHeadersDialog();
       emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
@@ -406,7 +398,7 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
   ASCIIWizardData data;
   int numOfLines = -1;
 
-  if (nullptr != m_ImportWizard)
+  if(nullptr != m_ImportWizard)
   {
     numOfLines = m_LineCounter->getNumberOfLines();
 
@@ -424,9 +416,9 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
   QVariant v;
   v.setValue(data);
   bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if (false == ok)
+  if(false == ok)
   {
-    //FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+    // FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 }
 
@@ -435,7 +427,6 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::beforePreflight()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -443,5 +434,4 @@ void ImportASCIIDataWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::afterPreflight()
 {
-
 }

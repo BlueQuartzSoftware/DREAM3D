@@ -37,8 +37,8 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
@@ -49,25 +49,23 @@
 // Include the MOC generated file for this class
 #include "moc_FindAvgOrientations.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindAvgOrientations::FindAvgOrientations() :
-  AbstractFilter(),
-  m_FeatureIdsArrayPath("", "", ""),
-  m_CellPhasesArrayPath("", "", ""),
-  m_QuatsArrayPath("", "", ""),
-  m_CrystalStructuresArrayPath("", "", ""),
-  m_AvgQuatsArrayPath("", "", ""),
-  m_AvgEulerAnglesArrayPath("", "", ""),
-  m_FeatureIds(nullptr),
-  m_CellPhases(nullptr),
-  m_Quats(nullptr),
-  m_CrystalStructures(nullptr),
-  m_FeatureEulerAngles(nullptr),
-  m_AvgQuats(nullptr)
+FindAvgOrientations::FindAvgOrientations()
+: AbstractFilter()
+, m_FeatureIdsArrayPath("", "", "")
+, m_CellPhasesArrayPath("", "", "")
+, m_QuatsArrayPath("", "", "")
+, m_CrystalStructuresArrayPath("", "", "")
+, m_AvgQuatsArrayPath("", "", "")
+, m_AvgEulerAnglesArrayPath("", "", "")
+, m_FeatureIds(nullptr)
+, m_CellPhases(nullptr)
+, m_Quats(nullptr)
+, m_CrystalStructures(nullptr)
+, m_FeatureEulerAngles(nullptr)
+, m_AvgQuats(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -124,12 +122,12 @@ void FindAvgOrientations::setupFilterParameters()
 void FindAvgOrientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setAvgEulerAnglesArrayPath(reader->readDataArrayPath("AvgEulerAnglesArrayPath", getAvgEulerAnglesArrayPath() ) );
-  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setAvgEulerAnglesArrayPath(reader->readDataArrayPath("AvgEulerAnglesArrayPath", getAvgEulerAnglesArrayPath()));
+  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -138,7 +136,6 @@ void FindAvgOrientations::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 void FindAvgOrientations::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -151,35 +148,62 @@ void FindAvgOrientations::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getFeatureIdsArrayPath());
+  }
 
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getCellPhasesArrayPath());
+  }
 
   cDims[0] = 4;
-  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getQuatsArrayPath()); }
+  m_QuatsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_QuatsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Quats = m_QuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getQuatsArrayPath());
+  }
 
-  m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgQuatsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgQuatsArrayPath(), 0,
+                                                                                                                 cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AvgQuatsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
-  m_FeatureEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgEulerAnglesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, getAvgEulerAnglesArrayPath(), 0, cDims);  /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -204,7 +228,10 @@ void FindAvgOrientations::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_AvgQuatsPtr.lock()->getNumberOfTuples();
@@ -217,14 +244,14 @@ void FindAvgOrientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     QuaternionMathF::ElementWiseAssign(avgQuats[i], 0.0);
   }
 
-  for (size_t i = 0; i < totalPoints; i++)
+  for(size_t i = 0; i < totalPoints; i++)
   {
-    if (m_FeatureIds[i] > 0 && m_CellPhases[i] > 0)
+    if(m_FeatureIds[i] > 0 && m_CellPhases[i] > 0)
     {
       counts[m_FeatureIds[i]] += 1;
       phase = m_CellPhases[i];
@@ -232,7 +259,7 @@ void FindAvgOrientations::execute()
       QuaternionMathF::Copy(avgQuats[m_FeatureIds[i]], curavgquat);
       QuaternionMathF::ScalarDivide(curavgquat, counts[m_FeatureIds[i]]);
 
-      if (counts[m_FeatureIds[i]] == 1)
+      if(counts[m_FeatureIds[i]] == 1)
       {
         QuaternionMathF::Identity(curavgquat);
       }
@@ -241,9 +268,9 @@ void FindAvgOrientations::execute()
     }
   }
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
-    if (counts[i] == 0)
+    if(counts[i] == 0)
     {
       QuaternionMathF::Identity(avgQuats[i]);
     }
@@ -292,23 +319,29 @@ const QString FindAvgOrientations::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgOrientations::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgOrientations::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
+{
+  return SIMPL::FilterSubGroups::CrystallographicFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgOrientations::getHumanLabel()
-{ return "Find Feature Average Orientations"; }
+{
+  return "Find Feature Average Orientations";
+}

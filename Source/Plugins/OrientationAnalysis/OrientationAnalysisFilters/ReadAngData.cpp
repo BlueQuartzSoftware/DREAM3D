@@ -40,8 +40,8 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "EbsdLib/TSL/AngFields.h"
@@ -54,51 +54,48 @@
  */
 class ReadAngDataPrivate
 {
-    Q_DISABLE_COPY(ReadAngDataPrivate)
-    Q_DECLARE_PUBLIC(ReadAngData)
-    ReadAngData* const q_ptr;
-    ReadAngDataPrivate(ReadAngData* ptr);
+  Q_DISABLE_COPY(ReadAngDataPrivate)
+  Q_DECLARE_PUBLIC(ReadAngData)
+  ReadAngData* const q_ptr;
+  ReadAngDataPrivate(ReadAngData* ptr);
 
-    Ang_Private_Data m_Data;
+  Ang_Private_Data m_Data;
 
-    QString m_InputFile_Cache;
-    QDateTime m_TimeStamp_Cache;
+  QString m_InputFile_Cache;
+  QDateTime m_TimeStamp_Cache;
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadAngDataPrivate::ReadAngDataPrivate(ReadAngData* ptr) :
-  q_ptr(ptr),
-  m_InputFile_Cache(""),
-  m_TimeStamp_Cache(QDateTime())
+ReadAngDataPrivate::ReadAngDataPrivate(ReadAngData* ptr)
+: q_ptr(ptr)
+, m_InputFile_Cache("")
+, m_TimeStamp_Cache(QDateTime())
 {
-
 }
 
 // Include the MOC generated file for this class
 #include "moc_ReadAngData.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadAngData::ReadAngData() :
-  AbstractFilter(),
-  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
-  m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName),
-  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_FileWasRead(false),
-  m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName),
-  m_InputFile(""),
-  m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection),
-  m_Manufacturer(Ebsd::UnknownManufacturer),
-  d_ptr(new ReadAngDataPrivate(this)),
-  m_CellPhases(nullptr),
-  m_CellEulerAngles(nullptr),
-  m_CrystalStructures(nullptr),
-  m_LatticeConstants(nullptr)
+ReadAngData::ReadAngData()
+: AbstractFilter()
+, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+, m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
+, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_FileWasRead(false)
+, m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
+, m_InputFile("")
+, m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
+, m_Manufacturer(Ebsd::UnknownManufacturer)
+, d_ptr(new ReadAngDataPrivate(this))
+, m_CellPhases(nullptr)
+, m_CellEulerAngles(nullptr)
+, m_CrystalStructures(nullptr)
+, m_LatticeConstants(nullptr)
 {
   setupFilterParameters();
 }
@@ -150,7 +147,6 @@ void ReadAngData::readFilterParameters(AbstractFilterParametersReader* reader, i
 // -----------------------------------------------------------------------------
 void ReadAngData::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -165,45 +161,54 @@ void ReadAngData::dataCheck()
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   tDims.resize(1);
   tDims[0] = 0;
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   QFileInfo fi(m_InputFile);
-  if (fi.exists() == false)
+  if(fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if(m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
 
-  if (m_InputFile.isEmpty() == false) // User set a filename, so lets check it
+  if(m_InputFile.isEmpty() == false) // User set a filename, so lets check it
   {
     QVector<size_t> tDims(3, 0);
 
     QString ext = fi.suffix();
     QVector<QString> names;
-    if (ext.compare(Ebsd::Ang::FileExt) == 0)
+    if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
       std::shared_ptr<AngReader> reader(new AngReader());
       readDataFile(reader.get(), m, tDims, ANG_HEADER_ONLY);
-      if (getErrorCondition() < 0)
+      if(getErrorCondition() < 0)
       {
         return;
       }
@@ -211,16 +216,16 @@ void ReadAngData::dataCheck()
       // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
       cellAttrMat->resizeAttributeArrays(tDims);
       AngFields angfeatures;
-      names = angfeatures.getFilterFeatures<QVector<QString> >();
+      names = angfeatures.getFilterFeatures<QVector<QString>>();
       tDims.resize(1);
       tDims[0] = 1;
-      for (int32_t i = 0; i < names.size(); ++i)
+      for(int32_t i = 0; i < names.size(); ++i)
       {
-        if (reader->getPointerType(names[i]) == Ebsd::Int32)
+        if(reader->getPointerType(names[i]) == Ebsd::Int32)
         {
           cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, tDims);
         }
-        else if (reader->getPointerType(names[i]) == Ebsd::Float)
+        else if(reader->getPointerType(names[i]) == Ebsd::Float)
         {
           cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, tDims);
         }
@@ -236,26 +241,38 @@ void ReadAngData::dataCheck()
 
     QVector<size_t> cDims(1, 3);
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::EulerAngles);
-    m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (nullptr != m_CellEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+        this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_CellEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     cDims[0] = 1;
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::Phases);
-    m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (nullptr != m_CellPhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+        this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_CellPhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::CrystalStructures);
-    m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(
+        this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_CrystalStructuresPtr.lock().get())                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     cDims[0] = 6;
     tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::LatticeConstants);
-    m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if (nullptr != m_LatticeConstantsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+        this, tempPath, 0.0, cDims);                  /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_LatticeConstantsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
     cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
@@ -292,23 +309,23 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVec
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
-  if (flag == ANG_FULL_FILE)
+  if(flag == ANG_FULL_FILE)
   {
     setInputFile_Cache(""); // We need something to trigger the file read below
   }
 
   // Drop into this if statement if we need to read from a file
-  if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+  if(m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
   {
     float zStep = 1.0, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
     size_t zDim = 1;
 
     reader->setFileName(m_InputFile);
 
-    if (flag == ANG_HEADER_ONLY)
+    if(flag == ANG_HEADER_ONLY)
     {
       int32_t err = reader->readHeaderOnly();
-      if (err < 0)
+      if(err < 0)
       {
         setErrorCondition(err);
         notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
@@ -324,7 +341,10 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVec
       if(reader->getGrid().compare(Ebsd::Ang::HexGrid) == 0)
       {
         setErrorCondition(-1000);
-        notifyErrorMessage(getHumanLabel(), "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.", getErrorCondition());
+        notifyErrorMessage(
+            getHumanLabel(),
+            "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.",
+            getErrorCondition());
         m_FileWasRead = false;
         return;
       }
@@ -332,7 +352,7 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVec
     else
     {
       int32_t err = reader->readFile();
-      if (err < 0)
+      if(err < 0)
       {
         setErrorCondition(err);
         notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
@@ -379,7 +399,7 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVec
     m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
   }
 
-  if (flag == ANG_FULL_FILE)
+  if(flag == ANG_FULL_FILE)
   {
     loadMaterialInfo(reader);
   }
@@ -391,7 +411,7 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVec
 int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
 {
   QVector<AngPhase::Pointer> phases = getData().phases;
-  if (phases.size() == 0)
+  if(phases.size() == 0)
   {
     setErrorCondition(reader->getErrorCode());
     notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
@@ -414,7 +434,7 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   latticeConstants->setComponent(0, 4, 0.0f);
   latticeConstants->setComponent(0, 5, 0.0f);
 
-  for (size_t i = 0; i < phases.size(); i++)
+  for(size_t i = 0; i < phases.size(); i++)
   {
     int32_t phaseID = phases[i]->getPhaseIndex();
     crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure());
@@ -427,12 +447,17 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
     latticeConstants->setComponent(phaseID, 3, lc[3]);
     latticeConstants->setComponent(phaseID, 4, lc[4]);
     latticeConstants->setComponent(phaseID, 5, lc[5]);
-
   }
   DataContainer::Pointer vdc = getDataContainerArray()->getDataContainer(getDataContainerName());
-  if (nullptr == vdc) { return -1; }
+  if(nullptr == vdc)
+  {
+    return -1;
+  }
   AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
-  if (nullptr == attrMatrix.get()) { return -2; }
+  if(nullptr == attrMatrix.get())
+  {
+    return -2;
+  }
 
   // Resize the AttributeMatrix based on the size of the crystal structures array
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
@@ -444,12 +469,16 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
-  if (nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_LatticeConstantsPtr = latticeConstants;
-  if (nullptr != m_LatticeConstantsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_LatticeConstantsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   return 0;
 }
 
@@ -481,9 +510,9 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
   // Adjust the values of the 'phase' data to correct for invalid values
   {
     phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ang::PhaseData));
-    for (size_t i = 0; i < totalPoints; i++)
+    for(size_t i = 0; i < totalPoints; i++)
     {
-      if (phasePtr[i] < 1)
+      if(phasePtr[i] < 1)
       {
         phasePtr[i] = 1;
       }
@@ -502,7 +531,7 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
     fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
-    for (size_t i = 0; i < totalPoints; i++)
+    for(size_t i = 0; i < totalPoints; i++)
     {
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
@@ -548,7 +577,10 @@ void ReadAngData::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   std::shared_ptr<AngReader> reader(new AngReader());
   QVector<size_t> tDims(3, 0);
@@ -569,7 +601,7 @@ void ReadAngData::execute()
     QFileInfo newFi(m_InputFile);
     QDateTime timeStamp(newFi.lastModified());
 
-    if (m_InputFile == getInputFile_Cache() && getTimeStamp_Cache().isValid() && getTimeStamp_Cache() >= timeStamp)
+    if(m_InputFile == getInputFile_Cache() && getTimeStamp_Cache().isValid() && getTimeStamp_Cache() >= timeStamp)
     {
       setTimeStamp_Cache(timeStamp);
       setInputFile_Cache(m_InputFile);
@@ -586,7 +618,7 @@ void ReadAngData::execute()
 AbstractFilter::Pointer ReadAngData::newFilterInstance(bool copyFilterParameters)
 {
   ReadAngData::Pointer filter = ReadAngData::New();
-  if (true == copyFilterParameters)
+  if(true == copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     copyFilterParameterInstanceVariables(filter.get());
@@ -617,23 +649,29 @@ const QString ReadAngData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadAngData::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadAngData::getSubGroupName()
-{ return SIMPL::FilterSubGroups::InputFilters; }
+{
+  return SIMPL::FilterSubGroups::InputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadAngData::getHumanLabel()
-{ return "Read EDAX EBSD Data (.ang)"; }
+{
+  return "Read EDAX EBSD Data (.ang)";
+}

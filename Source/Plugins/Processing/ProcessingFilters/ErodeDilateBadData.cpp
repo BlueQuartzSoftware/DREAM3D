@@ -37,10 +37,10 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -50,21 +50,19 @@
 // Include the MOC generated file for this class
 #include "moc_ErodeDilateBadData.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ErodeDilateBadData::ErodeDilateBadData() :
-  AbstractFilter(),
-  m_Direction(0),
-  m_NumIterations(1),
-  m_XDirOn(true),
-  m_YDirOn(true),
-  m_ZDirOn(true),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_Neighbors(nullptr),
-  m_FeatureIds(nullptr)
+ErodeDilateBadData::ErodeDilateBadData()
+: AbstractFilter()
+, m_Direction(0)
+, m_NumIterations(1)
+, m_XDirOn(true)
+, m_YDirOn(true)
+, m_ZDirOn(true)
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_Neighbors(nullptr)
+, m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -102,7 +100,8 @@ void ErodeDilateBadData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Z Direction", ZDirOn, FilterParameter::Parameter, ErodeDilateBadData));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, ErodeDilateBadData, req));
   }
   setFilterParameters(parameters);
@@ -114,12 +113,12 @@ void ErodeDilateBadData::setupFilterParameters()
 void ErodeDilateBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setDirection( reader->readValue("Direction", getDirection()) );
-  setNumIterations( reader->readValue("NumIterations", getNumIterations()) );
-  setXDirOn(reader->readValue("XDirOn", getXDirOn()) );
-  setYDirOn(reader->readValue("YDirOn", getYDirOn()) );
-  setZDirOn(reader->readValue("ZDirOn", getZDirOn()) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setDirection(reader->readValue("Direction", getDirection()));
+  setNumIterations(reader->readValue("NumIterations", getNumIterations()));
+  setXDirOn(reader->readValue("XDirOn", getXDirOn()));
+  setYDirOn(reader->readValue("YDirOn", getYDirOn()));
+  setZDirOn(reader->readValue("ZDirOn", getZDirOn()));
   reader->closeFilterGroup();
 }
 
@@ -140,7 +139,7 @@ void ErodeDilateBadData::dataCheck()
   initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  if (getNumIterations() <= 0)
+  if(getNumIterations() <= 0)
   {
     QString ss = QObject::tr("The number of iterations (%1) must be positive").arg(getNumIterations());
     setErrorCondition(-5555);
@@ -148,11 +147,13 @@ void ErodeDilateBadData::dataCheck()
   }
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -174,7 +175,10 @@ void ErodeDilateBadData::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
@@ -186,11 +190,8 @@ void ErodeDilateBadData::execute()
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   int32_t good = 1;
@@ -202,13 +203,16 @@ void ErodeDilateBadData::execute()
   int64_t neighpoint = 0;
   size_t numfeatures = 0;
 
-  for (size_t i = 0; i < totalPoints; i++)
+  for(size_t i = 0; i < totalPoints; i++)
   {
     featurename = m_FeatureIds[i];
-    if (featurename > numfeatures) { numfeatures = featurename; }
+    if(featurename > numfeatures)
+    {
+      numfeatures = featurename;
+    }
   }
 
-  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -218,44 +222,62 @@ void ErodeDilateBadData::execute()
 
   QVector<int32_t> n(numfeatures + 1, 0);
 
-  for (int32_t iteration = 0; iteration < m_NumIterations; iteration++)
+  for(int32_t iteration = 0; iteration < m_NumIterations; iteration++)
   {
-    for (int64_t k = 0; k < dims[2]; k++)
+    for(int64_t k = 0; k < dims[2]; k++)
     {
       kstride = dims[0] * dims[1] * k;
-      for (int64_t j = 0; j < dims[1]; j++)
+      for(int64_t j = 0; j < dims[1]; j++)
       {
         jstride = dims[0] * j;
-        for (int64_t i = 0; i < dims[0]; i++)
+        for(int64_t i = 0; i < dims[0]; i++)
         {
           count = kstride + jstride + i;
           featurename = m_FeatureIds[count];
-          if (featurename == 0)
+          if(featurename == 0)
           {
             current = 0;
             most = 0;
-            for (int32_t l = 0; l < 6; l++)
+            for(int32_t l = 0; l < 6; l++)
             {
               good = 1;
               neighpoint = count + neighpoints[l];
-              if (l == 0 && (k == 0 || m_ZDirOn == false)) { good = 0; }
-              else if (l == 5 && (k == (dims[2] - 1) || m_ZDirOn == false)) { good = 0; }
-              else if (l == 1 && (j == 0 || m_YDirOn == false)) { good = 0; }
-              else if (l == 4 && (j == (dims[1] - 1) || m_YDirOn == false)) { good = 0; }
-              else if (l == 2 && (i == 0 || m_XDirOn == false)) { good = 0; }
-              else if (l == 3 && (i == (dims[0] - 1) || m_XDirOn == false)) { good = 0; }
-              if (good == 1)
+              if(l == 0 && (k == 0 || m_ZDirOn == false))
+              {
+                good = 0;
+              }
+              else if(l == 5 && (k == (dims[2] - 1) || m_ZDirOn == false))
+              {
+                good = 0;
+              }
+              else if(l == 1 && (j == 0 || m_YDirOn == false))
+              {
+                good = 0;
+              }
+              else if(l == 4 && (j == (dims[1] - 1) || m_YDirOn == false))
+              {
+                good = 0;
+              }
+              else if(l == 2 && (i == 0 || m_XDirOn == false))
+              {
+                good = 0;
+              }
+              else if(l == 3 && (i == (dims[0] - 1) || m_XDirOn == false))
+              {
+                good = 0;
+              }
+              if(good == 1)
               {
                 feature = m_FeatureIds[neighpoint];
-                if (m_Direction == 0 && feature > 0)
+                if(m_Direction == 0 && feature > 0)
                 {
                   m_Neighbors[neighpoint] = count;
                 }
-                if (feature > 0 && m_Direction == 1)
+                if(feature > 0 && m_Direction == 1)
                 {
                   n[feature]++;
                   current = n[feature];
-                  if (current > most)
+                  if(current > most)
                   {
                     most = current;
                     m_Neighbors[count] = neighpoint;
@@ -263,19 +285,37 @@ void ErodeDilateBadData::execute()
                 }
               }
             }
-            if (m_Direction == 1)
+            if(m_Direction == 1)
             {
-              for (int32_t l = 0; l < 6; l++)
+              for(int32_t l = 0; l < 6; l++)
               {
                 good = 1;
                 neighpoint = count + neighpoints[l];
-                if (l == 0 && k == 0) { good = 0; }
-                if (l == 5 && k == (dims[2] - 1)) { good = 0; }
-                if (l == 1 && j == 0) { good = 0; }
-                if (l == 4 && j == (dims[1] - 1)) { good = 0; }
-                if (l == 2 && i == 0) { good = 0; }
-                if (l == 3 && i == (dims[0] - 1)) { good = 0; }
-                if (good == 1)
+                if(l == 0 && k == 0)
+                {
+                  good = 0;
+                }
+                if(l == 5 && k == (dims[2] - 1))
+                {
+                  good = 0;
+                }
+                if(l == 1 && j == 0)
+                {
+                  good = 0;
+                }
+                if(l == 4 && j == (dims[1] - 1))
+                {
+                  good = 0;
+                }
+                if(l == 2 && i == 0)
+                {
+                  good = 0;
+                }
+                if(l == 3 && i == (dims[0] - 1))
+                {
+                  good = 0;
+                }
+                if(good == 1)
                 {
                   feature = m_FeatureIds[neighpoint];
                   n[feature] = 0;
@@ -290,14 +330,13 @@ void ErodeDilateBadData::execute()
     QString attrMatName = m_FeatureIdsArrayPath.getAttributeMatrixName();
     QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
-    for (size_t j = 0; j < totalPoints; j++)
+    for(size_t j = 0; j < totalPoints; j++)
     {
       featurename = m_FeatureIds[j];
       int32_t neighbor = m_Neighbors[j];
-      if (neighbor >= 0)
+      if(neighbor >= 0)
       {
-        if ( (featurename == 0 && m_FeatureIds[neighbor] > 0 && m_Direction == 1)
-             || (featurename > 0 && m_FeatureIds[neighbor] == 0 && m_Direction == 0))
+        if((featurename == 0 && m_FeatureIds[neighbor] > 0 && m_Direction == 1) || (featurename > 0 && m_FeatureIds[neighbor] == 0 && m_Direction == 0))
         {
           for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
@@ -349,23 +388,29 @@ const QString ErodeDilateBadData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
+  vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateBadData::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateBadData::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CleanupFilters; }
+{
+  return SIMPL::FilterSubGroups::CleanupFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateBadData::getHumanLabel()
-{ return "Erode/Dilate Bad Data"; }
+{
+  return "Erode/Dilate Bad Data";
+}

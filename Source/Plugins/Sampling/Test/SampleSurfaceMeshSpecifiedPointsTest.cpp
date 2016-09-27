@@ -36,95 +36,100 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Common/FilterPipeline.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "SamplingTestFileLocations.h"
 
 class SampleSurfaceMeshSpecifiedPointsTest
 {
-  public:
-    SampleSurfaceMeshSpecifiedPointsTest(){}
-    virtual ~SampleSurfaceMeshSpecifiedPointsTest(){}
-    SIMPL_TYPE_MACRO(SampleSurfaceMeshSpecifiedPointsTest)
+public:
+  SampleSurfaceMeshSpecifiedPointsTest()
+  {
+  }
+  virtual ~SampleSurfaceMeshSpecifiedPointsTest()
+  {
+  }
+  SIMPL_TYPE_MACRO(SampleSurfaceMeshSpecifiedPointsTest)
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void RemoveTestFiles()
-    {
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void RemoveTestFiles()
+  {
 #if REMOVE_TEST_FILES
-      QFile::remove(UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile1);
-      QFile::remove(UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile2);
+    QFile::remove(UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile1);
+    QFile::remove(UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile2);
 #endif
-    }
+  }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    int TestFilterAvailability()
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int TestFilterAvailability()
+  {
+    // Now instantiate the SampleSurfaceMeshSpecifiedPointsTest Filter from the FilterManager
+    QString filtName = "SampleSurfaceMeshSpecifiedPoints";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    if(nullptr == filterFactory.get())
     {
-      // Now instantiate the SampleSurfaceMeshSpecifiedPointsTest Filter from the FilterManager
-      QString filtName = "SampleSurfaceMeshSpecifiedPoints";
-      FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (nullptr == filterFactory.get())
-      {
-        std::stringstream ss;
-        ss << "The SampleSurfaceMeshSpecifiedPointsTest Requires the use of the " << filtName.toStdString() << " filter which is found in the Sampling Plugin";
-        DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-      }
-      return 0;
+      std::stringstream ss;
+      ss << "The SampleSurfaceMeshSpecifiedPointsTest Requires the use of the " << filtName.toStdString() << " filter which is found in the Sampling Plugin";
+      DREAM3D_TEST_THROW_EXCEPTION(ss.str())
     }
+    return 0;
+  }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    int RunTest()
-    {
-      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      /* Please write SampleSurfaceMeshSpecifiedPointsTest test code here.
-   *
-   * Your IO test files are:
-   * UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile1
-   * UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile2
-   *
-   * DREAM3D provides some macros that will throw exceptions when a test fails
-   * and thus report that during testing. These macros are located in the
-   * DREAM3DLib/Utilities/UnitTestSupport.hpp file. Some examples are:
-   *
-   * DREAM3D_REQUIRE_EQUAL(foo, 0)
-   * This means that if the variable foo is NOT equal to Zero then test will fail
-   * and the current test will exit immediately. If there are more tests registered
-   * with the DREAM3D_REGISTER_TEST() macro, the next test will execute. There are
-   * lots of examples in the DREAM3D/Test folder to look at.
-   */
-      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int RunTest()
+  {
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    /* Please write SampleSurfaceMeshSpecifiedPointsTest test code here.
+ *
+ * Your IO test files are:
+ * UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile1
+ * UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile2
+ *
+ * DREAM3D provides some macros that will throw exceptions when a test fails
+ * and thus report that during testing. These macros are located in the
+ * DREAM3DLib/Utilities/UnitTestSupport.hpp file. Some examples are:
+ *
+ * DREAM3D_REQUIRE_EQUAL(foo, 0)
+ * This means that if the variable foo is NOT equal to Zero then test will fail
+ * and the current test will exit immediately. If there are more tests registered
+ * with the DREAM3D_REGISTER_TEST() macro, the next test will execute. There are
+ * lots of examples in the DREAM3D/Test folder to look at.
+ */
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      return EXIT_SUCCESS;
-    }
+    return EXIT_SUCCESS;
+  }
 
-    /**
-  * @brief
+  /**
+* @brief
 */
-    void operator()()
-    {
-      int err = EXIT_SUCCESS;
-      DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+  void operator()()
+  {
+    int err = EXIT_SUCCESS;
+    DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-      DREAM3D_REGISTER_TEST( RunTest() )
+    DREAM3D_REGISTER_TEST(RunTest())
 
-          DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    }
-  private:
-    SampleSurfaceMeshSpecifiedPointsTest(const SampleSurfaceMeshSpecifiedPointsTest&); // Copy Constructor Not Implemented
-    void operator=(const SampleSurfaceMeshSpecifiedPointsTest&); // Operator '=' Not Implemented
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
+  }
+
+private:
+  SampleSurfaceMeshSpecifiedPointsTest(const SampleSurfaceMeshSpecifiedPointsTest&); // Copy Constructor Not Implemented
+  void operator=(const SampleSurfaceMeshSpecifiedPointsTest&);                       // Operator '=' Not Implemented
 };

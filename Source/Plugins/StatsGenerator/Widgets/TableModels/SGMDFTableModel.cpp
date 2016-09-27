@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "SGMDFTableModel.h"
 
 #include <iostream>
 
-#include <QtWidgets/QStyleOptionComboBox>
 #include <QtWidgets/QAbstractItemDelegate>
+#include <QtWidgets/QStyleOptionComboBox>
 
 #include "Applications/SIMPLView/SIMPLViewApplication.h"
 
@@ -49,9 +48,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGMDFTableModel::SGMDFTableModel(QObject* parent) :
-  QAbstractTableModel(parent),
-  m_RowCount(0)
+SGMDFTableModel::SGMDFTableModel(QObject* parent)
+: QAbstractTableModel(parent)
+, m_RowCount(0)
 {
   m_ColumnCount = ColumnCount;
 }
@@ -63,36 +62,34 @@ SGMDFTableModel::~SGMDFTableModel()
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 Qt::ItemFlags SGMDFTableModel::flags(const QModelIndex& index) const
 {
   //  qDebug() << "SGMDFTableModel::flags" << "\n";
-  if (!index.isValid())
+  if(!index.isValid())
   {
     return Qt::NoItemFlags;
   }
   Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
-  if (index.isValid())
+  if(index.isValid())
   {
     //  theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
     int col = index.column();
-    if (col == Angle)
+    if(col == Angle)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
-    else if (col == Weight)
+    else if(col == Weight)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
-    else if (col == Axis)
+    else if(col == Axis)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
-
   }
   return theFlags;
 }
@@ -103,62 +100,71 @@ Qt::ItemFlags SGMDFTableModel::flags(const QModelIndex& index) const
 QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
-  if (!index.isValid())
+  if(!index.isValid())
   {
     return QVariant();
   }
 
-  if (role == Qt::SizeHintRole)
+  if(role == Qt::SizeHintRole)
   {
     QStyleOptionFrame comboBox;
     QLineEdit contents("1");
     switch(index.column())
     {
-      case Angle:
+    case Angle:
+    {
+      contents.setText(QString("11."));
+      const QString header = headerData(Angle, Qt::Horizontal, Qt::DisplayRole).toString();
+      if(header.length() > contents.text().length())
       {
-        contents.setText( QString("11.") );
-        const QString header = headerData(Angle, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > contents.text().length()) { contents.text() = header; }
-        break;
+        contents.text() = header;
       }
-      case Axis:
-      {
-        contents.setText( QString("1,1,1") );
-        const QString header = headerData(Axis, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > contents.text().length()) { contents.text() = header; }
-        break;
-      }
-      case Weight:
-      {
-        contents.setText( QString("11.") );
-        const QString header = headerData(Weight, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > contents.text().length()) { contents.text() = header; }
-        break;
-      }
-      default:
-        Q_ASSERT(false);
+      break;
     }
-    QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
+    case Axis:
+    {
+      contents.setText(QString("1,1,1"));
+      const QString header = headerData(Axis, Qt::Horizontal, Qt::DisplayRole).toString();
+      if(header.length() > contents.text().length())
+      {
+        contents.text() = header;
+      }
+      break;
+    }
+    case Weight:
+    {
+      contents.setText(QString("11."));
+      const QString header = headerData(Weight, Qt::Horizontal, Qt::DisplayRole).toString();
+      if(header.length() > contents.text().length())
+      {
+        contents.text() = header;
+      }
+      break;
+    }
+    default:
+      Q_ASSERT(false);
+    }
+    QFontMetrics fontMetrics(data(index, Qt::FontRole).value<QFont>());
     comboBox.fontMetrics = fontMetrics;
     QSize size(fontMetrics.width(contents.text()), fontMetrics.height());
     return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
-  else if (role == Qt::TextAlignmentRole)
+  else if(role == Qt::TextAlignmentRole)
   {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
-  else if (role == Qt::DisplayRole || role == Qt::EditRole)
+  else if(role == Qt::DisplayRole || role == Qt::EditRole)
   {
     int col = index.column();
-    if (col == Angle)
+    if(col == Angle)
     {
       return QVariant(m_Angles[index.row()]);
     }
-    else if (col == Weight)
+    else if(col == Weight)
     {
       return QVariant(m_Weights[index.row()]);
     }
-    else if (col == Axis)
+    else if(col == Axis)
     {
       return QVariant(m_Axis[index.row()]);
     }
@@ -172,23 +178,22 @@ QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
 // -----------------------------------------------------------------------------
 QVariant SGMDFTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     switch(section)
     {
-      case Angle:
-        return QVariant(QString("Angle\n(w)"));
-        break;
-      case Weight:
-        return QVariant(QString("Weight\n(MRD)"));
-        break;
-      case Axis:
-        return QVariant(QString("Axis\n(<h,k,l>)"));
-        break;
-      default:
-        break;
+    case Angle:
+      return QVariant(QString("Angle\n(w)"));
+      break;
+    case Weight:
+      return QVariant(QString("Weight\n(MRD)"));
+      break;
+    case Axis:
+      return QVariant(QString("Axis\n(<h,k,l>)"));
+      break;
+    default:
+      break;
     }
-
   }
   return QVariant();
 }
@@ -217,15 +222,13 @@ bool SGMDFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& 
   return false;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 bool SGMDFTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   // qDebug() << "SGMDFTableModel::setData " << value.toString() << "\n";
-  if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column()
-      >= m_ColumnCount)
+  if(!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column() >= m_ColumnCount)
   {
     return false;
   }
@@ -234,19 +237,18 @@ bool SGMDFTableModel::setData(const QModelIndex& index, const QVariant& value, i
   qint32 col = index.column();
   switch(col)
   {
-    case Angle:
-      m_Angles[row] = value.toFloat(&ok);
-      break;
-    case Axis:
-      m_Axis[row] = value.toString();
-      break;
-    case Weight:
-      m_Weights[row] = value.toFloat(&ok);
-      break;
+  case Angle:
+    m_Angles[row] = value.toFloat(&ok);
+    break;
+  case Axis:
+    m_Axis[row] = value.toString();
+    break;
+  case Weight:
+    m_Weights[row] = value.toFloat(&ok);
+    break;
 
-    default:
-      Q_ASSERT(false);
-
+  default:
+    Q_ASSERT(false);
   }
 
   emit dataChanged(index, index);
@@ -263,7 +265,7 @@ bool SGMDFTableModel::insertRows(int row, int count, const QModelIndex& index)
   float angle = 0.0;
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
     m_Angles.append(angle);
     m_Weights.append(weight);
@@ -280,12 +282,12 @@ bool SGMDFTableModel::insertRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
 {
-  if (count < 1)
+  if(count < 1)
   {
     return true;
   } // No Rows to remove
   beginRemoveRows(QModelIndex(), row, row + count - 1);
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
     m_Angles.remove(row);
     m_Weights.remove(row);
@@ -297,21 +299,20 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
   return true;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float > SGMDFTableModel::getData(int col)
+QVector<float> SGMDFTableModel::getData(int col)
 {
-  if (col == Angle)
+  if(col == Angle)
   {
     return m_Angles;
   }
-  else if (col == Weight)
+  else if(col == Weight)
   {
     return m_Weights;
   }
-  else if (col == Axis)
+  else if(col == Axis)
   {
     int count = rowCount();
     QVector<float> values;
@@ -319,10 +320,10 @@ QVector<float > SGMDFTableModel::getData(int col)
     float k = 0.0;
     float l = 0.0;
     int err = 0;
-    for (int r = 0; r < count; ++r)
+    for(int r = 0; r < count; ++r)
     {
       err = parseHKLRow(r, h, k, l);
-      if (err >= 0)
+      if(err >= 0)
       {
         values.push_back(h);
         values.push_back(k);
@@ -331,7 +332,7 @@ QVector<float > SGMDFTableModel::getData(int col)
     }
     return values;
   }
-  return QVector<float > ();
+  return QVector<float>();
 }
 
 // -----------------------------------------------------------------------------
@@ -340,16 +341,18 @@ QVector<float > SGMDFTableModel::getData(int col)
 int SGMDFTableModel::parseHKLRow(int row, float& h, float& k, float& l)
 {
   QString hklStr = m_Axis[row];
-  hklStr.chop(1); // remove the ">" charater from the end;
+  hklStr.chop(1);      // remove the ">" charater from the end;
   hklStr.remove(0, 1); // Remove the front "<" character
   bool ok = false;
   h = hklStr.section(',', 0, 0).toFloat(&ok);
   k = hklStr.section(',', 1, 1).toFloat(&ok);
   l = hklStr.section(',', 2, 2).toFloat(&ok);
-  if (ok) { return 0; }
+  if(ok)
+  {
+    return 0;
+  }
   return -1;
 }
-
 
 #if 0
 // -----------------------------------------------------------------------------
@@ -378,16 +381,16 @@ void SGMDFTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
-    case Angle:
-      m_Angles = data;
-      break;
-    case Weight:
-      m_Weights = data;
-      break;
-    case Axis:
-//      m_Axis = data; break;
-    default:
-      Q_ASSERT(false);
+  case Angle:
+    m_Angles = data;
+    break;
+  case Weight:
+    m_Weights = data;
+    break;
+  case Axis:
+  //      m_Axis = data; break;
+  default:
+    Q_ASSERT(false);
   }
 }
 
@@ -404,7 +407,7 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
   QModelIndex topLeft;
   QModelIndex botRight;
 
-  if (count > 0)
+  if(count > 0)
   {
     // Now mass insert the data to the table then emit that the data has changed
     beginInsertRows(QModelIndex(), row, row + count - 1);
@@ -413,7 +416,7 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
 
     m_Axis.clear();
     int h, k, l;
-    for (int i = 0; i < axis.size(); ++i)
+    for(int i = 0; i < axis.size(); ++i)
     {
       h = axis[i];
       k = axis[++i];
@@ -448,12 +451,9 @@ QAbstractItemDelegate* SGMDFTableModel::getItemDelegate()
   return new SGMDFItemDelegate;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void SGMDFTableModel::setInitialValues()
 {
-
 }
-

@@ -36,8 +36,8 @@
 #include "TriangleAreaFilter.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
@@ -45,13 +45,13 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
-#define SQR(value) (value)*(value)
+#define SQR(value) (value) * (value)
 
 /**
  * @brief The CalculateAreasImpl class implements a threaded algorithm that computes the area of each
@@ -59,63 +59,63 @@
  */
 class CalculateAreasImpl
 {
-    SharedVertexList::Pointer m_Nodes;
-    SharedTriList::Pointer m_Triangles;
-    double* m_Areas;
+  SharedVertexList::Pointer m_Nodes;
+  SharedTriList::Pointer m_Triangles;
+  double* m_Areas;
 
-  public:
-    CalculateAreasImpl(SharedVertexList::Pointer nodes,
-                       SharedTriList::Pointer triangles,
-                       double* Areas) :
-      m_Nodes(nodes),
-      m_Triangles(triangles),
-      m_Areas(Areas)
-    {}
-    virtual ~CalculateAreasImpl() {}
+public:
+  CalculateAreasImpl(SharedVertexList::Pointer nodes, SharedTriList::Pointer triangles, double* Areas)
+  : m_Nodes(nodes)
+  , m_Triangles(triangles)
+  , m_Areas(Areas)
+  {
+  }
+  virtual ~CalculateAreasImpl()
+  {
+  }
 
-    void generate(size_t start, size_t end) const
+  void generate(size_t start, size_t end) const
+  {
+    int64_t* triangles = m_Triangles->getPointer(0);
+    int64_t nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
+    float vecA[3] = {0.0f, 0.0f, 0.0f};
+    float vecB[3] = {0.0f, 0.0f, 0.0f};
+    float cross[3] = {0.0f, 0.0f, 0.0f};
+    for(size_t i = start; i < end; i++)
     {
-      int64_t* triangles = m_Triangles->getPointer(0);
-      int64_t nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
-      float vecA[3] = { 0.0f, 0.0f, 0.0f };
-      float vecB[3] = { 0.0f, 0.0f, 0.0f };
-      float cross[3] = { 0.0f, 0.0f, 0.0f };
-      for (size_t i = start; i < end; i++)
-      {
-        nIdx0 = triangles[i * 3];
-        nIdx1 = triangles[i * 3 + 1];
-        nIdx2 = triangles[i * 3 + 2];
-        float* A = m_Nodes->getPointer(nIdx0 * 3);
-        float* B = m_Nodes->getPointer(nIdx1 * 3);
-        float* C = m_Nodes->getPointer(nIdx2 * 3);
+      nIdx0 = triangles[i * 3];
+      nIdx1 = triangles[i * 3 + 1];
+      nIdx2 = triangles[i * 3 + 2];
+      float* A = m_Nodes->getPointer(nIdx0 * 3);
+      float* B = m_Nodes->getPointer(nIdx1 * 3);
+      float* C = m_Nodes->getPointer(nIdx2 * 3);
 
-        MatrixMath::Subtract3x1s(A, B, vecA);
-        MatrixMath::Subtract3x1s(A, C, vecB);
-        MatrixMath::CrossProduct(vecA, vecB, cross);
-        float area = 0.5f * MatrixMath::Magnitude3x1(cross);
-        m_Areas[i] = area;
-      }
+      MatrixMath::Subtract3x1s(A, B, vecA);
+      MatrixMath::Subtract3x1s(A, C, vecB);
+      MatrixMath::CrossProduct(vecA, vecB, cross);
+      float area = 0.5f * MatrixMath::Magnitude3x1(cross);
+      m_Areas[i] = area;
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      generate(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    generate(r.begin(), r.end());
+  }
 #endif
 };
 
 // Include the MOC generated file for this class
 #include "moc_TriangleAreaFilter.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleAreaFilter::TriangleAreaFilter() :
-  SurfaceMeshFilter(),
-  m_SurfaceMeshTriangleAreasArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas),
-  m_SurfaceMeshTriangleAreas(nullptr)
+TriangleAreaFilter::TriangleAreaFilter()
+: SurfaceMeshFilter()
+, m_SurfaceMeshTriangleAreasArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas)
+, m_SurfaceMeshTriangleAreas(nullptr)
 {
   setupFilterParameters();
 }
@@ -156,7 +156,6 @@ void TriangleAreaFilter::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 void TriangleAreaFilter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -170,13 +169,22 @@ void TriangleAreaFilter::dataCheck()
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(triangles->getTriangles());
+  }
 
   QVector<size_t> cDims(1, 1);
-  m_SurfaceMeshTriangleAreasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleAreasArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshTriangleAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshTriangleAreas = m_SurfaceMeshTriangleAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleAreasPtr.lock()); }
+  m_SurfaceMeshTriangleAreasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
+      this, getSurfaceMeshTriangleAreasArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshTriangleAreasPtr.lock().get())    /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshTriangleAreas = m_SurfaceMeshTriangleAreasPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(m_SurfaceMeshTriangleAreasPtr.lock());
+  }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
@@ -201,7 +209,10 @@ void TriangleAreaFilter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshTriangleAreasArrayPath().getDataContainerName());
 
@@ -213,11 +224,10 @@ void TriangleAreaFilter::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
-                      CalculateAreasImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleAreas), tbb::auto_partitioner());
-
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()), CalculateAreasImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleAreas),
+                      tbb::auto_partitioner());
   }
   else
 #endif
@@ -265,23 +275,29 @@ const QString TriangleAreaFilter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleAreaFilter::getGroupName()
-{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
+{
+  return SIMPL::FilterGroups::SurfaceMeshingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleAreaFilter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MiscFilters; }
+{
+  return SIMPL::FilterSubGroups::MiscFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleAreaFilter::getHumanLabel()
-{ return "Generate Triangle Areas"; }
+{
+  return "Generate Triangle Areas";
+}

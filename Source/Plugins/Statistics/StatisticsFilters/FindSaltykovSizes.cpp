@@ -37,29 +37,27 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 // Include the MOC generated file for this class
 #include "moc_FindSaltykovSizes.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSaltykovSizes::FindSaltykovSizes() :
-  AbstractFilter(),
-  m_EquivalentDiametersArrayPath(SIMPL::FeatureData::EquivalentDiameters),
-  m_SaltykovEquivalentDiametersArrayPath(SIMPL::FeatureData::SaltykovEquivalentDiameters),
-  m_EquivalentDiameters(nullptr),
-  m_SaltykovEquivalentDiameters(nullptr)
+FindSaltykovSizes::FindSaltykovSizes()
+: AbstractFilter()
+, m_EquivalentDiametersArrayPath(SIMPL::FeatureData::EquivalentDiameters)
+, m_SaltykovEquivalentDiametersArrayPath(SIMPL::FeatureData::SaltykovEquivalentDiameters)
+, m_EquivalentDiameters(nullptr)
+, m_SaltykovEquivalentDiameters(nullptr)
 {
   setupFilterParameters();
 }
@@ -90,12 +88,11 @@ void FindSaltykovSizes::setupFilterParameters()
   setFilterParameters(parameters);
 }
 
-
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
+  setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath()));
   setSaltykovEquivalentDiametersArrayPath(reader->readDataArrayPath("SaltykovEquivalentDiametersArrayPath", getSaltykovEquivalentDiametersArrayPath()));
   reader->closeFilterGroup();
 }
@@ -105,7 +102,6 @@ void FindSaltykovSizes::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -116,12 +112,18 @@ void FindSaltykovSizes::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> dims(1, 1);
-  m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SaltykovEquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getSaltykovEquivalentDiametersArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SaltykovEquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SaltykovEquivalentDiameters = m_SaltykovEquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(),
+                                                                                                               dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_EquivalentDiametersPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_SaltykovEquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, getSaltykovEquivalentDiametersArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SaltykovEquivalentDiametersPtr.lock().get())   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SaltykovEquivalentDiameters = m_SaltykovEquivalentDiametersPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -144,7 +146,10 @@ void FindSaltykovSizes::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   find_saltykov_sizes();
 
@@ -193,17 +198,26 @@ void FindSaltykovSizes::find_saltykov_sizes()
   std::vector<float> temp;
 
   // transfer equivalent diameters to a std::vector
-  for (size_t i = 1; i < numfeatures; i++) { equivalentDiameters[i - 1] = m_EquivalentDiameters[i]; }
+  for(size_t i = 1; i < numfeatures; i++)
+  {
+    equivalentDiameters[i - 1] = m_EquivalentDiameters[i];
+  }
 
   std::sort(equivalentDiameters.begin(), equivalentDiameters.end(), std::less<float>());
 
   // find the min and max
-  for (size_t i = 0; i < numfeatures - 1; i++)
+  for(size_t i = 0; i < numfeatures - 1; i++)
   {
     // find the min size
-    if (equivalentDiameters[i] < minEqDia) { minEqDia = equivalentDiameters[i]; }
+    if(equivalentDiameters[i] < minEqDia)
+    {
+      minEqDia = equivalentDiameters[i];
+    }
     // find the max size
-    if (equivalentDiameters[i] > maxEqDia) { maxEqDia = equivalentDiameters[i]; }
+    if(equivalentDiameters[i] > maxEqDia)
+    {
+      maxEqDia = equivalentDiameters[i];
+    }
   }
 
   float currentmiminum = minEqDia;
@@ -218,23 +232,23 @@ void FindSaltykovSizes::find_saltykov_sizes()
   // the feature eq dia.  But, it is important to note that the Saltykov eq dia
   // is not a direct transformation of the particular eq dia that it is matched
   // up with
-  while (saltykovLength != numfeatures - 1)
+  while(saltykovLength != numfeatures - 1)
   {
     // find the bin length
     binLength = maxEqDia / (numberofbins - 1);
 
     // initialize bin lengths to 0
-    for (int i = 0; i < numberofbins; i++) { binLengths[i] = 0; }
+    for(int i = 0; i < numberofbins; i++)
+    {
+      binLengths[i] = 0;
+    }
 
     iter = 0;
-    for (int i = 0; i < numberofbins; i++)
+    for(int i = 0; i < numberofbins; i++)
     {
       temp.resize(0);
-      std::copy(
-        std::lower_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength * i),
-        std::upper_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength * (i + 1)),
-        std::back_inserter(temp)
-      );
+      std::copy(std::lower_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength * i), std::upper_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength * (i + 1)),
+                std::back_inserter(temp));
       binLengths[i] = temp.size();
       iter++;
     }
@@ -247,10 +261,13 @@ void FindSaltykovSizes::find_saltykov_sizes()
     // saltykovLength is the total number of features to be sampled from
     // the saltykov bins
     saltykovLength = 0;
-    for (int i = 1; i <= numberofbins; i++)
+    for(int i = 1; i <= numberofbins; i++)
     {
       saltykovBinLengths[i - 1] = do_saltykov(binLengths, maxEqDia, i);
-      if (saltykovBinLengths[i - 1] < 0) { saltykovBinLengths[i - 1] = 0; }
+      if(saltykovBinLengths[i - 1] < 0)
+      {
+        saltykovBinLengths[i - 1] = 0;
+      }
       saltykovLength += saltykovBinLengths[i - 1];
     }
 
@@ -268,29 +285,35 @@ void FindSaltykovSizes::find_saltykov_sizes()
     // This is done because it is assumed that after 10 attempts, the solution is oscillating
     // between one less than and one more than feature so, for convienence, only the one less
     // than option triggers this fudge addition to reach our desired number of features
-    if (saltykovLength != numfeatures - 1)
+    if(saltykovLength != numfeatures - 1)
     {
-      //better minumum formula
+      // better minumum formula
       difference = saltykovLength - (numfeatures - 1);
-      if (attempts >= MaxAttempts && difference < 0)
+      if(attempts >= MaxAttempts && difference < 0)
       {
-        for (int i = 0; i > difference; i--)
+        for(int i = 0; i > difference; i--)
         {
           binToAddTo = rg.genrand_int32() % numberofbins + 1;
-          if (binToAddTo == numberofbins) { binToAddTo--; };
+          if(binToAddTo == numberofbins)
+          {
+            binToAddTo--;
+          };
           // only add to bins that already have values in them
-          if (saltykovBinLengths[binToAddTo] < 1)
+          if(saltykovBinLengths[binToAddTo] < 1)
           {
             saltykovBinLengths[binToAddTo]++;
             saltykovLength = numfeatures - 1;
           }
-          else { i++; }
+          else
+          {
+            i++;
+          }
         }
       }
       else
       {
         attempts++;
-        if (numberofbins2 == 20 && numberofbins1 == 0)
+        if(numberofbins2 == 20 && numberofbins1 == 0)
         {
           numberofbins1 = numberofbins;
           numberofbins = numberofbins2;
@@ -305,7 +328,10 @@ void FindSaltykovSizes::find_saltykov_sizes()
           numberofbins = forward_difference(numfeatures - 1, saltykovLength2, saltykovLength1, numberofbins2, numberofbins1);
         }
         // in case the number of bins is less than 1
-        if (numberofbins < 1) { numberofbins = 1; }
+        if(numberofbins < 1)
+        {
+          numberofbins = 1;
+        }
         binLengths.resize(numberofbins);
         saltykovBinLengths.resize(numberofbins);
       }
@@ -316,11 +342,11 @@ void FindSaltykovSizes::find_saltykov_sizes()
   // = the number of features, else let the loop cycle again with the
   // new number of bins
   saltykovIndex = 0;
-  if (saltykovLength == numfeatures - 1)
+  if(saltykovLength == numfeatures - 1)
   {
-    for (int i = 0; i < numberofbins; i++)
+    for(int i = 0; i < numberofbins; i++)
     {
-      for (int j = 0; j < saltykovBinLengths[i]; j++)
+      for(int j = 0; j < saltykovBinLengths[i]; j++)
       {
         // generate a random float between the current bin extents
         randomLong = rg.genrand_int32();
@@ -334,15 +360,15 @@ void FindSaltykovSizes::find_saltykov_sizes()
     std::sort(saltykovEquivalentDiameters.begin(), saltykovEquivalentDiameters.end(), std::less<float>());
 
     // this nested loop matches the Saltykov eq dia's with the feature eq dia's in asecending order
-    for (size_t i = 1; i < numfeatures; i++)
+    for(size_t i = 1; i < numfeatures; i++)
     {
-      for (size_t j = 1; j < numfeatures; j++)
+      for(size_t j = 1; j < numfeatures; j++)
       {
-        if (m_EquivalentDiameters[j] == currentmiminum)
+        if(m_EquivalentDiameters[j] == currentmiminum)
         {
           m_SaltykovEquivalentDiameters[j] = saltykovEquivalentDiameters[i - 1];
         }
-        if (m_EquivalentDiameters[j] > currentmiminum && m_EquivalentDiameters[j] < nextminimum)
+        if(m_EquivalentDiameters[j] > currentmiminum && m_EquivalentDiameters[j] < nextminimum)
         {
           nextminimum = m_EquivalentDiameters[j];
         }
@@ -366,9 +392,9 @@ int FindSaltykovSizes::do_saltykov(std::vector<int> nA, float Dmax, int k)
   double temp1 = 0.0, temp2 = 0.0;
   int temp3 = 0;
 
-  while ((i < 12) && ((k - i) > 0))
+  while((i < 12) && ((k - i) > 0))
   {
-    temp1 = double (nA[k - i - 1]);
+    temp1 = double(nA[k - i - 1]);
     temp2 += saltyCoefs[i + 1 - 1] * temp1;
     i++;
   }
@@ -394,8 +420,7 @@ int FindSaltykovSizes::forward_difference(int fx, int f1, int f0, int x1, int x0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<class T>
-int FindSaltykovSizes::round_to_nearest_int(T x)
+template <class T> int FindSaltykovSizes::round_to_nearest_int(T x)
 {
   return int(floor(x + 0.5));
 }
@@ -436,7 +461,7 @@ const QString FindSaltykovSizes::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 
@@ -444,19 +469,22 @@ const QString FindSaltykovSizes::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindSaltykovSizes::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
-
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSaltykovSizes::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
-
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSaltykovSizes::getHumanLabel()
-{ return "Find Feature Saltykov Sizes"; }
-
+{
+  return "Find Feature Saltykov Sizes";
+}

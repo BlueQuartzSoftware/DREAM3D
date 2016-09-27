@@ -46,16 +46,14 @@
 // Include the MOC generated file for this class
 #include "moc_AppendImageGeometryZSlice.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AppendImageGeometryZSlice::AppendImageGeometryZSlice() :
-  AbstractFilter(),
-  m_InputAttributeMatrix(),
-  m_DestinationAttributeMatrix(),
-  m_CheckResolution(false)
+AppendImageGeometryZSlice::AppendImageGeometryZSlice()
+: AbstractFilter()
+, m_InputAttributeMatrix()
+, m_DestinationAttributeMatrix()
+, m_CheckResolution(false)
 {
   setupFilterParameters();
 }
@@ -105,7 +103,6 @@ void AppendImageGeometryZSlice::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 void AppendImageGeometryZSlice::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -117,22 +114,33 @@ void AppendImageGeometryZSlice::dataCheck()
 
   // Validate the Source & Destination Attribute Matrix are available
   AttributeMatrix::Pointer inputCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getInputAttributeMatrix(), -8201);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   AttributeMatrix::Pointer destCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getDestinationAttributeMatrix(), -8200);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Validate each AttributeMatrix is associated with an Image Geometry.
   ImageGeom::Pointer inputGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputAttributeMatrix().getDataContainerName());
-  if (nullptr == inputGeometry.get() || getErrorCondition() < 0) { return; }
+  if(nullptr == inputGeometry.get() || getErrorCondition() < 0)
+  {
+    return;
+  }
 
   ImageGeom::Pointer destGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDestinationAttributeMatrix().getDataContainerName());
-  if (nullptr == destGeometry.get() || getErrorCondition() < 0) { return; }
-
+  if(nullptr == destGeometry.get() || getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Get the Dimensions of the ImageGeometries
 
-  size_t inputGeomDims[3] = { 0,0,0};
+  size_t inputGeomDims[3] = {0, 0, 0};
   inputGeometry->getDimensions(inputGeomDims);
 
   QVector<size_t> destGeomDims(3, 0);
@@ -140,44 +148,47 @@ void AppendImageGeometryZSlice::dataCheck()
 
   if(getCheckResolution())
   {
-    float inputRes[3] = { 0.0f, 0.0f, 0.0f};
+    float inputRes[3] = {0.0f, 0.0f, 0.0f};
     inputGeometry->getResolution(inputRes);
 
-    float destRes[3] = { 0.0f, 0.0f, 0.0f};
+    float destRes[3] = {0.0f, 0.0f, 0.0f};
     destGeometry->getResolution(destRes);
 
-    if(inputRes[0] != destRes[0]) {
+    if(inputRes[0] != destRes[0])
+    {
       QString ss = QObject::tr("Input X Resolution (%1) not equal to Destination X Resolution (%2)").arg(inputRes[0]).arg(destRes[0]);
       setErrorCondition(-8205);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
-    if(inputRes[1] != destRes[1]) {
+    if(inputRes[1] != destRes[1])
+    {
       QString ss = QObject::tr("Input Y Resolution (%1) not equal to Destination Y Resolution (%2)").arg(inputRes[1]).arg(destRes[1]);
       setErrorCondition(-8206);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
-    if(inputRes[2] != destRes[2]) {
+    if(inputRes[2] != destRes[2])
+    {
       QString ss = QObject::tr("Input Z Resolution (%1) not equal to Destination Z Resolution (%2)").arg(inputRes[2]).arg(destRes[2]);
       setErrorCondition(-8207);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 
-  if (destGeomDims[0] != inputGeomDims[0])
+  if(destGeomDims[0] != inputGeomDims[0])
   {
     QString ss = QObject::tr("Input X Dim (%1) not equal to Destination X Dim (%2)").arg(inputGeomDims[0]).arg(destGeomDims[0]);
     setErrorCondition(-8202);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (destGeomDims[0] != inputGeomDims[0])
+  if(destGeomDims[0] != inputGeomDims[0])
   {
     QString ss = QObject::tr("Input Y Dim (%1) not equal to Destination Y Dim (%2)").arg(inputGeomDims[1]).arg(destGeomDims[1]);
     setErrorCondition(-8203);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (getInPreflight())
+  if(getInPreflight())
   {
     // We are only appending in the Z direction
     destGeomDims[2] = destGeomDims[2] + inputGeomDims[2];
@@ -185,17 +196,20 @@ void AppendImageGeometryZSlice::dataCheck()
     // Update the existing z dimension of the image geometry and set that value back into the Image Geometry
     destGeometry->setDimensions(destGeomDims.data());
 
-
     size_t totalPoints = 1;
-    for(int i = 0; i < 3; i++) {
-      if(destGeomDims[i] != 0) { totalPoints *= destGeomDims[i]; }
+    for(int i = 0; i < 3; i++)
+    {
+      if(destGeomDims[i] != 0)
+      {
+        totalPoints *= destGeomDims[i];
+      }
     }
     AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(destGeomDims, destCellAttrMat->getName(), destCellAttrMat->getType());
     // Create new DataArrays with the new sizes and place into a temp AttributeMatrix which
     // will be inserted into the data container as a replacement for the existing
     // AttributeMatrix
     QList<QString> voxelArrayNames = destCellAttrMat->getAttributeArrayNames();
-    for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+    for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
     {
       IDataArray::Pointer p = destCellAttrMat->getAttributeArray(*iter);
       //
@@ -230,8 +244,10 @@ void AppendImageGeometryZSlice::execute()
   setErrorCondition(0);
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Validate each AttributeMatrix is associated with an Image Geometry.
   ImageGeom::Pointer inputGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputAttributeMatrix().getDataContainerName());
@@ -242,15 +258,19 @@ void AppendImageGeometryZSlice::execute()
 
   AttributeMatrix::Pointer destCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getDestinationAttributeMatrix(), -8200);
 
-  size_t inputGeomDims[3] = { 0,0,0};
+  size_t inputGeomDims[3] = {0, 0, 0};
   inputGeometry->getDimensions(inputGeomDims);
 
   QVector<size_t> destGeomDims(3, 0);
   destGeometry->getDimensions(destGeomDims.data());
 
   size_t tupleOffset = 1;
-  for(int i = 0; i < 3; i++) {
-    if(destGeomDims[i] != 0) { tupleOffset *= destGeomDims[i]; }
+  for(int i = 0; i < 3; i++)
+  {
+    if(destGeomDims[i] != 0)
+    {
+      tupleOffset *= destGeomDims[i];
+    }
   }
 
   // We are only appending in the Z direction
@@ -263,7 +283,7 @@ void AppendImageGeometryZSlice::execute()
   destCellAttrMat->resizeAttributeArrays(destGeomDims);
 
   QList<QString> voxelArrayNames = destCellAttrMat->getAttributeArrayNames();
-  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     IDataArray::Pointer p = destCellAttrMat->getAttributeArray(*iter);
     IDataArray::Pointer inputArray = inputCellAttrMat->getAttributeArray(*iter);
@@ -278,8 +298,6 @@ void AppendImageGeometryZSlice::execute()
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
-
-
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -319,23 +337,29 @@ const QString AppendImageGeometryZSlice::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
+  vStream << Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AppendImageGeometryZSlice::getGroupName()
-{ return SIMPL::FilterGroups::CoreFilters; }
+{
+  return SIMPL::FilterGroups::CoreFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AppendImageGeometryZSlice::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MemoryManagementFilters; }
+{
+  return SIMPL::FilterSubGroups::MemoryManagementFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AppendImageGeometryZSlice::getHumanLabel()
-{ return "Append Z Slice (Image Geometry)"; }
+{
+  return "Append Z Slice (Image Geometry)";
+}

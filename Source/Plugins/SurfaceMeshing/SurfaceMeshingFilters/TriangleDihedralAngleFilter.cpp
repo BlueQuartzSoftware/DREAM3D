@@ -36,8 +36,8 @@
 #include "TriangleDihedralAngleFilter.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
@@ -45,8 +45,8 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -57,79 +57,85 @@
  */
 class CalculateDihedralAnglesImpl
 {
-    SharedVertexList::Pointer m_Nodes;
-    SharedTriList::Pointer m_Triangles;
-    double* m_DihedralAngles;
+  SharedVertexList::Pointer m_Nodes;
+  SharedTriList::Pointer m_Triangles;
+  double* m_DihedralAngles;
 
-  public:
-    CalculateDihedralAnglesImpl(SharedVertexList::Pointer nodes,
-                                SharedTriList::Pointer triangles,
-                                double* DihedralAngles) :
-      m_Nodes(nodes),
-      m_Triangles(triangles),
-      m_DihedralAngles(DihedralAngles)
-    {}
-    virtual ~CalculateDihedralAnglesImpl() {}
+public:
+  CalculateDihedralAnglesImpl(SharedVertexList::Pointer nodes, SharedTriList::Pointer triangles, double* DihedralAngles)
+  : m_Nodes(nodes)
+  , m_Triangles(triangles)
+  , m_DihedralAngles(DihedralAngles)
+  {
+  }
+  virtual ~CalculateDihedralAnglesImpl()
+  {
+  }
 
-    void generate(size_t start, size_t end) const
+  void generate(size_t start, size_t end) const
+  {
+    float* nodes = m_Nodes->getPointer(0);
+    int64_t* triangles = m_Triangles->getPointer(0);
+
+    float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
+
+    float ABx = 0.0f, ABy = 0.0f, ABz = 0.0f, ACx = 0.0f, ACy = 0.0f, ACz = 0.0f, BCx = 0.0f, BCy = 0.0f, BCz = 0.0f;
+    float magAB = 0.0f, magAC = 0.0f, magBC = 0.0f;
+    float dihedralAngle1 = 0.0f, dihedralAngle2 = 0.0f, dihedralAngle3 = 0.0f, minDihedralAngle = 0.0f;
+    for(size_t i = start; i < end; i++)
     {
-      float* nodes = m_Nodes->getPointer(0);
-      int64_t* triangles = m_Triangles->getPointer(0);
+      minDihedralAngle = 180.0f;
 
-      float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
+      ABx = nodes[triangles[i * 3] * 3 + 0] - nodes[triangles[i * 3 + 1] * 3 + 0];
+      ABy = nodes[triangles[i * 3] * 3 + 1] - nodes[triangles[i * 3 + 1] * 3 + 1];
+      ABz = nodes[triangles[i * 3] * 3 + 2] - nodes[triangles[i * 3 + 1] * 3 + 2];
+      magAB = sqrtf(ABx * ABx + ABy * ABy + ABz * ABz);
 
-      float ABx = 0.0f, ABy = 0.0f, ABz = 0.0f, ACx = 0.0f, ACy = 0.0f, ACz = 0.0f, BCx = 0.0f, BCy = 0.0f, BCz = 0.0f;
-      float magAB = 0.0f, magAC = 0.0f, magBC = 0.0f;
-      float dihedralAngle1 = 0.0f, dihedralAngle2 = 0.0f, dihedralAngle3 = 0.0f, minDihedralAngle = 0.0f;
-      for (size_t i = start; i < end; i++)
+      ACx = nodes[triangles[i * 3] * 3 + 0] - nodes[triangles[i * 3 + 2] * 3 + 0];
+      ACy = nodes[triangles[i * 3] * 3 + 1] - nodes[triangles[i * 3 + 2] * 3 + 1];
+      ACz = nodes[triangles[i * 3] * 3 + 2] - nodes[triangles[i * 3 + 2] * 3 + 2];
+      magAC = sqrtf(ACx * ACx + ACy * ACy + ACz * ACz);
+
+      BCx = nodes[triangles[i * 3 + 1] * 3 + 0] - nodes[triangles[i * 3 + 2] * 3 + 0];
+      BCy = nodes[triangles[i * 3 + 1] * 3 + 1] - nodes[triangles[i * 3 + 2] * 3 + 1];
+      BCz = nodes[triangles[i * 3 + 1] * 3 + 2] - nodes[triangles[i * 3 + 2] * 3 + 2];
+      magBC = sqrtf(BCx * BCx + BCy * BCy + BCz * BCz);
+
+      dihedralAngle1 = radToDeg * acos(((ABx * ACx) + (ABy * ACy) + (ABz * ACz)) / (magAB * magAC));
+      // 180 - angle because AB points out of vertex and BC points into vertex, so angle is actually angle outside of triangle
+      dihedralAngle2 = 180.0f - (radToDeg * acos(((ABx * BCx) + (ABy * BCy) + (ABz * BCz)) / (magAB * magBC)));
+      dihedralAngle3 = radToDeg * acos(((BCx * ACx) + (BCy * ACy) + (BCz * ACz)) / (magBC * magAC));
+      minDihedralAngle = dihedralAngle1;
+      if(dihedralAngle2 < minDihedralAngle)
       {
-        minDihedralAngle = 180.0f;
-
-        ABx = nodes[triangles[i * 3] * 3 + 0] - nodes[triangles[i * 3 + 1] * 3 + 0];
-        ABy = nodes[triangles[i * 3] * 3 + 1] - nodes[triangles[i * 3 + 1] * 3 + 1];
-        ABz = nodes[triangles[i * 3] * 3 + 2] - nodes[triangles[i * 3 + 1] * 3 + 2];
-        magAB = sqrtf(ABx * ABx + ABy * ABy + ABz * ABz);
-
-        ACx = nodes[triangles[i * 3] * 3 + 0] - nodes[triangles[i * 3 + 2] * 3 + 0];
-        ACy = nodes[triangles[i * 3] * 3 + 1] - nodes[triangles[i * 3 + 2] * 3 + 1];
-        ACz = nodes[triangles[i * 3] * 3 + 2] - nodes[triangles[i * 3 + 2] * 3 + 2];
-        magAC = sqrtf(ACx * ACx + ACy * ACy + ACz * ACz);
-
-        BCx = nodes[triangles[i * 3 + 1] * 3 + 0] - nodes[triangles[i * 3 + 2] * 3 + 0];
-        BCy = nodes[triangles[i * 3 + 1] * 3 + 1] - nodes[triangles[i * 3 + 2] * 3 + 1];
-        BCz = nodes[triangles[i * 3 + 1] * 3 + 2] - nodes[triangles[i * 3 + 2] * 3 + 2];
-        magBC = sqrtf(BCx * BCx + BCy * BCy + BCz * BCz);
-
-        dihedralAngle1 = radToDeg * acos(((ABx * ACx) + (ABy * ACy) + (ABz * ACz)) / (magAB * magAC));
-        // 180 - angle because AB points out of vertex and BC points into vertex, so angle is actually angle outside of triangle
-        dihedralAngle2 = 180.0f - (radToDeg * acos(((ABx * BCx) + (ABy * BCy) + (ABz * BCz)) / (magAB * magBC)));
-        dihedralAngle3 = radToDeg * acos(((BCx * ACx) + (BCy * ACy) + (BCz * ACz)) / (magBC * magAC));
-        minDihedralAngle = dihedralAngle1;
-        if (dihedralAngle2 < minDihedralAngle) { minDihedralAngle = dihedralAngle2; }
-        if (dihedralAngle3 < minDihedralAngle) { minDihedralAngle = dihedralAngle3; }
-        m_DihedralAngles[i]  = minDihedralAngle;
+        minDihedralAngle = dihedralAngle2;
       }
+      if(dihedralAngle3 < minDihedralAngle)
+      {
+        minDihedralAngle = dihedralAngle3;
+      }
+      m_DihedralAngles[i] = minDihedralAngle;
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      generate(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    generate(r.begin(), r.end());
+  }
 #endif
 };
 
 // Include the MOC generated file for this class
 #include "moc_TriangleDihedralAngleFilter.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleDihedralAngleFilter::TriangleDihedralAngleFilter() :
-  SurfaceMeshFilter(),
-  m_SurfaceMeshTriangleDihedralAnglesArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceDihedralAngles),
-  m_SurfaceMeshTriangleDihedralAngles(nullptr)
+TriangleDihedralAngleFilter::TriangleDihedralAngleFilter()
+: SurfaceMeshFilter()
+, m_SurfaceMeshTriangleDihedralAnglesArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceDihedralAngles)
+, m_SurfaceMeshTriangleDihedralAngles(nullptr)
 {
   setupFilterParameters();
 }
@@ -170,7 +176,6 @@ void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -180,17 +185,27 @@ void TriangleDihedralAngleFilter::dataCheck()
 {
   setErrorCondition(0);
 
-  TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleDihedralAnglesArrayPath().getDataContainerName());
+  TriangleGeom::Pointer triangles =
+      getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleDihedralAnglesArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(triangles->getTriangles());
+  }
 
   QVector<size_t> cDims(1, 1);
-  m_SurfaceMeshTriangleDihedralAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleDihedralAnglesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshTriangleDihedralAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshTriangleDihedralAngles = m_SurfaceMeshTriangleDihedralAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleDihedralAnglesPtr.lock()); }
+  m_SurfaceMeshTriangleDihedralAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
+      this, getSurfaceMeshTriangleDihedralAnglesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshTriangleDihedralAnglesPtr.lock().get())    /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshTriangleDihedralAngles = m_SurfaceMeshTriangleDihedralAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(m_SurfaceMeshTriangleDihedralAnglesPtr.lock());
+  }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
@@ -215,7 +230,10 @@ void TriangleDihedralAngleFilter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshTriangleDihedralAnglesArrayPath().getDataContainerName());
 
@@ -227,7 +245,7 @@ void TriangleDihedralAngleFilter::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
                       CalculateDihedralAnglesImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleDihedralAngles), tbb::auto_partitioner());
@@ -278,23 +296,29 @@ const QString TriangleDihedralAngleFilter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleDihedralAngleFilter::getGroupName()
-{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
+{
+  return SIMPL::FilterGroups::SurfaceMeshingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleDihedralAngleFilter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MiscFilters; }
+{
+  return SIMPL::FilterSubGroups::MiscFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleDihedralAngleFilter::getHumanLabel()
-{ return "Find Minimum Triangle Dihedral Angle"; }
+{
+  return "Find Minimum Triangle Dihedral Angle";
+}

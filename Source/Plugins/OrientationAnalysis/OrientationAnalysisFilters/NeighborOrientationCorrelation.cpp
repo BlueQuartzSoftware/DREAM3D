@@ -37,9 +37,9 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -49,24 +49,22 @@
 // Include the MOC generated file for this class
 #include "moc_NeighborOrientationCorrelation.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NeighborOrientationCorrelation::NeighborOrientationCorrelation() :
-  AbstractFilter(),
-  m_MisorientationTolerance(5.0f),
-  m_MinConfidence(0.1f),
-  m_Level(6),
-  m_ConfidenceIndexArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex),
-  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
-  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
-  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
-  m_ConfidenceIndex(nullptr),
-  m_Quats(nullptr),
-  m_CellPhases(nullptr),
-  m_CrystalStructures(nullptr)
+NeighborOrientationCorrelation::NeighborOrientationCorrelation()
+: AbstractFilter()
+, m_MisorientationTolerance(5.0f)
+, m_MinConfidence(0.1f)
+, m_Level(6)
+, m_ConfidenceIndexArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex)
+, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
+, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
+, m_ConfidenceIndex(nullptr)
+, m_Quats(nullptr)
+, m_CellPhases(nullptr)
+, m_CrystalStructures(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -92,20 +90,24 @@ void NeighborOrientationCorrelation::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Confidence Index", ConfidenceIndexArrayPath, FilterParameter::RequiredArray, NeighborOrientationCorrelation, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, NeighborOrientationCorrelation, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, NeighborOrientationCorrelation, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, NeighborOrientationCorrelation, req));
   }
   setFilterParameters(parameters);
@@ -117,13 +119,13 @@ void NeighborOrientationCorrelation::setupFilterParameters()
 void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
-  setConfidenceIndexArrayPath(reader->readDataArrayPath("ConfidenceIndexArrayPath", getConfidenceIndexArrayPath() ) );
-  setMinConfidence( reader->readValue("MinConfidence", getMinConfidence()) );
-  setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
-  setLevel( reader->readValue("Level", getLevel()) );
+  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
+  setConfidenceIndexArrayPath(reader->readDataArrayPath("ConfidenceIndexArrayPath", getConfidenceIndexArrayPath()));
+  setMinConfidence(reader->readValue("MinConfidence", getMinConfidence()));
+  setMisorientationTolerance(reader->readValue("MisorientationTolerance", getMisorientationTolerance()));
+  setLevel(reader->readValue("Level", getLevel()));
   reader->closeFilterGroup();
 }
 
@@ -132,7 +134,6 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -147,25 +148,46 @@ void NeighborOrientationCorrelation::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
-  m_ConfidenceIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getConfidenceIndexArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_ConfidenceIndexPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_ConfidenceIndex = m_ConfidenceIndexPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getConfidenceIndexArrayPath()); }
+  m_ConfidenceIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getConfidenceIndexArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ConfidenceIndexPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_ConfidenceIndex = m_ConfidenceIndexPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getConfidenceIndexArrayPath());
+  }
 
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getCellPhasesArrayPath());
+  }
 
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 4;
-  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getQuatsArrayPath()); }
+  m_QuatsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_QuatsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Quats = m_QuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getQuatsArrayPath());
+  }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -190,21 +212,21 @@ void NeighborOrientationCorrelation::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ConfidenceIndexArrayPath.getDataContainerName());
   size_t totalPoints = m_ConfidenceIndexPtr.lock()->getNumberOfTuples();
 
   float misorientationToleranceR = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   size_t count = 1;
@@ -215,7 +237,7 @@ void NeighborOrientationCorrelation::execute()
   int64_t neighbor2 = 0;
   int64_t column = 0, row = 0, plane = 0;
 
-  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   neighpoints[0] = static_cast<int64_t>(-dims[0] * dims[1]);
   neighpoints[1] = static_cast<int64_t>(-dims[0]);
   neighpoints[2] = static_cast<int64_t>(-1);
@@ -235,16 +257,19 @@ void NeighborOrientationCorrelation::execute()
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   int32_t startLevel = 6;
-  for (int32_t currentLevel = startLevel; currentLevel > m_Level; currentLevel--)
+  for(int32_t currentLevel = startLevel; currentLevel > m_Level; currentLevel--)
   {
-    if (getCancel()) { break; }
+    if(getCancel())
+    {
+      break;
+    }
 
     int64_t progIncrement = static_cast<int64_t>(totalPoints / 100);
     int64_t prog = 1;
     int64_t progressInt = 0;
-    for (size_t i = 0; i < totalPoints; i++)
+    for(size_t i = 0; i < totalPoints; i++)
     {
-      if (int64_t(i) > prog)
+      if(int64_t(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("Level %1 of %2 || Processing Data %3%").arg((startLevel - currentLevel) + 1).arg(startLevel - m_Level).arg(progressInt);
@@ -252,23 +277,41 @@ void NeighborOrientationCorrelation::execute()
         prog = prog + progIncrement;
       }
 
-      if (m_ConfidenceIndex[i] < m_MinConfidence)
+      if(m_ConfidenceIndex[i] < m_MinConfidence)
       {
         count = 0;
         column = i % dims[0];
         row = (i / dims[0]) % dims[1];
         plane = i / (dims[0] * dims[1]);
-        for (int32_t j = 0; j < 6; j++)
+        for(int32_t j = 0; j < 6; j++)
         {
           good = true;
           neighbor = int64_t(i) + neighpoints[j];
-          if (j == 0 && plane == 0) { good = false; }
-          if (j == 5 && plane == (dims[2] - 1)) { good = false; }
-          if (j == 1 && row == 0) { good = false; }
-          if (j == 4 && row == (dims[1] - 1)) { good = false; }
-          if (j == 2 && column == 0) { good = false; }
-          if (j == 3 && column == (dims[0] - 1)) { good = false; }
-          if (good == true)
+          if(j == 0 && plane == 0)
+          {
+            good = false;
+          }
+          if(j == 5 && plane == (dims[2] - 1))
+          {
+            good = false;
+          }
+          if(j == 1 && row == 0)
+          {
+            good = false;
+          }
+          if(j == 4 && row == (dims[1] - 1))
+          {
+            good = false;
+          }
+          if(j == 2 && column == 0)
+          {
+            good = false;
+          }
+          if(j == 3 && column == (dims[0] - 1))
+          {
+            good = false;
+          }
+          if(good == true)
           {
             phase1 = m_CrystalStructures[m_CellPhases[i]];
             QuaternionMathF::Copy(quats[i], q1);
@@ -276,33 +319,54 @@ void NeighborOrientationCorrelation::execute()
             phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
             QuaternionMathF::Copy(quats[neighbor], q2);
 
-            if (m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0) { w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3); }
-            if (w > misorientationToleranceR)
+            if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
+            {
+              w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+            }
+            if(w > misorientationToleranceR)
             {
               neighborDiffCount[i]++;
             }
-            for (int32_t k = j + 1; k < 6; k++)
+            for(int32_t k = j + 1; k < 6; k++)
             {
               good2 = true;
               neighbor2 = int64_t(i) + neighpoints[k];
-              if (k == 0 && plane == 0) { good2 = false; }
-              if (k == 5 && plane == (dims[2] - 1)) { good2 = false; }
-              if (k == 1 && row == 0) { good2 = false; }
-              if (k == 4 && row == (dims[1] - 1)) { good2 = false; }
-              if (k == 2 && column == 0) { good2 = false; }
-              if (k == 3 && column == (dims[0] - 1)) { good2 = false; }
-              if (good2 == true)
+              if(k == 0 && plane == 0)
+              {
+                good2 = false;
+              }
+              if(k == 5 && plane == (dims[2] - 1))
+              {
+                good2 = false;
+              }
+              if(k == 1 && row == 0)
+              {
+                good2 = false;
+              }
+              if(k == 4 && row == (dims[1] - 1))
+              {
+                good2 = false;
+              }
+              if(k == 2 && column == 0)
+              {
+                good2 = false;
+              }
+              if(k == 3 && column == (dims[0] - 1))
+              {
+                good2 = false;
+              }
+              if(good2 == true)
               {
                 phase1 = m_CrystalStructures[m_CellPhases[neighbor2]];
                 QuaternionMathF::Copy(quats[neighbor2], q1);
 
                 phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
                 QuaternionMathF::Copy(quats[neighbor], q2);
-                if (m_CellPhases[neighbor2] == m_CellPhases[neighbor] && m_CellPhases[neighbor2] > 0)
+                if(m_CellPhases[neighbor2] == m_CellPhases[neighbor] && m_CellPhases[neighbor2] > 0)
                 {
-                  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                  w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                 }
-                if (w < misorientationToleranceR)
+                if(w < misorientationToleranceR)
                 {
                   neighborSimCount[j]++;
                   neighborSimCount[k]++;
@@ -311,20 +375,38 @@ void NeighborOrientationCorrelation::execute()
             }
           }
         }
-        for (int32_t j = 0; j < 6; j++)
+        for(int32_t j = 0; j < 6; j++)
         {
           best = 0;
           good = true;
           neighbor = int64_t(i) + neighpoints[j];
-          if (j == 0 && plane == 0) { good = false; }
-          if (j == 5 && plane == (dims[2] - 1)) { good = false; }
-          if (j == 1 && row == 0) { good = false; }
-          if (j == 4 && row == (dims[1] - 1)) { good = false; }
-          if (j == 2 && column == 0) { good = false; }
-          if (j == 3 && column == (dims[0] - 1)) { good = false; }
-          if (good == true)
+          if(j == 0 && plane == 0)
           {
-            if (neighborSimCount[j] > best)
+            good = false;
+          }
+          if(j == 5 && plane == (dims[2] - 1))
+          {
+            good = false;
+          }
+          if(j == 1 && row == 0)
+          {
+            good = false;
+          }
+          if(j == 4 && row == (dims[1] - 1))
+          {
+            good = false;
+          }
+          if(j == 2 && column == 0)
+          {
+            good = false;
+          }
+          if(j == 3 && column == (dims[0] - 1))
+          {
+            good = false;
+          }
+          if(good == true)
+          {
+            if(neighborSimCount[j] > best)
             {
               best = neighborSimCount[j];
               bestNeighbor[i] = neighbor;
@@ -337,14 +419,17 @@ void NeighborOrientationCorrelation::execute()
     QString attrMatName = m_ConfidenceIndexArrayPath.getAttributeMatrixName();
     QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
-    if (getCancel()) { return; }
+    if(getCancel())
+    {
+      return;
+    }
 
     progIncrement = static_cast<int64_t>(totalPoints / 100);
     prog = 1;
     progressInt = 0;
-    for (size_t i = 0; i < totalPoints; i++)
+    for(size_t i = 0; i < totalPoints; i++)
     {
-      if (int64_t(i) > prog)
+      if(int64_t(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("Level %1 of %2 || Copying Data %3%").arg((startLevel - currentLevel) + 2).arg(startLevel - m_Level).arg(progressInt);
@@ -352,9 +437,9 @@ void NeighborOrientationCorrelation::execute()
         prog = prog + progIncrement;
       }
       neighbor = bestNeighbor[i];
-      if (neighbor != -1)
+      if(neighbor != -1)
       {
-        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
           p->copyTuple(neighbor, i);
@@ -364,7 +449,10 @@ void NeighborOrientationCorrelation::execute()
     currentLevel = currentLevel - 1;
   }
 
-  if (getCancel()) { return; }
+  if(getCancel())
+  {
+    return;
+  }
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -406,23 +494,29 @@ const QString NeighborOrientationCorrelation::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NeighborOrientationCorrelation::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NeighborOrientationCorrelation::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CleanupFilters; }
+{
+  return SIMPL::FilterSubGroups::CleanupFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NeighborOrientationCorrelation::getHumanLabel()
-{ return "Neighbor Orientation Correlation"; }
+{
+  return "Neighbor Orientation Correlation";
+}

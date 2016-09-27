@@ -37,12 +37,12 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -50,19 +50,17 @@
 // Include the MOC generated file for this class
 #include "moc_AddBadData.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AddBadData::AddBadData() :
-  AbstractFilter(),
-  m_GBEuclideanDistancesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::ElementAttributeMatrixName, SIMPL::CellData::GBEuclideanDistances),
-  m_PoissonNoise(true),
-  m_PoissonVolFraction(0.0f),
-  m_BoundaryNoise(false),
-  m_BoundaryVolFraction(0.0f),
-  m_GBEuclideanDistances(nullptr)
+AddBadData::AddBadData()
+: AbstractFilter()
+, m_GBEuclideanDistancesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::ElementAttributeMatrixName, SIMPL::CellData::GBEuclideanDistances)
+, m_PoissonNoise(true)
+, m_PoissonVolFraction(0.0f)
+, m_BoundaryNoise(false)
+, m_BoundaryVolFraction(0.0f)
+, m_GBEuclideanDistances(nullptr)
 {
   setupFilterParameters();
 }
@@ -89,7 +87,8 @@ void AddBadData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Volume Fraction of Boundary Noise", BoundaryVolFraction, FilterParameter::Parameter, AddBadData));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Boundary Euclidean Distances", GBEuclideanDistancesArrayPath, FilterParameter::RequiredArray, AddBadData, req));
   }
   setFilterParameters(parameters);
@@ -101,11 +100,11 @@ void AddBadData::setupFilterParameters()
 void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setGBEuclideanDistancesArrayPath(reader->readDataArrayPath("GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath() ) );
-  setPoissonNoise( reader->readValue("PoissonNoise", getPoissonNoise()) );
-  setPoissonVolFraction( reader->readValue("PoissonVolFraction", getPoissonVolFraction()) );
-  setBoundaryNoise( reader->readValue("BoundaryNoise", getBoundaryNoise()) );
-  setBoundaryVolFraction( reader->readValue("BoundaryVolFraction", getBoundaryVolFraction()) );
+  setGBEuclideanDistancesArrayPath(reader->readDataArrayPath("GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath()));
+  setPoissonNoise(reader->readValue("PoissonNoise", getPoissonNoise()));
+  setPoissonVolFraction(reader->readValue("PoissonVolFraction", getPoissonVolFraction()));
+  setBoundaryNoise(reader->readValue("BoundaryNoise", getBoundaryNoise()));
+  setBoundaryVolFraction(reader->readValue("BoundaryVolFraction", getBoundaryVolFraction()));
   reader->closeFilterGroup();
 }
 
@@ -114,7 +113,6 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 void AddBadData::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -126,7 +124,7 @@ void AddBadData::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getGBEuclideanDistancesArrayPath().getDataContainerName());
 
-  if ((m_PoissonNoise == false) && (m_BoundaryNoise == false))
+  if((m_PoissonNoise == false) && (m_BoundaryNoise == false))
   {
     QString ss = QObject::tr("At least one type of noise must be selected");
     setErrorCondition(-1);
@@ -134,9 +132,12 @@ void AddBadData::dataCheck()
   }
 
   QVector<size_t> cDims(1, 1);
-  m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(),
+                                                                                                                  cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_GBEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -159,7 +160,10 @@ void AddBadData::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   add_noise();
 
@@ -170,7 +174,7 @@ void AddBadData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void  AddBadData::add_noise()
+void AddBadData::add_noise()
 {
   notifyStatusMessage(getHumanLabel(), "Adding Noise");
   SIMPL_RANDOMNG_NEW()
@@ -182,14 +186,14 @@ void  AddBadData::add_noise()
 
   float random = 0.0f;
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-  for (size_t i = 0; i < totalPoints; ++i)
+  for(size_t i = 0; i < totalPoints; ++i)
   {
-    if (m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)
+    if(m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)
     {
-      random = static_cast<float>( rg.genrand_res53() );
-      if (random < m_BoundaryVolFraction)
+      random = static_cast<float>(rg.genrand_res53());
+      if(random < m_BoundaryVolFraction)
       {
-        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           IDataArray::Pointer p = m->getAttributeMatrix(attMatName)->getAttributeArray(*iter);
           int var = 0;
@@ -197,12 +201,12 @@ void  AddBadData::add_noise()
         }
       }
     }
-    if (m_PoissonNoise == true)
+    if(m_PoissonNoise == true)
     {
-      random = static_cast<float>( rg.genrand_res53() );
-      if (random < m_PoissonVolFraction)
+      random = static_cast<float>(rg.genrand_res53());
+      if(random < m_PoissonVolFraction)
       {
-        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           IDataArray::Pointer p = m->getAttributeMatrix(attMatName)->getAttributeArray(*iter);
           int var = 0;
@@ -249,23 +253,29 @@ const QString AddBadData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SyntheticBuilding::Version::Major() << "." << SyntheticBuilding::Version::Minor() << "." << SyntheticBuilding::Version::Patch();
+  vStream << SyntheticBuilding::Version::Major() << "." << SyntheticBuilding::Version::Minor() << "." << SyntheticBuilding::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AddBadData::getGroupName()
-{ return SIMPL::FilterGroups::SyntheticBuildingFilters; }
+{
+  return SIMPL::FilterGroups::SyntheticBuildingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AddBadData::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MiscFilters; }
+{
+  return SIMPL::FilterSubGroups::MiscFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AddBadData::getHumanLabel()
-{ return "Add Bad Data"; }
+{
+  return "Add Bad Data";
+}

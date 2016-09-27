@@ -42,24 +42,22 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Sampling/SamplingConstants.h"
-#include "Sampling/SamplingVersion.h"
 #include "Sampling/SamplingFilters/CropImageGeometry.h"
+#include "Sampling/SamplingVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_ExtractFlaggedFeatures.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExtractFlaggedFeatures::ExtractFlaggedFeatures() :
-  AbstractFilter(),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_FlaggedFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Active),
-  m_FeatureBounds(nullptr),
-  m_FeatureIds(nullptr),
-  m_FlaggedFeatures(nullptr)
+ExtractFlaggedFeatures::ExtractFlaggedFeatures()
+: AbstractFilter()
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_FlaggedFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Active)
+, m_FeatureBounds(nullptr)
+, m_FeatureIds(nullptr)
+, m_FlaggedFeatures(nullptr)
 {
   setupFilterParameters();
 }
@@ -79,12 +77,14 @@ void ExtractFlaggedFeatures::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, ExtractFlaggedFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Flagged Features", FlaggedFeaturesArrayPath, FilterParameter::RequiredArray, ExtractFlaggedFeatures, req));
   }
@@ -97,8 +97,8 @@ void ExtractFlaggedFeatures::setupFilterParameters()
 void ExtractFlaggedFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFlaggedFeaturesArrayPath(reader->readDataArrayPath("FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setFlaggedFeaturesArrayPath(reader->readDataArrayPath("FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -121,13 +121,19 @@ void ExtractFlaggedFeatures::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_FlaggedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getFlaggedFeaturesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FlaggedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FlaggedFeatures = m_FlaggedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FlaggedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getFlaggedFeaturesArrayPath(),
+                                                                                                          cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FlaggedFeaturesPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FlaggedFeatures = m_FlaggedFeaturesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -154,11 +160,8 @@ void ExtractFlaggedFeatures::find_feature_bounds()
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   QVector<size_t> cDims(1, 6);
@@ -170,23 +173,41 @@ void ExtractFlaggedFeatures::find_feature_bounds()
   int64_t featureShift = 0;
   int32_t feature = 0;
 
-  for (int64_t k = 0; k < dims[2]; k++)
+  for(int64_t k = 0; k < dims[2]; k++)
   {
     kstride = dims[0] * dims[1] * k;
-    for (int64_t j = 0; j < dims[1]; j++)
+    for(int64_t j = 0; j < dims[1]; j++)
     {
       jstride = dims[0] * j;
-      for (int64_t i = 0; i < dims[0]; i++)
+      for(int64_t i = 0; i < dims[0]; i++)
       {
         count = kstride + jstride + i;
         feature = m_FeatureIds[count];
         featureShift = 6 * feature;
-        if (m_FeatureBounds[featureShift] == -1 || m_FeatureBounds[featureShift] > i) { m_FeatureBounds[featureShift] = i; }
-        if (m_FeatureBounds[featureShift + 1] == -1 || m_FeatureBounds[featureShift + 1] < i) { m_FeatureBounds[featureShift + 1] = i; }
-        if (m_FeatureBounds[featureShift + 2] == -1 || m_FeatureBounds[featureShift + 2] > j) { m_FeatureBounds[featureShift + 2] = j; }
-        if (m_FeatureBounds[featureShift + 3] == -1 || m_FeatureBounds[featureShift + 3] < j) { m_FeatureBounds[featureShift + 3] = j; }
-        if (m_FeatureBounds[featureShift + 4] == -1 || m_FeatureBounds[featureShift + 4] > k) { m_FeatureBounds[featureShift + 4] = k; }
-        if( m_FeatureBounds[featureShift + 5] == -1 || m_FeatureBounds[featureShift + 5] < k) { m_FeatureBounds[featureShift + 5] = k; }
+        if(m_FeatureBounds[featureShift] == -1 || m_FeatureBounds[featureShift] > i)
+        {
+          m_FeatureBounds[featureShift] = i;
+        }
+        if(m_FeatureBounds[featureShift + 1] == -1 || m_FeatureBounds[featureShift + 1] < i)
+        {
+          m_FeatureBounds[featureShift + 1] = i;
+        }
+        if(m_FeatureBounds[featureShift + 2] == -1 || m_FeatureBounds[featureShift + 2] > j)
+        {
+          m_FeatureBounds[featureShift + 2] = j;
+        }
+        if(m_FeatureBounds[featureShift + 3] == -1 || m_FeatureBounds[featureShift + 3] < j)
+        {
+          m_FeatureBounds[featureShift + 3] = j;
+        }
+        if(m_FeatureBounds[featureShift + 4] == -1 || m_FeatureBounds[featureShift + 4] > k)
+        {
+          m_FeatureBounds[featureShift + 4] = k;
+        }
+        if(m_FeatureBounds[featureShift + 5] == -1 || m_FeatureBounds[featureShift + 5] < k)
+        {
+          m_FeatureBounds[featureShift + 5] = k;
+        }
       }
     }
   }
@@ -199,7 +220,10 @@ void ExtractFlaggedFeatures::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t totalFeatures = m_FlaggedFeaturesPtr.lock()->getNumberOfTuples();
 
@@ -269,7 +293,7 @@ const QString ExtractFlaggedFeatures::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
+  vStream << Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 
@@ -277,16 +301,22 @@ const QString ExtractFlaggedFeatures::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getGroupName()
-{ return SIMPL::FilterGroups::SamplingFilters; }
+{
+  return SIMPL::FilterGroups::SamplingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CropCutFilters; }
+{
+  return SIMPL::FilterSubGroups::CropCutFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getHumanLabel()
-{ return "Extract Flagged Features (Rogues Gallery)"; }
+{
+  return "Extract Flagged Features (Rogues Gallery)";
+}

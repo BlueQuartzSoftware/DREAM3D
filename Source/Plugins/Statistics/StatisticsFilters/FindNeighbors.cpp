@@ -39,11 +39,11 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Statistics/StatisticsConstants.h"
@@ -52,26 +52,24 @@
 // Include the MOC generated file for this class
 #include "moc_FindNeighbors.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNeighbors::FindNeighbors() :
-  AbstractFilter(),
-  m_CellFeatureAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_SharedSurfaceAreaListArrayName(SIMPL::FeatureData::SharedSurfaceAreaList),
-  m_NeighborListArrayName(SIMPL::FeatureData::NeighborList),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells),
-  m_NumNeighborsArrayName(SIMPL::FeatureData::NumNeighbors),
-  m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures),
-  m_StoreBoundaryCells(false),
-  m_StoreSurfaceFeatures(false),
-  m_FeatureIds(nullptr),
-  m_BoundaryCells(nullptr),
-  m_SurfaceFeatures(nullptr),
-  m_NumNeighbors(nullptr)
+FindNeighbors::FindNeighbors()
+: AbstractFilter()
+, m_CellFeatureAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
+, m_SharedSurfaceAreaListArrayName(SIMPL::FeatureData::SharedSurfaceAreaList)
+, m_NeighborListArrayName(SIMPL::FeatureData::NeighborList)
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells)
+, m_NumNeighborsArrayName(SIMPL::FeatureData::NumNeighbors)
+, m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures)
+, m_StoreBoundaryCells(false)
+, m_StoreSurfaceFeatures(false)
+, m_FeatureIds(nullptr)
+, m_BoundaryCells(nullptr)
+, m_SurfaceFeatures(nullptr)
+, m_NumNeighbors(nullptr)
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
@@ -99,12 +97,14 @@ void FindNeighbors::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Surface Features Array", StoreSurfaceFeatures, FilterParameter::Parameter, FindNeighbors, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req =
+        AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, FindNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -117,22 +117,21 @@ void FindNeighbors::setupFilterParameters()
   setFilterParameters(parameters);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixPath(reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setBoundaryCellsArrayName(reader->readString("BoundaryCellsArrayName", getBoundaryCellsArrayName() ) );
-  setSurfaceFeaturesArrayName(reader->readString("SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName() ) );
-  setStoreBoundaryCells(reader->readValue("StoreBoundaryCells", getStoreBoundaryCells() ) );
-  setStoreSurfaceFeatures(reader->readValue("StoreSurfaceFeatures", getStoreSurfaceFeatures() ) );
-  setNumNeighborsArrayName(reader->readString("NumNeighborsArrayName", getNumNeighborsArrayName() ) );
-  setNeighborListArrayName(reader->readString("NeighborListArrayName", getNeighborListArrayName() ) );
-  setSharedSurfaceAreaListArrayName(reader->readString("SharedSurfaceAreaListArrayName", getSharedSurfaceAreaListArrayName() ) );
+  setCellFeatureAttributeMatrixPath(reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setBoundaryCellsArrayName(reader->readString("BoundaryCellsArrayName", getBoundaryCellsArrayName()));
+  setSurfaceFeaturesArrayName(reader->readString("SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName()));
+  setStoreBoundaryCells(reader->readValue("StoreBoundaryCells", getStoreBoundaryCells()));
+  setStoreSurfaceFeatures(reader->readValue("StoreSurfaceFeatures", getStoreSurfaceFeatures()));
+  setNumNeighborsArrayName(reader->readString("NumNeighborsArrayName", getNumNeighborsArrayName()));
+  setNeighborListArrayName(reader->readString("NeighborListArrayName", getNeighborListArrayName()));
+  setSharedSurfaceAreaListArrayName(reader->readString("SharedSurfaceAreaListArrayName", getSharedSurfaceAreaListArrayName()));
   reader->closeFilterGroup();
 }
 
@@ -157,43 +156,57 @@ void FindNeighbors::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getBoundaryCellsArrayName() );
-  if (m_StoreBoundaryCells == true)
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
-    m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getBoundaryCellsArrayName());
+  if(m_StoreBoundaryCells == true)
+  {
+    m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(
+        this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_BoundaryCellsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), -301);
 
-  tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNumNeighborsArrayName() );
-  m_NumNeighborsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_NumNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSurfaceFeaturesArrayName() );
-  if (m_StoreSurfaceFeatures == true)
+  tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNumNeighborsArrayName());
+  m_NumNeighborsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims);                /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NumNeighborsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
-    m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSurfaceFeaturesArrayName());
+  if(m_StoreSurfaceFeatures == true)
+  {
+    m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(
+        this, tempPath, false, cDims);               /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_SurfaceFeaturesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   // Feature Data
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNeighborListArrayName() );
-  m_NeighborList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNeighborListArrayName());
+  m_NeighborList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 
   // And we do the same for the SharedSurfaceArea list
-  tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSharedSurfaceAreaListArrayName() );
-  m_SharedSurfaceAreaList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSharedSurfaceAreaListArrayName());
+  m_SharedSurfaceAreaList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 }
 
 // -----------------------------------------------------------------------------
@@ -216,23 +229,23 @@ void FindNeighbors::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_NumNeighborsPtr.lock()->getNumberOfTuples();
 
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -247,8 +260,8 @@ void FindNeighbors::execute()
   bool good = false;
   int64_t neighbor = 0;
 
-  std::vector<std::vector<int32_t> > neighborlist;
-  std::vector<std::vector<float> > neighborsurfacearealist;
+  std::vector<std::vector<int32_t>> neighborlist;
+  std::vector<std::vector<float>> neighborsurfacearealist;
 
   int32_t nListSize = 100;
   neighborlist.resize(totalFeatures);
@@ -257,69 +270,96 @@ void FindNeighbors::execute()
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     currentMillis = QDateTime::currentMSecsSinceEpoch();
-    if (currentMillis - millis > 1000)
+    if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Finding Neighbors || Initializing Neighbor Lists || %1% Complete").arg((static_cast<float>(i) / totalFeatures) * 100);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
-    if (getCancel() == true) { return; }
+    if(getCancel() == true)
+    {
+      return;
+    }
 
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].assign(nListSize, -1.0f);
-    if (m_StoreSurfaceFeatures == true) { m_SurfaceFeatures[i] = false; }
-
+    if(m_StoreSurfaceFeatures == true)
+    {
+      m_SurfaceFeatures[i] = false;
+    }
   }
 
-  for (size_t j = 0; j < totalPoints; j++)
+  for(size_t j = 0; j < totalPoints; j++)
   {
     currentMillis = QDateTime::currentMSecsSinceEpoch();
-    if (currentMillis - millis > 1000)
+    if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Finding Neighbors || Determining Neighbor Lists || %1% Complete").arg((static_cast<float>(j) / totalPoints) * 100);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
-    if (getCancel() == true) { return; }
+    if(getCancel() == true)
+    {
+      return;
+    }
 
     onsurf = 0;
     feature = m_FeatureIds[j];
-    if (feature > 0)
+    if(feature > 0)
     {
-      column = static_cast<int64_t>( j % m->getGeometryAs<ImageGeom>()->getXPoints() );
-      row = static_cast<int64_t>( (j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints() );
-      plane = static_cast<int64_t>( j / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) );
-      if (m_StoreSurfaceFeatures == true)
+      column = static_cast<int64_t>(j % m->getGeometryAs<ImageGeom>()->getXPoints());
+      row = static_cast<int64_t>((j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints());
+      plane = static_cast<int64_t>(j / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()));
+      if(m_StoreSurfaceFeatures == true)
       {
-        if ((column == 0 || column == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getXPoints() - 1))
-             || row == 0 || row == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getYPoints()) - 1)
-             || plane == 0 || plane == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getZPoints() - 1)))
-            && m->getGeometryAs<ImageGeom>()->getZPoints() != 1)
+        if((column == 0 || column == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) || row == 0 ||
+            row == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getYPoints()) - 1) || plane == 0 || plane == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getZPoints() - 1))) &&
+           m->getGeometryAs<ImageGeom>()->getZPoints() != 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
-        if ((column == 0 || column == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) || row == 0 || row == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getYPoints() - 1))) && m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+        if((column == 0 || column == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) || row == 0 ||
+            row == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getYPoints() - 1))) &&
+           m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
       }
-      for (int32_t k = 0; k < 6; k++)
+      for(int32_t k = 0; k < 6; k++)
       {
         good = true;
-        neighbor = static_cast<int64_t>( j + neighpoints[k] );
-        if (k == 0 && plane == 0) { good = false; }
-        if (k == 5 && plane == (m->getGeometryAs<ImageGeom>()->getZPoints() - 1)) { good = false; }
-        if (k == 1 && row == 0) { good = false; }
-        if (k == 4 && row == (m->getGeometryAs<ImageGeom>()->getYPoints() - 1)) { good = false; }
-        if (k == 2 && column == 0) { good = false; }
-        if (k == 3 && column == (m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) { good = false; }
-        if (good == true && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
+        neighbor = static_cast<int64_t>(j + neighpoints[k]);
+        if(k == 0 && plane == 0)
+        {
+          good = false;
+        }
+        if(k == 5 && plane == (m->getGeometryAs<ImageGeom>()->getZPoints() - 1))
+        {
+          good = false;
+        }
+        if(k == 1 && row == 0)
+        {
+          good = false;
+        }
+        if(k == 4 && row == (m->getGeometryAs<ImageGeom>()->getYPoints() - 1))
+        {
+          good = false;
+        }
+        if(k == 2 && column == 0)
+        {
+          good = false;
+        }
+        if(k == 3 && column == (m->getGeometryAs<ImageGeom>()->getXPoints() - 1))
+        {
+          good = false;
+        }
+        if(good == true && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
         {
           onsurf++;
           nnum = m_NumNeighbors[feature];
@@ -329,28 +369,33 @@ void FindNeighbors::execute()
         }
       }
     }
-    if (m_StoreBoundaryCells == true) { m_BoundaryCells[j] = onsurf; }
+    if(m_StoreBoundaryCells == true)
+    {
+      m_BoundaryCells[j] = onsurf;
+    }
   }
 
   // We do this to create new set of NeighborList objects
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     currentMillis = QDateTime::currentMSecsSinceEpoch();
-    if (currentMillis - millis > 1000)
+    if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Finding Neighbors || Calculating Surface Areas || %1% Complete").arg(((float)i / totalFeatures) * 100);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
-    if(getCancel() == true) { return; }
-
+    if(getCancel() == true)
+    {
+      return;
+    }
 
     QMap<int32_t, int32_t> neighToCount;
-    int32_t numneighs = static_cast<int32_t>( neighborlist[i].size() );
+    int32_t numneighs = static_cast<int32_t>(neighborlist[i].size());
 
     // this increments the voxel counts for each feature
-    for (int32_t j = 0; j < numneighs; j++)
+    for(int32_t j = 0; j < numneighs; j++)
     {
       neighToCount[neighborlist[i][j]]++;
     }
@@ -363,9 +408,9 @@ void FindNeighbors::execute()
     neighborlist[i].resize(0);
     neighborsurfacearealist[i].resize(0);
 
-    for (QMap<int32_t, int32_t>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
+    for(QMap<int32_t, int32_t>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
     {
-      int32_t neigh = iter.key(); // get the neighbor feature
+      int32_t neigh = iter.key();    // get the neighbor feature
       int32_t number = iter.value(); // get the number of voxels
       float area = float(number) * m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes();
 
@@ -424,23 +469,29 @@ const QString FindNeighbors::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighbors::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighbors::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighbors::getHumanLabel()
-{ return "Find Feature Neighbors"; }
+{
+  return "Find Feature Neighbors";
+}

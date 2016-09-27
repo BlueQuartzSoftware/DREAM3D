@@ -40,15 +40,13 @@
 #include <QtWidgets/QFileDialog>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Utilities/FilePathGenerator.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 
-
-#include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
 #include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
 
 // Initialize private static member variable
 QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
@@ -56,23 +54,23 @@ QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent),
-  m_StackingGroup(nullptr),
-  m_DidCausePreflight(false)
+ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
+: FilterParameterWidget(parameter, filter, parent)
+, m_StackingGroup(nullptr)
+, m_DidCausePreflight(false)
 {
   m_Filter = qobject_cast<ConvertHexGridToSquareGrid*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGridWidget filter", __FILE__);
 
   m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(parameter);
 
-  if ( getOpenDialogLastDirectory().isEmpty() )
+  if(getOpenDialogLastDirectory().isEmpty())
   {
-    setOpenDialogLastDirectory( QDir::homePath() );
+    setOpenDialogLastDirectory(QDir::homePath());
   }
   setupUi(this);
   setupGui();
-//  checkIOFiles();
+  //  checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -80,7 +78,6 @@ ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParamet
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGridWidget::~ConvertHexGridToSquareGridWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -98,7 +95,6 @@ AbstractFilter* ConvertHexGridToSquareGridWidget::getFilter() const
 {
   return m_Filter;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -121,7 +117,7 @@ FilterParameter* ConvertHexGridToSquareGridWidget::getFilterParameter() const
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList)
+  foreach(QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -133,26 +129,20 @@ void ConvertHexGridToSquareGridWidget::setWidgetListEnabled(bool b)
 void ConvertHexGridToSquareGridWidget::setupGui()
 {
 
-
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
+  connect(m_Filter, SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   QtSFileCompleter* com = new QtSFileCompleter(this, true);
   m_InputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString&)),
-                    this, SLOT(on_m_InputDir_textChanged(const QString&)));
+  QObject::connect(com, SIGNAL(activated(const QString&)), this, SLOT(on_m_InputDir_textChanged(const QString&)));
   m_OutputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString&)),
-                    this, SLOT(on_m_OutputDir_textChanged(const QString&)));
+  QObject::connect(com, SIGNAL(activated(const QString&)), this, SLOT(on_m_OutputDir_textChanged(const QString&)));
 
   {
     QDoubleValidator* validator = new QDoubleValidator(m_xSpacing);
@@ -173,11 +163,8 @@ void ConvertHexGridToSquareGridWidget::setupGui()
   m_ErrorMessage->setVisible(false);
 
   // Manually hook up these signals/slots
-  connect(m_xSpacing, SIGNAL(textChanged(const QString&)),
-          this, SLOT(resolutionChanged(const QString&)));
-  connect(m_ySpacing, SIGNAL(textChanged(const QString&)),
-          this, SLOT(resolutionChanged(const QString&)));
-
+  connect(m_xSpacing, SIGNAL(textChanged(const QString&)), this, SLOT(resolutionChanged(const QString&)));
+  connect(m_ySpacing, SIGNAL(textChanged(const QString&)), this, SLOT(resolutionChanged(const QString&)));
 
   getGuiParametersFromFilter();
 }
@@ -196,11 +183,11 @@ void ConvertHexGridToSquareGridWidget::getGuiParametersFromFilter()
     ob->blockSignals(true);
   }
 
-  m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
-  m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
+  m_ZStartIndex->setValue(m_Filter->getZStartIndex());
+  m_ZEndIndex->setValue(m_Filter->getZEndIndex());
 
-  m_xSpacing->setText(QString::number(m_Filter->getXResolution()) );
-  m_ySpacing->setText(QString::number(m_Filter->getYResolution()) );
+  m_xSpacing->setText(QString::number(m_Filter->getXResolution()));
+  m_ySpacing->setText(QString::number(m_Filter->getYResolution()));
 
   m_FilePrefix->setText(m_Filter->getFilePrefix());
   m_FileSuffix->setText(m_Filter->getFileSuffix());
@@ -221,7 +208,6 @@ void ConvertHexGridToSquareGridWidget::getGuiParametersFromFilter()
 
   validateInputFile();
   generateExampleInputFile();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -231,13 +217,12 @@ void ConvertHexGridToSquareGridWidget::validateInputFile()
 {
   QString currentPath = m_Filter->getInputPath();
   QFileInfo fi(currentPath);
-  if (currentPath.isEmpty() == false && fi.exists() == false)
+  if(currentPath.isEmpty() == false && fi.exists() == false)
   {
-//    QString Ftype = m_FilterParameter->getFileType();
-//    QString ext = m_FilterParameter->getFileExtension();
-//    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
+    //    QString Ftype = m_FilterParameter->getFileType();
+    //    QString ext = m_FilterParameter->getFileExtension();
+    //    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
     QString defaultName = m_OpenDialogLastDirectory;
-
 
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
@@ -254,7 +239,6 @@ void ConvertHexGridToSquareGridWidget::validateInputFile()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -263,7 +247,6 @@ void ConvertHexGridToSquareGridWidget::resolutionChanged(const QString& string)
   emit parametersChanged();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -271,7 +254,7 @@ bool ConvertHexGridToSquareGridWidget::verifyPathExists(QString outFilePath, QLi
 {
   //  std::cout << "outFilePath: " << outFilePath << std::endl;
   QFileInfo fileinfo(outFilePath);
-  if (false == fileinfo.exists() )
+  if(false == fileinfo.exists())
   {
     lineEdit->setStyleSheet("border: 1px solid red;");
   }
@@ -287,7 +270,7 @@ bool ConvertHexGridToSquareGridWidget::verifyPathExists(QString outFilePath, QLi
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::checkIOFiles()
 {
-  if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
+  if(true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
   {
     findMaxSliceAndPrefix();
   }
@@ -301,7 +284,7 @@ void ConvertHexGridToSquareGridWidget::on_m_InputDirBtn_clicked()
   // std::cout << "on_angDirBtn_clicked" << std::endl;
   QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
-  if (!outputFile.isNull())
+  if(!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(outputFile));
@@ -311,13 +294,12 @@ void ConvertHexGridToSquareGridWidget::on_m_InputDirBtn_clicked()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::on_m_InputDir_textChanged(const QString& text)
 {
-  if (verifyPathExists(m_InputDir->text(), m_InputDir) )
+  if(verifyPathExists(m_InputDir->text(), m_InputDir))
   {
 
     findMaxSliceAndPrefix();
@@ -350,10 +332,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
   QString ext = m_FilterParameter->getFileExtension();
   QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
   QString defaultName = currentPath + QDir::separator() + "Untitled";
-  QString file = QFileDialog::getExistingDirectory(this,
-                                                   tr("Select Output Folder"),
-                                                   defaultName,
-                                                   QFileDialog::ShowDirsOnly);
+  QString file = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"), defaultName, QFileDialog::ShowDirsOnly);
 
   if(true == file.isEmpty())
   {
@@ -366,7 +345,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
   m_OpenDialogLastDirectory = fi.path();
   m_OutputDir->setText(file);
 
- // on_m_OutputDir_textChanged(file);
+  // on_m_OutputDir_textChanged(file);
 }
 
 // -----------------------------------------------------------------------------
@@ -374,10 +353,10 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::on_m_OutputDir_textChanged(const QString& text)
 {
-  //if (verifyPathExists(text, m_OutputFile) == true )
+  // if (verifyPathExists(text, m_OutputFile) == true )
   {
     QFileInfo fi(text);
-    setOpenDialogLastDirectory( fi.path() );
+    setOpenDialogLastDirectory(fi.path());
   }
   emit parametersChanged();
 }
@@ -444,17 +423,13 @@ void ConvertHexGridToSquareGridWidget::on_m_FilePrefix_textChanged(const QString
   emit parametersChanged();
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
 {
 
-  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text()).arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0').arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -462,12 +437,8 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, true,
-                              m_InputDir->text(),
-                              m_FilePrefix->text(),
-                              m_FileSuffix->text(),
-                              m_FileExt->text(),
-                              m_TotalDigits->value());
+  QVector<QString> fileList =
+      FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, true, m_InputDir->text(), m_FilePrefix->text(), m_FileSuffix->text(), m_FileExt->text(), m_TotalDigits->value());
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/bullet_ball_green.png"));
   QIcon redDot = QIcon(QString(":/bullet_ball_red.png"));
@@ -475,8 +446,8 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
   {
     QString filePath(fileList.at(i));
     QFileInfo fi(filePath);
-    QListWidgetItem* item = new QListWidgetItem( filePath, m_FileListView);
-    if (fi.exists() == true)
+    QListWidgetItem* item = new QListWidgetItem(filePath, m_FileListView);
+    if(fi.exists() == true)
     {
       item->setIcon(greenDot);
     }
@@ -487,7 +458,7 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
     }
   }
 
-  if (hasMissingFiles == true)
+  if(hasMissingFiles == true)
   {
     m_ErrorMessage->setVisible(true);
     m_ErrorMessage->setText("Alert: Red Dot File(s) on the list do NOT exist on the filesystem. Please make sure all files exist");
@@ -504,7 +475,10 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
 {
-  if (m_InputDir->text().length() == 0) { return; }
+  if(m_InputDir->text().length() == 0)
+  {
+    return;
+  }
   QDir dir(m_InputDir->text());
 #if 0
   m_FileExt->setText("");
@@ -535,7 +509,7 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
 #endif
 
   // Final check to make sure we have a valid file extension
-  if (m_FileExt->text().isEmpty() == true)
+  if(m_FileExt->text().isEmpty() == true)
   {
     return;
   }
@@ -561,13 +535,13 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
   int minTotalDigits = 1000;
   foreach(QFileInfo fi, angList)
   {
-    if (fi.suffix().compare(ext) && fi.isFile() == true)
+    if(fi.suffix().compare(ext) && fi.isFile() == true)
     {
       pos = 0;
       list.clear();
       QString fn = fi.baseName();
       QString fns = fn;
-      int length =  fn.length();
+      int length = fn.length();
       digitEnd = length - 1;
       while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
@@ -577,7 +551,7 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
 
       digitStart = pos = rx.indexIn(fn, pos);
       digitEnd = digitStart;
-      while ((pos = rx.indexIn(fn, pos)) != -1)
+      while((pos = rx.indexIn(fn, pos)) != -1)
       {
         list << rx.cap(0);
         fPrefix = fn.left(pos);
@@ -588,24 +562,36 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
         ++digitEnd;
       }
 
-      if ( digitEnd - digitStart < minTotalDigits) { minTotalDigits = digitEnd - digitStart; }
+      if(digitEnd - digitStart < minTotalDigits)
+      {
+        minTotalDigits = digitEnd - digitStart;
+      }
       m_TotalDigits->setValue(minTotalDigits);
-      if (list.size() > 0)
+      if(list.size() > 0)
       {
         currValue = list.front().toInt(&ok);
-        if (false == flag) { minSlice = currValue; flag = true;}
-        if (currValue > maxSlice) { maxSlice = currValue; }
-        if (currValue < minSlice) { minSlice = currValue; }
+        if(false == flag)
+        {
+          minSlice = currValue;
+          flag = true;
+        }
+        if(currValue > maxSlice)
+        {
+          maxSlice = currValue;
+        }
+        if(currValue < minSlice)
+        {
+          minSlice = currValue;
+        }
       }
       ++totalOimFilesFound;
     }
   }
   this->m_TotalSlices->setText(QString::number(totalOimFilesFound));
-// this->m_FilePrefix->setText(fPrefix);
+  // this->m_FilePrefix->setText(fPrefix);
   this->m_ZStartIndex->setValue(minSlice);
   this->m_ZEndIndex->setValue(maxSlice);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -620,7 +606,7 @@ void ConvertHexGridToSquareGridWidget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (nullptr == filter)
+  if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting ConvertHexGridToSquareGrid Gui values to Filter instance. Filter instance was nullptr.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
@@ -642,7 +628,6 @@ void ConvertHexGridToSquareGridWidget::filterNeedsInputParameters(AbstractFilter
   f->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
   f->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
   f->setPaddingDigits(m_TotalDigits->value());
-
 }
 
 // -----------------------------------------------------------------------------
@@ -650,9 +635,8 @@ void ConvertHexGridToSquareGridWidget::filterNeedsInputParameters(AbstractFilter
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::beforePreflight()
 {
-  if (m_DidCausePreflight == false)
+  if(m_DidCausePreflight == false)
   {
-
   }
 }
 
@@ -661,6 +645,4 @@ void ConvertHexGridToSquareGridWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::afterPreflight()
 {
-
 }
-

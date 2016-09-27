@@ -36,288 +36,286 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Common/FilterPipeline.h"
-#include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
-#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterPipeline.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "IOTestFileLocations.h"
 
 class ExportDataTest
 {
-  public:
-    ExportDataTest(){}
-    virtual ~ExportDataTest(){}
-    SIMPL_TYPE_MACRO(ExportDataTest)
+public:
+  ExportDataTest()
+  {
+  }
+  virtual ~ExportDataTest()
+  {
+  }
+  SIMPL_TYPE_MACRO(ExportDataTest)
 
-    enum ErrorCodes
-    {
-      NO_ERROR = 0,
-          DIFF_MATRICES = -11004
-    };
+  enum ErrorCodes
+  {
+    NO_ERROR = 0,
+    DIFF_MATRICES = -11004
+  };
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void RemoveTestFiles()
-    {
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void RemoveTestFiles()
+  {
 #if REMOVE_TEST_FILES
-      QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.dream3d");
-      QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.xdmf");
-      QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ConfidenceIndex.txt");
-      QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "Phases.txt");
-      QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ThresholdArray.txt");
+    QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.dream3d");
+    QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.xdmf");
+    QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ConfidenceIndex.txt");
+    QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "Phases.txt");
+    QFile::remove(UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ThresholdArray.txt");
 #endif
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int TestFilterAvailability()
+  {
+    // Now instantiate the ExportData Filter from the FilterManager
+    QString filtName = "ExportData";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    if(nullptr == filterFactory.get())
+    {
+      std::stringstream ss;
+      ss << "The ExportDataTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
+      DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+    }
+    return EXIT_SUCCESS;
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int TestExportDataWriter()
+  {
+    DataContainerArray::Pointer dca = DataContainerArray::New();
+
+    // A DataContainer that mimics some real data
+    DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::DataContainerName);
+    dca->addDataContainer(m);
+
+    AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, SIMPL::AttributeMatrixType::Generic);
+    m->addAttributeMatrix(SIMPL::Defaults::AttributeMatrixName, attrMatrix);
+
+    AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+    m->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMatrix2);
+    int size = 20;
+
+    {
+      Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::CellPhases);
+      for(int i = 0; i < size; ++i) // create an array with values 20 to 39
+      {
+        intArray->setValue(i, i + 20);
+      }
+      attrMatrix->addAttributeArray(SIMPL::CellData::CellPhases, intArray);
+    }
+    {
+      Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
+      for(int i = 0; i < size; ++i) // create an array with values 20 to 39
+      {
+        intArray->setValue(i, i + 20);
+      }
+      attrMatrix->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
+    }
+    {
+      BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, SIMPL::GeneralData::ThresholdArray);
+      for(int i = 0; i < size; ++i) // create an bool array with true and false values
+      {
+        if(i % 2 == 0)
+        {
+          boolArray->setValue(i, 0);
+        }
+        else
+        {
+          boolArray->setValue(i, 1);
+        }
+      }
+      attrMatrix->addAttributeArray(SIMPL::GeneralData::ThresholdArray, boolArray);
+    }
+    {
+      Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
+      for(int i = 0; i < size; ++i) // create an array with values 20 to 39
+      {
+        intArray->setValue(i, i + 20);
+      }
+      attrMatrix2->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
     }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    int TestFilterAvailability()
+    Observer obs;
+    // Send progress messages from PipelineBuilder to this object for display
+    DataContainerWriter::Pointer writer = DataContainerWriter::New();
+    writer->setDataContainerArray(dca);
+    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.dream3d";
+    writer->setOutputFile(exportArrayFile);
+
+    // Since we are NOT using the Pipeline Object to execute the filter but instead we are directly executing the filter
+    // and we want to know about any error/warning/progress messages we need to connect the filter to our Observer object
+    // manually. Normally the Pipeline Object would do this for us. We are NOT using a Pipeline Object because using the
+    // Pipeline Object would over write the DataContainer Array that we have created with a blank one thus defeating the
+    // entire purpose of the test.
+    QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+
+    writer->execute();
+    int err = writer->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
+
+    // Now instantiate the EnsembleInfoReader Filter from the FilterManager
+    QString filtName = "ExportData";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    if(nullptr != filterFactory.get())
     {
-      // Now instantiate the ExportData Filter from the FilterManager
-      QString filtName = "ExportData";
-      FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (nullptr == filterFactory.get() )
-      {
-        std::stringstream ss;
-        ss << "The ExportDataTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
-        DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-      }
-      return EXIT_SUCCESS;
-    }
+      // If we get this far, the Factory is good so creating the filter should not fail unless something has
+      // horribly gone wrong in which case the system is going to come down quickly after this.
+      AbstractFilter::Pointer filter = filterFactory->create();
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    int TestExportDataWriter()
-    {
-      DataContainerArray::Pointer dca = DataContainerArray::New();
+      QVariant var;
+      int err = 0;
+      bool propWasSet;
+      filter->setDataContainerArray(dca);
 
-      // A DataContainer that mimics some real data
-      DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::DataContainerName);
-      dca->addDataContainer(m);
+      var.setValue(2);
+      propWasSet = filter->setProperty("Delimeter", var); // delimeter is a space
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, SIMPL::AttributeMatrixType::Generic);
-      m->addAttributeMatrix(SIMPL::Defaults::AttributeMatrixName, attrMatrix);
+      var.setValue(10);
+      propWasSet = filter->setProperty("MaxValPerLine", var); // 10 array elements per line
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
-      m->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMatrix2);
-      int size = 20;
+      var.setValue(UnitTest::ExportDataTest::TestTempDir);
+      propWasSet = filter->setProperty("OutputPath", var); // output file to write array
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      {
-        Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::CellPhases);
-        for (int i = 0; i < size; ++i) // create an array with values 20 to 39
-        {
-          intArray->setValue(i, i + 20);
-        }
-        attrMatrix->addAttributeArray(SIMPL::CellData::CellPhases, intArray);
-      }
-      {
-        Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
-        for (int i = 0; i < size; ++i) // create an array with values 20 to 39
-        {
-          intArray->setValue(i, i + 20);
-        }
-        attrMatrix->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
-      }
-      {
-        BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, SIMPL::GeneralData::ThresholdArray);
-        for (int i = 0; i < size; ++i) // create an bool array with true and false values
-        {
-          if (i % 2 == 0)
-          { boolArray->setValue(i, 0); }
-          else
-          { boolArray->setValue(i, 1); }
-        }
-        attrMatrix->addAttributeArray(SIMPL::GeneralData::ThresholdArray, boolArray);
-      }
-      {
-        Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
-        for (int i = 0; i < size; ++i) // create an array with values 20 to 39
-        {
-          intArray->setValue(i, i + 20);
-        }
-        attrMatrix2->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
-      }
+      DataArrayPath path1 = DataArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::AttributeMatrixName, SIMPL::CellData::CellPhases);
 
-      Observer obs;
-      // Send progress messages from PipelineBuilder to this object for display
-      DataContainerWriter::Pointer writer = DataContainerWriter::New();
-      writer->setDataContainerArray(dca);
-      QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + "ExportTest.dream3d" ;
-      writer->setOutputFile(exportArrayFile);
+      DataArrayPath path2 = DataArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::AttributeMatrixName, SIMPL::CellData::ConfidenceIndexNoSpace);
 
-      // Since we are NOT using the Pipeline Object to execute the filter but instead we are directly executing the filter
-      // and we want to know about any error/warning/progress messages we need to connect the filter to our Observer object
-      // manually. Normally the Pipeline Object would do this for us. We are NOT using a Pipeline Object because using the
-      // Pipeline Object would over write the DataContainer Array that we have created with a blank one thus defeating the
-      // entire purpose of the test.
-      QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-                       &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+      DataArrayPath path4 = DataArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::AttributeMatrixName, SIMPL::GeneralData::ThresholdArray);
 
-      writer->execute();
-      int err = writer->getErrorCondition();
+      QVector<DataArrayPath> vector;
+      vector.push_back(path1);
+      vector.push_back(path2);
+      vector.push_back(path4);
+
+      var.setValue(vector);
+      propWasSet = filter->setProperty("SelectedDataArrayPaths", var); // arrays just created above
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+      filter->execute();
+      err = filter->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
-      // Now instantiate the EnsembleInfoReader Filter from the FilterManager
-      QString filtName = "ExportData";
-      FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-      if (nullptr != filterFactory.get())
-      {
-        // If we get this far, the Factory is good so creating the filter should not fail unless something has
-        // horribly gone wrong in which case the system is going to come down quickly after this.
-        AbstractFilter::Pointer filter = filterFactory->create();
+      DataArrayPath path3 = DataArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndexNoSpace);
 
-        QVariant var;
-        int err = 0;
-        bool propWasSet;
-        filter->setDataContainerArray(dca);
+      vector.push_back(path3);
 
-        var.setValue(2);
-        propWasSet = filter->setProperty("Delimeter", var); // delimeter is a space
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+      var.setValue(vector);
+      propWasSet = filter->setProperty("SelectedDataArrayPaths", var); // arrays just created above
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-            var.setValue(10);
-        propWasSet = filter->setProperty("MaxValPerLine", var); // 10 array elements per line
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-            var.setValue(UnitTest::ExportDataTest::TestTempDir);
-        propWasSet = filter->setProperty("OutputPath", var); // output file to write array
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-            DataArrayPath path1 = DataArrayPath(SIMPL::Defaults::DataContainerName,
-                                                SIMPL::Defaults::AttributeMatrixName,
-                                                SIMPL::CellData::CellPhases);
-
-        DataArrayPath path2 = DataArrayPath(SIMPL::Defaults::DataContainerName,
-                                            SIMPL::Defaults::AttributeMatrixName,
-                                            SIMPL::CellData::ConfidenceIndexNoSpace);
-
-        DataArrayPath path4 = DataArrayPath(SIMPL::Defaults::DataContainerName,
-                                            SIMPL::Defaults::AttributeMatrixName,
-                                            SIMPL::GeneralData::ThresholdArray);
-
-        QVector<DataArrayPath> vector;
-        vector.push_back(path1);
-        vector.push_back(path2);
-        vector.push_back(path4);
-
-        var.setValue(vector);
-        propWasSet = filter->setProperty("SelectedDataArrayPaths", var); //arrays just created above
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-            filter->execute();
-        err = filter->getErrorCondition();
-        DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
-
-        DataArrayPath path3 = DataArrayPath(SIMPL::Defaults::DataContainerName,
-                                            SIMPL::Defaults::CellAttributeMatrixName,
-                                            SIMPL::CellData::ConfidenceIndexNoSpace);
-
-        vector.push_back(path3);
-
-        var.setValue(vector);
-        propWasSet = filter->setProperty("SelectedDataArrayPaths", var); //arrays just created above
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-            filter->execute();
-        err = filter->getErrorCondition();
-        DREAM3D_REQUIRE_EQUAL(err, DIFF_MATRICES);
-      }
-      else
-      {
-        QString ss = QObject::tr("ExportDataTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-        DREAM3D_REQUIRE_EQUAL(0, 1)
-      }
-      return EXIT_SUCCESS;
+      filter->execute();
+      err = filter->getErrorCondition();
+      DREAM3D_REQUIRE_EQUAL(err, DIFF_MATRICES);
     }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    int TestExportDataReader()
+    else
     {
-      {
-        int num = 0;
-        FILE* f;
-        QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::CellData::CellPhases + ".txt";
-        f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
-        DREAM3D_REQUIRE_VALID_POINTER(f)
-
-            for (int i = 0; i < 20; i++) // compare file to what was written in array
-        {
-          fscanf(f, "%d,", &num);
-          if (i + 20 != num)
-          {
-            DREAM3D_REQUIRE_EQUAL(0, -3)
-          }
-        }
-        fclose(f);
-      }
-      {
-        int num = 0;
-        FILE* f;
-        QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::CellData::ConfidenceIndexNoSpace + ".txt";
-        f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
-        DREAM3D_REQUIRE_VALID_POINTER(f)
-
-            for (int i = 0; i < 20; i++) // compare file to what was written in array
-        {
-          fscanf(f, "%d,", &num);
-          if (i + 20 != num)
-          {
-            DREAM3D_REQUIRE_EQUAL(0, -3)
-          }
-        }
-        fclose(f);
-      }
-      {
-        int num = 0;
-        FILE* f;
-        QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::GeneralData::ThresholdArray + ".txt";
-        f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
-        DREAM3D_REQUIRE_VALID_POINTER(f)
-            for (int i = 0; i < 20; i++) // compare file to what was written in bool array
-        {
-          fscanf(f, "%d,", &num);
-          if ((i % 2 == 0 && num == 1) || (i % 2 != 0 && num == 0))
-          {
-            DREAM3D_REQUIRE_EQUAL(0, -3)
-          }
-        }
-        fclose(f);
-      }
-      return EXIT_SUCCESS;
+      QString ss = QObject::tr("ExportDataTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+      DREAM3D_REQUIRE_EQUAL(0, 1)
     }
+    return EXIT_SUCCESS;
+  }
 
-    /**
-  * @brief
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int TestExportDataReader()
+  {
+    {
+      int num = 0;
+      FILE* f;
+      QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::CellData::CellPhases + ".txt";
+      f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+      DREAM3D_REQUIRE_VALID_POINTER(f)
+
+      for(int i = 0; i < 20; i++) // compare file to what was written in array
+      {
+        fscanf(f, "%d,", &num);
+        if(i + 20 != num)
+        {
+          DREAM3D_REQUIRE_EQUAL(0, -3)
+        }
+      }
+      fclose(f);
+    }
+    {
+      int num = 0;
+      FILE* f;
+      QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::CellData::ConfidenceIndexNoSpace + ".txt";
+      f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+      DREAM3D_REQUIRE_VALID_POINTER(f)
+
+      for(int i = 0; i < 20; i++) // compare file to what was written in array
+      {
+        fscanf(f, "%d,", &num);
+        if(i + 20 != num)
+        {
+          DREAM3D_REQUIRE_EQUAL(0, -3)
+        }
+      }
+      fclose(f);
+    }
+    {
+      int num = 0;
+      FILE* f;
+      QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::GeneralData::ThresholdArray + ".txt";
+      f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+      DREAM3D_REQUIRE_VALID_POINTER(f)
+      for(int i = 0; i < 20; i++) // compare file to what was written in bool array
+      {
+        fscanf(f, "%d,", &num);
+        if((i % 2 == 0 && num == 1) || (i % 2 != 0 && num == 0))
+        {
+          DREAM3D_REQUIRE_EQUAL(0, -3)
+        }
+      }
+      fclose(f);
+    }
+    return EXIT_SUCCESS;
+  }
+
+  /**
+* @brief
 */
-    void operator()()
-    {
-      int err = EXIT_SUCCESS;
-      DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+  void operator()()
+  {
+    int err = EXIT_SUCCESS;
+    DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-      DREAM3D_REGISTER_TEST(TestExportDataWriter())
-          DREAM3D_REGISTER_TEST(TestExportDataReader())
+    DREAM3D_REGISTER_TEST(TestExportDataWriter())
+    DREAM3D_REGISTER_TEST(TestExportDataReader())
 
-          DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    }
-  private:
-    ExportDataTest(const ExportDataTest&); // Copy Constructor Not Implemented
-    void operator=(const ExportDataTest&); // Operator '=' Not Implemented
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
+  }
+
+private:
+  ExportDataTest(const ExportDataTest&); // Copy Constructor Not Implemented
+  void operator=(const ExportDataTest&); // Operator '=' Not Implemented
 };
-
-

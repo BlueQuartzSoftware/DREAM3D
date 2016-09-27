@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "TextureDialog.h"
 
 #include <QtGui/QDoubleValidator>
@@ -44,9 +43,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TextureDialog::TextureDialog(unsigned int xtal, QWidget* parent) :
-  QDialog(parent),
-  m_CrystalStructure(xtal)
+TextureDialog::TextureDialog(unsigned int xtal, QWidget* parent)
+: QDialog(parent)
+, m_CrystalStructure(xtal)
 {
   setupUi(this);
   setupGui();
@@ -57,7 +56,6 @@ TextureDialog::TextureDialog(unsigned int xtal, QWidget* parent) :
 // -----------------------------------------------------------------------------
 TextureDialog::~TextureDialog()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -65,11 +63,11 @@ TextureDialog::~TextureDialog()
 // -----------------------------------------------------------------------------
 void TextureDialog::setupGui()
 {
-  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure )
+  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     m_Presets = CubicTexturePresets::getTextures();
   }
-  else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure )
+  else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     m_Presets = HexTexturePresets::getTextures();
   }
@@ -79,7 +77,7 @@ void TextureDialog::setupGui()
   presetListWidget->clear();
 
   // Now push the list into the List View
-  for (TexturePreset::Container::iterator iter = m_Presets.begin(); iter != m_Presets.end(); ++iter)
+  for(TexturePreset::Container::iterator iter = m_Presets.begin(); iter != m_Presets.end(); ++iter)
   {
     presetListWidget->addItem(((*iter)->getName()));
   }
@@ -110,11 +108,11 @@ void TextureDialog::setupGui()
   }
   {
     sigma->setRange(1.0, 1.0);
-    if (Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure  )
+    if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
     {
       sigma->setRange(1.0, 18.0);
     }
-    else if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure )
+    else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
     {
       sigma->setRange(1.0, 36.0);
     }
@@ -124,7 +122,7 @@ void TextureDialog::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TextureDialog::on_presetListWidget_itemDoubleClicked ( QListWidgetItem* item )
+void TextureDialog::on_presetListWidget_itemDoubleClicked(QListWidgetItem* item)
 {
   int index = presetListWidget->currentRow();
   TexturePreset::Pointer t = m_Presets[index];
@@ -139,7 +137,6 @@ void TextureDialog::on_presetListWidget_itemDoubleClicked ( QListWidgetItem* ite
   weight->setText("1.0");
   sigma->setValue(1.0);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -166,5 +163,3 @@ void TextureDialog::getODFEntry(float& e1, float& e2, float& e3, float& w, float
   w = loc.toFloat(weight->text(), &ok);
   s = sigma->value();
 }
-
-

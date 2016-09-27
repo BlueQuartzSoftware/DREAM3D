@@ -45,14 +45,12 @@
 // Include the MOC generated file for this class
 #include "moc_SegmentFeatures.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SegmentFeatures::SegmentFeatures() :
-  AbstractFilter(),
-  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+SegmentFeatures::SegmentFeatures()
+: AbstractFilter()
+, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 {
 }
 
@@ -77,7 +75,6 @@ void SegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 void SegmentFeatures::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -126,15 +123,19 @@ void SegmentFeatures::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  { static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]), };
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+  };
 
   int32_t gnum = 1;
   int64_t seed = 0;
@@ -144,7 +145,7 @@ void SegmentFeatures::execute()
   size_t size = 0;
   size_t initialVoxelsListSize = 100000;
   std::vector<int64_t> voxelslist(initialVoxelsListSize, -1);
-  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   neighpoints[0] = -(dims[0] * dims[1]);
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -153,44 +154,68 @@ void SegmentFeatures::execute()
   neighpoints[5] = (dims[0] * dims[1]);
   int64_t nextSeed = 0;
 
-  while (seed >= 0)
+  while(seed >= 0)
   {
     seed = getSeed(gnum, nextSeed);
     nextSeed = seed + 1;
-    if (seed >= 0)
+    if(seed >= 0)
     {
       size = 0;
       voxelslist[size] = seed;
       size++;
-      while (size > 0)
+      while(size > 0)
       {
         int64_t currentpoint = voxelslist[size - 1];
         size -= 1;
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
         plane = currentpoint / (dims[0] * dims[1]);
-        for (int32_t i = 0; i < 6; i++)
+        for(int32_t i = 0; i < 6; i++)
         {
           good = true;
           neighbor = currentpoint + neighpoints[i];
-          if (i == 0 && plane == 0) { good = false; }
-          if (i == 5 && plane == (dims[2] - 1)) { good = false; }
-          if (i == 1 && row == 0) { good = false; }
-          if (i == 4 && row == (dims[1] - 1)) { good = false; }
-          if (i == 2 && col == 0) { good = false; }
-          if (i == 3 && col == (dims[0] - 1)) { good = false; }
-          if (good == true)
+          if(i == 0 && plane == 0)
           {
-            if (determineGrouping(currentpoint, neighbor, gnum) == true)
+            good = false;
+          }
+          if(i == 5 && plane == (dims[2] - 1))
+          {
+            good = false;
+          }
+          if(i == 1 && row == 0)
+          {
+            good = false;
+          }
+          if(i == 4 && row == (dims[1] - 1))
+          {
+            good = false;
+          }
+          if(i == 2 && col == 0)
+          {
+            good = false;
+          }
+          if(i == 3 && col == (dims[0] - 1))
+          {
+            good = false;
+          }
+          if(good == true)
+          {
+            if(determineGrouping(currentpoint, neighbor, gnum) == true)
             {
               voxelslist[size] = neighbor;
               size++;
-              if (neighbor == nextSeed) { nextSeed = neighbor + 1; }
-              if (size >= voxelslist.size())
+              if(neighbor == nextSeed)
+              {
+                nextSeed = neighbor + 1;
+              }
+              if(size >= voxelslist.size())
               {
                 size = voxelslist.size();
                 voxelslist.resize(size + initialVoxelsListSize);
-                for (std::vector<int64_t>::size_type j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
+                for(std::vector<int64_t>::size_type j = size; j < voxelslist.size(); ++j)
+                {
+                  voxelslist[j] = -1;
+                }
               }
             }
           }
@@ -200,9 +225,15 @@ void SegmentFeatures::execute()
       voxelslist.resize(initialVoxelsListSize, -1);
       gnum++;
       QString ss = QObject::tr("Total Features: %1").arg(gnum);
-      if (gnum % 100 == 0) { notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss); }
+      if(gnum % 100 == 0)
+      {
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      }
     }
-    if(getCancel()) { break; }
+    if(getCancel())
+    {
+      break;
+    }
   }
 
   // If there is an error set this to something negative and also set a message
@@ -245,23 +276,29 @@ const QString SegmentFeatures::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
+  vStream << Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SegmentFeatures::getGroupName()
-{ return SIMPL::FilterGroups::ReconstructionFilters; }
+{
+  return SIMPL::FilterGroups::ReconstructionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SegmentFeatures::getSubGroupName()
-{ return SIMPL::FilterSubGroups::SegmentationFilters; }
+{
+  return SIMPL::FilterSubGroups::SegmentationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SegmentFeatures::getHumanLabel()
-{ return "Segment Features"; }
+{
+  return "Segment Features";
+}

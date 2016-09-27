@@ -44,16 +44,15 @@
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 #include "moc_AlignSectionsList.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsList::AlignSectionsList() :
-  AlignSections(),
-  m_InputFile("")
+AlignSectionsList::AlignSectionsList()
+: AlignSections()
+, m_InputFile("")
 {
   // only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();
@@ -84,7 +83,7 @@ void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* rea
 {
   AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-  setInputFile( reader->readString( "InputFile", getInputFile() ) );
+  setInputFile(reader->readString("InputFile", getInputFile()));
   reader->closeFilterGroup();
 }
 
@@ -93,7 +92,6 @@ void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 void AlignSectionsList::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -105,16 +103,19 @@ void AlignSectionsList::dataCheck()
   QString ss;
 
   AlignSections::dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   QFileInfo fi(m_InputFile);
-  if (true == m_InputFile.isEmpty())
+  if(true == m_InputFile.isEmpty())
   {
     ss = QObject::tr("The input file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (false == fi.exists())
+  if(false == fi.exists())
   {
     ss = QObject::tr("The input file with name %1 does not exist").arg(m_InputFile);
     setErrorCondition(-1);
@@ -145,19 +146,16 @@ void AlignSectionsList::find_shifts(std::vector<int64_t>& xshifts, std::vector<i
   std::ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
 
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   int64_t slice = 0;
   int64_t newxshift = 0, newyshift = 0;
-  for (int64_t iter = 1; iter < dims[2]; iter++)
+  for(int64_t iter = 1; iter < dims[2]; iter++)
   {
     inFile >> slice >> newxshift >> newyshift;
     xshifts[iter] = xshifts[iter - 1] + newxshift;
@@ -174,7 +172,10 @@ void AlignSectionsList::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   AlignSections::execute();
 
@@ -218,23 +219,29 @@ const QString AlignSectionsList::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
+  vStream << Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsList::getGroupName()
-{ return SIMPL::FilterGroups::ReconstructionFilters; }
+{
+  return SIMPL::FilterGroups::ReconstructionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsList::getSubGroupName()
-{return SIMPL::FilterSubGroups::AlignmentFilters;}
+{
+  return SIMPL::FilterSubGroups::AlignmentFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsList::getHumanLabel()
-{ return "Align Sections (List)"; }
+{
+  return "Align Sections (List)";
+}

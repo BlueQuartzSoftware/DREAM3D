@@ -38,10 +38,10 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/GeometryMath.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -51,27 +51,25 @@
 // Include the MOC generated file for this class
 #include "moc_FindFeatureReferenceCAxisMisorientations.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureReferenceCAxisMisorientations::FindFeatureReferenceCAxisMisorientations() :
-  AbstractFilter(),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
-  m_AvgCAxesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgCAxes),
-  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
-  m_FeatureAvgCAxisMisorientationsArrayName(SIMPL::FeatureData::FeatureAvgCAxisMisorientations),
-  m_FeatureStdevCAxisMisorientationsArrayName(SIMPL::FeatureData::FeatureStdevCAxisMisorientations),
-  m_FeatureReferenceCAxisMisorientationsArrayName(SIMPL::CellData::FeatureReferenceCAxisMisorientations),
-  m_FeatureIds(nullptr),
-  m_CellPhases(nullptr),
-  m_Quats(nullptr),
-  m_AvgCAxes(nullptr),
-  m_FeatureReferenceCAxisMisorientations(nullptr),
-  m_FeatureAvgCAxisMisorientations(nullptr),
-  m_FeatureStdevCAxisMisorientations(nullptr)
+FindFeatureReferenceCAxisMisorientations::FindFeatureReferenceCAxisMisorientations()
+: AbstractFilter()
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
+, m_AvgCAxesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgCAxes)
+, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
+, m_FeatureAvgCAxisMisorientationsArrayName(SIMPL::FeatureData::FeatureAvgCAxisMisorientations)
+, m_FeatureStdevCAxisMisorientationsArrayName(SIMPL::FeatureData::FeatureStdevCAxisMisorientations)
+, m_FeatureReferenceCAxisMisorientationsArrayName(SIMPL::CellData::FeatureReferenceCAxisMisorientations)
+, m_FeatureIds(nullptr)
+, m_CellPhases(nullptr)
+, m_Quats(nullptr)
+, m_AvgCAxes(nullptr)
+, m_FeatureReferenceCAxisMisorientations(nullptr)
+, m_FeatureAvgCAxisMisorientations(nullptr)
+, m_FeatureStdevCAxisMisorientations(nullptr)
 {
   setupFilterParameters();
 }
@@ -90,27 +88,32 @@ void FindFeatureReferenceCAxisMisorientations::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindFeatureReferenceCAxisMisorientations, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, FindFeatureReferenceCAxisMisorientations, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, FindFeatureReferenceCAxisMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average C-Axes", AvgCAxesArrayPath, FilterParameter::RequiredArray, FindFeatureReferenceCAxisMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Average C-Axis Misorientations", FeatureAvgCAxisMisorientationsArrayName, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Feature Stdev C-Axis Misorientations", FeatureStdevCAxisMisorientationsArrayName, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Reference C-Axis Misorientations", FeatureReferenceCAxisMisorientationsArrayName, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
+  parameters.push_back(
+      SIMPL_NEW_STRING_FP("Feature Reference C-Axis Misorientations", FeatureReferenceCAxisMisorientationsArrayName, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
   setFilterParameters(parameters);
 }
 
@@ -118,13 +121,13 @@ void FindFeatureReferenceCAxisMisorientations::setupFilterParameters()
 void FindFeatureReferenceCAxisMisorientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFeatureReferenceCAxisMisorientationsArrayName(reader->readString("FeatureReferenceCAxisMisorientationsArrayName", getFeatureReferenceCAxisMisorientationsArrayName() ) );
-  setFeatureStdevCAxisMisorientationsArrayName(reader->readString("FeatureStdevCAxisMisorientationsArrayName", getFeatureStdevCAxisMisorientationsArrayName() ) );
-  setFeatureAvgCAxisMisorientationsArrayName(reader->readString("FeatureAvgCAxisMisorientationsArrayName", getFeatureAvgCAxisMisorientationsArrayName() ) );
-  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
-  setAvgCAxesArrayPath(reader->readDataArrayPath("AvgCAxesArrayPath", getAvgCAxesArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setFeatureReferenceCAxisMisorientationsArrayName(reader->readString("FeatureReferenceCAxisMisorientationsArrayName", getFeatureReferenceCAxisMisorientationsArrayName()));
+  setFeatureStdevCAxisMisorientationsArrayName(reader->readString("FeatureStdevCAxisMisorientationsArrayName", getFeatureStdevCAxisMisorientationsArrayName()));
+  setFeatureAvgCAxisMisorientationsArrayName(reader->readString("FeatureAvgCAxisMisorientationsArrayName", getFeatureAvgCAxisMisorientationsArrayName()));
+  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath()));
+  setAvgCAxesArrayPath(reader->readDataArrayPath("AvgCAxesArrayPath", getAvgCAxesArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -133,7 +136,6 @@ void FindFeatureReferenceCAxisMisorientations::readFilterParameters(AbstractFilt
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceCAxisMisorientations::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -149,41 +151,71 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getFeatureIdsArrayPath());
+  }
 
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getCellPhasesArrayPath());
+  }
 
-  tempPath.update(m_AvgCAxesArrayPath.getDataContainerName(), getAvgCAxesArrayPath().getAttributeMatrixName(), getFeatureAvgCAxisMisorientationsArrayName() );
-  m_FeatureAvgCAxisMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureAvgCAxisMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureAvgCAxisMisorientations = m_FeatureAvgCAxisMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_AvgCAxesArrayPath.getDataContainerName(), getAvgCAxesArrayPath().getAttributeMatrixName(), getFeatureAvgCAxisMisorientationsArrayName());
+  m_FeatureAvgCAxisMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims);                                  /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureAvgCAxisMisorientationsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureAvgCAxisMisorientations = m_FeatureAvgCAxisMisorientationsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(m_AvgCAxesArrayPath.getDataContainerName(), getAvgCAxesArrayPath().getAttributeMatrixName(), getFeatureStdevCAxisMisorientationsArrayName() );
-  m_FeatureStdevCAxisMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureStdevCAxisMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureStdevCAxisMisorientations = m_FeatureStdevCAxisMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_AvgCAxesArrayPath.getDataContainerName(), getAvgCAxesArrayPath().getAttributeMatrixName(), getFeatureStdevCAxisMisorientationsArrayName());
+  m_FeatureStdevCAxisMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims);                                    /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureStdevCAxisMisorientationsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureStdevCAxisMisorientations = m_FeatureStdevCAxisMisorientationsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getFeatureReferenceCAxisMisorientationsArrayName() );
-  m_FeatureReferenceCAxisMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureReferenceCAxisMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureReferenceCAxisMisorientations = m_FeatureReferenceCAxisMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getFeatureReferenceCAxisMisorientationsArrayName());
+  m_FeatureReferenceCAxisMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims);                                        /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureReferenceCAxisMisorientationsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureReferenceCAxisMisorientations = m_FeatureReferenceCAxisMisorientationsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
-  m_AvgCAxesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgCAxesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AvgCAxesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AvgCAxes = m_AvgCAxesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_AvgCAxesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgCAxesArrayPath(),
+                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AvgCAxesPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AvgCAxes = m_AvgCAxesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 4;
-  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getQuatsArrayPath()); }
+  m_QuatsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_QuatsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Quats = m_QuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getQuatsArrayPath());
+  }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -208,7 +240,10 @@ void FindFeatureReferenceCAxisMisorientations::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
@@ -224,7 +259,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   float w = 0.0f;
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   uint32_t maxUInt32 = std::numeric_limits<uint32_t>::max();
@@ -241,21 +276,21 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   int64_t zPoints = static_cast<int64_t>(udims[2]);
   int64_t point = 0;
 
-  float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float g1t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float g1t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float caxis[3] = {0.0f, 0.0f, 1.0f};
   float c1[3] = {0.0f, 0.0f, 0.0f};
   float AvgCAxis[3] = {0.0f, 0.0f, 0.0f};
   size_t index = 0;
 
-  for (int64_t col = 0; col < xPoints; col++)
+  for(int64_t col = 0; col < xPoints; col++)
   {
-    for (int64_t row = 0; row < yPoints; row++)
+    for(int64_t row = 0; row < yPoints; row++)
     {
-      for (int64_t plane = 0; plane < zPoints; plane++)
+      for(int64_t plane = 0; plane < zPoints; plane++)
       {
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
-        if (m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
+        if(m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
         {
           QuaternionMathF::Copy(quats[point], q1);
           FOrientArrayType om(9);
@@ -277,14 +312,17 @@ void FindFeatureReferenceCAxisMisorientations::execute()
           SIMPLibMath::boundF(w, -1, 1);
           w = acosf(w);
           w = w * SIMPLib::Constants::k_180OverPi;
-          if (w > 90.0) { w = 180.0 - w; }
+          if(w > 90.0)
+          {
+            w = 180.0 - w;
+          }
 
           m_FeatureReferenceCAxisMisorientations[point] = w;
           index = m_FeatureIds[point] * avgMisoComps;
           avgmiso[index]++;
           avgmiso[index + 1] += w;
         }
-        if (m_FeatureIds[point] == 0 || m_CellPhases[point] == 0)
+        if(m_FeatureIds[point] == 0 || m_CellPhases[point] == 0)
         {
           m_FeatureReferenceCAxisMisorientations[point] = 0;
         }
@@ -292,27 +330,30 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     }
   }
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
-    if (i % 1000 == 0)
+    if(i % 1000 == 0)
     {
       QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
     index = i * avgMisoComps;
     m_FeatureAvgCAxisMisorientations[i] = avgmiso[index + 1] / avgmiso[index];
-    if (avgmiso[index] == 0) { m_FeatureAvgCAxisMisorientations[i] = 0.0; }
+    if(avgmiso[index] == 0)
+    {
+      m_FeatureAvgCAxisMisorientations[i] = 0.0;
+    }
   }
-
 
   int32_t gNum = 0;
-  for (size_t j = 0; j < totalPoints; j++)
+  for(size_t j = 0; j < totalPoints; j++)
   {
     gNum = m_FeatureIds[j];
-    avgmiso[(gNum * avgMisoComps) + 2] += ((m_FeatureReferenceCAxisMisorientations[j] - m_FeatureAvgCAxisMisorientations[gNum]) * (m_FeatureReferenceCAxisMisorientations[j] - m_FeatureAvgCAxisMisorientations[gNum]));
+    avgmiso[(gNum * avgMisoComps) + 2] +=
+        ((m_FeatureReferenceCAxisMisorientations[j] - m_FeatureAvgCAxisMisorientations[gNum]) * (m_FeatureReferenceCAxisMisorientations[j] - m_FeatureAvgCAxisMisorientations[gNum]));
   }
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     index = i * avgMisoComps;
     m_FeatureStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index + 2]);
@@ -357,23 +398,29 @@ const QString FindFeatureReferenceCAxisMisorientations::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureReferenceCAxisMisorientations::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
+{
+  return SIMPL::FilterSubGroups::CrystallographicFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureReferenceCAxisMisorientations::getHumanLabel()
-{ return "Find Feature Reference C-Axis Misalignments"; }
+{
+  return "Find Feature Reference C-Axis Misalignments";
+}

@@ -36,18 +36,18 @@
 #include "FlattenImage.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -57,56 +57,56 @@
  */
 class FlattenImageImpl
 {
-  public:
-    FlattenImageImpl(uint8_t* data, uint8_t* newdata, float Rfactor, float Gfactor, float Bfactor, size_t comp) :
-      m_ImageData(data),
-      m_FlatImageData(newdata),
-      convRFactor(Rfactor),
-      convGFactor(Gfactor),
-      convBFactor(Bfactor),
-      numComp(comp)
-    {}
-    virtual ~FlattenImageImpl() {}
+public:
+  FlattenImageImpl(uint8_t* data, uint8_t* newdata, float Rfactor, float Gfactor, float Bfactor, size_t comp)
+  : m_ImageData(data)
+  , m_FlatImageData(newdata)
+  , convRFactor(Rfactor)
+  , convGFactor(Gfactor)
+  , convBFactor(Bfactor)
+  , numComp(comp)
+  {
+  }
+  virtual ~FlattenImageImpl()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    for(size_t i = start; i < end; i++)
     {
-      for (size_t i = start; i < end; i++)
-      {
-        m_FlatImageData[i] = int32_t((m_ImageData[numComp * i] * convRFactor) + (m_ImageData[numComp * i + 1] * convGFactor) + (m_ImageData[numComp * i + 2] * convBFactor));
-      }
+      m_FlatImageData[i] = int32_t((m_ImageData[numComp * i] * convRFactor) + (m_ImageData[numComp * i + 1] * convGFactor) + (m_ImageData[numComp * i + 2] * convBFactor));
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
-  private:
-    uint8_t* m_ImageData;
-    uint8_t* m_FlatImageData;
-    float  convRFactor;
-    float  convGFactor;
-    float  convBFactor;
-    size_t numComp;
-
+private:
+  uint8_t* m_ImageData;
+  uint8_t* m_FlatImageData;
+  float convRFactor;
+  float convGFactor;
+  float convBFactor;
+  size_t numComp;
 };
 
 // Include the MOC generated file for this class
 #include "moc_FlattenImage.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FlattenImage::FlattenImage() :
-  AbstractFilter(),
-  m_FlattenMethod(SIMPL::FlattenImageMethod::Luminosity),
-  m_ImageDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData),
-  m_FlatImageDataArrayName(SIMPL::CellData::FlatImageData),
-  m_ImageData(nullptr),
-  m_FlatImageData(nullptr)
+FlattenImage::FlattenImage()
+: AbstractFilter()
+, m_FlattenMethod(SIMPL::FlattenImageMethod::Luminosity)
+, m_ImageDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData)
+, m_FlatImageDataArrayName(SIMPL::CellData::FlatImageData)
+, m_ImageData(nullptr)
+, m_FlatImageData(nullptr)
 {
   setupFilterParameters();
 }
@@ -140,8 +140,9 @@ void FlattenImage::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    QVector< QVector<size_t> > cDims;
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    QVector<QVector<size_t>> cDims;
     cDims.push_back(QVector<size_t>(1, 3));
     cDims.push_back(QVector<size_t>(1, 4));
     req.componentDimensions = cDims;
@@ -158,9 +159,9 @@ void FlattenImage::setupFilterParameters()
 void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFlatImageDataArrayName(reader->readString("FlatImageDataArrayName", getFlatImageDataArrayName() ) );
-  setImageDataArrayPath(reader->readDataArrayPath("ImageDataArrayPath", getImageDataArrayPath() ) );
-  setFlattenMethod( reader->readValue("FlattenMethod", getFlattenMethod()) );
+  setFlatImageDataArrayName(reader->readString("FlatImageDataArrayName", getFlatImageDataArrayName()));
+  setImageDataArrayPath(reader->readDataArrayPath("ImageDataArrayPath", getImageDataArrayPath()));
+  setFlattenMethod(reader->readValue("FlattenMethod", getFlattenMethod()));
   reader->closeFilterGroup();
 }
 
@@ -169,7 +170,6 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 void FlattenImage::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -183,22 +183,31 @@ void FlattenImage::dataCheck()
   int32_t numImageComp = 1;
 
   IDataArray::Pointer iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageDataArrayPath());
-  if (getErrorCondition() < 0) { return; }
-  if (nullptr != iDataArray.get())
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+  if(nullptr != iDataArray.get())
   {
     numImageComp = iDataArray->getNumberOfComponents();
   }
 
   QVector<size_t> cDims(1, numImageComp);
-  m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getImageDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getImageDataArrayPath(),
+                                                                                                       cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ImageDataPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_ImageData = m_ImageDataPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
-  tempPath.update(m_ImageDataArrayPath.getDataContainerName(), m_ImageDataArrayPath.getAttributeMatrixName(), getFlatImageDataArrayName() );
-  m_FlatImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FlatImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FlatImageData = m_FlatImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_ImageDataArrayPath.getDataContainerName(), m_ImageDataArrayPath.getAttributeMatrixName(), getFlatImageDataArrayName());
+  m_FlatImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
+      this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FlatImageDataPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FlatImageData = m_FlatImageDataPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -221,20 +230,23 @@ void FlattenImage::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t totalPoints = m_ImageDataPtr.lock()->getNumberOfTuples();
 
   float Rfactor = 1.0f;
   float Gfactor = 1.0f;
   float Bfactor = 1.0f;
-  if (m_FlattenMethod == SIMPL::FlattenImageMethod::Average)
+  if(m_FlattenMethod == SIMPL::FlattenImageMethod::Average)
   {
     Rfactor = 1.0f / 3.0f;
     Gfactor = 1.0f / 3.0f;
     Bfactor = 1.0f / 3.0f;
   }
-  else if (m_FlattenMethod == SIMPL::FlattenImageMethod::Luminosity)
+  else if(m_FlattenMethod == SIMPL::FlattenImageMethod::Luminosity)
   {
     Rfactor = 0.21f;
     Gfactor = 0.72f;
@@ -248,13 +260,11 @@ void FlattenImage::execute()
 
   int32_t comp = m_ImageDataPtr.lock()->getNumberOfComponents();
 
-  //  qDebug() << "FlattenImage: " << m_ConversionFactor << "\n";
+//  qDebug() << "FlattenImage: " << m_ConversionFactor << "\n";
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      FlattenImageImpl(m_ImageData, m_FlatImageData, Rfactor, Gfactor, Bfactor, comp), tbb::auto_partitioner());
-
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), FlattenImageImpl(m_ImageData, m_FlatImageData, Rfactor, Gfactor, Bfactor, comp), tbb::auto_partitioner());
   }
   else
 #endif
@@ -302,24 +312,29 @@ const QString FlattenImage::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
+  vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FlattenImage::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FlattenImage::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ImageFilters; }
+{
+  return SIMPL::FilterSubGroups::ImageFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FlattenImage::getHumanLabel()
-{ return "Flatten Image"; }
-
+{
+  return "Flatten Image";
+}

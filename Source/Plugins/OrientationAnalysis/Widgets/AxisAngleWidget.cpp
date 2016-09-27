@@ -44,8 +44,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AxisAngleWidget::AxisAngleWidget(QWidget* parent) :
-  OrientationWidget(parent)
+AxisAngleWidget::AxisAngleWidget(QWidget* parent)
+: OrientationWidget(parent)
 {
   setupUi(this);
 
@@ -57,7 +57,6 @@ AxisAngleWidget::AxisAngleWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 AxisAngleWidget::~AxisAngleWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -70,14 +69,10 @@ void AxisAngleWidget::setupGui()
   aa3->setValidator(new QDoubleValidator(aa3));
   aa4->setValidator(new QRegExpValidator(QRegExp("([-+]?[0-9]*\\.?[0-9]+)|pi"), aa4));
 
-  connect(aa1, SIGNAL(textEdited(const QString&)),
-          this, SLOT(valuesUpdated(const QString&)));
-  connect(aa2, SIGNAL(textEdited(const QString&)),
-          this, SLOT(valuesUpdated(const QString&)));
-  connect(aa3, SIGNAL(textEdited(const QString&)),
-          this, SLOT(valuesUpdated(const QString&)));
-  connect(aa4, SIGNAL(textEdited(const QString&)),
-          this, SLOT(valuesUpdated(const QString&)));
+  connect(aa1, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(aa2, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(aa3, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(aa4, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -87,12 +82,12 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if (calculator->getInputType() == OrientationConverter<double>::AxisAngle)
+  if(calculator->getInputType() == OrientationConverter<double>::AxisAngle)
   {
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if (calculator->getHasErrors() == true)
+  else if(calculator->getHasErrors() == true)
   {
     aa1->setText("nan");
     aa2->setText("nan");
@@ -104,7 +99,7 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
 
   QVector<double> aaValues = calculator->getValues(OrientationConverter<double>::AxisAngle);
 
-  if (m_AngleMeasurement == Degrees)
+  if(m_AngleMeasurement == Degrees)
   {
     double radVal = aaValues[3];
     double degVal = radVal * SIMPLib::Constants::k_RadToDeg;
@@ -120,7 +115,7 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::valuesUpdated(const QString &text)
+void AxisAngleWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
 
@@ -129,7 +124,7 @@ void AxisAngleWidget::valuesUpdated(const QString &text)
     return;
   }
 
-  if (m_AngleMeasurement == Degrees)
+  if(m_AngleMeasurement == Degrees)
   {
     double degVal = values[3];
     double radVal = degVal * SIMPLib::Constants::k_DegToRad;
@@ -149,14 +144,13 @@ void AxisAngleWidget::valuesUpdated(const QString &text)
   ss << "Axis Angle values were normalized. Actual values used for the calculation are: ";
   ss << "<" << values[0] << ", " << values[1] << ", " << values[2] << "> " << values[3];
 
-
   emit invalidValues(errorCode, QString::fromStdString(ss.str()));
 
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ax_check(values);
   errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
-  if (errorCode >= 0)
+  if(errorCode >= 0)
   {
     emit valuesChanged(values, OrientationConverter<double>::AxisAngle, false);
   }
@@ -175,7 +169,7 @@ void AxisAngleWidget::convertData(bool isDegrees)
   QVector<double> values = getValues();
   double value = values[3];
 
-  if (isDegrees == true)
+  if(isDegrees == true)
   {
     value = value * SIMPLib::Constants::k_RadToDeg;
   }
@@ -194,22 +188,22 @@ QVector<double> AxisAngleWidget::getValues()
 {
   QVector<double> values;
 
-  if (aa1->text() == "nan")
+  if(aa1->text() == "nan")
   {
     aa1->setText("0");
   }
-  if (aa2->text() == "nan")
+  if(aa2->text() == "nan")
   {
     aa2->setText("0");
   }
-  if (aa3->text() == "nan")
+  if(aa3->text() == "nan")
   {
     aa3->setText("0");
   }
 
-  if (aa4->text() == "p" || aa4->text() == "pi")
+  if(aa4->text() == "p" || aa4->text() == "pi")
   {
-    if (m_AngleMeasurement == Degrees)
+    if(m_AngleMeasurement == Degrees)
     {
       aa4->setText("180");
     }
@@ -218,7 +212,7 @@ QVector<double> AxisAngleWidget::getValues()
       aa4->setText(QString::number(SIMPLib::Constants::k_Pi));
     }
   }
-  else if (aa4->text() == "nan")
+  else if(aa4->text() == "nan")
   {
     aa4->setText("0");
   }
@@ -230,4 +224,3 @@ QVector<double> AxisAngleWidget::getValues()
 
   return values;
 }
-

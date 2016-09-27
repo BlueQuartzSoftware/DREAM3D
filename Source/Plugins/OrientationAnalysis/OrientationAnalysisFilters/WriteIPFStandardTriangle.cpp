@@ -41,10 +41,9 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
-
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 
@@ -54,15 +53,13 @@
 // Include the MOC generated file for this class
 #include "moc_WriteIPFStandardTriangle.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteIPFStandardTriangle::WriteIPFStandardTriangle() :
-  AbstractFilter(),
-  m_OutputFile(""),
-  m_ImageSize(512)
+WriteIPFStandardTriangle::WriteIPFStandardTriangle()
+: AbstractFilter()
+, m_OutputFile("")
+, m_ImageSize(512)
 {
   setupFilterParameters();
 }
@@ -91,8 +88,8 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setOutputFile( reader->readString("OutputFile", getOutputFile()));
-  setImageSize( reader->readValue("ImageSize", getImageSize()));
+  setOutputFile(reader->readString("OutputFile", getOutputFile()));
+  setImageSize(reader->readValue("ImageSize", getImageSize()));
   reader->closeFilterGroup();
 }
 
@@ -101,7 +98,6 @@ void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -112,9 +108,9 @@ void WriteIPFStandardTriangle::dataCheck()
   setErrorCondition(0);
 
   QString ss;
-  if (getOutputFile().isEmpty() == true)
+  if(getOutputFile().isEmpty() == true)
   {
-    ss = QObject::tr( "The output file must be set");
+    ss = QObject::tr("The output file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -124,20 +120,20 @@ void WriteIPFStandardTriangle::dataCheck()
   QDir parentPath = fi.path();
   QString ext = fi.completeSuffix();
 
-  if (parentPath.exists() == false)
+  if(parentPath.exists() == false)
   {
-    ss = QObject::tr( "The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
+    ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if (ext.isEmpty())
+  if(ext.isEmpty())
   {
     ss = QObject::tr("The output file does not have an extension");
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if (ext != "tif" && ext != "bmp" && ext != "png")
+  else if(ext != "tif" && ext != "bmp" && ext != "png")
   {
     ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file");
     setErrorCondition(-1004);
@@ -145,7 +141,7 @@ void WriteIPFStandardTriangle::dataCheck()
     return;
   }
 
-  if (m_ImageSize <= 0)
+  if(m_ImageSize <= 0)
   {
     setErrorCondition(-1005);
     notifyErrorMessage(getHumanLabel(), "The size of the image must be positive", getErrorCondition());
@@ -183,9 +179,9 @@ QImage WriteIPFStandardTriangle::generateCubicHighTriangle()
   int32_t yDim = getImageSize();
   size_t idx = 0;
 
-  for (int32_t y = 0; y < yDim; ++y)
+  for(int32_t y = 0; y < yDim; ++y)
   {
-    for (int32_t x = 0; x < xDim; ++x)
+    for(int32_t x = 0; x < xDim; ++x)
     {
       idx = (y * xDim) + x;
       image.setPixel(x, y, rgba[idx]);
@@ -206,8 +202,10 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
   int32_t fontWidth = 0;
 
   int32_t fontScale = 24 / 256 * getImageSize(); // At 256 Pixel Image, we want to use 24 Point font
-  if (fontScale < 10) { fontScale = 10; } // Do not use fonts below 10Point.
-
+  if(fontScale < 10)
+  {
+    fontScale = 10;
+  } // Do not use fonts below 10Point.
 
   QFont font("Arial", fontScale, QFont::Bold);
   {
@@ -249,22 +247,22 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
   QString label("[111]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
-  painter.drawText( pImageWidth - (fontWidth * 1.25), fontHeight * 1.10, label);
+  painter.drawText(pImageWidth - (fontWidth * 1.25), fontHeight * 1.10, label);
 
   label = QString("[101]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
-  painter.drawText( pImageWidth - (fontWidth * 1.25), pImageHeight - fontHeight, label);
+  painter.drawText(pImageWidth - (fontWidth * 1.25), pImageHeight - fontHeight, label);
 
   label = QString("[001]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
-  painter.drawText( 10, pImageHeight - fontHeight, label);
+  painter.drawText(10, pImageHeight - fontHeight, label);
 
   label = QString("Cubic m-3m");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
-  painter.drawText( 10, fontHeight * 1.10, label);
+  painter.drawText(10, fontHeight * 1.10, label);
 
   return pImage;
 }
@@ -272,7 +270,7 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteIPFStandardTriangle::writeImage( QImage& image)
+void WriteIPFStandardTriangle::writeImage(QImage& image)
 {
 
   QString ss = QObject::tr("Writing Image %1").arg(getOutputFile());
@@ -280,13 +278,13 @@ void WriteIPFStandardTriangle::writeImage( QImage& image)
 
   QFileInfo fi((m_OutputFile));
   QDir parent(fi.absolutePath());
-  if (parent.exists() == false)
+  if(parent.exists() == false)
   {
     parent.mkpath(fi.absolutePath());
   }
 
   bool saved = image.save((m_OutputFile));
-  if (!saved)
+  if(!saved)
   {
     QString ss = QObject::tr("The Triangle image file '%1' was not saved").arg(getOutputFile());
     setErrorCondition(-90011);
@@ -301,7 +299,10 @@ void WriteIPFStandardTriangle::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   QImage image = generateCubicHighTriangle();
   writeImage(image);
@@ -346,23 +347,29 @@ const QString WriteIPFStandardTriangle::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getHumanLabel()
-{ return "Write IPF Triangle Legend (Cubic m-3m)"; }
+{
+  return "Write IPF Triangle Legend (Cubic m-3m)";
+}

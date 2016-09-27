@@ -37,35 +37,33 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
-#include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
+#include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 
 // Include the MOC generated file for this class
 #include "moc_FindFeatureHistogram.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureHistogram::FindFeatureHistogram() :
-  AbstractFilter(),
-  m_SelectedFeatureArrayPath("", "", ""),
-  m_NumberOfBins(1),
-  m_RemoveBiasedFeatures(false),
-  m_FeaturePhasesArrayPath("", "", ""),
-  m_BiasedFeaturesArrayPath("", "", ""),
-  m_NewEnsembleArrayArrayPath("", "", ""),
-  m_BiasedFeatures(nullptr),
-  m_NewEnsembleArray(nullptr),
-  m_FeaturePhases(nullptr)
+FindFeatureHistogram::FindFeatureHistogram()
+: AbstractFilter()
+, m_SelectedFeatureArrayPath("", "", "")
+, m_NumberOfBins(1)
+, m_RemoveBiasedFeatures(false)
+, m_FeaturePhasesArrayPath("", "", "")
+, m_BiasedFeaturesArrayPath("", "", "")
+, m_NewEnsembleArrayArrayPath("", "", "")
+, m_BiasedFeatures(nullptr)
+, m_NewEnsembleArray(nullptr)
+, m_FeaturePhases(nullptr)
 {
   setupFilterParameters();
 }
@@ -123,11 +121,11 @@ void FindFeatureHistogram::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
   setNewEnsembleArrayArrayPath(reader->readDataArrayPath("NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath()));
-  setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
-  setNumberOfBins( reader->readValue( "NumberOfBins", getNumberOfBins() ) );
-  setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
+  setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath()));
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
+  setSelectedFeatureArrayPath(reader->readDataArrayPath("SelectedFeatureArrayPath", getSelectedFeatureArrayPath()));
+  setNumberOfBins(reader->readValue("NumberOfBins", getNumberOfBins()));
+  setRemoveBiasedFeatures(reader->readValue("RemoveBiasedFeatures", getRemoveBiasedFeatures()));
   reader->closeFilterGroup();
 }
 
@@ -136,7 +134,6 @@ void FindFeatureHistogram::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -147,9 +144,12 @@ void FindFeatureHistogram::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> dims(1, 1);
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
+                                                                                                           dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_SelectedFeatureArrayPath.isEmpty() == true)
   {
@@ -160,16 +160,22 @@ void FindFeatureHistogram::dataCheck()
   int numComp = m_NumberOfBins;
   getNewEnsembleArrayArrayPath().setDataArrayName(m_SelectedFeatureArrayPath.getDataArrayName() + QString("Histogram"));
   dims[0] = numComp;
-  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int>, AbstractFilter>(this, getNewEnsembleArrayArrayPath(), 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int>, AbstractFilter>(
+      this, getNewEnsembleArrayArrayPath(), 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NewEnsembleArrayPtr.lock().get())   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_RemoveBiasedFeatures == true)
   {
     dims[0] = 1;
-    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(),
+                                                                                                           dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_BiasedFeaturesPtr.lock().get())                                                               /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -189,11 +195,10 @@ void FindFeatureHistogram::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_t* eIds, int NumberOfBins, bool removeBiasedFeatures, bool* biasedFeatures)
+template <typename T> void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_t* eIds, int NumberOfBins, bool removeBiasedFeatures, bool* biasedFeatures)
 {
   DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
-  if (nullptr == featureArray)
+  if(nullptr == featureArray)
   {
     return;
   }
@@ -206,21 +211,30 @@ void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_
   float min = 1000000.0f;
   float max = 0.0f;
   float value;
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     value = fPtr[i];
-    if(value > max) { max = value; }
-    if(value < min) { min = value; }
+    if(value > max)
+    {
+      max = value;
+    }
+    if(value < min)
+    {
+      min = value;
+    }
   }
   float stepsize = (max - min) / NumberOfBins;
 
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     if(removeBiasedFeatures == false || biasedFeatures[i] == false)
     {
       ensemble = eIds[i];
       bin = (fPtr[i] - min) / stepsize;
-      if(bin >= NumberOfBins) { bin = NumberOfBins - 1; }
+      if(bin >= NumberOfBins)
+      {
+        bin = NumberOfBins - 1;
+      }
       ensembleArray[(NumberOfBins * ensemble) + bin]++;
     }
   }
@@ -233,14 +247,17 @@ void FindFeatureHistogram::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedFeatureArrayPath.getDataContainerName());
 
   QString ss;
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayPath.getDataArrayName());
-  if (nullptr == inputData.get())
+  if(nullptr == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayPath.getDataArrayName());
     setErrorCondition(-11001);
@@ -250,47 +267,47 @@ void FindFeatureHistogram::execute()
 
   QString dType = inputData->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();
-  if (dType.compare("int8_t") == 0)
+  if(dType.compare("int8_t") == 0)
   {
     findHistogram<int8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("uint8_t") == 0)
+  else if(dType.compare("uint8_t") == 0)
   {
     findHistogram<uint8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("int16_t") == 0)
+  else if(dType.compare("int16_t") == 0)
   {
     findHistogram<int16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("uint16_t") == 0)
+  else if(dType.compare("uint16_t") == 0)
   {
     findHistogram<uint16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("int32_t") == 0)
+  else if(dType.compare("int32_t") == 0)
   {
     findHistogram<int32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("uint32_t") == 0)
+  else if(dType.compare("uint32_t") == 0)
   {
     findHistogram<uint32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("int64_t") == 0)
+  else if(dType.compare("int64_t") == 0)
   {
     findHistogram<int64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("uint64_t") == 0)
+  else if(dType.compare("uint64_t") == 0)
   {
     findHistogram<uint64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("float") == 0)
+  else if(dType.compare("float") == 0)
   {
     findHistogram<float>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("double") == 0)
+  else if(dType.compare("double") == 0)
   {
     findHistogram<double>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("bool") == 0)
+  else if(dType.compare("bool") == 0)
   {
     findHistogram<bool>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
@@ -334,7 +351,7 @@ const QString FindFeatureHistogram::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 
@@ -342,19 +359,22 @@ const QString FindFeatureHistogram::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureHistogram::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
-
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureHistogram::getSubGroupName()
-{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
-
+{
+  return SIMPL::FilterSubGroups::EnsembleStatsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureHistogram::getHumanLabel()
-{ return "Find Feature Histogram"; }
-
+{
+  return "Find Feature Histogram";
+}

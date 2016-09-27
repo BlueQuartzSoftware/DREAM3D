@@ -44,19 +44,18 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenWidget::StatsGenWidget(QWidget* parent) :
-  QWidget(parent),
-  m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-  m_PhaseIndex(0),
-  m_PhaseFraction(1.0),
-  m_TotalPhaseFraction(1.0),
-  m_DataHasBeenGenerated(false),
-  m_BulkLoadFailure(false),
-  m_TabTitle("Unknown Phase"),
-  m_PhaseName("Unknown Phase")
+StatsGenWidget::StatsGenWidget(QWidget* parent)
+: QWidget(parent)
+, m_PhaseType(SIMPL::PhaseType::PrimaryPhase)
+, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+, m_PhaseIndex(0)
+, m_PhaseFraction(1.0)
+, m_TotalPhaseFraction(1.0)
+, m_DataHasBeenGenerated(false)
+, m_BulkLoadFailure(false)
+, m_TabTitle("Unknown Phase")
+, m_PhaseName("Unknown Phase")
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -95,15 +94,12 @@ int StatsGenWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool prefl
 // -----------------------------------------------------------------------------
 void StatsGenWidget::generateDefaultData()
 {
-
 }
 
 //// -----------------------------------------------------------------------------
 ////
 //// -----------------------------------------------------------------------------
-//void StatsGenWidget::dataWasEdited()
+// void StatsGenWidget::dataWasEdited()
 //{
 //  Q_ASSERT(false);
 //}
-
-

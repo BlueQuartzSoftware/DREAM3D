@@ -37,9 +37,9 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -49,23 +49,21 @@
 // Include the MOC generated file for this class
 #include "moc_BadDataNeighborOrientationCheck.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck() :
-  AbstractFilter(),
-  m_MisorientationTolerance(5.0f),
-  m_NumberOfNeighbors(6),
-  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
-  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
-  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
-  m_Quats(nullptr),
-  m_GoodVoxels(nullptr),
-  m_CellPhases(nullptr),
-  m_CrystalStructures(nullptr)
+BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck()
+: AbstractFilter()
+, m_MisorientationTolerance(5.0f)
+, m_NumberOfNeighbors(6)
+, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
+, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
+, m_Quats(nullptr)
+, m_GoodVoxels(nullptr)
+, m_CellPhases(nullptr)
+, m_CrystalStructures(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
   setupFilterParameters();
@@ -88,20 +86,24 @@ void BadDataNeighborOrientationCheck::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Required Number of Neighbors", NumberOfNeighbors, FilterParameter::Parameter, BadDataNeighborOrientationCheck));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, BadDataNeighborOrientationCheck, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, BadDataNeighborOrientationCheck, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, BadDataNeighborOrientationCheck, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, BadDataNeighborOrientationCheck, req));
   }
   setFilterParameters(parameters);
@@ -113,12 +115,12 @@ void BadDataNeighborOrientationCheck::setupFilterParameters()
 void BadDataNeighborOrientationCheck::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
-  setNumberOfNeighbors( reader->readValue("NumberOfNeighbors", getNumberOfNeighbors()) );
+  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
+  setMisorientationTolerance(reader->readValue("MisorientationTolerance", getMisorientationTolerance()));
+  setNumberOfNeighbors(reader->readValue("NumberOfNeighbors", getNumberOfNeighbors()));
   reader->closeFilterGroup();
 }
 
@@ -127,7 +129,6 @@ void BadDataNeighborOrientationCheck::readFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 void BadDataNeighborOrientationCheck::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -142,25 +143,46 @@ void BadDataNeighborOrientationCheck::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getGoodVoxelsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getGoodVoxelsArrayPath());
+  }
 
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getCellPhasesArrayPath());
+  }
 
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this,  getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 4;
-  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+  m_QuatsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_QuatsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Quats = m_QuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getCellPhasesArrayPath());
+  }
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
@@ -185,7 +207,10 @@ void BadDataNeighborOrientationCheck::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_GoodVoxelsArrayPath.getDataContainerName());
   size_t totalPoints = m_GoodVoxelsPtr.lock()->getNumberOfTuples();
@@ -195,18 +220,15 @@ void BadDataNeighborOrientationCheck::execute()
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   int32_t good = 1;
   int64_t neighbor = 0;
   int64_t column = 0, row = 0, plane = 0;
 
-  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   neighpoints[0] = static_cast<int64_t>(-dims[0] * dims[1]);
   neighpoints[1] = static_cast<int64_t>(-dims[0]);
   neighpoints[2] = static_cast<int64_t>(-1);
@@ -223,24 +245,42 @@ void BadDataNeighborOrientationCheck::execute()
 
   QVector<int32_t> neighborCount(totalPoints, 0);
 
-  for (size_t i = 0; i < totalPoints; i++)
+  for(size_t i = 0; i < totalPoints; i++)
   {
-    if (m_GoodVoxels[i] == false)
+    if(m_GoodVoxels[i] == false)
     {
       column = i % dims[0];
       row = (i / dims[0]) % dims[1];
       plane = i / (dims[0] * dims[1]);
-      for (int32_t j = 0; j < 6; j++)
+      for(int32_t j = 0; j < 6; j++)
       {
         good = 1;
         neighbor = i + neighpoints[j];
-        if (j == 0 && plane == 0) { good = 0; }
-        if (j == 5 && plane == (dims[2] - 1)) { good = 0; }
-        if (j == 1 && row == 0) { good = 0; }
-        if (j == 4 && row == (dims[1] - 1)) { good = 0; }
-        if (j == 2 && column == 0) { good = 0; }
-        if (j == 3 && column == (dims[0] - 1)) { good = 0; }
-        if (good == 1 && m_GoodVoxels[neighbor] == true)
+        if(j == 0 && plane == 0)
+        {
+          good = 0;
+        }
+        if(j == 5 && plane == (dims[2] - 1))
+        {
+          good = 0;
+        }
+        if(j == 1 && row == 0)
+        {
+          good = 0;
+        }
+        if(j == 4 && row == (dims[1] - 1))
+        {
+          good = 0;
+        }
+        if(j == 2 && column == 0)
+        {
+          good = 0;
+        }
+        if(j == 3 && column == (dims[0] - 1))
+        {
+          good = 0;
+        }
+        if(good == 1 && m_GoodVoxels[neighbor] == true)
         {
           phase1 = m_CrystalStructures[m_CellPhases[i]];
           QuaternionMathF::Copy(quats[i], q1);
@@ -248,8 +288,11 @@ void BadDataNeighborOrientationCheck::execute()
           phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
           QuaternionMathF::Copy(quats[neighbor], q2);
 
-          if (m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
-          if (w < m_MisorientationTolerance)
+          if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
+          {
+            w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+          }
+          if(w < m_MisorientationTolerance)
           {
             neighborCount[i]++;
           }
@@ -261,32 +304,50 @@ void BadDataNeighborOrientationCheck::execute()
   int32_t currentLevel = 6;
   int32_t counter = 0;
 
-  while (currentLevel > m_NumberOfNeighbors)
+  while(currentLevel > m_NumberOfNeighbors)
   {
     counter = 1;
-    while (counter > 0)
+    while(counter > 0)
     {
       counter = 0;
-      for (size_t i = 0; i < totalPoints; i++)
+      for(size_t i = 0; i < totalPoints; i++)
       {
-        if (neighborCount[i] >= currentLevel && m_GoodVoxels[i] == false)
+        if(neighborCount[i] >= currentLevel && m_GoodVoxels[i] == false)
         {
           m_GoodVoxels[i] = true;
           counter++;
           column = i % dims[0];
           row = (i / dims[0]) % dims[1];
           plane = i / (dims[0] * dims[1]);
-          for (int64_t j = 0; j < 6; j++)
+          for(int64_t j = 0; j < 6; j++)
           {
             good = 1;
             neighbor = i + neighpoints[j];
-            if (j == 0 && plane == 0) { good = 0; }
-            if (j == 5 && plane == (dims[2] - 1)) { good = 0; }
-            if (j == 1 && row == 0) { good = 0; }
-            if (j == 4 && row == (dims[1] - 1)) { good = 0; }
-            if (j == 2 && column == 0) { good = 0; }
-            if (j == 3 && column == (dims[0] - 1)) { good = 0; }
-            if (good == 1 && m_GoodVoxels[neighbor] == false)
+            if(j == 0 && plane == 0)
+            {
+              good = 0;
+            }
+            if(j == 5 && plane == (dims[2] - 1))
+            {
+              good = 0;
+            }
+            if(j == 1 && row == 0)
+            {
+              good = 0;
+            }
+            if(j == 4 && row == (dims[1] - 1))
+            {
+              good = 0;
+            }
+            if(j == 2 && column == 0)
+            {
+              good = 0;
+            }
+            if(j == 3 && column == (dims[0] - 1))
+            {
+              good = 0;
+            }
+            if(good == 1 && m_GoodVoxels[neighbor] == false)
             {
               phase1 = m_CrystalStructures[m_CellPhases[i]];
               QuaternionMathF::Copy(quats[i], q1);
@@ -294,8 +355,11 @@ void BadDataNeighborOrientationCheck::execute()
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
               QuaternionMathF::Copy(quats[neighbor], q2);
 
-              if (m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
-              if (w < m_MisorientationTolerance)
+              if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
+              {
+                w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+              }
+              if(w < m_MisorientationTolerance)
               {
                 neighborCount[neighbor]++;
               }
@@ -347,23 +411,29 @@ const QString BadDataNeighborOrientationCheck::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString BadDataNeighborOrientationCheck::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString BadDataNeighborOrientationCheck::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CleanupFilters; }
+{
+  return SIMPL::FilterSubGroups::CleanupFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString BadDataNeighborOrientationCheck::getHumanLabel()
-{ return "Neighbor Orientation Comparison (Bad Data)"; }
+{
+  return "Neighbor Orientation Comparison (Bad Data)";
+}

@@ -37,8 +37,8 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Statistics/StatisticsConstants.h"
@@ -47,19 +47,17 @@
 // Include the MOC generated file for this class
 #include "moc_FindBoundaryElementFractions.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundaryElementFractions::FindBoundaryElementFractions() :
-  AbstractFilter(),
-  m_FeatureIdsArrayPath("", "", ""),
-  m_BoundaryCellsArrayPath("", "", ""),
-  m_BoundaryCellFractionsArrayPath("", "", ""),
-  m_FeatureIds(nullptr),
-  m_BoundaryCells(nullptr),
-  m_BoundaryCellFractions(nullptr)
+FindBoundaryElementFractions::FindBoundaryElementFractions()
+: AbstractFilter()
+, m_FeatureIdsArrayPath("", "", "")
+, m_BoundaryCellsArrayPath("", "", "")
+, m_BoundaryCellFractionsArrayPath("", "", "")
+, m_FeatureIds(nullptr)
+, m_BoundaryCells(nullptr)
+, m_BoundaryCellFractions(nullptr)
 {
   setupFilterParameters();
 }
@@ -99,8 +97,8 @@ void FindBoundaryElementFractions::readFilterParameters(AbstractFilterParameters
 {
   reader->openFilterGroup(this, index);
   setBoundaryCellFractionsArrayPath(reader->readDataArrayPath("BoundaryCellFractionsArrayPath", getBoundaryCellFractionsArrayPath()));
-  setBoundaryCellsArrayPath(reader->readDataArrayPath("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setBoundaryCellsArrayPath(reader->readDataArrayPath("BoundaryCellsArrayPath", getBoundaryCellsArrayPath()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -109,7 +107,6 @@ void FindBoundaryElementFractions::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void FindBoundaryElementFractions::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -122,21 +119,36 @@ void FindBoundaryElementFractions::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getFeatureIdsArrayPath());
+  }
 
-  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getBoundaryCellsArrayPath()); }
+  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(),
+                                                                                                          cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_BoundaryCellsPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getBoundaryCellsArrayPath());
+  }
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 
-  m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBoundaryCellFractionsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_BoundaryCellFractionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_BoundaryCellFractions = m_BoundaryCellFractionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, getBoundaryCellFractionsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_BoundaryCellFractionsPtr.lock().get())    /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_BoundaryCellFractions = m_BoundaryCellFractionsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -167,13 +179,16 @@ void FindBoundaryElementFractions::find_surface_voxel_fractions()
   m_VoxCounts->initializeWithZeros();
   float* voxcounts = m_VoxCounts->getPointer(0);
 
-  for (size_t j = 0; j < totalPoints; j++)
+  for(size_t j = 0; j < totalPoints; j++)
   {
     int32_t gnum = m_FeatureIds[j];
     voxcounts[gnum]++;
-    if (m_BoundaryCells[j] > 0) { surfvoxcounts[gnum]++; }
+    if(m_BoundaryCells[j] > 0)
+    {
+      surfvoxcounts[gnum]++;
+    }
   }
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     m_BoundaryCellFractions[i] = surfvoxcounts[i] / voxcounts[i];
   }
@@ -186,7 +201,10 @@ void FindBoundaryElementFractions::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   find_surface_voxel_fractions();
 
@@ -229,23 +247,29 @@ const QString FindBoundaryElementFractions::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryElementFractions::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryElementFractions::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryElementFractions::getHumanLabel()
-{ return "Find Feature Boundary Element Fractions"; }
+{
+  return "Find Feature Boundary Element Fractions";
+}

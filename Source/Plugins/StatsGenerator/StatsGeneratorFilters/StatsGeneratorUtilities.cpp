@@ -35,75 +35,74 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-
 #include "OrientationLib/Texture/Texture.hpp"
 
-#include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 StatsGeneratorUtilities::StatsGeneratorUtilities()
-{}
-
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 StatsGeneratorUtilities::~StatsGeneratorUtilities()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData,
-                                                 unsigned int phaseType, unsigned int crystalStructure,
-                                                 QVector<float> &e1s, QVector<float> &e2s,
-                                                 QVector<float> &e3s, QVector<float> &weights,
-                                                 QVector<float> &sigmas, bool computeODF)
+void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, unsigned int phaseType, unsigned int crystalStructure, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s,
+                                                 QVector<float>& weights, QVector<float>& sigmas, bool computeODF)
 {
 
   QVector<float> odf;
   size_t numEntries = e1s.size();
 
-  if ( Ebsd::CrystalStructure::Cubic_High == crystalStructure)
+  if(Ebsd::CrystalStructure::Cubic_High == crystalStructure)
   {
     odf.resize(CubicOps::k_OdfSize);
-    if (computeODF) { Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                   weights.data(), sigmas.data(), true,
-                                   odf.data(), numEntries); }
+    if(computeODF)
+    {
+      Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
+    }
   }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == crystalStructure)
+  else if(Ebsd::CrystalStructure::Hexagonal_High == crystalStructure)
   {
     odf.resize(HexagonalOps::k_OdfSize);
-    if (computeODF) { Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
-                                 weights.data(), sigmas.data(), true,
-                                 odf.data(), numEntries); }
+    if(computeODF)
+    {
+      Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
+    }
   }
-  if (odf.size() > 0)
+  if(odf.size() > 0)
   {
     FloatArrayType::Pointer p = FloatArrayType::FromQVector(odf, SIMPL::StringConstants::ODF);
-    if (phaseType == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
       pp->setODF(p);
     }
-    if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
+    if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
       pp->setODF(p);
     }
-    if (phaseType == SIMPL::PhaseType::TransformationPhase)
+    if(phaseType == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
       tp->setODF(p);
     }
-    if (e1s.size() > 0)
+    if(e1s.size() > 0)
     {
       FloatArrayType::Pointer euler1 = FloatArrayType::FromQVector(e1s, SIMPL::StringConstants::Euler1);
       FloatArrayType::Pointer euler2 = FloatArrayType::FromQVector(e2s, SIMPL::StringConstants::Euler2);
@@ -117,17 +116,17 @@ void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData,
       odfWeights.push_back(euler3);
       odfWeights.push_back(sigma);
       odfWeights.push_back(weight);
-      if (phaseType == SIMPL::PhaseType::PrimaryPhase)
+      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
       {
         PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
         pp->setODF_Weights(odfWeights);
       }
-      if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
+      if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
         pp->setODF_Weights(odfWeights);
       }
-      if (phaseType == SIMPL::PhaseType::TransformationPhase)
+      if(phaseType == SIMPL::PhaseType::TransformationPhase)
       {
         TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
         tp->setODF_Weights(odfWeights);
@@ -139,38 +138,37 @@ void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, unsigned int phaseType,
-                                                     QVector<float> &e1s, QVector<float> &e2s,
-                                                     QVector<float> &e3s, QVector<float> &weights,
-                                                     QVector<float> &sigmas, bool computeAxisODF)
+void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, unsigned int phaseType, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s, QVector<float>& weights,
+                                                     QVector<float>& sigmas, bool computeAxisODF)
 {
   QVector<float> aodf;
   size_t numEntries = e1s.size();
 
   aodf.resize(OrthoRhombicOps::k_OdfSize);
-  if (computeAxisODF) { Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                        weights.data(), sigmas.data(), true,
-                                        aodf.data(), numEntries); }
+  if(computeAxisODF)
+  {
+    Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, aodf.data(), numEntries);
+  }
 
-  if (aodf.size() > 0)
+  if(aodf.size() > 0)
   {
     FloatArrayType::Pointer aodfData = FloatArrayType::FromQVector(aodf, SIMPL::StringConstants::AxisOrientation);
-    if (phaseType == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
       pp->setAxisOrientation(aodfData);
     }
-    if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
+    if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
       pp->setAxisOrientation(aodfData);
     }
-    if (phaseType == SIMPL::PhaseType::TransformationPhase)
+    if(phaseType == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
       tp->setAxisOrientation(aodfData);
     }
-    if (e1s.size() > 0)
+    if(e1s.size() > 0)
     {
       FloatArrayType::Pointer euler1 = FloatArrayType::FromQVector(e1s, SIMPL::StringConstants::Euler1);
       FloatArrayType::Pointer euler2 = FloatArrayType::FromQVector(e2s, SIMPL::StringConstants::Euler2);
@@ -184,17 +182,17 @@ void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, unsig
       aodfWeights.push_back(euler3);
       aodfWeights.push_back(sigma);
       aodfWeights.push_back(weight);
-      if (phaseType == SIMPL::PhaseType::PrimaryPhase)
+      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
       {
         PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
         pp->setAxisODF_Weights(aodfWeights);
       }
-      if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
+      if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
         pp->setAxisODF_Weights(aodfWeights);
       }
-      if (phaseType == SIMPL::PhaseType::TransformationPhase)
+      if(phaseType == SIMPL::PhaseType::TransformationPhase)
       {
         TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
         tp->setAxisODF_Weights(aodfWeights);
@@ -206,29 +204,29 @@ void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, unsig
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> StatsGeneratorUtilities::GenerateODFData(unsigned int crystalStructure,
-                                                 QVector<float> &e1s, QVector<float> &e2s,
-                                                 QVector<float> &e3s, QVector<float> &weights,
-                                                 QVector<float> &sigmas, bool computeODF)
+QVector<float> StatsGeneratorUtilities::GenerateODFData(unsigned int crystalStructure, QVector<float>& e1s, QVector<float>& e2s, QVector<float>& e3s, QVector<float>& weights, QVector<float>& sigmas,
+                                                        bool computeODF)
 {
   QVector<float> odf;
 
   size_t numEntries = static_cast<size_t>(e1s.size());
 
-  if (Ebsd::CrystalStructure::Cubic_High == crystalStructure)
+  if(Ebsd::CrystalStructure::Cubic_High == crystalStructure)
   {
 
     odf.resize(CubicOps::k_OdfSize);
-    if (computeODF) { Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                   weights.data(), sigmas.data(), true,
-                                   odf.data(), numEntries); }
+    if(computeODF)
+    {
+      Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
+    }
   }
-  else if (Ebsd::CrystalStructure::Hexagonal_High == crystalStructure)
+  else if(Ebsd::CrystalStructure::Hexagonal_High == crystalStructure)
   {
     odf.resize(HexagonalOps::k_OdfSize);
-    if (computeODF) { Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
-                                 weights.data(), sigmas.data(), true,
-                                 odf.data(), numEntries); }
+    if(computeODF)
+    {
+      Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
+    }
   }
   return odf;
 }
@@ -236,48 +234,51 @@ QVector<float> StatsGeneratorUtilities::GenerateODFData(unsigned int crystalStru
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData,
-                                                            unsigned int phaseType, unsigned int crystalStruct,
-                                                            QVector<float> &odf,
-                                                            QVector<float> &angles, QVector<float> &axes,
-                                                            QVector<float> &weights, bool computeMDF)
+void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData, unsigned int phaseType, unsigned int crystalStruct, QVector<float>& odf, QVector<float>& angles, QVector<float>& axes,
+                                                            QVector<float>& weights, bool computeMDF)
 {
   QVector<float> x;
   QVector<float> y;
   QVector<float> mdf;
 
-  if (Ebsd::CrystalStructure::Cubic_High == crystalStruct)
+  if(Ebsd::CrystalStructure::Cubic_High == crystalStruct)
   {
     mdf.resize(CubicOps::k_MdfSize);
-    if (computeMDF) { Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size()); }
-    //nElements = 18 * 18 * 18;
+    if(computeMDF)
+    {
+      Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
+    }
+    // nElements = 18 * 18 * 18;
   }
-  else if (Ebsd::CrystalStructure::Hexagonal_High == crystalStruct)
+  else if(Ebsd::CrystalStructure::Hexagonal_High == crystalStruct)
   {
     mdf.resize(HexagonalOps::k_MdfSize);
-    if (computeMDF) { Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size()); }
-    //nElements = 36 * 36 * 12;
+    if(computeMDF)
+    {
+      Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
+    }
+    // nElements = 36 * 36 * 12;
   }
-  if (mdf.size() > 0)
+  if(mdf.size() > 0)
   {
     FloatArrayType::Pointer p = FloatArrayType::FromPointer(mdf.data(), mdf.size(), SIMPL::StringConstants::MisorientationBins);
-    if (phaseType == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
       pp->setMisorientationBins(p);
     }
-    if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
+    if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
       pp->setMisorientationBins(p);
     }
-    if (phaseType == SIMPL::PhaseType::TransformationPhase)
+    if(phaseType == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
       tp->setMisorientationBins(p);
     }
 
-    if (angles.size() > 0)
+    if(angles.size() > 0)
     {
       FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), SIMPL::StringConstants::Angle);
       FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), SIMPL::StringConstants::Axis);
@@ -287,17 +288,17 @@ void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData
       mdfWeights.push_back(anglesArray);
       mdfWeights.push_back(axisArray);
       mdfWeights.push_back(weightArray);
-      if (phaseType == SIMPL::PhaseType::PrimaryPhase)
+      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
       {
         PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
         pp->setMDF_Weights(mdfWeights);
       }
-      if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
+      if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
         pp->setMDF_Weights(mdfWeights);
       }
-      if (phaseType == SIMPL::PhaseType::TransformationPhase)
+      if(phaseType == SIMPL::PhaseType::TransformationPhase)
       {
         TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
         tp->setMDF_Weights(mdfWeights);

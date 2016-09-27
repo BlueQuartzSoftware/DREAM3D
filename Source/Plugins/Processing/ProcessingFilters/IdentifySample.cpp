@@ -48,16 +48,14 @@
 // Include the MOC generated file for this class
 #include "moc_IdentifySample.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IdentifySample::IdentifySample() :
-  AbstractFilter(),
-  m_FillHoles(false),
-  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_GoodVoxels(nullptr)
+IdentifySample::IdentifySample()
+: AbstractFilter()
+, m_FillHoles(false)
+, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_GoodVoxels(nullptr)
 {
   setupFilterParameters();
 }
@@ -77,7 +75,8 @@ void IdentifySample::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Fill Holes in Largest Feature", FillHoles, FilterParameter::Parameter, IdentifySample));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, IdentifySample, req));
   }
   setFilterParameters(parameters);
@@ -89,8 +88,8 @@ void IdentifySample::setupFilterParameters()
 void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFillHoles(reader->readValue("FillHoles", getFillHoles() ) );
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
+  setFillHoles(reader->readValue("FillHoles", getFillHoles()));
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -99,7 +98,6 @@ void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 void IdentifySample::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -112,9 +110,12 @@ void IdentifySample::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getGoodVoxelsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -137,7 +138,10 @@ void IdentifySample::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_GoodVoxelsArrayPath.getDataContainerName());
   int64_t totalPoints = static_cast<int64_t>(m_GoodVoxelsPtr.lock()->getNumberOfTuples());
@@ -145,14 +149,11 @@ void IdentifySample::execute()
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   int64_t xp = dims[0];
   int64_t yp = dims[1];
   int64_t zp = dims[2];
@@ -175,29 +176,47 @@ void IdentifySample::execute()
 
   // In this loop over the data we are finding the biggest contiguous set of GoodVoxels and calling that the 'sample'  All GoodVoxels that do not touch the 'sample'
   // are flipped to be called 'bad' voxels or 'not sample'
-  for (int64_t i = 0; i < totalPoints; i++)
+  for(int64_t i = 0; i < totalPoints; i++)
   {
-    if (checked[i] == false && m_GoodVoxels[i] == true)
+    if(checked[i] == false && m_GoodVoxels[i] == true)
     {
       currentvlist.push_back(i);
       count = 0;
-      while (count < currentvlist.size())
+      while(count < currentvlist.size())
       {
         index = currentvlist[count];
         column = index % xp;
         row = (index / xp) % yp;
         plane = index / (xp * yp);
-        for (int32_t j = 0; j < 6; j++)
+        for(int32_t j = 0; j < 6; j++)
         {
           good = 1;
           neighbor = index + neighpoints[j];
-          if (j == 0 && plane == 0) { good = 0; }
-          if (j == 5 && plane == (zp - 1)) { good = 0; }
-          if (j == 1 && row == 0) { good = 0; }
-          if (j == 4 && row == (yp - 1)) { good = 0; }
-          if (j == 2 && column == 0) { good = 0; }
-          if (j == 3 && column == (xp - 1)) { good = 0; }
-          if (good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == true)
+          if(j == 0 && plane == 0)
+          {
+            good = 0;
+          }
+          if(j == 5 && plane == (zp - 1))
+          {
+            good = 0;
+          }
+          if(j == 1 && row == 0)
+          {
+            good = 0;
+          }
+          if(j == 4 && row == (yp - 1))
+          {
+            good = 0;
+          }
+          if(j == 2 && column == 0)
+          {
+            good = 0;
+          }
+          if(j == 3 && column == (xp - 1))
+          {
+            good = 0;
+          }
+          if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == true)
           {
             currentvlist.push_back(neighbor);
             checked[neighbor] = true;
@@ -205,11 +224,11 @@ void IdentifySample::execute()
         }
         count++;
       }
-      if (static_cast<int64_t>(currentvlist.size()) >= biggestBlock)
+      if(static_cast<int64_t>(currentvlist.size()) >= biggestBlock)
       {
         biggestBlock = currentvlist.size();
         sample.assign(totalPoints, false);
-        for (int64_t j = 0; j < biggestBlock; j++)
+        for(int64_t j = 0; j < biggestBlock; j++)
         {
           sample[currentvlist[j]] = true;
         }
@@ -217,44 +236,67 @@ void IdentifySample::execute()
       currentvlist.clear();
     }
   }
-  for (int64_t i = 0; i < totalPoints; i++)
+  for(int64_t i = 0; i < totalPoints; i++)
   {
-    if (sample[i] == false && m_GoodVoxels[i] == true) { m_GoodVoxels[i] = false; }
+    if(sample[i] == false && m_GoodVoxels[i] == true)
+    {
+      m_GoodVoxels[i] = false;
+    }
   }
   sample.clear();
   checked.assign(totalPoints, false);
 
-
   // In this loop we are going to 'close' all of the 'holes' inside of the region already identified as the 'sample' if the user chose to do so.
   // This is done by flipping all 'bad' voxel features that do not touch the outside of the sample (i.e. they are fully contained inside of the 'sample'.
-  if (m_FillHoles == true)
+  if(m_FillHoles == true)
   {
     bool touchesBoundary = false;
-    for (int64_t i = 0; i < totalPoints; i++)
+    for(int64_t i = 0; i < totalPoints; i++)
     {
-      if (checked[i] == false && m_GoodVoxels[i] == false)
+      if(checked[i] == false && m_GoodVoxels[i] == false)
       {
         currentvlist.push_back(i);
         count = 0;
         touchesBoundary = false;
-        while (count < currentvlist.size())
+        while(count < currentvlist.size())
         {
           index = currentvlist[count];
           column = index % xp;
           row = (index / xp) % yp;
           plane = index / (xp * yp);
-          if (column == 0 || column == (xp - 1) || row == 0 || row == (yp - 1) || plane == 0 || plane == (zp - 1)) { touchesBoundary = true; }
-          for (int32_t j = 0; j < 6; j++)
+          if(column == 0 || column == (xp - 1) || row == 0 || row == (yp - 1) || plane == 0 || plane == (zp - 1))
+          {
+            touchesBoundary = true;
+          }
+          for(int32_t j = 0; j < 6; j++)
           {
             good = 1;
             neighbor = index + neighpoints[j];
-            if (j == 0 && plane == 0) { good = 0; }
-            if (j == 5 && plane == (zp - 1)) { good = 0; }
-            if (j == 1 && row == 0) { good = 0; }
-            if (j == 4 && row == (yp - 1)) { good = 0; }
-            if (j == 2 && column == 0) { good = 0; }
-            if (j == 3 && column == (xp - 1)) { good = 0; }
-            if (good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == false)
+            if(j == 0 && plane == 0)
+            {
+              good = 0;
+            }
+            if(j == 5 && plane == (zp - 1))
+            {
+              good = 0;
+            }
+            if(j == 1 && row == 0)
+            {
+              good = 0;
+            }
+            if(j == 4 && row == (yp - 1))
+            {
+              good = 0;
+            }
+            if(j == 2 && column == 0)
+            {
+              good = 0;
+            }
+            if(j == 3 && column == (xp - 1))
+            {
+              good = 0;
+            }
+            if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == false)
             {
               currentvlist.push_back(neighbor);
               checked[neighbor] = true;
@@ -262,9 +304,9 @@ void IdentifySample::execute()
           }
           count++;
         }
-        if (touchesBoundary == false)
+        if(touchesBoundary == false)
         {
-          for (size_t j = 0; j < currentvlist.size(); j++)
+          for(size_t j = 0; j < currentvlist.size(); j++)
           {
             m_GoodVoxels[currentvlist[j]] = true;
           }
@@ -315,7 +357,7 @@ const QString IdentifySample::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
+  vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
 
@@ -323,17 +365,22 @@ const QString IdentifySample::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString IdentifySample::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString IdentifySample::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CleanupFilters; }
+{
+  return SIMPL::FilterSubGroups::CleanupFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString IdentifySample::getHumanLabel()
-{ return "Isolate Largest Feature (Identify Sample)"; }
-
+{
+  return "Isolate Largest Feature (Identify Sample)";
+}

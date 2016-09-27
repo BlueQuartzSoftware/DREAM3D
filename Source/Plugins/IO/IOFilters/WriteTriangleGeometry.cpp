@@ -35,36 +35,32 @@
 
 #include "WriteTriangleGeometry.h"
 
-
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-
 #define WRITE_EDGES_FILE 0
 // Include the MOC generated file for this class
 #include "moc_WriteTriangleGeometry.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteTriangleGeometry::WriteTriangleGeometry() :
-  AbstractFilter(),
-  m_DataContainerSelection(""),
-  m_OutputNodesFile(""),
-  m_OutputTrianglesFile("")
+WriteTriangleGeometry::WriteTriangleGeometry()
+: AbstractFilter()
+, m_DataContainerSelection("")
+, m_OutputNodesFile("")
+, m_OutputTrianglesFile("")
 {
   setupFilterParameters();
 }
@@ -83,7 +79,6 @@ void WriteTriangleGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Nodes File", OutputNodesFile, FilterParameter::Parameter, WriteTriangleGeometry));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Triangles File", OutputTrianglesFile, FilterParameter::Parameter, WriteTriangleGeometry));
 
@@ -101,9 +96,9 @@ void WriteTriangleGeometry::setupFilterParameters()
 void WriteTriangleGeometry::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDataContainerSelection( reader->readString("DataContainerSelection", getDataContainerSelection()));
-  setOutputNodesFile( reader->readString( "OutputNodesFile", getOutputNodesFile() ) );
-  setOutputTrianglesFile( reader->readString( "OutputTrianglesFile", getOutputTrianglesFile() ) );
+  setDataContainerSelection(reader->readString("DataContainerSelection", getDataContainerSelection()));
+  setOutputNodesFile(reader->readString("OutputNodesFile", getOutputNodesFile()));
+  setOutputTrianglesFile(reader->readString("OutputTrianglesFile", getOutputTrianglesFile()));
   reader->closeFilterGroup();
 }
 
@@ -112,7 +107,6 @@ void WriteTriangleGeometry::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 void WriteTriangleGeometry::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -135,26 +129,30 @@ void WriteTriangleGeometry::dataCheck()
   }
 
   DataContainer::Pointer dataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerSelection());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
-  TriangleGeom::Pointer triangles =  dataContainer->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0) { return; }
+  TriangleGeom::Pointer triangles = dataContainer->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // We MUST have Nodes
-  if (nullptr == triangles->getVertices().get())
+  if(nullptr == triangles->getVertices().get())
   {
     setErrorCondition(-386);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
   }
   // We MUST have Triangles defined also.
-  if (nullptr == triangles->getTriangles().get())
+  if(nullptr == triangles->getTriangles().get())
   {
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -178,7 +176,10 @@ void WriteTriangleGeometry::execute()
   setErrorCondition(err);
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   DataContainer::Pointer dataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerSelection());
 
   TriangleGeom::Pointer triangleGeom = dataContainer->getGeometryAs<TriangleGeom>();
@@ -207,7 +208,7 @@ void WriteTriangleGeometry::execute()
   }
   FILE* nodesFile = nullptr;
   nodesFile = fopen(getOutputNodesFile().toLatin1().data(), "wb");
-  if (nullptr == nodesFile)
+  if(nullptr == nodesFile)
   {
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), "Error opening Nodes file for writing", -100);
@@ -218,7 +219,7 @@ void WriteTriangleGeometry::execute()
   fprintf(nodesFile, "# DREAM.3D Version %s\n", IO::Version::Complete().toLatin1().constData());
   fprintf(nodesFile, "# Node Data is X Y Z space delimited.\n");
   fprintf(nodesFile, "Node Count: %lld\n", numNodes);
-  for (int i = 0; i < numNodes; i++)
+  for(int i = 0; i < numNodes; i++)
   {
     fprintf(nodesFile, "%8.5f %8.5f %8.5f\n", nodes[i * 3], nodes[i * 3 + 1], nodes[i * 3 + 2]);
   }
@@ -237,7 +238,7 @@ void WriteTriangleGeometry::execute()
     return;
   }
   FILE* triFile = fopen(getOutputTrianglesFile().toLatin1().data(), "wb");
-  if (nullptr == triFile)
+  if(nullptr == triFile)
   {
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), "Error opening Triangles file for writing", -100);
@@ -251,17 +252,17 @@ void WriteTriangleGeometry::execute()
   fprintf(triFile, "# NODE IDs START AT 0.\n");
   fprintf(triFile, "Geometry Type: %s\n", geometryType.toLatin1().constData());
   fprintf(triFile, "Node Count: %lld\n", numNodes);
-  fprintf(triFile, "Max Node Id: %lld\n", maxNodeId );
+  fprintf(triFile, "Max Node Id: %lld\n", maxNodeId);
   fprintf(triFile, "Triangle Count: %lld\n", (long long int)(numTriangles));
 
   int n1, n2, n3;
-  for (int64_t j = 0; j < numTriangles; ++j)
+  for(int64_t j = 0; j < numTriangles; ++j)
   {
     n1 = triangles[j * 3];
     n2 = triangles[j * 3 + 1];
     n3 = triangles[j * 3 + 2];
 
-    fprintf(triFile, "%d %d %d\n",  n1, n2, n3);
+    fprintf(triFile, "%d %d %d\n", n1, n2, n3);
   }
 
   fclose(triFile);
@@ -306,7 +307,7 @@ const QString WriteTriangleGeometry::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 
@@ -314,19 +315,22 @@ const QString WriteTriangleGeometry::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString WriteTriangleGeometry::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
-
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteTriangleGeometry::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
-
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteTriangleGeometry::getHumanLabel()
-{ return "Write Triangle Geometry"; }
-
+{
+  return "Write Triangle Geometry";
+}

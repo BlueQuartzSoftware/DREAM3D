@@ -37,12 +37,12 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -50,22 +50,20 @@
 // Include the MOC generated file for this class
 #include "moc_FindSizes.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSizes::FindSizes() :
-  AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_VolumesArrayName(SIMPL::FeatureData::Volumes),
-  m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters),
-  m_NumCellsArrayName(SIMPL::FeatureData::NumCells),
-  m_FeatureIds(nullptr),
-  m_Volumes(nullptr),
-  m_EquivalentDiameters(nullptr),
-  m_NumCells(nullptr)
+FindSizes::FindSizes()
+: AbstractFilter()
+, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_VolumesArrayName(SIMPL::FeatureData::Volumes)
+, m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
+, m_NumCellsArrayName(SIMPL::FeatureData::NumCells)
+, m_FeatureIds(nullptr)
+, m_Volumes(nullptr)
+, m_EquivalentDiameters(nullptr)
+, m_NumCells(nullptr)
 {
   setupFilterParameters();
 }
@@ -85,12 +83,14 @@ void FindSizes::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindSizes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req =
+        AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindSizes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
@@ -107,10 +107,10 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int
 {
   reader->openFilterGroup(this, index);
   setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setNumCellsArrayName(reader->readString("NumCellsArrayName", getNumCellsArrayName() ) );
-  setEquivalentDiametersArrayName(reader->readString("EquivalentDiametersArrayName", getEquivalentDiametersArrayName() ) );
-  setVolumesArrayName(reader->readString("VolumesArrayName", getVolumesArrayName() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setNumCellsArrayName(reader->readString("NumCellsArrayName", getNumCellsArrayName()));
+  setEquivalentDiametersArrayName(reader->readString("EquivalentDiametersArrayName", getEquivalentDiametersArrayName()));
+  setVolumesArrayName(reader->readString("VolumesArrayName", getVolumesArrayName()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -119,7 +119,6 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int
 // -----------------------------------------------------------------------------
 void FindSizes::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -133,24 +132,36 @@ void FindSizes::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName() );
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName());
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
+                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_VolumesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Volumes = m_VolumesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getEquivalentDiametersArrayName() );
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getEquivalentDiametersArrayName());
+  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_EquivalentDiametersPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getNumCellsArrayName() );
-  m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getNumCellsArrayName());
+  m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0,
+                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NumCellsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -182,16 +193,16 @@ void FindSizes::find_sizes()
   m_FeatureCounts->initializeWithZeros();
   float* featurecounts = m_FeatureCounts->getPointer(0);
 
-  for (size_t j = 0; j < totalPoints; j++)
+  for(size_t j = 0; j < totalPoints; j++)
   {
     int32_t gnum = m_FeatureIds[j];
     featurecounts[gnum]++;
   }
   float res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
   float vol_term = (4.0f / 3.0f) * SIMPLib::Constants::k_Pi;
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
-    m_NumCells[i] = static_cast<int32_t>( featurecounts[i] );
+    m_NumCells[i] = static_cast<int32_t>(featurecounts[i]);
     m_Volumes[i] = (featurecounts[i] * res_scalar);
     radcubed = m_Volumes[i] / vol_term;
     diameter = 2.0f * powf(radcubed, 0.3333333333f);
@@ -215,18 +226,27 @@ void FindSizes::find_sizes2D()
   m_FeatureCounts->initializeWithZeros();
   float* featurecounts = m_FeatureCounts->getPointer(0);
 
-  for (size_t j = 0; j < totalPoints; j++)
+  for(size_t j = 0; j < totalPoints; j++)
   {
     int32_t gnum = m_FeatureIds[j];
     featurecounts[gnum]++;
   }
   float res_scalar = 0.0f;
-  if (m->getGeometryAs<ImageGeom>()->getXPoints() == 1) { res_scalar = m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes(); }
-  else if (m->getGeometryAs<ImageGeom>()->getYPoints() == 1) { res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getZRes(); }
-  else if (m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes(); }
-  for (size_t i = 1; i < numfeatures; i++)
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
   {
-    m_NumCells[i] = static_cast<int32_t>( featurecounts[i] );
+    res_scalar = m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
+  }
+  else if(m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
+  {
+    res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getZRes();
+  }
+  else if(m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  {
+    res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes();
+  }
+  for(size_t i = 1; i < numfeatures; i++)
+  {
+    m_NumCells[i] = static_cast<int32_t>(featurecounts[i]);
     m_Volumes[i] = (featurecounts[i] * res_scalar);
     radsquared = m_Volumes[i] / SIMPLib::Constants::k_Pi;
     diameter = (2 * sqrtf(radsquared));
@@ -241,12 +261,21 @@ void FindSizes::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_sizes(); }
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_sizes2D(); }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1)
+  {
+    find_sizes();
+  }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  {
+    find_sizes2D();
+  }
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
@@ -286,23 +315,29 @@ const QString FindSizes::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSizes::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSizes::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSizes::getHumanLabel()
-{ return "Find Feature Sizes"; }
+{
+  return "Find Feature Sizes";
+}

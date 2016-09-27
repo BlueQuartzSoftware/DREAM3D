@@ -323,8 +323,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   emmpm->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(emmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  connect(emmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
 
   emmpm->execute();
 

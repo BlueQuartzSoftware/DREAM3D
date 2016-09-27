@@ -38,11 +38,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationWidget::OrientationWidget(QWidget* parent) :
-QWidget(parent),
-m_AngleMeasurement(Degrees)
+OrientationWidget::OrientationWidget(QWidget* parent)
+: QWidget(parent)
+, m_AngleMeasurement(Degrees)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -50,7 +49,6 @@ m_AngleMeasurement(Degrees)
 // -----------------------------------------------------------------------------
 OrientationWidget::~OrientationWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -66,7 +64,7 @@ void OrientationWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 void OrientationWidget::updateAngleMeasurement(bool isDegrees)
 {
-  if (isDegrees == true)
+  if(isDegrees == true)
   {
     m_AngleMeasurement = Degrees;
   }
@@ -75,4 +73,3 @@ void OrientationWidget::updateAngleMeasurement(bool isDegrees)
     m_AngleMeasurement = Radians;
   }
 }
-

@@ -33,18 +33,16 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-
-#include "EMMPMLib/EMMPMLibTypes.h"
+#include "EMMPMLib/Common/EMMPM_Math.h"
+#include "EMMPMLib/Core/EMMPMUtilities.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"
 #include "EMMPMLib/Core/EMMPM_Data.h"
-#include "EMMPMLib/Common/EMMPM_Math.h"
 #include "EMMPMLib/Core/InitializationFunctions.h"
-#include "EMMPMLib/Core/EMMPMUtilities.h"
-
+#include "EMMPMLib/EMMPMLibTypes.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -60,18 +58,17 @@ void EMMPMUtilities::ConvertInputImageToWorkingImage(EMMPM_Data::Pointer data)
   int height;
   int dims;
 
-  if (data->inputImageChannels == 0)
+  if(data->inputImageChannels == 0)
   {
     printf("The number of input color channels was 0\n. Exiting Program.\n");
     return;
   }
 
-  if (data->inputImageChannels != data->dims)
+  if(data->inputImageChannels != data->dims)
   {
     printf("The number of image channels does not match the number of vector dimensions\nExiting Program.\n");
     return;
   }
-
 
   /* Copy input image to y[][] */
   width = data->columns;
@@ -79,12 +76,11 @@ void EMMPMUtilities::ConvertInputImageToWorkingImage(EMMPM_Data::Pointer data)
   dims = data->dims;
   dst = data->inputImage;
 
-
-  for (j = 0; j < height; j++)
+  for(j = 0; j < height; j++)
   {
-    for (i = 0; i < width; i++)
+    for(i = 0; i < width; i++)
     {
-      for (d = 0; d < dims; d++)
+      for(d = 0; d < dims; d++)
       {
         index = (j * width * dims) + (i * dims) + d;
         data->y[index] = *dst;
@@ -122,7 +118,7 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
   classCounts = (size_t*)malloc(data->classes * sizeof(size_t));
   memset(classCounts, 0, data->classes * sizeof(size_t));
 
-  if (data->outputImage == nullptr)
+  if(data->outputImage == nullptr)
   {
     data->allocateOutputImage();
   }
@@ -134,32 +130,32 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
   unsigned int ixCol = 0;
   unsigned int* colorTable = data->colorTable;
 
-  for (i = 0; i < rows; i++)
+  for(i = 0; i < rows; i++)
   {
     ixCol = i * columns;
-    for (j = 0; j < columns; j++)
+    for(j = 0; j < columns; j++)
     {
-      gtindex = data->xt[ ixCol + j ];
+      gtindex = data->xt[ixCol + j];
       classCounts[gtindex]++;
       raster[index++] = colorTable[gtindex];
     }
   }
   // Now we have the counts for the number of pixels of each class.
   // The "classes" loop could be its own threaded Task at this point
-  //printf("=============================\n");
-  for (d = 0; d < data->dims; d++)
+  // printf("=============================\n");
+  for(d = 0; d < data->dims; d++)
   {
-    for (l = 0; l < data->classes; ++l)
+    for(l = 0; l < data->classes; ++l)
     {
       pixelWeight = (float)(classCounts[l]) / (float)(totalPixels);
       ld = data->dims * l + d;
       mu = data->mean[ld];
       variance = data->variance[ld];
-      sigma = sqrt( data->variance[ld] ); // Standard Deviation is the Square Root of the Variance
-      twoSigSqrd = variance * 2.0f; // variance is StdDev Squared, so just use the Variance value
+      sigma = sqrt(data->variance[ld]); // Standard Deviation is the Square Root of the Variance
+      twoSigSqrd = variance * 2.0f;     // variance is StdDev Squared, so just use the Variance value
       constant = 1.0f / (sigma * sqrt2pi);
-      //printf("Class %d: Sigma %f  Peak Height: %f\n", l, sig, (constant * pixelWeight));
-      for (x = 0; x < 256; ++x)
+      // printf("Class %d: Sigma %f  Peak Height: %f\n", l, sig, (constant * pixelWeight));
+      for(x = 0; x < 256; ++x)
       {
         histIdx = (256 * data->classes * d) + (256 * l) + x;
         data->histograms[histIdx] = pixelWeight * constant * exp(-1.0f * ((x - mu) * (x - mu)) / (twoSigSqrd));
@@ -167,10 +163,8 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
     }
   }
 
-
   free(classCounts);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -179,9 +173,9 @@ void EMMPMUtilities::ZeroMeanVariance(int nClasses, size_t nDims, real_t* mu, re
 {
   size_t ld = 0;
   /* Reset model parameters to zero */
-  for (int l = 0; l < nClasses; l++)
+  for(int l = 0; l < nClasses; l++)
   {
-    for (size_t d = 0; d < nDims; d++)
+    for(size_t d = 0; d < nDims; d++)
     {
       ld = nDims * l + d;
       mu[ld] = 0;
@@ -209,9 +203,9 @@ bool EMMPMUtilities::isStoppingConditionLessThanTolerance(EMMPM_Data::Pointer da
 
   size_t ld = 0;
 
-  for (int l = 0; l < nClasses; l++)
+  for(int l = 0; l < nClasses; l++)
   {
-    for (size_t d = 0; d < nDims; d++)
+    for(size_t d = 0; d < nDims; d++)
     {
       ld = nDims * l + d;
       muDeltaSum += (mu[ld] - prevMu[ld]) * (mu[ld] - prevMu[ld]);
@@ -220,11 +214,11 @@ bool EMMPMUtilities::isStoppingConditionLessThanTolerance(EMMPM_Data::Pointer da
   }
   data->currentMSE = muDeltaSum + varDeltaSum;
 
-  if (data->useStoppingThreshold == 0)
+  if(data->useStoppingThreshold == 0)
   {
     return false;
   }
-  else if (data->currentMSE < data->stoppingThreshold)
+  else if(data->currentMSE < data->stoppingThreshold)
   {
     return true;
   }
@@ -246,56 +240,58 @@ void EMMPMUtilities::copyCurrentMeanVarianceValues(EMMPM_Data::Pointer data)
 // -----------------------------------------------------------------------------
 class EstimateMeans
 {
-  public:
-    EstimateMeans(EMMPM_Data* dPtr, size_t l)
-    {
-      this->l = l;
-      this->data = dPtr;
-    }
-    virtual ~EstimateMeans() {}
+public:
+  EstimateMeans(EMMPM_Data* dPtr, size_t l)
+  {
+    this->l = l;
+    this->data = dPtr;
+  }
+  virtual ~EstimateMeans()
+  {
+  }
 
-    void calc(int rowStart, int rowEnd, int colStart, int colEnd) const
-    {
-      int dims = data->dims;
-      int rows = data->rows;
-      int cols = data->columns;
-      int32_t k_, k2_, lij, ld, ijd, k_temp, k2_temp;
-      real_t* m = data->mean;
-      unsigned char* y = data->y;
-      real_t* probs = data->probs;
-      real_t* N = data->N;
+  void calc(int rowStart, int rowEnd, int colStart, int colEnd) const
+  {
+    int dims = data->dims;
+    int rows = data->rows;
+    int cols = data->columns;
+    int32_t k_, k2_, lij, ld, ijd, k_temp, k2_temp;
+    real_t* m = data->mean;
+    unsigned char* y = data->y;
+    real_t* probs = data->probs;
+    real_t* N = data->N;
 
-      k_temp = (cols * rows * l);
-      for (int r = rowStart; r < rowEnd; r++)
+    k_temp = (cols * rows * l);
+    for(int r = rowStart; r < rowEnd; r++)
+    {
+      k_ = k_temp + (cols * r);
+      k2_temp = (dims * cols * r);
+      for(int c = colStart; c < colEnd; c++)
       {
-        k_ = k_temp + (cols * r);
-        k2_temp = (dims * cols * r);
-        for (int c = colStart; c < colEnd; c++)
-        {
-          k2_ = k2_temp + ( dims * c);
-          lij = k_ + c;
-          N[l] += probs[lij]; // denominator of (20)
-          for (int d = 0; d < dims; d++)
-          {
-            ld = dims * l + d;
-            ijd = k2_ + d;
-            m[ld] += y[ijd] * probs[lij]; // numerator of (20)
-          }
-        }
-      }
-      if (N[l] != 0)
-      {
-        for (int d = 0; d < dims; d++)
+        k2_ = k2_temp + (dims * c);
+        lij = k_ + c;
+        N[l] += probs[lij]; // denominator of (20)
+        for(int d = 0; d < dims; d++)
         {
           ld = dims * l + d;
-          m[ld] = m[ld] / N[l];
+          ijd = k2_ + d;
+          m[ld] += y[ijd] * probs[lij]; // numerator of (20)
         }
       }
     }
+    if(N[l] != 0)
+    {
+      for(int d = 0; d < dims; d++)
+      {
+        ld = dims * l + d;
+        m[ld] = m[ld] / N[l];
+      }
+    }
+  }
 
-  private:
-    size_t l;
-    EMMPM_Data* data;
+private:
+  size_t l;
+  EMMPM_Data* data;
 };
 
 /* This class can not be easily parallelized due to the summation of the
@@ -303,64 +299,65 @@ class EstimateMeans
  */
 class EstimateVariance
 {
-  public:
-    EstimateVariance(EMMPM_Data* dPtr, size_t l)
+public:
+  EstimateVariance(EMMPM_Data* dPtr, size_t l)
+  {
+    this->l = l;
+    this->data = dPtr;
+  }
+  virtual ~EstimateVariance()
+  {
+  }
+
+  void calc(int rowStart, int rowEnd, int colStart, int colEnd) const
+  {
+    int dims = data->dims;
+    int rows = data->rows;
+    int cols = data->columns;
+    int32_t k_, k2_, lij, ld, ijd, k_temp, k2_temp;
+    real_t* m = data->mean;
+    unsigned char* y = data->y;
+    real_t* probs = data->probs;
+    real_t* N = data->N;
+    real_t res = 0.0f;
+    real_t* v = data->variance;
+    int32_t dimsXl = dims * l;
+
+    k_temp = (cols * rows * l);
+    for(int r = rowStart; r < rowEnd; r++)
     {
-      this->l = l;
-      this->data = dPtr;
-    }
-    virtual ~EstimateVariance() {}
-
-    void calc(int rowStart, int rowEnd, int colStart, int colEnd) const
-    {
-      int dims = data->dims;
-      int rows = data->rows;
-      int cols = data->columns;
-      int32_t k_, k2_, lij, ld, ijd, k_temp, k2_temp;
-      real_t* m = data->mean;
-      unsigned char* y = data->y;
-      real_t* probs = data->probs;
-      real_t* N = data->N;
-      real_t res = 0.0f;
-      real_t* v = data->variance;
-      int32_t dimsXl = dims * l;
-
-      k_temp = (cols * rows * l);
-      for (int r = rowStart; r < rowEnd; r++)
+      k_ = k_temp + (cols * r);
+      k2_temp = (dims * cols * r);
+      for(int c = colStart; c < colEnd; c++)
       {
-        k_ = k_temp + (cols * r);
-        k2_temp = (dims * cols * r);
-        for (int c = colStart; c < colEnd; c++)
+        k2_ = k2_temp + (dims * c);
+        // numerator of (21)
+        lij = k_ + c;
+        for(int d = 0; d < dims; d++)
         {
-          k2_ = k2_temp + ( dims * c);
-          // numerator of (21)
-          lij = k_ + c;
-          for (int d = 0; d < dims; d++)
-          {
-            ld = dimsXl + d;
-            ijd = k2_ + d;
-            res = y[ijd] - m[ld];
-            res = res * res; // Square to get the Variance
-            v[ld] += (res) * probs[lij];
-          }
-        }
-      }
-
-      if(N[l] != 0)
-      {
-        for (int d = 0; d < dims; d++)
-        {
-          ld = dims * l + d;
-          v[ld] = v[ld] / N[l];
+          ld = dimsXl + d;
+          ijd = k2_ + d;
+          res = y[ijd] - m[ld];
+          res = res * res; // Square to get the Variance
+          v[ld] += (res)*probs[lij];
         }
       }
     }
 
-  private:
-    size_t l;
-    EMMPM_Data* data;
+    if(N[l] != 0)
+    {
+      for(int d = 0; d < dims; d++)
+      {
+        ld = dims * l + d;
+        v[ld] = v[ld] / N[l];
+      }
+    }
+  }
+
+private:
+  size_t l;
+  EMMPM_Data* data;
 };
-
 
 // -----------------------------------------------------------------------------
 //
@@ -370,15 +367,14 @@ void EMMPMUtilities::UpdateMeansAndVariances(EMMPM_Data::Pointer dt)
   EMMPM_Data* data = dt.get();
 
   size_t l;
-// size_t dims = data->dims;
+  // size_t dims = data->dims;
   size_t rows = data->rows;
   size_t cols = data->columns;
   size_t classes = data->classes;
 
-
   /*** Some efficiency was sacrificed for readability below ***/
   /* Update estimates for mean of each class - (Maximization) */
-  for (l = 0; l < classes; l++)
+  for(l = 0; l < classes; l++)
   {
     EstimateMeans estimateMeans(data, l);
     estimateMeans.calc(0, rows, 0, cols);
@@ -386,21 +382,20 @@ void EMMPMUtilities::UpdateMeansAndVariances(EMMPM_Data::Pointer dt)
 
   // Eq. (20)}
   /* Update estimates of variance of each class */
-  for (l = 0; l < classes; l++)
+  for(l = 0; l < classes; l++)
   {
     EstimateVariance estimateVariance(data, l);
     estimateVariance.calc(0, rows, 0, cols);
   }
 
   // Make sure we don't fall below some minimum variance.
-  for (l = 0; l < classes; l++)
+  for(l = 0; l < classes; l++)
   {
     if(data->variance[l] < data->min_variance[l])
     {
       data->variance[l] = data->min_variance[l];
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -418,9 +413,9 @@ void EMMPMUtilities::MonitorMeansAndVariances(EMMPM_Data::Pointer dt)
 
   printf("Class\tDim\tMu\tVariance(StdDev^2)\n");
 
-  for (l = 0; l < classes; l++)
+  for(l = 0; l < classes; l++)
   {
-    for (d = 0; d < dims; d++)
+    for(d = 0; d < dims; d++)
     {
       printf("%d\t%d\t%3.3f\t%3.3f\n", (int)l, (int)d, data->mean[l], data->variance[l]);
     }
@@ -440,15 +435,15 @@ void EMMPMUtilities::RemoveZeroProbClasses(EMMPM_Data::Pointer dt)
   size_t cols = data->columns;
   size_t classes = data->classes;
 
-  for (kk = 0; kk < classes; kk++)
+  for(kk = 0; kk < classes; kk++)
   {
-    if (data->N[kk] == 0)
+    if(data->N[kk] == 0)
     {
-      for (l = kk; l < classes - 1; l++)
+      for(l = kk; l < classes - 1; l++)
       {
         /* Move other classes to fill the gap */
         data->N[l] = data->N[l + 1];
-        for (dd = 0; dd < dims; dd++)
+        for(dd = 0; dd < dims; dd++)
         {
           ld = dims * l + dd;
           l1d = (dims * (l + 1)) + dd;
@@ -456,12 +451,15 @@ void EMMPMUtilities::RemoveZeroProbClasses(EMMPM_Data::Pointer dt)
           data->variance[ld] = data->variance[l1d];
         }
       }
-      for (i = 0; i < rows; i++)
+      for(i = 0; i < rows; i++)
       {
-        for (j = 0; j < cols; j++)
+        for(j = 0; j < cols; j++)
         {
           ij = (cols * i) + j;
-          if (data->xt[ij] > kk) { data->xt[ij]--; }
+          if(data->xt[ij] > kk)
+          {
+            data->xt[ij]--;
+          }
         }
       }
       classes = classes - 1; // push the eliminated class into the last class
@@ -472,8 +470,7 @@ void EMMPMUtilities::RemoveZeroProbClasses(EMMPM_Data::Pointer dt)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EMMPMUtilities::ComputeEntropy(real_t** *probs, unsigned char** output,
-                                    unsigned int rows, unsigned int cols, unsigned int classes)
+void EMMPMUtilities::ComputeEntropy(real_t*** probs, unsigned char** output, unsigned int rows, unsigned int cols, unsigned int classes)
 {
   unsigned int l, i, j;
   real_t entr;
@@ -487,10 +484,11 @@ void EMMPMUtilities::ComputeEntropy(real_t** *probs, unsigned char** output,
       for(l = 0; l < classes; l++)
       {
         if(probs[l][i][j] > 0)
-        { entr -= probs[l][i][j] * (log10(probs[l][i][j]) / log10(2.0f)); }
+        {
+          entr -= probs[l][i][j] * (log10(probs[l][i][j]) / log10(2.0f));
+        }
       }
       output[i][j] = (unsigned char)(entr + 0.5);
     }
   }
-
 }

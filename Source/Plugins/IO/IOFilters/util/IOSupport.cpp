@@ -35,23 +35,22 @@
 
 #include "IOSupport.h"
 
-#include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "SIMPLib/HDF5/VTKH5Constants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IOSupport::IOSupport() :
-  Observable(),
-  m_ErrorCondition(0),
-  m_DataContainer(nullptr),
-  m_DataContainerType(DREAM3D::DataContainerType::UnknownDataContainer),
-  m_HdfFileId(-1),
-  m_HdfGroupId(-1)
+IOSupport::IOSupport()
+: Observable()
+, m_ErrorCondition(0)
+, m_DataContainer(nullptr)
+, m_DataContainerType(DREAM3D::DataContainerType::UnknownDataContainer)
+, m_HdfFileId(-1)
+, m_HdfGroupId(-1)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -59,7 +58,6 @@ IOSupport::IOSupport() :
 // -----------------------------------------------------------------------------
 IOSupport::~IOSupport()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -201,4 +199,3 @@ void IOSupport::clearErrorMessages()
   }
 }
 #endif
-

@@ -39,12 +39,12 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
@@ -69,28 +69,26 @@
 // Include the MOC generated file for this class
 #include "moc_WritePoleFigure.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WritePoleFigure::WritePoleFigure() :
-  AbstractFilter(),
-  m_ImagePrefix(""),
-  m_OutputPath(""),
-  m_ImageFormat(0),
-  m_ImageSize(512),
-  m_LambertSize(32),
-  m_NumColors(32),
-  m_ImageLayout(SIMPL::Layout::Square),
-  m_CellEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::EulerAngles),
-  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
-  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
-  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_CellEulerAngles(nullptr),
-  m_CellPhases(nullptr),
-  m_CrystalStructures(nullptr),
-  m_GoodVoxels(nullptr)
+WritePoleFigure::WritePoleFigure()
+: AbstractFilter()
+, m_ImagePrefix("")
+, m_OutputPath("")
+, m_ImageFormat(0)
+, m_ImageSize(512)
+, m_LambertSize(32)
+, m_NumColors(32)
+, m_ImageLayout(SIMPL::Layout::Square)
+, m_CellEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::EulerAngles)
+, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
+, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_CellEulerAngles(nullptr)
+, m_CellPhases(nullptr)
+, m_CrystalStructures(nullptr)
+, m_GoodVoxels(nullptr)
 {
   setupFilterParameters();
 }
@@ -146,20 +144,24 @@ void WritePoleFigure::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Parameter, WritePoleFigure));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   setFilterParameters(parameters);
@@ -171,16 +173,16 @@ void WritePoleFigure::setupFilterParameters()
 void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
-  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
-  setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()));
-  setOutputPath( reader->readString("OutputPath", getOutputPath()));
-  setImageFormat( reader->readValue("ImageFormat", getImageFormat()));
-  setImageLayout( reader->readValue("ImageLayout", getImageLayout()));
-  setImageSize( reader->readValue("ImageSize", getImageSize()));
-  setLambertSize( reader->readValue("LambertSize", getLambertSize()));
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath()));
+  setImagePrefix(reader->readString("ImagePrefix", getImagePrefix()));
+  setOutputPath(reader->readString("OutputPath", getOutputPath()));
+  setImageFormat(reader->readValue("ImageFormat", getImageFormat()));
+  setImageLayout(reader->readValue("ImageLayout", getImageLayout()));
+  setImageSize(reader->readValue("ImageSize", getImageSize()));
+  setLambertSize(reader->readValue("LambertSize", getLambertSize()));
   reader->closeFilterGroup();
 }
 
@@ -189,7 +191,6 @@ void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 void WritePoleFigure::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -203,12 +204,12 @@ void WritePoleFigure::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellPhasesArrayPath().getDataContainerName());
 
-  if (m_OutputPath.isEmpty() == true)
+  if(m_OutputPath.isEmpty() == true)
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "The output directory must be set", getErrorCondition());
   }
-  else if (path.exists() == false)
+  else if(path.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
@@ -217,29 +218,50 @@ void WritePoleFigure::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 3);
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellEulerAnglesArrayPath()); }
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellEulerAnglesPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getCellEulerAnglesArrayPath());
+  }
 
   cDims[0] = 1;
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getCellPhasesArrayPath());
+  }
 
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   cDims[0] = 1;
-  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_GoodVoxelsPtr.lock().get())
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_GoodVoxelsPtr.lock().get())
   {
-    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
+    if(nullptr != m_GoodVoxelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0)
+    {
+      dataArrayPaths.push_back(getGoodVoxelsArrayPath());
+    }
   }
   else
   {
@@ -267,8 +289,7 @@ void WritePoleFigure::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename Ops>
-QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& config)
+template <typename Ops> QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& config)
 {
   Ops ops;
   return ops.generatePoleFigure(config);
@@ -280,26 +301,26 @@ QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t& conf
 QString WritePoleFigure::generateImagePath(QString label)
 {
   QString path = m_OutputPath + "/" + m_ImagePrefix + label;
-  if (m_ImageFormat == TifImageType)
+  if(m_ImageFormat == TifImageType)
   {
     path.append(".tif");
   }
-  else if (m_ImageFormat == BmpImageType)
+  else if(m_ImageFormat == BmpImageType)
   {
     path.append(".bmp");
   }
-  else if (m_ImageFormat == PngImageType)
+  else if(m_ImageFormat == PngImageType)
   {
     path.append(".png");
   }
-  else if (m_ImageFormat == JpgImageType)
+  else if(m_ImageFormat == JpgImageType)
   {
     path.append(".jpg");
   }
   path = QDir::toNativeSeparators(path);
   QFileInfo fi(path);
   QDir parent(fi.absolutePath());
-  if (parent.exists() == false)
+  if(parent.exists() == false)
   {
     parent.mkpath(fi.absolutePath());
   }
@@ -316,7 +337,7 @@ void WritePoleFigure::writeImage(QImage image, QString label)
   QString ss = QObject::tr("Writing Image %1").arg(filename);
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   bool saved = image.save(filename);
-  if (!saved)
+  if(!saved)
   {
     setErrorCondition(-90011);
     QString ss = QObject::tr("The Pole Figure image file '%1' was not saved").arg(filename);
@@ -331,18 +352,21 @@ void WritePoleFigure::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_CellPhasesArrayPath.getDataContainerName());
 
-  size_t dims[3] = { 0, 0, 0 };
+  size_t dims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QDir path(getOutputPath());
 
-  if (!path.mkpath(".") )
+  if(!path.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(path.absolutePath());
     setErrorCondition(-1);
@@ -352,7 +376,7 @@ void WritePoleFigure::execute()
 
   bool missingGoodVoxels = true;
 
-  if (nullptr != m_GoodVoxels)
+  if(nullptr != m_GoodVoxels)
   {
     missingGoodVoxels = false;
   }
@@ -362,16 +386,16 @@ void WritePoleFigure::execute()
   size_t numPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
 
   // Loop over all the voxels gathering the Eulers for a specific phase into an array
-  for (size_t phase = 1; phase < numPhases; ++phase)
+  for(size_t phase = 1; phase < numPhases; ++phase)
   {
     size_t count = 0;
     // First find out how many voxels we are going to have. This is probably faster to loop twice than to
     // keep allocating memory everytime we find one.
-    for (size_t i = 0; i < numPoints; ++i)
+    for(size_t i = 0; i < numPoints; ++i)
     {
-      if (m_CellPhases[i] == phase)
+      if(m_CellPhases[i] == phase)
       {
-        if (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
         {
           count++;
         }
@@ -384,11 +408,11 @@ void WritePoleFigure::execute()
 
     // Now loop through the eulers again and this time add them to the subEulers Array
     count = 0;
-    for (size_t i = 0; i < numPoints; ++i)
+    for(size_t i = 0; i < numPoints; ++i)
     {
-      if (m_CellPhases[i] == phase)
+      if(m_CellPhases[i] == phase)
       {
-        if (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
         {
           eu[count * 3] = m_CellEulerAngles[i * 3];
           eu[count * 3 + 1] = m_CellEulerAngles[i * 3 + 1];
@@ -397,7 +421,10 @@ void WritePoleFigure::execute()
         }
       }
     }
-    if (subEulers->getNumberOfTuples() == 0) { continue; } // Skip because we have no Pole Figure data
+    if(subEulers->getNumberOfTuples() == 0)
+    {
+      continue;
+    } // Skip because we have no Pole Figure data
 
     QVector<UInt8ArrayType::Pointer> figures;
 
@@ -415,49 +442,48 @@ void WritePoleFigure::execute()
 
     switch(m_CrystalStructures[phase])
     {
-      case Ebsd::CrystalStructure::Cubic_High:
-        figures = makePoleFigures<CubicOps>(config);
-        break;
-      case Ebsd::CrystalStructure::Cubic_Low:
-        figures = makePoleFigures<CubicLowOps>(config);
-        break;
-      case Ebsd::CrystalStructure::Hexagonal_High:
-        figures = makePoleFigures<HexagonalOps>(config);
-        break;
-      case Ebsd::CrystalStructure::Hexagonal_Low:
-        figures = makePoleFigures<HexagonalLowOps>(config);
-        break;
-      case Ebsd::CrystalStructure::Trigonal_High:
-        //   figures = makePoleFigures<TrigonalOps>(config);
-        notifyWarningMessage(getHumanLabel(), "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
-        break;
-      case Ebsd::CrystalStructure::Trigonal_Low:
-        //  figures = makePoleFigures<TrigonalLowOps>(config);
-        notifyWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
-        break;
-      case Ebsd::CrystalStructure::Tetragonal_High:
-        //  figures = makePoleFigures<TetragonalOps>(config);
-        notifyWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
-        break;
-      case Ebsd::CrystalStructure::Tetragonal_Low:
-        //  figures = makePoleFigures<TetragonalLowOps>(config);
-        notifyWarningMessage(getHumanLabel(), "Tetragonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
-        break;
-      case Ebsd::CrystalStructure::OrthoRhombic:
-        figures = makePoleFigures<OrthoRhombicOps>(config);
-        break;
-      case Ebsd::CrystalStructure::Monoclinic:
-        figures = makePoleFigures<MonoclinicOps>(config);
-        break;
-      case Ebsd::CrystalStructure::Triclinic:
-        figures = makePoleFigures<TriclinicOps>(config);
-        break;
-      default:
-        break;
-
+    case Ebsd::CrystalStructure::Cubic_High:
+      figures = makePoleFigures<CubicOps>(config);
+      break;
+    case Ebsd::CrystalStructure::Cubic_Low:
+      figures = makePoleFigures<CubicLowOps>(config);
+      break;
+    case Ebsd::CrystalStructure::Hexagonal_High:
+      figures = makePoleFigures<HexagonalOps>(config);
+      break;
+    case Ebsd::CrystalStructure::Hexagonal_Low:
+      figures = makePoleFigures<HexagonalLowOps>(config);
+      break;
+    case Ebsd::CrystalStructure::Trigonal_High:
+      //   figures = makePoleFigures<TrigonalOps>(config);
+      notifyWarningMessage(getHumanLabel(), "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      break;
+    case Ebsd::CrystalStructure::Trigonal_Low:
+      //  figures = makePoleFigures<TrigonalLowOps>(config);
+      notifyWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      break;
+    case Ebsd::CrystalStructure::Tetragonal_High:
+      //  figures = makePoleFigures<TetragonalOps>(config);
+      notifyWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      break;
+    case Ebsd::CrystalStructure::Tetragonal_Low:
+      //  figures = makePoleFigures<TetragonalLowOps>(config);
+      notifyWarningMessage(getHumanLabel(), "Tetragonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      break;
+    case Ebsd::CrystalStructure::OrthoRhombic:
+      figures = makePoleFigures<OrthoRhombicOps>(config);
+      break;
+    case Ebsd::CrystalStructure::Monoclinic:
+      figures = makePoleFigures<MonoclinicOps>(config);
+      break;
+    case Ebsd::CrystalStructure::Triclinic:
+      figures = makePoleFigures<TriclinicOps>(config);
+      break;
+    default:
+      break;
     }
 
-    if (figures.size() == 3)
+    if(figures.size() == 3)
     {
       QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, getImageLayout());
       writeImage(combinedImage, label);
@@ -504,23 +530,29 @@ const QString WritePoleFigure::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WritePoleFigure::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WritePoleFigure::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WritePoleFigure::getHumanLabel()
-{ return "Write Pole Figure Images"; }
+{
+  return "Write Pole Figure Images";
+}

@@ -32,20 +32,19 @@
 
 #include "GenerateSGPipelineFile.h"
 
-
 // Qt Includes
-#include <QtCore/QtDebug>
+#include <QtCore/QCommandLineOption>
+#include <QtCore/QCommandLineParser>
 #include <QtCore/QCoreApplication>
-#include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QSettings>
-#include <QtCore/QCommandLineOption>
-#include <QtCore/QCommandLineParser>
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication* app = new QCoreApplication(argc, argv);
@@ -57,17 +56,15 @@ int main(int argc, char *argv[])
   QCommandLineParser parser;
   QString str;
   QTextStream ss(&str);
-  ss << "Pipeline Runner (" << GenerateSGPipeline::Version::Major << "." << GenerateSGPipeline::Version::Minor << "."
-     << GenerateSGPipeline::Version::Patch
-     << "):  ";
+  ss << "Pipeline Runner (" << GenerateSGPipeline::Version::Major << "." << GenerateSGPipeline::Version::Minor << "." << GenerateSGPipeline::Version::Patch << "):  ";
   parser.setApplicationDescription(str);
   parser.addHelpOption();
   parser.addVersionOption();
 
-
-
   // A boolean option with a single name (-p)
-  QCommandLineOption pipelineFileArg(QStringList() << "p" << "pipeline", "Pipeline File as a JSON file.", "file");
+  QCommandLineOption pipelineFileArg(QStringList() << "p"
+                                                   << "pipeline",
+                                     "Pipeline File as a JSON file.", "file");
   parser.addOption(pipelineFileArg);
 
   parser.addOption({"mu", "Value of Mu which is log(ESD)"});
@@ -77,11 +74,8 @@ int main(int argc, char *argv[])
   parser.addOption({"step", "Width of the bins"});
   parser.addOption({"esd", "Actual unitless Feature Equivelant Sphere Diameter you wish to have."});
 
-
   // Process the actual command line arguments given by the user
   parser.process(*app);
-
-
 
   return 0;
 }

@@ -36,8 +36,8 @@
 #include "SGODFTableModel.h"
 #include <iostream>
 
-#include <QtWidgets/QStyleOptionComboBox>
 #include <QtWidgets/QAbstractItemDelegate>
+#include <QtWidgets/QStyleOptionComboBox>
 
 #include "Applications/SIMPLView/SIMPLViewApplication.h"
 
@@ -47,10 +47,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGODFTableModel::SGODFTableModel(QObject* parent) :
-  QAbstractTableModel(parent),
-  m_RowCount(0),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+SGODFTableModel::SGODFTableModel(QObject* parent)
+: QAbstractTableModel(parent)
+, m_RowCount(0)
+, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
   m_ColumnCount = ColumnCount;
 }
@@ -68,15 +68,15 @@ SGODFTableModel::~SGODFTableModel()
 Qt::ItemFlags SGODFTableModel::flags(const QModelIndex& index) const
 {
   //  qDebug() << "SGODFTableModel::flags" << "\n";
-  if (!index.isValid())
+  if(!index.isValid())
   {
     return Qt::NoItemFlags;
   }
   Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
-  if (index.isValid())
+  if(index.isValid())
   {
     int col = index.column();
-    if (col < SGODFTableModel::ColumnCount)
+    if(col < SGODFTableModel::ColumnCount)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
@@ -90,53 +90,56 @@ Qt::ItemFlags SGODFTableModel::flags(const QModelIndex& index) const
 QVariant SGODFTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
-  if (!index.isValid())
+  if(!index.isValid())
   {
     return QVariant();
   }
 
-  if (role == Qt::SizeHintRole)
+  if(role == Qt::SizeHintRole)
   {
     QStyleOptionComboBox comboBox;
     comboBox.currentText = QString("10001");
-    if (index.column() < SGODFTableModel::ColumnCount)
+    if(index.column() < SGODFTableModel::ColumnCount)
     {
       const QString header = headerData(index.column(), Qt::Horizontal, Qt::DisplayRole).toString();
-      if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
+      if(header.length() > comboBox.currentText.length())
+      {
+        comboBox.currentText = header;
+      }
     }
     else
     {
       Q_ASSERT(false);
     }
-    QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
+    QFontMetrics fontMetrics(data(index, Qt::FontRole).value<QFont>());
     comboBox.fontMetrics = fontMetrics;
     QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
     return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
-  else if (role == Qt::TextAlignmentRole)
+  else if(role == Qt::TextAlignmentRole)
   {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
-  else if (role == Qt::DisplayRole || role == Qt::EditRole)
+  else if(role == Qt::DisplayRole || role == Qt::EditRole)
   {
     int col = index.column();
-    if (col == Euler1)
+    if(col == Euler1)
     {
       return QVariant(m_Euler1s[index.row()]);
     }
-    else if (col == Euler2)
+    else if(col == Euler2)
     {
       return QVariant(m_Euler2s[index.row()]);
     }
-    else if (col == Euler3)
+    else if(col == Euler3)
     {
       return QVariant(m_Euler3s[index.row()]);
     }
-    else if (col == Weight)
+    else if(col == Weight)
     {
       return QVariant(m_Weights[index.row()]);
     }
-    else if (col == Sigma)
+    else if(col == Sigma)
     {
       return QVariant(m_Sigmas[index.row()]);
     }
@@ -150,29 +153,28 @@ QVariant SGODFTableModel::data(const QModelIndex& index, qint32 role) const
 // -----------------------------------------------------------------------------
 QVariant SGODFTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     switch(section)
     {
-      case Euler1:
-        return QVariant(QString("Euler 1"));
-        break;
-      case Euler2:
-        return QVariant(QString("Euler 2"));
-        break;
-      case Euler3:
-        return QVariant(QString("Euler 3"));
-        break;
-      case Weight:
-        return QVariant(QString("Weight"));
-        break;
-      case Sigma:
-        return QVariant(QString("Sigma"));
-        break;
-      default:
-        break;
+    case Euler1:
+      return QVariant(QString("Euler 1"));
+      break;
+    case Euler2:
+      return QVariant(QString("Euler 2"));
+      break;
+    case Euler3:
+      return QVariant(QString("Euler 3"));
+      break;
+    case Weight:
+      return QVariant(QString("Weight"));
+      break;
+    case Sigma:
+      return QVariant(QString("Sigma"));
+      break;
+    default:
+      break;
     }
-
   }
   return QVariant();
 }
@@ -201,17 +203,13 @@ bool SGODFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& 
   return false;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 bool SGODFTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   // qDebug() << "SGODFTableModel::setData " << value.toString() << "\n";
-  if (!index.isValid() || role != Qt::EditRole || index.row() < 0
-      || index.row() >= m_Euler1s.count()
-      || index.column() < 0 || index.column()
-      >= m_ColumnCount)
+  if(!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Euler1s.count() || index.column() < 0 || index.column() >= m_ColumnCount)
   {
     return false;
   }
@@ -220,24 +218,23 @@ bool SGODFTableModel::setData(const QModelIndex& index, const QVariant& value, i
   qint32 col = index.column();
   switch(col)
   {
-    case Euler1:
-      m_Euler1s[row] = value.toFloat(&ok);
-      break;
-    case Euler2:
-      m_Euler2s[row] = value.toFloat(&ok);
-      break;
-    case Euler3:
-      m_Euler3s[row] = value.toFloat(&ok);
-      break;
-    case Weight:
-      m_Weights[row] = value.toFloat(&ok);
-      break;
-    case Sigma:
-      m_Sigmas[row] = value.toFloat(&ok);
-      break;
-    default:
-      Q_ASSERT(false);
-
+  case Euler1:
+    m_Euler1s[row] = value.toFloat(&ok);
+    break;
+  case Euler2:
+    m_Euler2s[row] = value.toFloat(&ok);
+    break;
+  case Euler3:
+    m_Euler3s[row] = value.toFloat(&ok);
+    break;
+  case Weight:
+    m_Weights[row] = value.toFloat(&ok);
+    break;
+  case Sigma:
+    m_Sigmas[row] = value.toFloat(&ok);
+    break;
+  default:
+    Q_ASSERT(false);
   }
 
   emit dataChanged(index, index);
@@ -258,7 +255,7 @@ bool SGODFTableModel::insertRows(int row, int count, const QModelIndex& index)
   QString c("blue");
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
     m_Euler1s.append(e1);
     m_Euler2s.append(e2);
@@ -277,12 +274,12 @@ bool SGODFTableModel::insertRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 bool SGODFTableModel::removeRows(int row, int count, const QModelIndex& index)
 {
-  if (count < 1)
+  if(count < 1)
   {
     return true;
   } // No Rows to remove
   beginRemoveRows(QModelIndex(), row, row + count - 1);
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
     m_Euler1s.remove(row);
     m_Euler2s.remove(row);
@@ -299,30 +296,30 @@ bool SGODFTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float > SGODFTableModel::getData(int col)
+QVector<float> SGODFTableModel::getData(int col)
 {
 
   switch(col)
   {
-    case Euler1:
-      return m_Euler1s;
-      break;
-    case Euler2:
-      return m_Euler2s;
-      break;
-    case Euler3:
-      return m_Euler3s;
-      break;
-    case Weight:
-      return m_Weights;
-      break;
-    case Sigma:
-      return m_Sigmas;
-      break;
-    default:
-      Q_ASSERT(false);
+  case Euler1:
+    return m_Euler1s;
+    break;
+  case Euler2:
+    return m_Euler2s;
+    break;
+  case Euler3:
+    return m_Euler3s;
+    break;
+  case Weight:
+    return m_Weights;
+    break;
+  case Sigma:
+    return m_Sigmas;
+    break;
+  default:
+    Q_ASSERT(false);
   }
-  return QVector<float > ();
+  return QVector<float>();
 }
 
 // -----------------------------------------------------------------------------
@@ -332,23 +329,23 @@ float SGODFTableModel::getDataValue(int col, int row)
 {
   switch(col)
   {
-    case Euler1:
-      return m_Euler1s[row];
-      break;
-    case Euler2:
-      return m_Euler2s[row];
-      break;
-    case Euler3:
-      return m_Euler3s[row];
-      break;
-    case Weight:
-      return m_Weights[row];
-      break;
-    case Sigma:
-      return m_Sigmas[row];
-      break;
-    default:
-      Q_ASSERT(false);
+  case Euler1:
+    return m_Euler1s[row];
+    break;
+  case Euler2:
+    return m_Euler2s[row];
+    break;
+  case Euler3:
+    return m_Euler3s[row];
+    break;
+  case Weight:
+    return m_Weights[row];
+    break;
+  case Sigma:
+    return m_Sigmas[row];
+    break;
+  default:
+    Q_ASSERT(false);
   }
   return 0.0;
 }
@@ -360,23 +357,23 @@ void SGODFTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
-    case Euler1:
-      m_Euler1s = data;
-      break;
-    case Euler2:
-      m_Euler2s = data;
-      break;
-    case Euler3:
-      m_Euler3s = data;
-      break;
-    case Weight:
-      m_Weights = data;
-      break;
-    case Sigma:
-      m_Sigmas = data;
-      break;
-    default:
-      Q_ASSERT(false);
+  case Euler1:
+    m_Euler1s = data;
+    break;
+  case Euler2:
+    m_Euler2s = data;
+    break;
+  case Euler3:
+    m_Euler3s = data;
+    break;
+  case Weight:
+    m_Weights = data;
+    break;
+  case Sigma:
+    m_Sigmas = data;
+    break;
+  default:
+    Q_ASSERT(false);
   }
   m_RowCount = data.size();
 }
@@ -401,71 +398,66 @@ QAbstractItemDelegate* SGODFTableModel::getItemDelegate()
   return new SGODFItemDelegate(m_CrystalStructure);
 }
 
-#define ADD_INITIAL_ROW_VALUE(name, weight, sigma)\
-  insertRow(rowCount());\
-  QModelIndex textureIndex = index(rowCount() - 1, SGODFTableModel::Texture);\
-  setData(textureIndex, QVariant(QString(name)), Qt::EditRole);\
-  QModelIndex weightIndex = index(rowCount() - 1, SGODFTableModel::Weight);\
-  setData(weightIndex, QVariant(weight), Qt::EditRole);\
-  QModelIndex sigmaIndex = index(rowCount() - 1, SGODFTableModel::Sigma);\
-  setData(sigmaIndex, QVariant(sigma), Qt::EditRole);\
+#define ADD_INITIAL_ROW_VALUE(name, weight, sigma)                                                                                                                                                     \
+  insertRow(rowCount());                                                                                                                                                                               \
+  QModelIndex textureIndex = index(rowCount() - 1, SGODFTableModel::Texture);                                                                                                                          \
+  setData(textureIndex, QVariant(QString(name)), Qt::EditRole);                                                                                                                                        \
+  QModelIndex weightIndex = index(rowCount() - 1, SGODFTableModel::Weight);                                                                                                                            \
+  setData(weightIndex, QVariant(weight), Qt::EditRole);                                                                                                                                                \
+  QModelIndex sigmaIndex = index(rowCount() - 1, SGODFTableModel::Sigma);                                                                                                                              \
+  setData(sigmaIndex, QVariant(sigma), Qt::EditRole);
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-  void SGODFTableModel::setInitialValues()
-  {
-
-  }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-  void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector<float> e3, QVector<float> weights, QVector<float> sigmas)
-  {
-    qint32 count = e1.count();
-
-    qint32 row = 0;
-    // Remove all the current rows in the table model
-    removeRows(0, rowCount());
-    QModelIndex topLeft;
-    QModelIndex botRight;
-    if (count >= 1)
-    {
-      // Now mass insert the data to the table then emit that the data has changed
-      beginInsertRows(QModelIndex(), row, row + count - 1);
-      m_Euler1s = e1;
-      m_Euler2s = e2;
-      m_Euler3s = e3;
-      m_Weights = weights;
-      m_Sigmas = sigmas;
-      m_RowCount = count;
-      endInsertRows();
-      createIndex(0, 0);
-      createIndex(count - 1, ColumnCount);
-    }
-    emit dataChanged(topLeft, botRight);
-  }
-
+void SGODFTableModel::setInitialValues()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-  void SGODFTableModel::setCrystalStructure(unsigned int value)
+void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector<float> e3, QVector<float> weights, QVector<float> sigmas)
+{
+  qint32 count = e1.count();
+
+  qint32 row = 0;
+  // Remove all the current rows in the table model
+  removeRows(0, rowCount());
+  QModelIndex topLeft;
+  QModelIndex botRight;
+  if(count >= 1)
   {
-    if (m_CrystalStructure != value)
-    {
-      this->m_CrystalStructure = value;
-    }
+    // Now mass insert the data to the table then emit that the data has changed
+    beginInsertRows(QModelIndex(), row, row + count - 1);
+    m_Euler1s = e1;
+    m_Euler2s = e2;
+    m_Euler3s = e3;
+    m_Weights = weights;
+    m_Sigmas = sigmas;
+    m_RowCount = count;
+    endInsertRows();
+    createIndex(0, 0);
+    createIndex(count - 1, ColumnCount);
   }
+  emit dataChanged(topLeft, botRight);
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-  unsigned int SGODFTableModel::getCrystalStructure()
+void SGODFTableModel::setCrystalStructure(unsigned int value)
+{
+  if(m_CrystalStructure != value)
   {
-    return m_CrystalStructure;
+    this->m_CrystalStructure = value;
   }
+}
 
-
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+unsigned int SGODFTableModel::getCrystalStructure()
+{
+  return m_CrystalStructure;
+}

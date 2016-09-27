@@ -36,15 +36,15 @@
 #include "GenerateFaceMisorientationColoring.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #endif
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
@@ -52,8 +52,8 @@
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
 #include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
 
@@ -62,112 +62,124 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-
 /**
  * @brief The CalculateFaceMisorientationColorsImpl class implements a threaded algorithm that computes the misorientation
  * colors for the given list of surface mesh labels
  */
 class CalculateFaceMisorientationColorsImpl
 {
-    int32_t* m_Labels;
-    int32_t* m_Phases;
-    float* m_Quats;
-    float* m_Colors;
-    unsigned int* m_CrystalStructures;
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  int32_t* m_Labels;
+  int32_t* m_Phases;
+  float* m_Quats;
+  float* m_Colors;
+  unsigned int* m_CrystalStructures;
+  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-  public:
-    CalculateFaceMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, float* colors, unsigned int* crystalStructures) :
-      m_Labels(labels),
-      m_Phases(phases),
-      m_Quats(quats),
-      m_Colors(colors),
-      m_CrystalStructures(crystalStructures)
+public:
+  CalculateFaceMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, float* colors, unsigned int* crystalStructures)
+  : m_Labels(labels)
+  , m_Phases(phases)
+  , m_Quats(quats)
+  , m_Colors(colors)
+  , m_CrystalStructures(crystalStructures)
+  {
+    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  }
+  virtual ~CalculateFaceMisorientationColorsImpl()
+  {
+  }
+
+  void generate(size_t start, size_t end) const
+  {
+    int32_t feature1 = 0, feature2 = 0, phase1 = 0, phase2 = 0;
+    QuatF q1 = QuaternionMathF::New();
+    QuatF q2 = QuaternionMathF::New();
+    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+
+    float w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+    float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
+    for(size_t i = start; i < end; i++)
     {
-      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
-    }
-    virtual ~CalculateFaceMisorientationColorsImpl() {}
-
-    void generate(size_t start, size_t end) const
-    {
-      int32_t feature1 = 0, feature2 = 0, phase1 = 0, phase2 = 0;
-      QuatF q1 = QuaternionMathF::New();
-      QuatF q2 = QuaternionMathF::New();
-      QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-
-      float w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-      float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
-      for (size_t i = start; i < end; i++)
+      feature1 = m_Labels[2 * i];
+      feature2 = m_Labels[2 * i + 1];
+      if(feature1 > 0)
       {
-        feature1 = m_Labels[2 * i];
-        feature2 = m_Labels[2 * i + 1];
-        if (feature1 > 0) { phase1 = m_Phases[feature1]; }
-        else { phase1 = 0; }
-        if (feature2 > 0) { phase2 = m_Phases[feature2]; }
-        else { phase2 = 0; }
-        if (phase1 > 0)
+        phase1 = m_Phases[feature1];
+      }
+      else
+      {
+        phase1 = 0;
+      }
+      if(feature2 > 0)
+      {
+        phase2 = m_Phases[feature2];
+      }
+      else
+      {
+        phase2 = 0;
+      }
+      if(phase1 > 0)
+      {
+        if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
         {
-          if (phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
-          {
-            QuaternionMathF::Copy(quats[feature1], q1);
-            QuaternionMathF::Copy(quats[feature2], q2);
-            w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
-            w = w * radToDeg;
-            m_Colors[3 * i + 0] = w * n1;
-            m_Colors[3 * i + 1] = w * n2;
-            m_Colors[3 * i + 2] = w * n3;
-          }
-          else if (phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High)
-          {
-            QuaternionMathF::Copy(quats[feature1], q1);
-            QuaternionMathF::Copy(quats[feature2], q2);
-            w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
-            w = w * radToDeg;
-            m_Colors[3 * i + 0] = w * n1;
-            m_Colors[3 * i + 1] = w * n2;
-            m_Colors[3 * i + 2] = w * n3;
-          }
+          QuaternionMathF::Copy(quats[feature1], q1);
+          QuaternionMathF::Copy(quats[feature2], q2);
+          w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
+          w = w * radToDeg;
+          m_Colors[3 * i + 0] = w * n1;
+          m_Colors[3 * i + 1] = w * n2;
+          m_Colors[3 * i + 2] = w * n3;
         }
-        else
+        else if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High)
         {
-          m_Colors[3 * i + 0] = 0;
-          m_Colors[3 * i + 1] = 0;
-          m_Colors[3 * i + 2] = 0;
+          QuaternionMathF::Copy(quats[feature1], q1);
+          QuaternionMathF::Copy(quats[feature2], q2);
+          w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
+          w = w * radToDeg;
+          m_Colors[3 * i + 0] = w * n1;
+          m_Colors[3 * i + 1] = w * n2;
+          m_Colors[3 * i + 2] = w * n3;
         }
       }
+      else
+      {
+        m_Colors[3 * i + 0] = 0;
+        m_Colors[3 * i + 1] = 0;
+        m_Colors[3 * i + 2] = 0;
+      }
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    /**
-     * @brief operator () This is called from the TBB stye of code
-     * @param r The range to compute the values
-     */
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      generate(r.begin(), r.end());
-    }
+  /**
+   * @brief operator () This is called from the TBB stye of code
+   * @param r The range to compute the values
+   */
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    generate(r.begin(), r.end());
+  }
 #endif
 };
 
 // Include the MOC generated file for this class
 #include "moc_GenerateFaceMisorientationColoring.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateFaceMisorientationColoring::GenerateFaceMisorientationColoring() :
-  SurfaceMeshFilter(),
-  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases),
-  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
-  m_SurfaceMeshFaceMisorientationColorsArrayName(SIMPL::FaceData::SurfaceMeshFaceMisorientationColors),
-  m_SurfaceMeshFaceLabels(nullptr),
-  m_AvgQuats(nullptr),
-  m_FeaturePhases(nullptr),
-  m_CrystalStructures(nullptr),
-  m_SurfaceMeshFaceMisorientationColors(nullptr)
+GenerateFaceMisorientationColoring::GenerateFaceMisorientationColoring()
+: SurfaceMeshFilter()
+, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
+, m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats)
+, m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
+, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+, m_SurfaceMeshFaceMisorientationColorsArrayName(SIMPL::FaceData::SurfaceMeshFaceMisorientationColors)
+, m_SurfaceMeshFaceLabels(nullptr)
+, m_AvgQuats(nullptr)
+, m_FeaturePhases(nullptr)
+, m_CrystalStructures(nullptr)
+, m_SurfaceMeshFaceMisorientationColors(nullptr)
 {
   setupFilterParameters();
 }
@@ -187,23 +199,27 @@ void GenerateFaceMisorientationColoring::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, GenerateFaceMisorientationColoring, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, GenerateFaceMisorientationColoring, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, GenerateFaceMisorientationColoring, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateFaceMisorientationColoring, req));
   }
@@ -219,11 +235,11 @@ void GenerateFaceMisorientationColoring::setupFilterParameters()
 void GenerateFaceMisorientationColoring::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSurfaceMeshFaceMisorientationColorsArrayName(reader->readString("SurfaceMeshFaceMisorientationColorsArrayName", getSurfaceMeshFaceMisorientationColorsArrayName() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
-  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
+  setSurfaceMeshFaceMisorientationColorsArrayName(reader->readString("SurfaceMeshFaceMisorientationColorsArrayName", getSurfaceMeshFaceMisorientationColorsArrayName()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
+  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath()));
+  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -239,19 +255,31 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh()
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(triangles->getTriangles());
+  }
 
   QVector<size_t> cDims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
+                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
+  }
 
   cDims[0] = 3;
-  tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName(), getSurfaceMeshFaceMisorientationColorsArrayName() );
-  m_SurfaceMeshFaceMisorientationColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshFaceMisorientationColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshFaceMisorientationColors = m_SurfaceMeshFaceMisorientationColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName(), getSurfaceMeshFaceMisorientationColorsArrayName());
+  m_SurfaceMeshFaceMisorientationColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims);                                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshFaceMisorientationColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshFaceMisorientationColors = m_SurfaceMeshFaceMisorientationColorsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
@@ -268,20 +296,35 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getAvgQuatsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 4);
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAvgQuatsArrayPath()); }
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(),
+                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AvgQuatsPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getAvgQuatsArrayPath());
+  }
 
   cDims[0] = 1;
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getFeaturePhasesArrayPath());
+  }
 
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -307,9 +350,15 @@ void GenerateFaceMisorientationColoring::execute()
 {
   setErrorCondition(0);
   dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   dataCheckVoxel();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   int64_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
@@ -318,7 +367,7 @@ void GenerateFaceMisorientationColoring::execute()
 #endif
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
                       CalculateFaceMisorientationColorsImpl(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_AvgQuats, m_SurfaceMeshFaceMisorientationColors, m_CrystalStructures), tbb::auto_partitioner());
@@ -369,23 +418,29 @@ const QString GenerateFaceMisorientationColoring::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceMisorientationColoring::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceMisorientationColoring::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographyFilters; }
+{
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceMisorientationColoring::getHumanLabel()
-{ return "Generate Misorientation Colors (Face)"; }
+{
+  return "Generate Misorientation Colors (Face)";
+}

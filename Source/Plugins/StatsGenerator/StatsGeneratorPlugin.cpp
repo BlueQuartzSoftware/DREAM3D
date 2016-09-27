@@ -7,9 +7,9 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
+#include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
-#include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
 #include "StatsGenerator/StatsGeneratorVersion.h"
@@ -20,17 +20,18 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorPlugin::StatsGeneratorPlugin() :
-  m_Version(StatsGenerator::Version::Package()),                            // Initialize StatsGenerator's Version Number Here
-  m_CompatibilityVersion(StatsGenerator::Version::Package()), // Initialize StatsGenerator's Compatibility Version Number Here
-  m_Vendor(BlueQuartz::VendorName),
-  m_URL(BlueQuartz::URL),
-  m_Location(""),
-  m_Copyright(BlueQuartz::Copyright),
-  m_Filters(QList<QString>()),
-  m_DidLoad(false)
+StatsGeneratorPlugin::StatsGeneratorPlugin()
+: m_Version(StatsGenerator::Version::Package())
+, // Initialize StatsGenerator's Version Number Here
+    m_CompatibilityVersion(StatsGenerator::Version::Package())
+, // Initialize StatsGenerator's Compatibility Version Number Here
+    m_Vendor(BlueQuartz::VendorName)
+, m_URL(BlueQuartz::URL)
+, m_Location("")
+, m_Copyright(BlueQuartz::Copyright)
+, m_Filters(QList<QString>())
+, m_DidLoad(false)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -100,9 +101,9 @@ QString StatsGeneratorPlugin::getDescription()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--Description was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -131,9 +132,9 @@ QString StatsGeneratorPlugin::getLicense()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--License was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -154,14 +155,14 @@ QMap<QString, QString> StatsGeneratorPlugin::getThirdPartyLicenses()
   fileStrList.push_back(":/ThirdParty/Qt.txt");
   fileStrList.push_back(":/ThirdParty/Qwt.txt");
 
-  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  for(QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
   {
     QFile file(*iter);
     QFileInfo licenseFileInfo(file);
 
-    if ( licenseFileInfo.exists() )
+    if(licenseFileInfo.exists())
     {
-      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      if(file.open(QIODevice::ReadOnly | QIODevice::Text))
       {
         QTextStream in(&file);
         licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
@@ -213,4 +214,3 @@ void StatsGeneratorPlugin::readSettings(QSettings& prefs)
 #include "StatsGeneratorFilters/RegisterKnownFilters.cpp"
 
 #include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
-

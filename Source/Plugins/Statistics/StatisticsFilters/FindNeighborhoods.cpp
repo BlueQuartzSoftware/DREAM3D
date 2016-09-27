@@ -37,12 +37,12 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -50,23 +50,21 @@
 // Include the MOC generated file for this class
 #include "moc_FindNeighborhoods.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNeighborhoods::FindNeighborhoods() :
-  AbstractFilter(),
-  m_NeighborhoodListArrayName(SIMPL::FeatureData::NeighborhoodList),
-  m_MultiplesOfAverage(1.0f),
-  m_EquivalentDiametersArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::EquivalentDiameters),
-  m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases),
-  m_CentroidsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids),
-  m_NeighborhoodsArrayName(SIMPL::FeatureData::Neighborhoods),
-  m_FeaturePhases(nullptr),
-  m_Centroids(nullptr),
-  m_EquivalentDiameters(nullptr),
-  m_Neighborhoods(nullptr)
+FindNeighborhoods::FindNeighborhoods()
+: AbstractFilter()
+, m_NeighborhoodListArrayName(SIMPL::FeatureData::NeighborhoodList)
+, m_MultiplesOfAverage(1.0f)
+, m_EquivalentDiametersArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::EquivalentDiameters)
+, m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
+, m_CentroidsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids)
+, m_NeighborhoodsArrayName(SIMPL::FeatureData::Neighborhoods)
+, m_FeaturePhases(nullptr)
+, m_Centroids(nullptr)
+, m_EquivalentDiameters(nullptr)
+, m_Neighborhoods(nullptr)
 {
   m_NeighborhoodList = NeighborList<int32_t>::NullPointer();
 
@@ -88,15 +86,18 @@ void FindNeighborhoods::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Multiples of Average Diameter", MultiplesOfAverage, FilterParameter::Parameter, FindNeighborhoods));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Equivalent Diameters", EquivalentDiametersArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
@@ -108,12 +109,12 @@ void FindNeighborhoods::setupFilterParameters()
 void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setNeighborhoodsArrayName(reader->readString("NeighborhoodsArrayName", getNeighborhoodsArrayName() ) );
-  setNeighborhoodListArrayName(reader->readString("NeighborhoodListArrayName", getNeighborhoodListArrayName() ) );
-  setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
-  setMultiplesOfAverage( reader->readValue("MultiplesOfAverage", getMultiplesOfAverage()) );
+  setNeighborhoodsArrayName(reader->readString("NeighborhoodsArrayName", getNeighborhoodsArrayName()));
+  setNeighborhoodListArrayName(reader->readString("NeighborhoodListArrayName", getNeighborhoodListArrayName()));
+  setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath()));
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
+  setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath()));
+  setMultiplesOfAverage(reader->readValue("MultiplesOfAverage", getMultiplesOfAverage()));
   reader->closeFilterGroup();
 }
 
@@ -143,29 +144,51 @@ void FindNeighborhoods::dataCheck()
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   QVector<size_t> cDims(1, 1);
-  tempPath.update(m_EquivalentDiametersArrayPath.getDataContainerName(), m_EquivalentDiametersArrayPath.getAttributeMatrixName(), getNeighborhoodListArrayName() );
-  m_NeighborhoodList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(m_EquivalentDiametersArrayPath.getDataContainerName(), m_EquivalentDiametersArrayPath.getAttributeMatrixName(), getNeighborhoodListArrayName());
+  m_NeighborhoodList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 
-  m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getEquivalentDiametersArrayPath()); }
+  m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(),
+                                                                                                               cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_EquivalentDiametersPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getEquivalentDiametersArrayPath());
+  }
 
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getFeaturePhasesArrayPath());
+  }
 
-  tempPath.update(m_EquivalentDiametersArrayPath.getDataContainerName(), m_EquivalentDiametersArrayPath.getAttributeMatrixName(), getNeighborhoodsArrayName() );
-  m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_EquivalentDiametersArrayPath.getDataContainerName(), m_EquivalentDiametersArrayPath.getAttributeMatrixName(), getNeighborhoodsArrayName());
+  m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NeighborhoodsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
-  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCentroidsArrayPath()); }
+  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(),
+                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CentroidsPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getCentroidsArrayPath());
+  }
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
@@ -190,7 +213,7 @@ void FindNeighborhoods::find_neighborhoods()
 {
   float x = 0.0f, y = 0.0f, z = 0.0f;
 
-  std::vector<std::vector<int32_t> > neighborhoodlist;
+  std::vector<std::vector<int32_t>> neighborhoodlist;
   std::vector<float> criticalDistance;
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_EquivalentDiametersArrayPath.getDataContainerName());
@@ -200,26 +223,26 @@ void FindNeighborhoods::find_neighborhoods()
   criticalDistance.resize(totalFeatures);
 
   float aveDiam = 0.0f;
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     m_Neighborhoods[i] = 0;
     aveDiam += m_EquivalentDiameters[i];
     criticalDistance[i] = m_EquivalentDiameters[i] * m_MultiplesOfAverage;
   }
   aveDiam /= totalFeatures;
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     criticalDistance[i] /= aveDiam;
   }
 
   float m_OriginX = 0.0f, m_OriginY = 0.0f, m_OriginZ = 0.0f;
   m->getGeometryAs<ImageGeom>()->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   size_t xbin = 0, ybin = 0, zbin = 0;
   std::vector<int64_t> bins(3 * totalFeatures, 0);
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
@@ -236,9 +259,9 @@ void FindNeighborhoods::find_neighborhoods()
   float dBinX = 0, dBinY = 0, dBinZ = 0;
   float criticalDistance1 = 0, criticalDistance2 = 0;
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
-    if (i % 1000 == 0)
+    if(i % 1000 == 0)
     {
 
       QString ss = QObject::tr("Working on Feature %1 of %2").arg(i).arg(totalFeatures);
@@ -252,7 +275,7 @@ void FindNeighborhoods::find_neighborhoods()
     bin1z = bins[3 * i + 2];
     criticalDistance1 = criticalDistance[i];
 
-    for (size_t j = i + 1; j < totalFeatures; j++)
+    for(size_t j = i + 1; j < totalFeatures; j++)
     {
       bin2x = bins[3 * j];
       bin2y = bins[3 * j + 1];
@@ -264,20 +287,20 @@ void FindNeighborhoods::find_neighborhoods()
       dBinY = llabs(bin2y - bin1y);
       dBinZ = llabs(bin2z - bin1z);
 
-      if (dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
+      if(dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
       {
         m_Neighborhoods[i]++;
         neighborhoodlist[i].push_back(j);
       }
 
-      if (dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
+      if(dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
       {
         m_Neighborhoods[j]++;
         neighborhoodlist[j].push_back(i);
       }
     }
   }
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     // Set the vector for each list into the NeighborhoodList Object
     NeighborList<int32_t>::SharedVectorType sharedNeiLst(new std::vector<int32_t>);
@@ -293,7 +316,10 @@ void FindNeighborhoods::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   find_neighborhoods();
 
@@ -336,23 +362,29 @@ const QString FindNeighborhoods::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighborhoods::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighborhoods::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighborhoods::getHumanLabel()
-{ return "Find Feature Neighborhoods"; }
+{
+  return "Find Feature Neighborhoods";
+}

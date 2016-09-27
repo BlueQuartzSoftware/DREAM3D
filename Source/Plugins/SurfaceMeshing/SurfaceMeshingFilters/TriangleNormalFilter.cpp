@@ -43,8 +43,8 @@
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #endif
 
@@ -57,64 +57,64 @@
  */
 class CalculateNormalsImpl
 {
-    SharedVertexList::Pointer m_Nodes;
-    SharedTriList::Pointer m_Triangles;
-    double* m_Normals;
+  SharedVertexList::Pointer m_Nodes;
+  SharedTriList::Pointer m_Triangles;
+  double* m_Normals;
 
-  public:
-    CalculateNormalsImpl(SharedVertexList::Pointer nodes,
-                         SharedTriList::Pointer triangles,
-                         double* normals) :
-      m_Nodes(nodes),
-      m_Triangles(triangles),
-      m_Normals(normals)
-    {}
-    virtual ~CalculateNormalsImpl() {}
+public:
+  CalculateNormalsImpl(SharedVertexList::Pointer nodes, SharedTriList::Pointer triangles, double* normals)
+  : m_Nodes(nodes)
+  , m_Triangles(triangles)
+  , m_Normals(normals)
+  {
+  }
+  virtual ~CalculateNormalsImpl()
+  {
+  }
 
-    void generate(size_t start, size_t end) const
+  void generate(size_t start, size_t end) const
+  {
+    float* nodes = m_Nodes->getPointer(0);
+    int64_t* triangles = m_Triangles->getPointer(0);
+    int64_t nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
+    for(size_t i = start; i < end; i++)
     {
-      float* nodes = m_Nodes->getPointer(0);
-      int64_t* triangles = m_Triangles->getPointer(0);
-      int64_t nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
-      for (size_t i = start; i < end; i++)
-      {
-        nIdx0 = triangles[i * 3] * 3;
-        nIdx1 = triangles[i * 3 + 1] * 3;
-        nIdx2 = triangles[i * 3 + 2] * 3;
-        float* n0 = &(nodes[nIdx0]);
-        float* n1 = &(nodes[nIdx1]);
-        float* n2 = &(nodes[nIdx2]);
+      nIdx0 = triangles[i * 3] * 3;
+      nIdx1 = triangles[i * 3 + 1] * 3;
+      nIdx2 = triangles[i * 3 + 2] * 3;
+      float* n0 = &(nodes[nIdx0]);
+      float* n1 = &(nodes[nIdx1]);
+      float* n2 = &(nodes[nIdx2]);
 
-        VectorType normal = TriangleOps::computeNormal(n0, n1, n2);
-        m_Normals[i * 3 + 0] = normal.x;
-        m_Normals[i * 3 + 1] = normal.y;
-        m_Normals[i * 3 + 2] = normal.z;
-      }
+      VectorType normal = TriangleOps::computeNormal(n0, n1, n2);
+      m_Normals[i * 3 + 0] = normal.x;
+      m_Normals[i * 3 + 1] = normal.y;
+      m_Normals[i * 3 + 2] = normal.z;
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    /**
-     * @brief operator () This is called from the TBB stye of code
-     * @param r The range to compute the values
-     */
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      generate(r.begin(), r.end());
-    }
+  /**
+   * @brief operator () This is called from the TBB stye of code
+   * @param r The range to compute the values
+   */
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    generate(r.begin(), r.end());
+  }
 #endif
 };
 
 // Include the MOC generated file for this class
 #include "moc_TriangleNormalFilter.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleNormalFilter::TriangleNormalFilter() :
-  SurfaceMeshFilter(),
-  m_SurfaceMeshTriangleNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals),
-  m_SurfaceMeshTriangleNormals(nullptr)
+TriangleNormalFilter::TriangleNormalFilter()
+: SurfaceMeshFilter()
+, m_SurfaceMeshTriangleNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals)
+, m_SurfaceMeshTriangleNormals(nullptr)
 {
   setupFilterParameters();
 }
@@ -155,7 +155,6 @@ void TriangleNormalFilter::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -169,13 +168,22 @@ void TriangleNormalFilter::dataCheck()
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(triangles->getTriangles());
+  }
 
   QVector<size_t> cDims(1, 3);
-  m_SurfaceMeshTriangleNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleNormalsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshTriangleNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshTriangleNormalsPtr.lock()); }
+  m_SurfaceMeshTriangleNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
+      this, getSurfaceMeshTriangleNormalsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshTriangleNormalsPtr.lock().get())    /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(m_SurfaceMeshTriangleNormalsPtr.lock());
+  }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
@@ -200,7 +208,10 @@ void TriangleNormalFilter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshTriangleNormalsArrayPath().getDataContainerName());
 
@@ -211,10 +222,10 @@ void TriangleNormalFilter::execute()
 #endif
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
-                      CalculateNormalsImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleNormals), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()), CalculateNormalsImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleNormals),
+                      tbb::auto_partitioner());
   }
   else
 #endif
@@ -262,23 +273,29 @@ const QString TriangleNormalFilter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleNormalFilter::getGroupName()
-{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
+{
+  return SIMPL::FilterGroups::SurfaceMeshingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleNormalFilter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MiscFilters; }
+{
+  return SIMPL::FilterSubGroups::MiscFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleNormalFilter::getHumanLabel()
-{ return "Generate Triangle Normals"; }
+{
+  return "Generate Triangle Normals";
+}

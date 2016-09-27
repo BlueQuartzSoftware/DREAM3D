@@ -34,14 +34,13 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "PrecipitateRolledPresetDialog.h"
 
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtWidgets/QApplication>
 
 #include <QtGui/QDoubleValidator>
-
 
 #include "SVWidgetsLib/QtSupport/QtSStyles.h"
 
@@ -51,8 +50,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrecipitateRolledPresetDialog::PrecipitateRolledPresetDialog(QWidget* parent) :
-  QDialog(parent)
+PrecipitateRolledPresetDialog::PrecipitateRolledPresetDialog(QWidget* parent)
+: QDialog(parent)
 {
   setupGui();
 }
@@ -72,7 +71,7 @@ void PrecipitateRolledPresetDialog::setupGui()
 
   QVBoxLayout* verticalLayout_2 = new QVBoxLayout(this);
 
-  QFormLayout*         formLayout = new QFormLayout();
+  QFormLayout* formLayout = new QFormLayout();
   formLayout->setObjectName(QString::fromUtf8("eulerLayout"));
 
   QLabel* ALabel = new QLabel(this);
@@ -125,27 +124,23 @@ void PrecipitateRolledPresetDialog::setupGui()
   BLabel->setText(QApplication::translate("Rolled Preset Dialog", "B Axis Length:", 0));
   CLabel->setText(QApplication::translate("Rolled Preset Dialog", "C Axis Length:", 0));
 
-
   QObject::connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
   QObject::connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
-  connect(A, SIGNAL(textEdited(const QString&)),
-          this, SLOT(checkInputs(const QString&)));
-  connect(B, SIGNAL(textEdited(const QString&)),
-          this, SLOT(checkInputs(const QString&)));
-  connect(C, SIGNAL(textEdited(const QString&)),
-          this, SLOT(checkInputs(const QString&)));
+  connect(A, SIGNAL(textEdited(const QString&)), this, SLOT(checkInputs(const QString&)));
+  connect(B, SIGNAL(textEdited(const QString&)), this, SLOT(checkInputs(const QString&)));
+  connect(C, SIGNAL(textEdited(const QString&)), this, SLOT(checkInputs(const QString&)));
 
   QMetaObject::connectSlotsByName(this);
 
   setWindowTitle("Rolled Preset Options");
   setSizeGripEnabled(false);
 
-//  TextureDialog->resize(690, 406);
+  //  TextureDialog->resize(690, 406);
   QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   sizePolicy.setHorizontalStretch(0);
   sizePolicy.setVerticalStretch(0);
-  //sizePolicy.setHeightForWidth(this->sizePolicy().hasHeightForWidth());
+  // sizePolicy.setHeightForWidth(this->sizePolicy().hasHeightForWidth());
   this->setSizePolicy(sizePolicy);
 }
 
@@ -157,7 +152,7 @@ void PrecipitateRolledPresetDialog::checkInputs(const QString& text)
   float a = getA();
   float b = getB();
   float c = getC();
-  if (a >= b && b >= c)
+  if(a >= b && b >= c)
   {
     QtSStyles::LineEditClearStyle(A);
     QtSStyles::LineEditClearStyle(B);
@@ -178,7 +173,8 @@ float PrecipitateRolledPresetDialog::getA()
 {
   bool ok = false;
   float d = A->text().toFloat(&ok);
-  if(!ok) d = 0.0f;
+  if(!ok)
+    d = 0.0f;
   return d;
 }
 
@@ -189,7 +185,8 @@ float PrecipitateRolledPresetDialog::getB()
 {
   bool ok = false;
   float d = B->text().toFloat(&ok);
-  if(!ok) d = 0.0f;
+  if(!ok)
+    d = 0.0f;
   return d;
 }
 
@@ -200,6 +197,7 @@ float PrecipitateRolledPresetDialog::getC()
 {
   bool ok = false;
   float d = C->text().toFloat(&ok);
-  if(!ok) d = 0.0f;
+  if(!ok)
+    d = 0.0f;
   return d;
 }

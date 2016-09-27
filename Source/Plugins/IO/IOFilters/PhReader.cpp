@@ -35,15 +35,15 @@
 
 #include "PhReader.h"
 
-#include <QtCore/QFileInfo>
 #include <QtCore/QDateTime>
+#include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
@@ -57,42 +57,41 @@
 // -----------------------------------------------------------------------------
 class PhReaderPrivate
 {
-    Q_DISABLE_COPY(PhReaderPrivate)
-    Q_DECLARE_PUBLIC(PhReader)
-    PhReader* const q_ptr;
-    PhReaderPrivate(PhReader* ptr);
-    QVector<size_t> m_Dims;
-    QString m_InputFile_Cache;
-    QDateTime m_LastRead;
+  Q_DISABLE_COPY(PhReaderPrivate)
+  Q_DECLARE_PUBLIC(PhReader)
+  PhReader* const q_ptr;
+  PhReaderPrivate(PhReader* ptr);
+  QVector<size_t> m_Dims;
+  QString m_InputFile_Cache;
+  QDateTime m_LastRead;
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PhReaderPrivate::PhReaderPrivate(PhReader* ptr) :
-  q_ptr(ptr),
-  m_Dims(),
-  m_InputFile_Cache(""),
-  m_LastRead()
+PhReaderPrivate::PhReaderPrivate(PhReader* ptr)
+: q_ptr(ptr)
+, m_Dims()
+, m_InputFile_Cache("")
+, m_LastRead()
 {
 }
 
 // Include the MOC generated file for this class
 #include "moc_PhReader.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PhReader::PhReader() :
-  FileReader(),
-  m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_InputFile(""),
-  m_FileWasRead(false),
-  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
-  d_ptr(new PhReaderPrivate(this)),
-  m_FeatureIds(nullptr)
+PhReader::PhReader()
+: FileReader()
+, m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
+, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_InputFile("")
+, m_FileWasRead(false)
+, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
+, d_ptr(new PhReaderPrivate(this))
+, m_FeatureIds(nullptr)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -114,7 +113,6 @@ PhReader::PhReader() :
 // -----------------------------------------------------------------------------
 PhReader::~PhReader()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -148,12 +146,12 @@ void PhReader::setupFilterParameters()
 void PhReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
-  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
-  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
-  setInputFile( reader->readString( "InputFile", getInputFile() ) );
-  setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
-  setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
+  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName()));
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
+  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
+  setInputFile(reader->readString("InputFile", getInputFile()));
+  setOrigin(reader->readFloatVec3("Origin", getOrigin()));
+  setResolution(reader->readFloatVec3("Resolution", getResolution()));
   reader->closeFilterGroup();
 }
 
@@ -164,8 +162,10 @@ void PhReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
 
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -187,7 +187,6 @@ void PhReader::flushCache()
 // -----------------------------------------------------------------------------
 void PhReader::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -199,23 +198,29 @@ void PhReader::dataCheck()
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   QVector<size_t> tDims(3, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if(fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
@@ -223,19 +228,22 @@ void PhReader::dataCheck()
   }
 
   QVector<size_t> cDims(1, 1);
-  tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
-  if (getInputFile().isEmpty() == false && fi.exists() == true)
+  if(getInputFile().isEmpty() == false && fi.exists() == true)
   {
     QDateTime lastModified(fi.lastModified());
 
-    if (getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
+    if(getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
     {
       // We are reading from the cache, so set the FileWasRead flag to false
       m_FileWasRead = false;
@@ -250,7 +258,7 @@ void PhReader::dataCheck()
 
       // We need to read the header of the input file to get the dimensions
       m_InStream = fopen(getInputFile().toLatin1().data(), "r");
-      if (m_InStream == nullptr)
+      if(m_InStream == nullptr)
       {
         setErrorCondition(-48802);
         QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
@@ -260,7 +268,7 @@ void PhReader::dataCheck()
       int32_t error = readHeader();
       fclose(m_InStream);
       m_InStream = nullptr;
-      if (error < 0)
+      if(error < 0)
       {
         setErrorCondition(error);
         QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file");
@@ -295,10 +303,13 @@ void PhReader::execute()
   int32_t err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   m_InStream = fopen(getInputFile().toLatin1().data(), "r");
-  if (m_InStream == nullptr)
+  if(m_InStream == nullptr)
   {
     setErrorCondition(-48030);
     QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
@@ -307,7 +318,7 @@ void PhReader::execute()
   }
 
   err = readHeader();
-  if (err < 0)
+  if(err < 0)
   {
     fclose(m_InStream);
     m_InStream = nullptr;
@@ -371,9 +382,9 @@ int32_t PhReader::readFile()
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateCellInstancePointers();
 
-  for (size_t n = 0; n < totalPoints; ++n)
+  for(size_t n = 0; n < totalPoints; ++n)
   {
-    if (fscanf(m_InStream, "%d", m_FeatureIds + n) == 0)
+    if(fscanf(m_InStream, "%d", m_FeatureIds + n) == 0)
     {
       fclose(m_InStream);
       m_InStream = nullptr;
@@ -427,23 +438,29 @@ const QString PhReader::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PhReader::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PhReader::getSubGroupName()
-{ return SIMPL::FilterSubGroups::InputFilters; }
+{
+  return SIMPL::FilterSubGroups::InputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PhReader::getHumanLabel()
-{ return "Read Ph File (Feature Ids)"; }
+{
+  return "Read Ph File (Feature Ids)";
+}

@@ -38,14 +38,14 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -53,17 +53,16 @@
 // Include the MOC generated file for this class
 #include "moc_SPParksTextReader.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SPParksTextReader::SPParksTextReader() :
-  FileReader(),
-  m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_InputFile(""),
-  m_OneBasedArrays(false),
-  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
+SPParksTextReader::SPParksTextReader()
+: FileReader()
+, m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
+, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_InputFile("")
+, m_OneBasedArrays(false)
+, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -108,13 +107,13 @@ void SPParksTextReader::setupFilterParameters()
 void SPParksTextReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
-  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
-  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
-  setInputFile( reader->readString( "InputFile", getInputFile() ) );
-  setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
-  setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
-  setOneBasedArrays( reader->readValue("OneBasedArrays", getOneBasedArrays() ) );
+  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName()));
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
+  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
+  setInputFile(reader->readString("InputFile", getInputFile()));
+  setOrigin(reader->readFloatVec3("Origin", getOrigin()));
+  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setOneBasedArrays(reader->readValue("OneBasedArrays", getOneBasedArrays()));
   reader->closeFilterGroup();
 }
 
@@ -125,7 +124,7 @@ void SPParksTextReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
 
-  //if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  // if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   //{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -150,11 +149,17 @@ void SPParksTextReader::dataCheck()
   initialize();
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   QVector<size_t> tDims(3, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Creating a Feature Ids array here in preflight so that it appears in the current data structure
   // This is a temporary array that will be overwritten by the correct array at the end of reading the file
@@ -163,13 +168,13 @@ void SPParksTextReader::dataCheck()
   getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims);
 
   QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if(fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
@@ -179,12 +184,12 @@ void SPParksTextReader::dataCheck()
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
-  if (getInputFile().isEmpty() == false && fi.exists() == true)
+  if(getInputFile().isEmpty() == false && fi.exists() == true)
   {
     // We need to read the header of the input file to get the dimensions
     m_InStream.setFileName(getInputFile());
 
-    if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
+    if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QString msg = QObject::tr("Input SPParks file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-102);
@@ -194,7 +199,7 @@ void SPParksTextReader::dataCheck()
     {
       int32_t error = readHeader();
       m_InStream.close();
-      if (error < 0)
+      if(error < 0)
       {
         setErrorCondition(error);
         QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file");
@@ -210,12 +215,12 @@ void SPParksTextReader::dataCheck()
 void SPParksTextReader::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -226,13 +231,16 @@ void SPParksTextReader::execute()
   int32_t err = 0;
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   m_InStream.setFileName(getInputFile());
   m_InStream.open(QFile::ReadOnly);
 
   err = readHeader();
-  if (err < 0)
+  if(err < 0)
   {
     m_InStream.close();
     return;
@@ -265,17 +273,20 @@ int32_t SPParksTextReader::readHeader()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
 
   int32_t oneBase = 0;
-  if (getOneBasedArrays()) { oneBase = 1; }
+  if(getOneBasedArrays())
+  {
+    oneBase = 1;
+  }
 
   bool ok = false; // Use this to verify that the comversions from string to numbers actually works.
   // We are going to reuse the 'buf' variable
-  QByteArray buf = m_InStream.readLine(); //ITEM: TIMESTEP
-  buf = m_InStream.readLine(); // 210    21000.6
-  buf = m_InStream.readLine(); // ITEM: NUMBER OF ATOMS
-  buf = m_InStream.readLine(); // 106480
+  QByteArray buf = m_InStream.readLine(); // ITEM: TIMESTEP
+  buf = m_InStream.readLine();            // 210    21000.6
+  buf = m_InStream.readLine();            // ITEM: NUMBER OF ATOMS
+  buf = m_InStream.readLine();            // 106480
   buf = buf.trimmed();
   int64_t numAtoms = buf.toInt(&ok); // Parse out the number of atoms
-  buf = m_InStream.readLine(); // ITEM: BOX BOUNDS
+  buf = m_InStream.readLine();       // ITEM: BOX BOUNDS
 
   buf = m_InStream.readLine(); // 0.5 44.5
   buf = buf.trimmed();
@@ -298,7 +309,7 @@ int32_t SPParksTextReader::readHeader()
   high = tokens[1].toFloat(&ok);
   int64_t nz = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
 
-  if (numAtoms != nx * ny * nz)
+  if(numAtoms != nx * ny * nz)
   {
     QString msg = QObject::tr("Number of sites does not match the calculated number of sites %1 != %2 * %3 * %4").arg(numAtoms).arg(nx).arg(ny).arg(nz);
     setErrorCondition(-101);
@@ -335,30 +346,46 @@ int32_t SPParksTextReader::readFile()
   int64_t zCol = 0;
   qint32 size = tokens.size();
   bool didAllocate = false;
-  for (qint32 i = 2; i < size; ++i)
+  for(qint32 i = 2; i < size; ++i)
   {
     QString name = QString::fromLatin1(tokens[i]);
     pType = getPointerType(name);
 
     // We don't need to parse the X, Y & Z or id values into arrays.
-    if (name.compare("x") == 0) { xCol = i - 2; continue;}
-    if (name.compare("y") == 0) { yCol = i - 2; continue;}
-    if (name.compare("z") == 0) { zCol = i - 2; continue;}
-    if (name.compare("id") == 0) { zCol = i - 2; continue;}
+    if(name.compare("x") == 0)
+    {
+      xCol = i - 2;
+      continue;
+    }
+    if(name.compare("y") == 0)
+    {
+      yCol = i - 2;
+      continue;
+    }
+    if(name.compare("z") == 0)
+    {
+      zCol = i - 2;
+      continue;
+    }
+    if(name.compare("id") == 0)
+    {
+      zCol = i - 2;
+      continue;
+    }
 
-    if (Ebsd::Int32 == pType)
+    if(Ebsd::Int32 == pType)
     {
       Int32Parser::Pointer dparser = Int32Parser::New(nullptr, totalPoints, name, i - 2);
-      if ((didAllocate = dparser->allocateArray(totalPoints)) == true)
+      if((didAllocate = dparser->allocateArray(totalPoints)) == true)
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(int32_t) * totalPoints);
         m_NamePointerMap.insert(name, dparser);
       }
     }
-    else if (Ebsd::Float == pType)
+    else if(Ebsd::Float == pType)
     {
       FloatParser::Pointer dparser = FloatParser::New(nullptr, totalPoints, name, i - 2);
-      if ((didAllocate = dparser->allocateArray(totalPoints)) == true)
+      if((didAllocate = dparser->allocateArray(totalPoints)) == true)
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(float) * totalPoints);
         m_NamePointerMap.insert(name, dparser);
@@ -372,7 +399,7 @@ int32_t SPParksTextReader::readFile()
       return getErrorCondition();
     }
 
-    if (didAllocate == false)
+    if(didAllocate == false)
     {
       QString msg = QObject::tr("Unable to allocate memory for the data");
       setErrorCondition(-106);
@@ -383,12 +410,12 @@ int32_t SPParksTextReader::readFile()
 
   // Now loop over all the points in the file. This could get REALLY slow if the file gets large.
   // Thank goodness we all like to save text files
-  for (size_t n = 0; n < totalPoints; ++n)
+  for(size_t n = 0; n < totalPoints; ++n)
   {
     buf = m_InStream.readLine(); // Read the line into a QByteArray including the newline
-    buf = buf.trimmed(); // Remove leading and trailing whitespace
+    buf = buf.trimmed();         // Remove leading and trailing whitespace
 
-    if (m_InStream.atEnd() == true && buf.isEmpty() == true) // We have to have read to the end of the file AND the buffer is empty
+    if(m_InStream.atEnd() == true && buf.isEmpty() == true) // We have to have read to the end of the file AND the buffer is empty
     {
       // otherwise we read EXACTLY the last line and we still need to parse the line.
       break;
@@ -397,7 +424,7 @@ int32_t SPParksTextReader::readFile()
   }
 
   DataParser::Pointer parser = m_NamePointerMap["type"];
-  if (nullptr != parser.get() )
+  if(nullptr != parser.get())
   {
     QVector<size_t> cDims(1, 1);
     // Create a new DataArray that wraps the already allocated memory
@@ -406,7 +433,7 @@ int32_t SPParksTextReader::readFile()
     parser->setManageMemory(false);
 
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-    if (nullptr != attrMat.get())
+    if(nullptr != attrMat.get())
     {
       attrMat->addAttributeArray(typePtr->getName(), typePtr);
     }
@@ -426,9 +453,9 @@ int32_t SPParksTextReader::readFile()
 void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol)
 {
   // Filter the line to convert European command style decimals to US/UK style points
-  for (qint32 c = 0; c < line.size(); ++c)
+  for(qint32 c = 0; c < line.size(); ++c)
   {
-    if (line.at(c) == ',')
+    if(line.at(c) == ',')
     {
       line[c] = '.';
     }
@@ -439,7 +466,10 @@ void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
   QList<QByteArray> tokens = line.split(' ');
 
   int32_t oneBase = 0;
-  if (getOneBasedArrays()) { oneBase = 1; }
+  if(getOneBasedArrays())
+  {
+    oneBase = 1;
+  }
 
   xIdx = tokens[xCol].toInt(&ok) - oneBase;
   yIdx = tokens[yCol].toInt(&ok) - oneBase;
@@ -450,23 +480,19 @@ void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
   // Q_ASSERT(tokens.size() == m_NamePointerMap.size());
 
   QMapIterator<QString, DataParser::Pointer> iter(m_NamePointerMap);
-  while (iter.hasNext())
+  while(iter.hasNext())
   {
     iter.next();
     DataParser::Pointer dparser = iter.value();
     // Make sure we dont' parse the x, y, z or id columns since they are pretty much useless data. At some point
     // if the SPParks users actually wanted to read in the matching XYZ lattice site for the data then actually
     // parsing and storing the data _may_ be of interest to them
-    if(dparser->getColumnName().compare("x") == 0
-        || dparser->getColumnName().compare("y") == 0
-        || dparser->getColumnName().compare("z") == 0
-        || dparser->getColumnName().compare("id") == 0)
+    if(dparser->getColumnName().compare("x") == 0 || dparser->getColumnName().compare("y") == 0 || dparser->getColumnName().compare("z") == 0 || dparser->getColumnName().compare("id") == 0)
     {
       continue;
     }
     dparser->parse(tokens[dparser->getColumnIndex()], offset);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -477,15 +503,42 @@ Ebsd::NumType SPParksTextReader::getPointerType(const QString& featureName)
   // text fields = id or site or x or y or z or
   //                  energy or propensity or iN or dN
 
-  if (featureName.compare("id") == 0) { return Ebsd::Int32;}
-  if (featureName.compare("type") == 0) { return Ebsd::Int32;}
-  if (featureName.compare("x") == 0) { return Ebsd::Int32;}
-  if (featureName.compare("y") == 0) { return Ebsd::Int32;}
-  if (featureName.compare("z") == 0) { return Ebsd::Int32;}
-  if (featureName.compare("energy") == 0) { return Ebsd::Float;}
-  if (featureName.compare("propensity") == 0) { return Ebsd::Float;}
-  if (featureName.startsWith("i")) { return Ebsd::Int32; } // Generic Integer site Value
-  if (featureName.startsWith("d")) { return Ebsd::Float; } // Generic floating point site value
+  if(featureName.compare("id") == 0)
+  {
+    return Ebsd::Int32;
+  }
+  if(featureName.compare("type") == 0)
+  {
+    return Ebsd::Int32;
+  }
+  if(featureName.compare("x") == 0)
+  {
+    return Ebsd::Int32;
+  }
+  if(featureName.compare("y") == 0)
+  {
+    return Ebsd::Int32;
+  }
+  if(featureName.compare("z") == 0)
+  {
+    return Ebsd::Int32;
+  }
+  if(featureName.compare("energy") == 0)
+  {
+    return Ebsd::Float;
+  }
+  if(featureName.compare("propensity") == 0)
+  {
+    return Ebsd::Float;
+  }
+  if(featureName.startsWith("i"))
+  {
+    return Ebsd::Int32;
+  } // Generic Integer site Value
+  if(featureName.startsWith("d"))
+  {
+    return Ebsd::Float;
+  } // Generic floating point site value
 
   // std::cout << "THIS IS NOT GOOD. Featurename: " << featureName << " was not found in the list" << std::endl;
   return Ebsd::UnknownNumType;
@@ -496,15 +549,42 @@ Ebsd::NumType SPParksTextReader::getPointerType(const QString& featureName)
 // -----------------------------------------------------------------------------
 int32_t SPParksTextReader::getTypeSize(const QString& featureName)
 {
-  if (featureName.compare("id") == 0) { return 4;}
-  if (featureName.compare("type") == 0) { return 4;}
-  if (featureName.compare("x") == 0) { return 4;}
-  if (featureName.compare("y") == 0) { return 4;}
-  if (featureName.compare("z") == 0) { return 4;}
-  if (featureName.compare("energy") == 0) { return 4;}
-  if (featureName.compare("propensity") == 0) { return 4;}
-  if (featureName.startsWith("i")) { return 4; }
-  if (featureName.startsWith("d")) { return 4; }
+  if(featureName.compare("id") == 0)
+  {
+    return 4;
+  }
+  if(featureName.compare("type") == 0)
+  {
+    return 4;
+  }
+  if(featureName.compare("x") == 0)
+  {
+    return 4;
+  }
+  if(featureName.compare("y") == 0)
+  {
+    return 4;
+  }
+  if(featureName.compare("z") == 0)
+  {
+    return 4;
+  }
+  if(featureName.compare("energy") == 0)
+  {
+    return 4;
+  }
+  if(featureName.compare("propensity") == 0)
+  {
+    return 4;
+  }
+  if(featureName.startsWith("i"))
+  {
+    return 4;
+  }
+  if(featureName.startsWith("d"))
+  {
+    return 4;
+  }
   return 0;
 }
 
@@ -544,23 +624,29 @@ const QString SPParksTextReader::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getSubGroupName()
-{ return SIMPL::FilterSubGroups::InputFilters; }
+{
+  return SIMPL::FilterSubGroups::InputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getHumanLabel()
-{ return "Read SPParks Text File"; }
+{
+  return "Read SPParks Text File";
+}

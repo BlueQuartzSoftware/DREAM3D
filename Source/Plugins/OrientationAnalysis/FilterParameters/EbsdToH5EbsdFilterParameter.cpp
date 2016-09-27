@@ -38,22 +38,23 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdToH5EbsdFilterParameter::EbsdToH5EbsdFilterParameter() :
-FilterParameter()
-{}
+EbsdToH5EbsdFilterParameter::EbsdToH5EbsdFilterParameter()
+: FilterParameter()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 EbsdToH5EbsdFilterParameter::~EbsdToH5EbsdFilterParameter()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, EbsdToH5Ebsd *filter, const QString& fileExtension,
-  const QString& fileType, int groupIndex)
+EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, EbsdToH5Ebsd* filter,
+                                                                      const QString& fileExtension, const QString& fileType, int groupIndex)
 {
   EbsdToH5EbsdFilterParameter::Pointer ptr = EbsdToH5EbsdFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -68,7 +69,6 @@ EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::New(const QStr
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -80,7 +80,7 @@ QString EbsdToH5EbsdFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdFilterParameter::readJson(const QJsonObject &json)
+void EbsdToH5EbsdFilterParameter::readJson(const QJsonObject& json)
 {
   m_Filter->setOutputFile(json["OutputFile"].toString());
   m_Filter->setZStartIndex(static_cast<int64_t>(std::stoi(json["ZStartIndex"].toString().toStdString())));
@@ -107,7 +107,7 @@ void EbsdToH5EbsdFilterParameter::readJson(const QJsonObject &json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject &json)
+void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject& json)
 {
   json["OutputFile"] = m_Filter->getOutputFile();
   json["ZStartIndex"] = QString::number(m_Filter->getZStartIndex());
@@ -125,10 +125,8 @@ void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject &json)
   sampleTrans.writeJson(sampleTransObj);
   json["SampleTransformation"] = sampleTransObj;
 
-
   QJsonObject eulerObj;
   AxisAngleInput_t euler = m_Filter->getEulerTransformation();
   euler.writeJson(eulerObj);
   json["EulerTransformation"] = eulerObj;
 }
-

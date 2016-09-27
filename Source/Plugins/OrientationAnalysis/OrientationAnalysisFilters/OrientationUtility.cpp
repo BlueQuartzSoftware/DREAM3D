@@ -18,8 +18,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtility::OrientationUtility() :
-  AbstractFilter()
+OrientationUtility::OrientationUtility()
+: AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -58,7 +58,6 @@ void OrientationUtility::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 void OrientationUtility::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -66,7 +65,6 @@ void OrientationUtility::initialize()
 // -----------------------------------------------------------------------------
 void OrientationUtility::dataCheck()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -126,24 +124,29 @@ const QString OrientationUtility::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString OrientationUtility::getGroupName()
-{ return SIMPL::FilterGroups::Utilities; }
+{
+  return SIMPL::FilterGroups::Utilities;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString OrientationUtility::getSubGroupName()
-{ return "OrientationAnalysis"; }
+{
+  return "OrientationAnalysis";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString OrientationUtility::getHumanLabel()
-{ return "Orientation Utility"; }
-
+{
+  return "Orientation Utility";
+}

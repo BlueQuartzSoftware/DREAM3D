@@ -36,21 +36,21 @@
 #include "SampleSurfaceMesh.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -60,75 +60,78 @@
  */
 class SampleSurfaceMeshImpl
 {
-    TriangleGeom::Pointer m_Faces;
-    Int32Int32DynamicListArray::Pointer m_FaceIds;
-    VertexGeom::Pointer m_FaceBBs;
-    VertexGeom::Pointer m_Points;
-    int32_t* m_PolyIds;
+  TriangleGeom::Pointer m_Faces;
+  Int32Int32DynamicListArray::Pointer m_FaceIds;
+  VertexGeom::Pointer m_FaceBBs;
+  VertexGeom::Pointer m_Points;
+  int32_t* m_PolyIds;
 
-  public:
-    SampleSurfaceMeshImpl(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, VertexGeom::Pointer points, int32_t* polyIds) :
-      m_Faces(faces),
-      m_FaceIds(faceIds),
-      m_FaceBBs(faceBBs),
-      m_Points(points),
-      m_PolyIds(polyIds)
-    {}
-    virtual ~SampleSurfaceMeshImpl() {}
+public:
+  SampleSurfaceMeshImpl(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, VertexGeom::Pointer points, int32_t* polyIds)
+  : m_Faces(faces)
+  , m_FaceIds(faceIds)
+  , m_FaceBBs(faceBBs)
+  , m_Points(points)
+  , m_PolyIds(polyIds)
+  {
+  }
+  virtual ~SampleSurfaceMeshImpl()
+  {
+  }
 
-    void checkPoints(size_t start, size_t end) const
+  void checkPoints(size_t start, size_t end) const
+  {
+    float radius = 0.0f;
+    float distToBoundary = 0.0f;
+    int64_t numPoints = m_Points->getNumberOfVertices();
+    FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower");
+    FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right");
+    float* ll = llPtr->getPointer(0);
+    float* ur = urPtr->getPointer(0);
+    float* point = nullptr;
+    char code = ' ';
+
+    for(size_t iter = start; iter < end; iter++)
     {
-      float radius = 0.0f;
-      float distToBoundary = 0.0f;
-      int64_t numPoints = m_Points->getNumberOfVertices();
-      FloatArrayType::Pointer llPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Lower");
-      FloatArrayType::Pointer urPtr = FloatArrayType::CreateArray(3, "_INTERNAL_USE_ONLY_Upper_Right");
-      float* ll = llPtr->getPointer(0);
-      float* ur = urPtr->getPointer(0);
-      float* point = nullptr;
-      char code = ' ';
+      // find bounding box for current feature
+      GeometryMath::FindBoundingBoxOfFaces(m_Faces, m_FaceIds->getElementList(iter), ll, ur);
+      GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
 
-      for (size_t iter = start; iter < end; iter++)
+      // check points in vertex array to see if they are in the bounding box of the feature
+      for(int64_t i = 0; i < numPoints; i++)
       {
-        // find bounding box for current feature
-        GeometryMath::FindBoundingBoxOfFaces(m_Faces, m_FaceIds->getElementList(iter), ll, ur);
-        GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
-
-        // check points in vertex array to see if they are in the bounding box of the feature
-        for (int64_t i = 0; i < numPoints; i++)
+        point = m_Points->getVertexPointer(i);
+        if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
         {
-          point = m_Points->getVertexPointer(i);
-          if (m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
+          code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius, distToBoundary);
+          if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
           {
-            code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius, distToBoundary);
-            if (code == 'i' || code == 'V' || code == 'E' || code == 'F') { m_PolyIds[i] = iter; }
+            m_PolyIds[i] = iter;
           }
         }
       }
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      checkPoints(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    checkPoints(r.begin(), r.end());
+  }
 #endif
-  private:
-
+private:
 };
 
 // Include the MOC generated file for this class
 #include "moc_SampleSurfaceMesh.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SampleSurfaceMesh::SampleSurfaceMesh() :
-  AbstractFilter(),
-  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceLabels(nullptr)
+SampleSurfaceMesh::SampleSurfaceMesh()
+: AbstractFilter()
+, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
+, m_SurfaceMeshFaceLabels(nullptr)
 {
   setupFilterParameters();
 }
@@ -148,7 +151,8 @@ void SampleSurfaceMesh::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, SampleSurfaceMesh, req));
   }
   setFilterParameters(parameters);
@@ -160,7 +164,7 @@ void SampleSurfaceMesh::setupFilterParameters()
 void SampleSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
+  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -169,7 +173,6 @@ void SampleSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -178,17 +181,29 @@ void SampleSurfaceMesh::initialize()
 void SampleSurfaceMesh::dataCheck()
 {
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(triangles->getTriangles());
+  }
 
   QVector<size_t> cDims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
+                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
+  }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
@@ -229,7 +244,10 @@ void SampleSurfaceMesh::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
   SIMPL_RANDOMNG_NEW()
@@ -254,12 +272,18 @@ void SampleSurfaceMesh::execute()
   // walk through faces to see how many features there are
   int32_t g1 = 0, g2 = 0;
   int32_t maxFeatureId = 0;
-  for (int64_t i = 0; i < numFaces; i++)
+  for(int64_t i = 0; i < numFaces; i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2 * i];
     g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
-    if (g1 > maxFeatureId) { maxFeatureId = g1; }
-    if (g2 > maxFeatureId) { maxFeatureId = g2; }
+    if(g1 > maxFeatureId)
+    {
+      maxFeatureId = g1;
+    }
+    if(g2 > maxFeatureId)
+    {
+      maxFeatureId = g2;
+    }
   }
   // add one to account for feature 0
   int32_t numFeatures = maxFeatureId + 1;
@@ -274,24 +298,36 @@ void SampleSurfaceMesh::execute()
   int32_t* linkLoc = linkLocPtr->getPointer(0);
 
   // traverse data to determine number of faces belonging to each feature
-  for (int64_t i = 0; i < numFaces; i++)
+  for(int64_t i = 0; i < numFaces; i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2 * i];
     g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
-    if (g1 > 0) { linkCount[g1]++; }
-    if (g2 > 0) { linkCount[g2]++; }
+    if(g1 > 0)
+    {
+      linkCount[g1]++;
+    }
+    if(g2 > 0)
+    {
+      linkCount[g2]++;
+    }
   }
 
   // now allocate storage for the faces
   faceLists->allocateLists(linkCount);
 
   // traverse data again to get the faces belonging to each feature
-  for (int64_t i = 0; i < numFaces; i++)
+  for(int64_t i = 0; i < numFaces; i++)
   {
     g1 = m_SurfaceMeshFaceLabels[2 * i];
     g2 = m_SurfaceMeshFaceLabels[2 * i + 1];
-    if (g1 > 0) { faceLists->insertCellReference(g1, (linkLoc[g1])++, i); }
-    if (g2 > 0) { faceLists->insertCellReference(g2, (linkLoc[g2])++, i); }
+    if(g1 > 0)
+    {
+      faceLists->insertCellReference(g1, (linkLoc[g1])++, i);
+    }
+    if(g2 > 0)
+    {
+      faceLists->insertCellReference(g2, (linkLoc[g2])++, i);
+    }
     // find bounding box for each face
     GeometryMath::FindBoundingBoxOfFace(triangleGeom, i, ll, ur);
     faceBBs->setCoords(2 * i, ll);
@@ -300,7 +336,10 @@ void SampleSurfaceMesh::execute()
 
   // generate the list of sampling points from subclass
   VertexGeom::Pointer points = generate_points();
-  if(getErrorCondition() < 0 || nullptr == points.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == points.get())
+  {
+    return;
+  }
   int64_t numPoints = points->getNumberOfVertices();
 
   // create array to hold which polyhedron (feature) each point falls in
@@ -310,10 +349,9 @@ void SampleSurfaceMesh::execute()
   int32_t* polyIds = iArray->getPointer(0);
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures),
-                      SampleSurfaceMeshImpl(triangleGeom, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), SampleSurfaceMeshImpl(triangleGeom, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
   }
   else
 #endif
@@ -363,23 +401,29 @@ const QString SampleSurfaceMesh::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
+  vStream << Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMesh::getGroupName()
-{ return SIMPL::FilterGroups::SamplingFilters; }
+{
+  return SIMPL::FilterGroups::SamplingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMesh::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ResolutionFilters; }
+{
+  return SIMPL::FilterSubGroups::ResolutionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMesh::getHumanLabel()
-{ return "Sample Triangle Geometry"; }
+{
+  return "Sample Triangle Geometry";
+}

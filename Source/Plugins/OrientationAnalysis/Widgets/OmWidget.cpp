@@ -38,8 +38,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OmWidget::OmWidget(QWidget* parent) :
-  OrientationWidget(parent)
+OmWidget::OmWidget(QWidget* parent)
+: OrientationWidget(parent)
 {
   setupUi(this);
 
@@ -51,7 +51,6 @@ OmWidget::OmWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 OmWidget::~OmWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -69,24 +68,15 @@ void OmWidget::setupGui()
   om8->setValidator(new QDoubleValidator(om8));
   om9->setValidator(new QDoubleValidator(om9));
 
-  connect(om1, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(om2, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(om3, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(om4, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(om5, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(om6, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(om7, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(om8, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(om9, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
+  connect(om1, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(om2, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(om3, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(om4, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(om5, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(om6, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(om7, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(om8, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(om9, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -96,12 +86,12 @@ void OmWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if (calculator->getInputType() == OrientationConverter<double>::OrientationMatrix)
+  if(calculator->getInputType() == OrientationConverter<double>::OrientationMatrix)
   {
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if (calculator->getHasErrors() == true)
+  else if(calculator->getHasErrors() == true)
   {
     om1->setText("nan");
     om2->setText("nan");
@@ -118,7 +108,7 @@ void OmWidget::updateData(OrientationUtilityCalculator* calculator)
 
   QVector<double> omValues = calculator->getValues(OrientationConverter<double>::OrientationMatrix);
 
-  if (omValues.size() == 9)
+  if(omValues.size() == 9)
   {
     om1->setText(QString::number(omValues[0]));
     om2->setText(QString::number(omValues[1]));
@@ -135,7 +125,7 @@ void OmWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OmWidget::valuesUpdated(const QString &text)
+void OmWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::om_check(values);
@@ -144,7 +134,7 @@ void OmWidget::valuesUpdated(const QString &text)
 
   emit clearErrorTable();
 
-  if (errorCode >= 0)
+  if(errorCode >= 0)
   {
     emit valuesChanged(values, OrientationConverter<double>::OrientationMatrix, false);
   }
@@ -162,39 +152,39 @@ QVector<double> OmWidget::getValues()
 {
   QVector<double> values;
 
-  if (om1->text() == "nan")
+  if(om1->text() == "nan")
   {
     om1->setText("0");
   }
-  if (om2->text() == "nan")
+  if(om2->text() == "nan")
   {
     om2->setText("0");
   }
-  if (om3->text() == "nan")
+  if(om3->text() == "nan")
   {
     om3->setText("0");
   }
-  if (om4->text() == "nan")
+  if(om4->text() == "nan")
   {
     om4->setText("0");
   }
-  if (om5->text() == "nan")
+  if(om5->text() == "nan")
   {
     om5->setText("0");
   }
-  if (om6->text() == "nan")
+  if(om6->text() == "nan")
   {
     om6->setText("0");
   }
-  if (om7->text() == "nan")
+  if(om7->text() == "nan")
   {
     om7->setText("0");
   }
-  if (om8->text() == "nan")
+  if(om8->text() == "nan")
   {
     om8->setText("0");
   }
-  if (om9->text() == "nan")
+  if(om9->text() == "nan")
   {
     om9->setText("0");
   }
@@ -211,5 +201,3 @@ QVector<double> OmWidget::getValues()
 
   return values;
 }
-
-
