@@ -36,18 +36,18 @@
 #include "ChangeAngleRepresentation.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -60,46 +60,46 @@
 class ChangeAngleRepresentationImpl
 {
 
-  public:
-    ChangeAngleRepresentationImpl(float* data, float factor) :
-      m_CellEulerAngles(data),
-      convFactor(factor)
-    {}
-    virtual ~ChangeAngleRepresentationImpl() {}
+public:
+  ChangeAngleRepresentationImpl(float* data, float factor)
+  : m_CellEulerAngles(data)
+  , convFactor(factor)
+  {
+  }
+  virtual ~ChangeAngleRepresentationImpl()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    for(size_t i = start; i < end; i++)
     {
-      for (size_t i = start; i < end; i++)
-      {
-        m_CellEulerAngles[i] = m_CellEulerAngles[i] * convFactor;
-      }
+      m_CellEulerAngles[i] = m_CellEulerAngles[i] * convFactor;
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
-  private:
-    float* m_CellEulerAngles;
-    float  convFactor;
-
+private:
+  float* m_CellEulerAngles;
+  float convFactor;
 };
 
 // Include the MOC generated file for this class
 #include "moc_ChangeAngleRepresentation.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChangeAngleRepresentation::ChangeAngleRepresentation() :
-  AbstractFilter(),
-  m_ConversionType(SIMPL::EulerAngleConversionType::DegreesToRadians),
-  m_CellEulerAnglesArrayPath("", "", ""),
-  m_CellEulerAngles(nullptr)
+ChangeAngleRepresentation::ChangeAngleRepresentation()
+: AbstractFilter()
+, m_ConversionType(SIMPL::EulerAngleConversionType::DegreesToRadians)
+, m_CellEulerAnglesArrayPath("", "", "")
+, m_CellEulerAngles(nullptr)
 {
   setupFilterParameters();
 }
@@ -133,7 +133,8 @@ void ChangeAngleRepresentation::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, ChangeAngleRepresentation, req));
   }
 
@@ -146,8 +147,8 @@ void ChangeAngleRepresentation::setupFilterParameters()
 void ChangeAngleRepresentation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
-  setConversionType( reader->readValue("ConversionType", getConversionType()) );
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath()));
+  setConversionType(reader->readValue("ConversionType", getConversionType()));
   reader->closeFilterGroup();
 }
 
@@ -156,7 +157,6 @@ void ChangeAngleRepresentation::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -167,9 +167,12 @@ void ChangeAngleRepresentation::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> cDims(1, 3);
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellEulerAnglesPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -192,7 +195,10 @@ void ChangeAngleRepresentation::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   int64_t totalPoints = static_cast<int64_t>(m_CellEulerAnglesPtr.lock()->getNumberOfTuples());
 
@@ -202,22 +208,21 @@ void ChangeAngleRepresentation::execute()
 #endif
 
   float conversionFactor = 1.0f;
-  if (m_ConversionType == SIMPL::EulerAngleConversionType::DegreesToRadians)
+  if(m_ConversionType == SIMPL::EulerAngleConversionType::DegreesToRadians)
   {
-    conversionFactor = static_cast<float>( M_PI / 180.0f );
+    conversionFactor = static_cast<float>(M_PI / 180.0f);
   }
-  else if (conversionFactor == SIMPL::EulerAngleConversionType::RadiansToDegrees)
+  else if(conversionFactor == SIMPL::EulerAngleConversionType::RadiansToDegrees)
   {
-    conversionFactor = static_cast<float>( 180.0f / M_PI );
+    conversionFactor = static_cast<float>(180.0f / M_PI);
   }
 
   totalPoints *= 3;
-  //  qDebug() << "ChangeAngleRepresentation: " << m_ConversionFactor << "\n";
+//  qDebug() << "ChangeAngleRepresentation: " << m_ConversionFactor << "\n";
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      ChangeAngleRepresentationImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), ChangeAngleRepresentationImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
   }
   else
 #endif
@@ -265,23 +270,29 @@ const QString ChangeAngleRepresentation::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ChangeAngleRepresentation::getGroupName()
-{ return SIMPL::FilterGroups::OrientationAnalysisFilters; }
+{
+  return SIMPL::FilterGroups::OrientationAnalysisFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ChangeAngleRepresentation::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ConversionFilters; }
+{
+  return SIMPL::FilterSubGroups::ConversionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ChangeAngleRepresentation::getHumanLabel()
-{ return "Convert Angles to Degrees or Radians"; }
+{
+  return "Convert Angles to Degrees or Radians";
+}

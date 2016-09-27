@@ -35,16 +35,16 @@
 #include <QtCore/QFile>
 #include <QtCore/QThread>
 
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Common/FilterPipeline.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "Plugins/OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
 
@@ -67,237 +67,241 @@ const int nRows2 = 4;
 
 class AngCachingTest
 {
-  public:
-    AngCachingTest(){}
-    virtual ~AngCachingTest(){}
-    SIMPL_TYPE_MACRO(AngCachingTest)
+public:
+  AngCachingTest()
+  {
+  }
+  virtual ~AngCachingTest()
+  {
+  }
+  SIMPL_TYPE_MACRO(AngCachingTest)
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CopyTestFiles()
-{
-  QFile::copy(File1, CopiedFile1);
-  QFile::copy(File2, CopiedFile2);
-}
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void CopyTestFiles()
+  {
+    QFile::copy(File1, CopiedFile1);
+    QFile::copy(File2, CopiedFile2);
+  }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveTestFiles()
-{
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void RemoveTestFiles()
+  {
 #if REMOVE_TEST_FILES
-  QFile::remove(CopiedFile1);
-  QFile::remove(CopiedFile2);
+    QFile::remove(CopiedFile1);
+    QFile::remove(CopiedFile2);
 #endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TestFilterAvailability()
-{
-  // Now instantiate the ReadAngData Filter from the FilterManager
-  QString filtName = "ReadAngData";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (nullptr == filterFactory.get())
-  {
-    std::stringstream ss;
-    ss << "The AngCachingTest Requires the use of the " << filtName.toStdString() << " filter which is found in the OrientationAnalysis Plugin";
-    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-  }
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TestAngReader()
-{
-  AbstractFilter::Pointer angReader = AbstractFilter::NullPointer();
-  QString filtName = "ReadAngData";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  Ang_Private_Data originalData;
-
-  // Reading first file
-  {
-    DataContainerArray::Pointer dca = DataContainerArray::New();
-
-    if (nullptr != filterFactory.get())
-    {
-      // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
-      angReader = filterFactory->create();    // Create the reader for the first time
-      bool propWasSet = angReader->setProperty("InputFile", CopiedFile1);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-      angReader->setDataContainerArray(dca);
-      angReader->preflight();
-      int err = angReader->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, 0);
-    }
-    else
-    {
-      QString ss = QObject::tr("AngCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-      qDebug() << ss;
-      DREAM3D_REQUIRE_EQUAL(0, 1)
-    }
-
-    Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
-
-    // XStep, YStep -> Resolution(x, y)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep1)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep1)
-
-    // numRows, numCols -> Dimensions (x, y)
-    DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols1)
-    DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows1)
-
-    // Check that the filter read the file
-    bool prop = angReader->property("FileWasRead").toBool();
-    DREAM3D_REQUIRE_EQUAL(prop, true)
   }
 
-  // Reading the file again
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int TestFilterAvailability()
   {
-    DataContainerArray::Pointer dca = DataContainerArray::New();
-
-    if (nullptr != filterFactory.get())
+    // Now instantiate the ReadAngData Filter from the FilterManager
+    QString filtName = "ReadAngData";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    if(nullptr == filterFactory.get())
     {
-      bool propWasSet = angReader->setProperty("InputFile", CopiedFile1);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-      angReader->setDataContainerArray(dca);
-      angReader->preflight();
-      int err = angReader->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, 0);
+      std::stringstream ss;
+      ss << "The AngCachingTest Requires the use of the " << filtName.toStdString() << " filter which is found in the OrientationAnalysis Plugin";
+      DREAM3D_TEST_THROW_EXCEPTION(ss.str())
     }
-    else
-    {
-      QString ss = QObject::tr("AngCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-      qDebug() << ss;
-      DREAM3D_REQUIRE_EQUAL(0, 1)
-    }
-
-    Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
-
-    // XStep, YStep -> Resolution(x, y)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep1)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep1)
-
-    // numRows, numCols -> Dimensions (x, y)
-    DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols1)
-    DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows1)
-
-    // Check that the filter read from the cache this time, since we're reading from the same file
-    bool prop = angReader->property("FileWasRead").toBool();
-    DREAM3D_REQUIRE_EQUAL(prop, false)
+    return 0;
   }
 
-  // Reading a different file
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int TestAngReader()
   {
-    DataContainerArray::Pointer dca = DataContainerArray::New();
+    AbstractFilter::Pointer angReader = AbstractFilter::NullPointer();
+    QString filtName = "ReadAngData";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    Ang_Private_Data originalData;
 
-    if (nullptr != filterFactory.get())
+    // Reading first file
     {
-      bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-      angReader->setDataContainerArray(dca);
-      angReader->preflight();
-      int err = angReader->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, 0);
-    }
-    else
-    {
-      QString ss = QObject::tr("AngCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-      qDebug() << ss;
-      DREAM3D_REQUIRE_EQUAL(0, 1)
-    }
+      DataContainerArray::Pointer dca = DataContainerArray::New();
 
-    Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
-
-    // XStep, YStep -> Resolution(x, y)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep2)
-
-    // numRows, numCols -> Dimensions (x, y)
-    DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols2)
-    DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows2)
-
-    // Check that the filter read from the file again, since we changed file names
-    bool prop = angReader->property("FileWasRead").toBool();
-    DREAM3D_REQUIRE_EQUAL(prop, true)
-  }
-
-  // Force the thread to sleep for 1 second for the next test
-  QThread::sleep(1);
-
-  // Reading the same file, but the contents changed outside the program
-  {
-    // Change the contents of the file to be read
-    {
-      QFile file(CopiedFile2);
-      if (!file.open(QFile::ReadOnly | QFile::Text))
+      if(nullptr != filterFactory.get())
       {
-        DREAM3D_REQUIRE_EQUAL(0, 1)
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
+        angReader = filterFactory->create(); // Create the reader for the first time
+        bool propWasSet = angReader->setProperty("InputFile", CopiedFile1);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        angReader->setDataContainerArray(dca);
+        angReader->preflight();
+        int err = angReader->getErrorCondition();
+        DREAM3D_REQUIRE_EQUAL(err, 0);
       }
-      QString contents = file.readAll();
-      file.close();
-      // Append a line of data to the end of the file
-      QTextStream in(&contents);
-      in << "4.18148   1.72461   4.03519      0.00000      0.00000   40.8  0.229  1  -1904  1.512 ";
-
-      if (!file.open(QFile::WriteOnly | QFile::Text))
+      else
       {
+        QString ss = QObject::tr("AngCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        qDebug() << ss;
         DREAM3D_REQUIRE_EQUAL(0, 1)
       }
 
-      QTextStream out( &file );
-      out << contents;
-      file.close();
+      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+
+      // XStep, YStep -> Resolution(x, y)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep1)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep1)
+
+      // numRows, numCols -> Dimensions (x, y)
+      DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols1)
+      DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows1)
+
+      // Check that the filter read the file
+      bool prop = angReader->property("FileWasRead").toBool();
+      DREAM3D_REQUIRE_EQUAL(prop, true)
     }
 
-    DataContainerArray::Pointer dca = DataContainerArray::New();
-
-    if (nullptr != filterFactory.get())
+    // Reading the file again
     {
-      bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-      angReader->setDataContainerArray(dca);
-      angReader->preflight();
-      int err = angReader->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, 0);
+      DataContainerArray::Pointer dca = DataContainerArray::New();
+
+      if(nullptr != filterFactory.get())
+      {
+        bool propWasSet = angReader->setProperty("InputFile", CopiedFile1);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        angReader->setDataContainerArray(dca);
+        angReader->preflight();
+        int err = angReader->getErrorCondition();
+        DREAM3D_REQUIRE_EQUAL(err, 0);
+      }
+      else
+      {
+        QString ss = QObject::tr("AngCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        qDebug() << ss;
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+      }
+
+      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+
+      // XStep, YStep -> Resolution(x, y)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep1)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep1)
+
+      // numRows, numCols -> Dimensions (x, y)
+      DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols1)
+      DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows1)
+
+      // Check that the filter read from the cache this time, since we're reading from the same file
+      bool prop = angReader->property("FileWasRead").toBool();
+      DREAM3D_REQUIRE_EQUAL(prop, false)
     }
-    else
+
+    // Reading a different file
     {
-      QString ss = QObject::tr("AngCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-      qDebug() << ss;
-      DREAM3D_REQUIRE_EQUAL(0, 1)
+      DataContainerArray::Pointer dca = DataContainerArray::New();
+
+      if(nullptr != filterFactory.get())
+      {
+        bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        angReader->setDataContainerArray(dca);
+        angReader->preflight();
+        int err = angReader->getErrorCondition();
+        DREAM3D_REQUIRE_EQUAL(err, 0);
+      }
+      else
+      {
+        QString ss = QObject::tr("AngCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        qDebug() << ss;
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+      }
+
+      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+
+      // XStep, YStep -> Resolution(x, y)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep2)
+
+      // numRows, numCols -> Dimensions (x, y)
+      DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols2)
+      DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows2)
+
+      // Check that the filter read from the file again, since we changed file names
+      bool prop = angReader->property("FileWasRead").toBool();
+      DREAM3D_REQUIRE_EQUAL(prop, true)
     }
 
-    Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+    // Force the thread to sleep for 1 second for the next test
+    QThread::sleep(1);
 
-    // XStep, YStep -> Resolution(x, y)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep2)
+    // Reading the same file, but the contents changed outside the program
+    {
+      // Change the contents of the file to be read
+      {
+        QFile file(CopiedFile2);
+        if(!file.open(QFile::ReadOnly | QFile::Text))
+        {
+          DREAM3D_REQUIRE_EQUAL(0, 1)
+        }
+        QString contents = file.readAll();
+        file.close();
+        // Append a line of data to the end of the file
+        QTextStream in(&contents);
+        in << "4.18148   1.72461   4.03519      0.00000      0.00000   40.8  0.229  1  -1904  1.512 ";
 
-    // numRows, numCols -> Dimensions (x, y)
-    DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols2)
-    DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows2)
+        if(!file.open(QFile::WriteOnly | QFile::Text))
+        {
+          DREAM3D_REQUIRE_EQUAL(0, 1)
+        }
 
-    // Check that the filter read from the file again, since we changed the contents of the file outside the program
-    bool prop = angReader->property("FileWasRead").toBool();
-    DREAM3D_REQUIRE_EQUAL(prop, true)
-  }
+        QTextStream out(&file);
+        out << contents;
+        file.close();
+      }
 
-  // Reading the same file, but we are testing the cache flush function
-  {
-    DataContainerArray::Pointer dca = DataContainerArray::New();
+      DataContainerArray::Pointer dca = DataContainerArray::New();
 
-    // Flush the cache by invoking the flushCache method dynamically, using Qt's meta system
-    if (QMetaObject::invokeMethod(angReader.get(), "flushCache", Qt::DirectConnection) == false)
-      DREAM3D_REQUIRE_EQUAL(0, 1)
+      if(nullptr != filterFactory.get())
+      {
+        bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        angReader->setDataContainerArray(dca);
+        angReader->preflight();
+        int err = angReader->getErrorCondition();
+        DREAM3D_REQUIRE_EQUAL(err, 0);
+      }
+      else
+      {
+        QString ss = QObject::tr("AngCachingTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        qDebug() << ss;
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+      }
 
-      if (nullptr != filterFactory.get())
+      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+
+      // XStep, YStep -> Resolution(x, y)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep2)
+
+      // numRows, numCols -> Dimensions (x, y)
+      DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols2)
+      DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows2)
+
+      // Check that the filter read from the file again, since we changed the contents of the file outside the program
+      bool prop = angReader->property("FileWasRead").toBool();
+      DREAM3D_REQUIRE_EQUAL(prop, true)
+    }
+
+    // Reading the same file, but we are testing the cache flush function
+    {
+      DataContainerArray::Pointer dca = DataContainerArray::New();
+
+      // Flush the cache by invoking the flushCache method dynamically, using Qt's meta system
+      if(QMetaObject::invokeMethod(angReader.get(), "flushCache", Qt::DirectConnection) == false)
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+
+      if(nullptr != filterFactory.get())
       {
         bool propWasSet = angReader->setProperty("InputFile", CopiedFile2);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -313,39 +317,40 @@ int TestAngReader()
         DREAM3D_REQUIRE_EQUAL(0, 1)
       }
 
-    Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
+      Ang_Private_Data data = angReader->property("Data").value<Ang_Private_Data>();
 
-    // XStep, YStep -> Resolution(x, y)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
-    DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep2)
+      // XStep, YStep -> Resolution(x, y)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[0], xStep2)
+      DREAM3D_REQUIRE_EQUAL(data.resolution[1], yStep2)
 
-    // numRows, numCols -> Dimensions (x, y)
-    DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols2)
-    DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows2)
+      // numRows, numCols -> Dimensions (x, y)
+      DREAM3D_REQUIRE_EQUAL(data.dims[0], nCols2)
+      DREAM3D_REQUIRE_EQUAL(data.dims[1], nRows2)
 
-    // Check that the filter read from the file again, since we flushed the cache
-    bool prop = angReader->property("FileWasRead").toBool();
-    DREAM3D_REQUIRE_EQUAL(prop, true)
+      // Check that the filter read from the file again, since we flushed the cache
+      bool prop = angReader->property("FileWasRead").toBool();
+      DREAM3D_REQUIRE_EQUAL(prop, true)
+    }
+
+    return EXIT_SUCCESS;
   }
 
-  return EXIT_SUCCESS;
-}
+  /**
+    * @brief
+  */
+  void operator()()
+  {
+    int err = EXIT_SUCCESS;
+    DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-/**
-  * @brief
-*/
-void operator()()
-{
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST(TestFilterAvailability());
+    DREAM3D_REGISTER_TEST(CopyTestFiles())
 
-  DREAM3D_REGISTER_TEST(CopyTestFiles())
+    DREAM3D_REGISTER_TEST(TestAngReader())
 
-  DREAM3D_REGISTER_TEST(TestAngReader())
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
+  }
 
-  DREAM3D_REGISTER_TEST(RemoveTestFiles())
-}
 private:
-AngCachingTest(const AngCachingTest&); // Copy Constructor Not Implemented
-void operator=(const AngCachingTest&); // Operator '=' Not Implemented
+  AngCachingTest(const AngCachingTest&); // Copy Constructor Not Implemented
+  void operator=(const AngCachingTest&); // Operator '=' Not Implemented
 };

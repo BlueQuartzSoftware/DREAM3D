@@ -33,70 +33,70 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-
+#include <fstream>
 #include <iostream>
 #include <ostream>
-#include <fstream>
-#include <string>
 #include <sstream>
+#include <string>
 
-
-#include "EMMPMLib/EMMPMLib.h"
-#include "EMMPMLib/Common/MSVCDefines.h"
-#include "EMMPMLib/Common/EMTime.h"
-#include "EMMPMLib/Common/EMMPM_Math.h"
-#include "EMMPMLib/Common/Observer.h"
-#include "EMMPMLib/Core/EMMPM_Data.h"
-#include "EMMPMLib/Core/EMMPM.h"
 #include "EMMPMLib/Common/EMMPMInputParser.h"
+#include "EMMPMLib/Common/EMMPM_Math.h"
+#include "EMMPMLib/Common/EMTime.h"
+#include "EMMPMLib/Common/MSVCDefines.h"
+#include "EMMPMLib/Common/Observer.h"
 #include "EMMPMLib/Common/StatsDelegate.h"
-#include "EMMPMLib/Core/InitializationFunctions.h"
+#include "EMMPMLib/Core/EMMPM.h"
 #include "EMMPMLib/Core/EMMPMUtilities.h"
+#include "EMMPMLib/Core/EMMPM_Data.h"
+#include "EMMPMLib/Core/InitializationFunctions.h"
+#include "EMMPMLib/EMMPMLib.h"
 
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if defined(EMMPM_USE_PARALLEL_ALGORITHMS)
 #include <tbb/task_scheduler_init.h>
 #endif
 
 class CLIStatsDelegate : public StatsDelegate
 {
-  public:
-    CLIStatsDelegate() {}
-    virtual ~CLIStatsDelegate() {};
+public:
+  CLIStatsDelegate()
+  {
+  }
+  virtual ~CLIStatsDelegate(){};
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-    virtual void reportProgress(EMMPM_Data::Pointer data)
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  virtual void reportProgress(EMMPM_Data::Pointer data)
+  {
+    // Check to make sure we are at the end of an em loop
+    if(data->inside_mpm_loop == 0 && nullptr != data->outputImage)
     {
-      // Check to make sure we are at the end of an em loop
-      if ( data->inside_mpm_loop == 0 && nullptr != data->outputImage)
+      char buff[256];
+      memset(buff, 0, 256);
+      // #if (_WIN32)
+      //         snprintf(buff, 256, "C:\\Data\\emmpm_out_%d.tif", data->currentEMLoop);
+      // #else
+      //         snprintf(buff, 256, "/tmp/emmpm_out_%d.tif", data->currentEMLoop);
+      // #endif
+      std::cout << "Writing Image: " << buff << std::endl;
+      TiffUtilities tifUtil;
+      int err = tifUtil.writeGrayScaleImage(buff, data->rows, data->columns, "Intermediate Image", data->outputImage);
+      if(err < 0)
       {
-        char buff[256];
-        memset(buff, 0, 256);
-// #if (_WIN32)
-//         snprintf(buff, 256, "C:\\Data\\emmpm_out_%d.tif", data->currentEMLoop);
-// #else
-//         snprintf(buff, 256, "/tmp/emmpm_out_%d.tif", data->currentEMLoop);
-// #endif
-        std::cout << "Writing Image: " << buff << std::endl;
-        TiffUtilities tifUtil;
-        int err = tifUtil.writeGrayScaleImage(buff, data->rows, data->columns, "Intermediate Image", data->outputImage);
-        if (err < 0)
-        {
-          std::cout << "Error writing intermediate tiff image." << std::endl;
-        }
+        std::cout << "Error writing intermediate tiff image." << std::endl;
+      }
 
-        std::cout << "Class\tMu\tSigma" << std::endl;
-        for (int l = 0; l < data->classes; l++)
-        {
-          //    snprintf(msgbuff, 256, "%d\t%.3f\t%.3f", l, data->m[l], data->v[l]);
-          //    EMMPM_ShowProgress(msgbuff, data->progress);
-          std::cout << l << "\t" << data->mean[l] << "\t" << data->variance[l] << "\t" << std::endl;
-        }
+      std::cout << "Class\tMu\tSigma" << std::endl;
+      for(int l = 0; l < data->classes; l++)
+      {
+        //    snprintf(msgbuff, 256, "%d\t%.3f\t%.3f", l, data->m[l], data->v[l]);
+        //    EMMPM_ShowProgress(msgbuff, data->progress);
+        std::cout << l << "\t" << data->mean[l] << "\t" << data->variance[l] << "\t" << std::endl;
+      }
 #if 0
         real_t hist[EMMPM_MAX_CLASSES][256];
         // Generate a gaussian curve for each class based off the mu and sigma for that class
@@ -128,16 +128,13 @@ class CLIStatsDelegate : public StatsDelegate
           }
         }
 #endif
-
-      }
-
     }
+  }
 
-  private:
-    CLIStatsDelegate(const CLIStatsDelegate&); // Copy Constructor Not Implemented
-    void operator=(const CLIStatsDelegate&); // Operator '=' Not Implemented
+private:
+  CLIStatsDelegate(const CLIStatsDelegate&); // Copy Constructor Not Implemented
+  void operator=(const CLIStatsDelegate&);   // Operator '=' Not Implemented
 };
-
 
 // -----------------------------------------------------------------------------
 //
@@ -147,7 +144,7 @@ int main(int argc, char* argv[])
 
 //  unsigned long long int millis = EMMPM_getMilliSeconds();
 
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if defined(EMMPM_USE_PARALLEL_ALGORITHMS)
   tbb::task_scheduler_init init;
   std::cout << "Default Number of Threads: " << init.default_num_threads() << std::endl;
 #endif
@@ -160,7 +157,7 @@ int main(int argc, char* argv[])
   EMMPMInputParser parser;
   err = parser.parseCLIArguments(argc, argv, data.get());
 
-  if (err < 0)
+  if(err < 0)
   {
     printf("Error trying to parse the arguments.\n");
     return 0;
@@ -193,16 +190,14 @@ int main(int argc, char* argv[])
   data->r_max = 1.0;
 #endif
 
-
   /* Set the Callback functions to provide feedback */
   Observer obs;
   CLIStatsDelegate::Pointer statsDelegate = CLIStatsDelegate::New();
 
-
   // Get our input image from the Image IO functions
   TiffUtilities tifUtil;
   err = tifUtil.readInputImage(data);
-  if (err < 0)
+  if(err < 0)
   {
     printf("Error Reading the input image.\n");
     return 0;
@@ -213,14 +208,14 @@ int main(int argc, char* argv[])
   // Set the initialization function based on the command line arguments
   switch(data->initType)
   {
-    case EMMPM_ManualInit:
-      initFunction = InitializationFunction::New();
-      break;
-    case EMMPM_UserInitArea:
-      initFunction = UserDefinedAreasInitialization::New();
-      break;
-    default:
-      break;
+  case EMMPM_ManualInit:
+    initFunction = InitializationFunction::New();
+    break;
+  case EMMPM_UserInitArea:
+    initFunction = UserDefinedAreasInitialization::New();
+    break;
+  default:
+    break;
   }
 
   obs.updateProgressAndMessage("EM/MPM Starting.... ", 0);
@@ -228,7 +223,7 @@ int main(int argc, char* argv[])
   // Allocate all the memory here
   data->allocateDataStructureMemory();
 
-  if (err)
+  if(err)
   {
     printf("Error allocating memory for the EMMPM Data Structure.\n   %s(%d)\n", __FILE__, __LINE__);
     return 1;
@@ -241,15 +236,13 @@ int main(int argc, char* argv[])
   emmpm->setInitializationFunction(initFunction);
   emmpm->execute();
 
-
-
   err = tifUtil.writeOutputImage(data);
-  if (err < 0)
+  if(err < 0)
   {
     return 0;
   }
 #if 0
-#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+#if defined(EMMPM_USE_PARALLEL_ALGORITHMS)
   std::cout << "Parrallel Time to Complete:";
 #else
   std::cout << "Serial Time To Complete: ";
@@ -265,16 +258,15 @@ int main(int argc, char* argv[])
 
   std::cout << "StatsFile: " << ss.str() << std::endl;
 
-
   FILE* f = fopen(ss.str().c_str(), "wb");
   fprintf(f, "InputFile:%s\n", data->input_file_name);
-  fprintf(f, "SegmentedFile:%s\n" , data->output_file_name);
+  fprintf(f, "SegmentedFile:%s\n", data->output_file_name);
   fprintf(f, "NumClasses:%d\n", data->classes);
   fprintf(f, "Class,Mu,Sigma\n");
   // Remember the Sigma is the Square Root of the variance
   for(int i = 0; i < data->classes; ++i)
   {
-    fprintf(f, "%d,%f,%f\n", i,  data->mean[i] , sqrtf(data->variance[i]) );
+    fprintf(f, "%d,%f,%f\n", i, data->mean[i], sqrtf(data->variance[i]));
   }
 
   fclose(f);
@@ -283,4 +275,3 @@ int main(int argc, char* argv[])
 
   return 1;
 }
-

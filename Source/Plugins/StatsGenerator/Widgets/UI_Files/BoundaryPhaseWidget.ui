@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>BoundaryPhaseWidget</class>
- <widget class="SGWidget" name="BoundaryPhaseWidget">
+ <widget class="StatsGenWidget" name="BoundaryPhaseWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -45,9 +45,9 @@ font-size: 150%;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SGWidget</class>
+   <class>StatsGenWidget</class>
    <extends>QWidget</extends>
-   <header>SGWidget.h</header>
+   <header>StatsGenWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -37,8 +37,8 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 
@@ -50,19 +50,17 @@
 // Include the MOC generated file for this class
 #include "moc_FindAvgCAxes.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindAvgCAxes::FindAvgCAxes() :
-  AbstractFilter(),
-  m_QuatsArrayPath("", "", ""),
-  m_FeatureIdsArrayPath("", "", ""),
-  m_AvgCAxesArrayPath("", "", ""),
-  m_FeatureIds(nullptr),
-  m_Quats(nullptr),
-  m_AvgCAxes(nullptr)
+FindAvgCAxes::FindAvgCAxes()
+: AbstractFilter()
+, m_QuatsArrayPath("", "", "")
+, m_FeatureIdsArrayPath("", "", "")
+, m_AvgCAxesArrayPath("", "", "")
+, m_FeatureIds(nullptr)
+, m_Quats(nullptr)
+, m_AvgCAxes(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -107,8 +105,8 @@ void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader, 
 {
   reader->openFilterGroup(this, index);
   setAvgCAxesArrayPath(reader->readDataArrayPath("AvgCAxesArrayPath", getAvgCAxesArrayPath()));
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -117,7 +115,6 @@ void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 void FindAvgCAxes::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -130,21 +127,36 @@ void FindAvgCAxes::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 4);
-  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getQuatsArrayPath()); }
+  m_QuatsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_QuatsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Quats = m_QuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getQuatsArrayPath());
+  }
 
   cDims[0] = 1;
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getFeatureIdsArrayPath());
+  }
 
   cDims[0] = 3;
-  m_AvgCAxesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgCAxesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AvgCAxesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AvgCAxes = m_AvgCAxesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_AvgCAxesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgCAxesArrayPath(), 0,
+                                                                                                                 cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AvgCAxesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AvgCAxes = m_AvgCAxesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -169,26 +181,29 @@ void FindAvgCAxes::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_AvgCAxesPtr.lock()->getNumberOfTuples();
 
   QuatF q1 = QuaternionMathF::New();
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-  float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float g1t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float caxis[3] = { 0.0f, 0.0f, 1.0f };
-  float c1[3] = { 0.0f, 0.0f, 0.0f };
+  float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float g1t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float caxis[3] = {0.0f, 0.0f, 1.0f};
+  float c1[3] = {0.0f, 0.0f, 0.0f};
 
   std::vector<int32_t> counter(totalFeatures, 0);
 
-  float curCAxis[3] = { 0.0f, 0.0f, 0.0f };
+  float curCAxis[3] = {0.0f, 0.0f, 0.0f};
   size_t index = 0;
   float w = 0.0f;
-  for (size_t i = 0; i < totalPoints; i++)
+  for(size_t i = 0; i < totalPoints; i++)
   {
-    if (m_FeatureIds[i] > 0)
+    if(m_FeatureIds[i] > 0)
     {
       index = 3 * m_FeatureIds[i];
       QuaternionMathF::Copy(quats[i], q1);
@@ -207,7 +222,10 @@ void FindAvgCAxes::execute()
       curCAxis[2] = m_AvgCAxes[index + 2] / counter[m_FeatureIds[i]];
       MatrixMath::Normalize3x1(curCAxis);
       w = GeometryMath::CosThetaBetweenVectors(c1, curCAxis);
-      if (w < 0) { MatrixMath::Multiply3x1withConstant(c1, -1); }
+      if(w < 0)
+      {
+        MatrixMath::Multiply3x1withConstant(c1, -1);
+      }
       counter[m_FeatureIds[i]]++;
       m_AvgCAxes[index] += c1[0];
       m_AvgCAxes[index + 1] += c1[1];
@@ -215,9 +233,9 @@ void FindAvgCAxes::execute()
     }
   }
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
-    if (counter[i] == 0)
+    if(counter[i] == 0)
     {
       m_AvgCAxes[3 * i] = 0;
       m_AvgCAxes[3 * i + 1] = 0;
@@ -270,23 +288,29 @@ const QString FindAvgCAxes::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgCAxes::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgCAxes::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
+{
+  return SIMPL::FilterSubGroups::CrystallographicFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgCAxes::getHumanLabel()
-{ return "Find Average C-Axis Orientations"; }
+{
+  return "Find Average C-Axis Orientations";
+}

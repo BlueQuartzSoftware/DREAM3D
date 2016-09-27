@@ -37,16 +37,15 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
-#include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
-#include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -54,17 +53,15 @@
 // Include the MOC generated file for this class
 #include "moc_WarpRegularGrid.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WarpRegularGrid::WarpRegularGrid() :
-  AbstractFilter(),
-  m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName),
-  m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""),
-  m_PolyOrder(0),
-  m_SaveAsNewDataContainer(false)
+WarpRegularGrid::WarpRegularGrid()
+: AbstractFilter()
+, m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
+, m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
+, m_PolyOrder(0)
+, m_SaveAsNewDataContainer(false)
 {
   m_SecondOrderACoeff.c20 = 0.0f, m_SecondOrderACoeff.c02 = 0.0f, m_SecondOrderACoeff.c11 = 0.0f;
   m_SecondOrderACoeff.c10 = 1.0f, m_SecondOrderACoeff.c01 = 1.0f, m_SecondOrderACoeff.c00 = 0.0f;
@@ -119,8 +116,12 @@ void WarpRegularGrid::setupFilterParameters()
     choices.push_back("4th");
     parameter->setChoices(choices);
     QStringList linkedProps;
-    linkedProps << "SecondOrderACoeff" << "ThirdOrderACoeff" << "FourthOrderACoeff";
-    linkedProps << "SecondOrderBCoeff" << "ThirdOrderBCoeff" << "FourthOrderBCoeff";
+    linkedProps << "SecondOrderACoeff"
+                << "ThirdOrderACoeff"
+                << "FourthOrderACoeff";
+    linkedProps << "SecondOrderBCoeff"
+                << "ThirdOrderBCoeff"
+                << "FourthOrderBCoeff";
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Parameter);
@@ -150,15 +151,15 @@ void WarpRegularGrid::setupFilterParameters()
 void WarpRegularGrid::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setNewDataContainerName( reader->readString("NewDataContainerName", getNewDataContainerName() ) );
-  setCellAttributeMatrixPath( reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
-  setSecondOrderACoeff( reader->readFloat2ndOrderPoly("SecondOrderACoeff", getSecondOrderACoeff() ) );
-  setSecondOrderBCoeff( reader->readFloat2ndOrderPoly("SecondOrderBCoeff", getSecondOrderBCoeff() ) );
-  setThirdOrderACoeff( reader->readFloat3rdOrderPoly("ThirdOrderACoeff", getThirdOrderACoeff() ) );
-  setThirdOrderBCoeff( reader->readFloat3rdOrderPoly("ThirdOrderBCoeff", getThirdOrderBCoeff() ) );
-  setFourthOrderACoeff( reader->readFloat4thOrderPoly("FourthOrderACoeff", getFourthOrderACoeff() ) );
-  setFourthOrderBCoeff( reader->readFloat4thOrderPoly("FourthOrderBCoeff", getFourthOrderBCoeff() ) );
-  setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", getSaveAsNewDataContainer()) );
+  setNewDataContainerName(reader->readString("NewDataContainerName", getNewDataContainerName()));
+  setCellAttributeMatrixPath(reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath()));
+  setSecondOrderACoeff(reader->readFloat2ndOrderPoly("SecondOrderACoeff", getSecondOrderACoeff()));
+  setSecondOrderBCoeff(reader->readFloat2ndOrderPoly("SecondOrderBCoeff", getSecondOrderBCoeff()));
+  setThirdOrderACoeff(reader->readFloat3rdOrderPoly("ThirdOrderACoeff", getThirdOrderACoeff()));
+  setThirdOrderBCoeff(reader->readFloat3rdOrderPoly("ThirdOrderBCoeff", getThirdOrderBCoeff()));
+  setFourthOrderACoeff(reader->readFloat4thOrderPoly("FourthOrderACoeff", getFourthOrderACoeff()));
+  setFourthOrderBCoeff(reader->readFloat4thOrderPoly("FourthOrderBCoeff", getFourthOrderBCoeff()));
+  setSaveAsNewDataContainer(reader->readValue("SaveAsNewDataContainer", getSaveAsNewDataContainer()));
   reader->closeFilterGroup();
 }
 
@@ -167,7 +168,6 @@ void WarpRegularGrid::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 void WarpRegularGrid::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -212,11 +212,9 @@ void WarpRegularGrid::determine_warped_coordinates(float x, float y, float& newX
   }
   if(m_PolyOrder == 1)
   {
-
   }
   if(m_PolyOrder == 2)
   {
-
   }
 }
 
@@ -227,18 +225,27 @@ void WarpRegularGrid::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m;
-  if (m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName()); }
-  else { m = getDataContainerArray()->getDataContainer(getNewDataContainerName()); }
+  if(m_SaveAsNewDataContainer == false)
+  {
+    m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
+  }
+  else
+  {
+    m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
+  }
 
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   AttributeMatrix::Pointer newCellAttrMat = cellAttrMat->deepCopy();
 
-  size_t dims[3] = { 0, 0, 0 };
+  size_t dims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
-  float res[3] = { 0.0f, 0.0f, 0.0f };
+  float res[3] = {0.0f, 0.0f, 0.0f};
   m->getGeometryAs<ImageGeom>()->getResolution(res);
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
@@ -250,13 +257,13 @@ void WarpRegularGrid::execute()
   std::vector<size_t> newindicies(totalPoints);
   std::vector<bool> goodPoint(totalPoints, true);
 
-  for (size_t i = 0; i < dims[2]; i++)
+  for(size_t i = 0; i < dims[2]; i++)
   {
     QString ss = QObject::tr("Warping Data - %1 Percent Complete").arg(((float)i / dims[2]) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    for (size_t j = 0; j < dims[1]; j++)
+    for(size_t j = 0; j < dims[1]; j++)
     {
-      for (size_t k = 0; k < dims[0]; k++)
+      for(size_t k = 0; k < dims[0]; k++)
       {
         x = static_cast<float>((k * res[0]));
         y = static_cast<float>((j * res[1]));
@@ -270,14 +277,20 @@ void WarpRegularGrid::execute()
 
         index_old = (plane * dims[0] * dims[1]) + (row * dims[0]) + col;
         newindicies[index] = index_old;
-        if (col > 0 && col < dims[0] && row > 0 && row < dims[1]) { goodPoint[index] = true; }
-        else { goodPoint[index] = false; }
+        if(col > 0 && col < dims[0] && row > 0 && row < dims[1])
+        {
+          goodPoint[index] = true;
+        }
+        else
+        {
+          goodPoint[index] = false;
+        }
       }
     }
   }
 
   QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
-  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
@@ -289,7 +302,7 @@ void WarpRegularGrid::execute()
     void* destination = nullptr;
     size_t newIndicies_I = 0;
     int nComp = data->getNumberOfComponents();
-    for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
+    for(size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
     {
       newIndicies_I = newindicies[i];
 
@@ -350,24 +363,29 @@ const QString WarpRegularGrid::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
+  vStream << Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WarpRegularGrid::getGroupName()
-{ return SIMPL::FilterGroups::SamplingFilters; }
+{
+  return SIMPL::FilterGroups::SamplingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WarpRegularGrid::getSubGroupName()
-{ return SIMPL::FilterSubGroups::WarpingFilters; }
+{
+  return SIMPL::FilterSubGroups::WarpingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WarpRegularGrid::getHumanLabel()
-{ return "Warp Rectilinear Grid"; }
-
+{
+  return "Warp Rectilinear Grid";
+}

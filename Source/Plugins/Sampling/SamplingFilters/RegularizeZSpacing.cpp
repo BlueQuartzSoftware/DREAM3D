@@ -39,9 +39,9 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -51,16 +51,14 @@
 // Include the MOC generated file for this class
 #include "moc_RegularizeZSpacing.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RegularizeZSpacing::RegularizeZSpacing() :
-  AbstractFilter(),
-  m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""),
-  m_InputFile(""),
-  m_NewZRes(1.0f)
+RegularizeZSpacing::RegularizeZSpacing()
+: AbstractFilter()
+, m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
+, m_InputFile("")
+, m_NewZRes(1.0f)
 {
   setupFilterParameters();
 }
@@ -94,9 +92,9 @@ void RegularizeZSpacing::setupFilterParameters()
 void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellAttributeMatrixPath( reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
-  setInputFile( reader->readString( "InputFile", getInputFile() ) );
-  setNewZRes( reader->readValue("NewZRes", getNewZRes()) );
+  setCellAttributeMatrixPath(reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath()));
+  setInputFile(reader->readString("InputFile", getInputFile()));
+  setNewZRes(reader->readValue("NewZRes", getNewZRes()));
   reader->closeFilterGroup();
 }
 
@@ -105,7 +103,6 @@ void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +112,7 @@ void RegularizeZSpacing::dataCheck()
 {
   setErrorCondition(0);
 
-  if (getNewZRes() <= 0)
+  if(getNewZRes() <= 0)
   {
     QString ss = QObject::tr("The new Z resolution Y (%1) must be positive").arg(getNewZRes());
     setErrorCondition(-5555);
@@ -125,7 +122,7 @@ void RegularizeZSpacing::dataCheck()
   std::ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
 
-  if (!inFile.good())
+  if(!inFile.good())
   {
     QString ss = QObject::tr("Unable to open input file with name '%1'").arg(getInputFile());
     setErrorCondition(-5556);
@@ -135,17 +132,23 @@ void RegularizeZSpacing::dataCheck()
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   float zval = 0.0f;
-  for (size_t iter = 0; iter < image->getZPoints() + 1; iter++)
+  for(size_t iter = 0; iter < image->getZPoints() + 1; iter++)
   {
     inFile >> zval;
   }
   size_t zP = static_cast<size_t>(zval / getNewZRes());
-  if(zP == 0) { zP = 1; }
+  if(zP == 0)
+  {
+    zP = 1;
+  }
 
-  if (getInPreflight())
+  if(getInPreflight())
   {
     image->setDimensions(image->getXPoints(), image->getYPoints(), zP);
     QVector<size_t> tDims(3, 0);
@@ -178,7 +181,10 @@ void RegularizeZSpacing::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
@@ -190,7 +196,7 @@ void RegularizeZSpacing::execute()
 
   float zval = 0.0f;
   std::vector<float> zboundvalues(dims[2] + 1, 0.0);
-  for (size_t iter = 0; iter < dims[2] + 1; iter++)
+  for(size_t iter = 0; iter < dims[2] + 1; iter++)
   {
     inFile >> zval;
     zboundvalues[iter] = zval;
@@ -204,22 +210,28 @@ void RegularizeZSpacing::execute()
   size_t m_XP = dims[0];
   size_t m_YP = dims[1];
   size_t m_ZP = static_cast<size_t>(sizez / m_NewZRes);
-  if (m_ZP == 0) { m_ZP = 1; }
+  if(m_ZP == 0)
+  {
+    m_ZP = 1;
+  }
   size_t totalPoints = m_XP * m_YP * m_ZP;
 
   size_t index = 0, oldindex = 0;
   size_t plane = 0;
   std::vector<size_t> newindicies(totalPoints, 0);
-  for (size_t i = 0; i < m_ZP; i++)
+  for(size_t i = 0; i < m_ZP; i++)
   {
     plane = 0;
-    for (size_t iter = 1; iter < dims[2]; iter++)
+    for(size_t iter = 1; iter < dims[2]; iter++)
     {
-      if ((i * m_NewZRes) > zboundvalues[iter]) { plane = iter; }
+      if((i * m_NewZRes) > zboundvalues[iter])
+      {
+        plane = iter;
+      }
     }
-    for (size_t j = 0; j < m_YP; j++)
+    for(size_t j = 0; j < m_YP; j++)
     {
-      for (size_t k = 0; k < m_XP; k++)
+      for(size_t k = 0; k < m_XP; k++)
       {
         oldindex = (plane * dims[0] * dims[1]) + (j * dims[0]) + k;
         index = (i * dims[0] * dims[1]) + (j * dims[0]) + k;
@@ -236,7 +248,7 @@ void RegularizeZSpacing::execute()
   AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, cellAttrMat->getName(), cellAttrMat->getType());
 
   QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
-  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
@@ -248,7 +260,7 @@ void RegularizeZSpacing::execute()
     void* destination = nullptr;
     size_t newIndicies_I = 0;
     int nComp = data->getNumberOfComponents();
-    for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
+    for(size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
     {
       newIndicies_I = newindicies[i];
 
@@ -303,23 +315,29 @@ const QString RegularizeZSpacing::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
+  vStream << Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getGroupName()
-{ return SIMPL::FilterGroups::SamplingFilters; }
+{
+  return SIMPL::FilterGroups::SamplingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ResolutionFilters; }
+{
+  return SIMPL::FilterSubGroups::ResolutionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getHumanLabel()
-{ return "Regularize Z Spacing"; }
+{
+  return "Regularize Z Spacing";
+}

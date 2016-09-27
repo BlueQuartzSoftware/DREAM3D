@@ -39,36 +39,34 @@
 #include <limits>
 
 #include <QtCore/QSettings>
+#include <QtGui/QDoubleValidator>
+#include <QtGui/QIntValidator>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
-#include <QtWidgets/QLineEdit>
-#include <QtGui/QIntValidator>
-#include <QtGui/QDoubleValidator>
-
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
-#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/StatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
-#include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
+#include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
-
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_PrimaryPhaseWidget.cpp"
@@ -76,8 +74,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent) :
-  SGWidget(parent)
+PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent)
+: StatsGenWidget(parent)
 {
   setTabTitle("Primary");
   setupUi(this);
@@ -105,10 +103,10 @@ QComboBox* PrimaryPhaseWidget::getMicrostructurePresetCombo()
 void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int index)
 {
   Q_UNUSED(index);
-  //qDebug() << "on_microstructurePresetCombo_currentIndexChanged" << "\n";
+  // qDebug() << "on_microstructurePresetCombo_currentIndexChanged" << "\n";
   QString presetName = microstructurePresetCombo->currentText();
 
-  //Factory Method to get an instantiated object of the correct type?
+  // Factory Method to get an instantiated object of the correct type?
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
   getMicroPreset() = manager->createNewPreset(presetName);
   getMicroPreset()->displayUserInputDialog();
@@ -173,7 +171,7 @@ void PrimaryPhaseWidget::setODFWidgetWidget(StatsGenODFWidget* w)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenODFWidget *PrimaryPhaseWidget::getODFWidgetWidget()
+StatsGenODFWidget* PrimaryPhaseWidget::getODFWidgetWidget()
 {
   return m_ODFWidget;
 }
@@ -181,7 +179,7 @@ StatsGenODFWidget *PrimaryPhaseWidget::getODFWidgetWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setAxisODFWidget(SGAxisODFWidget* w)
+void PrimaryPhaseWidget::setAxisODFWidget(StatsGenAxisODFWidget* w)
 {
   m_AxisODFWidget = w;
 }
@@ -189,7 +187,7 @@ void PrimaryPhaseWidget::setAxisODFWidget(SGAxisODFWidget* w)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGAxisODFWidget* PrimaryPhaseWidget::getAxisODFWidget()
+StatsGenAxisODFWidget* PrimaryPhaseWidget::getAxisODFWidget()
 {
   return m_AxisODFWidget;
 }
@@ -257,7 +255,7 @@ void PrimaryPhaseWidget::setupGui()
   // Register all of our Microstructure Preset Factories
   AbstractMicrostructurePresetFactory::Pointer presetFactory = AbstractMicrostructurePresetFactory::NullPointer();
 
-  //Register the Equiaxed Preset
+  // Register the Equiaxed Preset
   presetFactory = RegisterPresetFactory<PrimaryEquiaxedPresetFactory>(getMicrostructurePresetCombo());
   QString presetName = (presetFactory->displayName());
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
@@ -293,12 +291,9 @@ void PrimaryPhaseWidget::setupGui()
   w->setMinCutOff(minCutOff);
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
-  connect(w, SIGNAL(dataChanged()),
-          this, SLOT(dataWasEdited()));
-  connect(w, SIGNAL(dataChanged()),
-          this, SIGNAL(dataChanged()));
-  connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)),
-          w, SLOT(highlightCurve(int)));
+  connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
+  connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
   plotWidgets.push_back(m_BOverAPlot);
   w = m_BOverAPlot;
@@ -315,12 +310,9 @@ void PrimaryPhaseWidget::setupGui()
   w->setMinCutOff(minCutOff);
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
-  connect(w, SIGNAL(dataChanged()),
-          this, SLOT(dataWasEdited()));
-  connect(w, SIGNAL(dataChanged()),
-          this, SIGNAL(dataChanged()));
-  connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)),
-          w, SLOT(highlightCurve(int)));
+  connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
+  connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
   plotWidgets.push_back(m_COverAPlot);
   w = m_COverAPlot;
@@ -337,12 +329,9 @@ void PrimaryPhaseWidget::setupGui()
   w->setMinCutOff(minCutOff);
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
-  connect(w, SIGNAL(dataChanged()),
-          this, SLOT(dataWasEdited()));
-  connect(w, SIGNAL(dataChanged()),
-          this, SIGNAL(dataChanged()));
-  connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)),
-          w, SLOT(highlightCurve(int)));
+  connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
+  connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
   plotWidgets.push_back(m_NeighborPlot);
   w = m_NeighborPlot;
@@ -359,13 +348,9 @@ void PrimaryPhaseWidget::setupGui()
   w->setMinCutOff(minCutOff);
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
-  connect(w, SIGNAL(dataChanged()),
-          this, SLOT(dataWasEdited()));
-  connect(w, SIGNAL(dataChanged()),
-          this, SIGNAL(dataChanged()));
-  connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)),
-          w, SLOT(highlightCurve(int)));
-
+  connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
+  connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
   setSGPlotWidgets(plotWidgets);
 
@@ -378,19 +363,13 @@ void PrimaryPhaseWidget::setupGui()
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
   m_AxisODFWidget->setEnableAxisDecorations(false);
 
-  connect(m_ODFWidget, SIGNAL(dataChanged()),
-          this, SIGNAL(dataChanged()));
-  connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)),
-          this, SLOT(bulkLoadEvent(bool)));
-  connect(m_AxisODFWidget, SIGNAL(dataChanged()),
-          this, SIGNAL(dataChanged()));
+  connect(m_ODFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
+  connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)), this, SLOT(bulkLoadEvent(bool)));
+  connect(m_AxisODFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 
-  connect(m_FeatureSizeDistWidget, SIGNAL(dataChanged()),
-          this, SIGNAL(dataChanged()));
+  connect(m_FeatureSizeDistWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 
-  connect(m_FeatureSizeDistWidget, SIGNAL(userEnteredValidData(bool)),
-          m_GenerateDefaultData, SLOT(setEnabled(bool)));
-
+  connect(m_FeatureSizeDistWidget, SIGNAL(userEnteredValidData(bool)), m_GenerateDefaultData, SLOT(setEnabled(bool)));
 }
 
 // -----------------------------------------------------------------------------
@@ -398,11 +377,14 @@ void PrimaryPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setPhaseIndex(int index)
 {
-  SGWidget::setPhaseIndex(index);
+  StatsGenWidget::setPhaseIndex(index);
   m_Omega3Plot->setPhaseIndex(index);
   m_BOverAPlot->setPhaseIndex(index);
   m_COverAPlot->setPhaseIndex(index);
-  if(m_NeighborPlot) { m_NeighborPlot->setPhaseIndex(index); }
+  if(m_NeighborPlot)
+  {
+    m_NeighborPlot->setPhaseIndex(index);
+  }
   m_ODFWidget->setPhaseIndex(index);
   m_AxisODFWidget->setPhaseIndex(index);
   m_FeatureSizeDistWidget->setPhaseIndex(index);
@@ -413,11 +395,14 @@ void PrimaryPhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setCrystalStructure(unsigned int xtal)
 {
-  SGWidget::setCrystalStructure(xtal);
+  StatsGenWidget::setCrystalStructure(xtal);
   m_Omega3Plot->setCrystalStructure(xtal);
   m_BOverAPlot->setCrystalStructure(xtal);
   m_COverAPlot->setCrystalStructure(xtal);
-  if(m_NeighborPlot) { m_NeighborPlot->setCrystalStructure(xtal);}
+  if(m_NeighborPlot)
+  {
+    m_NeighborPlot->setCrystalStructure(xtal);
+  }
   m_ODFWidget->setCrystalStructure(xtal);
   m_FeatureSizeDistWidget->setCrystalStructure(xtal);
   /* Note that we do NOT want to set the crystal structure for the AxisODF widget
@@ -432,11 +417,11 @@ QString PrimaryPhaseWidget::getComboString()
 {
   QString s = QString::number(getPhaseIndex());
   s.append(" - ");
-  if ( Ebsd::CrystalStructure::Cubic_High == getCrystalStructure())
+  if(Ebsd::CrystalStructure::Cubic_High == getCrystalStructure())
   {
     s.append("Cubic");
   }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == getCrystalStructure())
+  else if(Ebsd::CrystalStructure::Hexagonal_High == getCrystalStructure())
   {
     s.append("Hexagonal");
   }
@@ -449,7 +434,7 @@ QString PrimaryPhaseWidget::getComboString()
 void PrimaryPhaseWidget::setTabsPlotTabsEnabled(bool b)
 {
   qint32 count = this->tabWidget->count();
-  for (qint32 i = 1; i < count; ++i)
+  for(qint32 i = 1; i < count; ++i)
   {
     this->tabWidget->setTabEnabled(i, b);
   }
@@ -469,7 +454,7 @@ void PrimaryPhaseWidget::dataWasEdited()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList)
+  foreach(QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -480,7 +465,7 @@ void PrimaryPhaseWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::updatePlots()
 {
-  if (getDataHasBeenGenerated() == true)
+  if(getDataHasBeenGenerated() == true)
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
     progress.setWindowModality(Qt::WindowModal);
@@ -509,7 +494,8 @@ void PrimaryPhaseWidget::updatePlots()
 
     m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
     getMicroPreset()->initializeCOverATableModel(m_COverAPlot, binSizes);
-    if(m_NeighborPlot) {
+    if(m_NeighborPlot)
+    {
       m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
       getMicroPreset()->initializeNeighborTableModel(m_NeighborPlot, binSizes);
     }
@@ -564,11 +550,9 @@ void PrimaryPhaseWidget::bulkLoadEvent(bool fail)
 // -----------------------------------------------------------------------------
 int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
-  if (getPhaseIndex() < 1)
+  if(getPhaseIndex() < 1)
   {
-    QMessageBox::critical(this, tr("StatsGenerator"),
-                          tr("The Phase Index is Less than 1. This is not allowed."),
-                          QMessageBox::Default);
+    QMessageBox::critical(this, tr("StatsGenerator"), tr("The Phase Index is Less than 1. This is not allowed."), QMessageBox::Default);
     return -1;
   }
   int retErr = 0;
@@ -576,9 +560,9 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
   StringDataArray::Pointer strArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
@@ -588,7 +572,7 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
   strArray->setValue(getPhaseIndex(), getPhaseName());
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
-  if (nullptr != statsDataArray)
+  if(nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
     PrimaryStatsData* primaryStatsData = PrimaryStatsData::SafePointerDownCast(statsData.get());
@@ -616,7 +600,8 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
       primaryStatsData->setFeatureSize_COverA(data);
       primaryStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
-    if(m_NeighborPlot) {
+    if(m_NeighborPlot)
+    {
       VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
       primaryStatsData->setFeatureSize_Neighbors(data);
       primaryStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
@@ -638,16 +623,16 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   setCrystalStructure(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   setPhaseType(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
-  if (statsDataArray == nullptr)
+  if(statsDataArray == nullptr)
   {
     return;
   }
@@ -707,7 +692,7 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
 #endif
 
   // Now have each of the plots set it's own data
-  QVector<float> qbins (bins->getNumberOfTuples());
+  QVector<float> qbins(bins->getNumberOfTuples());
   for(int i = 0; i < qbins.size(); ++i)
   {
     qbins[i] = bins->getValue(i);
@@ -733,7 +718,8 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   m_COverAPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  if(m_NeighborPlot) {
+  if(m_NeighborPlot)
+  {
     m_NeighborPlot->setDistributionType(primaryStatsData->getNeighbors_DistType(), false);
     m_NeighborPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_Neighbors());
     m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);

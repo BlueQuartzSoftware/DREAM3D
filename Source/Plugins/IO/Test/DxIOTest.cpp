@@ -34,21 +34,21 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDateTime>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QDateTime>
 
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Common/FilterPipeline.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "IOTestFileLocations.h"
 
@@ -56,7 +56,7 @@
 
 class DxIOTest
 {
-    public:
+public:
   DxIOTest()
   {
   }
@@ -157,7 +157,8 @@ class DxIOTest
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
         pipeline->pushBack(dxWriter);
-      } else
+      }
+      else
       {
         QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
         DREAM3D_REQUIRE_EQUAL(0, 1)
@@ -207,7 +208,8 @@ class DxIOTest
         propWasSet = dxWriter->setProperty("OutputFile", UnitTest::DxIOTest::TestFile2);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         pipeline->pushBack(dxWriter);
-      } else
+      }
+      else
       {
         QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
         DREAM3D_REQUIRE_EQUAL(0, 1)
@@ -247,7 +249,8 @@ class DxIOTest
       int err = dxReader->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, 0);
       // pipeline->pushBack(DxReader);
-    } else
+    }
+    else
     {
       QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
       qDebug() << ss;
@@ -258,7 +261,6 @@ class DxIOTest
     size_t ny = 0;
     size_t nz = 0;
 
-
     DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
 
@@ -267,7 +269,8 @@ class DxIOTest
     DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
     DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
 
-    IDataArray::Pointer mdata = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(SIMPL::CellData::FeatureIds);
+    IDataArray::Pointer mdata =
+        dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(SIMPL::CellData::FeatureIds);
 
     int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
     int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
@@ -282,8 +285,7 @@ class DxIOTest
     return 1;
   }
 
-  template <typename T>
-  void test(T x, T y, T z, const QString& type)
+  template <typename T> void test(T x, T y, T z, const QString& type)
   {
     T totalPoints = x * y * z;
     qDebug() << "sizeof(" << type << "): " << sizeof(T) << " totalPoints: " << totalPoints;
@@ -322,7 +324,8 @@ class DxIOTest
         dxReader->preflight();
         int err = dxReader->getErrorCondition();
         DREAM3D_REQUIRE_EQUAL(err, 0);
-      } else
+      }
+      else
       {
         QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
         qDebug() << ss;
@@ -332,7 +335,6 @@ class DxIOTest
       size_t nx = 0;
       size_t ny = 0;
       size_t nz = 0;
-
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
       DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
@@ -359,7 +361,8 @@ class DxIOTest
         dxReader->preflight();
         int err = dxReader->getErrorCondition();
         DREAM3D_REQUIRE_EQUAL(err, 0);
-      } else
+      }
+      else
       {
         QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
         qDebug() << ss;
@@ -369,7 +372,6 @@ class DxIOTest
       size_t nx = 0;
       size_t ny = 0;
       size_t nz = 0;
-
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
       DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
@@ -396,7 +398,8 @@ class DxIOTest
         dxReader->preflight();
         int err = dxReader->getErrorCondition();
         DREAM3D_REQUIRE_EQUAL(err, 0);
-      } else
+      }
+      else
       {
         QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
         qDebug() << ss;
@@ -406,7 +409,6 @@ class DxIOTest
       size_t nx = 0;
       size_t ny = 0;
       size_t nz = 0;
-
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
       DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
@@ -444,7 +446,8 @@ class DxIOTest
         dxReader->preflight();
         int err = dxReader->getErrorCondition();
         DREAM3D_REQUIRE_EQUAL(err, 0);
-      } else
+      }
+      else
       {
         QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
         qDebug() << ss;
@@ -454,7 +457,6 @@ class DxIOTest
       size_t nx = 0;
       size_t ny = 0;
       size_t nz = 0;
-
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
       DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
@@ -485,7 +487,8 @@ class DxIOTest
         dxReader->preflight();
         int err = dxReader->getErrorCondition();
         DREAM3D_REQUIRE_EQUAL(err, 0);
-      } else
+      }
+      else
       {
         QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
         qDebug() << ss;
@@ -495,7 +498,6 @@ class DxIOTest
       size_t nx = 0;
       size_t ny = 0;
       size_t nz = 0;
-
 
       DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
       DREAM3D_REQUIRED_PTR(m.get(), !=, nullptr)
@@ -528,7 +530,7 @@ class DxIOTest
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-    private:
+private:
   DxIOTest(const DxIOTest&);       // Copy Constructor Not Implemented
   void operator=(const DxIOTest&); // Operator '=' Not Implemented
 };

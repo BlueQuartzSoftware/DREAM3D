@@ -40,21 +40,22 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataFilterParameter::ImportASCIIDataFilterParameter() :
-FilterParameter()
-{}
+ImportASCIIDataFilterParameter::ImportASCIIDataFilterParameter()
+: FilterParameter()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ImportASCIIDataFilterParameter::~ImportASCIIDataFilterParameter()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataFilterParameter::Pointer ImportASCIIDataFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, int groupIndex)
+ImportASCIIDataFilterParameter::Pointer ImportASCIIDataFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, int groupIndex)
 {
   ImportASCIIDataFilterParameter::Pointer ptr = ImportASCIIDataFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -66,7 +67,6 @@ ImportASCIIDataFilterParameter::Pointer ImportASCIIDataFilterParameter::New(cons
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -74,4 +74,3 @@ QString ImportASCIIDataFilterParameter::getWidgetType()
 {
   return QString("ImportASCIIDataWidget");
 }
-

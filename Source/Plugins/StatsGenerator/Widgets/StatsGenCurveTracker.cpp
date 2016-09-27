@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "SGCurveTracker.h"
-
+#include "StatsGenCurveTracker.h"
 
 #include <qwt_picker_machine.h>
 #include <qwt_plot.h>
@@ -48,7 +47,7 @@ struct compareX
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGCurveTracker::SGCurveTracker(QWidget* canvas)
+StatsGenCurveTracker::StatsGenCurveTracker(QWidget* canvas)
 : QwtPlotPicker(canvas)
 {
   setTrackerMode(QwtPlotPicker::ActiveOnly);
@@ -60,7 +59,7 @@ SGCurveTracker::SGCurveTracker(QWidget* canvas)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QRect SGCurveTracker::trackerRect(const QFont& font) const
+QRect StatsGenCurveTracker::trackerRect(const QFont& font) const
 {
   QRect r = QwtPlotPicker::trackerRect(font);
 
@@ -89,7 +88,7 @@ QRect SGCurveTracker::trackerRect(const QFont& font) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QwtText SGCurveTracker::trackerTextF(const QPointF& pos) const
+QwtText StatsGenCurveTracker::trackerTextF(const QPointF& pos) const
 {
   QwtText trackerText;
 
@@ -124,7 +123,7 @@ QwtText SGCurveTracker::trackerTextF(const QPointF& pos) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SGCurveTracker::curveInfoAt(const QwtPlotCurve* curve, const QPointF& pos) const
+QString StatsGenCurveTracker::curveInfoAt(const QwtPlotCurve* curve, const QPointF& pos) const
 {
   const QLineF line = curveLineAt(curve, pos.x());
   if(line.isNull())
@@ -141,7 +140,7 @@ QString SGCurveTracker::curveInfoAt(const QwtPlotCurve* curve, const QPointF& po
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QLineF SGCurveTracker::curveLineAt(const QwtPlotCurve* curve, double x) const
+QLineF StatsGenCurveTracker::curveLineAt(const QwtPlotCurve* curve, double x) const
 {
   QLineF line;
 

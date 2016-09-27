@@ -35,37 +35,34 @@
 
 #include "AvizoUniformCoordinateWriter.h"
 
-
-#include <QtCore/QFileInfo>
+#include <QtCore/QDateTime>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QDateTime>
+#include <QtCore/QFileInfo>
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 // Include the MOC generated file for this class
 #include "moc_AvizoUniformCoordinateWriter.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
-  AbstractFilter(),
-  m_OutputFile(""),
-  m_WriteBinaryFile(false),
-  m_WriteFeatureIds(true),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_FeatureIds(nullptr)
+AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter()
+: AbstractFilter()
+, m_OutputFile("")
+, m_WriteBinaryFile(false)
+, m_WriteFeatureIds(true)
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -98,9 +95,9 @@ void AvizoUniformCoordinateWriter::setupFilterParameters()
 void AvizoUniformCoordinateWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
-  setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setOutputFile(reader->readString("OutputFile", getOutputFile()));
+  setWriteBinaryFile(reader->readValue("WriteBinaryFile", getWriteBinaryFile()));
   reader->closeFilterGroup();
 }
 
@@ -109,7 +106,6 @@ void AvizoUniformCoordinateWriter::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -120,10 +116,16 @@ void AvizoUniformCoordinateWriter::dataCheck()
   setErrorCondition(0);
 
   DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0 || nullptr == dc.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == dc.get())
+  {
+    return;
+  }
 
   ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || nullptr == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get())
+  {
+    return;
+  }
 
   if(m_OutputFile.isEmpty() == true)
   {
@@ -134,9 +136,12 @@ void AvizoUniformCoordinateWriter::dataCheck()
   if(m_WriteFeatureIds == true)
   {
     QVector<size_t> dims(1, 1);
-    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                          dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_FeatureIdsPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -161,7 +166,10 @@ void AvizoUniformCoordinateWriter::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -177,7 +185,7 @@ void AvizoUniformCoordinateWriter::execute()
   }
 
   QFile writer(getOutputFile());
-  if (!writer.open(QIODevice::WriteOnly | QIODevice::Text))
+  if(!writer.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Avizo Output file could not be opened: %1").arg(getOutputFile());
     setErrorCondition(-100);
@@ -242,7 +250,6 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "Lattice { int FeatureIds } = @1\n\n";
 
   ss << "# Data section follows\n";
-
 }
 
 // -----------------------------------------------------------------------------
@@ -261,7 +268,7 @@ int AvizoUniformCoordinateWriter::writeData(QDataStream& out)
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
     int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
     int count = 0;
-    for (int64_t i = 0; i < totalPoints; ++i)
+    for(int64_t i = 0; i < totalPoints; ++i)
     {
       out << m_FeatureIds[i];
       if(count < 20)
@@ -317,7 +324,7 @@ const QString AvizoUniformCoordinateWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 
@@ -325,19 +332,22 @@ const QString AvizoUniformCoordinateWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AvizoUniformCoordinateWriter::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
-
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AvizoUniformCoordinateWriter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
-
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AvizoUniformCoordinateWriter::getHumanLabel()
-{ return "Avizo Uniform Coordinate Writer"; }
-
+{
+  return "Avizo Uniform Coordinate Writer";
+}

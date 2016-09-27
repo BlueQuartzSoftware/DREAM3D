@@ -38,12 +38,12 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -51,29 +51,26 @@
 // Include the MOC generated file for this class
 #include "moc_CalculateArrayHistogram.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateArrayHistogram::CalculateArrayHistogram() :
-  AbstractFilter(),
-  m_SelectedArrayPath("", "", ""),
-  m_NumberOfBins(-1),
-  m_MinRange(0.0f),
-  m_MaxRange(1.0f),
-  m_UserDefinedRange(false),
-  m_Normalize(false),
-  m_NewAttributeMatrixName(SIMPL::Defaults::NewAttributeMatrixName),
-  m_NewDataArrayName(SIMPL::CellData::Histogram),
-  m_NewDataContainer(false),
-  m_NewDataContainerName(SIMPL::Defaults::NewDataContainerName),
-  m_InDataArray(nullptr),
-  m_NewDataArray(nullptr)
+CalculateArrayHistogram::CalculateArrayHistogram()
+: AbstractFilter()
+, m_SelectedArrayPath("", "", "")
+, m_NumberOfBins(-1)
+, m_MinRange(0.0f)
+, m_MaxRange(1.0f)
+, m_UserDefinedRange(false)
+, m_Normalize(false)
+, m_NewAttributeMatrixName(SIMPL::Defaults::NewAttributeMatrixName)
+, m_NewDataArrayName(SIMPL::CellData::Histogram)
+, m_NewDataContainer(false)
+, m_NewDataContainerName(SIMPL::Defaults::NewDataContainerName)
+, m_InDataArray(nullptr)
+, m_NewDataArray(nullptr)
 {
   setupFilterParameters();
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -90,7 +87,8 @@ void CalculateArrayHistogram::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins", NumberOfBins, FilterParameter::Parameter, CalculateArrayHistogram));
   QStringList linkedProps;
-  linkedProps << "MinRange" << "MaxRange";
+  linkedProps << "MinRange"
+              << "MaxRange";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Min & Max Range", UserDefinedRange, FilterParameter::Parameter, CalculateArrayHistogram, linkedProps));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min Value", MinRange, FilterParameter::Parameter, CalculateArrayHistogram));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Value", MaxRange, FilterParameter::Parameter, CalculateArrayHistogram));
@@ -126,7 +124,7 @@ void CalculateArrayHistogram::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateArrayHistogram::readFilterParameters(QJsonObject &obj)
+void CalculateArrayHistogram::readFilterParameters(QJsonObject& obj)
 {
   AbstractFilter::readFilterParameters(obj);
   setNormalize(static_cast<bool>(obj["Normalize"].toInt()));
@@ -137,7 +135,7 @@ void CalculateArrayHistogram::readFilterParameters(QJsonObject &obj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateArrayHistogram::writeFilterParameters(QJsonObject &obj)
+void CalculateArrayHistogram::writeFilterParameters(QJsonObject& obj)
 {
   AbstractFilter::writeFilterParameters(obj);
   obj["Normalize"] = static_cast<int>(getNormalize());
@@ -148,7 +146,6 @@ void CalculateArrayHistogram::writeFilterParameters(QJsonObject &obj)
 // -----------------------------------------------------------------------------
 void CalculateArrayHistogram::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -159,7 +156,7 @@ void CalculateArrayHistogram::dataCheck()
   setErrorCondition(0);
   DataArrayPath tempPath;
 
-  if (m_NumberOfBins <= 0)
+  if(m_NumberOfBins <= 0)
   {
     setErrorCondition(-11011);
     QString ss = QObject::tr("The number of bins (%1) must be positive").arg(m_NumberOfBins);
@@ -171,7 +168,7 @@ void CalculateArrayHistogram::dataCheck()
   QVector<size_t> cDims(1, 2);
 
   QString newArrayName;
-  if (m_Normalize == true)
+  if(m_Normalize == true)
   {
     newArrayName = getNewDataArrayName() + QString("_Normalized");
   }
@@ -181,8 +178,11 @@ void CalculateArrayHistogram::dataCheck()
   }
 
   m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
-  if (getErrorCondition() < 0) { return; }
-  if (nullptr != m_InDataArrayPtr.lock().get())
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+  if(nullptr != m_InDataArrayPtr.lock().get())
   {
     int32_t cDims = m_InDataArrayPtr.lock()->getNumberOfComponents();
     if(cDims != 1)
@@ -194,26 +194,38 @@ void CalculateArrayHistogram::dataCheck()
     }
   }
 
-  if (m_NewDataContainer) // create a new data container
+  if(m_NewDataContainer) // create a new data container
   {
     DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
-    if (getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
     AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
-    if (getErrorCondition() < 0 || nullptr == attrMat.get()) { return; }
+    if(getErrorCondition() < 0 || nullptr == attrMat.get())
+    {
+      return;
+    }
     tempPath.update(getNewDataContainerName(), getNewAttributeMatrixName(), newArrayName);
   }
   else // use existing data container
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
     AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
-    if (getErrorCondition() < 0 || nullptr == attrMat.get())  { return; }
+    if(getErrorCondition() < 0 || nullptr == attrMat.get())
+    {
+      return;
+    }
     tempPath.update(dc->getName(), getNewAttributeMatrixName(), newArrayName);
   }
 
   // histogram array
-  m_NewDataArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_NewDataArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NewDataArray = m_NewDataArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_NewDataArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(
+      this, tempPath, 0, cDims);                /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NewDataArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_NewDataArray = m_NewDataArrayPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -232,10 +244,9 @@ void CalculateArrayHistogram::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool userRange, double minRange, double maxRange, DoubleArrayType::Pointer newDataArray)
+template <typename T> void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool userRange, double minRange, double maxRange, DoubleArrayType::Pointer newDataArray)
 {
-  typename DataArray<T>::Pointer inputDataPtr = std::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
+  typename DataArray<T>::Pointer inputDataPtr = std::dynamic_pointer_cast<DataArray<T>>(inDataPtr);
 
   newDataArray->initializeWithZeros(); // we must initialize the histogram array to prepare for incrementing the array elements
   double* newDataArrayPtr = newDataArray->getPointer(0);
@@ -245,32 +256,38 @@ void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool use
   int32_t bin = 0;
   float min = std::numeric_limits<float>::max();
   float max = -1.0 * std::numeric_limits<float>::max();
-  if (userRange)
+  if(userRange)
   {
     min = minRange;
     max = maxRange;
   }
   else
   {
-    for (size_t i = 0; i < numPoints; i++) // min and max in the input array
+    for(size_t i = 0; i < numPoints; i++) // min and max in the input array
     {
-      if (static_cast<float>(inputArrayPtr[i]) > max) { max = static_cast<float>(inputArrayPtr[i]); }
-      if (static_cast<float>(inputArrayPtr[i]) < min) { min = static_cast<float>(inputArrayPtr[i]); }
+      if(static_cast<float>(inputArrayPtr[i]) > max)
+      {
+        max = static_cast<float>(inputArrayPtr[i]);
+      }
+      if(static_cast<float>(inputArrayPtr[i]) < min)
+      {
+        min = static_cast<float>(inputArrayPtr[i]);
+      }
     }
   }
 
   float increment = (max - min) / (numberOfBins);
-  if (numberOfBins == 1) // if one bin, just set the first element to total number of points
+  if(numberOfBins == 1) // if one bin, just set the first element to total number of points
   {
     newDataArrayPtr[0] = max;
     newDataArrayPtr[1] = numPoints;
   }
   else
   {
-    for (size_t i = 0; i < numPoints; i++) // sort into bins to create the histogram
+    for(size_t i = 0; i < numPoints; i++) // sort into bins to create the histogram
     {
       bin = size_t((inputArrayPtr[i] - min) / increment); // find bin for this input array value
-      if ((bin >= 0) && (bin < numberOfBins)) // make certain bin is in range
+      if((bin >= 0) && (bin < numberOfBins))              // make certain bin is in range
       {
         newDataArrayPtr[bin * 2 + 1]++; // increment histogram element corresponding to this input array value
       }
@@ -298,7 +315,10 @@ void CalculateArrayHistogram::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   EXECUTE_FUNCTION_TEMPLATE(this, findHistogram, m_InDataArrayPtr.lock(), m_InDataArrayPtr.lock(), m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock())
 
@@ -341,23 +361,29 @@ const QString CalculateArrayHistogram::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CalculateArrayHistogram::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CalculateArrayHistogram::getSubGroupName()
-{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
+{
+  return SIMPL::FilterSubGroups::EnsembleStatsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CalculateArrayHistogram::getHumanLabel()
-{ return "Calculate Frequency Histogram"; }
+{
+  return "Calculate Frequency Histogram";
+}

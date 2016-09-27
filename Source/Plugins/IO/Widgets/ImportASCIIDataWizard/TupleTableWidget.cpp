@@ -44,8 +44,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TupleTableWidget::TupleTableWidget(QWidget* parent) :
-  QWidget(parent)
+TupleTableWidget::TupleTableWidget(QWidget* parent)
+: QWidget(parent)
 {
   setupUi(this);
 
@@ -56,7 +56,8 @@ TupleTableWidget::TupleTableWidget(QWidget* parent) :
 //
 // -----------------------------------------------------------------------------
 TupleTableWidget::~TupleTableWidget()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -84,10 +85,10 @@ QVector<size_t> TupleTableWidget::getData()
   int cCount = tupleTable->columnCount();
   QVector<size_t> data(cCount, 0);
 
-  for (int col = 0; col < cCount; col++)
+  for(int col = 0; col < cCount; col++)
   {
     QTableWidgetItem* item = tupleTable->item(0, col);
-    if (nullptr == item)
+    if(nullptr == item)
     {
       return QVector<size_t>();
     }
@@ -102,7 +103,7 @@ QVector<size_t> TupleTableWidget::getData()
 // -----------------------------------------------------------------------------
 void TupleTableWidget::addTupleDimensions(QVector<size_t> tupleDims)
 {
-  for (int i = 0; i < tupleDims.size(); i++)
+  for(int i = 0; i < tupleDims.size(); i++)
   {
     addColumn(tupleDims[i]);
   }
@@ -117,7 +118,7 @@ void TupleTableWidget::clearTupleDimensions()
   while(tupleTable->columnCount() > 0)
   {
     tupleTable->removeColumn(0);
-    if (tupleTable->columnCount() == 0)
+    if(tupleTable->columnCount() == 0)
     {
       tupleTable->removeRow(0);
     }
@@ -132,7 +133,7 @@ void TupleTableWidget::addColumn(int value)
   int col = tupleTable->columnCount();
 
   // If we are adding the first column, add the first row too.
-  if (col <= 0)
+  if(col <= 0)
   {
     tupleTable->insertRow(0);
   }
@@ -160,12 +161,12 @@ void TupleTableWidget::on_deleteTupleBtn_pressed()
 {
   int currentColumn = tupleTable->currentColumn();
 
-  if (currentColumn >= 0)
+  if(currentColumn >= 0)
   {
     tupleTable->removeColumn(tupleTable->currentColumn());
   }
 
-  if (tupleTable->columnCount() == 0)
+  if(tupleTable->columnCount() == 0)
   {
     tupleTable->removeRow(0);
   }
@@ -180,6 +181,3 @@ void TupleTableWidget::on_tupleTable_itemChanged(QTableWidgetItem* item)
 {
   emit tupleDimsChanged(getData());
 }
-
-
-

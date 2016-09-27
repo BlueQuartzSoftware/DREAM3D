@@ -40,11 +40,11 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -52,18 +52,16 @@
 // Include the MOC generated file for this class
 #include "moc_FeatureDataCSVWriter.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FeatureDataCSVWriter::FeatureDataCSVWriter() :
-  AbstractFilter(),
-  m_CellFeatureAttributeMatrixPath("", "", ""),
-  m_FeatureDataFile(""),
-  m_WriteNeighborListData(false),
-  m_DelimiterChoice(0),
-  m_Delimiter(',')
+FeatureDataCSVWriter::FeatureDataCSVWriter()
+: AbstractFilter()
+, m_CellFeatureAttributeMatrixPath("", "", "")
+, m_FeatureDataFile("")
+, m_WriteNeighborListData(false)
+, m_DelimiterChoice(0)
+, m_Delimiter(',')
 {
   setupFilterParameters();
 }
@@ -82,7 +80,7 @@ void FeatureDataCSVWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FeatureDataFile, FilterParameter::Parameter, FeatureDataCSVWriter, "*.csv", "Comma Separated Data"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Neighbor Data", WriteNeighborListData, FilterParameter::Parameter, FeatureDataCSVWriter));
-  
+
   {
     QVector<QString> choices;
     choices.push_back(",");
@@ -92,7 +90,7 @@ void FeatureDataCSVWriter::setupFilterParameters()
 
     parameters.push_back(SIMPL_NEW_CHOICE_FP("Delimiter", DelimiterChoice, FilterParameter::Parameter, FeatureDataCSVWriter, choices, false));
   }
-  
+
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
@@ -108,9 +106,9 @@ void FeatureDataCSVWriter::setupFilterParameters()
 void FeatureDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixPath( reader->readDataArrayPath( "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
-  setFeatureDataFile( reader->readString( "FeatureDataFile", getFeatureDataFile() ) );
-  setWriteNeighborListData( reader->readValue("WriteNeighborListData", getWriteNeighborListData()) );
+  setCellFeatureAttributeMatrixPath(reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath()));
+  setFeatureDataFile(reader->readString("FeatureDataFile", getFeatureDataFile()));
+  setWriteNeighborListData(reader->readValue("WriteNeighborListData", getWriteNeighborListData()));
   reader->closeFilterGroup();
 }
 
@@ -119,7 +117,6 @@ void FeatureDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 void FeatureDataCSVWriter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +128,7 @@ void FeatureDataCSVWriter::dataCheck()
 
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), -301);
 
-  if (getFeatureDataFile().isEmpty() == true)
+  if(getFeatureDataFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set");
     setErrorCondition(-1);
@@ -140,33 +137,33 @@ void FeatureDataCSVWriter::dataCheck()
 
   QFileInfo fi(getFeatureDataFile());
   QDir parentPath(fi.path());
-  if (parentPath.exists() == false)
+  if(parentPath.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
-  if (fi.suffix().compare("") == 0)
+  if(fi.suffix().compare("") == 0)
   {
     setFeatureDataFile(getFeatureDataFile().append(".csv"));
   }
 
-  switch (getDelimiterChoice())
+  switch(getDelimiterChoice())
   {
-    case DelimiterChoicesEnum::COMMA:
-      setDelimiter(',');
-      break;
-    case DelimiterChoicesEnum::SEMICOLON:
-      setDelimiter(';');
-      break;
-    case DelimiterChoicesEnum::COLON:
-      setDelimiter(':');
-      break;
-    case DelimiterChoicesEnum::TAB:
-      setDelimiter('\t');
-      break;
-    default:
-      setDelimiter(',');
-      break;
+  case DelimiterChoicesEnum::COMMA:
+    setDelimiter(',');
+    break;
+  case DelimiterChoicesEnum::SEMICOLON:
+    setDelimiter(';');
+    break;
+  case DelimiterChoicesEnum::COLON:
+    setDelimiter(':');
+    break;
+  case DelimiterChoicesEnum::TAB:
+    setDelimiter('\t');
+    break;
+  default:
+    setDelimiter(',');
+    break;
   }
 }
 
@@ -190,7 +187,10 @@ void FeatureDataCSVWriter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -205,7 +205,7 @@ void FeatureDataCSVWriter::execute()
   }
 
   QFile file(getFeatureDataFile());
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+  if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Output file could not be opened: %1").arg(getFeatureDataFile());
     setErrorCondition(-100);
@@ -230,19 +230,19 @@ void FeatureDataCSVWriter::execute()
   // Print the FeatureIds Header before the rest of the headers
   outFile << SIMPL::FeatureData::FeatureID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = cellFeatureAttrMat->getAttributeArray(*iter);
-    if (p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
+    if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
-      if (p->getNumberOfComponents() == 1)
+      if(p->getNumberOfComponents() == 1)
       {
         outFile << m_Delimiter << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
       {
-        for (int32_t k = 0; k < p->getNumberOfComponents(); ++k)
+        for(int32_t k = 0; k < p->getNumberOfComponents(); ++k)
         {
           outFile << m_Delimiter << (*iter) << "_" << k;
         }
@@ -254,8 +254,8 @@ void FeatureDataCSVWriter::execute()
   outFile << "\n";
 
   // Get the number of tuples in the arrays
-  size_t numTuples =  0;
-  if (!data.empty())
+  size_t numTuples = 0;
+  if(!data.empty())
   {
     numTuples = data[0]->getNumberOfTuples();
   }
@@ -263,14 +263,14 @@ void FeatureDataCSVWriter::execute()
   float threshold = 0.0f;
 
   // Skip feature 0
-  for (size_t i = 1; i < numTuples; ++i)
+  for(size_t i = 1; i < numTuples; ++i)
   {
-    if (((float)i / numTuples) * 100.0f > threshold)
+    if(((float)i / numTuples) * 100.0f > threshold)
     {
       QString ss = QObject::tr("Writing Feature Data || %1% Complete").arg(((float)i / numTuples) * 100.0f);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       threshold = threshold + 5.0f;
-      if (threshold < ((float)i / numTuples) * 100.0f)
+      if(threshold < ((float)i / numTuples) * 100.0f)
       {
         threshold = ((float)i / numTuples) * 100.0f;
       }
@@ -279,7 +279,7 @@ void FeatureDataCSVWriter::execute()
     // Print the feature id
     outFile << i;
     // Print a row of data
-    for (std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
+    for(std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
     {
       outFile << m_Delimiter;
       (*p)->printTuple(outFile, i, m_Delimiter);
@@ -287,15 +287,15 @@ void FeatureDataCSVWriter::execute()
     outFile << "\n";
   }
 
-  if (m_WriteNeighborListData == true)
+  if(m_WriteNeighborListData == true)
   {
     // Print the FeatureIds Header before the rest of the headers
     // Loop throught the list and print the rest of the headers, ignoring those we don't want
-    for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+    for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       // Only get the array if the name does NOT match those listed
       IDataArray::Pointer p = cellFeatureAttrMat->getAttributeArray(*iter);
-      if (p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
+      if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
         outFile << SIMPL::FeatureData::FeatureID << m_Delimiter << SIMPL::FeatureData::NumNeighbors << m_Delimiter << (*iter) << "\n";
         numTuples = p->getNumberOfTuples();
@@ -359,23 +359,29 @@ const QString FeatureDataCSVWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FeatureDataCSVWriter::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FeatureDataCSVWriter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FeatureDataCSVWriter::getHumanLabel()
-{ return "Write Feature Data as CSV File"; }
+{
+  return "Write Feature Data as CSV File";
+}

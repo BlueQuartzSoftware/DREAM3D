@@ -50,10 +50,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsFeature::AlignSectionsFeature() :
-  AlignSections(),
-  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_GoodVoxels(nullptr)
+AlignSectionsFeature::AlignSectionsFeature()
+: AlignSections()
+, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_GoodVoxels(nullptr)
 {
   // only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();
@@ -75,7 +75,8 @@ void AlignSectionsFeature::setupFilterParameters()
   FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, AlignSectionsFeature, req));
   }
   setFilterParameters(parameters);
@@ -88,7 +89,7 @@ void AlignSectionsFeature::readFilterParameters(AbstractFilterParametersReader* 
 {
   AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -97,7 +98,6 @@ void AlignSectionsFeature::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -113,12 +113,18 @@ void AlignSectionsFeature::dataCheck()
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   QVector<size_t> cDims(1, 1);
-  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -142,18 +148,15 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   std::ofstream outFile;
-  if (getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts() == true)
   {
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   float disorientation = 0.0f;
@@ -166,14 +169,14 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
   int64_t slice = 0;
   int64_t refposition = 0;
   int64_t curposition = 0;
-  std::vector<std::vector<float> >  misorients(dims[0]);
+  std::vector<std::vector<float>> misorients(dims[0]);
 
-  for (int64_t a = 0; a < dims[0]; a++)
+  for(int64_t a = 0; a < dims[0]; a++)
   {
     misorients[a].assign(dims[1], 0.0f);
   }
 
-  for (int64_t iter = 1; iter < dims[2]; iter++)
+  for(int64_t iter = 1; iter < dims[2]; iter++)
   {
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(((float)iter / dims[2]) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -183,46 +186,47 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
     oldyshift = -1;
     newxshift = 0;
     newyshift = 0;
-    for (int64_t a = 0; a < dims[0]; a++)
+    for(int64_t a = 0; a < dims[0]; a++)
     {
-      for (int64_t b = 0; b < dims[1]; b++)
+      for(int64_t b = 0; b < dims[1]; b++)
       {
         misorients[a][b] = 0;
       }
     }
-    while (newxshift != oldxshift || newyshift != oldyshift)
+    while(newxshift != oldxshift || newyshift != oldyshift)
     {
       oldxshift = newxshift;
       oldyshift = newyshift;
-      for (int32_t j = -3; j < 4; j++)
+      for(int32_t j = -3; j < 4; j++)
       {
-        for (int32_t k = -3; k < 4; k++)
+        for(int32_t k = -3; k < 4; k++)
         {
           disorientation = 0.0f;
           count = 0.0f;
-          if (misorients[k + oldxshift + dims[0] / 2][j + oldyshift + dims[1] / 2] == 0.0f && abs(k + oldxshift) < (dims[0] / 2)
-              && (j + oldyshift) < (dims[1] / 2))
+          if(misorients[k + oldxshift + dims[0] / 2][j + oldyshift + dims[1] / 2] == 0.0f && abs(k + oldxshift) < (dims[0] / 2) && (j + oldyshift) < (dims[1] / 2))
           {
-            for (int64_t l = 0; l < dims[1]; l = l + 4)
+            for(int64_t l = 0; l < dims[1]; l = l + 4)
             {
-              for (int64_t n = 0; n < dims[0]; n = n + 4)
+              for(int64_t n = 0; n < dims[0]; n = n + 4)
               {
-                if ((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
+                if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
                   refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
                   curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
-                  if (m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) { disorientation++; }
+                  if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition])
+                  {
+                    disorientation++;
+                  }
                   count++;
                 }
                 else
                 {
-
                 }
               }
             }
             disorientation = disorientation / count;
             misorients[k + oldxshift + dims[0] / 2][j + oldyshift + dims[1] / 2] = disorientation;
-            if (disorientation < mindisorientation)
+            if(disorientation < mindisorientation)
             {
               newxshift = k + oldxshift;
               newyshift = j + oldyshift;
@@ -234,12 +238,12 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
     }
     xshifts[iter] = xshifts[iter - 1] + newxshift;
     yshifts[iter] = yshifts[iter - 1] + newyshift;
-    if (getWriteAlignmentShifts() == true)
+    if(getWriteAlignmentShifts() == true)
     {
       outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
     }
   }
-  if (getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts() == true)
   {
     outFile.close();
   }
@@ -252,7 +256,10 @@ void AlignSectionsFeature::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   AlignSections::execute();
 
@@ -296,23 +303,29 @@ const QString AlignSectionsFeature::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
+  vStream << Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeature::getGroupName()
-{ return SIMPL::FilterGroups::ReconstructionFilters; }
+{
+  return SIMPL::FilterGroups::ReconstructionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeature::getSubGroupName()
-{return SIMPL::FilterSubGroups::AlignmentFilters;}
+{
+  return SIMPL::FilterSubGroups::AlignmentFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeature::getHumanLabel()
-{ return "Align Sections (Feature)"; }
+{
+  return "Align Sections (Feature)";
+}

@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 // Written by Jason Gruber jgruber@andrew.cmu.edu
 //   many mods by Steve Sintay, ADR
 //  added an option to turn off edge-of-model constraints
@@ -55,10 +54,10 @@
 #include <iomanip>
 #include <limits>
 
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/DataArrays/StructArray.hpp"
+#include "SIMPLib/Geometry/MeshStructs.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshFunctions.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
@@ -70,8 +69,8 @@
 // -----------------------------------------------------------------------------
 class pvector
 {
-  public:
-    double coefft[3];
+public:
+  double coefft[3];
 };
 
 typedef struct
@@ -79,8 +78,6 @@ typedef struct
   int triplenn1;
   int triplenn2;
 } TripleNN;
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -93,8 +90,7 @@ inline int delta(int i, int j)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename Node, typename T>
-void LineCurvatureDirection(pvector& v, Node& n0, Node& n1, Node& n2)
+template <typename Node, typename T> void LineCurvatureDirection(pvector& v, Node& n0, Node& n1, Node& n2)
 //  returns vector along which curvature points at node n1
 {
   v.coefft[0] = (2. * n1.pos[0]) - n2.pos[0] - n0.pos[0];
@@ -106,8 +102,7 @@ void LineCurvatureDirection(pvector& v, Node& n0, Node& n1, Node& n2)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename Node, typename T>
-double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
+template <typename Node, typename T> double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 //  returns angle approx. to curvature at node n1
 {
   T v1[3], v2[3];
@@ -120,8 +115,14 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
   T d1 = NodeFunctions<Node, T>::Distance(n0, n1);
   T d2 = NodeFunctions<Node, T>::Distance(n1, n2);
   T product = sqrt((v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]) / d1 / d2);
-  if(product > 1.) { product = 1.; }
-  if(product < -1.) { product = -1.; }
+  if(product > 1.)
+  {
+    product = 1.;
+  }
+  if(product < -1.)
+  {
+    product = -1.;
+  }
   T angle = acos(product);
   return 2. * angle / (d1 + d2);
 }
@@ -129,20 +130,19 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 // Include the MOC generated file for this class
 #include "moc_MovingFiniteElementSmoothing.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
-  SurfaceMeshFilter(),
-  m_IterationSteps(1),
-  m_NodeConstraints(true),
-  m_ConstrainSurfaceNodes(true),
-  m_ConstrainQuadPoints(true),
-  m_SmoothTripleLines(true),
-  m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeTypeArrayName(SIMPL::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeType(nullptr)
+MovingFiniteElementSmoothing::MovingFiniteElementSmoothing()
+: SurfaceMeshFilter()
+, m_IterationSteps(1)
+, m_NodeConstraints(true)
+, m_ConstrainSurfaceNodes(true)
+, m_ConstrainQuadPoints(true)
+, m_SmoothTripleLines(true)
+, m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType)
+, m_SurfaceMeshNodeTypeArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
+, m_SurfaceMeshNodeType(nullptr)
 {
   setupFilterParameters();
 }
@@ -166,7 +166,9 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Constrain Quad Points", ConstrainQuadPoints, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Smooth Triple Lines", SmoothTripleLines, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath)));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized,
+                                                              SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath),
+                                                              SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath)));
   setFilterParameters(parameters);
 }
 
@@ -176,12 +178,12 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
 void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSurfaceMeshNodeTypeArrayPath(reader->readDataArrayPath("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath() ) );
-  setIterationSteps( reader->readValue("IterationSteps", getIterationSteps()) );
-  setNodeConstraints( reader->readValue("NodeConstraints", false) );
-  setConstrainSurfaceNodes( reader->readValue("ConstrainSurfaceNodes", false) );
-  setConstrainQuadPoints( reader->readValue("ConstrainQuadPoints", false) );
-  setSmoothTripleLines( reader->readValue("SmoothTripleLines", false) );
+  setSurfaceMeshNodeTypeArrayPath(reader->readDataArrayPath("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath()));
+  setIterationSteps(reader->readValue("IterationSteps", getIterationSteps()));
+  setNodeConstraints(reader->readValue("NodeConstraints", false));
+  setConstrainSurfaceNodes(reader->readValue("ConstrainSurfaceNodes", false));
+  setConstrainQuadPoints(reader->readValue("ConstrainQuadPoints", false));
+  setSmoothTripleLines(reader->readValue("SmoothTripleLines", false));
   reader->closeFilterGroup();
 }
 
@@ -190,7 +192,6 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -201,7 +202,10 @@ void MovingFiniteElementSmoothing::dataCheck()
   setErrorCondition(0);
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // We MUST have Nodes
   if(sm->getVertices().get() == nullptr)
@@ -217,17 +221,20 @@ void MovingFiniteElementSmoothing::dataCheck()
     notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
-  if (getErrorCondition() >= 0)
+  if(getErrorCondition() >= 0)
   {
     // Check for Node Type Array
-    //int size = sm->getVertices()->getNumberOfTuples();
+    // int size = sm->getVertices()->getNumberOfTuples();
     QVector<size_t> dims(1, 1);
-    m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(),
+                                                                                                                  dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_SurfaceMeshNodeTypePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )
+  if(getConstrainQuadPoints() == true || getSmoothTripleLines() == true)
   {
     if(sm->getEdges().get() == nullptr)
     {
@@ -264,7 +271,10 @@ void MovingFiniteElementSmoothing::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshNodeTypeArrayPath().getDataContainerName());
 
@@ -318,7 +328,7 @@ void MovingFiniteElementSmoothing::execute()
   QVector<int> tid(ntri);
   QVector<int> nodeConstraint(numberNodes); //  0=unconstrained, 1=constrained in X, 2= in Y, 4= in Z
 
-  //Read the nodes
+// Read the nodes
 #if 0
   int nodeType;
   if (isVerbose) { qDebug() << "reading nodes " << "\n"; }
@@ -356,7 +366,10 @@ void MovingFiniteElementSmoothing::execute()
     if((edgesDataArray.get() == nullptr || iEdgesDataArray.get() == nullptr) && m_SmoothTripleLines == true)
     {
       setErrorCondition(-596);
-      notifyErrorMessage(getHumanLabel(), "Either the Edges or Internal Edges array was nullptr which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.", -556);
+      notifyErrorMessage(
+          getHumanLabel(),
+          "Either the Edges or Internal Edges array was nullptr which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.",
+          -556);
       return;
     }
 
@@ -366,7 +379,7 @@ void MovingFiniteElementSmoothing::execute()
     StructArray<EdgeArray::Edge_t>* internalEdgesStructArray = StructArray<EdgeArray::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
     EdgeArray::Edge_t* iEdges = internalEdgesStructArray->getPointer(0);
 
-    //  Read the edges, if we are going to smooth them explicitly
+//  Read the edges, if we are going to smooth them explicitly
 #if 0
     if (isVerbose) { qDebug() << "reading edges " << "\n"; }
     std::ifstream input3(edgesFile.toLatin1().data());
@@ -384,14 +397,16 @@ void MovingFiniteElementSmoothing::execute()
     int nedges = edgeCount + iEdgeCount;
     //  input3 >> nedges;
     //  don't actually need the structure. just the information
-    if(isVerbose) { qDebug() << "Number of edges = " << nedges << "\n"; }
+    if(isVerbose)
+    {
+      qDebug() << "Number of edges = " << nedges << "\n";
+    }
 
     int tedges = 0; // triple line edge count
 
-    for (int i = 0; i < nedges; i++)
+    for(int i = 0; i < nedges; i++)
     {
-      int nid[2] =
-      { -1, -1 }, ekind = -1;
+      int nid[2] = {-1, -1}, ekind = -1;
       if(i < edgeCount) // Grab from the 'Segment' array
       {
         ekind = edges[i].edgeKind;
@@ -405,7 +420,7 @@ void MovingFiniteElementSmoothing::execute()
         nid[1] = edges[i - edgeCount].verts[1];
       }
 
-      //input3 >> junk >> nid[0] >> nid[1] >> ekind >> spin1 >> spin2 >> spin3 >> spin4;
+      // input3 >> junk >> nid[0] >> nid[1] >> ekind >> spin1 >> spin2 >> spin3 >> spin4;
       if(ekind == 3)
       {
         // qDebug() << "\n" << "edge#  ID1  ID2  " << i << " " << nid[0] << " " << nid[1] << "\n" ;
@@ -423,7 +438,8 @@ void MovingFiniteElementSmoothing::execute()
             {
               if(isVerbose)
               {
-                qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad" << "\n";
+                qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad"
+                         << "\n";
                 setErrorCondition(-666);
                 notifyErrorMessage(getHumanLabel(), "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
               }
@@ -448,7 +464,8 @@ void MovingFiniteElementSmoothing::execute()
             {
               if(isVerbose)
               {
-                qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad" << "\n";
+                qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad"
+                         << "\n";
                 setErrorCondition(-666);
                 notifyErrorMessage(getHumanLabel(), "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
               }
@@ -462,9 +479,13 @@ void MovingFiniteElementSmoothing::execute()
         }
       }
     }
-    if(isVerbose) { qDebug() << "... completed 1st reading edges" << "\n"; }
+    if(isVerbose)
+    {
+      qDebug() << "... completed 1st reading edges"
+               << "\n";
+    }
     //  destroy(edges) ;
-    //input3.close();
+    // input3.close();
     //  now let's check the entries
     /*
      for ( int i = 0 ; i < nnod ; i++ ) {
@@ -483,7 +504,7 @@ void MovingFiniteElementSmoothing::execute()
 
   int final = m_IterationSteps;
   int begin = 1;
-  //  for time stepping
+//  for time stepping
 
 #if ENABLE_MFE_SMOOTHING_RESTART_FILE
   int nnodRe, nnTriRe, stepsRe;
@@ -493,28 +514,51 @@ void MovingFiniteElementSmoothing::execute()
     std::ifstream restartInput(restartFile.toLatin1().data());
 
     restartInput >> nnodRe >> nnTriRe;
-    if (isVerbose) { qDebug() << "Check number of nodes, triangles in .inp: " << nnodRe << ", " << nnTriRe << "\n"; }
+    if(isVerbose)
+    {
+      qDebug() << "Check number of nodes, triangles in .inp: " << nnodRe << ", " << nnTriRe << "\n";
+    }
     if(nnodRe != nnod)
     {
-      if (isVerbose) { qDebug() << "Discrepancy in the number of nodes, must stop! " << "\n"; }
+      if(isVerbose)
+      {
+        qDebug() << "Discrepancy in the number of nodes, must stop! "
+                 << "\n";
+      }
       return -1;
     }
     else
     {
       // we are OK to read in
-      if (isVerbose) { qDebug() << "reading nodes from restart INP " << "\n"; }
-      for (int i = 0; i < nnod; i++)
+      if(isVerbose)
+      {
+        qDebug() << "reading nodes from restart INP "
+                 << "\n";
+      }
+      for(int i = 0; i < nnod; i++)
       {
         input1 >> id(nodes[i]) >> nodes[i][0] >> nodes[i][1] >> nodes[i][2];
       }
-      if (isVerbose) { qDebug() << "end reading nodes from restart INP " << "\n"; }
+      if(isVerbose)
+      {
+        qDebug() << "end reading nodes from restart INP "
+                 << "\n";
+      }
     }
     restartInput.close();
-    if (isVerbose) { qDebug() << "What step are we re-starting at? " << "\n"; }
+    if(isVerbose)
+    {
+      qDebug() << "What step are we re-starting at? "
+               << "\n";
+    }
     std::cin >> stepsRe;
     if(stepsRe >= final)
     {
-      if (isVerbose) { qDebug() << "Final time less than re-start time, must stop! " << "\n"; }
+      if(isVerbose)
+      {
+        qDebug() << "Final time less than re-start time, must stop! "
+                 << "\n";
+      }
       return -1;
     }
     else
@@ -563,15 +607,12 @@ void MovingFiniteElementSmoothing::execute()
 #endif
 
   // Find the minimum and maximum dimension of the data
-  double min[3] =
-  { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
-  double max[3] =
-  { std::numeric_limits<double>::min(), std::numeric_limits<double>::min(), std::numeric_limits<double>::min() };
+  double min[3] = {std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max()};
+  double max[3] = {std::numeric_limits<double>::min(), std::numeric_limits<double>::min(), std::numeric_limits<double>::min()};
 
-
-  for (int i = 0; i < numberNodes; i++)
+  for(int i = 0; i < numberNodes; i++)
   {
-    for (int j = 0; j < 3; j++)
+    for(int j = 0; j < 3; j++)
     {
       if(nodes[i].pos[j] < min[j])
       {
@@ -585,19 +626,20 @@ void MovingFiniteElementSmoothing::execute()
   }
   if(isVerbose)
   {
-    qDebug() << "Model Dimensions as Min, Max: " << "\n";
+    qDebug() << "Model Dimensions as Min, Max: "
+             << "\n";
 
     //  for(int i=0; i<3; i++)
     qDebug() << "X (0): " << min[0] << " " << max[0] << "\n";
     qDebug() << "Y (1): " << min[1] << " " << max[1] << "\n";
     qDebug() << "Z (2): " << min[2] << " " << max[2] << "\n";
   }
-  //Allocate vectors and matricies
+  // Allocate vectors and matricies
   int n_size = 3 * numberNodes;
   MFE::Vector<double> x(n_size), F(n_size);
   MFE::SMatrix<double> K(n_size, n_size);
 
-  //Allocate constants for solving linear equations
+  // Allocate constants for solving linear equations
   const double epsilon = 1.0; // change this if quality force too
   // high, low
   const double dt = (40.0e-6) * (10 / max[1]);
@@ -628,15 +670,24 @@ void MovingFiniteElementSmoothing::execute()
   //  for measuring dihedral angles, Mar 2010
 
   //  now we determine constraints
-  for (int r = 0; r < numberNodes; r++)
+  for(int r = 0; r < numberNodes; r++)
   {
     nodeConstraint[r] = 0;
     if(m_NodeConstraints == true)
     {
       // only do this if we want the constraint on surfaces
-      if(fabs(nodes[r].pos[0] - max[0]) < tolerance || fabs(nodes[r].pos[0] - min[0]) < tolerance) { nodeConstraint[r] += 1; }
-      if(fabs(nodes[r].pos[1] - max[1]) < tolerance || fabs(nodes[r].pos[1] - min[1]) < tolerance) { nodeConstraint[r] += 2; }
-      if(fabs(nodes[r].pos[2] - max[2]) < tolerance || fabs(nodes[r].pos[2] - min[2]) < tolerance) { nodeConstraint[r] += 4; }
+      if(fabs(nodes[r].pos[0] - max[0]) < tolerance || fabs(nodes[r].pos[0] - min[0]) < tolerance)
+      {
+        nodeConstraint[r] += 1;
+      }
+      if(fabs(nodes[r].pos[1] - max[1]) < tolerance || fabs(nodes[r].pos[1] - min[1]) < tolerance)
+      {
+        nodeConstraint[r] += 2;
+      }
+      if(fabs(nodes[r].pos[2] - max[2]) < tolerance || fabs(nodes[r].pos[2] - min[2]) < tolerance)
+      {
+        nodeConstraint[r] += 4;
+      }
       // debug
       if(m_SurfaceMeshNodeType[r] > 10 && nodeConstraint[r] == 0)
       {
@@ -647,20 +698,26 @@ void MovingFiniteElementSmoothing::execute()
           qDebug() << " Coord. Diffs. for Y: " << fabs(nodes[r].pos[1] - max[1]) << " " << fabs(nodes[r].pos[1] - min[1]) << "\n";
           qDebug() << " Coord. Diffs. for Z: " << fabs(nodes[r].pos[2] - max[2]) << " " << fabs(nodes[r].pos[2] - min[2]) << "\n";
           qDebug() << "Type, Constraint: " << m_SurfaceMeshNodeType[r] << " " << nodeConstraint[r] << "\n";
-          qDebug() << "Check whether there is a problem with applying constraints ... " << "\n";
+          qDebug() << "Check whether there is a problem with applying constraints ... "
+                   << "\n";
         }
       }
       //  constraint for surface nodes
-      if(m_ConstrainSurfaceNodes == true && nodeConstraint[r] != 0) { nodeConstraint[r] = 7; }
+      if(m_ConstrainSurfaceNodes == true && nodeConstraint[r] != 0)
+      {
+        nodeConstraint[r] = 7;
+      }
       //  totally constrain a surface node (temporary fix for connectivity issues in bounded box meshes)
-
     }
-    if(m_SurfaceMeshNodeType[r] == SIMPL::SurfaceMesh::NodeType::QuadPoint && m_ConstrainQuadPoints == true) { nodeConstraint[r] = 7; }
+    if(m_SurfaceMeshNodeType[r] == SIMPL::SurfaceMesh::NodeType::QuadPoint && m_ConstrainQuadPoints == true)
+    {
+      nodeConstraint[r] = 7;
+    }
     //  constraint for quad point nodes is in all 3 coords.
   }
 
   // update loop
-  for (size_t updates = begin; updates <= static_cast<size_t>(final); ++updates)
+  for(size_t updates = begin; updates <= static_cast<size_t>(final); ++updates)
   {
     if(getCancel() == true)
     {
@@ -699,12 +756,12 @@ void MovingFiniteElementSmoothing::execute()
     typedef NodeFunctions<VertexArray::VertD_t, double> NodeFunctionsType;
     typedef TriangleFunctions<VertexArray::VertD_t, double> TriangleFunctionsType;
     // Loop through each of the triangles
-    for (int t = 0; t < ntri; t++)
+    for(int t = 0; t < ntri; t++)
     {
       FaceArray::Face_t& rtri = triangles[t];
       MFE::Vector<double> n(3);
       n = TriangleFunctionsType::normal(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
-      A = TriangleFunctionsType::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
+      A = TriangleFunctionsType::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);           //  current Area
       Q = TriangleFunctionsType::circularity(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]], A); //  current quality
       if(Q > 100.)
       {
@@ -714,21 +771,30 @@ void MovingFiniteElementSmoothing::execute()
         }
       }
       Q_sum += Q;
-      if(Q > Q_max) { Q_max = Q; }
+      if(Q > Q_max)
+      {
+        Q_max = Q;
+      }
 
       Dihedral = TriangleFunctionsType::MinDihedral(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
       // debug
       //      qDebug() << "triangle, min dihedral: " << t << ", " << Dihedral*180/PI << "\n";
       Dihedral_sum += Dihedral;
-      if(Dihedral < Dihedral_min) { Dihedral_min = Dihedral; }
-      if(Dihedral > Dihedral_max) { Dihedral_max = Dihedral; }
+      if(Dihedral < Dihedral_min)
+      {
+        Dihedral_min = Dihedral;
+      }
+      if(Dihedral > Dihedral_max)
+      {
+        Dihedral_max = Dihedral;
+      }
 
-      for (int n0 = 0; n0 < 3; n0++)
+      for(int n0 = 0; n0 < 3; n0++)
       {
         // for each of 3 nodes on the t^th triangle
         int i = rtri.verts[n0];
         VertexArray::VertD_t& node_i = nodes[i];
-        for (int j = 0; j < 3; j++)
+        for(int j = 0; j < 3; j++)
         {
           //  for each of the three coordinates of the node
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
@@ -742,21 +808,21 @@ void MovingFiniteElementSmoothing::execute()
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
-            deltaLDistance = NodeFunctionsType::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctionsType::Distance(nodes[triplenn[i].triplenn2], nodes[i])
-                             - LDistance; // change in line length
+            deltaLDistance =
+                NodeFunctionsType::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctionsType::Distance(nodes[triplenn[i].triplenn2], nodes[i]) - LDistance; // change in line length
             F[3 * i + j] -= TJ_scale * deltaLDistance;
           }
           node_i.pos[j] -= small;
           double arg = (A_scale * (Anew - A) + Q_scale * (Qnew - Q) * A) / small;
           F[3 * i + j] -= arg;
         }
-        for (int n1 = 0; n1 < 3; n1++)
+        for(int n1 = 0; n1 < 3; n1++)
         {
           //  for each of 3 nodes
           int h = rtri.verts[n1];
-          for (int k = 0; k < 3; k++)
+          for(int k = 0; k < 3; k++)
           {
-            for (int j = 0; j < 3; j++)
+            for(int j = 0; j < 3; j++)
             {
               K[3 * h + k][3 * i + j] += one12th * (1.0 + delta(i, h)) * n[j] * n[k] * A;
             }
@@ -765,16 +831,16 @@ void MovingFiniteElementSmoothing::execute()
       }
     }
     // add epsilon to the diagonal
-    for (int r = 0; r < numberNodes; r++)
+    for(int r = 0; r < numberNodes; r++)
     {
-      for (int s = 0; s < 3; s++)
+      for(int s = 0; s < 3; s++)
       {
         K[3 * r + s][3 * r + s] += epsilon;
       }
     }
 
     // apply boundary conditions
-    for (int r = 0; r < numberNodes; r++)
+    for(int r = 0; r < numberNodes; r++)
     {
       if(m_NodeConstraints == true || m_ConstrainQuadPoints == true)
       {
@@ -797,17 +863,21 @@ void MovingFiniteElementSmoothing::execute()
 
     // solve for node velocities
     int iterations = MFE::CR(K, x, F, 4000, 1.0e-5);
-    if(isVerbose) { qDebug() << iterations << " iterations ... " << "\n"; }
+    if(isVerbose)
+    {
+      qDebug() << iterations << " iterations ... "
+               << "\n";
+    }
 
-    //Update the quality information
+    // Update the quality information
     if(updates - 1 < Q_max_hist.size())
     {
       Q_max_hist[updates - 1] = Q_max;
     }
     else
     {
-      //Update the history of Q_max
-      for (size_t i = 0; i < Q_max_hist.size() - 1; i++)
+      // Update the history of Q_max
+      for(size_t i = 0; i < Q_max_hist.size() - 1; i++)
       {
         //    qDebug() << i << " "<< Q_max_hist[i] << " " << Q_max_hist[i+1] << "\n";
         Q_max_hist[i] = Q_max_hist[i + 1];
@@ -815,9 +885,9 @@ void MovingFiniteElementSmoothing::execute()
 
       Q_max_hist[Q_max_hist.size() - 1] = Q_max;
 
-      //Compute the rolling average of the Q_max
+      // Compute the rolling average of the Q_max
       Q_max_ave = 0;
-      for (size_t i = 0; i < Q_max_hist.size(); i++)
+      for(size_t i = 0; i < Q_max_hist.size(); i++)
       {
         Q_max_ave += Q_max_hist[i];
       }
@@ -829,14 +899,16 @@ void MovingFiniteElementSmoothing::execute()
     //    std::cout<<"Q_Max history ... "<<Q_max_hist[i]<<std::endl;
     if(isVerbose)
     {
-      qDebug() << "Maximum circularity quality ... " << Q_max << "   - high is bad, low is good" << "\n";
+      qDebug() << "Maximum circularity quality ... " << Q_max << "   - high is bad, low is good"
+               << "\n";
       qDebug() << "Rolling Average circularity quality ... " << Q_max_ave << "\n";
       qDebug() << "Average circularity quality ... " << Q_ave << "\n";
     }
     Dihedral_ave = Dihedral_sum / (float)ntri;
     if(isVerbose)
     {
-      qDebug() << "Smallest min. dihedral angle ... " << Dihedral_min * 180. / M_PI << "   - low is bad, high is good" << "\n";
+      qDebug() << "Smallest min. dihedral angle ... " << Dihedral_min * 180. / M_PI << "   - low is bad, high is good"
+               << "\n";
       qDebug() << "Average min. dihedral angle ... " << Dihedral_ave * 180. / M_PI << "\n";
       qDebug() << "Largest min. dihedral angle ... " << Dihedral_max * 180. / M_PI << "\n";
 
@@ -882,10 +954,10 @@ void MovingFiniteElementSmoothing::execute()
 #endif
 
     // update node positions
-    for (int r = 0; r < numberNodes; r++)
+    for(int r = 0; r < numberNodes; r++)
     {
       //    velocityfile << r << " ";
-      for (int s = 0; s < 3; s++)
+      for(int s = 0; s < 3; s++)
       {
         double bc_dt = dt;
         if(m_NodeConstraints == true)
@@ -895,9 +967,18 @@ void MovingFiniteElementSmoothing::execute()
            if( (fabs(nodes[r][s] - max[s]) < tolerance)
            || (fabs(nodes[r][s] - min[s]) < tolerance)) bc_dt = 0.0 ;
            */
-          if(s == 0 && nodeConstraint[r] % 2 != 0) { bc_dt = 0.0; } // X
-          if(s == 1 && (nodeConstraint[r] / 2) % 2 != 0) { bc_dt = 0.0; } // Y
-          if(s == 2 && nodeConstraint[r] / 4 != 0) { bc_dt = 0.0; } // Z
+          if(s == 0 && nodeConstraint[r] % 2 != 0)
+          {
+            bc_dt = 0.0;
+          } // X
+          if(s == 1 && (nodeConstraint[r] / 2) % 2 != 0)
+          {
+            bc_dt = 0.0;
+          } // Y
+          if(s == 2 && nodeConstraint[r] / 4 != 0)
+          {
+            bc_dt = 0.0;
+          } // Z
           //  changed  12 v 10, ADR
         }
 
@@ -914,7 +995,7 @@ void MovingFiniteElementSmoothing::execute()
       }
       //    velocityfile << "\n";
     }
-    //  velocityfile.close();
+//  velocityfile.close();
 
 #if 0
     if(!((updates) % 10))
@@ -989,8 +1070,10 @@ void MovingFiniteElementSmoothing::execute()
 
   if(isVerbose)
   {
-    qDebug() << "Finished the smoothing " << "\n";
-    qDebug() << "You can combine the nodes and triangles to do further analysis or smoothing" << "\n";
+    qDebug() << "Finished the smoothing "
+             << "\n";
+    qDebug() << "You can combine the nodes and triangles to do further analysis or smoothing"
+             << "\n";
     // qDebug() << "Look for " << outputNodesFile << "\n";
   }
 
@@ -1005,7 +1088,6 @@ void MovingFiniteElementSmoothing::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -1043,7 +1125,7 @@ const QString MovingFiniteElementSmoothing::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 
@@ -1051,19 +1133,22 @@ const QString MovingFiniteElementSmoothing::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString MovingFiniteElementSmoothing::getGroupName()
-{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
-
+{
+  return SIMPL::FilterGroups::SurfaceMeshingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MovingFiniteElementSmoothing::getSubGroupName()
-{ return SIMPL::FilterSubGroups::SmoothingFilters; }
-
+{
+  return SIMPL::FilterSubGroups::SmoothingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MovingFiniteElementSmoothing::getHumanLabel()
-{ return "Moving Finite Element Smoothing"; }
-
+{
+  return "Moving Finite Element Smoothing";
+}

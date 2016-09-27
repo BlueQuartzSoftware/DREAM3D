@@ -37,22 +37,23 @@
 #include <QtWidgets/QMessageBox>
 
 #include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h"
-#include "StatsGenerator/Widgets/StatsGenPlotWidget.h"
+#include "StatsGenerator/Widgets/StatsGenAxisODFWidget.h"
 #include "StatsGenerator/Widgets/StatsGenODFWidget.h"
-#include "StatsGenerator/Widgets/SGAxisODFWidget.h"
-#include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
+#include "StatsGenerator/Widgets/StatsGenPlotWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGBetaTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
 
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryRolledPreset::PrimaryRolledPreset() :
-  m_AspectRatio1(1.0), m_AspectRatio2(1.0)
+PrimaryRolledPreset::PrimaryRolledPreset()
+: m_AspectRatio1(1.0)
+, m_AspectRatio2(1.0)
 {
 }
 
@@ -70,15 +71,15 @@ void PrimaryRolledPreset::displayUserInputDialog()
 {
   PrimaryRolledPresetDialog d(nullptr);
   bool keepGoing = true;
-  while (keepGoing)
+  while(keepGoing)
   {
     int ret = d.exec();
-    if (ret == QDialog::Accepted)
+    if(ret == QDialog::Accepted)
     {
       float a = d.getA();
       float b = d.getB();
       float c = d.getC();
-      if (a >= b && b >= c)
+      if(a >= b && b >= c)
       {
         // The user clicked the OK button so transfer the values from the dialog into this class
         m_AspectRatio1 = d.getA() / d.getB();
@@ -105,8 +106,8 @@ void PrimaryRolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, Q
   // Make sure the distribution is set correctly
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
-  if (nullptr == model)
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
+  if(nullptr == model)
   {
     return;
   }
@@ -122,7 +123,7 @@ void PrimaryRolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, Q
   QVector<float> betas;
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 10.0 + rg.genrand_res53();
     beta = (0 * i) + 1.5 + (0.5 * rg.genrand_res53());
@@ -130,7 +131,7 @@ void PrimaryRolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, Q
     betas.push_back(beta);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -144,8 +145,8 @@ void PrimaryRolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, Q
   // Make sure the distribution is set correctly
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
-  if (nullptr == model)
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
+  if(nullptr == model)
   {
     return;
   }
@@ -161,7 +162,7 @@ void PrimaryRolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, Q
   QVector<float> betas;
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + (1.1 + (28.9 * (1.0 / m_AspectRatio1))) + (rg.genrand_res53());
     beta = (0 * i) + (30 - (28.9 * (1.0 / m_AspectRatio1))) + (rg.genrand_res53());
@@ -169,7 +170,7 @@ void PrimaryRolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, Q
     betas.push_back(beta);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -183,8 +184,8 @@ void PrimaryRolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, Q
   // Make sure the distribution is set correctly
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*> (plot->tableModel());
-  if (nullptr == model)
+  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
+  if(nullptr == model)
   {
     return;
   }
@@ -200,7 +201,7 @@ void PrimaryRolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, Q
   QVector<float> betas;
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + (1.1 + (28.9 * (1.0 / m_AspectRatio2))) + (rg.genrand_res53());
     beta = (0 * i) + (30 - (28.9 * (1.0 / m_AspectRatio2))) + (rg.genrand_res53());
@@ -208,7 +209,7 @@ void PrimaryRolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, Q
     betas.push_back(beta);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -222,8 +223,8 @@ void PrimaryRolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot,
   // Make sure the distribution is set correctly
   plot->setDistributionType(SIMPL::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
-  if (nullptr == model)
+  SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*>(plot->tableModel());
+  if(nullptr == model)
   {
     return;
   }
@@ -241,7 +242,7 @@ void PrimaryRolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot,
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
   int middlebin = count / 2;
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     mu = log(8.0 + (1.0 * float(i - middlebin)));
     sigma = 0.3 + (float(middlebin - i) / float(middlebin * 10));
@@ -249,11 +250,10 @@ void PrimaryRolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot,
     sigmas.push_back(sigma);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(mus);
   data.push_back(sigmas);
   model->setTableData(binNumbers, data, colors);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -267,11 +267,11 @@ void PrimaryRolledPreset::initializeClusteringTableModel(StatsGenPlotWidget* plo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryRolledPreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
+void PrimaryRolledPreset::initializeAxisODFTableModel(StatsGenAxisODFWidget* widget)
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGODFTableModel* model = (widget->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -286,13 +286,17 @@ void PrimaryRolledPreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
   e3.push_back(0.0f);
   int spread = int(1.0 + (5 * powf((1 / m_AspectRatio1), 1.0)));
   float weight = (46656.0 * (1 - powf((1 / m_AspectRatio1), 2.0)));
-  if(weight == 0.0) { spread = 1; }
+  if(weight == 0.0)
+  {
+    spread = 1;
+  }
   int scaler = (8 * (spread - 1) * (spread - 1) * (spread - 1));
-  if(scaler == 0) { scaler = 1; }
+  if(scaler == 0)
+  {
+    scaler = 1;
+  }
   weights.push_back(weight / scaler);
   sigmas.push_back(spread);
 
-
   model->setTableData(e1, e2, e3, weights, sigmas);
 }
-

@@ -38,11 +38,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ASCIIDataItem::ASCIIDataItem(const QVector<QVariant>& data) :
-m_ItemData(data),
-m_OriginalString("")
+ASCIIDataItem::ASCIIDataItem(const QVector<QVariant>& data)
+: m_ItemData(data)
+, m_OriginalString("")
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -50,7 +49,6 @@ m_OriginalString("")
 // -----------------------------------------------------------------------------
 ASCIIDataItem::~ASCIIDataItem()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -58,10 +56,10 @@ ASCIIDataItem::~ASCIIDataItem()
 // -----------------------------------------------------------------------------
 bool ASCIIDataItem::insertColumns(int position, int columns)
 {
-  if (position < 0 || position > m_ItemData.size())
+  if(position < 0 || position > m_ItemData.size())
     return false;
 
-  for (int column = 0; column < columns; ++column)
+  for(int column = 0; column < columns; ++column)
   {
     m_ItemData.insert(position, QVariant());
   }
@@ -74,10 +72,10 @@ bool ASCIIDataItem::insertColumns(int position, int columns)
 // -----------------------------------------------------------------------------
 bool ASCIIDataItem::removeColumns(int position, int columns)
 {
-  if (position < 0 || position + columns > m_ItemData.size())
+  if(position < 0 || position + columns > m_ItemData.size())
     return false;
 
-  for (int column = 0; column < columns; ++column)
+  for(int column = 0; column < columns; ++column)
   {
     m_ItemData.remove(position);
   }
@@ -98,7 +96,7 @@ QVariant ASCIIDataItem::data(int column) const
 // -----------------------------------------------------------------------------
 bool ASCIIDataItem::setData(int column, const QVariant& value)
 {
-  if (column < 0)
+  if(column < 0)
   {
     return false;
   }

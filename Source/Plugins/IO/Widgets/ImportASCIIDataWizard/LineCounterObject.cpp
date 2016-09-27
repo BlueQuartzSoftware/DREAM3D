@@ -42,23 +42,21 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LineCounterObject::LineCounterObject(const QString &filePath, QObject* parent) :
-  QObject(parent),
-  m_FilePath(filePath),
-  m_NumOfLines(0)
+LineCounterObject::LineCounterObject(const QString& filePath, QObject* parent)
+: QObject(parent)
+, m_FilePath(filePath)
+, m_NumOfLines(0)
 {
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LineCounterObject::LineCounterObject(const QString &filePath, int numLines, QObject* parent) :
-  QObject(parent),
-  m_FilePath(filePath),
-  m_NumOfLines(numLines)
+LineCounterObject::LineCounterObject(const QString& filePath, int numLines, QObject* parent)
+: QObject(parent)
+, m_FilePath(filePath)
+, m_NumOfLines(numLines)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -66,7 +64,6 @@ LineCounterObject::LineCounterObject(const QString &filePath, int numLines, QObj
 // -----------------------------------------------------------------------------
 LineCounterObject::~LineCounterObject()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -84,7 +81,7 @@ void LineCounterObject::run()
   int64_t fileSize = qFile.size();
 
   // Open the file
-  if (qFile.open(QIODevice::ReadOnly) == false)
+  if(qFile.open(QIODevice::ReadOnly) == false)
   {
     QString errorStr = "Error: Unable to open file \"" + m_FilePath + "\"";
     fputs(errorStr.toStdString().c_str(), stderr);
@@ -92,7 +89,7 @@ void LineCounterObject::run()
   }
 
   int64_t actualSize;
-  if (fileSize <= bufferSize)
+  if(fileSize <= bufferSize)
   {
     actualSize = fileSize;
   }
@@ -102,8 +99,8 @@ void LineCounterObject::run()
   }
 
   // Allocate the buffer
-  buffer = (char*)malloc(sizeof(char)*actualSize);
-  if (buffer == nullptr)
+  buffer = (char*)malloc(sizeof(char) * actualSize);
+  if(buffer == nullptr)
   {
     QString errorStr = "Error: Unable to allocate memory to read in data from \"" + m_FilePath + "\"";
     fputs(errorStr.toStdString().c_str(), stderr);
@@ -111,7 +108,7 @@ void LineCounterObject::run()
   }
 
   int64_t currentByte = 0;
-  while (qFile.atEnd() == false)
+  while(qFile.atEnd() == false)
   {
     // Copy the file contents into the buffer
     result = qFile.read(buffer, actualSize);
@@ -119,23 +116,23 @@ void LineCounterObject::run()
     // Check the buffer for new lines and carriage returns
     int64_t fiveThresh = fileSize / 20.0;
     int64_t currentThresh = fiveThresh;
-    for (int i = 0; i < result; i++)
+    for(int i = 0; i < result; i++)
     {
       currentByte++;
-      if (currentByte > currentThresh)
+      if(currentByte > currentThresh)
       {
-        double progress = static_cast<double>(currentByte)/static_cast<double>(fileSize)*100;
+        double progress = static_cast<double>(currentByte) / static_cast<double>(fileSize) * 100;
         emit progressUpdateGenerated(progress);
         currentThresh = currentThresh + fiveThresh;
       }
 
       char currentChar = buffer[i];
 
-      if (currentChar == '\n')
+      if(currentChar == '\n')
       {
         m_NumOfLines++;
       }
-      else if (currentChar == '\r' && i + 1 < actualSize && buffer[i + 1] == '\n')
+      else if(currentChar == '\r' && i + 1 < actualSize && buffer[i + 1] == '\n')
       {
         m_NumOfLines++;
         i++;

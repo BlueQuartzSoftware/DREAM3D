@@ -38,8 +38,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RodriguesWidget::RodriguesWidget(QWidget* parent) :
-  OrientationWidget(parent)
+RodriguesWidget::RodriguesWidget(QWidget* parent)
+: OrientationWidget(parent)
 {
   setupUi(this);
 
@@ -51,7 +51,6 @@ RodriguesWidget::RodriguesWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 RodriguesWidget::~RodriguesWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -64,14 +63,10 @@ void RodriguesWidget::setupGui()
   r3->setValidator(new QDoubleValidator(r3));
   r4->setValidator(new QDoubleValidator(r4));
 
-  connect(r1, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(r2, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(r3, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(r4, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
+  connect(r1, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(r2, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(r3, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(r4, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -81,12 +76,12 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if (calculator->getInputType() == OrientationConverter<double>::Rodrigues)
+  if(calculator->getInputType() == OrientationConverter<double>::Rodrigues)
   {
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if (calculator->getHasErrors() == true)
+  else if(calculator->getHasErrors() == true)
   {
     r1->setText("nan");
     r2->setText("nan");
@@ -98,7 +93,7 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
 
   QVector<double> rValues = calculator->getValues(OrientationConverter<double>::Rodrigues);
 
-  if (rValues.size() == 4)
+  if(rValues.size() == 4)
   {
     r1->setText(QString::number(rValues[0]));
     r2->setText(QString::number(rValues[1]));
@@ -110,9 +105,9 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RodriguesWidget::valuesUpdated(const QString &text)
+void RodriguesWidget::valuesUpdated(const QString& text)
 {
-Q_UNUSED(text)
+  Q_UNUSED(text)
   QVector<double> values = getValues();
 
   // Sanity check the values. If they are all Zero then we just return otherwise
@@ -122,13 +117,12 @@ Q_UNUSED(text)
     return;
   }
 
-// Always normalize the axis vector
+  // Always normalize the axis vector
   Eigen::Vector3d rod(values[0], values[1], values[2]);
   rod.normalize();
   values[0] = rod[0];
   values[1] = rod[1];
   values[2] = rod[2];
-
 
   emit clearErrorTable();
   int errorCode = 0;
@@ -141,7 +135,7 @@ Q_UNUSED(text)
   errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
-  if (errorCode >= 0)
+  if(errorCode >= 0)
   {
     emit valuesChanged(values, OrientationConverter<double>::Rodrigues, false);
   }
@@ -159,19 +153,19 @@ QVector<double> RodriguesWidget::getValues()
 {
   QVector<double> values;
 
-  if (r1->text() == "nan")
+  if(r1->text() == "nan")
   {
     r1->setText("0");
   }
-  if (r2->text() == "nan")
+  if(r2->text() == "nan")
   {
     r2->setText("0");
   }
-  if (r3->text() == "nan")
+  if(r3->text() == "nan")
   {
     r3->setText("0");
   }
-  if (r4->text() == "nan")
+  if(r4->text() == "nan")
   {
     r4->setText("0");
   }
@@ -183,4 +177,3 @@ QVector<double> RodriguesWidget::getValues()
 
   return values;
 }
-

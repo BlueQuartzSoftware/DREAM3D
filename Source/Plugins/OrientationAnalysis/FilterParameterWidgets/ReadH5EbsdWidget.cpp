@@ -35,28 +35,26 @@
 
 #include "ReadH5EbsdWidget.h"
 
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QComboBox>
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
-#include "EbsdLib/TSL/H5AngVolumeReader.h"
-#include "EbsdLib/TSL/AngFields.h"
-#include "EbsdLib/HKL/H5CtfVolumeReader.h"
 #include "EbsdLib/HKL/CtfFields.h"
+#include "EbsdLib/HKL/H5CtfVolumeReader.h"
+#include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/TSL/H5AngVolumeReader.h"
 
 #include "SIMPLib/Common/Constants.h"
 
-
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
-#include "SVWidgetsLib/QtSupport/QtSMacros.h"
 #include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
+#include "SVWidgetsLib/QtSupport/QtSMacros.h"
 
-
-#include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
 #include "OrientationAnalysis/FilterParameters/ReadH5EbsdFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
 
 // Initialize private static member variable
 QString ReadH5EbsdWidget::m_OpenDialogLastDirectory = "";
@@ -64,11 +62,11 @@ QString ReadH5EbsdWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent),
-  m_Version4Warning(false),
-  m_DidCausePreflight(false),
-  m_NewFileLoaded(false)
+ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
+: FilterParameterWidget(parameter, filter, parent)
+, m_Version4Warning(false)
+, m_DidCausePreflight(false)
+, m_NewFileLoaded(false)
 {
   m_FilterParameter = dynamic_cast<ReadH5EbsdFilterParameter*>(parameter);
 
@@ -84,11 +82,11 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
   m_Filter = qobject_cast<ReadH5Ebsd*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
-  qRegisterMetaType<QSet<QString> >("QSet<QString>");
+  qRegisterMetaType<QSet<QString>>("QSet<QString>");
 
-  if ( getOpenDialogLastDirectory().isEmpty() )
+  if(getOpenDialogLastDirectory().isEmpty())
   {
-    setOpenDialogLastDirectory( QDir::homePath() );
+    setOpenDialogLastDirectory(QDir::homePath());
   }
   setupUi(this);
   setupGui();
@@ -99,7 +97,6 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
 // -----------------------------------------------------------------------------
 ReadH5EbsdWidget::~ReadH5EbsdWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +114,6 @@ AbstractFilter* ReadH5EbsdWidget::getFilter() const
 {
   return m_Filter;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -140,7 +136,7 @@ FilterParameter* ReadH5EbsdWidget::getFilterParameter() const
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList)
+  foreach(QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -153,38 +149,33 @@ void ReadH5EbsdWidget::setupGui()
 {
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
+  connect(m_Filter, SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   QtSFileCompleter* com = new QtSFileCompleter(this, false);
   m_InputFile->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString&)),
-                    this, SLOT(on_m_InputFile_textChanged(const QString&)));
+  QObject::connect(com, SIGNAL(activated(const QString&)), this, SLOT(on_m_InputFile_textChanged(const QString&)));
 
   validateInputFile();
 
   // Setup the GUI widgets from what ever is in the Filter instance
 
-
-  m_InputFile->setText( m_Filter->getInputFile() );
+  m_InputFile->setText(m_Filter->getInputFile());
   // Set the initial range based on the z min & z max. This will get adjusted later
   m_ZStartIndex->setRange(0, m_Filter->getZEndIndex());
-  m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
+  m_ZStartIndex->setValue(m_Filter->getZStartIndex());
   // Set the initial range based on the z min & z max. This will get adjusted later
   m_ZEndIndex->setRange(0, m_Filter->getZEndIndex());
-  m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
+  m_ZEndIndex->setValue(m_Filter->getZEndIndex());
 
-  m_UseTransformations->setChecked( m_Filter->getUseTransformations() );
+  m_UseTransformations->setChecked(m_Filter->getUseTransformations());
   m_AngleRepresentationCB->setCurrentIndex(m_Filter->getAngleRepresentation());
-  m_RefFrameZDir->setText( Ebsd::StackingOrder::Utils::getStringForEnum( m_Filter->getRefFrameZDir() )  );
+  m_RefFrameZDir->setText(Ebsd::StackingOrder::Utils::getStringForEnum(m_Filter->getRefFrameZDir()));
   updateFileInfoWidgets();
   QSet<QString> selectedArrays = m_Filter->getSelectedArrayNames();
   updateModelFromFilter(selectedArrays, true);
@@ -197,13 +188,12 @@ void ReadH5EbsdWidget::validateInputFile()
 {
   QString currentPath = m_Filter->getInputFile();
   QFileInfo fi(currentPath);
-  if (currentPath.isEmpty() == false && fi.exists() == false)
+  if(currentPath.isEmpty() == false && fi.exists() == false)
   {
     QString Ftype = m_FilterParameter->getFileType();
     QString ext = m_FilterParameter->getFileExtension();
     QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
     QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
-
 
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
@@ -241,12 +231,11 @@ void ReadH5EbsdWidget::on_m_InputFileBtn_clicked()
   }
   // Store the last used directory into the private instance variable
   inputFile = QDir::toNativeSeparators(inputFile);
-  if (!inputFile.isNull())
+  if(!inputFile.isNull())
   {
     m_InputFile->setText(inputFile); // Should cause a signal to be emitted
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -270,7 +259,6 @@ void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString& text)
   emit parametersChanged();
   m_DidCausePreflight = false;
   m_NewFileLoaded = false;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -283,23 +271,23 @@ void ReadH5EbsdWidget::on_m_CellList_itemClicked(QListWidgetItem* item)
   int count = m_CellList->count();
   for(int i = 0; i < count; i++)
   {
-    if (m_CellList->item(i)->checkState() == Qt::Checked)
+    if(m_CellList->item(i)->checkState() == Qt::Checked)
     {
       checkCount++;
     }
   }
   m_DataArraysCheckBox->blockSignals(true);
-  if (count == checkCount)
+  if(count == checkCount)
   {
-    m_DataArraysCheckBox->setCheckState(Qt::Checked );
+    m_DataArraysCheckBox->setCheckState(Qt::Checked);
   }
-  else if (checkCount > 0 && checkCount < count)
+  else if(checkCount > 0 && checkCount < count)
   {
-    m_DataArraysCheckBox->setCheckState(Qt::PartiallyChecked );
+    m_DataArraysCheckBox->setCheckState(Qt::PartiallyChecked);
   }
   else
   {
-    m_DataArraysCheckBox->setCheckState(Qt::Unchecked );
+    m_DataArraysCheckBox->setCheckState(Qt::Unchecked);
   }
   m_DataArraysCheckBox->blockSignals(false);
   emit parametersChanged();
@@ -320,10 +308,9 @@ void ReadH5EbsdWidget::on_m_DataArraysCheckBox_stateChanged(int state)
   {
     state = (int)(Qt::Checked);
     m_DataArraysCheckBox->blockSignals(true);
-    m_DataArraysCheckBox->setCheckState(Qt::CheckState(state) );
+    m_DataArraysCheckBox->setCheckState(Qt::CheckState(state));
     m_DataArraysCheckBox->blockSignals(false);
   }
-
 
   int count = m_CellList->count();
   for(int i = 0; i < count; i++)
@@ -383,7 +370,7 @@ bool ReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit
 {
   //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
-  if (false == fileinfo.exists() )
+  if(false == fileinfo.exists())
   {
     lineEdit->setStyleSheet("border: 1px solid red;");
   }
@@ -394,13 +381,12 @@ bool ReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit
   return fileinfo.exists();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (nullptr == filter)
+  if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was nullptr.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
@@ -410,16 +396,15 @@ void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   Q_ASSERT_X(nullptr != readEbsd, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   bool ok = false;
-  readEbsd->setInputFile(m_InputFile->text() );
+  readEbsd->setInputFile(m_InputFile->text());
   readEbsd->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
   readEbsd->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
-  readEbsd->setUseTransformations(m_UseTransformations->isChecked() );
+  readEbsd->setUseTransformations(m_UseTransformations->isChecked());
   int index = m_AngleRepresentationCB->currentIndex();
   readEbsd->setAngleRepresentation(index);
   readEbsd->setSelectedArrayNames(getSelectedArrayNames());
 
   //  m_Filter->setSelectedEnsembleNames(getSelectedEnsembleNames());
-
 }
 // -----------------------------------------------------------------------------
 //
@@ -447,7 +432,6 @@ QSet<QString> ReadH5EbsdWidget::getSelectedEnsembleNames()
 {
   QSet<QString> selections;
 
-
   return selections;
 }
 
@@ -457,7 +441,7 @@ QSet<QString> ReadH5EbsdWidget::getSelectedEnsembleNames()
 void ReadH5EbsdWidget::beforePreflight()
 {
 
-  if (m_NewFileLoaded == true)
+  if(m_NewFileLoaded == true)
   {
     // Get all the arrays from the file
     QSet<QString> arrayNames = m_Filter->getDataArrayNames();
@@ -470,7 +454,7 @@ void ReadH5EbsdWidget::beforePreflight()
     m_NewFileLoaded = false; // We are all done with our update based a new file being loaded
   }
 
-  if (m_DidCausePreflight == false )
+  if(m_DidCausePreflight == false)
   {
     QSet<QString> arrayNames = m_Filter->getDataArrayNames();
     updateModelFromFilter(arrayNames);
@@ -500,7 +484,7 @@ void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString>& arrayNames, bool set
   foreach(QString item, arrayNames)
   {
     QListWidgetItem* listItem = new QListWidgetItem(item, m_CellList);
-    if( (selections.find(item) != selections.end() ) || (setChecked == true))
+    if((selections.find(item) != selections.end()) || (setChecked == true))
     {
       listItem->setCheckState(Qt::Checked);
     }
@@ -508,7 +492,6 @@ void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString>& arrayNames, bool set
     {
       listItem->setCheckState(Qt::Unchecked);
     }
-
   }
   m_CellList->blockSignals(false);
 }
@@ -538,7 +521,7 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
       int zStart = 0;
       int zEnd = 0;
 
-      if (h5Reader->readVolumeInfo() >= 0)
+      if(h5Reader->readVolumeInfo() >= 0)
       {
 
         h5Reader->getResolution(xres, yres, zres);
@@ -559,16 +542,17 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
         int currentZ = m_ZStartIndex->value();
         m_ZStartIndex->setRange(zStart, zEnd);
 
-        if(currentZ < zStart || currentZ > zEnd) {
+        if(currentZ < zStart || currentZ > zEnd)
+        {
           m_ZStartIndex->setValue(zStart);
         }
 
         currentZ = m_ZEndIndex->value();
         m_ZEndIndex->setRange(zStart, zEnd);
-        if(currentZ < zStart || currentZ > zEnd) {
+        if(currentZ < zStart || currentZ > zEnd)
+        {
           m_ZEndIndex->setValue(zEnd);
         }
-
       }
       else
       {
@@ -580,12 +564,13 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
 
       m_RefFrameZDir->setText(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder()));
 
-      if (h5Reader->getFileVersion() == 4 && m_Version4Warning == false)
+      if(h5Reader->getFileVersion() == 4 && m_Version4Warning == false)
       {
         QMessageBox msgBox;
         msgBox.setText("H5Ebsd File Needs Updating");
         QString iText("Due to a bug in earlier versions of DREAM3D the default transformation values for TSL EBSD data were incorrect.\n");
-        iText.append(QString("This may cause results obtained through DREAM3D or another analysis program to be incorrect. We suggest that you reimport your .ang files into an .h5ebsd file to correct this error."));
+        iText.append(QString(
+            "This may cause results obtained through DREAM3D or another analysis program to be incorrect. We suggest that you reimport your .ang files into an .h5ebsd file to correct this error."));
         msgBox.setInformativeText(iText);
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setDefaultButton(QMessageBox::Ok);
@@ -596,22 +581,23 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
         //          h5Reader->updateToLatestVersion();
         //        }
       }
-      else if (h5Reader->getFileVersion() < 4)
+      else if(h5Reader->getFileVersion() < 4)
       {
         QMessageBox msgBox;
         msgBox.setText("H5Ebsd File Needs Updating");
-        msgBox.setInformativeText("The transformation information stored in the file does not meet the latest specification.\nShould DREAM3D update the file for you?\n  If you select NOT to do this operation DREAM3D can not use this file.");
+        msgBox.setInformativeText("The transformation information stored in the file does not meet the latest specification.\nShould DREAM3D update the file for you?\n  If you select NOT to do this "
+                                  "operation DREAM3D can not use this file.");
         msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Cancel);
         int ret = msgBox.exec();
-        if (QMessageBox::Ok == ret)
+        if(QMessageBox::Ok == ret)
         {
           h5Reader->updateToLatestVersion();
         }
       }
 
       // Now test again to see if we are at the correct file version
-      if (h5Reader->getFileVersion() >= 4)
+      if(h5Reader->getFileVersion() >= 4)
       {
         m_SampleTransformation.angle = h5Reader->getSampleTransformationAngle();
         QVector<float> sampleTransAxis = h5Reader->getSampleTransformationAxis();
@@ -629,8 +615,10 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
 
         //        sampleTransAxis = h5Reader->getSampleTransformationAxis();
         //        eulerTransAxis = h5Reader->getEulerTransformationAxis();
-        //        sampleTrans = QString::number(h5Reader->getSampleTransformationAngle()) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) + QString::number(sampleTransAxis[2]) + ">";
-        //        eulerTrans = QString::number(h5Reader->getEulerTransformationAngle()) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) + QString::number(eulerTransAxis[2]) + ">";
+        //        sampleTrans = QString::number(h5Reader->getSampleTransformationAngle()) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) +
+        //        QString::number(sampleTransAxis[2]) + ">";
+        //        eulerTrans = QString::number(h5Reader->getEulerTransformationAngle()) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) +
+        //        QString::number(eulerTransAxis[2]) + ">";
 
         m_SampleTransformationLabel->setText(sampleTrans);
         m_EulerTransformationLabel->setText(eulerTrans);
@@ -661,5 +649,3 @@ void ReadH5EbsdWidget::resetGuiFileInfoWidgets()
   m_ZMax->setText("xxx");
   m_RefFrameZDir->setText("xxx");
 }
-
-

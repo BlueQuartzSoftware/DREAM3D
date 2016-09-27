@@ -39,17 +39,17 @@
 
 #include "SIMPLib/Common/Constants.h"
 
-#include "ImportASCIIDataWizard.h"
 #include "ASCIIDataModel.h"
 #include "EditHeadersDialog.h"
+#include "ImportASCIIDataWizard.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataFormatPage::DataFormatPage(const QString &inputFilePath, int numLines, QWidget* parent) :
-  AbstractWizardPage(inputFilePath, parent),
-  m_NumLines(numLines),
-  m_EditHeadersDialog(nullptr)
+DataFormatPage::DataFormatPage(const QString& inputFilePath, int numLines, QWidget* parent)
+: AbstractWizardPage(inputFilePath, parent)
+, m_NumLines(numLines)
+, m_EditHeadersDialog(nullptr)
 {
   setupUi(this);
 
@@ -61,7 +61,6 @@ DataFormatPage::DataFormatPage(const QString &inputFilePath, int numLines, QWidg
 // -----------------------------------------------------------------------------
 DataFormatPage::~DataFormatPage()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -72,7 +71,7 @@ void DataFormatPage::setupGui()
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   dataView->setModel(model);
-//  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  //  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
   connect(tupleDimsTable, SIGNAL(tupleDimsChanged(QVector<size_t>)), this, SLOT(checkTupleDimensions(QVector<size_t>)));
@@ -105,7 +104,7 @@ void DataFormatPage::setupGui()
 
   editHeadersBtn->setDisabled(true);
   columnDataGroupBox->setDisabled(true);
-  
+
   lineNumErrLabel->hide();
   tupleTableErrLabel->hide();
 }
@@ -129,9 +128,9 @@ void DataFormatPage::showEvent(QShowEvent* event)
   QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 
-  for (int i = 0; i < model->columnCount(); i++)
+  for(int i = 0; i < model->columnCount(); i++)
   {
-    if (model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString().isEmpty() == true)
+    if(model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString().isEmpty() == true)
     {
       model->setColumnHasErrors(i, true);
       arrayErrLabel->setText("Column headers cannot be empty.");
@@ -146,7 +145,7 @@ void DataFormatPage::showEvent(QShowEvent* event)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_startRowSpin_valueChanged(int value)
 {
-  if (value > m_NumLines)
+  if(value > m_NumLines)
   {
     wizard()->button(QWizard::FinishButton)->setDisabled(true);
     tupleCountLabel->setText("ERR");
@@ -183,7 +182,7 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
 {
-  if (checked == true)
+  if(checked == true)
   {
     editHeadersBtn->setDisabled(true);
     lineNumberLabel->setEnabled(true);
@@ -199,7 +198,7 @@ void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
     headersIndexLineEdit->setDisabled(true);
 
     ASCIIDataModel* model = ASCIIDataModel::Instance();
-    for (int i = 0; i < model->columnCount(); i++)
+    for(int i = 0; i < model->columnCount(); i++)
     {
       model->setHeaderData(i, Qt::Horizontal, "", Qt::DisplayRole);
     }
@@ -209,13 +208,13 @@ void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
+void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString& text)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   bool ok = false;
   int lineNum = text.toInt(&ok);
 
-  if ( text.isEmpty() == false && (lineNum > m_NumLines || ok == false) )
+  if(text.isEmpty() == false && (lineNum > m_NumLines || ok == false))
   {
     model->clearHeaders(Qt::Horizontal);
     validateHeaders(QVector<QString>());
@@ -226,7 +225,7 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
   lineNumErrLabel->hide();
   wizard()->button(QWizard::FinishButton)->setEnabled(true);
 
-  if (text.isEmpty() == true)
+  if(text.isEmpty() == true)
   {
     model->clearHeaders(Qt::Horizontal);
     validateHeaders(QVector<QString>());
@@ -234,7 +233,7 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
   }
 
   QString line = ImportASCIIDataWizard::ReadLine(m_InputFilePath, lineNum);
-  
+
   QStringList list;
   list.push_back(line);
 
@@ -251,11 +250,11 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
   QStringList tokenizedLine = result[0];
 
   QVector<QString> headers;
-  for (int i = 0; i < model->columnCount(); i++)
+  for(int i = 0; i < model->columnCount(); i++)
   {
     QString header = "";
 
-    if (i < tokenizedLine.size())
+    if(i < tokenizedLine.size())
     {
       header = tokenizedLine[i];
     }
@@ -273,7 +272,7 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_editHeadersBtn_clicked()
 {
-  if (nullptr == m_EditHeadersDialog)
+  if(nullptr == m_EditHeadersDialog)
   {
     m_EditHeadersDialog = new EditHeadersDialog(this);
   }
@@ -284,12 +283,12 @@ void DataFormatPage::on_editHeadersBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::updateSelection(const QItemSelection &selected, const QItemSelection &deselected)
+void DataFormatPage::updateSelection(const QItemSelection& selected, const QItemSelection& deselected)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   QModelIndexList selectedIndexList = selected.indexes();
 
-  if (selectedIndexList.size() <= 0)
+  if(selectedIndexList.size() <= 0)
   {
     columnDataGroupBox->setDisabled(true);
   }
@@ -300,13 +299,13 @@ void DataFormatPage::updateSelection(const QItemSelection &selected, const QItem
     int selectedColumn = selectedIndexList[0].column();
     QString selectedType = model->columnDataType(selectedColumn);
 
-    if (selectedType.isEmpty())
+    if(selectedType.isEmpty())
     {
       dataTypeRadio->setChecked(true);
       dataTypeCB->setEnabled(true);
       dataTypeCB->setCurrentIndex(0);
     }
-    else if (selectedType == "Skip")
+    else if(selectedType == "Skip")
     {
       skipRadio->setChecked(true);
       dataTypeCB->setDisabled(true);
@@ -327,14 +326,14 @@ void DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims)
 {
   int tupleTotal = 1;
 
-  for (int i = 0; i < tupleDims.size(); i++)
+  for(int i = 0; i < tupleDims.size(); i++)
   {
     tupleTotal = tupleTotal * tupleDims[i];
   }
 
   int beginIndex = startRowSpin->value();
   int numOfDataLines = m_NumLines - beginIndex + 1;
-  if (tupleTotal != numOfDataLines)
+  if(tupleTotal != numOfDataLines)
   {
     tupleTableErrLabel->setText("The current tuple dimensions do not match the total number of tuples.");
     tupleTableErrLabel->show();
@@ -356,7 +355,7 @@ void DataFormatPage::on_dataTypeRadio_clicked()
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   QModelIndexList indexList = dataView->selectionModel()->selectedColumns();
 
-  if (indexList.size() > 0)
+  if(indexList.size() > 0)
   {
     QModelIndex index = indexList[0];
     int column = index.column();
@@ -370,7 +369,7 @@ void DataFormatPage::on_dataTypeRadio_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::on_dataTypeCB_currentTextChanged(const QString &text)
+void DataFormatPage::on_dataTypeCB_currentTextChanged(const QString& text)
 {
   on_dataTypeRadio_clicked();
 }
@@ -383,7 +382,7 @@ void DataFormatPage::on_skipRadio_clicked()
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   QModelIndexList indexList = dataView->selectionModel()->selectedColumns();
 
-  if (indexList.size() > 0)
+  if(indexList.size() > 0)
   {
     QModelIndex index = indexList[0];
     int column = index.column();
@@ -405,7 +404,7 @@ void DataFormatPage::cleanupPage()
   doesNotHaveHeadersRadio->setChecked(false);
 
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-  for (int i = 0; i < model->columnCount(); i++)
+  for(int i = 0; i < model->columnCount(); i++)
   {
     model->setColumnHasErrors(i, false);
   }
@@ -435,13 +434,12 @@ void DataFormatPage::refreshModel()
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 
   // Refresh the headers
-  if (hasHeadersRadio->isChecked())
+  if(hasHeadersRadio->isChecked())
   {
     on_headersIndexLineEdit_textChanged(headersIndexLineEdit->text());
   }
   else
   {
-
   }
 }
 
@@ -450,18 +448,18 @@ void DataFormatPage::refreshModel()
 // -----------------------------------------------------------------------------
 void DataFormatPage::launchEditHeadersDialog()
 {
-  if (nullptr != m_EditHeadersDialog)
+  if(nullptr != m_EditHeadersDialog)
   {
     ASCIIDataModel* model = ASCIIDataModel::Instance();
     QVector<QString> currentHeaders;
-    for (int i = 0; i < model->columnCount(); i++)
+    for(int i = 0; i < model->columnCount(); i++)
     {
       currentHeaders.push_back(model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString());
       model->setHeaderData(i, Qt::Horizontal, QString::number(i + 1), Qt::DisplayRole);
     }
 
     int result = m_EditHeadersDialog->exec();
-    if (result == QDialog::Accepted)
+    if(result == QDialog::Accepted)
     {
       QVector<QString> headers = m_EditHeadersDialog->getHeaders();
 
@@ -469,7 +467,7 @@ void DataFormatPage::launchEditHeadersDialog()
     }
     else
     {
-      for (int i = 0; i < model->columnCount(); i++)
+      for(int i = 0; i < model->columnCount(); i++)
       {
         model->setHeaderData(i, Qt::Horizontal, currentHeaders[i], Qt::DisplayRole);
       }
@@ -490,24 +488,24 @@ void DataFormatPage::validateHeaders(QVector<QString> headers)
   bool hasDuplicates = false;
 
   bool isEmpty = false;
-  if (headers.size() <= 0)
+  if(headers.size() <= 0)
   {
     isEmpty = true;
-    for (int i = 0; i < model->columnCount(); i++)
+    for(int i = 0; i < model->columnCount(); i++)
     {
       model->setColumnHasErrors(i, true);
     }
   }
-  for (int i = 0; i < headers.size(); i++)
+  for(int i = 0; i < headers.size(); i++)
   {
     QString header = headers[i];
 
-    if (header.isEmpty() == true)
+    if(header.isEmpty() == true)
     {
       isEmpty = true;
       model->setColumnHasErrors(i, true);
     }
-    else if (header.contains('/') || header.contains('\\'))
+    else if(header.contains('/') || header.contains('\\'))
     {
       hasSlashes = true;
       model->setColumnHasErrors(i, true);
@@ -517,17 +515,17 @@ void DataFormatPage::validateHeaders(QVector<QString> headers)
       model->setColumnHasErrors(i, false);
     }
 
-    for (int j = 0; j < headers.size(); j++)
+    for(int j = 0; j < headers.size(); j++)
     {
       QString otherHeader = headers[j];
 
-      if (i != j && header.isEmpty() == false && otherHeader.isEmpty() == false && header == otherHeader)
+      if(i != j && header.isEmpty() == false && otherHeader.isEmpty() == false && header == otherHeader)
       {
         hasDuplicates = true;
         model->setColumnHasErrors(i, true);
         model->setColumnHasErrors(j, true);
       }
-      else if (hasDuplicates == false && isEmpty == false && hasSlashes == false)
+      else if(hasDuplicates == false && isEmpty == false && hasSlashes == false)
       {
         model->setColumnHasErrors(i, false);
         model->setColumnHasErrors(j, false);
@@ -537,19 +535,19 @@ void DataFormatPage::validateHeaders(QVector<QString> headers)
     model->setHeaderData(i, Qt::Horizontal, header, Qt::DisplayRole);
   }
 
-  if (isEmpty == true)
+  if(isEmpty == true)
   {
     arrayErrLabel->setText("Column headers cannot be empty.");
     arrayErrLabel->show();
     wizard()->button(QWizard::FinishButton)->setDisabled(true);
   }
-  else if (hasSlashes == true)
+  else if(hasSlashes == true)
   {
     arrayErrLabel->setText("Column headers cannot contain slashes.");
     arrayErrLabel->show();
     wizard()->button(QWizard::FinishButton)->setDisabled(true);
   }
-  else if (hasDuplicates == true)
+  else if(hasDuplicates == true)
   {
     arrayErrLabel->setText("Column headers cannot have the same name.");
     arrayErrLabel->show();

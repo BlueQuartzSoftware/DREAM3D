@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _sgaxisodfwidget_h_
-#define _sgaxisodfwidget_h_
+#ifndef _StatsGenAxisODFWidget_h_
+#define _StatsGenAxisODFWidget_h_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -43,7 +43,7 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "ui_SGAxisODFWidget.h"
+#include "ui_StatsGenAxisODFWidget.h"
 
 class SGODFTableModel;
 class StatsGenMDFWidget;
@@ -53,19 +53,19 @@ class QwtPlotMarker;
 class StatsData;
 
 /**
- * @class SGAxisODFWidget SGAxisODFWidget.h StatsGenerator/SGAxisODFWidget.h
+ * @class StatsGenAxisODFWidget StatsGenAxisODFWidget.h StatsGenerator/StatsGenAxisODFWidget.h
  * @brief Calculates and displays ODF data
  *
  * @date Jan 27, 2011
  * @version 1.0
  */
-class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
+class StatsGenAxisODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
 {
     Q_OBJECT
 
   public:
-    SGAxisODFWidget(QWidget* parent = 0);
-    virtual ~SGAxisODFWidget();
+    StatsGenAxisODFWidget(QWidget* parent = 0);
+    virtual ~StatsGenAxisODFWidget();
 
     void setupGui();
 
@@ -116,8 +116,8 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     QwtPlotCurve*           m_RotCross1;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
-    SGAxisODFWidget(const SGAxisODFWidget&); // Copy Constructor Not Implemented
-    void operator=(const SGAxisODFWidget&); // Operator '=' Not Implemented
+    StatsGenAxisODFWidget(const StatsGenAxisODFWidget&); // Copy Constructor Not Implemented
+    void operator=(const StatsGenAxisODFWidget&); // Operator '=' Not Implemented
 };
 
 #endif /* _SG_AXIS_ODFWIDGET_H_ */

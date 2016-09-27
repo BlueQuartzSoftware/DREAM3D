@@ -41,11 +41,11 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Utilities/TimeUtilities.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -53,14 +53,13 @@
 // Include the MOC generated file for this class
 #include "moc_SPParksWriter.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SPParksWriter::SPParksWriter() :
-  FileWriter(),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_FeatureIds(nullptr)
+SPParksWriter::SPParksWriter()
+: FileWriter()
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -81,7 +80,8 @@ void SPParksWriter::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, SPParksWriter, "*.spparks", "SPParks Sites File"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, SPParksWriter, req));
   }
   setFilterParameters(parameters);
@@ -93,8 +93,8 @@ void SPParksWriter::setupFilterParameters()
 void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setOutputFile(reader->readString("OutputFile", getOutputFile()));
   reader->closeFilterGroup();
 }
 
@@ -103,7 +103,6 @@ void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 void SPParksWriter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -116,9 +115,12 @@ void SPParksWriter::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -141,18 +143,21 @@ int32_t SPParksWriter::writeHeader()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return getErrorCondition(); }
+  if(getErrorCondition() < 0)
+  {
+    return getErrorCondition();
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   size_t totalpoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   std::ofstream outfile;
   outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary);
-  if (!outfile)
+  if(!outfile)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
     setErrorCondition(-100);
@@ -160,15 +165,23 @@ int32_t SPParksWriter::writeHeader()
     return getErrorCondition();
   }
 
-  outfile << "-" << "\n";
-  outfile << "3 dimension" << "\n";
-  outfile << totalpoints << " sites" << "\n";
-  outfile << "26 max neighbors" << "\n";
-  outfile << "0 " << udims[0] << " xlo xhi" << "\n";
-  outfile << "0 " << udims[1] << " ylo yhi" << "\n";
-  outfile << "0 " << udims[2] << " zlo zhi" << "\n";
+  outfile << "-"
+          << "\n";
+  outfile << "3 dimension"
+          << "\n";
+  outfile << totalpoints << " sites"
+          << "\n";
+  outfile << "26 max neighbors"
+          << "\n";
+  outfile << "0 " << udims[0] << " xlo xhi"
+          << "\n";
+  outfile << "0 " << udims[1] << " ylo yhi"
+          << "\n";
+  outfile << "0 " << udims[2] << " zlo zhi"
+          << "\n";
   outfile << "\n";
-  outfile << "Values" << "\n";
+  outfile << "Values"
+          << "\n";
   outfile << "\n";
   outfile.close();
   return 0;
@@ -181,7 +194,10 @@ int32_t SPParksWriter::writeFile()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return getErrorCondition(); }
+  if(getErrorCondition() < 0)
+  {
+    return getErrorCondition();
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
@@ -192,7 +208,7 @@ int32_t SPParksWriter::writeFile()
 
   std::ofstream outfile;
   outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary | std::ios_base::app);
-  if (!outfile)
+  if(!outfile)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
     setErrorCondition(-100);
@@ -214,25 +230,25 @@ int32_t SPParksWriter::writeFile()
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
   outfile.rdbuf()->pubsetbuf(buffer, 4096);
-  for (size_t k = 0; k < totalpoints; k++)
+  for(size_t k = 0; k < totalpoints; k++)
   {
-    if (count % increment == 0)
+    if(count % increment == 0)
     {
       currentMillis = QDateTime::currentMSecsSinceEpoch();
-      if (currentMillis - millis > 1000)
+      if(currentMillis - millis > 1000)
       {
         buf.clear();
-        ss << getMessagePrefix() << " " << static_cast<int>((float)(k) / (float)(totalpoints) * 100) << " % Completed ";
+        ss << getMessagePrefix() << " " << static_cast<int>((float)(k) / (float)(totalpoints)*100) << " % Completed ";
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
         ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-        notifyStatusMessage(getHumanLabel(),  buf );
+        notifyStatusMessage(getHumanLabel(), buf);
         millis = QDateTime::currentMSecsSinceEpoch();
       }
     }
     count++;
-//    double temp0 = 0.0;
-//    double temp1 = 0.0;
+    //    double temp0 = 0.0;
+    //    double temp1 = 0.0;
     outfile << k + 1 << " " << m_FeatureIds[k]
             /* << " " << temp0 << " " << temp1 */
             << "\n";
@@ -280,23 +296,29 @@ const QString SPParksWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksWriter::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksWriter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksWriter::getHumanLabel()
-{ return "Write SPParks Sites (Feature Ids)"; }
+{
+  return "Write SPParks Sites (Feature Ids)";
+}

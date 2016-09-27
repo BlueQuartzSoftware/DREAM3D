@@ -36,8 +36,8 @@
 #include "FindRelativeMotionBetweenSlices.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
@@ -45,13 +45,13 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -60,88 +60,88 @@
  * @brief The CalcRelativeMotion class implements a templated threaded algorithm for
  * determining the relative motion between a series of slices through a 3D volume.
  */
-template<typename T>
-class CalcRelativeMotion
+template <typename T> class CalcRelativeMotion
 {
 
-  public:
-    CalcRelativeMotion(T* data, float* motionDir, int32_t* patchPoints, int32_t* searchPoints, bool* validPoints, size_t numPP, size_t numSP) :
-      m_Data(data),
-      m_MotionDirection(motionDir),
-      m_PatchPoints(patchPoints),
-      m_SearchPoints(searchPoints),
-      m_ValidPoints(validPoints),
-      m_NumPatchPoints(numPP),
-      m_NumSearchPoints(numSP)
-    {}
-    virtual ~CalcRelativeMotion() {}
+public:
+  CalcRelativeMotion(T* data, float* motionDir, int32_t* patchPoints, int32_t* searchPoints, bool* validPoints, size_t numPP, size_t numSP)
+  : m_Data(data)
+  , m_MotionDirection(motionDir)
+  , m_PatchPoints(patchPoints)
+  , m_SearchPoints(searchPoints)
+  , m_ValidPoints(validPoints)
+  , m_NumPatchPoints(numPP)
+  , m_NumSearchPoints(numSP)
+  {
+  }
+  virtual ~CalcRelativeMotion()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    int32_t patchPoint = 0, comparePoint = 0;
+    float val = 0.0f, minVal = 0.0f;
+    for(size_t i = start; i < end; i++)
     {
-      int32_t patchPoint = 0, comparePoint = 0;
-      float val = 0.0f, minVal = 0.0f;
-      for (size_t i = start; i < end; i++)
+      if(m_ValidPoints[i] == true)
       {
-        if(m_ValidPoints[i] == true)
+        minVal = std::numeric_limits<float>::max();
+        for(size_t j = 0; j < m_NumSearchPoints; j++)
         {
-          minVal = std::numeric_limits<float>::max();
-          for (size_t j = 0; j < m_NumSearchPoints; j++)
+          val = 0;
+          for(size_t k = 0; k < m_NumPatchPoints; k++)
           {
-            val = 0;
-            for (size_t k = 0; k < m_NumPatchPoints; k++)
-            {
-              patchPoint = i + m_PatchPoints[k];
-              comparePoint = patchPoint + m_SearchPoints[4 * j];
-              val += float((m_Data[patchPoint] - m_Data[comparePoint])) * float((m_Data[patchPoint] - m_Data[comparePoint]));
-            }
-            if (val < minVal)
-            {
-              minVal = val;
-              m_MotionDirection[3 * i + 0] = m_SearchPoints[4 * j + 1];
-              m_MotionDirection[3 * i + 1] = m_SearchPoints[4 * j + 2];
-              m_MotionDirection[3 * i + 2] = m_SearchPoints[4 * j + 3];
-            }
+            patchPoint = i + m_PatchPoints[k];
+            comparePoint = patchPoint + m_SearchPoints[4 * j];
+            val += float((m_Data[patchPoint] - m_Data[comparePoint])) * float((m_Data[patchPoint] - m_Data[comparePoint]));
+          }
+          if(val < minVal)
+          {
+            minVal = val;
+            m_MotionDirection[3 * i + 0] = m_SearchPoints[4 * j + 1];
+            m_MotionDirection[3 * i + 1] = m_SearchPoints[4 * j + 2];
+            m_MotionDirection[3 * i + 2] = m_SearchPoints[4 * j + 3];
           }
         }
       }
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
-  private:
-    T* m_Data;
-    float* m_MotionDirection;
-    int32_t* m_PatchPoints;
-    int32_t* m_SearchPoints;
-    bool* m_ValidPoints;
-    size_t m_NumPatchPoints;
-    size_t m_NumSearchPoints;
+private:
+  T* m_Data;
+  float* m_MotionDirection;
+  int32_t* m_PatchPoints;
+  int32_t* m_SearchPoints;
+  bool* m_ValidPoints;
+  size_t m_NumPatchPoints;
+  size_t m_NumSearchPoints;
 };
 
 // Include the MOC generated file for this class
 #include "moc_FindRelativeMotionBetweenSlices.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices() :
-  AbstractFilter(),
-  m_SelectedArrayPath("", "", ""),
-  m_Plane(0),
-  m_PSize1(0),
-  m_PSize2(0),
-  m_SSize1(0),
-  m_SSize2(0),
-  m_SliceStep(0),
-  m_MotionDirectionArrayName(SIMPL::CellData::MotionDirection),
-  m_InData(nullptr),
-  m_MotionDirection(nullptr)
+FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices()
+: AbstractFilter()
+, m_SelectedArrayPath("", "", "")
+, m_Plane(0)
+, m_PSize1(0)
+, m_PSize2(0)
+, m_SSize1(0)
+, m_SSize2(0)
+, m_SliceStep(0)
+, m_MotionDirectionArrayName(SIMPL::CellData::MotionDirection)
+, m_InData(nullptr)
+, m_MotionDirection(nullptr)
 {
   setupFilterParameters();
 }
@@ -181,7 +181,8 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Step", SliceStep, FilterParameter::Parameter, FindRelativeMotionBetweenSlices));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     QVector<QString> daTypes;
     daTypes.push_back(SIMPL::TypeNames::Int8);
     daTypes.push_back(SIMPL::TypeNames::Int16);
@@ -205,14 +206,14 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
 void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setMotionDirectionArrayName(reader->readString("MotionDirectionArrayName", getMotionDirectionArrayName() ) );
-  setSelectedArrayPath( reader->readDataArrayPath( "SelectedArrayPath", getSelectedArrayPath() ) );
-  setPlane( reader->readValue("Plane", getPlane()));
-  setPSize1( reader->readValue("PSize1", getPSize1()));
-  setPSize2( reader->readValue("PSize2", getPSize2()));
-  setSSize1( reader->readValue("SSize1", getSSize1()));
-  setSSize2( reader->readValue("SSize2", getSSize2()));
-  setSliceStep( reader->readValue("SliceStep", getSliceStep()));
+  setMotionDirectionArrayName(reader->readString("MotionDirectionArrayName", getMotionDirectionArrayName()));
+  setSelectedArrayPath(reader->readDataArrayPath("SelectedArrayPath", getSelectedArrayPath()));
+  setPlane(reader->readValue("Plane", getPlane()));
+  setPSize1(reader->readValue("PSize1", getPSize1()));
+  setPSize2(reader->readValue("PSize2", getPSize2()));
+  setSSize1(reader->readValue("SSize1", getSSize1()));
+  setSSize2(reader->readValue("SSize2", getSSize2()));
+  setSliceStep(reader->readValue("SliceStep", getSliceStep()));
   reader->closeFilterGroup();
 }
 
@@ -221,7 +222,6 @@ void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 void FindRelativeMotionBetweenSlices::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -235,9 +235,9 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   QString ss;
 
   m_InDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
-  if( nullptr != m_InDataPtr.lock())
+  if(nullptr != m_InDataPtr.lock())
   {
-    if (TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))
+    if(TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))
     {
       QString ss = QObject::tr("Selected array cannot be of type bool.  The path is %1").arg(getSelectedArrayPath().serialize());
       setErrorCondition(-11001);
@@ -246,38 +246,44 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   }
 
   QVector<size_t> cDims(1, 3);
-  tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getMotionDirectionArrayName() );
-  m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getMotionDirectionArrayName());
+  m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_MotionDirectionPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSelectedArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
-  if (image->getXPoints() <= 1 || image->getYPoints() <= 1 || image->getZPoints() <= 1)
+  if(image->getXPoints() <= 1 || image->getYPoints() <= 1 || image->getZPoints() <= 1)
   {
     ss = QObject::tr("The Image Geometry is not 3D and cannot be run through this filter. The dimensions are (%1,%2,%3)").arg(image->getXPoints()).arg(image->getYPoints()).arg(image->getZPoints());
     setErrorCondition(-3000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (getPSize1() <= 0 || getPSize2() <= 0)
+  if(getPSize1() <= 0 || getPSize2() <= 0)
   {
     ss = QObject::tr("The patch dimensions (%1, %2) must both be positive numbers").arg(getPSize1()).arg(getPSize2());
     setErrorCondition(-3001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (getSSize1() <= 0 || getSSize2() <= 0)
+  if(getSSize1() <= 0 || getSSize2() <= 0)
   {
     ss = QObject::tr("The search dimensions (%1, %2) must both be positive numbers").arg(getSSize1()).arg(getSSize2());
     setErrorCondition(-3002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (getPlane() == 0)
+  if(getPlane() == 0)
   {
-    if (getSliceStep() >= static_cast<int64_t>(image->getZPoints()))
+    if(getSliceStep() >= static_cast<int64_t>(image->getZPoints()))
     {
       ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied slice step (%2)").arg(image->getZPoints()).arg(getSliceStep());
       setErrorCondition(-3003);
@@ -285,9 +291,9 @@ void FindRelativeMotionBetweenSlices::dataCheck()
     }
   }
 
-  if (getPlane() == 1)
+  if(getPlane() == 1)
   {
-    if (getSliceStep() >= static_cast<int64_t>(image->getYPoints()))
+    if(getSliceStep() >= static_cast<int64_t>(image->getYPoints()))
     {
       ss = QObject::tr("The Image Geometry Y extent (%1) is smaller than the supplied slice step (%2)").arg(image->getYPoints()).arg(getSliceStep());
       setErrorCondition(-3004);
@@ -295,9 +301,9 @@ void FindRelativeMotionBetweenSlices::dataCheck()
     }
   }
 
-  if (getPlane() == 2)
+  if(getPlane() == 2)
   {
-    if (getSliceStep() >= static_cast<int64_t>(image->getXPoints()))
+    if(getSliceStep() >= static_cast<int64_t>(image->getXPoints()))
     {
       ss = QObject::tr("The Image Geometry X extent (%1) is smaller than the supplied slice step (%2)").arg(image->getXPoints()).arg(getSliceStep());
       setErrorCondition(-3005);
@@ -326,7 +332,10 @@ void FindRelativeMotionBetweenSlices::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
@@ -356,12 +365,12 @@ void FindRelativeMotionBetweenSlices::execute()
   size_t count = 0;
   size_t numPatchPoints = 0, numSearchPoints = 0;
 
-  if (m_Plane == 0)
+  if(m_Plane == 0)
   {
-    for (int32_t j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
+    for(int32_t j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
     {
       yStride = j * xP;
-      for (int32_t i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
+      for(int32_t i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
       {
         patchPoints[count] = yStride + i;
         count++;
@@ -369,10 +378,10 @@ void FindRelativeMotionBetweenSlices::execute()
     }
     numPatchPoints = count;
     count = 0;
-    for (int32_t j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
+    for(int32_t j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
     {
       yStride = j * xP;
-      for (int32_t i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
+      for(int32_t i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
       {
         searchPoints[4 * count] = (m_SliceStep * xP * yP) + yStride + i;
         searchPoints[4 * count + 1] = i;
@@ -382,13 +391,13 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for (int64_t k = 0; k < zP - m_SliceStep; k++)
+    for(int64_t k = 0; k < zP - m_SliceStep; k++)
     {
       zStride = k * xP * yP;
-      for (int64_t j = buffer2; j < (yP - buffer2); j++)
+      for(int64_t j = buffer2; j < (yP - buffer2); j++)
       {
         yStride = j * xP;
-        for (int64_t i = buffer1; i < (xP - buffer1); i++)
+        for(int64_t i = buffer1; i < (xP - buffer1); i++)
         {
           validPoints[zStride + yStride + i] = true;
         }
@@ -396,12 +405,12 @@ void FindRelativeMotionBetweenSlices::execute()
     }
   }
 
-  if (m_Plane == 1)
+  if(m_Plane == 1)
   {
-    for (int32_t j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
+    for(int32_t j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
     {
       yStride = (j * xP * yP);
-      for (int32_t i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
+      for(int32_t i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
       {
         patchPoints[count] = yStride + i;
         count++;
@@ -409,10 +418,10 @@ void FindRelativeMotionBetweenSlices::execute()
     }
     numPatchPoints = count;
     count = 0;
-    for (int32_t j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
+    for(int32_t j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
     {
       yStride = (j * xP * yP);
-      for (int32_t i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
+      for(int32_t i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
       {
         searchPoints[count] = (m_SliceStep * xP) + yStride + i;
         searchPoints[4 * count + 1] = i;
@@ -422,13 +431,13 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for (int64_t k = buffer2; k < (zP - buffer2); k++)
+    for(int64_t k = buffer2; k < (zP - buffer2); k++)
     {
       zStride = k * xP * yP;
-      for (int64_t j = 0; j < yP - m_SliceStep; j++)
+      for(int64_t j = 0; j < yP - m_SliceStep; j++)
       {
         yStride = j * xP;
-        for (int64_t i = buffer1; i < (xP - buffer1); i++)
+        for(int64_t i = buffer1; i < (xP - buffer1); i++)
         {
           validPoints[zStride + yStride + i] = true;
         }
@@ -436,12 +445,12 @@ void FindRelativeMotionBetweenSlices::execute()
     }
   }
 
-  if (m_Plane == 2)
+  if(m_Plane == 2)
   {
-    for (int32_t j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
+    for(int32_t j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
     {
       yStride = (j * xP * yP);
-      for (int32_t i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
+      for(int32_t i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
       {
         patchPoints[count] = yStride + (i * xP);
         count++;
@@ -449,10 +458,10 @@ void FindRelativeMotionBetweenSlices::execute()
     }
     numPatchPoints = count;
     count = 0;
-    for (int32_t j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
+    for(int32_t j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
     {
       yStride = (j * xP * yP);
-      for (int32_t i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
+      for(int32_t i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
       {
         searchPoints[count] = (m_SliceStep) + yStride + (i * xP);
         searchPoints[4 * count + 1] = m_SliceStep;
@@ -462,13 +471,13 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for (int64_t k = buffer2; k < (zP - buffer2); k++)
+    for(int64_t k = buffer2; k < (zP - buffer2); k++)
     {
       zStride = k * xP * yP;
-      for (int64_t j = buffer1; j < (yP - buffer1); j++)
+      for(int64_t j = buffer1; j < (yP - buffer1); j++)
       {
         yStride = j * xP;
-        for (int64_t i = 0; i < xP - m_SliceStep; i++)
+        for(int64_t i = 0; i < xP - m_SliceStep; i++)
         {
           validPoints[zStride + yStride + i] = true;
         }
@@ -476,7 +485,7 @@ void FindRelativeMotionBetweenSlices::execute()
     }
   }
 
-  if (nullptr == patchPoints || nullptr == searchPoints || nullptr == validPoints)
+  if(nullptr == patchPoints || nullptr == searchPoints || nullptr == validPoints)
   {
     QString ss = QObject::tr("Unable to establish search space for supplied parameters");
     setErrorCondition(-11001);
@@ -484,14 +493,15 @@ void FindRelativeMotionBetweenSlices::execute()
     return;
   }
 
-  if (TemplateHelpers::CanDynamicCast<Int8ArrayType>()(m_InDataPtr.lock()))
+  if(TemplateHelpers::CanDynamicCast<Int8ArrayType>()(m_InDataPtr.lock()))
   {
     Int8ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int8ArrayType>(m_InDataPtr.lock());
     int8_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -500,14 +510,15 @@ void FindRelativeMotionBetweenSlices::execute()
       serial.convert(0, totalPoints);
     }
   }
-  else if (TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(m_InDataPtr.lock()))
+  else if(TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(m_InDataPtr.lock()))
   {
     UInt8ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt8ArrayType>(m_InDataPtr.lock());
     uint8_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -516,14 +527,15 @@ void FindRelativeMotionBetweenSlices::execute()
       serial.convert(0, totalPoints);
     }
   }
-  else if (TemplateHelpers::CanDynamicCast<Int16ArrayType>()(m_InDataPtr.lock()))
+  else if(TemplateHelpers::CanDynamicCast<Int16ArrayType>()(m_InDataPtr.lock()))
   {
     Int16ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int16ArrayType>(m_InDataPtr.lock());
     int16_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -532,14 +544,15 @@ void FindRelativeMotionBetweenSlices::execute()
       serial.convert(0, totalPoints);
     }
   }
-  else if (TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(m_InDataPtr.lock()))
+  else if(TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(m_InDataPtr.lock()))
   {
     UInt16ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt16ArrayType>(m_InDataPtr.lock());
     uint16_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -548,14 +561,15 @@ void FindRelativeMotionBetweenSlices::execute()
       serial.convert(0, totalPoints);
     }
   }
-  else if (TemplateHelpers::CanDynamicCast<Int32ArrayType>()(m_InDataPtr.lock()))
+  else if(TemplateHelpers::CanDynamicCast<Int32ArrayType>()(m_InDataPtr.lock()))
   {
     Int32ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int32ArrayType>(m_InDataPtr.lock());
     int32_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -564,14 +578,15 @@ void FindRelativeMotionBetweenSlices::execute()
       serial.convert(0, totalPoints);
     }
   }
-  else if (TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(m_InDataPtr.lock()))
+  else if(TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(m_InDataPtr.lock()))
   {
     UInt32ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt32ArrayType>(m_InDataPtr.lock());
     uint32_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -580,14 +595,15 @@ void FindRelativeMotionBetweenSlices::execute()
       serial.convert(0, totalPoints);
     }
   }
-  else if (TemplateHelpers::CanDynamicCast<Int64ArrayType>()(m_InDataPtr.lock()))
+  else if(TemplateHelpers::CanDynamicCast<Int64ArrayType>()(m_InDataPtr.lock()))
   {
     Int64ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int64ArrayType>(m_InDataPtr.lock());
     int64_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -596,14 +612,15 @@ void FindRelativeMotionBetweenSlices::execute()
       serial.convert(0, totalPoints);
     }
   }
-  else if (TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(m_InDataPtr.lock()))
+  else if(TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(m_InDataPtr.lock()))
   {
     UInt64ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt64ArrayType>(m_InDataPtr.lock());
     uint64_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -612,14 +629,15 @@ void FindRelativeMotionBetweenSlices::execute()
       serial.convert(0, totalPoints);
     }
   }
-  else if (TemplateHelpers::CanDynamicCast<FloatArrayType>()(m_InDataPtr.lock()))
+  else if(TemplateHelpers::CanDynamicCast<FloatArrayType>()(m_InDataPtr.lock()))
   {
     FloatArrayType::Pointer cellArray = std::dynamic_pointer_cast<FloatArrayType>(m_InDataPtr.lock());
     float* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<float>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<float>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -628,14 +646,15 @@ void FindRelativeMotionBetweenSlices::execute()
       serial.convert(0, totalPoints);
     }
   }
-  else if (TemplateHelpers::CanDynamicCast<DoubleArrayType>()(m_InDataPtr.lock()))
+  else if(TemplateHelpers::CanDynamicCast<DoubleArrayType>()(m_InDataPtr.lock()))
   {
     DoubleArrayType::Pointer cellArray = std::dynamic_pointer_cast<DoubleArrayType>(m_InDataPtr.lock());
     double* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<double>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<double>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints),
+                        tbb::auto_partitioner());
     }
     else
 #endif
@@ -656,7 +675,7 @@ void FindRelativeMotionBetweenSlices::execute()
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
-  for (size_t i = 0; i < totalPoints; i++)
+  for(size_t i = 0; i < totalPoints; i++)
   {
     v[0] = m_MotionDirection[3 * i + 0] * xRes;
     v[1] = m_MotionDirection[3 * i + 1] * yRes;
@@ -706,7 +725,7 @@ const QString FindRelativeMotionBetweenSlices::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
+  vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
 
@@ -714,19 +733,22 @@ const QString FindRelativeMotionBetweenSlices::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindRelativeMotionBetweenSlices::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
-
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindRelativeMotionBetweenSlices::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ImageFilters; }
-
+{
+  return SIMPL::FilterSubGroups::ImageFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindRelativeMotionBetweenSlices::getHumanLabel()
-{ return "Find Relative Motion Between Slices"; }
-
+{
+  return "Find Relative Motion Between Slices";
+}

@@ -35,11 +35,9 @@
 
 #include "M3CSliceBySlice.h"
 
-
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "SIMPLib/Math/SIMPLibMath.h"
-
 
 // C Includes
 #include <stdio.h>
@@ -47,81 +45,58 @@
 #include <string.h>
 
 //-- C++ STL
-#include <vector>
-#include <sstream>
 #include <queue>
+#include <sstream>
+#include <vector>
 
-#include <QtCore/QMap>
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
 #include <QtCore/QDir>
-
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QMap>
 
 #include "SIMPLib/Common/PipelineMessage.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 
-
 #define WRITE_BINARY_TEMP_FILES 1
 
 namespace Detail
 {
 
-  static int triangleResizeCount = 0;
-  static size_t triangleResize = 1000;
+static int triangleResizeCount = 0;
+static size_t triangleResize = 1000;
 
-  const QString NodesFile("Nodes.bin");
-  const QString TrianglesFile("Triangles.bin");
+const QString NodesFile("Nodes.bin");
+const QString TrianglesFile("Triangles.bin");
 
-  int edgeTable_2d[20][8] =
-  {
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { 0, 1, -1, -1, -1, -1, -1, -1 },
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { 0, 2, -1, -1, -1, -1, -1, -1 },
-    { 1, 2, -1, -1, -1, -1, -1, -1 },
-    { 0, 4, 2, 4, 1, 4, -1, -1 },
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { 3, 0, -1, -1, -1, -1, -1, -1 },
-    { 3, 1, -1, -1, -1, -1, -1, -1 },
-    { 3, 4, 0, 4, 1, 4, -1, -1 },
-    { 2, 3, -1, -1, -1, -1, -1, -1 },
-    { 3, 4, 0, 4, 2, 4, -1, -1 },
-    { 3, 4, 1, 4, 2, 4, -1, -1 },
-    { 3, 0, 1, 2, -1, -1, -1, -1 },
-    { 0, 1, 2, 3, -1, -1, -1, -1 },
-    { 0, 1, 2, 3, -1, -1, -1, -1 },
-    { 3, 0, 1, 2, -1, -1, -1, -1 },
-    { 3, 4, 1, 4, 0, 4, 2, 4 }
-  };
+int edgeTable_2d[20][8] = {{-1, -1, -1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1, -1, -1}, {0, 1, -1, -1, -1, -1, -1, -1},   {-1, -1, -1, -1, -1, -1, -1, -1},
+                           {0, 2, -1, -1, -1, -1, -1, -1},   {1, 2, -1, -1, -1, -1, -1, -1},   {0, 4, 2, 4, 1, 4, -1, -1},       {-1, -1, -1, -1, -1, -1, -1, -1}, {3, 0, -1, -1, -1, -1, -1, -1},
+                           {3, 1, -1, -1, -1, -1, -1, -1},   {3, 4, 0, 4, 1, 4, -1, -1},       {2, 3, -1, -1, -1, -1, -1, -1},   {3, 4, 0, 4, 2, 4, -1, -1},       {3, 4, 1, 4, 2, 4, -1, -1},
+                           {3, 0, 1, 2, -1, -1, -1, -1},     {0, 1, 2, 3, -1, -1, -1, -1},     {0, 1, 2, 3, -1, -1, -1, -1},     {3, 0, 1, 2, -1, -1, -1, -1},     {3, 4, 1, 4, 0, 4, 2, 4}};
 
-  int nsTable_2d[20][8] =
-  {
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { 1, 0, -1, -1, -1, -1, -1, -1 },
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { 1, 0, -1, -1, -1, -1, -1, -1, },
-    { 2, 1, -1, -1, -1, -1, -1, -1 },
-    { 1, 0, 3, 2, 2, 1, -1, -1 },
-    { -1, -1, -1, -1, -1, -1, -1, -1 },
-    { 0, 3, -1, -1, -1, -1, -1, -1 },
-    { 0, 3, -1, -1, -1, -1, -1, -1 },
-    { 0, 3, 1, 0, 2, 1, -1, -1 },
-    { 3, 2, -1, -1, -1, -1, -1, -1 },
-    { 0, 3, 1, 0, 3, 2, -1, -1 },
-    { 0, 3, 2, 1, 3, 2, -1, -1 },
-    { 0, 3, 2, 1, -1, -1, -1, -1 },
-    { 1, 0, 3, 2, -1, -1, -1, -1 },
-    { 1, 0, 3, 2, -1, -1, -1, -1 },
-    { 0, 3, 2, 1, -1, -1, -1, -1 },
-    { 0, 3, 2, 1, 1, 0, 3, 2 }
-  };
-
+int nsTable_2d[20][8] = {{-1, -1, -1, -1, -1, -1, -1, -1},
+                         {-1, -1, -1, -1, -1, -1, -1, -1},
+                         {-1, -1, -1, -1, -1, -1, -1, -1},
+                         {1, 0, -1, -1, -1, -1, -1, -1},
+                         {-1, -1, -1, -1, -1, -1, -1, -1},
+                         {
+                             1, 0, -1, -1, -1, -1, -1, -1,
+                         },
+                         {2, 1, -1, -1, -1, -1, -1, -1},
+                         {1, 0, 3, 2, 2, 1, -1, -1},
+                         {-1, -1, -1, -1, -1, -1, -1, -1},
+                         {0, 3, -1, -1, -1, -1, -1, -1},
+                         {0, 3, -1, -1, -1, -1, -1, -1},
+                         {0, 3, 1, 0, 2, 1, -1, -1},
+                         {3, 2, -1, -1, -1, -1, -1, -1},
+                         {0, 3, 1, 0, 3, 2, -1, -1},
+                         {0, 3, 2, 1, 3, 2, -1, -1},
+                         {0, 3, 2, 1, -1, -1, -1, -1},
+                         {1, 0, 3, 2, -1, -1, -1, -1},
+                         {1, 0, 3, 2, -1, -1, -1, -1},
+                         {0, 3, 2, 1, -1, -1, -1, -1},
+                         {0, 3, 2, 1, 1, 0, 3, 2}};
 }
 
 /**
@@ -132,75 +107,96 @@ namespace Detail
  */
 class SMTempFile
 {
-  public:
-    SIMPL_SHARED_POINTERS(SMTempFile)
-    SIMPL_STATIC_NEW_MACRO(SMTempFile)
-    virtual ~SMTempFile()
+public:
+  SIMPL_SHARED_POINTERS(SMTempFile)
+  SIMPL_STATIC_NEW_MACRO(SMTempFile)
+  virtual ~SMTempFile()
+  {
+    if(m_AutoDelete == true)
     {
-      if (m_AutoDelete == true)
-      {
-        QFile fi(m_FilePath);
-        fi.remove();
-      }
+      QFile fi(m_FilePath);
+      fi.remove();
     }
+  }
 
-    SIMPL_INSTANCE_STRING_PROPERTY(FilePath)
-    SIMPL_INSTANCE_PROPERTY(bool, AutoDelete)
+  SIMPL_INSTANCE_STRING_PROPERTY(FilePath)
+  SIMPL_INSTANCE_PROPERTY(bool, AutoDelete)
 
-  protected:
-    SMTempFile()
-    {}
-  private:
-    SMTempFile(const SMTempFile&); // Copy Constructor Not Implemented
-    void operator=(const SMTempFile&); // Operator '=' Not Implemented
+protected:
+  SMTempFile()
+  {
+  }
+
+private:
+  SMTempFile(const SMTempFile&);     // Copy Constructor Not Implemented
+  void operator=(const SMTempFile&); // Operator '=' Not Implemented
 };
-
-
 
 class FeatureChecker
 {
-  public:
-    SIMPL_SHARED_POINTERS(FeatureChecker)
-    SIMPL_STATIC_NEW_MACRO(FeatureChecker)
-    virtual ~FeatureChecker() {}
-    typedef QMap<int, int>  MapType;
+public:
+  SIMPL_SHARED_POINTERS(FeatureChecker)
+  SIMPL_STATIC_NEW_MACRO(FeatureChecker)
+  virtual ~FeatureChecker()
+  {
+  }
+  typedef QMap<int, int> MapType;
 
-    template<typename T>
-    static void TripletSort(T a, T b, T c, T* sorted)
+  template <typename T> static void TripletSort(T a, T b, T c, T* sorted)
+  {
+    if(a > b && a > c)
     {
-      if ( a > b && a > c)
+      sorted[2] = a;
+      if(b > c)
       {
-        sorted[2] = a;
-        if (b > c) { sorted[1] = b; sorted[0] = c; }
-        else { sorted[1] = c; sorted[0] = b; }
-      }
-      else if ( b > a && b > c)
-      {
-        sorted[2] = b;
-        if (a > c) { sorted[1] = a; sorted[0] = c; }
-        else { sorted[1] = c; sorted[0] = a; }
-      }
-      else if ( a > b )
-      {
-        sorted[1] = a;
-        sorted[0] = b;
-        sorted[2] = c;
-      }
-      else if (a >= c && b >= c)
-      {
+        sorted[1] = b;
         sorted[0] = c;
-        sorted[1] = a;
-        sorted[2] = b;
       }
       else
-      { sorted[0] = a; sorted[1] = b; sorted[2] = c;}
+      {
+        sorted[1] = c;
+        sorted[0] = b;
+      }
     }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void addData(int numTriangles, int ctid, StructArray<SurfaceMesh::M3C::Face>::Pointer cTriangle, VertexArray::Vert_t* cVertex)
+    else if(b > a && b > c)
     {
+      sorted[2] = b;
+      if(a > c)
+      {
+        sorted[1] = a;
+        sorted[0] = c;
+      }
+      else
+      {
+        sorted[1] = c;
+        sorted[0] = a;
+      }
+    }
+    else if(a > b)
+    {
+      sorted[1] = a;
+      sorted[0] = b;
+      sorted[2] = c;
+    }
+    else if(a >= c && b >= c)
+    {
+      sorted[0] = c;
+      sorted[1] = a;
+      sorted[2] = b;
+    }
+    else
+    {
+      sorted[0] = a;
+      sorted[1] = b;
+      sorted[2] = c;
+    }
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void addData(int numTriangles, int ctid, StructArray<SurfaceMesh::M3C::Face>::Pointer cTriangle, VertexArray::Vert_t* cVertex)
+  {
 #if 0
       int n1, n2, n3;
       int gid;
@@ -262,60 +258,61 @@ class FeatureChecker
         ++ctid;
       }
 #endif
-    }
+  }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void analyzeFeatures()
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void analyzeFeatures()
+  {
+    size_t size = tCounts.size();
+    size_t vCount = 0;
+    size_t tCount = 0;
+    for(size_t i = 1; i < size; ++i)
     {
-      size_t size = tCounts.size();
-      size_t vCount = 0;
-      size_t tCount = 0;
-      for (size_t i = 1; i < size; ++i)
+      MapType& t = tCounts[i];
+      tCount = t.size();
+      MapType& m = featureMaps[i];
+      vCount = m.size();
+      if(tCount + 4 != vCount * 2)
       {
-        MapType& t = tCounts[i];
-        tCount = t.size();
-        MapType& m = featureMaps[i];
-        vCount = m.size();
-        if (tCount + 4 != vCount * 2)
-        {
-          qDebug() << "Feature ID: " << i << " Does not satisfy equation T=2V-4    " << "  tCount: " << tCount << "   " << "  vCount: " << vCount << "\n";
-        }
+        qDebug() << "Feature ID: " << i << " Does not satisfy equation T=2V-4    "
+                 << "  tCount: " << tCount << "   "
+                 << "  vCount: " << vCount << "\n";
       }
     }
+  }
 
-  protected:
-    FeatureChecker() {}
+protected:
+  FeatureChecker()
+  {
+  }
 
-  private:
-    QVector<MapType> featureMaps;
-    QVector<MapType> tCounts;
+private:
+  QVector<MapType> featureMaps;
+  QVector<MapType> tCounts;
 
-    FeatureChecker(const FeatureChecker&); // Copy Constructor Not Implemented
-    void operator=(const FeatureChecker&); // Operator '=' Not Implemented
+  FeatureChecker(const FeatureChecker&); // Copy Constructor Not Implemented
+  void operator=(const FeatureChecker&); // Operator '=' Not Implemented
 };
-
 
 // Include the MOC generated file for this class
 #include "moc_M3CSliceBySlice.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-M3CSliceBySlice::M3CSliceBySlice() :
-  AbstractFilter(),
-  m_SurfaceDataContainerName(SIMPL::Defaults::DataContainerName),
-  m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName),
-  m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName),
-  m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshNodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType),
-  m_DeleteTempFiles(true),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
-  m_FeatureIds(nullptr)
+M3CSliceBySlice::M3CSliceBySlice()
+: AbstractFilter()
+, m_SurfaceDataContainerName(SIMPL::Defaults::DataContainerName)
+, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
+, m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
+, m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
+, m_SurfaceMeshNodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
+, m_DeleteTempFiles(true)
+, m_FeatureIdsArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
+, m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -335,7 +332,8 @@ void M3CSliceBySlice::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Temp Files", DeleteTempFiles, FilterParameter::Uncategorized, M3CSliceBySlice));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(M3CSliceBySlice, this, FeatureIdsArrayPath)));
+  parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Uncategorized,
+                                                              SIMPL_BIND_SETTER(M3CSliceBySlice, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(M3CSliceBySlice, this, FeatureIdsArrayPath)));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(SIMPL_NEW_STRING_FP("Surface Data Container", SurfaceDataContainerName, FilterParameter::Uncategorized, M3CSliceBySlice));
   parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::Uncategorized, M3CSliceBySlice));
@@ -351,13 +349,13 @@ void M3CSliceBySlice::setupFilterParameters()
 void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
-  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
-  setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName() ) );
-  setSurfaceMeshNodeTypesArrayName(reader->readString("SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName() ) );
-  setFaceLabelsArrayName(reader->readString("FaceLabelsArrayName", getFaceLabelsArrayName() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setDeleteTempFiles( reader->readValue("DeleteTempFiles", getDeleteTempFiles()) );
+  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
+  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
+  setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName()));
+  setSurfaceMeshNodeTypesArrayName(reader->readString("SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName()));
+  setFaceLabelsArrayName(reader->readString("FaceLabelsArrayName", getFaceLabelsArrayName()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setDeleteTempFiles(reader->readValue("DeleteTempFiles", getDeleteTempFiles()));
   reader->closeFilterGroup();
 }
 
@@ -366,7 +364,6 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -378,9 +375,12 @@ void M3CSliceBySlice::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -422,7 +422,6 @@ void M3CSliceBySlice::preflight()
   setInPreflight(false);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -431,7 +430,10 @@ void M3CSliceBySlice::execute()
   int err = 0;
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
@@ -447,7 +449,7 @@ void M3CSliceBySlice::execute()
   trianglesTempFile->setFilePath(trianglesFile);
   trianglesTempFile->setAutoDelete(this->m_DeleteTempFiles);
 
-  if (m_DeleteTempFiles == false)
+  if(m_DeleteTempFiles == false)
   {
     qDebug() << nodesFile << "\n";
     qDebug() << trianglesFile << "\n";
@@ -457,8 +459,8 @@ void M3CSliceBySlice::execute()
   int cTriID = 0;
   int cEdgeID = 0;
   int nTriangle = 0; // number of triangles...
-  int nEdge = 0; // number of edges...
-  int nNodes = 0; // number of total Nodes used...
+  int nEdge = 0;     // number of edges...
+  int nNodes = 0;    // number of total Nodes used...
 
   //  FeatureChecker::Pointer m_FeatureChecker = FeatureChecker::New();
 
@@ -470,13 +472,13 @@ void M3CSliceBySlice::execute()
   /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
   /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
-  int wrappedDims[3] = { static_cast<int>(dims[0]), static_cast<int>(dims[1]), static_cast<int>(dims[2]) };
+  int wrappedDims[3] = {static_cast<int>(dims[0]), static_cast<int>(dims[1]), static_cast<int>(dims[2])};
 
   // Check to see if there is already a layer of bounding negative feature ids around the volume
   bool isWrapped = volumeHasGhostLayer();
   // If the volume is NOT wrapped by a ghost layer of negative voxels then we need to wrap
   // volume in a ghost layer of voxels.
-  if (isWrapped == false)
+  if(isWrapped == false)
   {
     wrappedDims[0] += 2;
     wrappedDims[1] += 2;
@@ -488,7 +490,7 @@ void M3CSliceBySlice::execute()
   int NS = wrappedDims[0] * wrappedDims[1] * wrappedDims[2];
   int NSP = wrappedDims[0] * wrappedDims[1];
 
-  DataArray<int32_t>::Pointer voxelsPtr = DataArray<int32_t>::CreateArray( 2 * NSP + 1, "M3CSliceBySlice_Working_Voxels");
+  DataArray<int32_t>::Pointer voxelsPtr = DataArray<int32_t>::CreateArray(2 * NSP + 1, "M3CSliceBySlice_Working_Voxels");
   voxelsPtr->initializeWithValue(-3);
   int32_t* voxels = voxelsPtr->getPointer(0);
 
@@ -510,7 +512,7 @@ void M3CSliceBySlice::execute()
   DataArray<int8_t>::Pointer cVertexNodeTypePtr = DataArray<int8_t>::CreateArray(2 * 7 * NSP, "M3CSliceBySlice_Node_NodeKind_Array");
   cVertexNodeTypePtr->initializeWithValue(SIMPL::SurfaceMesh::NodeType::Unused);
 
-  StructArray<SurfaceMesh::M3C::Patch>::Pointer  cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array");
+  StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array");
   cTrianglePtr->initializeWithZeros();
 
   StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr = StructArray<SurfaceMesh::M3C::Segment>::CreateArray(0, "M3CSliceBySlice_SurfaceMesh::M3C::Segment_Array");
@@ -521,7 +523,7 @@ void M3CSliceBySlice::execute()
   if(isWrapped == false)
   {
     int size = 2 * NSP + 1;
-    for (int i = 0; i < size; ++i)
+    for(int i = 0; i < size; ++i)
     {
       voxels[i] = -3;
     }
@@ -531,17 +533,17 @@ void M3CSliceBySlice::execute()
   // a different plane say the XZ in case that plane is smaller in dimensions than
   // the XY plane, ie, the volume is rectangular
   size_t sliceCount = dims[2];
-  if (isWrapped == false)
+  if(isWrapped == false)
   {
     sliceCount = dims[2] + 1;
   }
-  for (size_t i = 0; i < sliceCount; i++)
+  for(size_t i = 0; i < sliceCount; i++)
   {
     QString ss = QObject::tr(" Layers %1 and %2 of %3").arg(i).arg(i + 1).arg(sliceCount);
     // notifyProgressValue((i * 90 / sliceCount));
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-    if (getCancel() == true)
+    if(getCancel() == true)
     {
 
       ss = QObject::tr("Cancelling filter");
@@ -555,17 +557,23 @@ void M3CSliceBySlice::execute()
 
     // Either interleave the voxels of just a straight copy depending if a ghost
     // layer was already present
-    if (isWrapped == true)
+    if(isWrapped == true)
     {
       // Get a pointer into the FeatureIds Array at the appropriate offset
       int32_t* fileVoxelLayer = m_FeatureIds + (i * dims[0] * dims[1]);
       // Copy the feature id values into the 2nd slice layer of the working voxels.
-      ::memcpy( &(voxels[1 + NSP]), fileVoxelLayer, NSP * sizeof(int));
-      for(int ii = 0; ii < 2 * NSP + 1; ++ii) { if (voxels[ii] < 0) { voxels[ii] = -3;} } // Ensure all ghost cells are -3
+      ::memcpy(&(voxels[1 + NSP]), fileVoxelLayer, NSP * sizeof(int));
+      for(int ii = 0; ii < 2 * NSP + 1; ++ii)
+      {
+        if(voxels[ii] < 0)
+        {
+          voxels[ii] = -3;
+        }
+      } // Ensure all ghost cells are -3
     }
-    else if (i == dims[2] && isWrapped == false)
+    else if(i == dims[2] && isWrapped == false)
     {
-      for (int n = NSP; n < 2 * NSP + 1; ++n)
+      for(int n = NSP; n < 2 * NSP + 1; ++n)
       {
         voxels[n] = -3;
       }
@@ -603,7 +611,7 @@ void M3CSliceBySlice::execute()
 
     // Output Nodes and triangles...
     err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeTypePtr);
-    if (err < 0)
+    if(err < 0)
     {
 
       ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
@@ -613,7 +621,7 @@ void M3CSliceBySlice::execute()
     }
 
     err = writeTrianglesFile(i, cTriID, trianglesFile, nTriangle, cTrianglePtr, cVertexNodeIdPtr, renumberFeatureValue);
-    if (err < 0)
+    if(err < 0)
     {
 
       ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
@@ -624,7 +632,7 @@ void M3CSliceBySlice::execute()
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
     cEdgeID = cEdgeID + nEdge;
-    if (nTriangle > 0)
+    if(nTriangle > 0)
     {
       cTrianglePtr->resize(0);
     }
@@ -641,13 +649,11 @@ void M3CSliceBySlice::execute()
   cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::NullPointer();
   cEdgePtr = StructArray<SurfaceMesh::M3C::Segment>::NullPointer();
 
-
   // This will read the mesh from the temp file and store it in the SurfaceMesh Data container
   BinaryNodesTrianglesReader::Pointer binaryReader = BinaryNodesTrianglesReader::New();
-  QString ss = QObject::tr("%1 |--> %2").arg( getMessagePrefix()).arg(binaryReader->getNameOfClass());
+  QString ss = QObject::tr("%1 |--> %2").arg(getMessagePrefix()).arg(binaryReader->getNameOfClass());
   binaryReader->setMessagePrefix(ss);
-  connect(binaryReader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  connect(binaryReader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
   binaryReader->setBinaryNodesFile(nodesFile);
   binaryReader->setBinaryTrianglesFile(trianglesFile);
   binaryReader->setDataContainerArray(getDataContainerArray());
@@ -667,7 +673,7 @@ void M3CSliceBySlice::execute()
   trianglesTempFile = SMTempFile::NullPointer();
   nodesTempFile = SMTempFile::NullPointer();
 
-  if (renumberFeatureValue != 0)
+  if(renumberFeatureValue != 0)
   {
     renumberVoxelFeatureIds(renumberFeatureValue);
   }
@@ -681,25 +687,43 @@ void M3CSliceBySlice::execute()
 bool M3CSliceBySlice::volumeHasGhostLayer()
 {
   size_t fileDim[3];
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())/* FIXME: ImageGeom */ ->getGeometryAs<ImageGeom>()->getDimensions(fileDim);
+  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName()) /* FIXME: ImageGeom */->getGeometryAs<ImageGeom>()->getDimensions(fileDim);
   size_t index = 0;
   int32_t* p = m_FeatureIds;
   bool p_value = false;
 
-  for (size_t z = 0; z < fileDim[2]; ++z)
+  for(size_t z = 0; z < fileDim[2]; ++z)
   {
-    for (size_t y = 0; y < fileDim[1]; ++y)
+    for(size_t y = 0; y < fileDim[1]; ++y)
     {
-      for (size_t x = 0; x < fileDim[0]; ++x)
+      for(size_t x = 0; x < fileDim[0]; ++x)
       {
         index = (fileDim[0] * fileDim[1] * z) + (fileDim[0] * y) + x;
         p_value = p[index] >= 0;
-        if (z == 0 && p_value) { return false;}
-        else if (z == fileDim[2] - 1 && p_value) { return false;}
-        else if (y == 0 && p_value) { return false;}
-        else if (y == fileDim[1] - 1 && p_value) { return false;}
-        else if (x == 0 && p_value) { return false;}
-        else if (x == fileDim[0] - 1 && p_value) { return false;}
+        if(z == 0 && p_value)
+        {
+          return false;
+        }
+        else if(z == fileDim[2] - 1 && p_value)
+        {
+          return false;
+        }
+        else if(y == 0 && p_value)
+        {
+          return false;
+        }
+        else if(y == fileDim[1] - 1 && p_value)
+        {
+          return false;
+        }
+        else if(x == 0 && p_value)
+        {
+          return false;
+        }
+        else if(x == fileDim[0] - 1 && p_value)
+        {
+          return false;
+        }
       }
     }
   }
@@ -720,29 +744,32 @@ int32_t M3CSliceBySlice::volumeHasFeatureValuesOfZero()
   bool renumber = false;
   int32_t maxFeatureId = 0;
 
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
-    if (m_FeatureIds[i] == 0)
+    if(m_FeatureIds[i] == 0)
     {
       renumber = true;
     }
-    if (m_FeatureIds[i] > maxFeatureId) { maxFeatureId = m_FeatureIds[i];}
+    if(m_FeatureIds[i] > maxFeatureId)
+    {
+      maxFeatureId = m_FeatureIds[i];
+    }
   }
 
   maxFeatureId++;
 
-  if (renumber == true)
+  if(renumber == true)
   {
-    for (int i = 0; i < count; ++i)
+    for(int i = 0; i < count; ++i)
     {
-      if (m_FeatureIds[i] == 0)
+      if(m_FeatureIds[i] == 0)
       {
         m_FeatureIds[i] = maxFeatureId;
       }
     }
   }
 
-  if (renumber == false)
+  if(renumber == false)
   {
     return 0;
   }
@@ -760,9 +787,9 @@ void M3CSliceBySlice::renumberVoxelFeatureIds(int32_t gid)
 
   int32_t count = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
-    if (m_FeatureIds[i] == gid)
+    if(m_FeatureIds[i] == gid)
     {
       m_FeatureIds[i] = 0;
     }
@@ -772,8 +799,7 @@ void M3CSliceBySlice::renumberVoxelFeatureIds(int32_t gid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims,
-                                                    size_t* dims, int32_t* voxels)
+void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims, size_t* dims, int32_t* voxels)
 {
 
   int NSP = wrappedDims[0] * wrappedDims[1];
@@ -782,14 +808,12 @@ void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims,
   // Get a pointer into the FeatureIds Array at the appropriate offset
   int32_t* fileVoxelLayer = m_FeatureIds + (i * dims[0] * dims[1]);
 
-
-
   // now splice the data into the 2nd z layer for our marching cubes remembering
   // that we have a layer of border voxels.
   int* vxPtr = voxels;
-  vxPtr = voxels + 1; // Pointer to start of layer 2 - Should be 4 bytes farther in memory because of junk voxel at voxel[0]
+  vxPtr = voxels + 1;           // Pointer to start of layer 2 - Should be 4 bytes farther in memory because of junk voxel at voxel[0]
   int* fVxPtr = fileVoxelLayer; // Pointer to actual Feature Ids
-  for (size_t y = 0; y < dims[1]; ++y)
+  for(size_t y = 0; y < dims[1]; ++y)
   {
     // Get the offset into the data just read from the file
     fVxPtr = fileVoxelLayer + (y * dims[0]);
@@ -804,13 +828,10 @@ void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims,
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
-                                        StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr,
-                                        DataArray<int32_t>::Pointer neighborCSiteIdPtr)
+void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[], StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr, DataArray<int32_t>::Pointer neighborCSiteIdPtr)
 {
   // NSP = number of sites in a plane of xDim by yDim...
   // neigh[][] = 2 dimeNSional array storing its site number and Neighbors...
@@ -823,16 +844,15 @@ void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
   //    6   7   8         15  16  17          24  25  26
   //
   //    in-plane          upper plane         lower plane
-  int ii; // loop index...
+  int ii;         // loop index...
   int i, j, k, r; // position indices...
-  int site_id; // id number for each site...
+  int site_id;    // id number for each site...
 
   SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->getPointer(0);
   int32_t* csiteid = neighborCSiteIdPtr->getPointer(0);
   int xDim = wrappedDims[0];
 
-
-  for (ii = 1; ii <= 2 * NSP; ii++)
+  for(ii = 1; ii <= 2 * NSP; ii++)
   {
     site_id = ii;
     csiteid[ii] = site_id;
@@ -842,7 +862,7 @@ void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
     j = r / xDim;
     j = j * xDim;
     i = r % xDim + 1;
-    //same plane...
+    // same plane...
     neigh[ii].neigh_id[1] = k + j + i % xDim + 1;
     neigh[ii].neigh_id[2] = k + (j - xDim + NSP) % NSP + i % xDim + 1;
     neigh[ii].neigh_id[3] = k + (j - xDim + NSP) % NSP + i;
@@ -851,8 +871,8 @@ void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
     neigh[ii].neigh_id[6] = k + (j + xDim) % NSP + (i - 2 + xDim) % xDim + 1;
     neigh[ii].neigh_id[7] = k + (j + xDim) % NSP + i;
     neigh[ii].neigh_id[8] = k + (j + xDim) % NSP + i % xDim + 1;
-    //upper plane...
-    //move the plane up and use the same scheme...
+    // upper plane...
+    // move the plane up and use the same scheme...
     neigh[ii].neigh_id[9] = (k - NSP + NS) % NS + j + i;
     neigh[ii].neigh_id[10] = (k - NSP + NS) % NS + j + i % xDim + 1;
     neigh[ii].neigh_id[11] = (k - NSP + NS) % NS + (j - xDim + NSP) % NSP + i % xDim + 1;
@@ -862,7 +882,7 @@ void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
     neigh[ii].neigh_id[15] = (k - NSP + NS) % NS + (j + xDim) % NSP + (i - 2 + xDim) % xDim + 1;
     neigh[ii].neigh_id[16] = (k - NSP + NS) % NS + (j + xDim) % NSP + i;
     neigh[ii].neigh_id[17] = (k - NSP + NS) % NS + (j + xDim) % NSP + i % xDim + 1;
-    //lower plane...
+    // lower plane...
     neigh[ii].neigh_id[18] = (k + NSP) % NS + j + i;
     neigh[ii].neigh_id[19] = (k + NSP) % NS + j + i % xDim + 1;
     neigh[ii].neigh_id[20] = (k + NSP) % NS + (j - xDim + NSP) % NSP + i % xDim + 1;
@@ -905,15 +925,11 @@ float M3CSliceBySlice::find_zcoord(int index, int xDim, int yDim, float zRes)
   return z;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float* res,
-                                       VertexArray::Pointer cVertexPtr,
-                                       DataArray<int32_t>::Pointer voxelsPtr,
-                                       DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                                       DataArray<int8_t>::Pointer cVertexNodeTypePtr  )
+void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float* res, VertexArray::Pointer cVertexPtr, DataArray<int32_t>::Pointer voxelsPtr,
+                                       DataArray<int32_t>::Pointer cVertexNodeIdPtr, DataArray<int8_t>::Pointer cVertexNodeTypePtr)
 {
 
   // Finds the coordinates of Nodes...
@@ -922,7 +938,7 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
   int tsite, locale;
   float x, y, z;
   int start = NSP + 1;
-  if (zID == 0)
+  if(zID == 0)
   {
     start = 1;
     numfeatures = 0;
@@ -938,13 +954,13 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
   int32_t* nodeID = cVertexNodeIdPtr->getPointer(0);
 
   // Node id starts with 0....
-  if (zID > 0)
+  if(zID > 0)
   {
-    for (i = 1; i <= NSP; i++)
+    for(i = 1; i <= NSP; i++)
     {
       id = 7 * (i - 1);
       oid = 7 * ((i + NSP) - 1);
-      for (j = 0; j < 7; j++)
+      for(j = 0; j < 7; j++)
       {
         cVertex[id + j] = cVertex[oid + j];
         nodeKind[id + j] = nodeKind[oid + j];
@@ -953,7 +969,7 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
     }
   }
   int shift = (zID * NSP);
-  for (i = start; i <= 2 * NSP; i++)
+  for(i = start; i <= 2 * NSP; i++)
   {
     id = 7 * (i - 1);
     tsite = i;
@@ -962,12 +978,15 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
     y = find_ycoord(locale, wrappedDims[0], wrappedDims[1], yRes);
     z = find_zcoord(locale, wrappedDims[0], wrappedDims[1], zRes);
     int featureid = voxels[tsite];
-    if (featureid > numfeatures) { numfeatures = featureid; }
+    if(featureid > numfeatures)
+    {
+      numfeatures = featureid;
+    }
     cVertex[id].pos[0] = x + (0.5f * xRes);
     cVertex[id].pos[1] = y;
     cVertex[id].pos[2] = z;
     nodeKind[id] = SIMPL::SurfaceMesh::NodeType::Unused;
-    nodeID[id] =  SIMPL::SurfaceMesh::NodeId::Unused;
+    nodeID[id] = SIMPL::SurfaceMesh::NodeId::Unused;
     cVertex[id + 1].pos[0] = x;
     cVertex[id + 1].pos[1] = y + (0.5f * yRes);
     cVertex[id + 1].pos[2] = z;
@@ -1001,13 +1020,10 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::initialize_squares(int zID, int NSP,
-                                         StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr,
-                                         StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
+void M3CSliceBySlice::initialize_squares(int zID, int NSP, StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr, StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
 {
 
   // Gather initial information on each square...
@@ -1021,7 +1037,7 @@ void M3CSliceBySlice::initialize_squares(int zID, int NSP,
   // notice that point at the surface will have the wrong values of Node at the other end...
   // since it includes periodic boundary condition...
   // but, since the structure surrounded by ghost layer of featurename -3, it's OK...
-  for (int i = 1; i <= 2 * NSP; i++)
+  for(int i = 1; i <= 2 * NSP; i++)
   {
     id = 3 * (i - 1);
     csite = i;
@@ -1039,13 +1055,13 @@ void M3CSliceBySlice::initialize_squares(int zID, int NSP,
     cSquare[id + 2].site_id[2] = neigh[i].neigh_id[18];
     cSquare[id + 2].site_id[3] = neigh[i].neigh_id[25];
     // initialize Node, edge...-1 is dummy initial value...
-    for (int j = 0; j < 4; j++)
+    for(int j = 0; j < 4; j++)
     {
       cSquare[id].edge_id[j] = -1;
       cSquare[id + 1].edge_id[j] = -1;
       cSquare[id + 2].edge_id[j] = -1;
     }
-    for (int j = 0; j < 3; j++)
+    for(int j = 0; j < 3; j++)
     {
       cSquare[id + j].nEdge = 0;
       cSquare[id + j].FCnode = -1;
@@ -1057,17 +1073,14 @@ void M3CSliceBySlice::initialize_squares(int zID, int NSP,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
-                                        StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr,
-                                        DataArray<int32_t>::Pointer voxelsPtr,
-                                        StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
-                                        DataArray<int8_t>::Pointer cVertexNodeTypePtr,
+size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims, StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr, DataArray<int32_t>::Pointer voxelsPtr,
+                                        StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr, DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                                         StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
 {
   int j, k, m, ii;
   int tsite;
   int cubeOrigin; // stores the site id of 0th corner of each cube...
-  int sqOrder; // stores the 0th, 1st and 2nd square...
+  int sqOrder;    // stores the 0th, 1st and 2nd square...
   int tNSite[4];
   int tnSpin[4];
   int atBulk; // if it's 0, the square is at Bulk...
@@ -1086,20 +1099,19 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
   int pixfeaturename[2];
 
   size_t edgeResize = 1000;
-  int    edgeResizeCount = 0;
-
+  int edgeResizeCount = 0;
 
   SurfaceMesh::M3C::Face* cSquare = cSquarePtr->getPointer(0);
   int32_t* voxels = voxelsPtr->getPointer(0);
   int8_t* nodeType = cVertexNodeTypePtr->getPointer(0);
 
-  for (k = 0; k < 3 * 2 * NSP; k++)
+  for(k = 0; k < 3 * 2 * NSP; k++)
   {
     // for each square...
     quot = k / (3 * NSP);
     rmd = k % (3 * NSP);
     rmd1 = rmd % 3;
-    if (quot == 0 || (quot == 1 && rmd1 == 0))
+    if(quot == 0 || (quot == 1 && rmd1 == 0))
     {
       cubeOrigin = k / 3 + 1;
       sqOrder = k % 3;
@@ -1110,29 +1122,32 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
       tNSite[2] = cSquare[k].site_id[2];
       tNSite[3] = cSquare[k].site_id[3];
       atBulk = 0;
-      for (m = 0; m < 4; m++)
+      for(m = 0; m < 4; m++)
       {
         tsite = tNSite[m];
         tnSpin[m] = voxels[tsite];
-        if (tnSpin[m] < 0) { atBulk++; }
+        if(tnSpin[m] < 0)
+        {
+          atBulk++;
+        }
       }
       edgeCount = 0;
       // Let's find the edges...
-      if (atBulk != 4)
+      if(atBulk != 4)
       {
         // consider the square inside the bulk only...
         cSquare[k].effect = 1;
         sqIndex = get_square_index(tnSpin);
-        if (sqIndex == 15)
+        if(sqIndex == 15)
         {
           anFlag = treat_anomaly(tNSite, zID, voxelsPtr, neighborsPtr);
           sqIndex = sqIndex + anFlag;
         }
-        if (sqIndex != 0)
+        if(sqIndex != 0)
         {
-          for (j = 0; j < 8; j = j + 2)
+          for(j = 0; j < 8; j = j + 2)
           {
-            if (Detail::edgeTable_2d[sqIndex][j] != -1)
+            if(Detail::edgeTable_2d[sqIndex][j] != -1)
             {
               NodeIndex[0] = Detail::edgeTable_2d[sqIndex][j];
               NodeIndex[1] = Detail::edgeTable_2d[sqIndex][j + 1];
@@ -1140,20 +1155,20 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
               pixIndex[1] = Detail::nsTable_2d[sqIndex][j + 1];
               get_nodes(cubeOrigin, sqOrder, NodeIndex, NodeID, NSP, wrappedDims);
               get_featurenames(cubeOrigin, sqOrder, pixIndex, pixfeaturename, NSP, wrappedDims, voxelsPtr);
-              if (pixfeaturename[0] > 0 || pixfeaturename[1] > 0)
+              if(pixfeaturename[0] > 0 || pixfeaturename[1] > 0)
               {
                 size_t currentEdgeArraySize = cEdgePtr->getNumberOfTuples();
-                if (currentEdgeArraySize < eid + 1)
+                if(currentEdgeArraySize < eid + 1)
                 {
                   edgeResizeCount++;
-                  if (edgeResizeCount == 10)
+                  if(edgeResizeCount == 10)
                   {
                     edgeResizeCount = 0;
                     edgeResize *= 10; // Increment the resize factor by an order of magnitude
                   }
                   cEdgePtr->resize(currentEdgeArraySize + edgeResize); // Allocate Edges in 100,000 packs
                   currentEdgeArraySize = cEdgePtr->getNumberOfTuples();
-                  //qDebug() << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")" << "\n";
+                  // qDebug() << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")" << "\n";
                 }
 
                 SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->getPointer(0);
@@ -1175,17 +1190,17 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                 nodeType[tn2] = SIMPL::SurfaceMesh::NodeType::Unused; // we don't need them...
               }
               // Categorize the Node...if it's triple junction or not...
-              for (ii = 0; ii < 2; ii++)
+              for(ii = 0; ii < 2; ii++)
               {
-                if (NodeIndex[ii] == 4)
+                if(NodeIndex[ii] == 4)
                 {
-                  if (sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
+                  if(sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
                   {
                     tnode = NodeID[ii];
                     nodeType[tnode] = SIMPL::SurfaceMesh::NodeType::TriplePoint;
                     cSquare[k].FCnode = tnode;
                   }
-                  else if (sqIndex == 19)
+                  else if(sqIndex == 19)
                   {
                     tnode = NodeID[ii];
                     nodeType[tnode] = SIMPL::SurfaceMesh::NodeType::QuadPoint;
@@ -1196,7 +1211,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                 {
                   tnode = NodeID[ii];
                   tnk = nodeType[tnode];
-                  if (tnk != -1)
+                  if(tnk != -1)
                   {
                     nodeType[tnode] = SIMPL::SurfaceMesh::NodeType::Default;
                   }
@@ -1223,23 +1238,59 @@ int M3CSliceBySlice::get_square_index(int tNS[4])
   int aBit[6];
   int tempIndex;
   int subIndex;
-  if (tNS[0] == tNS[1]) { aBit[0] = 0; }
-  else { aBit[0] = 1; }
-  if (tNS[1] == tNS[2]) { aBit[1] = 0; }
-  else { aBit[1] = 1; }
-  if (tNS[2] == tNS[3]) { aBit[2] = 0; }
-  else { aBit[2] = 1; }
-  if (tNS[3] == tNS[0]) { aBit[3] = 0; }
-  else { aBit[3] = 1; }
-  if (tNS[0] == tNS[2]) { aBit[4] = 0; }
-  else { aBit[4] = 1; }
-  if (tNS[1] == tNS[3]) { aBit[5] = 0; }
-  else { aBit[5] = 1; }
+  if(tNS[0] == tNS[1])
+  {
+    aBit[0] = 0;
+  }
+  else
+  {
+    aBit[0] = 1;
+  }
+  if(tNS[1] == tNS[2])
+  {
+    aBit[1] = 0;
+  }
+  else
+  {
+    aBit[1] = 1;
+  }
+  if(tNS[2] == tNS[3])
+  {
+    aBit[2] = 0;
+  }
+  else
+  {
+    aBit[2] = 1;
+  }
+  if(tNS[3] == tNS[0])
+  {
+    aBit[3] = 0;
+  }
+  else
+  {
+    aBit[3] = 1;
+  }
+  if(tNS[0] == tNS[2])
+  {
+    aBit[4] = 0;
+  }
+  else
+  {
+    aBit[4] = 1;
+  }
+  if(tNS[1] == tNS[3])
+  {
+    aBit[5] = 0;
+  }
+  else
+  {
+    aBit[5] = 1;
+  }
   tempIndex = 8 * aBit[3] + 4 * aBit[2] + 2 * aBit[1] + 1 * aBit[0];
-  if (tempIndex == 15)
+  if(tempIndex == 15)
   {
     subIndex = 2 * aBit[4] + 1 * aBit[5];
-    if (subIndex != 0)
+    if(subIndex != 0)
     {
       tempIndex = tempIndex + subIndex + 1;
     }
@@ -1250,9 +1301,7 @@ int M3CSliceBySlice::get_square_index(int tNS[4])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int M3CSliceBySlice::treat_anomaly(int tNSt[4], int zID1,
-                                   DataArray<int32_t>::Pointer voxelsPtr,
-                                   StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
+int M3CSliceBySlice::treat_anomaly(int tNSt[4], int zID1, DataArray<int32_t>::Pointer voxelsPtr, StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
 {
   int i, j, k, ii;
   int csite, cfeaturename;
@@ -1267,35 +1316,35 @@ int M3CSliceBySlice::treat_anomaly(int tNSt[4], int zID1,
   int32_t* voxels = voxelsPtr->getPointer(0);
   SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->getPointer(0);
 
-  for (k = 0; k < 4; k++)
+  for(k = 0; k < 4; k++)
   {
     numNeigh[k] = 0;
   }
-  for (i = 0; i < 4; i++)
+  for(i = 0; i < 4; i++)
   {
     csite = tNSt[i];
     cfeaturename = voxels[csite];
     //    for (j = 1; j <= num_neigh; j++)
-    for (j = 1; j <= 8; j++)
+    for(j = 1; j <= 8; j++)
     {
       NSite = neigh[csite].neigh_id[j];
       nSpin = voxels[NSite];
-      if (cfeaturename == nSpin)
+      if(cfeaturename == nSpin)
       {
         numNeigh[i] = numNeigh[i] + 1;
       }
     }
   }
-  for (ii = 0; ii < 4; ii++)
+  for(ii = 0; ii < 4; ii++)
   {
     temp = numNeigh[ii];
-    if (temp < min)
+    if(temp < min)
     {
       min = temp;
       minid = ii;
     }
   }
-  if (minid == 1 || minid == 3)
+  if(minid == 1 || minid == 3)
   {
     // we can reverse this...let's try this later...
     tempFlag = 0;
@@ -1314,51 +1363,51 @@ void M3CSliceBySlice::get_nodes(int cst, int ord, int nidx[2], int* nid, int NSP
 {
   int ii;
   int tempIndex;
-  for (ii = 0; ii < 2; ii++)
+  for(ii = 0; ii < 2; ii++)
   {
     tempIndex = nidx[ii];
-    if (ord == 0)
+    if(ord == 0)
     {
       // if the square index is 0 for corner site...
       switch(tempIndex)
       {
-        case 0:
-          nid[ii] = 7 * (cst - 1);
-          break;
-        case 1:
-          nid[ii] = 7 * cst + 1;
-          break;
-        case 2:
-          nid[ii] = 7 * (cst + wrappedDims[0] - 1);
-          break;
-        case 3:
-          nid[ii] = 7 * (cst - 1) + 1;
-          break;
-        case 4:
-          nid[ii] = 7 * (cst - 1) + 3;
-          break;
+      case 0:
+        nid[ii] = 7 * (cst - 1);
+        break;
+      case 1:
+        nid[ii] = 7 * cst + 1;
+        break;
+      case 2:
+        nid[ii] = 7 * (cst + wrappedDims[0] - 1);
+        break;
+      case 3:
+        nid[ii] = 7 * (cst - 1) + 1;
+        break;
+      case 4:
+        nid[ii] = 7 * (cst - 1) + 3;
+        break;
       }
     }
-    else if (ord == 1)
+    else if(ord == 1)
     {
       // if the square index is 1...
       switch(tempIndex)
       {
-        case 0:
-          nid[ii] = 7 * (cst - 1);
-          break;
-        case 1:
-          nid[ii] = 7 * cst + 2;
-          break;
-        case 2:
-          nid[ii] = 7 * (cst + NSP - 1);
-          break;
-        case 3:
-          nid[ii] = 7 * (cst - 1) + 2;
-          break;
-        case 4:
-          nid[ii] = 7 * (cst - 1) + 4;
-          break;
+      case 0:
+        nid[ii] = 7 * (cst - 1);
+        break;
+      case 1:
+        nid[ii] = 7 * cst + 2;
+        break;
+      case 2:
+        nid[ii] = 7 * (cst + NSP - 1);
+        break;
+      case 3:
+        nid[ii] = 7 * (cst - 1) + 2;
+        break;
+      case 4:
+        nid[ii] = 7 * (cst - 1) + 4;
+        break;
       }
     }
     else
@@ -1366,21 +1415,21 @@ void M3CSliceBySlice::get_nodes(int cst, int ord, int nidx[2], int* nid, int NSP
       // if the square index is 2...
       switch(tempIndex)
       {
-        case 0:
-          nid[ii] = 7 * (cst - 1) + 1;
-          break;
-        case 1:
-          nid[ii] = 7 * (cst - 1) + 2;
-          break;
-        case 2:
-          nid[ii] = 7 * (cst + NSP - 1) + 1;
-          break;
-        case 3:
-          nid[ii] = 7 * (cst + wrappedDims[0] - 1) + 2;
-          break;
-        case 4:
-          nid[ii] = 7 * (cst - 1) + 5;
-          break;
+      case 0:
+        nid[ii] = 7 * (cst - 1) + 1;
+        break;
+      case 1:
+        nid[ii] = 7 * (cst - 1) + 2;
+        break;
+      case 2:
+        nid[ii] = 7 * (cst + NSP - 1) + 1;
+        break;
+      case 3:
+        nid[ii] = 7 * (cst + wrappedDims[0] - 1) + 2;
+        break;
+      case 4:
+        nid[ii] = 7 * (cst - 1) + 5;
+        break;
       }
     }
   }
@@ -1389,105 +1438,98 @@ void M3CSliceBySlice::get_nodes(int cst, int ord, int nidx[2], int* nid, int NSP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::get_featurenames(int cst, int ord, int pID[2], int* pfeaturename,
-                                       int NSP, int* wrappedDims,
-                                       DataArray<int32_t>::Pointer voxelsPtr)
+void M3CSliceBySlice::get_featurenames(int cst, int ord, int pID[2], int* pfeaturename, int NSP, int* wrappedDims, DataArray<int32_t>::Pointer voxelsPtr)
 {
   int i;
   int pixTemp, tempfeaturename;
   int32_t* voxels = voxelsPtr->getPointer(0);
-  for (i = 0; i < 2; i++)
+  for(i = 0; i < 2; i++)
   {
     pixTemp = pID[i];
-    if (ord == 0)
+    if(ord == 0)
     {
       switch(pixTemp)
       {
-        case 0:
-          tempfeaturename = voxels[cst];
-          pfeaturename[i] = tempfeaturename;
-          break;
-        case 1:
-          tempfeaturename = voxels[cst + 1];
-          pfeaturename[i] = tempfeaturename;
-          break;
-        case 2:
-          tempfeaturename = voxels[cst + wrappedDims[0] + 1];
-          pfeaturename[i] = tempfeaturename;
-          break;
-        case 3:
-          tempfeaturename = voxels[cst + wrappedDims[0]];
-          pfeaturename[i] = tempfeaturename;
-          break;
+      case 0:
+        tempfeaturename = voxels[cst];
+        pfeaturename[i] = tempfeaturename;
+        break;
+      case 1:
+        tempfeaturename = voxels[cst + 1];
+        pfeaturename[i] = tempfeaturename;
+        break;
+      case 2:
+        tempfeaturename = voxels[cst + wrappedDims[0] + 1];
+        pfeaturename[i] = tempfeaturename;
+        break;
+      case 3:
+        tempfeaturename = voxels[cst + wrappedDims[0]];
+        pfeaturename[i] = tempfeaturename;
+        break;
       }
     }
-    else if (ord == 1)
+    else if(ord == 1)
     {
       switch(pixTemp)
       {
-        case 0:
-          tempfeaturename = voxels[cst];
-          pfeaturename[i] = tempfeaturename;
-          break;
-        case 1:
-          tempfeaturename = voxels[cst + 1];
-          pfeaturename[i] = tempfeaturename;
-          break;
-        case 2:
-          tempfeaturename = voxels[cst + NSP + 1];
-          pfeaturename[i] = tempfeaturename;
-          break;
-        case 3:
-          tempfeaturename = voxels[cst + NSP];
-          pfeaturename[i] = tempfeaturename;
-          break;
+      case 0:
+        tempfeaturename = voxels[cst];
+        pfeaturename[i] = tempfeaturename;
+        break;
+      case 1:
+        tempfeaturename = voxels[cst + 1];
+        pfeaturename[i] = tempfeaturename;
+        break;
+      case 2:
+        tempfeaturename = voxels[cst + NSP + 1];
+        pfeaturename[i] = tempfeaturename;
+        break;
+      case 3:
+        tempfeaturename = voxels[cst + NSP];
+        pfeaturename[i] = tempfeaturename;
+        break;
       }
     }
-    else if (ord == 2)
+    else if(ord == 2)
     {
       switch(pixTemp)
       {
-        case 0:
-          tempfeaturename = voxels[cst + wrappedDims[0]];
-          pfeaturename[i] = tempfeaturename;
-          break;
-        case 1:
-          tempfeaturename = voxels[cst];
-          pfeaturename[i] = tempfeaturename;
-          break;
-        case 2:
-          tempfeaturename = voxels[cst + NSP];
-          pfeaturename[i] = tempfeaturename;
-          break;
-        case 3:
-          tempfeaturename = voxels[cst + NSP + wrappedDims[0]];
-          pfeaturename[i] = tempfeaturename;
-          break;
+      case 0:
+        tempfeaturename = voxels[cst + wrappedDims[0]];
+        pfeaturename[i] = tempfeaturename;
+        break;
+      case 1:
+        tempfeaturename = voxels[cst];
+        pfeaturename[i] = tempfeaturename;
+        break;
+      case 2:
+        tempfeaturename = voxels[cst + NSP];
+        pfeaturename[i] = tempfeaturename;
+        break;
+      case 3:
+        tempfeaturename = voxels[cst + NSP + wrappedDims[0]];
+        pfeaturename[i] = tempfeaturename;
+        break;
       }
     }
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
-                                   StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr,
-                                   DataArray<int32_t>::Pointer voxelsPtr,
-                                   DataArray<int8_t>::Pointer cVertexNodeTypePtr,
-                                   StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
-                                   StructArray<SurfaceMesh::M3C::Patch>::Pointer  cTrianglePtr)
+int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims, StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr, DataArray<int32_t>::Pointer voxelsPtr,
+                                   DataArray<int8_t>::Pointer cVertexNodeTypePtr, StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr, StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr)
 {
   int i, ii, i1, i2;
   int sqID[6];
-  int tsq; // current sq id...
-  int tnE; // temp number of edges...
-  int nFC; // number of FC turned on...
-  int nE; // number of SurfaceMesh::M3C::Face edges...
-  int eff; // all the squares effective?...
+  int tsq;      // current sq id...
+  int tnE;      // temp number of edges...
+  int nFC;      // number of FC turned on...
+  int nE;       // number of SurfaceMesh::M3C::Face edges...
+  int eff;      // all the squares effective?...
   int cubeFlag; // if 1, we can do marching cube; if 0, useless...
-  int BCnode; // cube center Node...
+  int BCnode;   // cube center Node...
   int nkFlag;
   int tsqid1, tsqid2;
   int* arrayE;
@@ -1509,7 +1551,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
   Detail::triangleResizeCount = 0;
 
   tidIn = 0;
-  for (i = 1; i <= NSP; i++)
+  for(i = 1; i <= NSP; i++)
   {
     cubeFlag = 0;
     // for each marching cube, collect Faces...
@@ -1523,18 +1565,18 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
     nFC = 0;
     nE = 0;
     eff = 0;
-    //initialize SurfaceMesh::M3C::Face center array...
-    for (ii = 0; ii < 6; ii++)
+    // initialize SurfaceMesh::M3C::Face center array...
+    for(ii = 0; ii < 6; ii++)
     {
       arrayFC[ii] = -1;
     }
     // Count the number of SurfaceMesh::M3C::Face center turned on and SurfaceMesh::M3C::Face edges...
     fcid = 0;
     ii = 0;
-    for (ii = 0; ii < 6; ii++)
+    for(ii = 0; ii < 6; ii++)
     {
       tsq = sqID[ii];
-      if (cSquare[tsq].FCnode != -1)
+      if(cSquare[tsq].FCnode != -1)
       {
         arrayFC[fcid] = cSquare[tsq].FCnode;
         fcid++;
@@ -1544,8 +1586,11 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
       eff = eff + cSquare[tsq].effect;
     }
     nFC = fcid;
-    if (eff > 0) { cubeFlag = 1; }
-    if (nFC >= 3)
+    if(eff > 0)
+    {
+      cubeFlag = 1;
+    }
+    if(nFC >= 3)
     {
       // If number of SurfaceMesh::M3C::Face centers turned on is more than 2...
       // let's update the NodeKind of body center Node...
@@ -1553,7 +1598,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
       tsqid2 = sqID[5];
       nkFlag = 0;
       // get spin numbers for 8 corners for each marching cube...
-      for (int j = 0; j < 4; j++)
+      for(int j = 0; j < 4; j++)
       {
         tsite1 = cSquare[tsqid1].site_id[j];
         tsite2 = cSquare[tsqid2].site_id[j];
@@ -1561,36 +1606,38 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
         tfeaturename2 = voxels[tsite2];
         arrayfeaturename[j] = tfeaturename1;
         arrayfeaturename[j + 4] = tfeaturename2;
-        if (tfeaturename1 < 0 || tfeaturename2 < 0)
-        {nkFlag++;}
+        if(tfeaturename1 < 0 || tfeaturename2 < 0)
+        {
+          nkFlag++;
+        }
       }
-      nds = 0; // number of different spins in each marching cube...
+      nds = 0;    // number of different spins in each marching cube...
       nburnt = 0; // so nds = NodeKind of body center position...
-      for (int k = 0; k < 8; k++)
+      for(int k = 0; k < 8; k++)
       {
         // arraySpin contains no -1 before any of it is burnt...
         cfeaturename = arrayfeaturename[k];
-        if (cfeaturename != -1)
+        if(cfeaturename != -1)
         {
           nds++;
           arrayfeaturename[k] = -1; // burn...
           nburnt++;
-          for (int kk = 0; kk < 8; kk++)
+          for(int kk = 0; kk < 8; kk++)
           {
             nSpin = arrayfeaturename[kk];
-            if (cfeaturename == nSpin)
+            if(cfeaturename == nSpin)
             {
-              arrayfeaturename[kk] = -1; //burn...
+              arrayfeaturename[kk] = -1; // burn...
               nburnt++;
             }
           }
         }
       }
       // update NodeKind of body center Node in the current marching cube...
-      if (nkFlag > 0)
+      if(nkFlag > 0)
       {
         nodeType[BCnode] = nds;
-        if (nds > 4 && nds < 12)
+        if(nds > 4 && nds < 12)
         {
           nodeType[BCnode] = SIMPL::SurfaceMesh::NodeType::QuadPoint;
         }
@@ -1598,7 +1645,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
       else
       {
         nodeType[BCnode] = nds;
-        if (nds > 4 && nds < 12)
+        if(nds > 4 && nds < 12)
         {
           nodeType[BCnode] = SIMPL::SurfaceMesh::NodeType::QuadPoint;
         }
@@ -1610,19 +1657,19 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
     // when nE==2, it doen't happen
     // when nE==1, the edge will contribute for the Neighboring marching cube...
     // when nE==0, it meaNS the cube is inside a feature...
-    if (cubeFlag == 1 && nE > 2)
+    if(cubeFlag == 1 && nE > 2)
     {
       // Make edge array for each marching cube...
       arrayE = new int[nE];
       boost::shared_array<int> arrayEPtr(arrayE);
       tindex = 0;
-      for (i1 = 0; i1 < 6; i1++)
+      for(i1 = 0; i1 < 6; i1++)
       {
         tsq = sqID[i1];
         tnE = cSquare[tsq].nEdge;
-        if (tnE != 0)
+        if(tnE != 0)
         {
-          for (i2 = 0; i2 < tnE; i2++)
+          for(i2 = 0; i2 < tnE; i2++)
           {
             arrayE[tindex] = cSquare[tsq].edge_id[i2];
             tindex++;
@@ -1630,18 +1677,18 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
         }
       }
       // Consider each case as Z. Wu's paper...
-      if (nFC == 0)
+      if(nFC == 0)
       {
         // when there's no SurfaceMesh::M3C::Face center
         get_case0_triangles(i, arrayE, nE, tidIn, &tidOut, cEdgePtr, cTrianglePtr);
         tidIn = tidOut;
       }
-      else if (nFC == 2)
+      else if(nFC == 2)
       {
         get_case2_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut, cEdgePtr, cTrianglePtr);
         tidIn = tidOut;
       }
-      else if (nFC > 2 && nFC <= 6)
+      else if(nFC > 2 && nFC <= 6)
       {
         get_caseM_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut, BCnode, cEdgePtr, cTrianglePtr);
         tidIn = tidOut;
@@ -1658,32 +1705,31 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
   return cTrianglePtr->getNumberOfTuples();
 }
 
-#define ADD_TRIANGLE(cTrianglePtr, ctid, n0, n1, n2, label0, label1)\
-  {\
-    size_t current_##cTrianglePtr##_size = cTrianglePtr->getNumberOfTuples();\
-    if (current_##cTrianglePtr##_size < static_cast<size_t>(ctid + 1) ) {\
-      Detail::triangleResizeCount++; \
-      if (Detail::triangleResizeCount == 10) { \
-        Detail::triangleResizeCount = 0;\
-        Detail::triangleResize *= 10;\
-      }\
-      cTrianglePtr->resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
-    }\
-    StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
-    cTriangle[ctid].node_id[0] = n0;\
-    cTriangle[ctid].node_id[1] = n1;\
-    cTriangle[ctid].node_id[2] = n2;\
-    cTriangle[ctid].nSpin[0] = label0;\
-    cTriangle[ctid].nSpin[1] = label1;\
+#define ADD_TRIANGLE(cTrianglePtr, ctid, n0, n1, n2, label0, label1)                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    size_t current_##cTrianglePtr##_size = cTrianglePtr->getNumberOfTuples();                                                                                                                          \
+    if(current_##cTrianglePtr##_size < static_cast<size_t>(ctid + 1))                                                                                                                                  \
+    {                                                                                                                                                                                                  \
+      Detail::triangleResizeCount++;                                                                                                                                                                   \
+      if(Detail::triangleResizeCount == 10)                                                                                                                                                            \
+      {                                                                                                                                                                                                \
+        Detail::triangleResizeCount = 0;                                                                                                                                                               \
+        Detail::triangleResize *= 10;                                                                                                                                                                  \
+      }                                                                                                                                                                                                \
+      cTrianglePtr->resize(current_##cTrianglePtr##_size + Detail::triangleResize);                                                                                                                    \
+    }                                                                                                                                                                                                  \
+    StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());                                                                                                                        \
+    cTriangle[ctid].node_id[0] = n0;                                                                                                                                                                   \
+    cTriangle[ctid].node_id[1] = n1;                                                                                                                                                                   \
+    cTriangle[ctid].node_id[2] = n2;                                                                                                                                                                   \
+    cTriangle[ctid].nSpin[0] = label0;                                                                                                                                                                 \
+    cTriangle[ctid].nSpin[1] = label1;                                                                                                                                                                 \
   }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
-                                          int tin, int* tout,
-                                          StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
+void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge, int tin, int* tout, StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
                                           StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr)
 {
   int ii, i, j, jj, k, kk, k1, mm;
@@ -1692,7 +1738,7 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
   int ce, ne;
   int cfeaturename1, cfeaturename2, cnode1, cnode2;
   int nSpin1, nSpin2, nnode1, nnode2;
-  //int nucleus;
+  // int nucleus;
   int chaser;
   int featurenameFlag, NodeFlag, flip;
   int bflag, nbflag;
@@ -1718,7 +1764,7 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
   SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->getPointer(0);
 
   // initialize burn flags for SurfaceMesh::M3C::Face edges...
-  for (ii = 0; ii < nedge; ii++)
+  for(ii = 0; ii < nedge; ii++)
   {
     burnt[ii] = 0;
     burnt_list[ii] = -1;
@@ -1726,35 +1772,35 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
   loopID = 1;
   tail = 0;
   head = 0;
-  for (i = 0; i < nedge; i++)
+  for(i = 0; i < nedge; i++)
   {
     ce = ae[i];
     bflag = burnt[i];
-    if (bflag == 0)
+    if(bflag == 0)
     {
       //  nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
       coin = 1;
-      while (coin)
+      while(coin)
       {
         chaser = burnt_list[tail];
         cfeaturename1 = cEdge[chaser].nSpin[0];
         cfeaturename2 = cEdge[chaser].nSpin[1];
         cnode1 = cEdge[chaser].node_id[0];
         cnode2 = cEdge[chaser].node_id[1];
-        for (j = 0; j < nedge; j++)
+        for(j = 0; j < nedge; j++)
         {
           ne = ae[j];
           nbflag = burnt[j];
-          if (nbflag == 0)
+          if(nbflag == 0)
           {
             nSpin1 = cEdge[ne].nSpin[0];
             nSpin2 = cEdge[ne].nSpin[1];
             nnode1 = cEdge[ne].node_id[0];
             nnode2 = cEdge[ne].node_id[1];
             // checking if SurfaceMesh::M3C::Neighbor edge has same Neighboring featurenames...
-            if (((cfeaturename1 == nSpin1) && (cfeaturename2 == nSpin2)) || ((cfeaturename1 == nSpin2) && (cfeaturename2 == nSpin1)))
+            if(((cfeaturename1 == nSpin1) && (cfeaturename2 == nSpin2)) || ((cfeaturename1 == nSpin2) && (cfeaturename2 == nSpin1)))
             {
               featurenameFlag = 1;
             }
@@ -1763,12 +1809,12 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
               featurenameFlag = 0;
             }
             // checking if neighbor egde is contiguous...
-            if ((cnode2 == nnode1) && (cnode1 != nnode2))
+            if((cnode2 == nnode1) && (cnode1 != nnode2))
             {
               NodeFlag = 1;
               flip = 0;
             }
-            else if ((cnode2 == nnode2) && (cnode1 != nnode1))
+            else if((cnode2 == nnode2) && (cnode1 != nnode1))
             {
               NodeFlag = 1;
               flip = 1;
@@ -1778,12 +1824,12 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
               NodeFlag = 0;
               flip = 0;
             }
-            if (featurenameFlag == 1 && NodeFlag == 1)
+            if(featurenameFlag == 1 && NodeFlag == 1)
             {
               head = head + 1;
               burnt_list[head] = ne;
               burnt[j] = loopID;
-              if (flip == 1)
+              if(flip == 1)
               {
                 cEdge[ne].nSpin[0] = nSpin2;
                 cEdge[ne].nSpin[1] = nSpin1;
@@ -1793,7 +1839,7 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
             }
           }
         }
-        if (tail == head)
+        if(tail == head)
         {
           coin = 0;
           tail = tail + 1;
@@ -1810,15 +1856,15 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
   }
   SharedIntArray_t countPtr(new int[loopID]);
   count = countPtr.get();
-  for (k1 = 1; k1 < loopID; k1++)
+  for(k1 = 1; k1 < loopID; k1++)
   {
     count[k1] = 0;
   }
-  for (k = 1; k < loopID; k++)
+  for(k = 1; k < loopID; k++)
   {
-    for (kk = 0; kk < nedge; kk++)
+    for(kk = 0; kk < nedge; kk++)
     {
-      if (k == burnt[kk])
+      if(k == burnt[kk])
       {
         count[k] = count[k] + 1;
       }
@@ -1827,26 +1873,26 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
   // Let's do triangulation...
   sumN = 0;
   ctid = tin;
-  for (jj = 1; jj < loopID; jj++)
+  for(jj = 1; jj < loopID; jj++)
   {
     numN = count[jj];
     sumN = sumN + numN;
     from = sumN - numN;
     SharedIntArray_t loopPtr(new int[numN]);
     loop = loopPtr.get();
-    for (mm = 0; mm < numN; mm++)
+    for(mm = 0; mm < numN; mm++)
     {
       loop[mm] = burnt_list[from + mm];
     }
-    if (numN == 3)
+    if(numN == 3)
     {
       te0 = loop[0];
       te1 = loop[1];
       te2 = loop[2];
-      ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] );
+      ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1]);
       ctid++;
     }
-    else if (numN > 3)
+    else if(numN > 3)
     {
       numT = numN - 2;
       cnumT = 0;
@@ -1858,22 +1904,22 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
       tcVertex = cEdge[te0].node_id[1];
       tv2 = cEdge[te1].node_id[0];
       {
-        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
+        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1])
       }
       new_node0 = tv2;
       //  new_node1 = tcVertex;
       cnumT++;
       ctid++;
-      while (cnumT < numT)
+      while(cnumT < numT)
       {
-        if ((cnumT % 2) != 0)
+        if((cnumT % 2) != 0)
         {
           front = front + 1;
           ce = loop[front];
           tv0 = cEdge[ce].node_id[0];
           tcVertex = cEdge[ce].node_id[1];
           tv2 = new_node0;
-          ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
+          ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
 
           new_node0 = tcVertex;
           cnumT++;
@@ -1886,7 +1932,7 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
           tv0 = cEdge[ce].node_id[0];
           tcVertex = cEdge[ce].node_id[1];
           tv2 = new_node0;
-          ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
+          ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
 
           new_node0 = tv0;
           cnumT++;
@@ -1901,15 +1947,13 @@ void M3CSliceBySlice::get_case0_triangles(int site, int* ae, int nedge,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burnt_list, int& loopID,
-                                                int* ae, StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
-                                                QVector<int>& countVec)
+void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burnt_list, int& loopID, int* ae, StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr, QVector<int>& countVec)
 {
   int nSpin1, nSpin2, nnode1, nnode2;
   int bflag, nbflag;
   int cfeaturename1, cfeaturename2;
   int featurenameFlag, NodeFlag;
-  //int nucleus;
+  // int nucleus;
   int ne;
   int chaser;
   int cnode1, cnode2;
@@ -1917,7 +1961,7 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
   SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->getPointer(0);
 
   // initialize burn flags for SurfaceMesh::M3C::Face edges...
-  for (int ii = 0; ii < nedge; ii++)
+  for(int ii = 0; ii < nedge; ii++)
   {
     burnt[ii] = 0;
     burnt_list[ii] = -1;
@@ -1926,35 +1970,35 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
   int tail = 0;
   int head = 0;
   int coin;
-  for (int i = 0; i < nedge; i++)
+  for(int i = 0; i < nedge; i++)
   {
     ce = ae[i];
     bflag = burnt[i];
-    if (bflag == 0)
+    if(bflag == 0)
     {
-      //nucleus = ce;
+      // nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
       coin = 1;
-      while (coin)
+      while(coin)
       {
         chaser = burnt_list[tail];
         cfeaturename1 = cEdge[chaser].nSpin[0];
         cfeaturename2 = cEdge[chaser].nSpin[1];
         cnode1 = cEdge[chaser].node_id[0];
         cnode2 = cEdge[chaser].node_id[1];
-        for (int j = 0; j < nedge; j++)
+        for(int j = 0; j < nedge; j++)
         {
           ne = ae[j];
           nbflag = burnt[j];
-          if (nbflag == 0)
+          if(nbflag == 0)
           {
             nSpin1 = cEdge[ne].nSpin[0];
             nSpin2 = cEdge[ne].nSpin[1];
             nnode1 = cEdge[ne].node_id[0];
             nnode2 = cEdge[ne].node_id[1];
             // checking if SurfaceMesh::M3C::Neighbor edge has same Neighboring featurenames...
-            if (((cfeaturename1 == nSpin1) && (cfeaturename2 == nSpin2)) || ((cfeaturename1 == nSpin2) && (cfeaturename2 == nSpin1)))
+            if(((cfeaturename1 == nSpin1) && (cfeaturename2 == nSpin2)) || ((cfeaturename1 == nSpin2) && (cfeaturename2 == nSpin1)))
             {
               featurenameFlag = 1;
             }
@@ -1963,19 +2007,19 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
               featurenameFlag = 0;
             }
             // checking if neighor egde is contiguous...
-            if ((cnode1 == nnode1) && (cnode2 != nnode2))
+            if((cnode1 == nnode1) && (cnode2 != nnode2))
             {
               NodeFlag = 1;
             }
-            else if ((cnode1 == nnode2) && (cnode2 != nnode1))
+            else if((cnode1 == nnode2) && (cnode2 != nnode1))
             {
               NodeFlag = 1;
             }
-            else if ((cnode2 == nnode1) && (cnode1 != nnode2))
+            else if((cnode2 == nnode1) && (cnode1 != nnode2))
             {
               NodeFlag = 1;
             }
-            else if ((cnode2 == nnode2) && (cnode1 != nnode1))
+            else if((cnode2 == nnode2) && (cnode1 != nnode1))
             {
               NodeFlag = 1;
             }
@@ -1983,7 +2027,7 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
             {
               NodeFlag = 0;
             }
-            if (featurenameFlag == 1 && NodeFlag == 1)
+            if(featurenameFlag == 1 && NodeFlag == 1)
             {
               head = head + 1;
               burnt_list[head] = ne;
@@ -1991,7 +2035,7 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
             }
           }
         }
-        if (tail == head)
+        if(tail == head)
         {
           coin = 0;
           tail = tail + 1;
@@ -2008,15 +2052,15 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
   }
   countVec.resize(loopID);
   int* count = &(countVec.front());
-  for (int k1 = 1; k1 < loopID; k1++)
+  for(int k1 = 1; k1 < loopID; k1++)
   {
     count[k1] = 0;
   }
-  for (int k = 1; k < loopID; k++)
+  for(int k = 1; k < loopID; k++)
   {
-    for (int kk = 0; kk < nedge; kk++)
+    for(int kk = 0; kk < nedge; kk++)
     {
-      if (k == burnt[kk])
+      if(k == burnt[kk])
       {
         count[k] = count[k] + 1;
       }
@@ -2027,9 +2071,7 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_list,
-                                                  int from, int to, int numN, int& ctid,
-                                                  StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
+void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_list, int from, int to, int numN, int& ctid, StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
                                                   StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr)
 {
   int front, back;
@@ -2047,19 +2089,19 @@ void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_li
   int index = 1;
   int endNode = cEdge[startEdge].node_id[1];
   int chaser = startEdge;
-  while (index < numN)
+  while(index < numN)
   {
-    for (int n = from; n < to; n++)
+    for(int n = from; n < to; n++)
     {
       ce = burnt_list[n];
       cnode1 = cEdge[ce].node_id[0];
       cnode2 = cEdge[ce].node_id[1];
-      if ((ce != chaser) && (endNode == cnode1))
+      if((ce != chaser) && (endNode == cnode1))
       {
         burnt_loop[index] = ce;
         index++;
       }
-      else if ((ce != chaser) && (endNode == cnode2))
+      else if((ce != chaser) && (endNode == cnode2))
       {
         burnt_loop[index] = ce;
         index++;
@@ -2075,16 +2117,16 @@ void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_li
     chaser = burnt_loop[index - 1];
     endNode = cEdge[chaser].node_id[1];
   }
-  if (numN == 3)
+  if(numN == 3)
   {
     te0 = burnt_loop[0];
     te1 = burnt_loop[1];
     te2 = burnt_loop[2];
-    ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
+    ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1])
 
     ctid++;
   }
-  else if (numN > 3)
+  else if(numN > 3)
   {
     numT = numN - 2;
     cnumT = 0;
@@ -2096,22 +2138,22 @@ void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_li
     tcVertex = cEdge[te0].node_id[1];
     tv2 = cEdge[te1].node_id[0];
     {
-      ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
+      ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1])
     }
     new_node0 = tv2;
     //  new_node1 = tcVertex;
     cnumT++;
     ctid++;
-    while (cnumT < numT)
+    while(cnumT < numT)
     {
-      if ((cnumT % 2) != 0)
+      if((cnumT % 2) != 0)
       {
         front = front + 1;
         ce = burnt_loop[front];
         tv0 = cEdge[ce].node_id[0];
         tcVertex = cEdge[ce].node_id[1];
         tv2 = new_node0;
-        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
+        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
 
         new_node0 = tcVertex;
         cnumT++;
@@ -2124,7 +2166,7 @@ void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_li
         tv0 = cEdge[ce].node_id[0];
         tcVertex = cEdge[ce].node_id[1];
         tv2 = new_node0;
-        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
+        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
 
         new_node0 = tv0;
         cnumT++;
@@ -2137,9 +2179,7 @@ void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_li
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc,
-                                          int nfctr, int tin, int* tout,
-                                          StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
+void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc, int nfctr, int tin, int* tout, StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
                                           StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr)
 {
 
@@ -2150,7 +2190,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
   int tfeaturename, tnode;
   int chaser;
   int start;
-  //int end;
+  // int end;
   int from, to;
   int flip;
   int* burnt = nullptr;
@@ -2183,12 +2223,12 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
   // Let's make complete loops...
   // numTri = 0;
   start = afc[0];
-  //end = afc[1];
+  // end = afc[1];
   to = 0;
   from = 0;
   // Let's do triangulation...
   ctid = tin;
-  for (int j1 = 1; j1 < loopID; j1++)
+  for(int j1 = 1; j1 < loopID; j1++)
   {
     int startEdge;
     int endNode;
@@ -2199,28 +2239,28 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
     from = to - numN;
     SharedIntArray_t burnt_loop_ptr(new int[numN]);
     burnt_loop = burnt_loop_ptr.get();
-    for (i1 = from; i1 < to; i1++)
+    for(i1 = from; i1 < to; i1++)
     {
       ce = burnt_list[i1];
       cnode1 = cEdge[ce].node_id[0];
       cnode2 = cEdge[ce].node_id[1];
-      if (start == cnode1)
+      if(start == cnode1)
       {
         openL = 1; // loop is open...
         startEdge = ce;
         flip = 0;
       }
-      else if (start == cnode2)
+      else if(start == cnode2)
       {
         openL = 1;
         startEdge = ce;
         flip = 1;
       }
     }
-    if (openL == 1)
+    if(openL == 1)
     {
       // if current loop is an open loop...
-      if (flip == 1)
+      if(flip == 1)
       {
         tnode = cEdge[startEdge].node_id[0];
         tfeaturename = cEdge[startEdge].nSpin[0];
@@ -2233,19 +2273,19 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
       index = 1;
       endNode = cEdge[startEdge].node_id[1];
       chaser = startEdge;
-      while (index < numN)
+      while(index < numN)
       {
-        for (n = from; n < to; n++)
+        for(n = from; n < to; n++)
         {
           ce = burnt_list[n];
           cnode1 = cEdge[ce].node_id[0];
           cnode2 = cEdge[ce].node_id[1];
-          if ((ce != chaser) && (endNode == cnode1))
+          if((ce != chaser) && (endNode == cnode1))
           {
             burnt_loop[index] = ce;
             index++;
           }
-          else if ((ce != chaser) && (endNode == cnode2))
+          else if((ce != chaser) && (endNode == cnode2))
           {
             burnt_loop[index] = ce;
             index++;
@@ -2261,7 +2301,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
         chaser = burnt_loop[index - 1];
         endNode = cEdge[chaser].node_id[1];
       }
-      if (numN == 2)
+      if(numN == 2)
       {
         te0 = burnt_loop[0];
         te1 = burnt_loop[1];
@@ -2270,10 +2310,10 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
         int tn1 = cEdge[te1].node_id[1];
         int ts0 = cEdge[te0].nSpin[0];
         int ts1 = cEdge[te0].nSpin[1];
-        ADD_TRIANGLE(cTrianglePtr, ctid, ccn, tn0, tn1, ts0, ts1 )
+        ADD_TRIANGLE(cTrianglePtr, ctid, ccn, tn0, tn1, ts0, ts1)
         ctid++;
       }
-      else if (numN > 2)
+      else if(numN > 2)
       {
         numT = numN - 1; // Note that it's open loop...
         cnumT = 0;
@@ -2285,22 +2325,22 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
         tcVertex = cEdge[te0].node_id[1];
         tv2 = cEdge[te1].node_id[1];
         {
-          ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
+          ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1])
         }
         new_node0 = tv2;
         //    new_node1 = tcVertex;
         cnumT++;
         ctid++;
-        while (cnumT < numT)
+        while(cnumT < numT)
         {
-          if ((cnumT % 2) != 0)
+          if((cnumT % 2) != 0)
           {
             front = front + 1;
             ce = burnt_loop[front];
             tv0 = cEdge[ce].node_id[0];
             tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
+            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
 
             new_node0 = tcVertex;
             cnumT++;
@@ -2313,7 +2353,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
             tv0 = cEdge[ce].node_id[0];
             tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
+            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
 
             new_node0 = tv0;
             cnumT++;
@@ -2334,9 +2374,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc,
-                                          int nfctr, int tin, int* tout, int ccn,
-                                          StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
+void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc, int nfctr, int tin, int* tout, int ccn, StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
                                           StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr)
 {
   int n, i1;
@@ -2353,7 +2391,7 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
   int* burnt_list;
   int* count;
   QVector<int> countVec;
-  int numN;//, numTri;
+  int numN; //, numTri;
   int tn0, tn1;
   int* burnt_loop;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
@@ -2377,12 +2415,12 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
   count = &(countVec.front());
 
   // Let's make complete loops...
-  //numTri = 0;
+  // numTri = 0;
   to = 0;
   from = 0;
   // Let's do triangulation...
   ctid = tin;
-  for (int j1 = 1; j1 < loopID; j1++)
+  for(int j1 = 1; j1 < loopID; j1++)
   {
     openL = 0; // current loop is closed...
     numN = count[j1];
@@ -2390,21 +2428,21 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
     from = to - numN;
     SharedIntArray_t burnt_loop_ptr(new int[numN]);
     burnt_loop = burnt_loop_ptr.get();
-    for (i1 = from; i1 < to; i1++)
+    for(i1 = from; i1 < to; i1++)
     {
       ce = burnt_list[i1];
       cnode1 = cEdge[ce].node_id[0];
       cnode2 = cEdge[ce].node_id[1];
-      for (n1 = 0; n1 < nfctr; n1++)
+      for(n1 = 0; n1 < nfctr; n1++)
       {
         start = afc[n1];
-        if (start == cnode1)
+        if(start == cnode1)
         {
           openL = 1; // loop is open...
           startEdge = ce;
           flip = 0;
         }
-        else if (start == cnode2)
+        else if(start == cnode2)
         {
           openL = 1;
           startEdge = ce;
@@ -2412,10 +2450,10 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
         }
       }
     }
-    if (openL == 1)
+    if(openL == 1)
     {
       // if current loop is an open loop...
-      if (flip == 1)
+      if(flip == 1)
       {
         tnode = cEdge[startEdge].node_id[0];
         tfeaturename = cEdge[startEdge].nSpin[0];
@@ -2428,19 +2466,19 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
       index = 1;
       endNode = cEdge[startEdge].node_id[1];
       chaser = startEdge;
-      while (index < numN)
+      while(index < numN)
       {
-        for (n = from; n < to; n++)
+        for(n = from; n < to; n++)
         {
           ce = burnt_list[n];
           cnode1 = cEdge[ce].node_id[0];
           cnode2 = cEdge[ce].node_id[1];
-          if ((ce != chaser) && (endNode == cnode1))
+          if((ce != chaser) && (endNode == cnode1))
           {
             burnt_loop[index] = ce;
             index++;
           }
-          else if ((ce != chaser) && (endNode == cnode2))
+          else if((ce != chaser) && (endNode == cnode2))
           {
             burnt_loop[index] = ce;
             index++;
@@ -2456,8 +2494,8 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
         chaser = burnt_loop[index - 1];
         endNode = cEdge[chaser].node_id[1];
       }
-      //triangulation...
-      for (iii = 0; iii < numN; iii++)
+      // triangulation...
+      for(iii = 0; iii < numN; iii++)
       {
         ce = burnt_loop[iii];
         tn0 = cEdge[ce].node_id[0];
@@ -2480,17 +2518,14 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::arrange_featurenames(int numT, int zID, int NSP, int* wrappedDims, float* res,
-                                           StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                                           VertexArray::Pointer cVertexPtr,
-                                           DataArray<int32_t>::Pointer voxelsPtr,
-                                           StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
+void M3CSliceBySlice::arrange_featurenames(int numT, int zID, int NSP, int* wrappedDims, float* res, StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr, VertexArray::Pointer cVertexPtr,
+                                           DataArray<int32_t>::Pointer voxelsPtr, StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
 {
-  //int i, j;
+  // int i, j;
   int cnode;
   int csite, kind;
-  int tsite1[3] = { -1, -1, -1};
-  int tsite2[3] = { -1, -1, -1};
+  int tsite1[3] = {-1, -1, -1};
+  int tsite2[3] = {-1, -1, -1};
   //  int nSpin1, nSpin2;
   int tfeaturename1[3], tfeaturename2[3];
   float cx, cy, cz;
@@ -2510,7 +2545,7 @@ void M3CSliceBySlice::arrange_featurenames(int numT, int zID, int NSP, int* wrap
 
   int nSpin1 = 0;
   int nSpin2 = 0;
-  for (int i = 0; i < numT; i++)
+  for(int i = 0; i < numT; i++)
   {
     // for each triangle...
     xSum = 0.0;
@@ -2520,7 +2555,7 @@ void M3CSliceBySlice::arrange_featurenames(int numT, int zID, int NSP, int* wrap
     nSpin2 = cTriangle[i].nSpin[1];
     cTriangle[i].nSpin[0] = -1;
     cTriangle[i].nSpin[1] = -1;
-    for (int j = 0; j < 3; j++)
+    for(int j = 0; j < 3; j++)
     {
       // for each Node inside the triangle...
       tsite1[j] = -1;
@@ -2536,21 +2571,21 @@ void M3CSliceBySlice::arrange_featurenames(int numT, int zID, int NSP, int* wrap
       vcoord[j][0] = cVertex[cnode].pos[0];
       vcoord[j][1] = cVertex[cnode].pos[1];
       vcoord[j][2] = cVertex[cnode].pos[2];
-      if (kind == 0)
+      if(kind == 0)
       {
         tsite1[j] = csite;
         tsite2[j] = neigh[csite].neigh_id[1];
         tfeaturename1[j] = voxels[tsite1[j]];
         tfeaturename2[j] = voxels[tsite2[j]];
       }
-      else if (kind == 1)
+      else if(kind == 1)
       {
         tsite1[j] = csite;
         tsite2[j] = neigh[csite].neigh_id[7];
         tfeaturename1[j] = voxels[tsite1[j]];
         tfeaturename2[j] = voxels[tsite2[j]];
       }
-      else if (kind == 2)
+      else if(kind == 2)
       {
         tsite1[j] = csite;
         tsite2[j] = neigh[csite].neigh_id[18];
@@ -2579,9 +2614,18 @@ void M3CSliceBySlice::arrange_featurenames(int numT, int zID, int NSP, int* wrap
     a = a / length;
     b = b / length;
     c = c / length;
-    if (fabs(a) < 0.00001) { a = 0.0; }
-    if (fabs(b) < 0.00001) { b = 0.0; }
-    if (fabs(c) < 0.00001) { c = 0.0; }
+    if(fabs(a) < 0.00001)
+    {
+      a = 0.0;
+    }
+    if(fabs(b) < 0.00001)
+    {
+      b = 0.0;
+    }
+    if(fabs(c) < 0.00001)
+    {
+      c = 0.0;
+    }
     // update SurfaceMesh::M3C::Patch info...
     //    cTriangle[i]->normal[0] = a;
     //    cTriangle[i]->normal[1] = b;
@@ -2589,21 +2633,21 @@ void M3CSliceBySlice::arrange_featurenames(int numT, int zID, int NSP, int* wrap
     //    cTriangle[i]->area = 0.5 * length;
     // determine which way normal should point...
     d = -(a * cx + b * cy + c * cz);
-    for (int j = 0; j < 3; j++)
+    for(int j = 0; j < 3; j++)
     {
-      if (tsite1[j] != -1)
+      if(tsite1[j] != -1)
       {
         locale = tsite1[j] + shift;
         x = find_xcoord(locale, wrappedDims[0], res[0]);
         y = find_ycoord(locale, wrappedDims[0], wrappedDims[1], res[1]);
         z = find_zcoord(locale, wrappedDims[0], wrappedDims[1], res[2]);
         sidecheck = (a * x + b * y + c * z + d);
-        if (sidecheck < -0.000001)
+        if(sidecheck < -0.000001)
         {
           cTriangle[i].nSpin[0] = tfeaturename2[j];
           cTriangle[i].nSpin[1] = tfeaturename1[j];
         }
-        else if (sidecheck > 0.000001)
+        else if(sidecheck > 0.000001)
         {
           cTriangle[i].nSpin[0] = tfeaturename1[j];
           cTriangle[i].nSpin[1] = tfeaturename2[j];
@@ -2613,56 +2657,86 @@ void M3CSliceBySlice::arrange_featurenames(int numT, int zID, int NSP, int* wrap
     int k = 0;
     int index = 0;
     int testtsite = 0;
-    //int sidechecked = 1;
+    // int sidechecked = 1;
     int xDim = wrappedDims[0];
     int yDim = wrappedDims[1];
 
-    while (cTriangle[i].nSpin[0] == -1 && k < 6)
+    while(cTriangle[i].nSpin[0] == -1 && k < 6)
     {
-      while (tsite1[k] == -1)
+      while(tsite1[k] == -1)
       {
         k++;
       }
-      if (k == 3) { a = -a, b = -b, c = -c; }
-      if (k < 3) { index = k; }
-      if (k >= 3) { index = k - 3; }
-      if (a != 0 && (tsite1[index] % xDim + a) >= 0 && (tsite1[index] % xDim + a) < xDim) { testtsite = tsite1[index] + (a * 1); }
-      if (b != 0 && ((tsite1[index] / xDim) % yDim + b) >= 0 && ((tsite1[index] / xDim) % yDim + b) < yDim) { testtsite = tsite1[index] + (b * xDim); }
-      if (c != 0 && (tsite1[index] / (xDim * yDim) + c) >= 0 && (tsite1[index] / (xDim * yDim) + c) < 2) { testtsite = tsite1[index] + (c * NSP); }
+      if(k == 3)
+      {
+        a = -a, b = -b, c = -c;
+      }
+      if(k < 3)
+      {
+        index = k;
+      }
+      if(k >= 3)
+      {
+        index = k - 3;
+      }
+      if(a != 0 && (tsite1[index] % xDim + a) >= 0 && (tsite1[index] % xDim + a) < xDim)
+      {
+        testtsite = tsite1[index] + (a * 1);
+      }
+      if(b != 0 && ((tsite1[index] / xDim) % yDim + b) >= 0 && ((tsite1[index] / xDim) % yDim + b) < yDim)
+      {
+        testtsite = tsite1[index] + (b * xDim);
+      }
+      if(c != 0 && (tsite1[index] / (xDim * yDim) + c) >= 0 && (tsite1[index] / (xDim * yDim) + c) < 2)
+      {
+        testtsite = tsite1[index] + (c * NSP);
+      }
       int gname = voxels[testtsite];
-      if (gname == tfeaturename1[index])
+      if(gname == tfeaturename1[index])
       {
-        if (k < 3) { cTriangle[i].nSpin[0] = tfeaturename1[index], cTriangle[i].nSpin[1] = tfeaturename2[index]; }
-        if (k >= 3) { cTriangle[i].nSpin[0] = tfeaturename2[index], cTriangle[i].nSpin[1] = tfeaturename1[index]; }
+        if(k < 3)
+        {
+          cTriangle[i].nSpin[0] = tfeaturename1[index], cTriangle[i].nSpin[1] = tfeaturename2[index];
+        }
+        if(k >= 3)
+        {
+          cTriangle[i].nSpin[0] = tfeaturename2[index], cTriangle[i].nSpin[1] = tfeaturename1[index];
+        }
       }
-      if (gname == tfeaturename2[index])
+      if(gname == tfeaturename2[index])
       {
-        if (k < 3) { cTriangle[i].nSpin[0] = tfeaturename2[index], cTriangle[i].nSpin[1] = tfeaturename1[index]; }
-        if (k >= 3) { cTriangle[i].nSpin[0] = tfeaturename1[index], cTriangle[i].nSpin[1] = tfeaturename2[index]; }
+        if(k < 3)
+        {
+          cTriangle[i].nSpin[0] = tfeaturename2[index], cTriangle[i].nSpin[1] = tfeaturename1[index];
+        }
+        if(k >= 3)
+        {
+          cTriangle[i].nSpin[0] = tfeaturename1[index], cTriangle[i].nSpin[1] = tfeaturename2[index];
+        }
       }
-      if (gname != tfeaturename1[index] && gname != tfeaturename2[index]) { k++; }
+      if(gname != tfeaturename1[index] && gname != tfeaturename2[index])
+      {
+        k++;
+      }
     }
     // IF WE FAILED TO PROPERLY SET THE LABELS THEN SIMPLY PUT THE LABELS BACK TO THEIR ORIGINAL VALUES. IF WE HAD
     // PROPER CONNECTIVITY THIS WOULD NOT BE A PROBLEM AS WE WOULD JUST TEST AGAINST THE NEIGHBORS TO MAKE SURE OUR
     // WINDING IS CORRECT.
-    if (cTriangle[i].nSpin[0] == -1)
+    if(cTriangle[i].nSpin[0] == -1)
     {
       cTriangle[i].nSpin[0] = nSpin1;
     }
-    if (cTriangle[i].nSpin[1] == -1)
+    if(cTriangle[i].nSpin[1] == -1)
     {
       cTriangle[i].nSpin[1] = nSpin2;
     }
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
-                                   DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                                   DataArray<int8_t>::Pointer cVertexNodeTypePtr)
+int M3CSliceBySlice::assign_nodeID(int nN, int NSP, DataArray<int32_t>::Pointer cVertexNodeIdPtr, DataArray<int8_t>::Pointer cVertexNodeTypePtr)
 {
   int nid = 0;
   //  int nkind = 0;
@@ -2671,12 +2745,12 @@ int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
   int8_t* nodeType = cVertexNodeTypePtr->getPointer(0);
   int32_t* nodeID = cVertexNodeIdPtr->getPointer(0);
   nid = nN;
-  for (int i = 0; i < (7 * 2 * NSP); i++)
+  for(int i = 0; i < (7 * 2 * NSP); i++)
   {
     //    nkind = nodeType[i];
     //    cnid = nodeID[i];
     //  plane = i % 7;
-    if (nodeType[i] != SIMPL::SurfaceMesh::NodeType::Unused && nodeID[i] == SIMPL::SurfaceMesh::NodeId::Unused)
+    if(nodeType[i] != SIMPL::SurfaceMesh::NodeType::Unused && nodeID[i] == SIMPL::SurfaceMesh::NodeId::Unused)
     {
       nodeID[i] = nid;
       nid++;
@@ -2688,9 +2762,7 @@ int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::update_node_edge_kind(int nT,
-                                            StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                                            DataArray<int8_t>::Pointer cVertexNodeTypePtr,
+void M3CSliceBySlice::update_node_edge_kind(int nT, StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr, DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                                             StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr)
 {
   int tn = 0;
@@ -2703,7 +2775,7 @@ void M3CSliceBySlice::update_node_edge_kind(int nT,
   int8_t* nodeType = cVertexNodeTypePtr->getPointer(0);
   //  SurfaceMesh::M3C::Segment* fe = cEdgePtr->getPointer(0);
   //  int nfedge = cEdgePtr->getNumberOfTuples();
-  for (int j = 0; j < nT; j++)
+  for(int j = 0; j < nT; j++)
   {
     tspin1 = t[j].nSpin[0];
     tspin2 = t[j].nSpin[1];
@@ -2711,7 +2783,7 @@ void M3CSliceBySlice::update_node_edge_kind(int nT,
     {
       // if the triangle is the surface of whole microstructure...
       // increase edge and node kind by 10...
-      for (int i = 0; i < 3; i++)
+      for(int i = 0; i < 3; i++)
       {
         // nodeKind...
         tn = t[j].node_id[i];
@@ -2741,19 +2813,14 @@ void M3CSliceBySlice::update_node_edge_kind(int nT,
         //        }
       }
     }
-
   }
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
-                                    const QString& nodesFile,
-                                    VertexArray::Pointer cVertexPtr,
-                                    DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                                    DataArray<int8_t>::Pointer cVertexNodeTypePtr )
+int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP, const QString& nodesFile, VertexArray::Pointer cVertexPtr, DataArray<int32_t>::Pointer cVertexNodeIdPtr,
+                                    DataArray<int8_t>::Pointer cVertexNodeTypePtr)
 {
 
 #if 0
@@ -2772,19 +2839,19 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   // qDebug() << "M3CSliceBySlice writing Nodes file " << cNodeID << "\n";
 
   // Create a new file if this is our first slice
-  if (zID == 0)
+  if(zID == 0)
   {
     f = fopen(nodesFile.toLatin1().data(), "wb");
-    if (nullptr == f)
+    if(nullptr == f)
     {
       return -1;
     }
   }
   // Append to existing file if we are on z>0 slice
-  if (zID > 0)
+  if(zID > 0)
   {
     f = fopen(nodesFile.toLatin1().data(), "ab");
-    if (nullptr == f)
+    if(nullptr == f)
     {
       return -1;
     }
@@ -2794,11 +2861,11 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   int8_t* nodeKind = cVertexNodeTypePtr->getPointer(0);
   VertexArray::Vert_t* cVertex = cVertexPtr->getPointer(0);
 
-  for (int k = 0; k < total; k++)
+  for(int k = 0; k < total; k++)
   {
     //*tId = nodeID[k];
     record.nodeId = nodeID[k];
-    if (record.nodeId > cNodeID - 1)
+    if(record.nodeId > cNodeID - 1)
     {
       //*nk = nodeKind[k];
       record.nodeKind = nodeKind[k];
@@ -2807,9 +2874,10 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
       record.z = cVertex[k].pos[2];
 
       totalWritten = fwrite(&record, BYTE_COUNT, 1, f);
-      if (totalWritten != 1)
+      if(totalWritten != 1)
       {
-        qDebug() << "Not enough data written to the Nodes file." << "\n";
+        qDebug() << "Not enough data written to the Nodes file."
+                 << "\n";
         return -1;
       }
       //      if (nodeKind[k] < 0)
@@ -2825,9 +2893,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
 // -----------------------------------------------------------------------------
 //  Write a BINARY file which is only TEMP during the surface meshing
 // -----------------------------------------------------------------------------
-int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
-                                        const QString& trianglesFile, int nt,
-                                        StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
+int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid, const QString& trianglesFile, int nt, StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
                                         DataArray<int32_t>::Pointer cVertexNodeIdPtr, int32_t featureIdZeroMappingValue)
 {
 
@@ -2850,25 +2916,23 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   int32_t* nodeID = cVertexNodeIdPtr->getPointer(0);
   SurfaceMesh::M3C::Patch* cTriangle = cTrianglePtr->getPointer(0);
 
-
-
   // Create a new file if this is our first slice
-  if (zID == 0)
+  if(zID == 0)
   {
     f = fopen(trianglesFile.toLatin1().data(), "wb");
-    if (nullptr == f)
+    if(nullptr == f)
     {
       return -1;
     }
-#if (WRITE_BINARY_TEMP_FILES == 0)
+#if(WRITE_BINARY_TEMP_FILES == 0)
     fprintf(f, "XXXXXXXXXXXX\n"); // This should get over written at some point with the actual number of triangles
 #endif
   }
   // Append to existing file if we are on z>0 slice
-  if (zID > 0)
+  if(zID > 0)
   {
     f = fopen(trianglesFile.toLatin1().data(), "ab");
-    if (nullptr == f)
+    if(nullptr == f)
     {
       return -1;
     }
@@ -2878,7 +2942,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   size_t totalWritten = 0;
 
   //  outFile << nt <<endl;
-  for (int i = 0; i < end; i++)
+  for(int i = 0; i < end; i++)
   {
     SurfaceMesh::M3C::Patch& patch = cTriangle[i];
     n1 = patch.node_id[0];
@@ -2893,9 +2957,10 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
     record.label_1 = (patch.nSpin[1] == featureIdZeroMappingValue ? 0 : patch.nSpin[1]);
 
     totalWritten = fwrite(&record, BYTE_COUNT, 1, f);
-    if (totalWritten != 1)
+    if(totalWritten != 1)
     {
-      qDebug() << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." << "\n";
+      qDebug() << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6."
+               << "\n";
       return -1;
     }
     record.triId = record.triId + 1;
@@ -2905,7 +2970,6 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
 
   return 0;
 }
-
 
 #if 0
 // -----------------------------------------------------------------------------
@@ -3026,7 +3090,6 @@ QVector<int> M3CSliceBySlice::findAdjacentTriangles(SurfaceMesh::M3C::Triangle* 
 
 }
 
-
 #endif
 
 // -----------------------------------------------------------------------------
@@ -3065,7 +3128,7 @@ const QString M3CSliceBySlice::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 
@@ -3073,19 +3136,22 @@ const QString M3CSliceBySlice::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString M3CSliceBySlice::getGroupName()
-{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
-
+{
+  return SIMPL::FilterGroups::SurfaceMeshingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString M3CSliceBySlice::getSubGroupName()
-{ return SIMPL::FilterSubGroups::GenerationFilters; }
-
+{
+  return SIMPL::FilterSubGroups::GenerationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString M3CSliceBySlice::getHumanLabel()
-{ return "M3C Surface Meshing (Slice at a time)"; }
-
+{
+  return "M3C Surface Meshing (Slice at a time)";
+}

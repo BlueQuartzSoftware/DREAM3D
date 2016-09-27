@@ -35,17 +35,17 @@
 
 #include "LaplacianSmoothing.h"
 
-#include <stdio.h>
 #include <sstream>
+#include <stdio.h>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -53,26 +53,25 @@
 // Include the MOC generated file for this class
 #include "moc_LaplacianSmoothing.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LaplacianSmoothing::LaplacianSmoothing() :
-  SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName),
-  m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_IterationSteps(1),
-  m_Lambda(0.1f),
-  m_SurfacePointLambda(0.0f),
-  m_TripleLineLambda(0.0f),
-  m_QuadPointLambda(0.0f),
-  m_SurfaceTripleLineLambda(0.0f),
-  m_SurfaceQuadPointLambda(0.0f),
-  m_UseTaubinSmoothing(false),
-  m_MuFactor(-1.03f),
-  m_SurfaceMeshNodeType(nullptr),
-  m_SurfaceMeshFaceLabels(nullptr)
+LaplacianSmoothing::LaplacianSmoothing()
+: SurfaceMeshFilter()
+, m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
+, m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType)
+, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
+, m_IterationSteps(1)
+, m_Lambda(0.1f)
+, m_SurfacePointLambda(0.0f)
+, m_TripleLineLambda(0.0f)
+, m_QuadPointLambda(0.0f)
+, m_SurfaceTripleLineLambda(0.0f)
+, m_SurfaceQuadPointLambda(0.0f)
+, m_UseTaubinSmoothing(false)
+, m_MuFactor(-1.03f)
+, m_SurfaceMeshNodeType(nullptr)
+, m_SurfaceMeshFaceLabels(nullptr)
 {
   setupFilterParameters();
 }
@@ -105,12 +104,14 @@ void LaplacianSmoothing::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Outer Quadruple Points Lambda", SurfaceQuadPointLambda, FilterParameter::Parameter, LaplacianSmoothing));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Vertex, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Vertex, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Node Type", SurfaceMeshNodeTypeArrayPath, FilterParameter::RequiredArray, LaplacianSmoothing, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, LaplacianSmoothing, req));
   }
   setFilterParameters(parameters);
@@ -122,15 +123,15 @@ void LaplacianSmoothing::setupFilterParameters()
 void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setIterationSteps( reader->readValue("IterationSteps", getIterationSteps()) );
-  setLambda( reader->readValue("Lambda", getLambda()) );
-  setTripleLineLambda( reader->readValue("TripleLineLambda", getTripleLineLambda()) );
-  setQuadPointLambda( reader->readValue("QuadPointLambda", getQuadPointLambda()) );
-  setSurfacePointLambda( reader->readValue("SurfacePointLambda", getSurfacePointLambda()) );
-  setSurfaceTripleLineLambda( reader->readValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda()) );
-  setSurfaceQuadPointLambda( reader->readValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda()) );
-  setSurfaceMeshNodeTypeArrayPath(reader->readDataArrayPath("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath() ) );
-  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
+  setIterationSteps(reader->readValue("IterationSteps", getIterationSteps()));
+  setLambda(reader->readValue("Lambda", getLambda()));
+  setTripleLineLambda(reader->readValue("TripleLineLambda", getTripleLineLambda()));
+  setQuadPointLambda(reader->readValue("QuadPointLambda", getQuadPointLambda()));
+  setSurfacePointLambda(reader->readValue("SurfacePointLambda", getSurfacePointLambda()));
+  setSurfaceTripleLineLambda(reader->readValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda()));
+  setSurfaceQuadPointLambda(reader->readValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda()));
+  setSurfaceMeshNodeTypeArrayPath(reader->readDataArrayPath("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath()));
+  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath()));
   setUseTaubinSmoothing(reader->readValue("UseTaubinSmoothing", getUseTaubinSmoothing()));
   setMuFactor(reader->readValue("MuFactor", getMuFactor()));
   reader->closeFilterGroup();
@@ -141,7 +142,6 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -154,19 +154,35 @@ void LaplacianSmoothing::dataCheck()
   QVector<IDataArray::Pointer> faceDataArrays;
   QVector<IDataArray::Pointer> nodeDataArrays;
 
-  if(getErrorCondition() >= 0) { faceDataArrays.push_back(triangles->getTriangles()); nodeDataArrays.push_back(triangles->getVertices()); }
+  if(getErrorCondition() >= 0)
+  {
+    faceDataArrays.push_back(triangles->getTriangles());
+    nodeDataArrays.push_back(triangles->getVertices());
+  }
 
   QVector<size_t> cDims(1, 1);
-  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { nodeDataArrays.push_back(m_SurfaceMeshNodeTypePtr.lock()); }
+  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(),
+                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshNodeTypePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    nodeDataArrays.push_back(m_SurfaceMeshNodeTypePtr.lock());
+  }
 
   cDims[0] = 2;
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { faceDataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
+                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    faceDataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
+  }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, faceDataArrays);
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, nodeDataArrays);
@@ -195,11 +211,14 @@ void LaplacianSmoothing::execute()
   int32_t err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   err = edgeBasedSmoothing();
 
-  if (err < 0)
+  if(err < 0)
   {
     notifyErrorMessage(getHumanLabel(), "Error smoothing the surface mesh", getErrorCondition());
     return;
@@ -218,32 +237,32 @@ int32_t LaplacianSmoothing::generateLambdaArray()
   DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Lambda_Array");
   lambdas->initializeWithZeros();
 
-  for (size_t i = 0; i < numNodes; ++i)
+  for(size_t i = 0; i < numNodes; ++i)
   {
-    switch (m_SurfaceMeshNodeType[i])
+    switch(m_SurfaceMeshNodeType[i])
     {
-      case SIMPL::SurfaceMesh::NodeType::Unused:
-        break;
-      case SIMPL::SurfaceMesh::NodeType::Default:
-        lambdas->setValue(i, m_Lambda);
-        break;
-      case SIMPL::SurfaceMesh::NodeType::TriplePoint:
-        lambdas->setValue(i, m_TripleLineLambda);
-        break;
-      case SIMPL::SurfaceMesh::NodeType::QuadPoint:
-        lambdas->setValue(i, m_QuadPointLambda);
-        break;
-      case SIMPL::SurfaceMesh::NodeType::SurfaceDefault:
-        lambdas->setValue(i, m_SurfacePointLambda);
-        break;
-      case SIMPL::SurfaceMesh::NodeType::SurfaceTriplePoint:
-        lambdas->setValue(i, m_SurfaceTripleLineLambda);
-        break;
-      case SIMPL::SurfaceMesh::NodeType::SurfaceQuadPoint:
-        lambdas->setValue(i, m_SurfaceQuadPointLambda);
-        break;
-      default:
-        break;
+    case SIMPL::SurfaceMesh::NodeType::Unused:
+      break;
+    case SIMPL::SurfaceMesh::NodeType::Default:
+      lambdas->setValue(i, m_Lambda);
+      break;
+    case SIMPL::SurfaceMesh::NodeType::TriplePoint:
+      lambdas->setValue(i, m_TripleLineLambda);
+      break;
+    case SIMPL::SurfaceMesh::NodeType::QuadPoint:
+      lambdas->setValue(i, m_QuadPointLambda);
+      break;
+    case SIMPL::SurfaceMesh::NodeType::SurfaceDefault:
+      lambdas->setValue(i, m_SurfacePointLambda);
+      break;
+    case SIMPL::SurfaceMesh::NodeType::SurfaceTriplePoint:
+      lambdas->setValue(i, m_SurfaceTripleLineLambda);
+      break;
+    case SIMPL::SurfaceMesh::NodeType::SurfaceQuadPoint:
+      lambdas->setValue(i, m_SurfaceQuadPointLambda);
+      break;
+    default:
+      break;
     }
   }
 
@@ -264,7 +283,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
 
   // Generate the Lambda Array
   err = generateLambdaArray();
-  if (err < 0)
+  if(err < 0)
   {
     setErrorCondition(-557);
     notifyErrorMessage(getHumanLabel(), "Error generating the lambda array", getErrorCondition());
@@ -276,11 +295,11 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   float* lambda = lambdas->getPointer(0);
 
   //  Generate the Unique Edges
-  if (nullptr == surfaceMesh->getEdges().get())
+  if(nullptr == surfaceMesh->getEdges().get())
   {
     err = surfaceMesh->findEdges();
   }
-  if (err < 0)
+  if(err < 0)
   {
     setErrorCondition(-560);
     notifyErrorMessage(getHumanLabel(), "Error retrieving the shared edge list", getErrorCondition());
@@ -300,21 +319,24 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   double* delta = deltaArray->getPointer(0);
 
   double dlta = 0.0;
-  for (int32_t q = 0; q < m_IterationSteps; q++)
+  for(int32_t q = 0; q < m_IterationSteps; q++)
   {
-    if (getCancel() == true) { return -1; }
+    if(getCancel() == true)
+    {
+      return -1;
+    }
     QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     // Compute the Deltas for each point
-    for (int64_t i = 0; i < nedges; i++)
+    for(int64_t i = 0; i < nedges; i++)
     {
-      int64_t in1 = uedges[2 * i];   // row of the first vertex
+      int64_t in1 = uedges[2 * i];     // row of the first vertex
       int64_t in2 = uedges[2 * i + 1]; // row the second vertex
 
-      for (int32_t j = 0; j < 3; j++)
+      for(int32_t j = 0; j < 3; j++)
       {
-        Q_ASSERT( static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3) );
-        Q_ASSERT( static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3) );
+        Q_ASSERT(static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3));
+        Q_ASSERT(static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3));
         dlta = verts[3 * in2 + j] - verts[3 * in1 + j];
         delta[3 * in1 + j] += dlta;
         delta[3 * in2 + j] += -1.0 * dlta;
@@ -325,9 +347,9 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
 
     // Move each point
     float ll = 0.0f;
-    for (int64_t i = 0; i < nvert; i++)
+    for(int64_t i = 0; i < nvert; i++)
     {
-      for (int32_t j = 0; j < 3; j++)
+      for(int32_t j = 0; j < 3; j++)
       {
         int64_t in0 = 3 * i + j;
         dlta = delta[in0] / ncon[i];
@@ -339,26 +361,28 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
       ncon[i] = 0; // reset for next iteration
     }
 
-
     // Now optionally apply a negative lambda based on the mu Factor value.
     // This is from Taubin's paper on smoothing without shrinkage. This effectively
     // runs a low pass filter on the data
     if(m_UseTaubinSmoothing)
     {
 
-      if (getCancel() == true) { return -1; }
+      if(getCancel() == true)
+      {
+        return -1;
+      }
       QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       // Compute the Delta's
-      for (int64_t i = 0; i < nedges; i++)
+      for(int64_t i = 0; i < nedges; i++)
       {
-        int64_t in1 = uedges[2 * i];   // row of the first vertex
+        int64_t in1 = uedges[2 * i];     // row of the first vertex
         int64_t in2 = uedges[2 * i + 1]; // row the second vertex
 
-        for (int32_t j = 0; j < 3; j++)
+        for(int32_t j = 0; j < 3; j++)
         {
-          Q_ASSERT( static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3) );
-          Q_ASSERT( static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3) );
+          Q_ASSERT(static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3));
+          Q_ASSERT(static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3));
           dlta = verts[3 * in2 + j] - verts[3 * in1 + j];
           delta[3 * in1 + j] += dlta;
           delta[3 * in2 + j] += -1.0 * dlta;
@@ -369,9 +393,9 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
 
       // MOve the points
       float ll = 0.0f;
-      for (int64_t i = 0; i < nvert; i++)
+      for(int64_t i = 0; i < nvert; i++)
       {
-        for (int32_t j = 0; j < 3; j++)
+        for(int32_t j = 0; j < 3; j++)
         {
           int64_t in0 = 3 * i + j;
           dlta = delta[in0] / ncon[i];
@@ -382,9 +406,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
         }
         ncon[i] = 0; // reset for next iteration
       }
-
     }
-
   }
 
   return err;

@@ -35,27 +35,29 @@
 
 #include "ImportVectorImageStackFilterParameter.h"
 
-#include <QtCore/QJsonValue>
 #include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::ImportVectorImageStackFilterParameter() :
-FilterParameter()
-{}
+ImportVectorImageStackFilterParameter::ImportVectorImageStackFilterParameter()
+: FilterParameter()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ImportVectorImageStackFilterParameter::~ImportVectorImageStackFilterParameter()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, ImportVectorImageStack *filter, int groupIndex)
+ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category,
+                                                                                          ImportVectorImageStack* filter, int groupIndex)
 {
 
   ImportVectorImageStackFilterParameter::Pointer ptr = ImportVectorImageStackFilterParameter::New();
@@ -69,7 +71,6 @@ ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParam
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -81,7 +82,7 @@ QString ImportVectorImageStackFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportVectorImageStackFilterParameter::readJson(const QJsonObject &json)
+void ImportVectorImageStackFilterParameter::readJson(const QJsonObject& json)
 {
   m_Filter->setStartIndex(json["StartIndex"].toString().toLongLong());
   m_Filter->setEndIndex(json["EndIndex"].toString().toLongLong());
@@ -109,7 +110,7 @@ void ImportVectorImageStackFilterParameter::readJson(const QJsonObject &json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportVectorImageStackFilterParameter::writeJson(QJsonObject &json)
+void ImportVectorImageStackFilterParameter::writeJson(QJsonObject& json)
 {
   json["StartIndex"] = QString::number(m_Filter->getStartIndex());
   json["EndIndex"] = QString::number(m_Filter->getEndIndex());
@@ -133,4 +134,3 @@ void ImportVectorImageStackFilterParameter::writeJson(QJsonObject &json)
   resolution.writeJson(resolutionObj);
   json["Resolution"] = resolutionObj;
 }
-

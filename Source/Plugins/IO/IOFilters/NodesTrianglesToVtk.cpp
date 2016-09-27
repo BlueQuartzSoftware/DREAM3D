@@ -35,37 +35,32 @@
 
 #include "NodesTrianglesToVtk.h"
 
-
-
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QtEndian>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-
 // Include the MOC generated file for this class
 #include "moc_NodesTrianglesToVtk.cpp"
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NodesTrianglesToVtk::NodesTrianglesToVtk() :
-  AbstractFilter(),
-  m_NodesFile(""),
-  m_TrianglesFile(""),
-  m_OutputVtkFile(""),
-  m_WriteBinaryFile(false),
-  m_WriteConformalMesh(true)
+NodesTrianglesToVtk::NodesTrianglesToVtk()
+: AbstractFilter()
+, m_NodesFile("")
+, m_TrianglesFile("")
+, m_OutputVtkFile("")
+, m_WriteBinaryFile(false)
+, m_WriteConformalMesh(true)
 {
   setupFilterParameters();
 }
@@ -99,11 +94,11 @@ void NodesTrianglesToVtk::setupFilterParameters()
 void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setNodesFile( reader->readString( "NodesFile", getNodesFile() ) );
-  setTrianglesFile( reader->readString( "TrianglesFile", getTrianglesFile() ) );
-  setOutputVtkFile( reader->readString( "OutputVtkFile", getOutputVtkFile() ) );
-  setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
-  setWriteConformalMesh( reader->readValue("WriteConformalMesh", getWriteConformalMesh()) );
+  setNodesFile(reader->readString("NodesFile", getNodesFile()));
+  setTrianglesFile(reader->readString("TrianglesFile", getTrianglesFile()));
+  setOutputVtkFile(reader->readString("OutputVtkFile", getOutputVtkFile()));
+  setWriteBinaryFile(reader->readValue("WriteBinaryFile", getWriteBinaryFile()));
+  setWriteConformalMesh(reader->readValue("WriteConformalMesh", getWriteConformalMesh()));
   reader->closeFilterGroup();
 }
 
@@ -123,16 +118,18 @@ void NodesTrianglesToVtk::dataCheck()
   setErrorCondition(0);
 
   QFileInfo fi(m_TrianglesFile);
-  if (m_TrianglesFile.isEmpty() == true)
+  if(m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
     notifyErrorMessage(getHumanLabel(), "Triangles file is not set correctly", -1001);
   }
-  else if (fi.exists() == false)
+  else if(fi.exists() == false)
   {
 
-    if (getInPreflight())
-    { notifyWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
+    if(getInPreflight())
+    {
+      notifyWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+    }
     else
     {
       setErrorCondition(-1001);
@@ -141,16 +138,18 @@ void NodesTrianglesToVtk::dataCheck()
   }
 
   QFileInfo fii(m_NodesFile);
-  if (m_NodesFile.isEmpty() == true)
+  if(m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
     notifyErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
-  else if (fii.exists() == false)
+  else if(fii.exists() == false)
   {
 
-    if (getInPreflight())
-    { notifyWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
+    if(getInPreflight())
+    {
+      notifyWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
+    }
     else
     {
       setErrorCondition(-1002);
@@ -158,7 +157,7 @@ void NodesTrianglesToVtk::dataCheck()
     }
   }
 
-  if (m_OutputVtkFile.isEmpty() == true)
+  if(m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
@@ -183,15 +182,18 @@ void NodesTrianglesToVtk::preflight()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::execute()
 {
-  //int err = 0;
+  // int err = 0;
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   initialize();
 
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
-  if (nodesFile == nullptr)
+  if(nodesFile == nullptr)
   {
 
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
@@ -210,7 +212,7 @@ void NodesTrianglesToVtk::execute()
 
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
-  if (triFile == nullptr)
+  if(triFile == nullptr)
   {
 
     QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
@@ -229,7 +231,7 @@ void NodesTrianglesToVtk::execute()
   // Open the output VTK File for writing
   FILE* vtkFile = nullptr;
   vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
-  if (nullptr == vtkFile)
+  if(nullptr == vtkFile)
   {
 
     QString ss = QObject::tr(": Error creating Triangles VTK Visualization '%1'").arg(getOutputVtkFile());
@@ -239,7 +241,7 @@ void NodesTrianglesToVtk::execute()
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile)
+  if(m_WriteBinaryFile)
   {
     fprintf(vtkFile, "BINARY\n");
   }
@@ -254,26 +256,24 @@ void NodesTrianglesToVtk::execute()
   int nodeKind = 0;
   float pos[3] = {0.0f, 0.0f, 0.0f};
 
-
   size_t totalWritten = 0;
   size_t nread = 0;
   // Write the POINTS data (Vertex)
-  for (int i = 0; i < nNodes; i++)
+  for(int i = 0; i < nNodes; i++)
   {
     nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
-    if (nread != 5)
+    if(nread != 5)
     {
       break;
     }
-    if (m_WriteBinaryFile == true)
+    if(m_WriteBinaryFile == true)
     {
       SIMPLib::Endian::FromSystemToBig::convert(pos[0]);
       SIMPLib::Endian::FromSystemToBig::convert(pos[1]);
       SIMPLib::Endian::FromSystemToBig::convert(pos[2]);
       totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
-      if (totalWritten != sizeof(float) * 3)
+      if(totalWritten != sizeof(float) * 3)
       {
-
       }
     }
     else
@@ -290,17 +290,17 @@ void NodesTrianglesToVtk::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
   int triangleCount = nTriangles;
-  if (false == m_WriteConformalMesh)
+  if(false == m_WriteConformalMesh)
   {
     triangleCount = nTriangles * 2;
   }
   // Write the CELLS Data
   fprintf(vtkFile, "POLYGONS %d %d\n", triangleCount, (triangleCount * 4));
-  for (int i = 0; i < nTriangles; i++)
+  for(int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8 );
-    if (m_WriteBinaryFile == true)
+    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
+    if(m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
       SIMPLib::Endian::FromSystemToBig::convert(tData[0]);
@@ -308,7 +308,7 @@ void NodesTrianglesToVtk::execute()
       SIMPLib::Endian::FromSystemToBig::convert(tData[2]);
       SIMPLib::Endian::FromSystemToBig::convert(tData[3]);
       fwrite(tData, sizeof(int), 4, vtkFile);
-      if (false == m_WriteConformalMesh)
+      if(false == m_WriteConformalMesh)
       {
         tData[0] = tData[1];
         tData[1] = tData[3];
@@ -321,7 +321,7 @@ void NodesTrianglesToVtk::execute()
     else
     {
       fprintf(vtkFile, "3 %d %d %d\n", tData[1], tData[2], tData[3]);
-      if (false == m_WriteConformalMesh)
+      if(false == m_WriteConformalMesh)
       {
         fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
       }
@@ -331,7 +331,7 @@ void NodesTrianglesToVtk::execute()
 
   int err = 0;
   // Write the CELL_DATA section
-  if (m_WriteBinaryFile == true)
+  if(m_WriteBinaryFile == true)
   {
     err = writeBinaryCellData(m_TrianglesFile, vtkFile, nTriangles, m_WriteConformalMesh);
     if(err < 0)
@@ -348,9 +348,8 @@ void NodesTrianglesToVtk::execute()
     }
   }
 
-
   // Write the POINT_DATA section
-  if (m_WriteBinaryFile == true)
+  if(m_WriteBinaryFile == true)
   {
     err = writeBinaryPointData(m_NodesFile, vtkFile, nNodes, m_WriteConformalMesh);
     if(err < 0)
@@ -367,8 +366,6 @@ void NodesTrianglesToVtk::execute()
     }
   }
 
-
-
   fprintf(vtkFile, "\n");
   // Free the memory
   // Close the input and output files
@@ -379,7 +376,6 @@ void NodesTrianglesToVtk::execute()
 
   return;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -408,11 +404,11 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   fscanf(nodesFile, "%d", &nodeId); // Read the number of nodes
-  std::vector<int> data (nNodes, 0);
-  for (int i = 0; i < nNodes; i++)
+  std::vector<int> data(nNodes, 0);
+  for(int i = 0; i < nNodes; i++)
   {
     nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
-    if (nread != 5)
+    if(nread != 5)
     {
       break;
     }
@@ -421,9 +417,9 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
 
     data[i] = swapped;
   }
-  int totalWritten = fwrite( &(data.front()), sizeof(int), nNodes, vtkFile);
+  int totalWritten = fwrite(&(data.front()), sizeof(int), nNodes, vtkFile);
   fclose(nodesFile);
-  if (totalWritten != nNodes)
+  if(totalWritten != nNodes)
   {
     return -1;
   }
@@ -441,17 +437,16 @@ int NodesTrianglesToVtk::writeASCIIPointData(const QString& NodesFile, FILE* vtk
   float pos[3] = {0.0f, 0.0f, 0.0f};
   int nread = 0;
 
-
   FILE* nodesFile = fopen(NodesFile.toLatin1().data(), "rb");
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   fscanf(nodesFile, "%d", &nodeId); // Read the number of nodes
-  for (int i = 0; i < nNodes; i++)
+  for(int i = 0; i < nNodes; i++)
   {
     nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
-    if (nread != 5)
+    if(nread != 5)
     {
       break;
     }
@@ -483,7 +478,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE*
   int tData[9];
 
   int triangleCount = nTriangles;
-  if (false == conformalMesh)
+  if(false == conformalMesh)
   {
     triangleCount = nTriangles * 2;
     offset = 2;
@@ -495,12 +490,11 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE*
   fprintf(vtkFile, "SCALARS FeatureID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
-
   std::vector<int> cell_data(triangleCount);
-  for (int i = 0; i < nTriangles; i++)
+  for(int i = 0; i < nTriangles; i++)
   {
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8 );
-    if (nread != 9)
+    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
+    if(nread != 9)
     {
       return -1;
     }
@@ -508,7 +502,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE*
     tri_ids[i * offset] = tData[0];
     SIMPLib::Endian::FromSystemToBig::convert(tData[7]);
     cell_data[i * offset] = tData[7];
-    if (false == conformalMesh)
+    if(false == conformalMesh)
     {
       SIMPLib::Endian::FromSystemToBig::convert(tData[8]);
       cell_data[i * offset + 1] = tData[8];
@@ -516,8 +510,8 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE*
     }
   }
 
-  int totalWritten = fwrite( &(cell_data.front()), sizeof(int), triangleCount, vtkFile);
-  if (totalWritten != triangleCount)
+  int totalWritten = fwrite(&(cell_data.front()), sizeof(int), triangleCount, vtkFile);
+  if(totalWritten != triangleCount)
   {
     return -1;
   }
@@ -527,8 +521,8 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE*
   fprintf(vtkFile, "SCALARS TriangleID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
-  totalWritten = fwrite( &(tri_ids.front()), sizeof(int), triangleCount, vtkFile);
-  if (totalWritten != triangleCount)
+  totalWritten = fwrite(&(tri_ids.front()), sizeof(int), triangleCount, vtkFile);
+  if(totalWritten != triangleCount)
   {
     return -1;
   }
@@ -550,7 +544,7 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
 
   // Write the FeatureId Data to the file
   int triangleCount = nTriangles;
-  if (false == conformalMesh)
+  if(false == conformalMesh)
   {
     triangleCount = nTriangles * 2;
   }
@@ -560,15 +554,15 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
   int tData[9];
-  for (int i = 0; i < nTriangles; i++)
+  for(int i = 0; i < nTriangles; i++)
   {
-    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8 );
-    if (nread != 9)
+    nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
+    if(nread != 9)
     {
       return -1;
     }
     fprintf(vtkFile, "%d\n", tData[7]);
-    if (false == conformalMesh)
+    if(false == conformalMesh)
     {
       fprintf(vtkFile, "%d\n", tData[8]);
     }
@@ -576,7 +570,6 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
   fclose(triFile);
   return 0;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -621,7 +614,7 @@ const QString NodesTrianglesToVtk::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 
@@ -629,19 +622,22 @@ const QString NodesTrianglesToVtk::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToVtk::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
-
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToVtk::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
-
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToVtk::getHumanLabel()
-{ return "Convert Nodes & Triangles To Vtk"; }
-
+{
+  return "Convert Nodes & Triangles To Vtk";
+}

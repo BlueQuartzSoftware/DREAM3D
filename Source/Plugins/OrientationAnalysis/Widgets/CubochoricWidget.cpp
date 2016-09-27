@@ -38,8 +38,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CubochoricWidget::CubochoricWidget(QWidget* parent) :
-  OrientationWidget(parent)
+CubochoricWidget::CubochoricWidget(QWidget* parent)
+: OrientationWidget(parent)
 {
   setupUi(this);
 
@@ -51,7 +51,6 @@ CubochoricWidget::CubochoricWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 CubochoricWidget::~CubochoricWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -63,12 +62,9 @@ void CubochoricWidget::setupGui()
   c2->setValidator(new QDoubleValidator(c2));
   c3->setValidator(new QDoubleValidator(c3));
 
-  connect(c1, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(c2, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(c3, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
+  connect(c1, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(c2, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(c3, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -78,12 +74,12 @@ void CubochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if (calculator->getInputType() == OrientationConverter<double>::Cubochoric)
+  if(calculator->getInputType() == OrientationConverter<double>::Cubochoric)
   {
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if (calculator->getHasErrors() == true)
+  else if(calculator->getHasErrors() == true)
   {
     c1->setText("nan");
     c2->setText("nan");
@@ -94,7 +90,7 @@ void CubochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 
   QVector<double> cValues = calculator->getValues(OrientationConverter<double>::Cubochoric);
 
-  if (cValues.size() == 3)
+  if(cValues.size() == 3)
   {
     c1->setText(QString::number(cValues[0]));
     c2->setText(QString::number(cValues[1]));
@@ -105,7 +101,7 @@ void CubochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CubochoricWidget::valuesUpdated(const QString &text)
+void CubochoricWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::cu_check(values);
@@ -114,7 +110,7 @@ void CubochoricWidget::valuesUpdated(const QString &text)
 
   emit clearErrorTable();
 
-  if (errorCode >= 0)
+  if(errorCode >= 0)
   {
     emit valuesChanged(values, OrientationConverter<double>::Cubochoric, false);
   }
@@ -132,15 +128,15 @@ QVector<double> CubochoricWidget::getValues()
 {
   QVector<double> values;
 
-  if (c1->text() == "nan")
+  if(c1->text() == "nan")
   {
     c1->setText("0");
   }
-  if (c2->text() == "nan")
+  if(c2->text() == "nan")
   {
     c2->setText("0");
   }
-  if (c3->text() == "nan")
+  if(c3->text() == "nan")
   {
     c3->setText("0");
   }
@@ -151,4 +147,3 @@ QVector<double> CubochoricWidget::getValues()
 
   return values;
 }
-

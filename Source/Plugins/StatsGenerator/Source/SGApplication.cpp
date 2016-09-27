@@ -46,10 +46,9 @@
 //
 // -----------------------------------------------------------------------------
 SGApplication::SGApplication(int& argc, char** argv)
-  : QApplication(argc, argv)
+: QApplication(argc, argv)
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -65,8 +64,7 @@ StatsGeneratorUI* SGApplication::createNewStatsGenerator()
 {
   StatsGeneratorUI* sg = new StatsGeneratorUI;
   m_Windows << sg;
-  connect(sg, SIGNAL(windowIsClosing(StatsGeneratorUI*)),
-          this, SLOT(windowClosed(StatsGeneratorUI*)));
+  connect(sg, SIGNAL(windowIsClosing(StatsGeneratorUI*)), this, SLOT(windowClosed(StatsGeneratorUI*)));
   return sg;
 }
 
@@ -83,20 +81,18 @@ void SGApplication::checkWindowPosition(StatsGeneratorUI* win)
   QDesktopWidget desktop;
   QRect desktopRect = desktop.availableGeometry(desktop.primaryScreen());
   // try moving it to keep size
-  if (!desktopRect.contains(mwRect))
+  if(!desktopRect.contains(mwRect))
   {
     mwRect = QRect(desktopRect.topLeft(), win->size());
   }
   // still doesn't fit, resize it
-  if (!desktopRect.contains(mwRect))
+  if(!desktopRect.contains(mwRect))
   {
     mwRect = QRect(desktopRect.topLeft(), win->size());
     win->resize(desktopRect.size());
   }
   win->move(mwRect.topLeft());
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -107,7 +103,6 @@ void SGApplication::windowClosed(StatsGeneratorUI* window)
   window->deleteLater();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -117,7 +112,7 @@ QString SGApplication::newTempFile(QString directory)
   int i = 1;
   bool fileExists = false;
   QString name;
-  while (true)
+  while(true)
   {
     name = QString("Untitled-");
     name.append(QString::number(i)).append(".h5");
@@ -126,12 +121,12 @@ QString SGApplication::newTempFile(QString directory)
     Q_FOREACH(sg, m_Windows)
     {
       QString f = sg->getFilePath();
-      if (f.compare(name) == 0)
+      if(f.compare(name) == 0)
       {
         fileExists = true;
       }
     }
-    if (fileExists == false)
+    if(fileExists == false)
     {
       break;
     }

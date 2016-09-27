@@ -41,7 +41,7 @@
 #include <QtGui/QImage>
 #include <QtWidgets/QWidget>
 
-#include "ui_SGAxisODFWidget.h"
+#include "ui_StatsGenAxisODFWidget.h"
 
 #ifndef QwtArray
 #define QwtArray QVector
@@ -72,7 +72,7 @@ class QwtPlotMarker;
  * @date Jan 27, 2011
  * @version 1.0
  */
-class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
+class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
 {
     Q_OBJECT
 

@@ -42,7 +42,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 
-#include "StatsGenerator/Widgets/SGWidget.h"
+#include "StatsGenerator/Widgets/StatsGenWidget.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
 #include "ui_TransformationPhaseWidget.h"
 
@@ -54,7 +54,7 @@ class QwtPlotMarker;
 /*
  *
  */
-class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPhaseWidget
+class TransformationPhaseWidget : public StatsGenWidget, private Ui::TransformationPhaseWidget
 {
 
     Q_OBJECT

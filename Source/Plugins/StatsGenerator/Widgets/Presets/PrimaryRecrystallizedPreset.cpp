@@ -35,18 +35,17 @@
 
 #include "PrimaryRecrystallizedPreset.h"
 
-
 #include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h"
-#include "StatsGenerator/Widgets/StatsGenPlotWidget.h"
+#include "StatsGenerator/Widgets/StatsGenAxisODFWidget.h"
 #include "StatsGenerator/Widgets/StatsGenODFWidget.h"
-#include "StatsGenerator/Widgets/SGAxisODFWidget.h"
-#include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
+#include "StatsGenerator/Widgets/StatsGenPlotWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGBetaTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
 
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -69,7 +68,7 @@ void PrimaryRecrystallizedPreset::displayUserInputDialog()
 {
   PrimaryRecrystallizedPresetDialog d(nullptr);
   int ret = d.exec();
-  if (ret == QDialog::Accepted)
+  if(ret == QDialog::Accepted)
   {
     // The user clicked the OK button so transfer the values from the dialog into this class
     m_PercentRecrystallized = d.getPercentRecrystallized();
@@ -89,7 +88,7 @@ void PrimaryRecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget*
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -105,7 +104,7 @@ void PrimaryRecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget*
   QVector<float> betas;
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 10.0 + rg.genrand_res53();
     beta = (0 * i) + 1.5 + (0.5 * rg.genrand_res53());
@@ -113,7 +112,7 @@ void PrimaryRecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget*
     betas.push_back(beta);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -128,7 +127,7 @@ void PrimaryRecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget*
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -144,7 +143,7 @@ void PrimaryRecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget*
   QVector<float> betas;
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 10.0 + rg.genrand_res53();
     beta = (0 * i) + 1.5 + (0.5 * rg.genrand_res53());
@@ -152,7 +151,7 @@ void PrimaryRecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget*
     betas.push_back(beta);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -167,7 +166,7 @@ void PrimaryRecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget*
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -183,7 +182,7 @@ void PrimaryRecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget*
   QVector<float> betas;
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 10.0 + rg.genrand_res53();
     beta = (0 * i) + 1.5 + (0.5 * rg.genrand_res53());
@@ -191,12 +190,11 @@ void PrimaryRecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget*
     betas.push_back(beta);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -206,8 +204,8 @@ void PrimaryRecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidge
   // Make sure the distribution is set correctly
   plot->setDistributionType(SIMPL::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
-  if (nullptr == model)
+  SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*>(plot->tableModel());
+  if(nullptr == model)
   {
     return;
   }
@@ -225,7 +223,7 @@ void PrimaryRecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidge
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
   int middlebin = count / 2;
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     mu = log(14.0 + (2.0 * float(i - middlebin)));
     sigma = 0.3 + (float(middlebin - i) / float(middlebin * 10));
@@ -233,11 +231,10 @@ void PrimaryRecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidge
     sigmas.push_back(sigma);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(mus);
   data.push_back(sigmas);
   model->setTableData(binNumbers, data, colors);
-
 }
 
 // -----------------------------------------------------------------------------

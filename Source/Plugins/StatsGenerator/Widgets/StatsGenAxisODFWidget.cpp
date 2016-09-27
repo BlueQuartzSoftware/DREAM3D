@@ -32,43 +32,43 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "SGAxisODFWidget.h"
+#include "StatsGenAxisODFWidget.h"
 
 //-- C++ Includes
 #include <iostream>
 
 //-- Qt Includes
 #include <QtConcurrent/QtConcurrentMap>
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtCore/QString>
-#include <QtCore/QSettings>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QModelIndex>
+#include <QtCore/QSettings>
+#include <QtCore/QString>
 #include <QtGui/QCloseEvent>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QFileDialog>
 #include <QtWidgets/QAbstractItemDelegate>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/StatsData/StatsData.h"
 
-#include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/Texture/StatsGen.hpp"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/Utilities/PoleFigureImageUtilities.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 #include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorUtilities.h"
-#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
+#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/Widgets/TextureDialog.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot.h>
-#include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
+#include <qwt_plot_grid.h>
 #include <qwt_plot_marker.h>
 #include <qwt_scale_draw.h>
 
@@ -80,31 +80,30 @@
 #define COLOR_POLE_FIGURES 1
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_SGAxisODFWidget.cpp"
+#include "moc_StatsGenAxisODFWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGAxisODFWidget::SGAxisODFWidget(QWidget* parent) :
-  QWidget(parent),
-  m_EnableAxisDecorations(false),
-  m_Initializing(true),
-  m_PhaseIndex(-1),
-  m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic),
-  m_ODFTableModel(nullptr),
-  m_MDFWidget(nullptr)
+StatsGenAxisODFWidget::StatsGenAxisODFWidget(QWidget* parent)
+: QWidget(parent)
+, m_EnableAxisDecorations(false)
+, m_Initializing(true)
+, m_PhaseIndex(-1)
+, m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic)
+, m_ODFTableModel(nullptr)
+, m_MDFWidget(nullptr)
 {
   this->setupUi(this);
   this->setupGui();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGAxisODFWidget::~SGAxisODFWidget()
+StatsGenAxisODFWidget::~StatsGenAxisODFWidget()
 {
-  if (nullptr != m_ODFTableModel)
+  if(nullptr != m_ODFTableModel)
   {
     m_ODFTableModel->deleteLater();
   }
@@ -113,7 +112,7 @@ SGAxisODFWidget::~SGAxisODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
+void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
 {
 
   VectorOfFloatArray arrays(0);
@@ -132,22 +131,22 @@ void SGAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getAxisODF_Weights();
   }
-  if (arrays.size() > 0 )
+  if(arrays.size() > 0)
   {
     QVector<float> e1(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(e1.front()), arrays[0]->getVoidPointer(0), sizeof(float)*e1.size() );
+    ::memcpy(&(e1.front()), arrays[0]->getVoidPointer(0), sizeof(float) * e1.size());
 
     QVector<float> e2(static_cast<int>(arrays[1]->getNumberOfTuples()));
-    ::memcpy( &(e2.front()), arrays[1]->getVoidPointer(0), sizeof(float)*e2.size() );
+    ::memcpy(&(e2.front()), arrays[1]->getVoidPointer(0), sizeof(float) * e2.size());
 
     QVector<float> e3(static_cast<int>(arrays[2]->getNumberOfTuples()));
-    ::memcpy( &(e3.front()), arrays[2]->getVoidPointer(0), sizeof(float)*e3.size() );
+    ::memcpy(&(e3.front()), arrays[2]->getVoidPointer(0), sizeof(float) * e3.size());
 
     QVector<float> weights(static_cast<int>(arrays[4]->getNumberOfTuples()));
-    ::memcpy( &(weights.front()), arrays[4]->getVoidPointer(0), sizeof(float)*weights.size() );
+    ::memcpy(&(weights.front()), arrays[4]->getVoidPointer(0), sizeof(float) * weights.size());
 
     QVector<float> sigmas(static_cast<int>(arrays[3]->getNumberOfTuples()));
-    ::memcpy( &(sigmas.front()), arrays[3]->getVoidPointer(0), sizeof(float)*sigmas.size() );
+    ::memcpy(&(sigmas.front()), arrays[3]->getVoidPointer(0), sizeof(float) * sigmas.size());
 
     if(e1.size() > 0)
     {
@@ -161,7 +160,7 @@ void SGAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phaseType, bool preflight)
+int StatsGenAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phaseType, bool preflight)
 {
   int retErr = 0;
 
@@ -183,7 +182,7 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
   QVector<float> e3Rad = e3s;
 
   // Convert from Degrees to Radians
-  for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
+  for(QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
     e1s[i] = static_cast<float>(e1s[i] * M_PI / 180.0);
     e2s[i] = static_cast<float>(e2s[i] * M_PI / 180.0);
@@ -198,7 +197,7 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int SGAxisODFWidget::getCrystalStructure()
+unsigned int StatsGenAxisODFWidget::getCrystalStructure()
 {
   return m_CrystalStructure;
 }
@@ -206,7 +205,7 @@ unsigned int SGAxisODFWidget::getCrystalStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::setPhaseIndex(int value)
+void StatsGenAxisODFWidget::setPhaseIndex(int value)
 {
   this->m_PhaseIndex = value;
 }
@@ -214,7 +213,7 @@ void SGAxisODFWidget::setPhaseIndex(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGAxisODFWidget::getPhaseIndex()
+int StatsGenAxisODFWidget::getPhaseIndex()
 {
   return m_PhaseIndex;
 }
@@ -222,7 +221,7 @@ int SGAxisODFWidget::getPhaseIndex()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
+void StatsGenAxisODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
 {
   tabWidget->setTabText(1, t1);
   tabWidget->setTabText(2, t2);
@@ -232,7 +231,7 @@ void SGAxisODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::tableDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+void StatsGenAxisODFWidget::tableDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
 {
   Q_UNUSED(topLeft);
   Q_UNUSED(bottomRight);
@@ -241,11 +240,10 @@ void SGAxisODFWidget::tableDataChanged(const QModelIndex &topLeft, const QModelI
   emit dataChanged();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::setupGui()
+void StatsGenAxisODFWidget::setupGui()
 {
   setPlotTabTitles("A-Axis PF", "B-Axis PF", "C-Axis PF");
 
@@ -259,8 +257,7 @@ void SGAxisODFWidget::setupGui()
   m_ODFTableModel->setInitialValues();
   m_ODFTableView->setModel(m_ODFTableModel);
 
-  connect(m_ODFTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-          this, SLOT(tableDataChanged(const QModelIndex&, const QModelIndex&)));
+  connect(m_ODFTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(tableDataChanged(const QModelIndex&, const QModelIndex&)));
 
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
@@ -274,7 +271,7 @@ void SGAxisODFWidget::setupGui()
 
   // In release mode hide the Lambert Square Size.
   QString releaseType = QString::fromLatin1("Official");
-  if (releaseType.compare("Official") == 0)
+  if(releaseType.compare("Official") == 0)
   {
     pfLambertSize->hide();
     pfLambertLabel->hide();
@@ -286,7 +283,7 @@ void SGAxisODFWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
+void StatsGenAxisODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
 {
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
@@ -311,7 +308,7 @@ void SGAxisODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot*
 // -----------------------------------------------------------------------------
 //  We should just subclass QwtPlotGrid and do all the drawing there.
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
+void StatsGenAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
 {
   // Draw the accepted Inverse Pole Grid Style
 
@@ -390,11 +387,10 @@ void SGAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::updatePlots()
+void StatsGenAxisODFWidget::updatePlots()
 {
   on_m_CalculateODFBtn_clicked();
 }
@@ -402,10 +398,10 @@ void SGAxisODFWidget::updatePlots()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
+void StatsGenAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
-  // qDebug() << "SGAxisODFWidget[" << objectName() << "]::on_m_CalculateODFBtn_clicked" << "\n";
+  // qDebug() << "StatsGenAxisODFWidget[" << objectName() << "]::on_m_CalculateODFBtn_clicked" << "\n";
   QwtArray<float> e1s;
   QwtArray<float> e2s;
   QwtArray<float> e3s;
@@ -436,9 +432,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 
   odf.resize(OrthoRhombicOps::k_OdfSize);
 
-  Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                        weights.data(), sigmas.data(), true,
-                                        odf.data(), numEntries);
+  Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
 
   err = StatsGen::GenAxisODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
@@ -449,9 +443,9 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   config.lambertDim = lamberSize;
   config.numColors = numColors;
   QVector<QString> labels(3);
-  labels[0] = QString("C Axis"); //001
-  labels[1] = QString("A Axis"); //100
-  labels[2] = QString("B Axis"); //010
+  labels[0] = QString("C Axis"); // 001
+  labels[1] = QString("A Axis"); // 100
+  labels[2] = QString("B Axis"); // 010
   config.labels = labels;
 
   QVector<unsigned int> order(3);
@@ -461,9 +455,9 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   config.order = order;
 
   QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
-  if (err == 1)
+  if(err == 1)
   {
-    //TODO: Present Error Message
+    // TODO: Present Error Message
     return;
   }
 
@@ -476,13 +470,16 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::on_addODFTextureBtn_clicked()
+void StatsGenAxisODFWidget::on_addODFTextureBtn_clicked()
 {
   TextureDialog t(m_CrystalStructure, nullptr);
   int r = t.exec();
-  if (r == QDialog::Accepted)
+  if(r == QDialog::Accepted)
   {
-    if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) { return; }
+    if(!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount()))
+    {
+      return;
+    }
     // Gather values from the dialog and push them to the Table Model
     float e1 = 0.0;
     float e2 = 0.0;
@@ -506,14 +503,20 @@ void SGAxisODFWidget::on_addODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::on_deleteODFTextureBtn_clicked()
+void StatsGenAxisODFWidget::on_deleteODFTextureBtn_clicked()
 {
   QItemSelectionModel* selectionModel = m_ODFTableView->selectionModel();
-  if (!selectionModel->hasSelection()) { return; }
+  if(!selectionModel->hasSelection())
+  {
+    return;
+  }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) { return; }
+  if(!index.isValid())
+  {
+    return;
+  }
   m_ODFTableModel->removeRow(index.row(), index.parent());
-  if (m_ODFTableModel->rowCount() > 0)
+  if(m_ODFTableModel->rowCount() > 0)
   {
     m_ODFTableView->resizeColumnsToContents();
   }
@@ -523,7 +526,7 @@ void SGAxisODFWidget::on_deleteODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
+void StatsGenAxisODFWidget::on_loadODFTextureBtn_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory;
   QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
@@ -541,10 +544,13 @@ void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
     inFile >> numOrients;
 
     float e1, e2, e3, weight, sigma;
-    for (size_t i = 0; i < numOrients; i++)
+    for(size_t i = 0; i < numOrients; i++)
     {
       inFile >> e1 >> e2 >> e3 >> weight >> sigma;
-      if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) { return; }
+      if(!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount()))
+      {
+        return;
+      }
       int row = m_ODFTableModel->rowCount() - 1;
       m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
       m_ODFTableView->resizeColumnsToContents();
@@ -559,7 +565,7 @@ void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGODFTableModel* SGAxisODFWidget::tableModel()
+SGODFTableModel* StatsGenAxisODFWidget::tableModel()
 {
   return m_ODFTableModel;
 }
@@ -567,7 +573,7 @@ SGODFTableModel* SGAxisODFWidget::tableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::on_savePoleFigureImage_clicked()
+void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
 {
   QString Ftype = "Image Files";
   QString ext = "*.png";

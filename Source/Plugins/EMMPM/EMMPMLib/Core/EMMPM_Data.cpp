@@ -35,12 +35,12 @@
 
 #include "EMMPM_Data.h"
 
-
-#define EMMPM_FREE_POINTER(ptr)\
-  if (nullptr != (ptr)) { free(ptr); (ptr) = nullptr;}
-
-
-
+#define EMMPM_FREE_POINTER(ptr)                                                                                                                                                                        \
+  if(nullptr != (ptr))                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    free(ptr);                                                                                                                                                                                         \
+    (ptr) = nullptr;                                                                                                                                                                                   \
+  }
 
 // -----------------------------------------------------------------------------
 //
@@ -84,8 +84,7 @@ EMMPM_Data::~EMMPM_Data()
   EMMPM_FREE_POINTER(this->nw)
   EMMPM_FREE_POINTER(this->histograms);
   EMMPM_FREE_POINTER(this->couplingBeta);
-//  EMMPM_FREE_POINTER(this->rngVars);
-
+  //  EMMPM_FREE_POINTER(this->rngVars);
 }
 
 // -----------------------------------------------------------------------------
@@ -97,58 +96,84 @@ int EMMPM_Data::allocateDataStructureMemory()
   {
     this->y = (unsigned char*)malloc(this->columns * this->rows * this->dims * sizeof(unsigned char));
   }
-  if(nullptr == this->y) { return -1; }
+  if(nullptr == this->y)
+  {
+    return -1;
+  }
 
   if(nullptr == this->xt)
   {
     this->xt = (unsigned char*)malloc(this->columns * this->rows * sizeof(unsigned char));
   }
-  if(nullptr == this->xt) { return -1; }
+  if(nullptr == this->xt)
+  {
+    return -1;
+  }
 
   if(nullptr == this->mean)
   {
     this->mean = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(nullptr == this->mean) { return -1; }
+  if(nullptr == this->mean)
+  {
+    return -1;
+  }
 
   if(nullptr == this->prev_mu)
   {
     this->prev_mu = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(nullptr == this->prev_mu) { return -1; }
-
+  if(nullptr == this->prev_mu)
+  {
+    return -1;
+  }
 
   if(nullptr == this->variance)
   {
     this->variance = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(nullptr == this->variance) { return -1; }
+  if(nullptr == this->variance)
+  {
+    return -1;
+  }
 
   if(nullptr == this->prev_variance)
   {
     this->prev_variance = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(nullptr == this->prev_variance) { return -1; }
+  if(nullptr == this->prev_variance)
+  {
+    return -1;
+  }
 
   if(nullptr == this->probs)
   {
     this->probs = (real_t*)malloc(this->classes * this->columns * this->rows * sizeof(real_t));
   }
-  if(nullptr == this->probs) { return -1; }
+  if(nullptr == this->probs)
+  {
+    return -1;
+  }
 
   if(nullptr == this->histograms)
   {
     this->histograms = (real_t*)malloc(this->classes * this->dims * 256 * sizeof(real_t));
   }
-  if(nullptr == this->histograms) { return -1; }
+  if(nullptr == this->histograms)
+  {
+    return -1;
+  }
 
-  if (nullptr == this->couplingBeta)
+  if(nullptr == this->couplingBeta)
   {
     unsigned int cSize = this->classes + 1;
     size_t couplingElements = cSize * cSize;
     this->couplingBeta = static_cast<real_t*>(malloc(sizeof(real_t) * couplingElements));
   }
-  if (nullptr == this->couplingBeta) { return -1; }
+  if(nullptr == this->couplingBeta)
+  {
+    return -1;
+  }
 
   return 0;
 }
@@ -184,7 +209,7 @@ void EMMPM_Data::initVariables()
   this->dims = 1;
   this->initType = EMMPM_Basic;
   this->couplingBeta = nullptr;
-  for (c = 0; c < EMMPM_MAX_CLASSES; c++)
+  for(c = 0; c < EMMPM_MAX_CLASSES; c++)
   {
     this->initCoords[c][0] = 0;
     this->initCoords[c][1] = 1;
@@ -238,7 +263,7 @@ void EMMPM_Data::initVariables()
   this->currentMSE = 0.0;
   this->histograms = nullptr;
 
-  //this->rngVars = nullptr;
+  // this->rngVars = nullptr;
 
   this->tiffResSet = 0;
   this->xResolution = 0;
@@ -251,26 +276,38 @@ void EMMPM_Data::initVariables()
 // -----------------------------------------------------------------------------
 void EMMPM_Data::calculateBetaMatrix(double default_beta)
 {
-  if (nullptr == couplingBeta)
+  if(nullptr == couplingBeta)
   {
     return;
   }
 
   // Recalculate the Class Coupling Matrix
   int ij = 0;
-  for (int i = 0; i < (classes + 1); ++i)
+  for(int i = 0; i < (classes + 1); ++i)
   {
-    for (int j = 0; j < (classes + 1); ++j)
+    for(int j = 0; j < (classes + 1); ++j)
     {
       ij = ((classes + 1) * i) + j;
-      if(j == classes) { couplingBeta[ij] = 0.0; }
-      else if(i == j) { couplingBeta[ij] = 0.0; }
-      else if(i == classes) { couplingBeta[ij] = 0.0; }
-      else { couplingBeta[ij] = default_beta; }
+      if(j == classes)
+      {
+        couplingBeta[ij] = 0.0;
+      }
+      else if(i == j)
+      {
+        couplingBeta[ij] = 0.0;
+      }
+      else if(i == classes)
+      {
+        couplingBeta[ij] = 0.0;
+      }
+      else
+      {
+        couplingBeta[ij] = default_beta;
+      }
     }
   }
   // Update the Coupling Matrix with user defined entries
-  for (std::vector<CoupleType>::iterator iter = coupleEntries.begin(); iter != coupleEntries.end(); ++iter)
+  for(std::vector<CoupleType>::iterator iter = coupleEntries.begin(); iter != coupleEntries.end(); ++iter)
   {
     ij = ((classes + 1) * ((*iter).label_1)) + (*iter).label_2;
     couplingBeta[ij] = (*iter).beta;

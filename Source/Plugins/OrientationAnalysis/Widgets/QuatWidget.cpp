@@ -40,8 +40,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QuatWidget::QuatWidget(QWidget* parent) :
-  OrientationWidget(parent)
+QuatWidget::QuatWidget(QWidget* parent)
+: OrientationWidget(parent)
 {
   setupUi(this);
 
@@ -53,7 +53,6 @@ QuatWidget::QuatWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 QuatWidget::~QuatWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -66,14 +65,10 @@ void QuatWidget::setupGui()
   q3->setValidator(new QDoubleValidator(q3));
   q4->setValidator(new QDoubleValidator(q4));
 
-  connect(q1, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(q2, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(q3, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(q4, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
+  connect(q1, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(q2, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(q3, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(q4, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -83,12 +78,12 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if (calculator->getInputType() == OrientationConverter<double>::Quaternion)
+  if(calculator->getInputType() == OrientationConverter<double>::Quaternion)
   {
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if (calculator->getHasErrors() == true)
+  else if(calculator->getHasErrors() == true)
   {
     q1->setText("nan");
     q2->setText("nan");
@@ -100,7 +95,7 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
 
   QVector<double> qValues = calculator->getValues(OrientationConverter<double>::Quaternion);
 
-  if (qValues.size() == 4)
+  if(qValues.size() == 4)
   {
     q1->setText(QString::number(qValues[0]));
     q2->setText(QString::number(qValues[1]));
@@ -112,7 +107,7 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuatWidget::valuesUpdated(const QString &text)
+void QuatWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
 
@@ -129,7 +124,7 @@ void QuatWidget::valuesUpdated(const QString &text)
 
   emit clearErrorTable();
 
-  if (errorCode >= 0)
+  if(errorCode >= 0)
   {
     emit valuesChanged(values, OrientationConverter<double>::Quaternion, false);
   }
@@ -147,19 +142,19 @@ QVector<double> QuatWidget::getValues()
 {
   QVector<double> values;
 
-  if (q1->text() == "nan")
+  if(q1->text() == "nan")
   {
     q1->setText("0");
   }
-  if (q2->text() == "nan")
+  if(q2->text() == "nan")
   {
     q2->setText("0");
   }
-  if (q3->text() == "nan")
+  if(q3->text() == "nan")
   {
     q3->setText("0");
   }
-  if (q4->text() == "nan")
+  if(q4->text() == "nan")
   {
     q4->setText("0");
   }
@@ -171,4 +166,3 @@ QVector<double> QuatWidget::getValues()
 
   return values;
 }
-

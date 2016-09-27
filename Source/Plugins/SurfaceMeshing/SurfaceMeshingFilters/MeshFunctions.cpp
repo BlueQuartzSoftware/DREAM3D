@@ -37,12 +37,15 @@
 
 #include "SIMPLib/Common/DREAM3DMath.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NodeFunctions::NodeFunctions() {}
-NodeFunctions::~NodeFunctions() {}
+NodeFunctions::NodeFunctions()
+{
+}
+NodeFunctions::~NodeFunctions()
+{
+}
 
 double NodeFunctions::Distance(Node& n0, Node& n1)
 {
@@ -63,22 +66,29 @@ int NodeFunctions::type(Node& n)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EdgeFunctions::EdgeFunctions() {}
-EdgeFunctions::~EdgeFunctions() {}
-
+EdgeFunctions::EdgeFunctions()
+{
+}
+EdgeFunctions::~EdgeFunctions()
+{
+}
 
 double EdgeFunctions::Length(StructArray<Node>::Pointer nodes, Segment* e)
 {
   int nid0 = e->node_id[0];
   int nid1 = e->node_id[1];
-  return NodeFunctions::Distance( *(nodes->GetPointer(nid0)), *(nodes->GetPointer(nid1)) );
+  return NodeFunctions::Distance(*(nodes->GetPointer(nid0)), *(nodes->GetPointer(nid1)));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleFunctions::TriangleFunctions() {}
-TriangleFunctions::~TriangleFunctions() {}
+TriangleFunctions::TriangleFunctions()
+{
+}
+TriangleFunctions::~TriangleFunctions()
+{
+}
 
 double TriangleFunctions::area(Node& n0, Node& n1, Node& n2)
 {
@@ -128,10 +138,22 @@ double TriangleFunctions::aspect(Node& n0, Node& n1, Node& n2)
   double c = NodeFunctions::Distance(n2, n0);
   double min = a;
   double max = a;
-  if(b > max) { max = b; }
-  else if(b < min) { min = b; }
-  if(c > max) { max = c; }
-  else if(c < min) { min = c; }
+  if(b > max)
+  {
+    max = b;
+  }
+  else if(b < min)
+  {
+    min = b;
+  }
+  if(c > max)
+  {
+    max = c;
+  }
+  else if(c < min)
+  {
+    min = c;
+  }
   return max / min;
 }
 
@@ -188,14 +210,32 @@ double TriangleFunctions::MinDihedral(Node& n0, Node& n1, Node& n2) //  another 
   }
   //  qDebug() << "MinDIhedral, c: " << c[0] <<" " << c[1] <<" " << c[2] << "\n" ;
   w1 = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  if(w1 < -1.) { w1 = -1.; }
-  if(w1 > 1.) { w1 = 1.; }
+  if(w1 < -1.)
+  {
+    w1 = -1.;
+  }
+  if(w1 > 1.)
+  {
+    w1 = 1.;
+  }
   w2 = -1. * a[0] * c[0] - a[1] * c[1] - a[2] * c[2];
-  if(w2 < -1.) { w2 = -1.; }
-  if(w2 > 1.) { w2 = 1.; }
+  if(w2 < -1.)
+  {
+    w2 = -1.;
+  }
+  if(w2 > 1.)
+  {
+    w2 = 1.;
+  }
   w3 = c[0] * b[0] + c[1] * b[1] + c[2] * b[2];
-  if(w3 < -1.) { w3 = -1.; }
-  if(w3 > 1.) { w3 = 1.; }
+  if(w3 < -1.)
+  {
+    w3 = -1.;
+  }
+  if(w3 > 1.)
+  {
+    w3 = 1.;
+  }
   //  qDebug() << "MinDIhedral, w: " << w1 <<" " << w2 <<" " << w3 << "\n" ;
   double d1 = acos(w1);
   double d2 = acos(w2);
@@ -203,7 +243,13 @@ double TriangleFunctions::MinDihedral(Node& n0, Node& n1, Node& n2) //  another 
   // debug
   //  qDebug() << "MinDIhedral, angles: " << d1*180./PI <<" " << d2*180./PI <<" " << d3*180./PI << "\n" ;
   min = d1;
-  if(d2 < min) { min = d2; }
-  if(d3 < min) { min = d3; }
+  if(d2 < min)
+  {
+    min = d2;
+  }
+  if(d3 < min)
+  {
+    min = d3;
+  }
   return min;
 }

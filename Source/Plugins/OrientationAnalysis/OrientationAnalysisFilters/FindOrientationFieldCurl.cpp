@@ -36,98 +36,97 @@
 #include "FindOrientationFieldCurl.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range.h>
 #include <tbb/atomic.h>
-#include <tbb/tick_count.h>
-#include <tbb/task_scheduler_init.h>
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/task_group.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/tick_count.h>
 #endif
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-
 class FindMisorientationVectorsImpl
 {
-  public:
-    FindMisorientationVectorsImpl(QuatF* quats, float* misoVecs, int64_t* neighbors, int64_t* faceIds) :
-      m_Quats(quats),
-      m_MisoVecs(misoVecs),
-      m_Neighbors(neighbors),
-      m_FaceIds(faceIds)
-    {
-      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
-    }
-    virtual ~FindMisorientationVectorsImpl() {}
+public:
+  FindMisorientationVectorsImpl(QuatF* quats, float* misoVecs, int64_t* neighbors, int64_t* faceIds)
+  : m_Quats(quats)
+  , m_MisoVecs(misoVecs)
+  , m_Neighbors(neighbors)
+  , m_FaceIds(faceIds)
+  {
+    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  }
+  virtual ~FindMisorientationVectorsImpl()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    QuatF q1;
+    QuatF q2;
+    QuatF delq;
+    float misoVec[3];
+    for(size_t i = start; i < end; i++)
     {
-      QuatF q1;
-      QuatF q2;
-      QuatF delq;
-      float misoVec[3];
-      for (size_t i = start; i < end; i++)
+      for(int j = 0; j < 3; j++)
       {
-        for(int j = 0; j < 3; j++)
+        QuaternionMathF::Copy(m_Quats[i], q1);
+        if(m_Neighbors[3 * i + j] > 0)
         {
-          QuaternionMathF::Copy(m_Quats[i], q1);
-          if(m_Neighbors[3 * i + j] > 0)
-          {
-            QuaternionMathF::Copy(m_Quats[m_Neighbors[3 * i + j]], q2);
-            QuaternionMathF::Conjugate(q2);
-            QuaternionMathF::Multiply(q1, q2, delq);
-            m_OrientationOps[1]->getFZQuat(delq);
-            QuaternionMathF::GetMisorientationVector(delq, misoVec);
-            m_MisoVecs[3 * m_FaceIds[3 * i + j] + 0] = misoVec[0];
-            m_MisoVecs[3 * m_FaceIds[3 * i + j] + 1] = misoVec[1];
-            m_MisoVecs[3 * m_FaceIds[3 * i + j] + 2] = misoVec[2];
-          }
+          QuaternionMathF::Copy(m_Quats[m_Neighbors[3 * i + j]], q2);
+          QuaternionMathF::Conjugate(q2);
+          QuaternionMathF::Multiply(q1, q2, delq);
+          m_OrientationOps[1]->getFZQuat(delq);
+          QuaternionMathF::GetMisorientationVector(delq, misoVec);
+          m_MisoVecs[3 * m_FaceIds[3 * i + j] + 0] = misoVec[0];
+          m_MisoVecs[3 * m_FaceIds[3 * i + j] + 1] = misoVec[1];
+          m_MisoVecs[3 * m_FaceIds[3 * i + j] + 2] = misoVec[2];
         }
       }
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
-  private:
-    QuatF* m_Quats;
-    float* m_MisoVecs;
-    int64_t* m_Neighbors;
-    int64_t* m_FaceIds;
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+private:
+  QuatF* m_Quats;
+  float* m_MisoVecs;
+  int64_t* m_Neighbors;
+  int64_t* m_FaceIds;
+  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 };
 
 // Include the MOC generated file for this class
 #include "moc_FindOrientationFieldCurl.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindOrientationFieldCurl::FindOrientationFieldCurl() :
-  AbstractFilter(),
-  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
-  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
-  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
-  m_DislocationTensorsArrayName(SIMPL::CellData::DislocationTensors),
-  m_CellPhases(nullptr),
-  m_DislocationTensors(nullptr),
-  m_Quats(nullptr),
-  m_CrystalStructures(nullptr)
+FindOrientationFieldCurl::FindOrientationFieldCurl()
+: AbstractFilter()
+, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
+, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
+, m_DislocationTensorsArrayName(SIMPL::CellData::DislocationTensors)
+, m_CellPhases(nullptr)
+, m_DislocationTensors(nullptr)
+, m_Quats(nullptr)
+, m_CrystalStructures(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -176,11 +175,11 @@ void FindOrientationFieldCurl::setupFilterParameters()
 void FindOrientationFieldCurl::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDislocationTensorsArrayName(reader->readString("DislocationTensorsArrayName", getDislocationTensorsArrayName() ) );
-  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
-  setCurlSize( reader->readIntVec3("CurlSize", getCurlSize() ) );
+  setDislocationTensorsArrayName(reader->readString("DislocationTensorsArrayName", getDislocationTensorsArrayName()));
+  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
+  setCurlSize(reader->readIntVec3("CurlSize", getCurlSize()));
   reader->closeFilterGroup();
 }
 
@@ -189,7 +188,6 @@ void FindOrientationFieldCurl::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -201,33 +199,49 @@ void FindOrientationFieldCurl::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> dims(1, 1);
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCellPhasesArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get())
+  {
+    return;
+  }
 
   dims[0] = 9;
-  tempPath.update(m_CellPhasesArrayPath.getDataContainerName(), m_CellPhasesArrayPath.getAttributeMatrixName(), getDislocationTensorsArrayName() );
-  m_DislocationTensorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_DislocationTensorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_DislocationTensors = m_DislocationTensorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_CellPhasesArrayPath.getDataContainerName(), m_CellPhasesArrayPath.getAttributeMatrixName(), getDislocationTensorsArrayName());
+  m_DislocationTensorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, dims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_DislocationTensorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_DislocationTensors = m_DislocationTensorsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
-//typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
-                           ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  // typedef DataArray<unsigned int> XTalStructArrayType;
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                    dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 4;
-  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_QuatsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_QuatsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Quats = m_QuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -249,7 +263,10 @@ void FindOrientationFieldCurl::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_CellPhasesArrayPath.getDataContainerName());
   size_t xP = m->getGeometryAs<ImageGeom>()->getXPoints();
@@ -281,9 +298,18 @@ void FindOrientationFieldCurl::execute()
     {
       for(size_t k = 0; k < xP; k++)
       {
-        if(k != xP - 1) { neighbors[3 * count + 0] = count + 1, faceIds[3 * count + 0] = k + (j * (xP + 1)) + (i * (xP + 1) * yP) + 1; }
-        if(j != yP - 1) { neighbors[3 * count + 1] = count + xP, faceIds[3 * count + 1] = j + (k * (yP + 1)) + (i * (yP + 1) * xP) + yshift + 1; }
-        if(i != zP - 1) { neighbors[3 * count + 2] = count + (xP * yP), faceIds[3 * count + 2] = i + (k * (zP + 1)) + (j * (zP + 1) * xP) + zshift + 1; }
+        if(k != xP - 1)
+        {
+          neighbors[3 * count + 0] = count + 1, faceIds[3 * count + 0] = k + (j * (xP + 1)) + (i * (xP + 1) * yP) + 1;
+        }
+        if(j != yP - 1)
+        {
+          neighbors[3 * count + 1] = count + xP, faceIds[3 * count + 1] = j + (k * (yP + 1)) + (i * (yP + 1) * xP) + yshift + 1;
+        }
+        if(i != zP - 1)
+        {
+          neighbors[3 * count + 2] = count + (xP * yP), faceIds[3 * count + 2] = i + (k * (zP + 1)) + (j * (zP + 1) * xP) + zshift + 1;
+        }
         count++;
       }
     }
@@ -294,13 +320,11 @@ void FindOrientationFieldCurl::execute()
   bool doParallel = true;
 #endif
 
-//first determine the misorientation vectors on all the voxel faces
+// first determine the misorientation vectors on all the voxel faces
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, (xP * yP * zP)),
-                      FindMisorientationVectorsImpl(quats, misoVecs, neighbors, faceIds), tbb::auto_partitioner());
-
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, (xP * yP * zP)), FindMisorientationVectorsImpl(quats, misoVecs, neighbors, faceIds), tbb::auto_partitioner());
   }
   else
 #endif
@@ -309,13 +333,12 @@ void FindOrientationFieldCurl::execute()
     serial.convert(0, (xP * yP * zP));
   }
 
-
   int good = 0;
 
-//  float w, totalmisorientation;
-//  float n1, n2, n3;
-//  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-//  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  //  float w, totalmisorientation;
+  //  float n1, n2, n3;
+  //  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  //  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
@@ -339,16 +362,16 @@ void FindOrientationFieldCurl::execute()
   float kappa13 = 0;
   float kappa23 = 0;
   float kappa33 = 0;
-  for (int64_t plane = 0; plane < zPoints; plane++)
+  for(int64_t plane = 0; plane < zPoints; plane++)
   {
     planeStride = plane * planeShift;
-    for (int64_t row = 0; row < yPoints; row++)
+    for(int64_t row = 0; row < yPoints; row++)
     {
       rowStride = row * rowShift;
-      for (int64_t col = 0; col < xPoints; col++)
+      for(int64_t col = 0; col < xPoints; col++)
       {
         point = planeStride + rowStride + col;
-        if (m_CellPhases[point] > 0)
+        if(m_CellPhases[point] > 0)
         {
           count = 0;
           kappa11 = 0;
@@ -360,11 +383,17 @@ void FindOrientationFieldCurl::execute()
           kappa13 = 0;
           kappa23 = 0;
           kappa33 = 0;
-          for (int j = -m_CurlSize.z; j < m_CurlSize.z; j++)
+          for(int j = -m_CurlSize.z; j < m_CurlSize.z; j++)
           {
             good = 1;
-            if(plane + j < 0) { good = 0; }
-            else if(plane + j >= zPoints - 1) { good = 0; }
+            if(plane + j < 0)
+            {
+              good = 0;
+            }
+            else if(plane + j >= zPoints - 1)
+            {
+              good = 0;
+            }
             if(good == 1)
             {
               neighbor = point + (j * planeShift);
@@ -383,11 +412,17 @@ void FindOrientationFieldCurl::execute()
           }
 
           count = 0;
-          for (int k = -m_CurlSize.y; k < m_CurlSize.y; k++)
+          for(int k = -m_CurlSize.y; k < m_CurlSize.y; k++)
           {
             good = 1;
-            if(row + k < 0) { good = 0; }
-            else if(row + k >= yPoints - 1) { good = 0; }
+            if(row + k < 0)
+            {
+              good = 0;
+            }
+            else if(row + k >= yPoints - 1)
+            {
+              good = 0;
+            }
             if(good == 1)
             {
               neighbor = point + (k * rowShift);
@@ -405,11 +440,17 @@ void FindOrientationFieldCurl::execute()
             count = 0;
           }
 
-          for (int l = -m_CurlSize.x; l < m_CurlSize.z; l++)
+          for(int l = -m_CurlSize.x; l < m_CurlSize.z; l++)
           {
             good = 1;
-            if(col + l < 0) { good = 0; }
-            else if(col + l >= xPoints - 1) { good = 0; }
+            if(col + l < 0)
+            {
+              good = 0;
+            }
+            else if(col + l >= xPoints - 1)
+            {
+              good = 0;
+            }
             if(good == 1)
             {
               neighbor = point + l;
@@ -480,7 +521,7 @@ const QString FindOrientationFieldCurl::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 
@@ -488,19 +529,22 @@ const QString FindOrientationFieldCurl::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
-
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
-
+{
+  return SIMPL::FilterSubGroups::CrystallographicFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getHumanLabel()
-{ return "Find Curl of Orientation Field"; }
-
+{
+  return "Find Curl of Orientation Field";
+}

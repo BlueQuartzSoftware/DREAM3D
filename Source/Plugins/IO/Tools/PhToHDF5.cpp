@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
@@ -45,16 +45,15 @@
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
-#include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/HDF5/VTKH5Constants.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/HDF5/VTKH5Constants.h"
-
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
@@ -64,16 +63,18 @@ hid_t m_FileId = 0;
 /** @brief Holds a single Euler Angle Set */
 class EulerSet
 {
-  public:
-    float e0;
-    float e1;
-    float e2;
-    virtual ~EulerSet() {};
-    EulerSet() : e0(0.0f), e1(0.0f), e2(0.0f) {}
+public:
+  float e0;
+  float e1;
+  float e2;
+  virtual ~EulerSet(){};
+  EulerSet()
+  : e0(0.0f)
+  , e1(0.0f)
+  , e2(0.0f)
+  {
+  }
 };
-
-
-
 
 /**
  *
@@ -83,7 +84,7 @@ class EulerSet
  * @param ny Y Dimension
  * @param nz Z Dimension
  */
-int  ReadPHFile(QString FileName, QVector<int>& data, int& nx, int& ny, int& nz)
+int ReadPHFile(QString FileName, QVector<int>& data, int& nx, int& ny, int& nz)
 {
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer m = DataContainer::New(); /* FIXME: What Geometry do we need? */
@@ -95,10 +96,9 @@ int  ReadPHFile(QString FileName, QVector<int>& data, int& nx, int& ny, int& nz)
   bool propWasSet = reader->setProperty("InputFile", FileName);
   if(propWasSet == false)
   {
-
   }
   reader->execute();
-  if (reader->getErrorCondition() < 0)
+  if(reader->getErrorCondition() < 0)
   {
     qDebug() << "Error Reading the Ph File '" << FileName << "' Error Code:" << reader->getErrorCondition();
     return -1;
@@ -113,7 +113,6 @@ int  ReadPHFile(QString FileName, QVector<int>& data, int& nx, int& ny, int& nz)
     data[i] = featureIds->getValue(i);
   }
 
-
   return 0;
 }
 
@@ -123,24 +122,23 @@ int  ReadPHFile(QString FileName, QVector<int>& data, int& nx, int& ny, int& nz)
 int openHDF5File(const QString m_FileName, bool appendData)
 {
   // Try to open a file to append data into
-  if (APPEND_DATA_TRUE == appendData)
+  if(APPEND_DATA_TRUE == appendData)
   {
     m_FileId = QH5Utilities::openFile(m_FileName, false);
   }
   // No file was found or we are writing new data only to a clean file
-  if (APPEND_DATA_FALSE == appendData || m_FileId < 0)
+  if(APPEND_DATA_FALSE == appendData || m_FileId < 0)
   {
-    m_FileId = QH5Utilities::createFile (m_FileName);
+    m_FileId = QH5Utilities::createFile(m_FileName);
   }
 
-  //Something went wrong either opening or creating the file. Error messages have
+  // Something went wrong either opening or creating the file. Error messages have
   // Alread been written at this point so just return.
-  if (m_FileId < 0)
+  if(m_FileId < 0)
   {
     qDebug() << "The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_FileName << "]";
   }
   return m_FileId;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -155,25 +153,21 @@ int closeHDF5File()
 /**
  *
  */
-template<typename T>
-int writeScalarData(const QString& hdfPath,
-                    const QVector<T>& scalar_data,
-                    const QString& name,
-                    int numComp, int32_t rank, hsize_t* dims)
+template <typename T> int writeScalarData(const QString& hdfPath, const QVector<T>& scalar_data, const QString& name, int numComp, int32_t rank, hsize_t* dims)
 {
-  hid_t gid = H5Gopen(m_FileId, hdfPath.toLatin1().data(), H5P_DEFAULT );
-  if (gid < 0)
+  hid_t gid = H5Gopen(m_FileId, hdfPath.toLatin1().data(), H5P_DEFAULT);
+  if(gid < 0)
   {
     qDebug() << "Error opening Group " << hdfPath;
     return gid;
   }
   herr_t err = QH5Utilities::createGroupsFromPath(H5_SCALAR_DATA_GROUP_NAME, gid);
-  if (err < 0)
+  if(err < 0)
   {
     qDebug() << "Error creating HDF Group " << H5_SCALAR_DATA_GROUP_NAME;
     return err;
   }
-  hid_t cellGroupId = H5Gopen(gid, H5_SCALAR_DATA_GROUP_NAME, H5P_DEFAULT );
+  hid_t cellGroupId = H5Gopen(gid, H5_SCALAR_DATA_GROUP_NAME, H5P_DEFAULT);
   if(err < 0)
   {
     qDebug() << "Error writing string attribute to HDF Group " << H5_SCALAR_DATA_GROUP_NAME;
@@ -182,14 +176,13 @@ int writeScalarData(const QString& hdfPath,
 
   T* data = const_cast<T*>(&(scalar_data.front()));
 
-
   err = QH5Lite::replacePointerDataset(cellGroupId, name, rank, dims, data);
-  if (err < 0)
+  if(err < 0)
   {
     qDebug() << "Error writing array with name: " << name;
   }
   err = QH5Lite::writeScalarAttribute(cellGroupId, name, SIMPL::HDF5::NumComponents, numComp);
-  if (err < 0)
+  if(err < 0)
   {
     qDebug() << "Error writing dataset " << name;
   }
@@ -215,12 +208,11 @@ int writePhDataToHDF5File(const QString& h5File, QVector<int>& data, int& nx, in
 
   int totalPoints = nx * ny * nz;
   int32_t rank = 1;
-  hsize_t dims[1] =
-  { totalPoints };
+  hsize_t dims[1] = {totalPoints};
 
   int numComp = 1;
   err = writeScalarData(SIMPL::Defaults::DataContainerName, data, SIMPL::CellData::FeatureIds, numComp, rank, dims);
-  if (err < 0)
+  if(err < 0)
   {
     qDebug() << "Error Writing Scalars '" << SIMPL::CellData::FeatureIds << "' to " << SIMPL::Defaults::DataContainerName;
     return err;
@@ -239,7 +231,7 @@ int writeEulerDataToHDF5File(const QString& h5File, QVector<float>& data, int nu
   err = openHDF5File(h5File, true);
 
   err = writeScalarData(SIMPL::Defaults::DataContainerName, data, SIMPL::CellData::EulerAngles, numComp, rank, dims);
-  if (err < 0)
+  if(err < 0)
   {
     qDebug() << "Error Writing Scalars '" << SIMPL::CellData::EulerAngles << "' to " << SIMPL::Defaults::DataContainerName;
     return err;
@@ -250,7 +242,6 @@ int writeEulerDataToHDF5File(const QString& h5File, QVector<float>& data, int nu
   return err;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -258,7 +249,7 @@ int ReadEulerFile(const QString& filename, QMap<int, EulerSet>& gidToEulerMap)
 {
   int err = -1;
   FILE* f = fopen(filename.toLatin1().data(), "rb");
-  if (nullptr == f)
+  if(nullptr == f)
   {
     qDebug() << "Could not open Euler Angle File '" << filename << "'";
     return err;
@@ -266,14 +257,14 @@ int ReadEulerFile(const QString& filename, QMap<int, EulerSet>& gidToEulerMap)
   err = 1;
   int read = 4;
   int gid;
-  while (read == 4)
+  while(read == 4)
   {
     EulerSet e;
-    read = fscanf(f, "%d %f %f %f", &gid, &(e.e0), &(e.e1), &(e.e2) );
+    read = fscanf(f, "%d %f %f %f", &gid, &(e.e0), &(e.e1), &(e.e2));
     gidToEulerMap[gid] = e;
   }
 
-  //Close the file when we are done
+  // Close the file when we are done
   fclose(f);
 
   return err;
@@ -285,14 +276,13 @@ int main(int argc, char** argv)
 {
   qDebug() << "Starting Ph to HDF5 Merging...";
 
-// Instantiate the QCoreApplication that we need to get the current path and load plugins.
+  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("PhToHDF5");
 
   std::cout << "PhToHDF5 Starting. Version " << IO::Version::PackageComplete().toStdString() << std::endl;
-
 
   // Register all the filters including trying to load those from Plugins
   FilterManager::Pointer fm = FilterManager::Instance();
@@ -306,23 +296,22 @@ int main(int argc, char** argv)
     // Handle program options passed on command line.
     TCLAP::CmdLine cmd("PhToHDF5", ' ', IO::Version::Complete().toStdString());
 
-    TCLAP::ValueArg<std::string> phFileArg( "p", "phfile", "Ph Input File", true, "", "Ph Input File");
+    TCLAP::ValueArg<std::string> phFileArg("p", "phfile", "Ph Input File", true, "", "Ph Input File");
     cmd.add(phFileArg);
 
-    TCLAP::ValueArg<std::string> angleFileArg( "e", "eulerfile", "Euler Angle File", false, "", "Euler Angle File");
+    TCLAP::ValueArg<std::string> angleFileArg("e", "eulerfile", "Euler Angle File", false, "", "Euler Angle File");
     cmd.add(angleFileArg);
 
-    TCLAP::ValueArg<std::string> h5InputFileArg( "t", "h5file", "Target HDF5 File", true, "", "Target HDF5 File");
+    TCLAP::ValueArg<std::string> h5InputFileArg("t", "h5file", "Target HDF5 File", true, "", "Target HDF5 File");
     cmd.add(h5InputFileArg);
 
     // Parse the argv array.
     cmd.parse(argc, argv);
-    if (argc == 1)
+    if(argc == 1)
     {
       qDebug() << "PhToHDF5 program was not provided any arguments. Use the --help argument to show the help listing.";
       return EXIT_FAILURE;
     }
-
 
     QString phFile = QString::fromStdString(phFileArg.getValue());
     QString h5File = QString::fromStdString(h5InputFileArg.getValue());
@@ -336,32 +325,29 @@ int main(int argc, char** argv)
     qDebug() << "  into";
     qDebug() << "file: " << h5File;
 
-
     qDebug() << "Reading the Ph data file....";
     int err = ReadPHFile(phFile, voxels, nx, ny, nz);
-    if (err < 0)
+    if(err < 0)
     {
       return EXIT_FAILURE;
     }
     qDebug() << "Ph File has dimensions: " << nx << " x " << ny << " x " << nz;
 
-
     qDebug() << "Now Overwriting the FeatureID data set in the HDF5 file....";
     err = writePhDataToHDF5File(h5File, voxels, nz, ny, nz);
-    if (err < 0)
+    if(err < 0)
     {
       qDebug() << "There was an error writing the feature id data. Check other errors for possible clues.";
       return EXIT_FAILURE;
     }
     qDebug() << "+ Done Writing the Feature ID Data.";
 
-
     QMap<int, EulerSet> gidToEulerMap;
-    if (angleFileArg.getValue().empty() == false)
+    if(angleFileArg.getValue().empty() == false)
     {
       qDebug() << "Reading the Euler Angle Data....";
       err = ReadEulerFile(QString::fromStdString(angleFileArg.getValue()), gidToEulerMap);
-      if (err < 0)
+      if(err < 0)
       {
         qDebug() << "Error Reading the Euler Angle File";
         return EXIT_FAILURE;
@@ -374,7 +360,7 @@ int main(int argc, char** argv)
       int numComp = 3;
       // Loop over each Voxel getting its Feature ID and then setting the Euler Angle
       QVector<float> dataf(totalPoints * 3);
-      for (int i = 0; i < totalPoints; ++i)
+      for(int i = 0; i < totalPoints; ++i)
       {
         EulerSet& angle = gidToEulerMap[voxels[i]];
         dataf[i * 3] = angle.e0;
@@ -385,7 +371,7 @@ int main(int argc, char** argv)
       int32_t rank = 2;
       hsize_t dims[2] = {totalPoints, numComp};
       err = writeEulerDataToHDF5File(h5File, dataf, numComp, rank, dims);
-      if (err < 0)
+      if(err < 0)
       {
         qDebug() << "There was an error writing the Euler Angle data. Check other errors for possible clues.";
         return EXIT_FAILURE;
@@ -393,8 +379,7 @@ int main(int argc, char** argv)
       qDebug() << "+ Done Writing the Euler Angle Data.";
     }
 
-  }
-  catch (TCLAP::ArgException& e) // catch any exceptions
+  } catch(TCLAP::ArgException& e) // catch any exceptions
   {
     std::cerr << " error: " << e.error() << " for arg " << e.argId();
     return EXIT_FAILURE;

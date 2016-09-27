@@ -38,8 +38,8 @@
 #include "SIMPLib/Common/Constants.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Generic/GenericConstants.h"
@@ -48,19 +48,17 @@
 // Include the MOC generated file for this class
 #include "moc_FindFeaturePhases.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeaturePhases::FindFeaturePhases() :
-  AbstractFilter(),
-  m_FeatureIdsArrayPath("", "", ""),
-  m_CellPhasesArrayPath("", "", ""),
-  m_FeaturePhasesArrayPath(SIMPL::FeatureData::Phases),
-  m_FeatureIds(nullptr),
-  m_CellPhases(nullptr),
-  m_FeaturePhases(nullptr)
+FindFeaturePhases::FindFeaturePhases()
+: AbstractFilter()
+, m_FeatureIdsArrayPath("", "", "")
+, m_CellPhasesArrayPath("", "", "")
+, m_FeaturePhasesArrayPath(SIMPL::FeatureData::Phases)
+, m_FeatureIds(nullptr)
+, m_CellPhases(nullptr)
+, m_FeaturePhases(nullptr)
 {
 
   setupFilterParameters();
@@ -102,9 +100,9 @@ void FindFeaturePhases::setupFilterParameters()
 void FindFeaturePhases::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -113,7 +111,6 @@ void FindFeaturePhases::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 void FindFeaturePhases::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -127,19 +124,34 @@ void FindFeaturePhases::dataCheck()
 
   QVector<size_t> cDims(1, 1);
 
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeatureIdsArrayPath()); }
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getFeatureIdsArrayPath());
+  }
 
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getCellPhasesArrayPath()); }
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getCellPhasesArrayPath());
+  }
 
-  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, getFeaturePhasesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, getFeaturePhasesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock().get())    /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 }
@@ -164,7 +176,10 @@ void FindFeaturePhases::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
@@ -173,16 +188,23 @@ void FindFeaturePhases::execute()
 
   QMap<int32_t, int32_t> warningMap;
 
-  for (size_t i = 0; i < totalPoints; i++)
+  for(size_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
-    if (!featureMap.contains(gnum)) { featureMap.insert(gnum, m_CellPhases[i]); }
+    if(!featureMap.contains(gnum))
+    {
+      featureMap.insert(gnum, m_CellPhases[i]);
+    }
     int32_t curPhaseVal = featureMap.value(gnum);
 
-    if (curPhaseVal != m_CellPhases[i])
+    if(curPhaseVal != m_CellPhases[i])
     {
-      if(!warningMap.contains(gnum)) { warningMap[gnum] = 1; }
-      else {
+      if(!warningMap.contains(gnum))
+      {
+        warningMap[gnum] = 1;
+      }
+      else
+      {
         warningMap[gnum]++;
       }
     }
@@ -195,12 +217,13 @@ void FindFeaturePhases::execute()
     QString header = QString("Elements from some features did not all have the same phase Id. The last phase Id copied into each feature will be used");
     warnings.append(header);
     QMapIterator<int32_t, int32_t> i(warningMap);
-    while (i.hasNext()) {
-        i.next();
-        QString str;
-        QTextStream ss(&str);
-        ss << "  Phase Feature " << i.key() << " created " << i.value() << " warnings.";
-        warnings.append(str);
+    while(i.hasNext())
+    {
+      i.next();
+      QString str;
+      QTextStream ss(&str);
+      ss << "  Phase Feature " << i.key() << " created " << i.value() << " warnings.";
+      warnings.append(str);
     }
     notifyWarningMessage(getHumanLabel(), warnings.join("\n"), getErrorCondition());
   }
@@ -244,24 +267,29 @@ const QString FindFeaturePhases::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Generic::Version::Major() << "." << Generic::Version::Minor() << "." << Generic::Version::Patch();
+  vStream << Generic::Version::Major() << "." << Generic::Version::Minor() << "." << Generic::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeaturePhases::getGroupName()
-{ return SIMPL::FilterGroups::GenericFilters; }
+{
+  return SIMPL::FilterGroups::GenericFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeaturePhases::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MiscFilters; }
+{
+  return SIMPL::FilterSubGroups::MiscFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeaturePhases::getHumanLabel()
-{ return "Find Feature Phases"; }
-
+{
+  return "Find Feature Phases";
+}

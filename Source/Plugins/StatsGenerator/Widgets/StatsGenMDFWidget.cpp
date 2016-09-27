@@ -41,49 +41,47 @@
 #include <iostream>
 
 //-- Qt Includes
-#include <QtWidgets/QAbstractItemDelegate>
 #include <QtConcurrent/QtConcurrentMap>
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtCore/QString>
-#include <QtCore/QSettings>
-#include <QtCore/QVector>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QModelIndex>
+#include <QtCore/QSettings>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
-#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QFileDialog>
-
+#include <QtWidgets/QMessageBox>
 
 #include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
 #include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
-#include <qwt_series_data.h>
-#include <qwt_interval.h>
-#include <qwt_point_3d.h>
 #include <qwt_compat.h>
+#include <qwt_interval.h>
+#include <qwt_plot.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_curve.h>
 #include <qwt_plot_layout.h>
+#include <qwt_plot_marker.h>
+#include <qwt_point_3d.h>
+#include <qwt_scale_draw.h>
 #include <qwt_scale_widget.h>
+#include <qwt_series_data.h>
+#include <qwt_symbol.h>
 
 #include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/Texture/Texture.hpp"
-#include "OrientationLib/Texture/StatsGen.hpp"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/Texture/StatsGen.hpp"
+#include "OrientationLib/Texture/Texture.hpp"
 
-#include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
 #include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorUtilities.h"
-
+#include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_StatsGenMDFWidget.cpp"
@@ -91,10 +89,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent) :
-  QWidget(parent),
-  m_PhaseIndex(-1),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent)
+: QWidget(parent)
+, m_PhaseIndex(-1)
+, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
   this->setupUi(this);
   this->setupGui();
@@ -105,7 +103,7 @@ StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 StatsGenMDFWidget::~StatsGenMDFWidget()
 {
-  if (nullptr != m_MDFTableModel)
+  if(nullptr != m_MDFTableModel)
   {
     m_MDFTableModel->deleteLater();
   }
@@ -129,8 +127,7 @@ void StatsGenMDFWidget::setupGui()
   m_MDFTableModel->setInitialValues();
   m_MDFTableView->setModel(m_MDFTableModel);
 
-  connect(m_MDFTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-          this, SLOT(tableDataChanged(const QModelIndex&, const QModelIndex&)));
+  connect(m_MDFTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(tableDataChanged(const QModelIndex&, const QModelIndex&)));
 
   QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
@@ -140,7 +137,7 @@ void StatsGenMDFWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::tableDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+void StatsGenMDFWidget::tableDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
 {
   Q_UNUSED(topLeft);
   Q_UNUSED(bottomRight);
@@ -155,45 +152,44 @@ void StatsGenMDFWidget::tableDataChanged(const QModelIndex &topLeft, const QMode
 void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
 {
 
-  QPalette  pal;
+  QPalette pal;
   pal.setColor(QPalette::Text, Qt::white);
   pal.setColor(QPalette::Foreground, Qt::white);
   pal.setColor(QPalette::Window, Qt::black);
 
-  plot->setPalette( pal );
+  plot->setPalette(pal);
 
-  plot->plotLayout()->setAlignCanvasToScales( true );
-  for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
+  plot->plotLayout()->setAlignCanvasToScales(true);
+  for(int axis = 0; axis < QwtPlot::axisCnt; axis++)
   {
-      plot->axisWidget( axis )->setMargin( 0 );
-      plot->axisWidget(axis)->setPalette(pal);
+    plot->axisWidget(axis)->setMargin(0);
+    plot->axisWidget(axis)->setPalette(pal);
   }
-  QwtPlotCanvas *canvas = new QwtPlotCanvas();
+  QwtPlotCanvas* canvas = new QwtPlotCanvas();
 
-  canvas->setAutoFillBackground( false );
-  canvas->setFrameStyle( QFrame::NoFrame );
+  canvas->setAutoFillBackground(false);
+  canvas->setFrameStyle(QFrame::NoFrame);
   canvas->setPalette(pal);
-  plot->setCanvas( canvas );
+  plot->setCanvas(canvas);
 
   QFont font;
   font.setBold(true);
 
   QwtText xAxis(xAxisName);
   xAxis.setColor(Qt::white);
-  xAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+  xAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   xAxis.setFont(font);
 
   QwtText yAxis(yAxisName);
   yAxis.setColor(Qt::white);
-  yAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+  yAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   yAxis.setFont(font);
 
   const int margin = 5;
-  plot->setContentsMargins( margin, margin, margin, margin );
+  plot->setContentsMargins(margin, margin, margin, margin);
 
   plot->setAxisTitle(QwtPlot::xBottom, xAxis);
   plot->setAxisTitle(QwtPlot::yLeft, yAxis);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -249,7 +245,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
   // These are the output vectors
   QVector<float> x;
   QVector<float> y;
-  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure )
+  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     // Allocate a new vector to hold the mdf data
     QVector<float> mdf(CubicOps::k_MdfSize);
@@ -260,12 +256,12 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
     x.resize(npoints);
     y.resize(npoints);
     err = StatsGen::GenCubicMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
-    if (err < 0)
+    if(err < 0)
     {
       return;
     }
   }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure )
+  else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     // Allocate a new vector to hold the mdf data
     QVector<float> mdf(HexagonalOps::k_MdfSize);
@@ -276,17 +272,19 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
     x.resize(npoints);
     y.resize(npoints);
     err = StatsGen::GenHexMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
-    if (err < 0) { return; }
+    if(err < 0)
+    {
+      return;
+    }
   }
 
   QwtArray<double> xD(static_cast<int>(x.size()));
   QwtArray<double> yD(static_cast<int>(x.size()));
-  for (qint32 i = 0; i < x.size(); ++i)
+  for(qint32 i = 0; i < x.size(); ++i)
   {
     xD[i] = static_cast<double>(x.at(i));
     yD[i] = static_cast<double>(y.at(i));
   }
-
 
   // This will actually plot the XY data in the Qwt plot widget
   QwtPlotCurve* curve = m_PlotCurve;
@@ -297,11 +295,10 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
 #endif
   QColor color = QColor("DodgerBlue");
   curve->setPen(color, 2);
-  curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
+  curve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
   curve->setStyle(QwtPlotCurve::Lines);
-  QwtSymbol *symbol = new QwtSymbol( QwtSymbol::Ellipse,
-      QBrush( Qt::white ), QPen( color, 2 ), QSize( 8, 8 ) );
-  curve->setSymbol( symbol );
+  QwtSymbol* symbol = new QwtSymbol(QwtSymbol::Ellipse, QBrush(Qt::white), QPen(color, 2), QSize(8, 8));
+  curve->setSymbol(symbol);
   curve->attach(m_MDFPlot);
   m_MDFPlot->replot();
 }
@@ -311,7 +308,10 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
 // -----------------------------------------------------------------------------
 void StatsGenMDFWidget::on_addMDFRowBtn_clicked()
 {
-  if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) { return; }
+  if(!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount()))
+  {
+    return;
+  }
   m_MDFTableView->resizeColumnsToContents();
   m_MDFTableView->scrollToBottom();
   m_MDFTableView->setFocus();
@@ -326,11 +326,17 @@ void StatsGenMDFWidget::on_addMDFRowBtn_clicked()
 void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 {
   QItemSelectionModel* selectionModel = m_MDFTableView->selectionModel();
-  if (!selectionModel->hasSelection()) { return; }
+  if(!selectionModel->hasSelection())
+  {
+    return;
+  }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) { return; }
+  if(!index.isValid())
+  {
+    return;
+  }
   m_MDFTableModel->removeRow(index.row(), index.parent());
-  if (m_MDFTableModel->rowCount() > 0)
+  if(m_MDFTableModel->rowCount() > 0)
   {
     m_MDFTableView->resizeColumnsToContents();
   }
@@ -365,7 +371,10 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 
       QString axis = QString("<" + QString::fromStdString(n1) + "," + QString::fromStdString(n2) + "," + QString::fromStdString(n3) + ">");
 
-      if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) { return; }
+      if(!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount()))
+      {
+        return;
+      }
       int row = m_MDFTableModel->rowCount() - 1;
       m_MDFTableModel->setRowData(row, angle, axis, weight);
 
@@ -405,31 +414,31 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsign
   QVector<float> angle;
   QVector<float> weights;
 
-  for (int i = 0; i < arrays.size(); i++)
+  for(int i = 0; i < arrays.size(); i++)
   {
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Axis) == 0)
     {
-       axis = QVector<float>(static_cast<int>(arrays[i]->getSize())); // This one is 3xn in size
-      ::memcpy( &(axis.front()), arrays[i]->getVoidPointer(0), sizeof(float)*axis.size() );
+      axis = QVector<float>(static_cast<int>(arrays[i]->getSize())); // This one is 3xn in size
+      ::memcpy(&(axis.front()), arrays[i]->getVoidPointer(0), sizeof(float) * axis.size());
     }
 
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Angle) == 0)
     {
       angle = QVector<float>(static_cast<int>(arrays[i]->getNumberOfTuples()));
-      ::memcpy( &(angle.front()), arrays[i]->getVoidPointer(0), sizeof(float)*angle.size() );
+      ::memcpy(&(angle.front()), arrays[i]->getVoidPointer(0), sizeof(float) * angle.size());
     }
 
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Weight) == 0)
     {
       weights = QVector<float>(static_cast<int>(arrays[i]->getNumberOfTuples()));
-      ::memcpy( &(weights.front()), arrays[i]->getVoidPointer(0), sizeof(float)*weights.size() );
+      ::memcpy(&(weights.front()), arrays[i]->getVoidPointer(0), sizeof(float) * weights.size());
     }
   }
-    if (arrays.size() > 0)
-    {
-      // Load the data into the table model
-      m_MDFTableModel->setTableData(angle, axis, weights);
-    }
+  if(arrays.size() > 0)
+  {
+    // Load the data into the table model
+    m_MDFTableModel->setTableData(angle, axis, weights);
+  }
 
   on_m_MDFUpdateBtn_clicked();
 }
@@ -471,4 +480,3 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
   StatsGeneratorUtilities::GenerateMisorientationBinData(statsData, phaseType, m_CrystalStructure, odf, angles, axes, weights, !preflight);
   return retErr;
 }
-

@@ -29,28 +29,21 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _CURVE_TRACKER_H_
-#define _CURVE_TRACKER_H_
 
-#include <qwt_plot_picker.h>
 
-class QwtPlotCurve;
+#include <QtCore/QString>
 
-/**
- * @brief The CurveTracker class
- */
-class SGCurveTracker : public QwtPlotPicker
-{
-public:
-  SGCurveTracker(QWidget*);
 
-protected:
-  virtual QwtText trackerTextF(const QPointF&) const;
-  virtual QRect trackerRect(const QFont&) const;
 
-private:
-  QString curveInfoAt(const QwtPlotCurve*, const QPointF&) const;
-  QLineF curveLineAt(const QwtPlotCurve*, double x) const;
-};
+namespace GenerateSGPipeline {
 
-#endif
+  namespace Version {
+      static const QString Major("0");
+      static const QString Minor("1");
+      static const QString Patch("0");
+  }
+
+
+}
+
+

@@ -40,9 +40,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtilityWidget::OrientationUtilityWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent),
-  m_Calculator(new OrientationUtilityCalculator(this))
+OrientationUtilityWidget::OrientationUtilityWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
+: FilterParameterWidget(parameter, filter, parent)
+, m_Calculator(new OrientationUtilityCalculator(this))
 {
   setupUi(this);
 
@@ -54,7 +54,6 @@ OrientationUtilityWidget::OrientationUtilityWidget(FilterParameter* parameter, A
 // -----------------------------------------------------------------------------
 OrientationUtilityWidget::~OrientationUtilityWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -74,11 +73,12 @@ void OrientationUtilityWidget::setupGui()
   connect(degreesBtn, SIGNAL(toggled(bool)), axisAngleWidget, SLOT(convertData(bool)));
   connect(degreesBtn, SIGNAL(toggled(bool)), eulerWidget, SLOT(convertData(bool)));
 
-  for (int i = 0; i < m_OrientationWidgets.size(); i++)
+  for(int i = 0; i < m_OrientationWidgets.size(); i++)
   {
     OrientationWidget* widget = m_OrientationWidgets[i];
 
-    connect(widget, SIGNAL(valuesChanged(QVector<double>, OrientationConverter<double>::OrientationType, bool)), m_Calculator, SLOT(setDataAndInputType(QVector<double>, OrientationConverter<double>::OrientationType, bool)));
+    connect(widget, SIGNAL(valuesChanged(QVector<double>, OrientationConverter<double>::OrientationType, bool)), m_Calculator,
+            SLOT(setDataAndInputType(QVector<double>, OrientationConverter<double>::OrientationType, bool)));
     connect(widget, SIGNAL(invalidValues(int, QString)), this, SLOT(setErrorEntry(int, QString)));
     connect(widget, SIGNAL(clearErrorTable()), this, SLOT(clearErrorTable()));
     connect(m_Calculator, SIGNAL(calculatorReady(OrientationUtilityCalculator*)), widget, SLOT(updateData(OrientationUtilityCalculator*)));
@@ -110,4 +110,3 @@ void OrientationUtilityWidget::clearErrorTable()
 {
   errorTextEdit->clear();
 }
-

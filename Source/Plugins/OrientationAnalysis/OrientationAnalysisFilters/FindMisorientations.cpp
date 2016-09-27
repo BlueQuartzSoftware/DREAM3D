@@ -38,9 +38,9 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -48,24 +48,22 @@
 // Include the MOC generated file for this class
 #include "moc_FindMisorientations.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindMisorientations::FindMisorientations() :
-  AbstractFilter(),
-  m_NeighborListArrayPath("", "", ""),
-  m_MisorientationListArrayName(SIMPL::FeatureData::MisorientationList),
-  m_AvgQuatsArrayPath("", "", ""),
-  m_FeaturePhasesArrayPath("", "", ""),
-  m_CrystalStructuresArrayPath("", "", ""),
-  m_AvgMisorientationsArrayName(SIMPL::FeatureData::AvgMisorientations),
-  m_FindAvgMisors(false),
-  m_AvgQuats(nullptr),
-  m_FeaturePhases(nullptr),
-  m_CrystalStructures(nullptr),
-  m_AvgMisorientations(nullptr)
+FindMisorientations::FindMisorientations()
+: AbstractFilter()
+, m_NeighborListArrayPath("", "", "")
+, m_MisorientationListArrayName(SIMPL::FeatureData::MisorientationList)
+, m_AvgQuatsArrayPath("", "", "")
+, m_FeaturePhasesArrayPath("", "", "")
+, m_CrystalStructuresArrayPath("", "", "")
+, m_AvgMisorientationsArrayName(SIMPL::FeatureData::AvgMisorientations)
+, m_FindAvgMisors(false)
+, m_AvgQuats(nullptr)
+, m_FeaturePhases(nullptr)
+, m_CrystalStructures(nullptr)
+, m_AvgMisorientations(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -120,13 +118,13 @@ void FindMisorientations::setupFilterParameters()
 void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setAvgMisorientationsArrayName(reader->readString("AvgMisorientationsArrayName", getAvgMisorientationsArrayName() ) );
-  setMisorientationListArrayName(reader->readString("MisorientationListArrayName", getMisorientationListArrayName() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
-  setNeighborListArrayPath(reader->readDataArrayPath("NeighborListArrayPath", getNeighborListArrayPath() ) );
-  setFindAvgMisors( reader->readValue("FindAvgMisors", getFindAvgMisors()) );
+  setAvgMisorientationsArrayName(reader->readString("AvgMisorientationsArrayName", getAvgMisorientationsArrayName()));
+  setMisorientationListArrayName(reader->readString("MisorientationListArrayName", getMisorientationListArrayName()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
+  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath()));
+  setNeighborListArrayPath(reader->readDataArrayPath("NeighborListArrayPath", getNeighborListArrayPath()));
+  setFindAvgMisors(reader->readValue("FindAvgMisors", getFindAvgMisors()));
   reader->closeFilterGroup();
 }
 
@@ -154,37 +152,59 @@ void FindMisorientations::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   // Feature Data
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAvgQuatsArrayPath()); }
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(),
+                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AvgQuatsPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getAvgQuatsArrayPath());
+  }
 
   cDims[0] = 1;
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getFeaturePhasesArrayPath());
+  }
 
   // New Feature Data
   if(m_FindAvgMisors == true)
   {
-    tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAvgMisorientationsArrayName() );
-    m_AvgMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_AvgMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_AvgMisorientations = m_AvgMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAvgMisorientationsArrayName());
+    m_AvgMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+        this, tempPath, 0, cDims);                      /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_AvgMisorientationsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_AvgMisorientations = m_AvgMisorientationsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   // Ensemble Data
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getNeighborListArrayPath(), cDims);
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getNeighborListArrayPath()); }
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getNeighborListArrayPath());
+  }
 
-  tempPath.update(m_NeighborListArrayPath.getDataContainerName(), getNeighborListArrayPath().getAttributeMatrixName(), getMisorientationListArrayName() );
-  m_MisorientationList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(m_NeighborListArrayPath.getDataContainerName(), getNeighborListArrayPath().getAttributeMatrixName(), getMisorientationListArrayName());
+  m_MisorientationList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -209,7 +229,10 @@ void FindMisorientations::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
@@ -218,7 +241,7 @@ void FindMisorientations::execute()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int32_t>& neighborlist = *(m_NeighborList.lock());
 
-  std::vector<std::vector<float> > misorientationlists;
+  std::vector<std::vector<float>> misorientationlists;
 
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   float w = 0.0f;
@@ -231,39 +254,51 @@ void FindMisorientations::execute()
   int32_t nname = 0;
 
   misorientationlists.resize(totalFeatures);
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
-    misorientationlists[i].assign(neighborlist[i].size(), -1.0 );
-    for (size_t j = 0; j < neighborlist[i].size(); j++)
+    misorientationlists[i].assign(neighborlist[i].size(), -1.0);
+    for(size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = std::numeric_limits<float>::max();
       nname = neighborlist[i][j];
       QuaternionMathF::Copy(avgQuats[nname], q2);
       phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
       tempMisoList = neighborlist[i].size();
-      if (phase1 == phase2)
+      if(phase1 == phase2)
       {
         w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
         misorientationlists[i][j] = w * SIMPLib::Constants::k_180OverPi;
-        if (m_FindAvgMisors == true) { m_AvgMisorientations[i] += misorientationlists[i][j]; }
+        if(m_FindAvgMisors == true)
+        {
+          m_AvgMisorientations[i] += misorientationlists[i][j];
+        }
       }
       else
       {
-        if (m_FindAvgMisors == true) { tempMisoList--; }
+        if(m_FindAvgMisors == true)
+        {
+          tempMisoList--;
+        }
         misorientationlists[i][j] = -100.0f;
       }
     }
-    if (m_FindAvgMisors == true)
+    if(m_FindAvgMisors == true)
     {
-      if (tempMisoList != 0) { m_AvgMisorientations[i] /= tempMisoList; }
-      else { m_AvgMisorientations[i] = -100.0f; }
+      if(tempMisoList != 0)
+      {
+        m_AvgMisorientations[i] /= tempMisoList;
+      }
+      else
+      {
+        m_AvgMisorientations[i] = -100.0f;
+      }
       tempMisoList = 0;
     }
   }
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 1; i < totalFeatures; i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType misoL(new std::vector<float>);
@@ -309,23 +344,29 @@ const QString FindMisorientations::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindMisorientations::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindMisorientations::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
+{
+  return SIMPL::FilterSubGroups::CrystallographicFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindMisorientations::getHumanLabel()
-{ return "Find Feature Neighbor Misorientations"; }
+{
+  return "Find Feature Neighbor Misorientations";
+}

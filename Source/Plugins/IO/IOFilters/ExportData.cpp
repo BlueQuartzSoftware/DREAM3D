@@ -40,12 +40,11 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
-
+#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -54,84 +53,88 @@
  * @brief The ExportDataPrivate class is a templated class that implements a method to generically
  * export data to an ASCII file
  */
-template<typename TInputType>
-class ExportDataPrivate
+template <typename TInputType> class ExportDataPrivate
 {
-  public:
-    typedef DataArray<TInputType> DataArrayType;
+public:
+  typedef DataArray<TInputType> DataArrayType;
 
-    ExportDataPrivate() {}
-    virtual ~ExportDataPrivate() {}
+  ExportDataPrivate()
+  {
+  }
+  virtual ~ExportDataPrivate()
+  {
+  }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    bool operator()(IDataArray::Pointer p)
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  bool operator()(IDataArray::Pointer p)
+  {
+    return (std::dynamic_pointer_cast<DataArrayType>(p).get() != nullptr);
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void static Execute(ExportData* filter, IDataArray::Pointer inputData, char delimeter, QString outputFile, int32_t MaxValPerLine)
+  {
+    typename DataArrayType::Pointer inputArray = std::dynamic_pointer_cast<DataArrayType>(inputData);
+
+    QFile file(outputFile);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-      return (std::dynamic_pointer_cast<DataArrayType>(p).get() != nullptr);
+      QString ss = QObject::tr("The output file could not be opened: '%1'").arg(outputFile);
+      filter->setErrorCondition(-11008);
+      filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      return;
     }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void static Execute(ExportData* filter, IDataArray::Pointer inputData, char delimeter, QString outputFile, int32_t MaxValPerLine)
+    QTextStream out(&file);
+
+    int32_t nComp = inputArray->getNumberOfComponents();
+
+    TInputType* inputArrayPtr = inputArray->getPointer(0);
+    size_t nTuples = inputArray->getNumberOfTuples();
+
+    int32_t recCount = 0;
+    for(size_t i = 0; i < nTuples; i++)
     {
-      typename DataArrayType::Pointer inputArray = std::dynamic_pointer_cast<DataArrayType>(inputData);
-
-      QFile file(outputFile);
-      if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+      for(int32_t j = 0; j < nComp; j++)
       {
-        QString ss = QObject::tr("The output file could not be opened: '%1'").arg(outputFile);
-        filter->setErrorCondition(-11008);
-        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
-        return;
-      }
-
-      QTextStream out(&file);
-
-      int32_t nComp = inputArray->getNumberOfComponents();
-
-      TInputType* inputArrayPtr = inputArray->getPointer(0);
-      size_t nTuples = inputArray->getNumberOfTuples();
-
-      int32_t recCount = 0;
-      for (size_t i = 0; i < nTuples; i++)
-      {
-        for (int32_t j = 0; j < nComp; j++)
-        {
-          out << inputArrayPtr[i * nComp + j];
-          if (j < nComp - 1) { out << delimeter; }
-        }
-        recCount++;
-
-        if (recCount >= MaxValPerLine)
-        {
-          out << '\n';
-          recCount = 0;
-        }
-        else
+        out << inputArrayPtr[i * nComp + j];
+        if(j < nComp - 1)
         {
           out << delimeter;
         }
       }
+      recCount++;
+
+      if(recCount >= MaxValPerLine)
+      {
+        out << '\n';
+        recCount = 0;
+      }
+      else
+      {
+        out << delimeter;
+      }
     }
+  }
 };
 
 // Include the MOC generated file for this class
 #include "moc_ExportData.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExportData::ExportData() :
-  AbstractFilter(),
-  m_SelectedDataArrayPaths(QVector<DataArrayPath>()),
-  m_OutputPath(""),
-  m_Delimeter(0),
-  m_FileExtension(".txt"),
-  m_MaxValPerLine(-1)
+ExportData::ExportData()
+: AbstractFilter()
+, m_SelectedDataArrayPaths(QVector<DataArrayPath>())
+, m_OutputPath("")
+, m_Delimeter(0)
+, m_FileExtension(".txt")
+, m_MaxValPerLine(-1)
 {
   setupFilterParameters();
 }
@@ -153,7 +156,7 @@ void ExportData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Parameter, ExportData));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Tuples Per Line", MaxValPerLine, FilterParameter::Parameter, ExportData));
   {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();  //Delimiter choice
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New(); // Delimiter choice
     parameter->setHumanLabel("Delimiter");
     parameter->setPropertyName("Delimeter");
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ExportData, this, Delimeter));
@@ -208,7 +211,7 @@ void ExportData::dataCheck()
 
   setErrorCondition(0);
 
-  if (m_SelectedDataArrayPaths.isEmpty() == true)
+  if(m_SelectedDataArrayPaths.isEmpty() == true)
   {
     setErrorCondition(-11001);
     QString ss = QObject::tr("At least one Attribute Array must be selected");
@@ -216,7 +219,7 @@ void ExportData::dataCheck()
     return;
   }
 
-  if (m_OutputPath.isEmpty() == true)
+  if(m_OutputPath.isEmpty() == true)
   {
     setErrorCondition(-11002);
     QString ss = QObject::tr("The output path must be set");
@@ -224,7 +227,7 @@ void ExportData::dataCheck()
     return;
   }
 
-  if (m_MaxValPerLine <= 0)
+  if(m_MaxValPerLine <= 0)
   {
     setErrorCondition(-11003);
     QString ss = QObject::tr("The Maximum Tuples Per Line (%1) must be positive").arg(m_MaxValPerLine);
@@ -234,7 +237,7 @@ void ExportData::dataCheck()
 
   QVector<DataArrayPath> paths = getSelectedDataArrayPaths();
 
-  if (DataArrayPath::ValidateVector(paths) == false)
+  if(DataArrayPath::ValidateVector(paths) == false)
   {
     setErrorCondition(-11004);
     QString ss = QObject::tr("There are Attribute Arrays selected that are not contained in the same Attribute Matrix. All selected Attribute Arrays must belong to the same Attribute Matrix");
@@ -242,7 +245,7 @@ void ExportData::dataCheck()
     return;
   }
 
-  for (int32_t i = 0; i < paths.count(); i++)
+  for(int32_t i = 0; i < paths.count(); i++)
   {
     DataArrayPath path = paths.at(i);
     IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
@@ -271,9 +274,12 @@ void ExportData::execute()
   setErrorCondition(0);
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
-  if (m_SelectedDataArrayPaths.count() != m_SelectedWeakPtrVector.count())
+  if(m_SelectedDataArrayPaths.count() != m_SelectedWeakPtrVector.count())
   {
     QString ss = QObject::tr("The number of selected Attribute Arrays does not equal the number of internal weak pointers");
     setErrorCondition(-11008);
@@ -283,7 +289,7 @@ void ExportData::execute()
 
   QString ss;
   QDir dir;
-  if (!dir.mkpath(m_OutputPath))
+  if(!dir.mkpath(m_OutputPath))
   {
     ss = QObject::tr("Error creating output path '%1'").arg(m_OutputPath);
     setErrorCondition(-11004);
@@ -291,18 +297,17 @@ void ExportData::execute()
     return;
   }
 
-  if (m_FileExtension.startsWith(".") == false) // if no '.', add '.' to file extension
+  if(m_FileExtension.startsWith(".") == false) // if no '.', add '.' to file extension
   {
     m_FileExtension = "." + m_FileExtension;
   }
 
-  for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+  for(int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
   {
     IDataArray::WeakPointer selectedArrayPtr = m_SelectedWeakPtrVector.at(i);
 
     QString message = QObject::tr("|| Exporting Dataset '%1'").arg(selectedArrayPtr.lock()->getName());
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), message);
-
 
     QString exportArrayFile = m_OutputPath + QDir::separator() + selectedArrayPtr.lock()->getName() + m_FileExtension; // the complete output file path, name and extension
 
@@ -310,7 +315,10 @@ void ExportData::execute()
 
     EXECUTE_TEMPLATE(this, ExportDataPrivate, selectedArrayPtr.lock(), this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine)
 
-    if (getErrorCondition() < 0) { break; }
+    if(getErrorCondition() < 0)
+    {
+      break;
+    }
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -322,25 +330,25 @@ void ExportData::execute()
 char ExportData::lookupDelimeter()
 {
   char del = ' ';
-  switch (m_Delimeter)
+  switch(m_Delimeter)
   {
-    case Comma:
-      del = ',';
-      break;
-    case Semicolon:
-      del = ';';
-      break;
-    case Space:
-      del = ' ';
-      break;
-    case Colon:
-      del = ':';
-      break;
-    case Tab:
-      del = '\t';
-      break;
-    default:
-      del = ' ';
+  case Comma:
+    del = ',';
+    break;
+  case Semicolon:
+    del = ';';
+    break;
+  case Space:
+    del = ' ';
+    break;
+  case Colon:
+    del = ':';
+    break;
+  case Tab:
+    del = '\t';
+    break;
+  default:
+    del = ' ';
   }
   return del;
 }
@@ -381,23 +389,29 @@ const QString ExportData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ExportData::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ExportData::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ExportData::getHumanLabel()
-{ return "Export Data (ASCII Text)"; }
+{
+  return "Export Data (ASCII Text)";
+}

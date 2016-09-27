@@ -40,16 +40,14 @@
 // Include the MOC generated file for this class
 #include "moc_GenerateNodeTriangleConnectivity.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity() :
-  AbstractFilter(),
-  m_SurfaceMeshUniqueEdgesArrayName(SIMPL::CellData::SurfaceMeshUniqueEdges),
-  m_SurfaceMeshTriangleEdgesArrayName(SIMPL::CellData::SurfaceMeshTriangleEdges),
-  m_SurfaceMeshTriangleEdges(nullptr)
+GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity()
+: AbstractFilter()
+, m_SurfaceMeshUniqueEdgesArrayName(SIMPL::CellData::SurfaceMeshUniqueEdges)
+, m_SurfaceMeshTriangleEdgesArrayName(SIMPL::CellData::SurfaceMeshTriangleEdges)
+, m_SurfaceMeshTriangleEdges(nullptr)
 {
   setupFilterParameters();
 }
@@ -77,7 +75,7 @@ void GenerateNodeTriangleConnectivity::setupFilterParameters()
 void GenerateNodeTriangleConnectivity::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-////!!##
+  ////!!##
   reader->closeFilterGroup();
 }
 
@@ -86,7 +84,6 @@ void GenerateNodeTriangleConnectivity::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -121,9 +118,12 @@ void GenerateNodeTriangleConnectivity::dataCheck()
     {
       // This depends on the triangles array already being created
       int size = sm->getFaces()->GetNumberOfTuples();
-      m_SurfaceMeshTriangleEdgesPtr = sattrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName,  m_SurfaceMeshTriangleEdgesArrayName, 0, size, 3); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( nullptr != m_SurfaceMeshTriangleEdgesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-      { m_SurfaceMeshTriangleEdges = m_SurfaceMeshTriangleEdgesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+      m_SurfaceMeshTriangleEdgesPtr = sattrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName, m_SurfaceMeshTriangleEdgesArrayName, 0, size,
+                                                                                                                  3); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if(nullptr != m_SurfaceMeshTriangleEdgesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      {
+        m_SurfaceMeshTriangleEdges = m_SurfaceMeshTriangleEdgesPtr.lock()->getPointer(0);
+      } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
 
     // We do not know the size of the array so we can not use the macro so we just manually call
@@ -136,7 +136,6 @@ void GenerateNodeTriangleConnectivity::dataCheck()
     addCreatedCellData(SIMPL::CellData::SurfaceMeshUniqueEdges);
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -158,7 +157,10 @@ void GenerateNodeTriangleConnectivity::execute()
 
   // Just to double check we have everything.
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
@@ -169,8 +171,6 @@ void GenerateNodeTriangleConnectivity::execute()
     return;
   }
   setErrorCondition(0);
-
-
 
   notifyStatusMessage(getHumanLabel(), "Starting");
 
@@ -218,7 +218,10 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
     m_Node2Triangle[tri.node_id[1]].insert(i);
     m_Node2Triangle[tri.node_id[2]].insert(i);
   }
-  if (getCancel() == true) { return; }
+  if(getCancel() == true)
+  {
+    return;
+  }
 
   ManagedPointerArray<int>::Pointer nodeTriangleArray = ManagedPointerArray<int>::CreateArray(m_Node2Triangle.size(), SIMPL::CellData::SurfaceMeshNodeTriangles);
 
@@ -226,11 +229,10 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   float curPercent = 0.0;
   float total = static_cast<float>(m_Node2Triangle.size());
 
-
   // Loop over each entry in the map
   for(NodeTrianglesMap_t::iterator iter = m_Node2Triangle.begin(); iter != m_Node2Triangle.end(); ++iter)
   {
-    if ( progIndex / total * 100.0f > (curPercent) )
+    if(progIndex / total * 100.0f > (curPercent))
     {
       ss.str("");
       ss << (progIndex / total * 100.0f) << "% Complete";
@@ -238,14 +240,17 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
       curPercent += 5.0f;
     }
     progIndex++;
-    if (getCancel() == true) { return; }
+    if(getCancel() == true)
+    {
+      return;
+    }
 
     int nodeId = iter.key();
     ManagedPointerArray<int>::Data_t& entry = *(nodeTriangleArray->GetPointer(nodeId));
     UniqueTriangleIds_t& triangles = iter.value();
     // Allocate enough memory to hold the list of triangles
     entry.count = triangles.size();
-    if (entry.count > 0)
+    if(entry.count > 0)
     {
       entry.data = (int*)(malloc(sizeof(int) * entry.count));
       int index = 0;
@@ -259,5 +264,3 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   getSurfaceMeshDataContainer()->addCellData(nodeTriangleArray->getName(), nodeTriangleArray);
   return;
 }
-
-

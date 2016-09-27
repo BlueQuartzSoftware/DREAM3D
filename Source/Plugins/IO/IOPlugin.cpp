@@ -38,9 +38,9 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
+#include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
-#include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -51,17 +51,16 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IOPlugin::IOPlugin() :
-  m_Version(IO::Version::Package()),
-  m_CompatibilityVersion(IO::Version::Package()),
-  m_Vendor(BlueQuartz::VendorName),
-  m_URL(BlueQuartz::URL),
-  m_Location(""),
-  m_Copyright(BlueQuartz::Copyright),
-  m_Filters(QList<QString>()),
-  m_DidLoad(false)
+IOPlugin::IOPlugin()
+: m_Version(IO::Version::Package())
+, m_CompatibilityVersion(IO::Version::Package())
+, m_Vendor(BlueQuartz::VendorName)
+, m_URL(BlueQuartz::URL)
+, m_Location("")
+, m_Copyright(BlueQuartz::Copyright)
+, m_Filters(QList<QString>())
+, m_DidLoad(false)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -128,9 +127,9 @@ QString IOPlugin::getDescription()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--Description was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -156,9 +155,9 @@ QString IOPlugin::getLicense()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--License was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -179,14 +178,14 @@ QMap<QString, QString> IOPlugin::getThirdPartyLicenses()
   fileStrList.push_back(":/ThirdParty/Qt.txt");
   fileStrList.push_back(":/ThirdParty/Qwt.txt");
 
-  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  for(QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
   {
     QFile file(*iter);
     QFileInfo licenseFileInfo(file);
 
-    if ( licenseFileInfo.exists() )
+    if(licenseFileInfo.exists())
     {
-      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      if(file.open(QIODevice::ReadOnly | QIODevice::Text))
       {
         QTextStream in(&file);
         licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
@@ -226,7 +225,6 @@ void IOPlugin::setLocation(QString filePath)
 // -----------------------------------------------------------------------------
 void IOPlugin::writeSettings(QSettings& prefs)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -234,10 +232,8 @@ void IOPlugin::writeSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 void IOPlugin::readSettings(QSettings& prefs)
 {
-
 }
 
 #include "IOFilters/RegisterKnownFilters.cpp"
 
 #include "IO/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
-

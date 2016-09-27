@@ -34,16 +34,15 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "TupleTableItemDelegate.h"
-#include <QLineEdit>
 #include <QIntValidator>
+#include <QLineEdit>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TupleTableItemDelegate::TupleTableItemDelegate(QObject* parent) :
-  QStyledItemDelegate(parent)
+TupleTableItemDelegate::TupleTableItemDelegate(QObject* parent)
+: QStyledItemDelegate(parent)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -51,7 +50,6 @@ TupleTableItemDelegate::TupleTableItemDelegate(QObject* parent) :
 // -----------------------------------------------------------------------------
 TupleTableItemDelegate::~TupleTableItemDelegate()
 {
-
 }
 
 // -----------------------------------------------------------------------------

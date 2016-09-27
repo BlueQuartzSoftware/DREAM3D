@@ -39,15 +39,15 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/RectGridGeom.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/ImageIOVersion.h"
@@ -55,18 +55,16 @@
 // Include the MOC generated file for this class
 #include "moc_ImportImageStack.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportImageStack::ImportImageStack() :
-  AbstractFilter(),
-  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_BoundsFile(""),
-  m_GeometryType(0),
-  m_ImageDataArrayName(SIMPL::CellData::ImageData)
+ImportImageStack::ImportImageStack()
+: AbstractFilter()
+, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_BoundsFile("")
+, m_GeometryType(0)
+, m_ImageDataArrayName(SIMPL::CellData::ImageData)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -110,7 +108,9 @@ void ImportImageStack::setupFilterParameters()
     choices.push_back("Rectilinear Grid");
     parameter->setChoices(choices);
     QStringList linkedProps;
-    linkedProps << "Origin" << "Resolution" << "BoundsFile";
+    linkedProps << "Origin"
+                << "Resolution"
+                << "BoundsFile";
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Parameter);
@@ -132,12 +132,12 @@ void ImportImageStack::setupFilterParameters()
 void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
-  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
-  setImageDataArrayName(reader->readString("ImageDataArrayName", getImageDataArrayName() ) );
-  setInputFileListInfo( reader->readFileListInfo("InputFileListInfo", getInputFileListInfo() ) );
-  setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
-  setResolution( reader->readFloatVec3("Resolution", getResolution()) );
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
+  setImageDataArrayName(reader->readString("ImageDataArrayName", getImageDataArrayName()));
+  setInputFileListInfo(reader->readFileListInfo("InputFileListInfo", getInputFileListInfo()));
+  setOrigin(reader->readFloatVec3("Origin", getOrigin()));
+  setResolution(reader->readFloatVec3("Resolution", getResolution()));
   setGeometryType(reader->readValue("GeometryType", getGeometryType()));
   setBoundsFile(reader->readString("BoundsFile", getBoundsFile()));
   reader->closeFilterGroup();
@@ -148,7 +148,6 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 void ImportImageStack::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -161,7 +160,7 @@ void ImportImageStack::dataCheck()
   DataArrayPath tempPath;
   QString ss;
 
-  if (m_InputFileListInfo.InputPath.isEmpty() == true)
+  if(m_InputFileListInfo.InputPath.isEmpty() == true)
   {
     ss = QObject::tr("The input directory must be set");
     setErrorCondition(-13);
@@ -169,19 +168,22 @@ void ImportImageStack::dataCheck()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get())
+  {
+    return;
+  }
 
-  if (m_GeometryType == 0)
+  if(m_GeometryType == 0)
   {
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     m->setGeometry(image);
   }
-  else if (m_GeometryType == 1)
+  else if(m_GeometryType == 1)
   {
     RectGridGeom::Pointer rectGrid = RectGridGeom::CreateGeometry(SIMPL::Geometry::RectGridGeometry);
     m->setGeometry(rectGrid);
 
-    if (m_BoundsFile.isEmpty() == true)
+    if(m_BoundsFile.isEmpty() == true)
     {
       ss = QObject::tr("The Bounds file must be set");
       setErrorCondition(-14);
@@ -192,20 +194,23 @@ void ImportImageStack::dataCheck()
   bool hasMissingFiles = false;
   bool orderAscending = false;
 
-  if (m_InputFileListInfo.Ordering == 0) { orderAscending = true; }
-  else if (m_InputFileListInfo.Ordering == 1) { orderAscending = false; }
+  if(m_InputFileListInfo.Ordering == 0)
+  {
+    orderAscending = true;
+  }
+  else if(m_InputFileListInfo.Ordering == 1)
+  {
+    orderAscending = false;
+  }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex,
-                              m_InputFileListInfo.EndIndex, hasMissingFiles, orderAscending,
-                              m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix,
-                              m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
-                              m_InputFileListInfo.PaddingDigits);
-  if (fileList.size() == 0)
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, hasMissingFiles, orderAscending, m_InputFileListInfo.InputPath,
+                                                                  m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension, m_InputFileListInfo.PaddingDigits);
+  if(fileList.size() == 0)
   {
     ss.clear();
     QTextStream out(&ss);
-    out <<" No files have been selected for import. Have you set the input directory and other values so that input files will be generated?\n";
+    out << " No files have been selected for import. Have you set the input directory and other values so that input files will be generated?\n";
     out << "InputPath: " << m_InputFileListInfo.InputPath << "\n";
     out << "FilePrefix: " << m_InputFileListInfo.FilePrefix << "\n";
     out << "FileSuffix: " << m_InputFileListInfo.FileSuffix << "\n";
@@ -225,17 +230,17 @@ void ImportImageStack::dataCheck()
     int32_t err = 0;
     QImageReader reader((fileList[0]));
     QSize imageDims = reader.size();
-    int64_t dims[3] = { imageDims.width(), imageDims.height(), fileList.size() };
-    /* Sanity check what we are trying to load to make sure it can fit in our address space.
-     * Note that this does not guarantee the user has enough left, just that the
-     * size of the volume can fit in the address space of the program
-     */
-#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t dims[3] = {imageDims.width(), imageDims.height(), fileList.size()};
+/* Sanity check what we are trying to load to make sure it can fit in our address space.
+ * Note that this does not guarantee the user has enough left, just that the
+ * size of the volume can fit in the address space of the program
+ */
+#if(CMP_SIZEOF_SSIZE_T == 4)
     int64_t max = std::numeric_limits<size_t>::max();
 #else
     int64_t max = std::numeric_limits<int64_t>::max();
 #endif
-    if (dims[0] * dims[1] * dims[2] > max)
+    if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
       QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold").arg((dims[0] * dims[1] * dims[2]));
@@ -243,31 +248,40 @@ void ImportImageStack::dataCheck()
       notifyErrorMessage(getHumanLabel(), ss, err);
     }
 
-    if (dims[0] > max || dims[1] > max || dims[2] > max)
+    if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
       QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem"
-                               " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
+                               " dim[0]=%1  dim[1]=%2  dim[2]=%3")
+                       .arg(dims[0])
+                       .arg(dims[1])
+                       .arg(dims[2]);
       setErrorCondition(err);
       notifyErrorMessage(getHumanLabel(), ss, err);
     }
     /* ************ End Sanity Check *************************** */
 
-    if (m_GeometryType == 0)
+    if(m_GeometryType == 0)
     {
       m->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
       m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
       m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
     }
-    else if (m_GeometryType == 1)
+    else if(m_GeometryType == 1)
     {
       m->getGeometryAs<RectGridGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
-      if (!m_BoundsFile.isEmpty()) { err = readBounds(); }
-      if (err < 0) { setErrorCondition(err); }
+      if(!m_BoundsFile.isEmpty())
+      {
+        err = readBounds();
+      }
+      if(err < 0)
+      {
+        setErrorCondition(err);
+      }
     }
 
     QVector<size_t> tDims(3, 0);
-    for (int32_t i = 0; i < 3; i++)
+    for(int32_t i = 0; i < 3; i++)
     {
       tDims[i] = dims[i];
     }
@@ -278,18 +292,18 @@ void ImportImageStack::dataCheck()
     QImage::Format format = reader.imageFormat();
     switch(format)
     {
-       case QImage::Format_Indexed8:
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
-      case QImage::Format_Grayscale8:
+    case QImage::Format_Indexed8:
+#if(QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+    case QImage::Format_Grayscale8:
 #endif
-        pixelBytes = 1;
-        break;
-      case QImage::Format_RGB32:
-      case QImage::Format_ARGB32:
-        pixelBytes = 4;
-        break;
-      default:
-         pixelBytes = 0;
+      pixelBytes = 1;
+      break;
+    case QImage::Format_RGB32:
+    case QImage::Format_ARGB32:
+      pixelBytes = 4;
+      break;
+    default:
+      pixelBytes = 0;
     }
 
     if(pixelBytes == 0)
@@ -302,13 +316,15 @@ void ImportImageStack::dataCheck()
 
     QVector<size_t> cDims(1, pixelBytes);
     // This would be for a gray scale image
-    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName() );
-    m_ImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
+    m_ImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
+        this, tempPath, 0, cDims);             /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_ImageDataPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_ImageData = m_ImageDataPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -330,19 +346,23 @@ void ImportImageStack::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  if (m_GeometryType == 0)
+  if(m_GeometryType == 0)
   {
     m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
     m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
   }
-  else if (m_GeometryType == 1)
+  else if(m_GeometryType == 1)
   {
     int err = readBounds();
-    if (err < 0) return;
+    if(err < 0)
+      return;
   }
   UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
 
@@ -354,36 +374,39 @@ void ImportImageStack::execute()
   bool hasMissingFiles = false;
   bool orderAscending = false;
 
-  if (m_InputFileListInfo.Ordering == 0) { orderAscending = true; }
-  else if (m_InputFileListInfo.Ordering == 1) { orderAscending = false; }
+  if(m_InputFileListInfo.Ordering == 0)
+  {
+    orderAscending = true;
+  }
+  else if(m_InputFileListInfo.Ordering == 1)
+  {
+    orderAscending = false;
+  }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex,
-                              m_InputFileListInfo.EndIndex, hasMissingFiles, orderAscending,
-                              m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix,
-                              m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
-                              m_InputFileListInfo.PaddingDigits);
-  if (fileList.size() == 0)
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, hasMissingFiles, orderAscending, m_InputFileListInfo.InputPath,
+                                                                  m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension, m_InputFileListInfo.PaddingDigits);
+  if(fileList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import");
     setErrorCondition(-11);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
+  for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
   {
     QString imageFName = *filepath;
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     QImageReader reader(imageFName);
     QImage image(imageFName);
-    if (image.isNull() == true)
+    if(image.isNull() == true)
     {
       setErrorCondition(-14000);
       notifyErrorMessage(getHumanLabel(), "Failed to load image file", getErrorCondition());
       return;
     }
-#if defined (CMP_WORDS_BIGENDIAN)
+#if defined(CMP_WORDS_BIGENDIAN)
 #error
 #else
     // We need to convert from Little Endian based ARGB to a physical RGB layout
@@ -393,29 +416,33 @@ void ImportImageStack::execute()
     size_t width = static_cast<size_t>(image.width());
     size_t totalPixels = width * height;
 
-
-
     // This is the first image so we need to create our block of data to store the data
-    if (z == m_InputFileListInfo.StartIndex)
+    if(z == m_InputFileListInfo.StartIndex)
     {
-      if (m_GeometryType == 0) { m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size()); }
-      else if (m_GeometryType == 1) { m->getGeometryAs<RectGridGeom>()->setDimensions(width, height, fileList.size()); }
+      if(m_GeometryType == 0)
+      {
+        m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size());
+      }
+      else if(m_GeometryType == 1)
+      {
+        m->getGeometryAs<RectGridGeom>()->setDimensions(width, height, fileList.size());
+      }
 
       const QImage::Format format = reader.imageFormat();
       switch(format)
       {
-        case QImage::Format_Indexed8:
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+      case QImage::Format_Indexed8:
+#if(QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
       case QImage::Format_Grayscale8:
 #endif
-          pixelBytes = 1;
-          break;
-        case QImage::Format_RGB32:
-        case QImage::Format_ARGB32:
-          pixelBytes = 4;
-          break;
-        default:
-           pixelBytes = 0;
+        pixelBytes = 1;
+        break;
+      case QImage::Format_RGB32:
+      case QImage::Format_ARGB32:
+        pixelBytes = 4;
+        break;
+      default:
+        pixelBytes = 0;
       }
 
       if(pixelBytes == 0)
@@ -434,15 +461,18 @@ void ImportImageStack::execute()
 
     // Get the current position in the array to copy the image into
     zSpot = (z - m_InputFileListInfo.StartIndex);
-    for (size_t i = 0; i < height; ++i)
+    for(size_t i = 0; i < height; ++i)
     {
-      imagePtr = data->getPointer( (zSpot) * totalPixels * pixelBytes + i * (width * pixelBytes));
+      imagePtr = data->getPointer((zSpot)*totalPixels * pixelBytes + i * (width * pixelBytes));
       uint8_t* source = image.scanLine(i);
       ::memcpy(imagePtr, source, width * pixelBytes);
     }
 
     ++z;
-    if (getCancel() == true) { return; }
+    if(getCancel() == true)
+    {
+      return;
+    }
   }
 
   m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(data->getName(), data);
@@ -469,7 +499,7 @@ int ImportImageStack::readBounds()
 
   QFile inFile;
   inFile.setFileName(m_BoundsFile.toLatin1().data());
-  if (!inFile.open(QIODevice::ReadOnly | QIODevice::Text))
+  if(!inFile.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Bounds Input file could not be opened: %1").arg(getBoundsFile());
     setErrorCondition(-100);
@@ -484,25 +514,28 @@ int ImportImageStack::readBounds()
   bool ok = false;
   QString word;
 
-  //Read header until we get to the line that should have the format: XPOINTS number
+  // Read header until we get to the line that should have the format: XPOINTS number
   bool header = true;
-  while (header == true)
+  while(header == true)
   {
     buf = inFile.readLine();
-    if (buf.startsWith("#") == false) { header = false; }
+    if(buf.startsWith("#") == false)
+    {
+      header = false;
+    }
   }
   buf = buf.trimmed();
   buf = buf.simplified();
   tokens = buf.split(' ');
   word = tokens.at(0);
-  if (word.compare("X_COORDINATES") != 0)
+  if(word.compare("X_COORDINATES") != 0)
   {
     QString ss = QObject::tr("X_COORDINATES keyword not found in proper location in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
-  if (tokens.size() != 2)
+  if(tokens.size() != 2)
   {
     QString ss = QObject::tr("X_COORDINATES keyword line not properly formatted in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
@@ -510,7 +543,7 @@ int ImportImageStack::readBounds()
     return -1;
   }
   size_t numXBounds = tokens[1].toInt(&ok, 10);
-  if (numXBounds != xbounds->getNumberOfTuples())
+  if(numXBounds != xbounds->getNumberOfTuples())
   {
     QString ss = QObject::tr("The number of X bounds in %1 does not match the x dimension of the geometry.").arg(m_BoundsFile);
     setErrorCondition(-100);
@@ -518,9 +551,9 @@ int ImportImageStack::readBounds()
     return -1;
   }
   count = 0;
-  while (count < numXBounds)
+  while(count < numXBounds)
   {
-    if (inFile.atEnd())
+    if(inFile.atEnd())
     {
       QString ss = QObject::tr(" %1..").arg(m_BoundsFile);
       setErrorCondition(-100);
@@ -531,12 +564,12 @@ int ImportImageStack::readBounds()
     buf = buf.trimmed();
     buf = buf.simplified();
     tokens = buf.split(' ');
-    for (size_t iter2 = 0; iter2 < tokens.size(); iter2++)
+    for(size_t iter2 = 0; iter2 < tokens.size(); iter2++)
     {
       xbnds[count] = tokens[iter2].toFloat(&ok);
-      if (!ok)
+      if(!ok)
       {
-        QString ss = QObject::tr("Could not read X coordinte number %1. Could not interpret as float value.").arg(count+1);
+        QString ss = QObject::tr("Could not read X coordinte number %1. Could not interpret as float value.").arg(count + 1);
         setErrorCondition(-100);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return -1;
@@ -545,20 +578,20 @@ int ImportImageStack::readBounds()
     }
   }
 
-  //Read the line that should have the format: YPOINTS number
+  // Read the line that should have the format: YPOINTS number
   buf = inFile.readLine();
   buf = buf.trimmed();
   buf = buf.simplified();
   tokens = buf.split(' ');
   word = tokens.at(0);
-  if (word.compare("Y_COORDINATES") != 0)
+  if(word.compare("Y_COORDINATES") != 0)
   {
     QString ss = QObject::tr("Y_COORDINATES keyword not found in proper location in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
-  if (tokens.size() != 2)
+  if(tokens.size() != 2)
   {
     QString ss = QObject::tr("Y_COORDINATES keyword line not properly formatted in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
@@ -566,7 +599,7 @@ int ImportImageStack::readBounds()
     return -1;
   }
   size_t numYBounds = tokens[1].toInt(&ok, 10);
-  if (numYBounds != ybounds->getNumberOfTuples())
+  if(numYBounds != ybounds->getNumberOfTuples())
   {
     QString ss = QObject::tr("The number of Y bounds in %1 does not match the y dimension of the geometry.").arg(m_BoundsFile);
     setErrorCondition(-100);
@@ -574,16 +607,16 @@ int ImportImageStack::readBounds()
     return -1;
   }
   count = 0;
-  while (count < numYBounds)
+  while(count < numYBounds)
   {
     buf = inFile.readLine();
     buf = buf.trimmed();
     buf = buf.simplified();
     tokens = buf.split(' ');
-    for (size_t iter2 = 0; iter2 < tokens.size(); iter2++)
+    for(size_t iter2 = 0; iter2 < tokens.size(); iter2++)
     {
       ybnds[count] = tokens[iter2].toFloat(&ok);
-      if (!ok)
+      if(!ok)
       {
         QString ss = QObject::tr("Could not read Y coordinte number %1. Could not interpret as float value.").arg(count + 1);
         setErrorCondition(-100);
@@ -594,20 +627,20 @@ int ImportImageStack::readBounds()
     }
   }
 
-  //Read the line that should have the format: ZPOINTS number
+  // Read the line that should have the format: ZPOINTS number
   buf = inFile.readLine();
   buf = buf.trimmed();
   buf = buf.simplified();
   tokens = buf.split(' ');
   word = tokens.at(0);
-  if (word.compare("Z_COORDINATES") != 0)
+  if(word.compare("Z_COORDINATES") != 0)
   {
     QString ss = QObject::tr("Z_COORDINATES keyword not found in proper location in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
-  if (tokens.size() != 2)
+  if(tokens.size() != 2)
   {
     QString ss = QObject::tr("Z_COORDINATES keyword line not properly formatted in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
@@ -615,7 +648,7 @@ int ImportImageStack::readBounds()
     return -1;
   }
   size_t numZBounds = tokens[1].toInt(&ok, 10);
-  if (numZBounds != zbounds->getNumberOfTuples())
+  if(numZBounds != zbounds->getNumberOfTuples())
   {
     QString ss = QObject::tr("The number of Z bounds in %1 does not match the z dimension of the geometry.").arg(m_BoundsFile);
     setErrorCondition(-100);
@@ -623,16 +656,16 @@ int ImportImageStack::readBounds()
     return -1;
   }
   count = 0;
-  while (count < numZBounds)
+  while(count < numZBounds)
   {
     buf = inFile.readLine();
     buf = buf.trimmed();
     buf = buf.simplified();
     tokens = buf.split(' ');
-    for (size_t iter2 = 0; iter2 < tokens.size(); iter2++)
+    for(size_t iter2 = 0; iter2 < tokens.size(); iter2++)
     {
       zbnds[count] = tokens[iter2].toFloat(&ok);
-      if (!ok)
+      if(!ok)
       {
         QString ss = QObject::tr("Could not read Z coordinte number %1. Could not interpret as float value.").arg(count + 1);
         setErrorCondition(-100);
@@ -660,7 +693,7 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
   ImportImageStack::Pointer filter = ImportImageStack::New();
   if(true == copyFilterParameters)
   {
-    filter->setFilterParameters(getFilterParameters() );
+    filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
     SIMPL_COPY_INSTANCEVAR(DataContainerName)
@@ -709,23 +742,29 @@ const QString ImportImageStack::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ImageIO::Version::Major() << "." << ImageIO::Version::Minor() << "." << ImageIO::Version::Patch();
+  vStream << ImageIO::Version::Major() << "." << ImageIO::Version::Minor() << "." << ImageIO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportImageStack::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportImageStack::getSubGroupName()
-{ return SIMPL::FilterSubGroups::InputFilters; }
+{
+  return SIMPL::FilterSubGroups::InputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportImageStack::getHumanLabel()
-{ return "Import Images (3D Stack)"; }
+{
+  return "Import Images (3D Stack)";
+}

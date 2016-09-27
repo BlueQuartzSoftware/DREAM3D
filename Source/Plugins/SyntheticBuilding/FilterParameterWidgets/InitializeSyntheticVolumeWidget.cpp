@@ -35,32 +35,31 @@
 
 #include "InitializeSyntheticVolumeWidget.h"
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QListWidgetItem>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QListWidgetItem>
+#include <QtWidgets/QMessageBox>
 
-#include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
-
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
-#include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/DataArrays/StatsDataArray.h"
-#include "SIMPLib/StatsData/StatsData.h"
-#include "SIMPLib/StatsData/PrimaryStatsData.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 
@@ -69,22 +68,22 @@
 // Initialize private static member variable
 QString InitializeSyntheticVolumeWidget::m_OpenDialogLastDirectory = "";
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent),  m_Version4Warning(false),
-  m_DidCausePreflight(false),
-  m_NewFileLoaded(false)
+InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
+: FilterParameterWidget(parameter, filter, parent)
+, m_Version4Warning(false)
+, m_DidCausePreflight(false)
+, m_NewFileLoaded(false)
 {
 
   m_Filter = qobject_cast<InitializeSyntheticVolume*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
 
-  if ( getOpenDialogLastDirectory().isEmpty() )
+  if(getOpenDialogLastDirectory().isEmpty())
   {
-    setOpenDialogLastDirectory( QDir::homePath() );
+    setOpenDialogLastDirectory(QDir::homePath());
   }
   setupUi(this);
   setupGui();
@@ -95,7 +94,6 @@ InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter
 // -----------------------------------------------------------------------------
 InitializeSyntheticVolumeWidget::~InitializeSyntheticVolumeWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -114,14 +112,12 @@ AbstractFilter* InitializeSyntheticVolumeWidget::getFilter() const
   return m_Filter;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList)
+  foreach(QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -134,23 +130,17 @@ void InitializeSyntheticVolumeWidget::setupGui()
 {
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
+  connect(m_Filter, SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   QtSFileCompleter* com = new QtSFileCompleter(this, false);
   m_InputFile->setCompleter(com);
-  QObject::connect(com, SIGNAL(activated(const QString&)),
-                   this, SLOT(on_m_InputFile_textChanged(const QString&)));
-
-
+  QObject::connect(com, SIGNAL(activated(const QString&)), this, SLOT(on_m_InputFile_textChanged(const QString&)));
 
   m_StatsArrayPath = DataArraySelectionFilterParameter::New();
   m_StatsArrayPath->setHumanLabel("Stats Array");
@@ -168,33 +158,30 @@ void InitializeSyntheticVolumeWidget::setupGui()
   crystalStructuresWidget->initializeWidget(m_CrystalStructuresPath.get(), m_Filter);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 {
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
-                                              m_OpenDialogLastDirectory,
-                                              tr("DREAM3D Stats Files (*.dream3d *.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)") );
-  if ( true == file.isEmpty() ) { return; }
-  QFileInfo fi (file);
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), m_OpenDialogLastDirectory, tr("DREAM3D Stats Files (*.dream3d *.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
+  if(true == file.isEmpty())
+  {
+    return;
+  }
+  QFileInfo fi(file);
   m_InputFile->blockSignals(true);
   QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
   m_InputFile->setText(p);
-  on_m_InputFile_textChanged(m_InputFile->text() );
+  on_m_InputFile_textChanged(m_InputFile->text());
   m_InputFile->blockSignals(false);
-
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& text)
 {
-  if (m_InputFile->text().isEmpty())
+  if(m_InputFile->text().isEmpty())
   {
     return;
   }
@@ -204,35 +191,33 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   }
 
   QFileInfo fi(m_InputFile->text());
-  if( fi.isFile() == false)
+  if(fi.isFile() == false)
   {
     return;
   }
-
 
   m_NewFileLoaded = true;
   m_DidCausePreflight = true;
 
   // We need to send the file down to the filter BEFORE any of the preflight starts because it needs this updated file
-  //m_Filter->setInputFile(m_InputFile->text());
+  // m_Filter->setInputFile(m_InputFile->text());
   // Once the input file is changed then kick off the prefligth by emitting the parametersChanged() signal
   emit parametersChanged();
   m_DidCausePreflight = false;
   m_NewFileLoaded = false;
 
-
-
-  if (true) { return; }
-
+  if(true)
+  {
+    return;
+  }
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
-  //reader->setDataContainerArray(dca);
+  // reader->setDataContainerArray(dca);
   reader->setInputFile(m_InputFile->text());
-  //reader->setDataContainerArrayProxy(dcaProxy);
+  // reader->setDataContainerArrayProxy(dcaProxy);
 
   // Connect up to get any errors
-  connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(displayErrorMessage(const PipelineMessage&)));
+  connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(displayErrorMessage(const PipelineMessage&)));
 
   // Read the structure from file
   DataContainerArrayProxy dcaProxy = reader->readDataContainerArrayStructure(m_InputFile->text());
@@ -242,10 +227,10 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   m_DataContainer = DataContainer::New();
   dca->addDataContainer(m_DataContainer);
 
-  //      QSet<QString> selectedArrays;
-  //      selectedArrays.insert(SIMPL::EnsembleData::Statistics);
-  //      selectedArrays.insert(SIMPL::EnsembleData::PhaseTypes);
-  //      selectedArrays.insert(SIMPL::EnsembleData::CrystalStructures);
+//      QSet<QString> selectedArrays;
+//      selectedArrays.insert(SIMPL::EnsembleData::Statistics);
+//      selectedArrays.insert(SIMPL::EnsembleData::PhaseTypes);
+//      selectedArrays.insert(SIMPL::EnsembleData::CrystalStructures);
 
 #if 0
   // Create a Proxy object to hold our "Array Selections"
@@ -266,9 +251,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   reader->setDataContainerArray(dca);
   reader->setInputFile(m_InputFile->text());
   reader->setInputFileDataContainerArrayProxy(dcaProxy);
-  connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(displayErrorMessage(const PipelineMessage&)));
-
+  connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(displayErrorMessage(const PipelineMessage&)));
 
   reader->execute();
   int err = reader->getErrorCondition();
@@ -280,7 +263,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   }
 
   IDataArray::Pointer iPtr = m_DataContainer->getAttributeMatrix("CellEnsembleData")->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  if (nullptr == iPtr.get())
+  if(nullptr == iPtr.get())
   {
     m_DataContainer = DataContainer::NullPointer();
     QMessageBox::critical(this, tr("DREAM.3D"), tr("The Ensemble Array 'PhaseTypes' was not found in the File"), QMessageBox::Ok, QMessageBox::Ok);
@@ -297,7 +280,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
 
   // Remove all the items from the GUI and from the internal tracking Lists
   QLayoutItem* child;
-  while ((formLayout_2->count() > 0) && (child = formLayout_2->takeAt(0)) != 0)
+  while((formLayout_2->count() > 0) && (child = formLayout_2->takeAt(0)) != 0)
   {
     delete child;
   }
@@ -316,7 +299,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
 
   // We skip the first Ensemble as it is always a dummy
-  for (int i = 0; i < size - 1; i++)
+  for(int i = 0; i < size - 1; i++)
   {
     QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
     QString str("Phase ");
@@ -331,7 +314,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
     QComboBox* cb = new QComboBox(m_ShapeTypeScrollContents);
     str.append(" ComboBox");
     cb->setObjectName(str);
-    for (size_t s = 0; s < shapeTypeStrings.size(); ++s)
+    for(size_t s = 0; s < shapeTypeStrings.size(); ++s)
     {
       cb->addItem((shapeTypeStrings[s]), shapeTypeEnums[s]);
       cb->setItemData(static_cast<int>(s), shapeTypeEnums[s], Qt::UserRole);
@@ -343,27 +326,26 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   // Estimate the number of Features
   estimateNumFeaturesSetup();
 
-
-
   emit parametersChanged();
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (nullptr == filter)
+  if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting InitializeSyntheticVolumeWidget Gui values to Filter instance. Filter instance was nullptr.").arg(getFilterParameter()->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 
   InitializeSyntheticVolume* filt = qobject_cast<InitializeSyntheticVolume*>(filter);
-  if(nullptr == filt) { Q_ASSERT_X(nullptr != filt, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__); }
+  if(nullptr == filt)
+  {
+    Q_ASSERT_X(nullptr != filt, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
+  }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -371,21 +353,19 @@ void InitializeSyntheticVolumeWidget::filterNeedsInputParameters(AbstractFilter*
 void InitializeSyntheticVolumeWidget::beforePreflight()
 {
 
-  if (m_NewFileLoaded == true)
+  if(m_NewFileLoaded == true)
   {
     // We need to update the DataArraySelectionWidgets
     statsArrayWidget->initializeWidget(m_StatsArrayPath.get(), m_Filter);
     phaseTypesWidget->initializeWidget(m_PhaseTypesPath.get(), m_Filter);
     crystalStructuresWidget->initializeWidget(m_CrystalStructuresPath.get(), m_Filter);
 
-
     m_NewFileLoaded = false; // We are all done with our update based a new file being loaded
   }
 
-  if (m_DidCausePreflight == false )
+  if(m_DidCausePreflight == false)
   {
     // Update the DataArraySelectionWidgets
-
   }
 }
 
@@ -394,7 +374,6 @@ void InitializeSyntheticVolumeWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::afterPreflight()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -403,7 +382,7 @@ void InitializeSyntheticVolumeWidget::afterPreflight()
 void InitializeSyntheticVolumeWidget::displayErrorMessage(const PipelineMessage& msg)
 {
 
-  qDebug() << msg.getFilterClassName() << msg.getCode() << msg.getPrefix() << msg.getText() ;
+  qDebug() << msg.getFilterClassName() << msg.getCode() << msg.getPrefix() << msg.getText();
 }
 
 // -----------------------------------------------------------------------------
@@ -432,7 +411,6 @@ void InitializeSyntheticVolumeWidget::on_m_ZPoints_valueChanged(int v)
   estimateNumFeaturesSetup();
   emit parametersChanged();
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -470,7 +448,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
   int gid = 1;
 
   totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
-  if (totalvol == 0.0)
+  if(totalvol == 0.0)
   {
     return -1;
   }
@@ -559,9 +537,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
 
 #endif
   return gid;
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -580,7 +556,6 @@ void InitializeSyntheticVolumeWidget::estimateNumFeaturesSetup()
   m_EstimatedGrains->setText(QString::number(est_nFeatures));
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -588,7 +563,7 @@ bool InitializeSyntheticVolumeWidget::verifyPathExists(QString outFilePath, QLin
 {
   //  std::cout << "outFilePath: " << outFilePath << std::endl;
   QFileInfo fileinfo(outFilePath);
-  if (false == fileinfo.exists() )
+  if(false == fileinfo.exists())
   {
     lineEdit->setStyleSheet("border: 1px solid red;");
   }
@@ -598,7 +573,6 @@ bool InitializeSyntheticVolumeWidget::verifyPathExists(QString outFilePath, QLin
   }
   return fileinfo.exists();
 }
-
 
 #if 0
 // -----------------------------------------------------------------------------

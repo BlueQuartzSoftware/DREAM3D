@@ -36,19 +36,19 @@
 #include "RotateEulerRefFrame.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/blocked_range3d.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -59,71 +59,71 @@
  */
 class RotateEulerRefFrameImpl
 {
-    float* m_CellEulerAngles;
-    float angle;
-    float axis[3];
-  public:
-    RotateEulerRefFrameImpl(float* data, float rotAngle, float rotAxis[3]) :
-      m_CellEulerAngles(data),
-      angle(rotAngle)
+  float* m_CellEulerAngles;
+  float angle;
+  float axis[3];
+
+public:
+  RotateEulerRefFrameImpl(float* data, float rotAngle, float rotAxis[3])
+  : m_CellEulerAngles(data)
+  , angle(rotAngle)
+  {
+    axis[0] = rotAxis[0];
+    axis[1] = rotAxis[1];
+    axis[2] = rotAxis[2];
+  }
+  virtual ~RotateEulerRefFrameImpl()
+  {
+  }
+
+  void convert(size_t start, size_t end) const
+  {
+    float rotMat[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    FOrientArrayType om(9, 0.0f);
+    FOrientTransformsType::ax2om(FOrientArrayType(axis[0], axis[1], axis[2], angle), om);
+    om.toGMatrix(rotMat);
+
+    float ea1 = 0, ea2 = 0, ea3 = 0;
+    float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    float gNew[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    for(size_t i = start; i < end; i++)
     {
-      axis[0] = rotAxis[0];
-      axis[1] = rotAxis[1];
-      axis[2] = rotAxis[2];
+      ea1 = m_CellEulerAngles[3 * i + 0];
+      ea2 = m_CellEulerAngles[3 * i + 1];
+      ea3 = m_CellEulerAngles[3 * i + 2];
+      FOrientArrayType om(9);
+      FOrientTransformsType::eu2om(FOrientArrayType(ea1, ea2, ea3), om);
+      om.toGMatrix(g);
+
+      MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
+      MatrixMath::Normalize3x3(gNew);
+      // Because we are going to simply wrap the m_CellEulerAngles array, the new
+      // Euler angles will be directly written to the m_CellEulerAngles array
+      // at the proper spot
+      FOrientArrayType eu(m_CellEulerAngles + (3 * i), 3);
+      FOrientTransformsType::om2eu(FOrientArrayType(gNew), eu);
     }
-    virtual ~RotateEulerRefFrameImpl() {}
-
-    void convert(size_t start, size_t end) const
-    {
-      float rotMat[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      FOrientArrayType om(9, 0.0f);
-      FOrientTransformsType::ax2om(FOrientArrayType(axis[0], axis[1], axis[2], angle), om);
-      om.toGMatrix(rotMat);
-
-      float ea1 = 0, ea2 = 0, ea3 = 0;
-      float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } , { 0.0f, 0.0f, 0.0f } };
-      float gNew[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      for (size_t i = start; i < end; i++)
-      {
-        ea1 = m_CellEulerAngles[3 * i + 0];
-        ea2 = m_CellEulerAngles[3 * i + 1];
-        ea3 = m_CellEulerAngles[3 * i + 2];
-        FOrientArrayType om(9);
-        FOrientTransformsType::eu2om(FOrientArrayType(ea1, ea2, ea3), om);
-        om.toGMatrix(g);
-
-        MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
-        MatrixMath::Normalize3x3(gNew);
-        // Because we are going to simply wrap the m_CellEulerAngles array, the new
-        // Euler angles will be directly written to the m_CellEulerAngles array
-        // at the proper spot
-        FOrientArrayType eu( m_CellEulerAngles + (3 * i), 3);
-        FOrientTransformsType::om2eu(FOrientArrayType(gNew), eu);
-      }
-    }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
-
 };
 
 // Include the MOC generated file for this class
 #include "moc_RotateEulerRefFrame.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RotateEulerRefFrame::RotateEulerRefFrame() :
-  AbstractFilter(),
-  m_RotationAngle(0.0f),
-  m_CellEulerAnglesArrayPath("", "", ""),
-  m_CellEulerAngles(nullptr)
+RotateEulerRefFrame::RotateEulerRefFrame()
+: AbstractFilter()
+, m_RotationAngle(0.0f)
+, m_CellEulerAnglesArrayPath("", "", "")
+, m_CellEulerAngles(nullptr)
 {
   m_RotationAxis.x = 0.0f;
   m_RotationAxis.y = 0.0f;
@@ -160,9 +160,9 @@ void RotateEulerRefFrame::setupFilterParameters()
 void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
-  setRotationAxis( reader->readFloatVec3("RotationAxis", getRotationAxis() ) );
-  setRotationAngle( reader->readValue("RotationAngle", getRotationAngle()) );
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath()));
+  setRotationAxis(reader->readFloatVec3("RotationAxis", getRotationAxis()));
+  setRotationAngle(reader->readValue("RotationAngle", getRotationAngle()));
   reader->closeFilterGroup();
 }
 
@@ -171,7 +171,6 @@ void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -182,9 +181,12 @@ void RotateEulerRefFrame::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> cDims(1, 3);
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellEulerAnglesPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -207,7 +209,10 @@ void RotateEulerRefFrame::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
@@ -221,11 +226,9 @@ void RotateEulerRefFrame::execute()
 #endif
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      RotateEulerRefFrameImpl(m_CellEulerAngles, rotAngle, rotAxis), tbb::auto_partitioner());
-
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), RotateEulerRefFrameImpl(m_CellEulerAngles, rotAngle, rotAxis), tbb::auto_partitioner());
   }
   else
 #endif
@@ -273,23 +276,29 @@ const QString RotateEulerRefFrame::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getGroupName()
-{ return SIMPL::FilterGroups::OrientationAnalysisFilters; }
+{
+  return SIMPL::FilterGroups::OrientationAnalysisFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ConversionFilters; }
+{
+  return SIMPL::FilterSubGroups::ConversionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getHumanLabel()
-{ return "Rotate Euler Reference Frame"; }
+{
+  return "Rotate Euler Reference Frame";
+}

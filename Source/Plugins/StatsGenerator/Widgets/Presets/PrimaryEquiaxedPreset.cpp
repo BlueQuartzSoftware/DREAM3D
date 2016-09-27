@@ -33,24 +33,20 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "PrimaryEquiaxedPreset.h"
 
-
-
 #include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h"
-#include "StatsGenerator/Widgets/StatsGenPlotWidget.h"
-#include "StatsGenerator/Widgets/StatsGenODFWidget.h"
-#include "StatsGenerator/Widgets/SGAxisODFWidget.h"
+#include "StatsGenerator/Widgets/StatsGenAxisODFWidget.h"
 #include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
-#include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
+#include "StatsGenerator/Widgets/StatsGenODFWidget.h"
+#include "StatsGenerator/Widgets/StatsGenPlotWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGBetaTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
 
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -66,7 +62,6 @@ PrimaryEquiaxedPreset::~PrimaryEquiaxedPreset()
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -76,7 +71,7 @@ void PrimaryEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot,
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -92,7 +87,7 @@ void PrimaryEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot,
   QVector<float> betas;
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 10.0 + rg.genrand_res53();
     beta = (0 * i) + 1.5 + (0.5 * rg.genrand_res53());
@@ -100,7 +95,7 @@ void PrimaryEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot,
     betas.push_back(beta);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -115,7 +110,7 @@ void PrimaryEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot,
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -131,7 +126,7 @@ void PrimaryEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot,
   QVector<float> betas;
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 15.0 + rg.genrand_res53();
     beta = (0 * i) + 1.25 + (0.5 * rg.genrand_res53());
@@ -139,7 +134,7 @@ void PrimaryEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot,
     betas.push_back(beta);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
@@ -154,7 +149,7 @@ void PrimaryEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot,
   plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -170,7 +165,7 @@ void PrimaryEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot,
   QVector<float> betas;
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     alpha = (0 * i) + 15.0 + rg.genrand_res53();
     beta = (0 * i) + 1.25 + (0.5 * rg.genrand_res53());
@@ -178,12 +173,11 @@ void PrimaryEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot,
     betas.push_back(beta);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(alphas);
   data.push_back(betas);
   model->setTableData(binNumbers, data, colors);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -193,8 +187,8 @@ void PrimaryEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plo
   // Make sure the distribution is set correctly
   plot->setDistributionType(SIMPL::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
-  SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
-  if (nullptr == model)
+  SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*>(plot->tableModel());
+  if(nullptr == model)
   {
     return;
   }
@@ -212,7 +206,7 @@ void PrimaryEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plo
   QVector<QColor> colors = GenerateColors(count, 160, 255);
 
   int middlebin = count / 2;
-  for (qint32 i = 0; i < count; ++i)
+  for(qint32 i = 0; i < count; ++i)
   {
     mu = log(14.0 + (2.0 * float(i - middlebin)));
     sigma = 0.3 + (float(middlebin - i) / float(middlebin * 10));
@@ -220,11 +214,10 @@ void PrimaryEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plo
     sigmas.push_back(sigma);
   }
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
   data.push_back(mus);
   data.push_back(sigmas);
   model->setTableData(binNumbers, data, colors);
-
 }
 
 // -----------------------------------------------------------------------------
