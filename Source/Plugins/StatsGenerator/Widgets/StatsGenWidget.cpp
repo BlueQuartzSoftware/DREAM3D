@@ -33,18 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SGWidget.h"
+#include "StatsGenWidget.h"
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_SGWidget.cpp"
+#include "moc_StatsGenWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGWidget::SGWidget(QWidget* parent) :
+StatsGenWidget::StatsGenWidget(QWidget* parent) :
   QWidget(parent),
   m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
   m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
@@ -62,14 +62,14 @@ SGWidget::SGWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGWidget::~SGWidget()
+StatsGenWidget::~StatsGenWidget()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
+void StatsGenWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
   Q_ASSERT(false);
 }
@@ -77,15 +77,15 @@ void SGWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SGWidget::getComboString()
+QString StatsGenWidget::getComboString()
 {
-  return QString("SGWidget - THIS IS BAD. YOU SHOULD NOT BE SEEING THIS.");
+  return QString("StatsGenWidget - THIS IS BAD. YOU SHOULD NOT BE SEEING THIS.");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
+int StatsGenWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
   return -1;
 }
@@ -93,7 +93,7 @@ int SGWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::generateDefaultData()
+void StatsGenWidget::generateDefaultData()
 {
 
 }
@@ -101,7 +101,7 @@ void SGWidget::generateDefaultData()
 //// -----------------------------------------------------------------------------
 ////
 //// -----------------------------------------------------------------------------
-//void SGWidget::dataWasEdited()
+//void StatsGenWidget::dataWasEdited()
 //{
 //  Q_ASSERT(false);
 //}

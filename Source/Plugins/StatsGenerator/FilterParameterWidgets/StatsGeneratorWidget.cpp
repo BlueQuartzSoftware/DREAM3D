@@ -274,7 +274,7 @@ void StatsGeneratorWidget::beforePreflight()
 {
  for (int i = 0; i < phaseTabs->count(); i++)
  {
-   SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
+   StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(i));
    if (!qobject_cast<MatrixPhaseWidget*>(sgwidget) &&
        !qobject_cast<BoundaryPhaseWidget*>(sgwidget) &&
        !qobject_cast<TransformationPhaseWidget*>(sgwidget))
@@ -309,8 +309,8 @@ void StatsGeneratorWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::on_addPhase_clicked()
 {
-  // Ensure the Current SGWidget has generated its data first:
-  SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->currentWidget());
+  // Ensure the Current StatsGenWidget has generated its data first:
+  StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->currentWidget());
   if (false == sgwidget->getDataHasBeenGenerated())
   {
     int r = QMessageBox::warning(this, tr("StatsGenerator"),
@@ -331,7 +331,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < phaseTabs->count(); ++p)
   {
-    SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
+    StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(p));
     phaseFractionTotal += sgwidget->getPhaseFraction();
   }
 
@@ -453,11 +453,11 @@ void StatsGeneratorWidget::on_editPhase_clicked()
   EditPhaseDialog dialog;
   dialog.setEditFlag(false);
 
-  SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->currentWidget());
+  StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->currentWidget());
 
   for (int p = 0; p < phaseTabs->count(); ++p)
   {
-    SGWidget* currentWidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
+    StatsGenWidget* currentWidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(p));
     if(sgwidget != currentWidget )
     {
       phaseFractionTotal += currentWidget->getPhaseFraction();
@@ -565,27 +565,27 @@ void StatsGeneratorWidget::on_phaseTabs_tabCloseRequested ( int index )
   if(phaseTabs->count() > 1)
   {
     // Remove the SGPhase object from the vector
-    SGWidget* currentWidget = qobject_cast<SGWidget*>(phaseTabs->widget(index));
+    StatsGenWidget* currentWidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(index));
     phaseTabs->removeTab(index);
     currentWidget->deleteLater(); // Actually delete it
 
     // Reset the phase index for each SGPhase object
     for (int p = 0; p < phaseTabs->count(); ++p)
     {
-      SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
+      StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(p));
       sgwidget->setPhaseIndex(p + 1);
       sgwidget->setObjectName(sgwidget->getComboString());
     }
 
 #if 0
-    SGWidget* widget = m_SGWidgets[0];
+    StatsGenWidget* widget = m_StatsGenWidgets[0];
 
-    verticalLayout_2->removeWidget(m_SGWidget);
-    m_SGWidget->hide();
-    m_SGWidget->deleteLater();
-    m_SGWidget = widget;
-    verticalLayout_2->addWidget(m_SGWidget);
-    m_SGWidget->show();
+    verticalLayout_2->removeWidget(m_StatsGenWidget);
+    m_StatsGenWidget->hide();
+    m_StatsGenWidget->deleteLater();
+    m_StatsGenWidget = widget;
+    verticalLayout_2->addWidget(m_StatsGenWidget);
+    m_StatsGenWidget->show();
 #endif
   }
   setWindowModified(true);
@@ -682,14 +682,14 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < phaseTabs->count(); ++p)
   {
-    SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
+    StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(p));
     phaseFractionTotal += sgwidget->getPhaseFraction();
   }
 
   // Loop on all the phases
   for (int i = 0; i < phaseTabs->count(); ++i)
   {
-    SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
+    StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(i));
     sgwidget->setTotalPhaseFraction(static_cast<float>(phaseFractionTotal));
     if (sgwidget->getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
     {

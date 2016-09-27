@@ -246,7 +246,7 @@
        <property name="movable">
         <bool>false</bool>
        </property>
-       <widget class="SGWidget" name="tab_SGWidget_1">
+       <widget class="StatsGenWidget" name="tab_StatsGenWidget_1">
         <attribute name="title">
          <string>Tab 1</string>
         </attribute>
@@ -335,9 +335,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SGWidget</class>
+   <class>StatsGenWidget</class>
    <extends>QWidget</extends>
-   <header location="global">SGWidget.h</header>
+   <header location="global">StatsGenWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

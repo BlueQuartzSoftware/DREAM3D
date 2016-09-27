@@ -37,7 +37,7 @@
 
 #include <QtCore/QVector>
 
-#include "StatsGenerator/Widgets/SGAxisODFWidget.h"
+#include "StatsGenerator/Widgets/StatsGenAxisODFWidget.h"
 #include "StatsGenerator/Widgets/StatsGenODFWidget.h"
 #include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
@@ -62,7 +62,7 @@ AbstractMicrostructurePreset::~AbstractMicrostructurePreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractMicrostructurePreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
+void AbstractMicrostructurePreset::initializeAxisODFTableModel(StatsGenAxisODFWidget* widget)
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGODFTableModel* model = (widget->tableModel());

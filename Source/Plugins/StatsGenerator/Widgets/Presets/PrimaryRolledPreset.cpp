@@ -39,7 +39,7 @@
 #include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h"
 #include "StatsGenerator/Widgets/StatsGenPlotWidget.h"
 #include "StatsGenerator/Widgets/StatsGenODFWidget.h"
-#include "StatsGenerator/Widgets/SGAxisODFWidget.h"
+#include "StatsGenerator/Widgets/StatsGenAxisODFWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
@@ -267,7 +267,7 @@ void PrimaryRolledPreset::initializeClusteringTableModel(StatsGenPlotWidget* plo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryRolledPreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
+void PrimaryRolledPreset::initializeAxisODFTableModel(StatsGenAxisODFWidget* widget)
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGODFTableModel* model = (widget->tableModel());

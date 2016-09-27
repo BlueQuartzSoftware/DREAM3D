@@ -38,7 +38,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 
-#include "StatsGenerator/Widgets/SGWidget.h"
+#include "StatsGenerator/Widgets/StatsGenWidget.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
 
 #include "ui_MatrixPhaseWidget.h"
@@ -50,7 +50,7 @@ class QwtPlotMarker;
 /*
  *
  */
-class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
+class MatrixPhaseWidget : public StatsGenWidget, private Ui::MatrixPhaseWidget
 {
 
     Q_OBJECT

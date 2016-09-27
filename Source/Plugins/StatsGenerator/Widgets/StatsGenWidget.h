@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgwidget_h_
-#define _sgwidget_h_
+#ifndef _StatsGenWidget_h_
+#define _StatsGenWidget_h_
 
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QComboBox>
@@ -55,14 +55,14 @@ class QwtPlotMarker;
 /*
  *
  */
-class SGWidget : public QWidget
+class StatsGenWidget : public QWidget
 {
 
     Q_OBJECT
 
   public:
-    SGWidget(QWidget* parent = 0);
-    virtual ~SGWidget();
+    StatsGenWidget(QWidget* parent = 0);
+    virtual ~StatsGenWidget();
 
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType)
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
@@ -110,8 +110,8 @@ class SGWidget : public QWidget
   protected:
 
   private:
-    SGWidget(const SGWidget&); // Copy Constructor Not Implemented
-    void operator=(const SGWidget&); // Operator '=' Not Implemented
+    StatsGenWidget(const StatsGenWidget&); // Copy Constructor Not Implemented
+    void operator=(const StatsGenWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* SGWIDGET_H_ */
+#endif /* StatsGenWidget_H_ */

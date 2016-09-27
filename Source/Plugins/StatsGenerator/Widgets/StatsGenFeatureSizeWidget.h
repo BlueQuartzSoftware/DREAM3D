@@ -13,7 +13,7 @@
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 
-#include "StatsGenerator/Widgets/SGWidget.h"
+#include "StatsGenerator/Widgets/StatsGenWidget.h"
 #include "StatsGenerator/ui_StatsGenFeatureSizeWidget.h"
 
 #ifndef QwtArray

@@ -77,7 +77,7 @@
 //
 // -----------------------------------------------------------------------------
 PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent) :
-  SGWidget(parent)
+  StatsGenWidget(parent)
 {
   setTabTitle("Primary");
   setupUi(this);
@@ -181,7 +181,7 @@ StatsGenODFWidget *PrimaryPhaseWidget::getODFWidgetWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setAxisODFWidget(SGAxisODFWidget* w)
+void PrimaryPhaseWidget::setAxisODFWidget(StatsGenAxisODFWidget* w)
 {
   m_AxisODFWidget = w;
 }
@@ -189,7 +189,7 @@ void PrimaryPhaseWidget::setAxisODFWidget(SGAxisODFWidget* w)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGAxisODFWidget* PrimaryPhaseWidget::getAxisODFWidget()
+StatsGenAxisODFWidget* PrimaryPhaseWidget::getAxisODFWidget()
 {
   return m_AxisODFWidget;
 }
@@ -398,7 +398,7 @@ void PrimaryPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setPhaseIndex(int index)
 {
-  SGWidget::setPhaseIndex(index);
+  StatsGenWidget::setPhaseIndex(index);
   m_Omega3Plot->setPhaseIndex(index);
   m_BOverAPlot->setPhaseIndex(index);
   m_COverAPlot->setPhaseIndex(index);
@@ -413,7 +413,7 @@ void PrimaryPhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setCrystalStructure(unsigned int xtal)
 {
-  SGWidget::setCrystalStructure(xtal);
+  StatsGenWidget::setCrystalStructure(xtal);
   m_Omega3Plot->setCrystalStructure(xtal);
   m_BOverAPlot->setCrystalStructure(xtal);
   m_COverAPlot->setCrystalStructure(xtal);

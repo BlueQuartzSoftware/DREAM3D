@@ -44,7 +44,7 @@
 
 class StatsGenPlotWidget;
 class StatsGenODFWidget;
-class SGAxisODFWidget;
+class StatsGenAxisODFWidget;
 class StatsGenMDFWidget;
 
 /**
@@ -113,9 +113,9 @@ class AbstractMicrostructurePreset
     /**
      * @brief This method initializes the AxisODF Table with preset Euler angles,
      * Weights and Spreads.
-     * @param widget Non Null SGAxisODFWidget
+     * @param widget Non Null StatsGenAxisODFWidget
      */
-    virtual void initializeAxisODFTableModel(SGAxisODFWidget* widget);
+    virtual void initializeAxisODFTableModel(StatsGenAxisODFWidget* widget);
 
     /**
      * @brief This method initializes the ODF Table with preset Euler angles,

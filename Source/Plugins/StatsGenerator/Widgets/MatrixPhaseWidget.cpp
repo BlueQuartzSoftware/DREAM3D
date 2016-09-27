@@ -67,7 +67,7 @@
 //
 // -----------------------------------------------------------------------------
 MatrixPhaseWidget::MatrixPhaseWidget(QWidget* parent) :
-  SGWidget(parent),
+  StatsGenWidget(parent),
   m_grid(nullptr)
 {
   setTabTitle("Matrix");

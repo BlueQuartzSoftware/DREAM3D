@@ -78,7 +78,7 @@
 //
 // -----------------------------------------------------------------------------
 TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent) :
-  SGWidget(parent),
+  StatsGenWidget(parent),
   m_ParentPhase(0),
   m_SizeDistributionCurve(nullptr),
   m_CutOffMin(nullptr),

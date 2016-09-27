@@ -58,7 +58,7 @@
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
-#include "StatsGenerator/Widgets/SGCurveTracker.h"
+#include "StatsGenerator/Widgets/StatsGenCurveTracker.h"
 
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h

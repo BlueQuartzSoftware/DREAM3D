@@ -240,7 +240,7 @@ void PrecipitatePhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::setPhaseIndex(int index)
 {
-  SGWidget::setPhaseIndex(index);
+  StatsGenWidget::setPhaseIndex(index);
   getFeatureSizeWidget()->setPhaseIndex(index);
   getOmega3PlotWidget()->setPhaseIndex(index);
   getBOverAPlotPlotWidget()->setPhaseIndex(index);
@@ -254,7 +254,7 @@ void PrecipitatePhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::setCrystalStructure(unsigned int xtal)
 {
-  SGWidget::setCrystalStructure(xtal);
+  StatsGenWidget::setCrystalStructure(xtal);
   getFeatureSizeWidget()->setCrystalStructure(xtal);
   getOmega3PlotWidget()->setCrystalStructure(xtal);
   getBOverAPlotPlotWidget()->setCrystalStructure(xtal);
