@@ -66,10 +66,10 @@ ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, Abstrac
 , m_LineCounter(nullptr)
 {
   m_FilterParameter = dynamic_cast<ImportASCIIDataFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != nullptr, "nullptr Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIDataFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != nullptr, "NULL Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIDataFilterParameter object");
 
   m_Filter = dynamic_cast<ImportASCIIData*>(filter);
-  Q_ASSERT_X(m_Filter != nullptr, "nullptr Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIData filter");
+  Q_ASSERT_X(m_Filter != nullptr, "NULL Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIData filter");
 
   setupUi(this);
 

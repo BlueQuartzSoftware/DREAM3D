@@ -83,10 +83,10 @@ StatsGeneratorWidget::StatsGeneratorWidget(FilterParameter* parameter, AbstractF
 : FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<StatsGeneratorFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != nullptr, "nullptr Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != nullptr, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilterParameter object");
 
   m_Filter = dynamic_cast<StatsGeneratorFilter*>(filter);
-  Q_ASSERT_X(m_Filter != nullptr, "nullptr Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilter filter");
+  Q_ASSERT_X(m_Filter != nullptr, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilter filter");
 
   m_OpenDialogLastDirectory = QDir::homePath();
   setWidgetIsExpanding(true);
