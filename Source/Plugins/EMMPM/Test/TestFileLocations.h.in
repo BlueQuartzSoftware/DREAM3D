@@ -17,7 +17,6 @@
 
 namespace UnitTest
 {
-  const QString DREAM3D_USE_ITK("@DREAM3D_USE_ITK@");
 
   const QString DataDir("@DREAM3D_DATA_DIR@");
   const QString TestTempDir("@TEST_TEMP_DIR@");

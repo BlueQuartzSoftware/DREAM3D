@@ -109,6 +109,21 @@ public:
       }
     }
 
+      {
+          // Now instantiate the ItkReadImage Filter from the FilterManager
+          m_ImageProcessingPluginLoaded = 1; // Assume it loaded.
+          QString filtName = m_ReadImageFilterName;
+          FilterManager* fm = FilterManager::Instance();
+          IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+          if(nullptr == filterFactory.get())
+          {
+              std::stringstream ss;
+              ss << "Unable to initialize the " << m_ReadImageFilterName.toStdString() << " while executing the EMMPMSegmentationTest.";
+              std::cout << ss.str() << std::endl;
+              m_ImageProcessingPluginLoaded = 0; // Plugin or filter not available.
+          }
+      }
+
     return 0;
   }
 
@@ -117,9 +132,9 @@ public:
   // -----------------------------------------------------------------------------
   void createAndAddReadImageFilter(FilterPipeline::Pointer pipeline, QString inputFile)
   {
-    QString filtName = "ItkReadImage";
+
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(m_ReadImageFilterName);
 
     if(nullptr != filterFactory.get())
     {
@@ -138,7 +153,7 @@ public:
     }
     else
     {
-      QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+      QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(m_ReadImageFilterName);
       DREAM3D_REQUIRE_EQUAL(0, 1)
     }
   }
@@ -333,23 +348,25 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void operator()()
+void operator()()
+{
+
+  int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST(TestFilterAvailability());
+  if (m_ImageProcessingPluginLoaded)
   {
-
-
-    if (UnitTest::DREAM3D_USE_ITK.compare(QString("ON")) == 0)
-    {
-      int err = EXIT_SUCCESS;
-      DREAM3D_REGISTER_TEST(TestFilterAvailability());
-
       DREAM3D_REGISTER_TEST(TestEMMPMSegmentation())
       DREAM3D_REGISTER_TEST(TestMultiEMMPMSegmentation())
-
-      DREAM3D_REGISTER_TEST(RemoveTestFiles())
-    }
   }
+  DREAM3D_REGISTER_TEST(RemoveTestFiles())
+
+}
 
 private:
+
+  int m_ImageProcessingPluginLoaded = 0;
+  QString m_ReadImageFilterName = QString("ItkReadImage");
+
   EMMPMSegmentationTest(const EMMPMSegmentationTest&); // Copy Constructor Not Implemented
   void operator=(const EMMPMSegmentationTest&);        // Operator '=' Not Implemented
 };
