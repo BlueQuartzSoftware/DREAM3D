@@ -323,13 +323,18 @@ public:
   // -----------------------------------------------------------------------------
   void operator()()
   {
-    int err = EXIT_SUCCESS;
-    DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-    DREAM3D_REGISTER_TEST(TestEMMPMSegmentation())
-    DREAM3D_REGISTER_TEST(TestMultiEMMPMSegmentation())
 
-    DREAM3D_REGISTER_TEST(RemoveTestFiles())
+    if (UnitTest::DREAM3D_USE_ITK.compare(QString("ON")) == 0)
+    {
+      int err = EXIT_SUCCESS;
+      DREAM3D_REGISTER_TEST(TestFilterAvailability());
+
+      DREAM3D_REGISTER_TEST(TestEMMPMSegmentation())
+      DREAM3D_REGISTER_TEST(TestMultiEMMPMSegmentation())
+
+      DREAM3D_REGISTER_TEST(RemoveTestFiles())
+    }
   }
 
 private:
