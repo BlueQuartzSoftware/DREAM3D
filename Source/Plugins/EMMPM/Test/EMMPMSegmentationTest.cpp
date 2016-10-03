@@ -249,11 +249,23 @@ public:
   // -----------------------------------------------------------------------------
   int TestEMMPMSegmentation()
   {
-    QImage inputImage(100, 100, QImage::Format_ARGB32);
+    int h = 100;
+    int w = 100;
+    QImage inputImage(h, w, QImage::Format_ARGB32);
+    for(int i = 0; i < h; i++)
+    {
+        for (int j = 0; j < w;j++)
+        {
+            inputImage.setPixel(i, j, 0xAA);
+        }
+    }
     bool saveResult = inputImage.save(UnitTest::EMMPMSegmentationTest::TestFile);
     DREAM3D_REQUIRE_EQUAL(saveResult, true)
 
+
     FilterPipeline::Pointer pipeline = FilterPipeline::New();
+//    Observer observer;
+//    pipeline->addMessageReceiver(&observer);
 
     {
 
