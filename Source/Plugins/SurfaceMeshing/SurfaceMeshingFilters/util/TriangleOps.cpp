@@ -35,31 +35,29 @@
 
 #include "TriangleOps.h"
 
-#include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-
+#include "SIMPLib/Math/MatrixMath.h"
 
 namespace SM = SIMPL::SurfaceMesh;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 TriangleOps::TriangleOps()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------4
 TriangleOps::~TriangleOps()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triangles,
-                                                    int64_t triangleIndex,
-                                                    DataArray<int32_t>::Pointer faceLabelsPtr,
-                                                    int32_t label)
+QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triangles, int64_t triangleIndex, DataArray<int32_t>::Pointer faceLabelsPtr, int32_t label)
 {
   QVector<int64_t> adjacentTris;
 
@@ -76,14 +74,15 @@ QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triang
   uint16_t count = triNeighbors->getNumberOfElements(triangleIndex);
   int64_t* nList = triNeighbors->getElementListPointer(triangleIndex);
 
-  if (count < 3)
+  if(count < 3)
   {
-    qDebug() << "Triangle Neighbor List had only " << count << " neighbors. Must be at least 3." << "\n";
+    qDebug() << "Triangle Neighbor List had only " << count << " neighbors. Must be at least 3."
+             << "\n";
     Q_ASSERT(false);
   }
-  else if (count == 3) // This triangle only has 3 neighbors so we are assuming all three have the same label set.
+  else if(count == 3) // This triangle only has 3 neighbors so we are assuming all three have the same label set.
   {
-    for (uint16_t n = 0; n < count; ++n)
+    for(uint16_t n = 0; n < count; ++n)
     {
       adjacentTris.push_back(nList[n]);
     }
@@ -91,11 +90,11 @@ QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triang
   else
   {
     // Iterate over the indices to find triangles that match the label and are NOT the current triangle index
-    for (uint16_t n = 0; n < count; ++n)
+    for(uint16_t n = 0; n < count; ++n)
     {
       int32_t fl_0 = faceLabels[nList[n] * 2];
       int32_t fl_1 = faceLabels[nList[n] * 2 + 1];
-      if ( (fl_0 == label || fl_1 == label)  && (nList[n] != triangleIndex) )
+      if((fl_0 == label || fl_1 == label) && (nList[n] != triangleIndex))
       {
         //  qDebug() << "    Found Adjacent Triangle: " << t->tIndex << "\n";
         adjacentTris.push_back(nList[n]);
@@ -106,17 +105,14 @@ QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triang
   return adjacentTris;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::getWindingIndices4(int64_t triangle[3],
-                                     int32_t* faceLabel,
-                                     int ids[4], int32_t label)
+void TriangleOps::getWindingIndices4(int64_t triangle[3], int32_t* faceLabel, int ids[4], int32_t label)
 {
   int64_t idx = TriangleOps::getLabelIndex(faceLabel, label);
 
-  if (idx == 1)
+  if(idx == 1)
   {
     ids[0] = triangle[2];
     ids[1] = triangle[1];
@@ -135,11 +131,7 @@ void TriangleOps::getWindingIndices4(int64_t triangle[3],
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TriangleOps::verifyWinding(int64_t source[3],
-                                int64_t tri[3],
-                                int32_t* faceLabelSource,
-                                int32_t* faceLabelTri,
-                                int32_t label)
+bool TriangleOps::verifyWinding(int64_t source[3], int64_t tri[3], int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label)
 {
   int ids[4];
   int nids[4];
@@ -152,19 +144,19 @@ bool TriangleOps::verifyWinding(int64_t source[3],
   int i0, i1;
   //  bool flip = false;
   bool done = false;
-  for (int i = 0; i < 3; ++i)
+  for(int i = 0; i < 3; ++i)
   {
     i0 = ids[i];
     i1 = ids[i + 1];
-    for (int j = 0; j < 3; ++j)
+    for(int j = 0; j < 3; ++j)
     {
-      if (i0 == nids[j + 1] && i1 == nids[j])
+      if(i0 == nids[j + 1] && i1 == nids[j])
       {
         //    qDebug() << ">>>>>> Winding OK "<< tIndex << " <-> "<< tri->tIndex << "\n";
         done = true;
         break;
       }
-      else if (i0 == nids[j] && i1 == nids[j + 1])
+      else if(i0 == nids[j] && i1 == nids[j + 1])
       {
         //   qDebug() << "!!!!!! Winding Bad " << "\n";
         done = true;
@@ -173,19 +165,27 @@ bool TriangleOps::verifyWinding(int64_t source[3],
         break;
       }
     }
-    if (done) { break; }
+    if(done)
+    {
+      break;
+    }
   }
   return flipped;
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int TriangleOps::getLabelIndex(int32_t* triLabels, int label)
 {
-  if (label == triLabels[0]) { return 0; }
-  if (label == triLabels[1]) { return 1; }
+  if(label == triLabels[0])
+  {
+    return 0;
+  }
+  if(label == triLabels[1])
+  {
+    return 1;
+  }
   return 2; // Error condition. Valid values are 0 or 1 since there are only 2 elements to the array.
 }
 
@@ -196,7 +196,7 @@ QVector<int64_t> TriangleOps::getNodeIndices(int64_t t[3], int32_t* faceLabel, i
 {
   QVector<int64_t> tNodes(3);
   int64_t idx = TriangleOps::getLabelIndex(faceLabel, label);
-  if (idx == 1)
+  if(idx == 1)
   {
     tNodes[0] = t[2];
     tNodes[1] = t[1];
@@ -270,11 +270,10 @@ QSet<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>::Pointer face
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   size_t count = faceLabelsPtr->getNumberOfTuples();
-  for (size_t i = 0; i < count; ++i)
+  for(size_t i = 0; i < count; ++i)
   {
     uniqueLabels.insert(faceLabels[i * 2]);
     uniqueLabels.insert(faceLabels[i * 2 + 1]);
   }
   return uniqueLabels;
 }
-

@@ -34,12 +34,12 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "PrimaryRecrystallizedPresetDialog.h"
+#include <QtGui/QDoubleValidator>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QDialogButtonBox>
-#include <QtGui/QDoubleValidator>
-#include <QtWidgets/QApplication>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_PrimaryRecrystallizedPresetDialog.cpp"
@@ -47,8 +47,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryRecrystallizedPresetDialog::PrimaryRecrystallizedPresetDialog(QWidget* parent) :
-  QDialog(parent)
+PrimaryRecrystallizedPresetDialog::PrimaryRecrystallizedPresetDialog(QWidget* parent)
+: QDialog(parent)
 {
   setupGui();
 }
@@ -68,7 +68,7 @@ void PrimaryRecrystallizedPresetDialog::setupGui()
 
   QVBoxLayout* verticalLayout_2 = new QVBoxLayout(this);
 
-  QFormLayout*         formLayout = new QFormLayout();
+  QFormLayout* formLayout = new QFormLayout();
   formLayout->setObjectName(QString::fromUtf8("eulerLayout"));
 
   QLabel* percentRecystallizedLabel = new QLabel(this);
@@ -82,7 +82,6 @@ void PrimaryRecrystallizedPresetDialog::setupGui()
   QDoubleValidator* aspectRatioValidator = new QDoubleValidator(percentRecystallized);
   aspectRatioValidator->setDecimals(4);
 
-
   verticalLayout_2->addLayout(formLayout);
 
   QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
@@ -92,7 +91,6 @@ void PrimaryRecrystallizedPresetDialog::setupGui()
   verticalLayout_2->addWidget(buttonBox);
 
   percentRecystallizedLabel->setText(QApplication::translate("Percent Recrystallized Preset Dialog", "Percent Recrystallized:", 0));
-
 
   QObject::connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
   QObject::connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
@@ -104,7 +102,7 @@ void PrimaryRecrystallizedPresetDialog::setupGui()
   QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   sizePolicy.setHorizontalStretch(0);
   sizePolicy.setVerticalStretch(0);
-  //sizePolicy.setHeightForWidth(this->sizePolicy().hasHeightForWidth());
+  // sizePolicy.setHeightForWidth(this->sizePolicy().hasHeightForWidth());
   this->setSizePolicy(sizePolicy);
 }
 
@@ -115,8 +113,7 @@ float PrimaryRecrystallizedPresetDialog::getPercentRecrystallized()
 {
   bool ok = false;
   float d = percentRecystallized->text().toFloat(&ok);
-  if(!ok) d = 0.0f;
+  if(!ok)
+    d = 0.0f;
   return d;
 }
-
-

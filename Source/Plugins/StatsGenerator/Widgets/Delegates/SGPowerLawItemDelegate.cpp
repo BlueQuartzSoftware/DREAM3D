@@ -6,11 +6,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGPowerLawItemDelegate::SGPowerLawItemDelegate(QObject* parent) :
-  QStyledItemDelegate(parent)
+SGPowerLawItemDelegate::SGPowerLawItemDelegate(QObject* parent)
+: QStyledItemDelegate(parent)
 {
   Q_ASSERT_X(false, __FILE__, "POWERLAW TABLE MODEL IS NOT WORKING AND NEEDS FIXING.");
-
 }
 
 // -----------------------------------------------------------------------------
@@ -38,36 +37,36 @@ QWidget* SGPowerLawItemDelegate::createEditor(QWidget* parent, const QStyleOptio
   qint32 col = index.column();
   switch(col)
   {
-    case SGPowerLawTableModel::BinNumber:
-      return nullptr;
-      break;
+  case SGPowerLawTableModel::BinNumber:
+    return nullptr;
+    break;
 
-    case SGPowerLawTableModel::Alpha:
-      alpha = new QLineEdit(parent);
-      alpha->setFrame(false);
-      alphaValidator = new QDoubleValidator(alpha);
-      alphaValidator->setDecimals(6);
-      alpha->setValidator(alphaValidator);
-      return alpha;
-    case SGPowerLawTableModel::K:
-      k = new QLineEdit(parent);
-      k->setFrame(false);
-      kValidator = new QDoubleValidator(k);
-      kValidator->setDecimals(6);
-      k->setValidator(kValidator);
-      return k;
-    case SGPowerLawTableModel::Beta:
-      beta = new QLineEdit(parent);
-      beta->setFrame(false);
-      betaValidator = new QDoubleValidator(beta);
-      betaValidator->setDecimals(6);
-      beta->setValidator(betaValidator);
-      return beta;
-    case SGPowerLawTableModel::LineColor:
-      colorCombo = new QtSColorComboPicker(parent);
-      return colorCombo;
-    default:
-      break;
+  case SGPowerLawTableModel::Alpha:
+    alpha = new QLineEdit(parent);
+    alpha->setFrame(false);
+    alphaValidator = new QDoubleValidator(alpha);
+    alphaValidator->setDecimals(6);
+    alpha->setValidator(alphaValidator);
+    return alpha;
+  case SGPowerLawTableModel::K:
+    k = new QLineEdit(parent);
+    k->setFrame(false);
+    kValidator = new QDoubleValidator(k);
+    kValidator->setDecimals(6);
+    k->setValidator(kValidator);
+    return k;
+  case SGPowerLawTableModel::Beta:
+    beta = new QLineEdit(parent);
+    beta->setFrame(false);
+    betaValidator = new QDoubleValidator(beta);
+    betaValidator->setDecimals(6);
+    beta->setValidator(betaValidator);
+    return beta;
+  case SGPowerLawTableModel::LineColor:
+    colorCombo = new QtSColorComboPicker(parent);
+    return colorCombo;
+  default:
+    break;
   }
   return QStyledItemDelegate::createEditor(parent, option, index);
 }
@@ -79,21 +78,24 @@ void SGPowerLawItemDelegate::setEditorData(QWidget* editor, const QModelIndex& i
 {
   qint32 col = index.column();
   // bool ok = false;
-  if (col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
+  if(col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
   {
     //    double value = index.model()->data(index).toFloat(&ok);
-    QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+    QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
     Q_ASSERT(lineEdit);
     lineEdit->setText(index.model()->data(index).toString());
   }
-  else if (col == SGPowerLawTableModel::LineColor)
+  else if(col == SGPowerLawTableModel::LineColor)
   {
     QString state = index.model()->data(index).toString();
-    QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
+    QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker*>(editor);
     Q_ASSERT(comboBox);
     comboBox->setCurrentIndex(comboBox->findText(state));
   }
-  else { QStyledItemDelegate::setEditorData(editor, index); }
+  else
+  {
+    QStyledItemDelegate::setEditorData(editor, index);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -104,19 +106,22 @@ void SGPowerLawItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* m
   //  qDebug() << "SGPowerLawItemDelegate::setModelData" << "\n";
   qint32 col = index.column();
   //  bool ok = false;
-  if (col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
+  if(col == SGPowerLawTableModel::Alpha || col == SGPowerLawTableModel::K || col == SGPowerLawTableModel::Beta)
   {
-    QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
+    QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
     Q_ASSERT(lineEdit);
     bool ok = false;
     double v = lineEdit->text().toFloat(&ok);
     model->setData(index, v);
   }
-  else if (col == SGPowerLawTableModel::LineColor)
+  else if(col == SGPowerLawTableModel::LineColor)
   {
-    QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
+    QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker*>(editor);
     Q_ASSERT(comboBox);
     model->setData(index, comboBox->currentText());
   }
-  else { QStyledItemDelegate::setModelData(editor, model, index); }
+  else
+  {
+    QStyledItemDelegate::setModelData(editor, model, index);
+  }
 }

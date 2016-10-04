@@ -12,7 +12,7 @@ set(DREAM3D_WIDGETS
   MatrixPhaseWidget
   PrecipitatePhaseWidget
   PrimaryPhaseWidget
-  SGAxisODFWidget
+  StatsGenAxisODFWidget
   StatsGenFeatureSizeWidget
   StatsGenMDFWidget
   StatsGenPlotWidget
@@ -37,19 +37,19 @@ endforeach()
 # inheritance through a .ui file
 set(${PLUGIN_NAME}_Widgets_HDRS
   ${${PLUGIN_NAME}_Widgets_HDRS}
-  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SGWidget.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/StatsGenWidget.h
   ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/StatsGenODFWidget.h
 
 )
 set(${PLUGIN_NAME}_Widgets_SRCS
   ${${PLUGIN_NAME}_Widgets_SRCS}
-  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SGWidget.cpp
+  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/StatsGenWidget.cpp
   ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/StatsGenODFWidget.cpp
-  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SGCurveTracker.cpp
+  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/StatsGenCurveTracker.cpp
 )
 
 set(${PLUGIN_NAME}_Widgets_MISC_HDRS
-  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SGCurveTracker.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/StatsGenCurveTracker.h
 )
 
 set(StatsGenerator_DELEGATE_SRCS

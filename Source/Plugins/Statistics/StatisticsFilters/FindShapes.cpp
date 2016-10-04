@@ -36,12 +36,12 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -51,29 +51,27 @@
 // Include the MOC generated file for this class
 #include "moc_FindShapes.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindShapes::FindShapes() :
-  AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_CentroidsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids),
-  m_Omega3sArrayName(SIMPL::FeatureData::Omega3s),
-  m_VolumesArrayName(SIMPL::FeatureData::Volumes),
-  m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths),
-  m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles),
-  m_AspectRatiosArrayName(SIMPL::FeatureData::AspectRatios),
-  m_FeatureIds(nullptr),
-  m_Centroids(nullptr),
-  m_AxisEulerAngles(nullptr),
-  m_AxisLengths(nullptr),
-  m_Omega3s(nullptr),
-  m_Volumes(nullptr),
-  m_AspectRatios(nullptr),
-  m_ScaleFactor(1.0f)
+FindShapes::FindShapes()
+: AbstractFilter()
+, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_CentroidsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids)
+, m_Omega3sArrayName(SIMPL::FeatureData::Omega3s)
+, m_VolumesArrayName(SIMPL::FeatureData::Volumes)
+, m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
+, m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
+, m_AspectRatiosArrayName(SIMPL::FeatureData::AspectRatios)
+, m_FeatureIds(nullptr)
+, m_Centroids(nullptr)
+, m_AxisEulerAngles(nullptr)
+, m_AxisLengths(nullptr)
+, m_Omega3s(nullptr)
+, m_Volumes(nullptr)
+, m_AspectRatios(nullptr)
+, m_ScaleFactor(1.0f)
 {
   featuremoments = nullptr;
   featureeigenvals = nullptr;
@@ -96,16 +94,19 @@ void FindShapes::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindShapes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req =
+        AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindShapes, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindShapes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
@@ -124,13 +125,13 @@ void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setAspectRatiosArrayName(reader->readString("AspectRatiosArrayName", getAspectRatiosArrayName() ) );
-  setAxisEulerAnglesArrayName(reader->readString("AxisEulerAnglesArrayName", getAxisEulerAnglesArrayName() ) );
-  setAxisLengthsArrayName(reader->readString("AxisLengthsArrayName", getAxisLengthsArrayName() ) );
-  setVolumesArrayName(reader->readString("VolumesArrayName", getVolumesArrayName() ) );
-  setOmega3sArrayName(reader->readString("Omega3sArrayName", getOmega3sArrayName() ) );
-  setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setAspectRatiosArrayName(reader->readString("AspectRatiosArrayName", getAspectRatiosArrayName()));
+  setAxisEulerAnglesArrayName(reader->readString("AxisEulerAnglesArrayName", getAxisEulerAnglesArrayName()));
+  setAxisLengthsArrayName(reader->readString("AxisLengthsArrayName", getAxisLengthsArrayName()));
+  setVolumesArrayName(reader->readString("VolumesArrayName", getVolumesArrayName()));
+  setOmega3sArrayName(reader->readString("Omega3sArrayName", getOmega3sArrayName()));
+  setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -157,40 +158,61 @@ void FindShapes::dataCheck()
   INIT_DataArray(m_FeatureEigenVals, double);
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getOmega3sArrayName() );
-  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getOmega3sArrayName());
+  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
+                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_Omega3sPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName() );
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName());
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
+                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_VolumesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Volumes = m_VolumesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getAxisLengthsArrayName() );
-  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getAxisLengthsArrayName());
+  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
+                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AxisLengthsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(),
+                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CentroidsPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getAxisEulerAnglesArrayName() );
-  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getAxisEulerAnglesArrayName());
+  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AxisEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 2;
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getAspectRatiosArrayName() );
-  m_AspectRatiosPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AspectRatiosPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getAspectRatiosArrayName());
+  m_AspectRatiosPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
+                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AspectRatiosPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -237,7 +259,7 @@ void FindShapes::find_moments()
   float modYRes = yRes * float(m_ScaleFactor);
   float modZRes = zRes * float(m_ScaleFactor);
 
-  for (size_t i = 0; i < numfeatures; i++)
+  for(size_t i = 0; i < numfeatures; i++)
   {
     featuremoments[6 * i + 0] = 0.0f;
     featuremoments[6 * i + 1] = 0.0f;
@@ -252,13 +274,13 @@ void FindShapes::find_moments()
   float ydist1 = 0.0f, ydist2 = 0.0f, ydist3 = 0.0f, ydist4 = 0.0f, ydist5 = 0.0f, ydist6 = 0.0f, ydist7 = 0.0f, ydist8 = 0.0f;
   float zdist1 = 0.0f, zdist2 = 0.0f, zdist3 = 0.0f, zdist4 = 0.0f, zdist5 = 0.0f, zdist6 = 0.0f, zdist7 = 0.0f, zdist8 = 0.0f;
   size_t zStride = 0, yStride = 0;
-  for (size_t i = 0; i < zPoints; i++)
+  for(size_t i = 0; i < zPoints; i++)
   {
     zStride = i * xPoints * yPoints;
-    for (size_t j = 0; j < yPoints; j++)
+    for(size_t j = 0; j < yPoints; j++)
     {
       yStride = j * xPoints;
-      for (size_t k = 0; k < xPoints; k++)
+      for(size_t k = 0; k < xPoints; k++)
       {
         int32_t gnum = m_FeatureIds[zStride + yStride + k];
         x = float(k * modXRes);
@@ -295,21 +317,21 @@ void FindShapes::find_moments()
         ydist8 = (y2 - (m_Centroids[gnum * 3 + 1] * m_ScaleFactor));
         zdist8 = (z2 - (m_Centroids[gnum * 3 + 2] * m_ScaleFactor));
 
-        xx = ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
-             + ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
-             + ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) + ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
-        yy = ((xdist1) * (xdist1)) + ((zdist1) * (zdist1)) + ((xdist2) * (xdist2)) + ((zdist2) * (zdist2)) + ((xdist3) * (xdist3)) + ((zdist3) * (zdist3))
-             + ((xdist4) * (xdist4)) + ((zdist4) * (zdist4)) + ((xdist5) * (xdist5)) + ((zdist5) * (zdist5)) + ((xdist6) * (xdist6)) + ((zdist6) * (zdist6))
-             + ((xdist7) * (xdist7)) + ((zdist7) * (zdist7)) + ((xdist8) * (xdist8)) + ((zdist8) * (zdist8));
-        zz = ((xdist1) * (xdist1)) + ((ydist1) * (ydist1)) + ((xdist2) * (xdist2)) + ((ydist2) * (ydist2)) + ((xdist3) * (xdist3)) + ((ydist3) * (ydist3))
-             + ((xdist4) * (xdist4)) + ((ydist4) * (ydist4)) + ((xdist5) * (xdist5)) + ((ydist5) * (ydist5)) + ((xdist6) * (xdist6)) + ((ydist6) * (ydist6))
-             + ((xdist7) * (xdist7)) + ((ydist7) * (ydist7)) + ((xdist8) * (xdist8)) + ((ydist8) * (ydist8));
-        xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4)) + ((xdist5) * (ydist5)) + ((xdist6) * (ydist6))
-             + ((xdist7) * (ydist7)) + ((xdist8) * (ydist8));
-        yz = ((ydist1) * (zdist1)) + ((ydist2) * (zdist2)) + ((ydist3) * (zdist3)) + ((ydist4) * (zdist4)) + ((ydist5) * (zdist5)) + ((ydist6) * (zdist6))
-             + ((ydist7) * (zdist7)) + ((ydist8) * (zdist8));
-        xz = ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6))
-             + ((xdist7) * (zdist7)) + ((xdist8) * (zdist8));
+        xx = ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3)) + ((ydist4) * (ydist4)) +
+             ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6)) + ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) +
+             ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
+        yy = ((xdist1) * (xdist1)) + ((zdist1) * (zdist1)) + ((xdist2) * (xdist2)) + ((zdist2) * (zdist2)) + ((xdist3) * (xdist3)) + ((zdist3) * (zdist3)) + ((xdist4) * (xdist4)) +
+             ((zdist4) * (zdist4)) + ((xdist5) * (xdist5)) + ((zdist5) * (zdist5)) + ((xdist6) * (xdist6)) + ((zdist6) * (zdist6)) + ((xdist7) * (xdist7)) + ((zdist7) * (zdist7)) +
+             ((xdist8) * (xdist8)) + ((zdist8) * (zdist8));
+        zz = ((xdist1) * (xdist1)) + ((ydist1) * (ydist1)) + ((xdist2) * (xdist2)) + ((ydist2) * (ydist2)) + ((xdist3) * (xdist3)) + ((ydist3) * (ydist3)) + ((xdist4) * (xdist4)) +
+             ((ydist4) * (ydist4)) + ((xdist5) * (xdist5)) + ((ydist5) * (ydist5)) + ((xdist6) * (xdist6)) + ((ydist6) * (ydist6)) + ((xdist7) * (xdist7)) + ((ydist7) * (ydist7)) +
+             ((xdist8) * (xdist8)) + ((ydist8) * (ydist8));
+        xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4)) + ((xdist5) * (ydist5)) + ((xdist6) * (ydist6)) + ((xdist7) * (ydist7)) +
+             ((xdist8) * (ydist8));
+        yz = ((ydist1) * (zdist1)) + ((ydist2) * (zdist2)) + ((ydist3) * (zdist3)) + ((ydist4) * (zdist4)) + ((ydist5) * (zdist5)) + ((ydist6) * (zdist6)) + ((ydist7) * (zdist7)) +
+             ((ydist8) * (zdist8));
+        xz = ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6)) + ((xdist7) * (zdist7)) +
+             ((xdist8) * (zdist8));
 
         featuremoments[gnum * 6 + 0] = featuremoments[gnum * 6 + 0] + xx;
         featuremoments[gnum * 6 + 1] = featuremoments[gnum * 6 + 1] + yy;
@@ -323,12 +345,12 @@ void FindShapes::find_moments()
   }
   double sphere = (2000.0 * M_PI * M_PI) / 9.0;
   // constant for moments because voxels are broken into smaller voxels
-  double konst1 =  static_cast<double>((modXRes / 2.0) * (modYRes / 2.0) * (modZRes / 2.0));
+  double konst1 = static_cast<double>((modXRes / 2.0) * (modYRes / 2.0) * (modZRes / 2.0));
   // constant for volumes because voxels are counted as one
-  double konst2 =  static_cast<double>((xRes) * (yRes) * (zRes));
-  double konst3 =  static_cast<double>((modXRes) * (modYRes) * (modZRes));
+  double konst2 = static_cast<double>((xRes) * (yRes) * (zRes));
+  double konst3 = static_cast<double>((modXRes) * (modYRes) * (modZRes));
   double o3 = 0.0, vol5 = 0.0, omega3 = 0.0;
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     // calculating the modified volume for the omega3 value
     vol5 = m_Volumes[i] * konst3;
@@ -349,8 +371,14 @@ void FindShapes::find_moments()
     vol5 = pow(vol5, 5.0);
     omega3 = vol5 / o3;
     omega3 = omega3 / sphere;
-    if (omega3 > 1) { omega3 = 1.0; }
-    if (vol5 == 0.0) { omega3 = 0.0; }
+    if(omega3 > 1)
+    {
+      omega3 = 1.0;
+    }
+    if(vol5 == 0.0)
+    {
+      omega3 = 0.0;
+    }
     m_Omega3s[i] = static_cast<float>(omega3);
   }
 }
@@ -370,21 +398,21 @@ void FindShapes::find_moments2D()
   size_t xPoints = 0, yPoints = 0;
   float xRes = 0.0f, yRes = 0.0f;
 
-  if (m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
   {
     xPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
     xRes = m->getGeometryAs<ImageGeom>()->getYRes();
     yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
     yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if (m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
   {
     xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
     xRes = m->getGeometryAs<ImageGeom>()->getXRes();
     yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
     yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if (m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
   {
     xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
     xRes = m->getGeometryAs<ImageGeom>()->getXRes();
@@ -395,7 +423,7 @@ void FindShapes::find_moments2D()
   float modXRes = xRes * m_ScaleFactor;
   float modYRes = yRes * m_ScaleFactor;
 
-  for (size_t i = 0; i < 6 * numfeatures; i++)
+  for(size_t i = 0; i < 6 * numfeatures; i++)
   {
     featuremoments[i] = 0.0;
   }
@@ -404,10 +432,10 @@ void FindShapes::find_moments2D()
   float xdist1 = 0.0f, xdist2 = 0.0f, xdist3 = 0.0f, xdist4 = 0.0f;
   float ydist1 = 0.0f, ydist2 = 0.0f, ydist3 = 0.0f, ydist4 = 0.0f;
   size_t yStride = 0;
-  for (size_t j = 0; j < yPoints; j++)
+  for(size_t j = 0; j < yPoints; j++)
   {
     yStride = j * xPoints;
-    for (size_t k = 0; k < xPoints; k++)
+    for(size_t k = 0; k < xPoints; k++)
     {
       int32_t gnum = m_FeatureIds[yStride + k];
       x = float(k) * modXRes;
@@ -435,7 +463,7 @@ void FindShapes::find_moments2D()
   }
   double konst1 = static_cast<double>((modXRes / 2.0) * (modYRes / 2.0));
   double konst2 = static_cast<double>(xRes * yRes);
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     m_Volumes[i] = m_Volumes[i] * konst2;
     featuremoments[i * 6 + 0] = featuremoments[i * 6 + 0] * konst1;
@@ -466,7 +494,7 @@ void FindShapes::find_axes()
   m_FeatureEigenVals->resize(numfeatures * 3);
   featureeigenvals = m_FeatureEigenVals->getPointer(0);
 
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     Ixx = featuremoments[i * 6 + 0];
     Iyy = featuremoments[i * 6 + 1];
@@ -487,17 +515,26 @@ void FindShapes::find_axes()
     h = (g * g / 4.0) + (f * f * f / 27.0);
     rsquare = (g * g / 4.0) - h;
     r = sqrt(rsquare);
-    if (rsquare < 0.0) { r = 0.0; }
+    if(rsquare < 0.0)
+    {
+      r = 0.0;
+    }
     theta = 0;
-    if (r == 0)
+    if(r == 0)
     {
       theta = 0;
     }
-    if (r != 0)
+    if(r != 0)
     {
       value = -g / (2.0 * r);
-      if (value > 1) { value = 1.0; }
-      if (value < -1) { value = -1.0; }
+      if(value > 1)
+      {
+        value = 1.0;
+      }
+      if(value < -1)
+      {
+        value = -1.0;
+      }
       theta = acos(value);
     }
     double const1 = pow(r, 0.33333333333);
@@ -529,7 +566,10 @@ void FindShapes::find_axes()
     m_AxisLengths[3 * i + 2] = static_cast<float>(c / m_ScaleFactor);
     bovera = static_cast<float>(b / a);
     covera = static_cast<float>(c / a);
-    if (A == 0 || B == 0 || C == 0) { bovera = 0.0f, covera = 0.0f; }
+    if(A == 0 || B == 0 || C == 0)
+    {
+      bovera = 0.0f, covera = 0.0f;
+    }
     m_AspectRatios[2 * i] = bovera;
     m_AspectRatios[2 * i + 1] = covera;
   }
@@ -549,21 +589,21 @@ void FindShapes::find_axes2D()
   float xRes = 0.0f;
   float yRes = 0.0f;
 
-  if (m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
   {
     xPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
     xRes = m->getGeometryAs<ImageGeom>()->getYRes();
     yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
     yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if (m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
   {
     xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
     xRes = m->getGeometryAs<ImageGeom>()->getXRes();
     yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
     yRes = m->getGeometryAs<ImageGeom>()->getZRes();
   }
-  if (m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  if(m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
   {
     xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
     xRes = m->getGeometryAs<ImageGeom>()->getXRes();
@@ -574,23 +614,23 @@ void FindShapes::find_axes2D()
   m_FeatureMoments->resize(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     Ixx = featuremoments[i * 6 + 0];
     Iyy = featuremoments[i * 6 + 1];
     Ixy = featuremoments[i * 6 + 2];
     double r1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 - (Ixx * Iyy - Ixy * Ixy));
     double r2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 - (Ixx * Iyy - Ixy * Ixy));
-    if (r2 <= 0)
+    if(r2 <= 0)
     {
       float tempScale1 = 1.0f;
       float tempScale2 = 1.0f;
-      if (Ixx >= Iyy)
+      if(Ixx >= Iyy)
       {
         tempScale1 = xRes;
         tempScale2 = yRes;
       }
-      if (Ixx < Iyy)
+      if(Ixx < Iyy)
       {
         tempScale1 = yRes;
         tempScale2 = xRes;
@@ -622,7 +662,7 @@ void FindShapes::find_axes2D()
 void FindShapes::find_axiseulers()
 {
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     double Ixx = featuremoments[i * 6 + 0];
     double Iyy = featuremoments[i * 6 + 1];
@@ -635,17 +675,17 @@ void FindShapes::find_axiseulers()
     double radius3 = featureeigenvals[3 * i + 2];
 
     double e[3][1];
-    double vect[3][3] = { { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 } };
+    double vect[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
     e[0][0] = radius1;
     e[1][0] = radius2;
     e[2][0] = radius3;
-    double uber[3][3] = { { 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 } };
+    double uber[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
     double bmat[3][1];
     bmat[0][0] = 0.0000001;
     bmat[1][0] = 0.0000001;
     bmat[2][0] = 0.0000001;
 
-    for (int32_t j = 0; j < 3; j++)
+    for(int32_t j = 0; j < 3; j++)
     {
       uber[0][0] = Ixx - e[j][0];
       uber[0][1] = Ixy;
@@ -658,9 +698,9 @@ void FindShapes::find_axiseulers()
       uber[2][2] = Izz - e[j][0];
       double** uberelim;
       double** uberbelim;
-      uberelim = new double *[3];
-      uberbelim = new double *[3];
-      for (int32_t d = 0; d < 3; d++)
+      uberelim = new double*[3];
+      uberbelim = new double*[3];
+      for(int32_t d = 0; d < 3; d++)
       {
         uberelim[d] = new double[3];
         uberbelim[d] = new double[1];
@@ -670,10 +710,10 @@ void FindShapes::find_axiseulers()
       double q = 0.0;
       double sum = 0.0;
       double c = 0.0;
-      for (int32_t a = 0; a < 3; a++)
+      for(int32_t a = 0; a < 3; a++)
       {
         elimcount1 = 0;
-        for (int32_t b = 0; b < 3; b++)
+        for(int32_t b = 0; b < 3; b++)
         {
           uberelim[elimcount][elimcount1] = uber[a][b];
           elimcount1++;
@@ -681,12 +721,12 @@ void FindShapes::find_axiseulers()
         uberbelim[elimcount][0] = bmat[a][0];
         elimcount++;
       }
-      for (int32_t k = 0; k < elimcount - 1; k++)
+      for(int32_t k = 0; k < elimcount - 1; k++)
       {
-        for (int32_t l = k + 1; l < elimcount; l++)
+        for(int32_t l = k + 1; l < elimcount; l++)
         {
           c = uberelim[l][k] / uberelim[k][k];
-          for (int32_t r = k + 1; r < elimcount; r++)
+          for(int32_t r = k + 1; r < elimcount; r++)
           {
             uberelim[l][r] = uberelim[l][r] - c * uberelim[k][r];
           }
@@ -694,22 +734,22 @@ void FindShapes::find_axiseulers()
         }
       }
       uberbelim[elimcount - 1][0] = uberbelim[elimcount - 1][0] / uberelim[elimcount - 1][elimcount - 1];
-      for (int32_t l = 1; l < elimcount; l++)
+      for(int32_t l = 1; l < elimcount; l++)
       {
         int32_t r = (elimcount - 1) - l;
         sum = 0.0;
-        for (int32_t n = r + 1; n < elimcount; n++)
+        for(int32_t n = r + 1; n < elimcount; n++)
         {
           sum = sum + (uberelim[r][n] * uberbelim[n][0]);
         }
         uberbelim[r][0] = (uberbelim[r][0] - sum) / uberelim[r][r];
       }
-      for (int32_t p = 0; p < elimcount; p++)
+      for(int32_t p = 0; p < elimcount; p++)
       {
         q = uberbelim[p][0];
         vect[j][p] = q;
       }
-      for (int32_t d = 0; d < 3; d++)
+      for(int32_t d = 0; d < 3; d++)
       {
         delete uberelim[d];
         delete uberbelim[d];
@@ -740,9 +780,9 @@ void FindShapes::find_axiseulers()
     n3y = n3y / norm3;
     n3z = n3z / norm3;
 
-    //insert principal unit vectors into rotation matrix representing Feature reference frame within the sample reference frame
+    // insert principal unit vectors into rotation matrix representing Feature reference frame within the sample reference frame
     //(Note that the 3 direction is actually the long axis and the 1 direction is actually the short axis)
-    float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
     g[0][0] = n3x;
     g[0][1] = n3y;
     g[0][2] = n3z;
@@ -753,10 +793,10 @@ void FindShapes::find_axiseulers()
     g[2][1] = n1y;
     g[2][2] = n1z;
 
-    //check for right-handedness
-    typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
+    // check for right-handedness
+    typedef OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result = FOrientTransformsType::om_check(FOrientArrayType(g));
-    if (result.result == 0)
+    if(result.result == 0)
     {
       g[2][0] *= -1.0f;
       g[2][1] *= -1.0f;
@@ -779,21 +819,21 @@ void FindShapes::find_axiseulers2D()
 {
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     double Ixx = featuremoments[i * 6 + 0];
     double Iyy = featuremoments[i * 6 + 1];
     double Ixy = featuremoments[i * 6 + 2];
-    if (Ixy == 0)
+    if(Ixy == 0)
     {
-      if (Ixx > Iyy)
+      if(Ixx > Iyy)
       {
         m_AxisEulerAngles[3 * i] = static_cast<float>(SIMPLib::Constants::k_PiOver2);
         m_AxisEulerAngles[3 * i + 1] = 0.0f;
         m_AxisEulerAngles[3 * i + 2] = 0.0f;
         continue;
       }
-      if (Iyy >= Ixx)
+      if(Iyy >= Ixx)
       {
         m_AxisEulerAngles[3 * i] = 0.0f;
         m_AxisEulerAngles[3 * i + 1] = 0.0f;
@@ -815,7 +855,10 @@ void FindShapes::find_axiseulers2D()
     n2y = n2y / norm2;
     double cosine1 = n1x;
     double ea1 = acos(cosine1);
-    if (ea1 > M_PI) { ea1 = ea1 - M_PI; }
+    if(ea1 > M_PI)
+    {
+      ea1 = ea1 - M_PI;
+    }
     m_AxisEulerAngles[3 * i] = static_cast<float>(ea1);
     m_AxisEulerAngles[3 * i + 1] = 0.0f;
     m_AxisEulerAngles[3 * i + 2] = 0.0f;
@@ -829,7 +872,10 @@ void FindShapes::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
@@ -837,17 +883,41 @@ void FindShapes::execute()
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
   m_ScaleFactor = static_cast<double>(1.0 / xRes);
-  if (yRes > xRes && yRes > zRes) { m_ScaleFactor = static_cast<double>(1.0 / yRes); }
-  if (zRes > xRes && zRes > yRes) { m_ScaleFactor = static_cast<double>(1.0 / zRes); }
+  if(yRes > xRes && yRes > zRes)
+  {
+    m_ScaleFactor = static_cast<double>(1.0 / yRes);
+  }
+  if(zRes > xRes && zRes > yRes)
+  {
+    m_ScaleFactor = static_cast<double>(1.0 / zRes);
+  }
 
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_moments(); }
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_moments2D(); }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1)
+  {
+    find_moments();
+  }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  {
+    find_moments2D();
+  }
 
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_axes(); }
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_axes2D(); }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1)
+  {
+    find_axes();
+  }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  {
+    find_axes2D();
+  }
 
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) { find_axiseulers(); }
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) { find_axiseulers2D(); }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1)
+  {
+    find_axiseulers();
+  }
+  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  {
+    find_axiseulers2D();
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -888,23 +958,29 @@ const QString FindShapes::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindShapes::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindShapes::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindShapes::getHumanLabel()
-{ return "Find Feature Shapes"; }
+{
+  return "Find Feature Shapes";
+}

@@ -73,7 +73,7 @@ int LogNormalOps::calculateParameters(std::vector<float>& data, FloatArrayType::
     stddev = stddev / float(data.size());
     stddev = sqrt(stddev);
   }
-  else if (data.size() == 1)
+  else if(data.size() == 1)
   {
     avg = data[0];
     stddev = 0;
@@ -90,7 +90,7 @@ int LogNormalOps::calculateParameters(std::vector<float>& data, FloatArrayType::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs)
+int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float>>& data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float avg = 0;
@@ -113,7 +113,7 @@ int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> >
       stddev = stddev / float(data[i].size());
       stddev = sqrt(stddev);
     }
-    else if (data[i].size() == 1)
+    else if(data[i].size() == 1)
     {
       avg = data[i][0];
       stddev = 0;
@@ -128,4 +128,3 @@ int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> >
   }
   return err;
 }
-

@@ -43,7 +43,6 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
 
-
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
@@ -52,12 +51,12 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints() :
-  SampleSurfaceMesh(),
-  m_InputFilePath(""),
-  m_OutputFilePath(""),
-  m_FeatureIds(nullptr),
-  m_NumPoints(0)
+SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints()
+: SampleSurfaceMesh()
+, m_InputFilePath("")
+, m_OutputFilePath("")
+, m_FeatureIds(nullptr)
+, m_NumPoints(0)
 {
   setupFilterParameters();
 }
@@ -98,8 +97,10 @@ void SampleSurfaceMeshSpecifiedPoints::readFilterParameters(AbstractFilterParame
 void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 {
   setErrorCondition(0);
-  if (nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -119,13 +120,13 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   initialize();
   DataArrayPath tempPath;
 
-  if (true == m_InputFilePath.isEmpty())
+  if(true == m_InputFilePath.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
-  if (true == m_OutputFilePath.isEmpty())
+  if(true == m_OutputFilePath.isEmpty())
   {
     QString ss = QObject::tr("The output file must be set");
     setErrorCondition(-1);
@@ -133,7 +134,10 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   }
 
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
-  if (getErrorCondition() < 0 || nullptr == v.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == v.get())
+  {
+    return;
+  }
 
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   v->setGeometry(vertices);
@@ -143,9 +147,12 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims);              /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -154,11 +161,11 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 void SampleSurfaceMeshSpecifiedPoints::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
   SampleSurfaceMesh::preflight();
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
 }
@@ -176,7 +183,7 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
   // get the number of points in the specified points file
   inFile >> m_NumPoints;
 
-  if (m_NumPoints <= 0)
+  if(m_NumPoints <= 0)
   {
     QString ss = QObject::tr("Number of points to sample (%1) must be positive").arg(m_NumPoints);
     setErrorCondition(-1);
@@ -188,9 +195,9 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
 
   VertexGeom::Pointer points = VertexGeom::CreateGeometry(m_NumPoints, "Points");
 
-  float coords[3] = { 0.0f, 0.0f, 0.0f };
+  float coords[3] = {0.0f, 0.0f, 0.0f};
 
-  for (int64_t i = 0; i < m_NumPoints; i++)
+  for(int64_t i = 0; i < m_NumPoints; i++)
   {
     inFile >> coords[0] >> coords[1] >> coords[2];
     points->setCoords(i, coords);
@@ -211,7 +218,7 @@ void SampleSurfaceMeshSpecifiedPoints::assign_points(Int32ArrayType::Pointer iAr
   updateVertexInstancePointers();
 
   int32_t* ids = iArray->getPointer(0);
-  for (int64_t i = 0; i < m_NumPoints; i++)
+  for(int64_t i = 0; i < m_NumPoints; i++)
   {
     m_FeatureIds[i] = ids[i];
   }
@@ -224,13 +231,16 @@ void SampleSurfaceMeshSpecifiedPoints::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   SampleSurfaceMesh::execute();
 
   std::ofstream outFile;
   outFile.open(m_OutputFilePath.toLatin1().data());
-  for (int64_t i = 0; i < m_NumPoints; i++)
+  for(int64_t i = 0; i < m_NumPoints; i++)
   {
     outFile << m_FeatureIds[i] << std::endl;
   }
@@ -275,23 +285,29 @@ const QString SampleSurfaceMeshSpecifiedPoints::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
+  vStream << Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMeshSpecifiedPoints::getGroupName()
-{ return SIMPL::FilterGroups::SamplingFilters; }
+{
+  return SIMPL::FilterGroups::SamplingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMeshSpecifiedPoints::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ResolutionFilters; }
+{
+  return SIMPL::FilterSubGroups::ResolutionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMeshSpecifiedPoints::getHumanLabel()
-{ return "Sample Triangle Geometry at Specified Points"; }
+{
+  return "Sample Triangle Geometry at Specified Points";
+}

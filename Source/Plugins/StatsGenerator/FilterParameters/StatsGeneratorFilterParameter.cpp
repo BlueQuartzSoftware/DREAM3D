@@ -36,21 +36,22 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorFilterParameter::StatsGeneratorFilterParameter() :
-FilterParameter()
-{}
+StatsGeneratorFilterParameter::StatsGeneratorFilterParameter()
+: FilterParameter()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 StatsGeneratorFilterParameter::~StatsGeneratorFilterParameter()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& defaultValue, Category category, int groupIndex)
+StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QString& defaultValue, Category category, int groupIndex)
 {
 
   StatsGeneratorFilterParameter::Pointer ptr = StatsGeneratorFilterParameter::New();
@@ -60,10 +61,8 @@ StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::New(const 
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
 
-
   return ptr;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -72,4 +71,3 @@ QString StatsGeneratorFilterParameter::getWidgetType()
 {
   return QString("StatsGeneratorWidget");
 }
-

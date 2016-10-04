@@ -39,11 +39,11 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
@@ -56,13 +56,15 @@
  */
 class CompareFunctor
 {
-  public:
-    virtual ~CompareFunctor() {}
+public:
+  virtual ~CompareFunctor()
+  {
+  }
 
-    virtual bool operator()(int64_t index, int64_t neighIndex, int32_t gnum)  // call using () operator
-    {
-      return false;
-    }
+  virtual bool operator()(int64_t index, int64_t neighIndex, int32_t gnum) // call using () operator
+  {
+    return false;
+  }
 };
 
 /**
@@ -70,108 +72,120 @@ class CompareFunctor
  */
 class TSpecificCompareFunctorBool : public CompareFunctor
 {
-  public:
-    TSpecificCompareFunctorBool(void* data, int64_t length, bool tolerance, int32_t* featureIds) :
-      m_Length(length),
-      m_FeatureIds(featureIds)
-    {
-      m_Data = reinterpret_cast<bool*>(data);
-    }
-    virtual ~TSpecificCompareFunctorBool() {}
+public:
+  TSpecificCompareFunctorBool(void* data, int64_t length, bool tolerance, int32_t* featureIds)
+  : m_Length(length)
+  , m_FeatureIds(featureIds)
+  {
+    m_Data = reinterpret_cast<bool*>(data);
+  }
+  virtual ~TSpecificCompareFunctorBool()
+  {
+  }
 
-    virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
+  virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
+  {
+    // Sanity check the indices that are being passed in.
+    if(referencepoint >= m_Length || neighborpoint >= m_Length)
     {
-      // Sanity check the indices that are being passed in.
-      if (referencepoint >= m_Length || neighborpoint >= m_Length) { return false; }
-
-      if ( m_Data[neighborpoint] == m_Data[referencepoint])
-      {
-        m_FeatureIds[neighborpoint] = gnum;
-        return true;
-      }
       return false;
     }
 
-  protected:
-    TSpecificCompareFunctorBool() {}
+    if(m_Data[neighborpoint] == m_Data[referencepoint])
+    {
+      m_FeatureIds[neighborpoint] = gnum;
+      return true;
+    }
+    return false;
+  }
 
-  private:
-    bool* m_Data; // The data that is being compared
-    int64_t m_Length; // Length of the Data Array
-    int32_t* m_FeatureIds; // The Feature Ids
+protected:
+  TSpecificCompareFunctorBool()
+  {
+  }
+
+private:
+  bool* m_Data;          // The data that is being compared
+  int64_t m_Length;      // Length of the Data Array
+  int32_t* m_FeatureIds; // The Feature Ids
 };
 
 /**
  * @brief The TSpecificCompareFunctor class extens @see CompareFunctor to compare templated data
  */
-template<class T>
-class TSpecificCompareFunctor : public CompareFunctor
+template <class T> class TSpecificCompareFunctor : public CompareFunctor
 {
-  public:
-    TSpecificCompareFunctor(void* data, int64_t length, T tolerance, int32_t* featureIds) :
-      m_Length(length),
-      m_Tolerance(tolerance),
-      m_FeatureIds(featureIds)
-    {
-      m_Data = reinterpret_cast<T*>(data);
-    }
-    virtual ~TSpecificCompareFunctor() {}
+public:
+  TSpecificCompareFunctor(void* data, int64_t length, T tolerance, int32_t* featureIds)
+  : m_Length(length)
+  , m_Tolerance(tolerance)
+  , m_FeatureIds(featureIds)
+  {
+    m_Data = reinterpret_cast<T*>(data);
+  }
+  virtual ~TSpecificCompareFunctor()
+  {
+  }
 
-    virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
+  virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
+  {
+    // Sanity check the indices that are being passed in.
+    if(referencepoint >= m_Length || neighborpoint >= m_Length)
     {
-      // Sanity check the indices that are being passed in.
-      if (referencepoint >= m_Length || neighborpoint >= m_Length) { return false; }
-
-      if(m_Data[referencepoint] >= m_Data[neighborpoint])
-      {
-        if ((m_Data[referencepoint] - m_Data[neighborpoint]) <= m_Tolerance)
-        {
-          m_FeatureIds[neighborpoint] = gnum;
-          return true;
-        }
-      }
-      else
-      {
-        if ((m_Data[neighborpoint] - m_Data[referencepoint]) <= m_Tolerance)
-        {
-          m_FeatureIds[neighborpoint] = gnum;
-          return true;
-        }
-      }
       return false;
     }
 
-  protected:
-    TSpecificCompareFunctor() {}
+    if(m_Data[referencepoint] >= m_Data[neighborpoint])
+    {
+      if((m_Data[referencepoint] - m_Data[neighborpoint]) <= m_Tolerance)
+      {
+        m_FeatureIds[neighborpoint] = gnum;
+        return true;
+      }
+    }
+    else
+    {
+      if((m_Data[neighborpoint] - m_Data[referencepoint]) <= m_Tolerance)
+      {
+        m_FeatureIds[neighborpoint] = gnum;
+        return true;
+      }
+    }
+    return false;
+  }
 
-  private:
-    T* m_Data; // The data that is being compared
-    int64_t m_Length; // Length of the Data Array
-    T      m_Tolerance; // The tolerance of the comparison
-    int32_t* m_FeatureIds; // The Feature Ids
+protected:
+  TSpecificCompareFunctor()
+  {
+  }
+
+private:
+  T* m_Data;             // The data that is being compared
+  int64_t m_Length;      // Length of the Data Array
+  T m_Tolerance;         // The tolerance of the comparison
+  int32_t* m_FeatureIds; // The Feature Ids
 };
 
 // Include the MOC generated file for this class
 #include "moc_ScalarSegmentFeatures.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ScalarSegmentFeatures::ScalarSegmentFeatures() :
-  SegmentFeatures(),
-  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName),
-  m_ScalarArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""),
-  m_ScalarTolerance(5.0f),
-  m_RandomizeFeatureIds(true),
-  m_UseGoodVoxels(true),
-  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
-  m_ActiveArrayName(SIMPL::FeatureData::Active),
-  m_GoodVoxels(nullptr),
-  m_InputData(nullptr),
-  m_FeatureIds(nullptr),
-  m_Active(nullptr)
+ScalarSegmentFeatures::ScalarSegmentFeatures()
+: SegmentFeatures()
+, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
+, m_ScalarArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
+, m_ScalarTolerance(5.0f)
+, m_RandomizeFeatureIds(true)
+, m_UseGoodVoxels(true)
+, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
+, m_ActiveArrayName(SIMPL::FeatureData::Active)
+, m_GoodVoxels(nullptr)
+, m_InputData(nullptr)
+, m_FeatureIds(nullptr)
+, m_Active(nullptr)
 {
   setupFilterParameters();
 }
@@ -194,11 +208,13 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, ScalarSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Scalar Array to Segment", ScalarArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -215,13 +231,13 @@ void ScalarSegmentFeatures::setupFilterParameters()
 void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName() ) );
-  setCellFeatureAttributeMatrixName(reader->readString("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName() ) );
-  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels() ) );
-  setScalarArrayPath( reader->readDataArrayPath( "ScalarArrayPath", getScalarArrayPath() ) );
-  setScalarTolerance( reader->readValue("ScalarTolerance", getScalarTolerance()) );
+  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName()));
+  setCellFeatureAttributeMatrixName(reader->readString("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
+  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
+  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels()));
+  setScalarArrayPath(reader->readDataArrayPath("ScalarArrayPath", getScalarArrayPath()));
+  setScalarTolerance(reader->readValue("ScalarTolerance", getScalarTolerance()));
   reader->closeFilterGroup();
 }
 
@@ -232,8 +248,10 @@ void ScalarSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Active = m_ActivePtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -241,7 +259,6 @@ void ScalarSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -256,10 +273,16 @@ void ScalarSegmentFeatures::dataCheck()
   setDataContainerName(m_ScalarArrayPath.getDataContainerName());
 
   SegmentFeatures::dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get())
+  {
+    return;
+  }
 
   QVector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
@@ -267,36 +290,52 @@ void ScalarSegmentFeatures::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
-  tempPath.update(getDataContainerName(), m_ScalarArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName() );
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getDataContainerName(), m_ScalarArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName());
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_InputDataPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getScalarArrayPath()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_InputDataPtr.lock().get() )
+  m_InputDataPtr =
+      getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getScalarArrayPath()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_InputDataPtr.lock().get())
   {
     m_InputData = m_InputDataPtr.lock()->getVoidPointer(0);
-    if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)
+    if(m_InputDataPtr.lock()->getNumberOfComponents() != 1)
     {
       QString ss = QObject::tr("The selected array is not a scalar array. The number of components is %1").arg(m_InputDataPtr.lock()->getNumberOfComponents());
       setErrorCondition(-3011);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getScalarArrayPath()); }
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getScalarArrayPath());
+  }
 
   if(m_UseGoodVoxels == true)
   {
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); }
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                       cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0)
+    {
+      dataArrayPaths.push_back(getGoodVoxelsArrayPath());
+    }
   }
 
-  tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
-  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName());
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true,
+                                                                                                             cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Active = m_ActivePtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -333,7 +372,7 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
   int64_t* gid = rndNumbers->getPointer(0);
   gid[0] = 0;
 
-  for (int64_t i = 1; i < totalFeatures; ++i)
+  for(int64_t i = 1; i < totalFeatures; ++i)
   {
     gid[i] = i;
   }
@@ -342,10 +381,10 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
   int64_t temp = 0;
 
   //--- Shuffle elements by randomly exchanging each with one other.
-  for (int64_t i = 1; i < totalFeatures; i++)
+  for(int64_t i = 1; i < totalFeatures; i++)
   {
     r = numberGenerator(); // Random remaining position.
-    if (r >= totalFeatures)
+    if(r >= totalFeatures)
     {
       continue;
     }
@@ -355,7 +394,7 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
   }
 
   // Now adjust all the Grain Id values for each Voxel
-  for (int64_t i = 0; i < totalPoints; ++i)
+  for(int64_t i = 0; i < totalPoints; ++i)
   {
     m_FeatureIds[i] = gid[m_FeatureIds[i]];
   }
@@ -373,19 +412,25 @@ int64_t ScalarSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   int64_t seed = -1;
   // start with the next voxel after the last seed
   size_t randpoint = static_cast<size_t>(nextSeed);
-  while (seed == -1 && randpoint < totalPoints)
+  while(seed == -1 && randpoint < totalPoints)
   {
-    if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
+    if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
-      if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
+      if(m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
       {
         seed = randpoint;
       }
-      else { randpoint += 1; }
+      else
+      {
+        randpoint += 1;
+      }
     }
-    else { randpoint += 1; }
+    else
+    {
+      randpoint += 1;
+    }
   }
-  if (seed >= 0)
+  if(seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
     QVector<size_t> tDims(1, gnum + 1);
@@ -400,10 +445,10 @@ int64_t ScalarSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 // -----------------------------------------------------------------------------
 bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
 {
-  if (m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
+  if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
   {
     CompareFunctor* func = m_Compare.get();
-    return (*func)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
+    return (*func)((size_t)(referencepoint), (size_t)(neighborpoint), gnum);
     //     | Functor  ||calling the operator() method of the CompareFunctor Class |
   }
   else
@@ -420,7 +465,7 @@ void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin,
   m_Distribution = std::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
   m_RandomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
   m_NumberGenerator = std::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
-  m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
+  m_RandomNumberGenerator->seed(static_cast<size_t>(QDateTime::currentMSecsSinceEpoch())); // seed with the current time
 }
 
 // -----------------------------------------------------------------------------
@@ -430,7 +475,10 @@ void ScalarSegmentFeatures::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
@@ -442,53 +490,53 @@ void ScalarSegmentFeatures::execute()
   int64_t inDataPoints = static_cast<int64_t>(m_InputDataPtr.lock()->getNumberOfTuples());
 
   QString dType = m_InputDataPtr.lock()->getTypeAsString();
-  if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)
+  if(m_InputDataPtr.lock()->getNumberOfComponents() != 1)
   {
     m_Compare = std::shared_ptr<CompareFunctor>(new CompareFunctor()); // The default CompareFunctor which ALWAYS returns false for the comparison
   }
-  else if (dType.compare("int8_t") == 0)
+  else if(dType.compare("int8_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int8_t> >(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int8_t>>(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("uint8_t") == 0)
+  else if(dType.compare("uint8_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint8_t> >(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint8_t>>(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("bool") == 0)
+  else if(dType.compare("bool") == 0)
   {
     m_Compare = std::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("int16_t") == 0)
+  else if(dType.compare("int16_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int16_t> >(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int16_t>>(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("uint16_t") == 0)
+  else if(dType.compare("uint16_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint16_t> >(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint16_t>>(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("int32_t") == 0)
+  else if(dType.compare("int32_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int32_t> >(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int32_t>>(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("uint32_t") == 0)
+  else if(dType.compare("uint32_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint32_t> >(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint32_t>>(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("int64_t") == 0)
+  else if(dType.compare("int64_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int64_t> >(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int64_t>>(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("uint64_t") == 0)
+  else if(dType.compare("uint64_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint64_t> >(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint64_t>>(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("float") == 0)
+  else if(dType.compare("float") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<float> >(new TSpecificCompareFunctor<float>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<float>>(new TSpecificCompareFunctor<float>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
-  else if (dType.compare("double") == 0)
+  else if(dType.compare("double") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<double> >(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<double>>(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
@@ -499,7 +547,7 @@ void ScalarSegmentFeatures::execute()
   SegmentFeatures::execute();
 
   int64_t totalFeatures = static_cast<int64_t>(m_ActivePtr.lock()->getNumberOfTuples());
-  if (totalFeatures < 2)
+  if(totalFeatures < 2)
   {
     setErrorCondition(-87000);
     notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high", getErrorCondition());
@@ -507,7 +555,7 @@ void ScalarSegmentFeatures::execute()
   }
 
   // By default we randomize grains
-  if (true == m_RandomizeFeatureIds)
+  if(true == m_RandomizeFeatureIds)
   {
     totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
     randomizeFeatureIds(totalPoints, totalFeatures);
@@ -553,23 +601,29 @@ const QString ScalarSegmentFeatures::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
+  vStream << Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScalarSegmentFeatures::getGroupName()
-{ return SIMPL::FilterGroups::ReconstructionFilters; }
+{
+  return SIMPL::FilterGroups::ReconstructionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScalarSegmentFeatures::getSubGroupName()
-{ return SIMPL::FilterSubGroups::SegmentationFilters;}
+{
+  return SIMPL::FilterSubGroups::SegmentationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ScalarSegmentFeatures::getHumanLabel()
-{ return "Segment Features (Scalar)"; }
+{
+  return "Segment Features (Scalar)";
+}

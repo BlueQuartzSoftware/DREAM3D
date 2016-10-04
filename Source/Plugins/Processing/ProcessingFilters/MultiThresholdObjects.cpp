@@ -38,9 +38,9 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/ThresholdFilterHelper.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ComparisonSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -48,16 +48,14 @@
 // Include the MOC generated file for this class
 #include "moc_MultiThresholdObjects.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiThresholdObjects::MultiThresholdObjects() :
-  AbstractFilter(),
-  m_DestinationArrayName(SIMPL::GeneralData::Mask),
-  m_SelectedThresholds(),
-  m_Destination(nullptr)
+MultiThresholdObjects::MultiThresholdObjects()
+: AbstractFilter()
+, m_DestinationArrayName(SIMPL::GeneralData::Mask)
+, m_SelectedThresholds()
+, m_Destination(nullptr)
 {
   setupFilterParameters();
 }
@@ -96,7 +94,7 @@ void MultiThresholdObjects::setupFilterParameters()
 void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDestinationArrayName(reader->readString("DestinationArrayName", getDestinationArrayName() ) );
+  setDestinationArrayName(reader->readString("DestinationArrayName", getDestinationArrayName()));
   setSelectedThresholds(reader->readComparisonInputs("SelectedThresholds", getSelectedThresholds()));
   reader->closeFilterGroup();
 }
@@ -106,7 +104,6 @@ void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 void MultiThresholdObjects::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -116,7 +113,7 @@ void MultiThresholdObjects::dataCheck()
 {
   setErrorCondition(0);
 
-  if (m_SelectedThresholds.size() == 0)
+  if(m_SelectedThresholds.size() == 0)
   {
     setErrorCondition(-12000);
     notifyErrorMessage(getHumanLabel(), "You must add at least 1 threshold value.", getErrorCondition());
@@ -152,12 +149,15 @@ void MultiThresholdObjects::dataCheck()
     ComparisonInput_t comp = m_SelectedThresholds[0];
     QVector<size_t> cDims(1, 1);
     DataArrayPath tempPath(comp.dataContainerName, comp.attributeMatrixName, getDestinationArrayName());
-    m_DestinationPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_DestinationPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true,
+                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_DestinationPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_Destination = m_DestinationPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     // Do not allow non-scalar arrays
-    for (size_t i = 0; i < m_SelectedThresholds.size(); ++i)
+    for(size_t i = 0; i < m_SelectedThresholds.size(); ++i)
     {
       ComparisonInput_t comp = m_SelectedThresholds[i];
       tempPath.update(comp.dataContainerName, comp.attributeMatrixName, comp.attributeArrayName);
@@ -166,11 +166,11 @@ void MultiThresholdObjects::dataCheck()
       {
         cDims = inputData->getComponentDimensions();
         int32_t numComp = static_cast<int32_t>(cDims[0]);
-        for (int32_t d = 1; d < cDims.size(); d++)
+        for(int32_t d = 1; d < cDims.size(); d++)
         {
           numComp *= cDims[d];
         }
-        if (numComp > 1)
+        if(numComp > 1)
         {
           QString ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedThresholds[i].attributeArrayName);
           setErrorCondition(-11003);
@@ -202,7 +202,10 @@ void MultiThresholdObjects::execute()
   int32_t err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Get the first comparison object
   ComparisonInput_t& comp_0 = m_SelectedThresholds[0];
@@ -218,7 +221,7 @@ void MultiThresholdObjects::execute()
     ThresholdFilterHelper filter(static_cast<SIMPL::Comparison::Enumeration>(comp_0.compOperator), comp_0.compValue, m_DestinationPtr.lock().get());
     // Run the first threshold and store the results in our output array
     err = filter.execute(m->getAttributeMatrix(amName)->getAttributeArray(comp_0.attributeArrayName).get(), m_DestinationPtr.lock().get());
-    if (err < 0)
+    if(err < 0)
     {
       DataArrayPath tempPath(comp_0.dataContainerName, comp_0.attributeMatrixName, comp_0.attributeArrayName);
       QString ss = QObject::tr("Error Executing threshold filter on first array. The path is %1").arg(tempPath.serialize());
@@ -228,14 +231,14 @@ void MultiThresholdObjects::execute()
     }
   }
 
-  if (m_SelectedThresholds.size() > 1)
+  if(m_SelectedThresholds.size() > 1)
   {
     // Get the total number of tuples, create and initialize an array to use for these results
     int64_t totalTuples = static_cast<int64_t>(m->getAttributeMatrix(amName)->getNumberOfTuples());
     BoolArrayType::Pointer currentArrayPtr = BoolArrayType::CreateArray(totalTuples, "_INTERNAL_USE_ONLY_TEMP");
 
     // Loop on the remaining Comparison objects updating our final result array as we go
-    for (int32_t i = 1; i < m_SelectedThresholds.size(); ++i)
+    for(int32_t i = 1; i < m_SelectedThresholds.size(); ++i)
     {
       // Initialize the array to false
       currentArrayPtr->initializeWithZeros();
@@ -247,7 +250,7 @@ void MultiThresholdObjects::execute()
       ThresholdFilterHelper filter(static_cast<SIMPL::Comparison::Enumeration>(compRef.compOperator), compRef.compValue, currentArrayPtr.get());
 
       err = filter.execute(m->getAttributeMatrix(amName)->getAttributeArray(compRef.attributeArrayName).get(), currentArrayPtr.get());
-      if (err < 0)
+      if(err < 0)
       {
         DataArrayPath tempPath(compRef.dataContainerName, compRef.attributeMatrixName, compRef.attributeArrayName);
         QString ss = QObject::tr("Error Executing threshold filter on array. The path is %1").arg(tempPath.serialize());
@@ -255,9 +258,9 @@ void MultiThresholdObjects::execute()
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
-      for (int64_t p = 0; p < totalTuples; ++p)
+      for(int64_t p = 0; p < totalTuples; ++p)
       {
-        if (m_Destination[p] == false || currentArray[p] == false)
+        if(m_Destination[p] == false || currentArray[p] == false)
         {
           m_Destination[p] = false;
         }
@@ -305,23 +308,29 @@ const QString MultiThresholdObjects::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
+  vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ThresholdFilters; }
+{
+  return SIMPL::FilterSubGroups::ThresholdFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getHumanLabel()
-{ return "Threshold Objects"; }
+{
+  return "Threshold Objects";
+}

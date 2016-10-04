@@ -46,15 +46,14 @@
 // Include the MOC generated file for this class
 #include "moc_GenerateGeometryConnectivity.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateGeometryConnectivity::GenerateGeometryConnectivity() :
-  SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(""),
-  m_GenerateVertexTriangleLists(true),
-  m_GenerateTriangleNeighbors(true)
+GenerateGeometryConnectivity::GenerateGeometryConnectivity()
+: SurfaceMeshFilter()
+, m_SurfaceDataContainerName("")
+, m_GenerateVertexTriangleLists(true)
+, m_GenerateTriangleNeighbors(true)
 {
   setupFilterParameters();
 }
@@ -87,9 +86,9 @@ void GenerateGeometryConnectivity::setupFilterParameters()
 void GenerateGeometryConnectivity::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
-  setGenerateVertexTriangleLists( reader->readValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists()) );
-  setGenerateTriangleNeighbors( reader->readValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors()) );
+  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
+  setGenerateVertexTriangleLists(reader->readValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists()));
+  setGenerateTriangleNeighbors(reader->readValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors()));
   reader->closeFilterGroup();
 }
 
@@ -98,7 +97,6 @@ void GenerateGeometryConnectivity::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -130,27 +128,30 @@ void GenerateGeometryConnectivity::execute()
   int32_t err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
   IGeometry::Pointer geom = sm->getGeometry();
 
-  if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
+  if(m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage(getHumanLabel(), "Generating Vertex Element List");
     err = geom->findElementsContainingVert();
-    if (err < 0)
+    if(err < 0)
     {
       setErrorCondition(-400);
       QString ss = QObject::tr("Error generating vertex element list for Geometry type %1").arg(geom->getGeometryTypeAsString());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
-  if (m_GenerateTriangleNeighbors == true)
+  if(m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage(getHumanLabel(), "Generating Element Neighbors List");
     err = geom->findElementNeighbors();
-    if (err < 0)
+    if(err < 0)
     {
       setErrorCondition(-401);
       QString ss = QObject::tr("Error generating element neighbor list for Geometry type %1").arg(geom->getGeometryTypeAsString());
@@ -198,23 +199,29 @@ const QString GenerateGeometryConnectivity::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getGroupName()
-{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
+{
+  return SIMPL::FilterGroups::SurfaceMeshingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ConnectivityArrangementFilters; }
+{
+  return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getHumanLabel()
-{ return "Generate Geometry Connectivity"; }
+{
+  return "Generate Geometry Connectivity";
+}

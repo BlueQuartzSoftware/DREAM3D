@@ -37,9 +37,9 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -49,18 +49,16 @@
 // Include the MOC generated file for this class
 #include "moc_FindLargestCrossSections.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindLargestCrossSections::FindLargestCrossSections() :
-  AbstractFilter(),
-  m_Plane(0),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_LargestCrossSectionsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::LargestCrossSections),
-  m_FeatureIds(nullptr),
-  m_LargestCrossSections(nullptr)
+FindLargestCrossSections::FindLargestCrossSections()
+: AbstractFilter()
+, m_Plane(0)
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_LargestCrossSectionsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::LargestCrossSections)
+, m_FeatureIds(nullptr)
+, m_LargestCrossSections(nullptr)
 {
   setupFilterParameters();
 }
@@ -95,7 +93,8 @@ void FindLargestCrossSections::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindLargestCrossSections, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
@@ -111,8 +110,8 @@ void FindLargestCrossSections::readFilterParameters(AbstractFilterParametersRead
 {
   reader->openFilterGroup(this, index);
   setLargestCrossSectionsArrayPath(reader->readDataArrayPath("LargestCrossSectionsArrayPath", getLargestCrossSectionsArrayPath()));
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setPlane( reader->readValue("Plane", getPlane()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setPlane(reader->readValue("Plane", getPlane()));
   reader->closeFilterGroup();
 }
 
@@ -121,7 +120,6 @@ void FindLargestCrossSections::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -132,21 +130,30 @@ void FindLargestCrossSections::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_LargestCrossSectionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getLargestCrossSectionsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_LargestCrossSectionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_LargestCrossSections = m_LargestCrossSectionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_LargestCrossSectionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, getLargestCrossSectionsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_LargestCrossSectionsPtr.lock().get())    /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_LargestCrossSections = m_LargestCrossSectionsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
-  size_t dims[3] = { 0, 0, 0 };
+  size_t dims[3] = {0, 0, 0};
   image->getDimensions(dims);
 
-  if (dims[0] <= 1 || dims[1] <= 1 || dims[2] <= 1)
+  if(dims[0] <= 1 || dims[1] <= 1 || dims[2] <= 1)
   {
     QString ss = QObject::tr("Image Geometry is not 3D.  The dimensions are (%1, %2, %3)").arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(-3012);
@@ -186,7 +193,7 @@ void FindLargestCrossSections::find_crosssections()
   size_t istride = 0, jstride = 0, kstride = 0;
   size_t point = 0, gnum = 0;
 
-  if (m_Plane == 0)
+  if(m_Plane == 0)
   {
     outPlane = m->getGeometryAs<ImageGeom>()->getZPoints();
     inPlane1 = m->getGeometryAs<ImageGeom>()->getXPoints();
@@ -196,7 +203,7 @@ void FindLargestCrossSections::find_crosssections()
     stride2 = 1;
     stride3 = inPlane1;
   }
-  if (m_Plane == 1)
+  if(m_Plane == 1)
   {
     outPlane = m->getGeometryAs<ImageGeom>()->getYPoints();
     inPlane1 = m->getGeometryAs<ImageGeom>()->getXPoints();
@@ -206,7 +213,7 @@ void FindLargestCrossSections::find_crosssections()
     stride2 = 1;
     stride3 = inPlane1 * inPlane2;
   }
-  if (m_Plane == 2)
+  if(m_Plane == 2)
   {
     outPlane = m->getGeometryAs<ImageGeom>()->getXPoints();
     inPlane1 = m->getGeometryAs<ImageGeom>()->getYPoints();
@@ -216,17 +223,17 @@ void FindLargestCrossSections::find_crosssections()
     stride2 = inPlane1;
     stride3 = inPlane1 * inPlane2;
   }
-  for (size_t i = 0; i < outPlane; i++)
+  for(size_t i = 0; i < outPlane; i++)
   {
-    for (size_t g = 0; g < numfeatures * 1; g++)
+    for(size_t g = 0; g < numfeatures * 1; g++)
     {
       featurecounts[g] = 0.0f;
     }
     istride = i * stride1;
-    for (size_t j = 0; j < inPlane1; j++)
+    for(size_t j = 0; j < inPlane1; j++)
     {
       jstride = j * stride2;
-      for (size_t k = 0; k < inPlane2; k++)
+      for(size_t k = 0; k < inPlane2; k++)
       {
         kstride = k * stride3;
         point = istride + jstride + kstride;
@@ -234,10 +241,13 @@ void FindLargestCrossSections::find_crosssections()
         featurecounts[gnum]++;
       }
     }
-    for (size_t g = 1; g < numfeatures; g++)
+    for(size_t g = 1; g < numfeatures; g++)
     {
       area = featurecounts[g] * res_scalar;
-      if (area > m_LargestCrossSections[g]) { m_LargestCrossSections[g] = area; }
+      if(area > m_LargestCrossSections[g])
+      {
+        m_LargestCrossSections[g] = area;
+      }
     }
   }
 }
@@ -249,7 +259,10 @@ void FindLargestCrossSections::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   find_crosssections();
 
@@ -292,23 +305,29 @@ const QString FindLargestCrossSections::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindLargestCrossSections::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindLargestCrossSections::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindLargestCrossSections::getHumanLabel()
-{ return "Find Feature Largest Cross-Section Areas"; }
+{
+  return "Find Feature Largest Cross-Section Areas";
+}

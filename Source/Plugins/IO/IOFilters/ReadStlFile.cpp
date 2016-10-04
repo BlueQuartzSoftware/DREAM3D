@@ -36,8 +36,8 @@
 #include "ReadStlFile.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
@@ -45,8 +45,8 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "IO/IOConstants.h"
@@ -58,70 +58,71 @@
  */
 class FindUniqueIdsImpl
 {
-  public:
-    FindUniqueIdsImpl(SharedVertexList::Pointer vertex, QVector<QVector<size_t> > nodesInBin, int64_t* uniqueIds) :
-      m_Vertex(vertex),
-      m_NodesInBin(nodesInBin),
-      m_UniqueIds(uniqueIds)
-    {}
-    virtual ~FindUniqueIdsImpl() {}
+public:
+  FindUniqueIdsImpl(SharedVertexList::Pointer vertex, QVector<QVector<size_t>> nodesInBin, int64_t* uniqueIds)
+  : m_Vertex(vertex)
+  , m_NodesInBin(nodesInBin)
+  , m_UniqueIds(uniqueIds)
+  {
+  }
+  virtual ~FindUniqueIdsImpl()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    float* verts = m_Vertex->getPointer(0);
+    for(size_t i = start; i < end; i++)
     {
-      float* verts = m_Vertex->getPointer(0);
-      for (size_t i = start; i < end; i++)
+      for(int32_t j = 0; j < m_NodesInBin[i].size(); j++)
       {
-        for (int32_t j = 0; j < m_NodesInBin[i].size(); j++)
+        size_t node1 = m_NodesInBin[i][j];
+        if(m_UniqueIds[node1] == node1)
         {
-          size_t node1 = m_NodesInBin[i][j];
-          if (m_UniqueIds[node1] == node1)
+          for(int32_t k = j + 1; k < m_NodesInBin[i].size(); k++)
           {
-            for (int32_t k = j + 1; k < m_NodesInBin[i].size(); k++)
+            size_t node2 = m_NodesInBin[i][k];
+            if(verts[node1 * 3] == verts[node2 * 3] && verts[node1 * 3 + 1] == verts[node2 * 3 + 1] && verts[node1 * 3 + 2] == verts[node2 * 3 + 2])
             {
-              size_t node2 = m_NodesInBin[i][k];
-              if (verts[node1 * 3] == verts[node2 * 3] && verts[node1 * 3 + 1] == verts[node2 * 3 + 1] && verts[node1 * 3 + 2] == verts[node2 * 3 + 2])
-              {
-                m_UniqueIds[node2] = node1;
-              }
+              m_UniqueIds[node2] = node1;
             }
           }
         }
       }
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
-  private:
-    SharedVertexList::Pointer m_Vertex;
-    QVector<QVector<size_t> > m_NodesInBin;
-    int64_t* m_UniqueIds;
+private:
+  SharedVertexList::Pointer m_Vertex;
+  QVector<QVector<size_t>> m_NodesInBin;
+  int64_t* m_UniqueIds;
 };
 
 // Include the MOC generated file for this class
 #include "moc_ReadStlFile.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadStlFile::ReadStlFile() :
-  AbstractFilter(),
-  m_SurfaceMeshDataContainerName(SIMPL::Defaults::TriangleDataContainerName),
-  m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName),
-  m_StlFilePath(""),
-  m_FaceNormalsArrayName(SIMPL::FaceData::SurfaceMeshFaceNormals),
-  m_FaceNormals(nullptr),
-  m_minXcoord(std::numeric_limits<float>::max()),
-  m_maxXcoord(-std::numeric_limits<float>::max()),
-  m_minYcoord(std::numeric_limits<float>::max()),
-  m_maxYcoord(-std::numeric_limits<float>::max()),
-  m_minZcoord(std::numeric_limits<float>::max()),
-  m_maxZcoord(-std::numeric_limits<float>::max())
+ReadStlFile::ReadStlFile()
+: AbstractFilter()
+, m_SurfaceMeshDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
+, m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
+, m_StlFilePath("")
+, m_FaceNormalsArrayName(SIMPL::FaceData::SurfaceMeshFaceNormals)
+, m_FaceNormals(nullptr)
+, m_minXcoord(std::numeric_limits<float>::max())
+, m_maxXcoord(-std::numeric_limits<float>::max())
+, m_minYcoord(std::numeric_limits<float>::max())
+, m_maxYcoord(-std::numeric_limits<float>::max())
+, m_minZcoord(std::numeric_limits<float>::max())
+, m_maxZcoord(-std::numeric_limits<float>::max())
 {
   setupFilterParameters();
 }
@@ -154,10 +155,10 @@ void ReadStlFile::setupFilterParameters()
 void ReadStlFile::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setStlFilePath( reader->readString( "StlFilePath", getStlFilePath() ) );
-  setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName() ) );
-  setSurfaceMeshDataContainerName( reader->readString( "SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName() ) );
-  setFaceNormalsArrayName(reader->readString("FaceNormalsArrayName", getFaceNormalsArrayName() ) );
+  setStlFilePath(reader->readString("StlFilePath", getStlFilePath()));
+  setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName()));
+  setSurfaceMeshDataContainerName(reader->readString("SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName()));
+  setFaceNormalsArrayName(reader->readString("FaceNormalsArrayName", getFaceNormalsArrayName()));
   reader->closeFilterGroup();
 }
 
@@ -168,8 +169,10 @@ void ReadStlFile::updateFaceInstancePointers()
 {
   setErrorCondition(0);
 
-  if( nullptr != m_FaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_FaceNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -195,7 +198,7 @@ void ReadStlFile::dataCheck()
 
   DataArrayPath tempPath;
 
-  if (m_StlFilePath.isEmpty() == true)
+  if(m_StlFilePath.isEmpty() == true)
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "The input file must be set", -1003);
@@ -203,7 +206,10 @@ void ReadStlFile::dataCheck()
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   SharedVertexList::Pointer sharedVertList = TriangleGeom::CreateSharedVertexList(0);
   TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, sharedVertList, SIMPL::Geometry::TriangleGeometry, !getInPreflight());
@@ -214,10 +220,13 @@ void ReadStlFile::dataCheck()
   sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Face);
 
   QVector<size_t> cDims(1, 3);
-  tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName() );
-  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName());
+  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
+      this, tempPath, 0, cDims);               /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FaceNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -240,7 +249,10 @@ void ReadStlFile::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   readFile();
   eliminate_duplicate_nodes();
@@ -258,7 +270,7 @@ void ReadStlFile::readFile()
 
   // Open File
   FILE* f = fopen(m_StlFilePath.toLatin1().data(), "rb");
-  if (nullptr == f)
+  if(nullptr == f)
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "Error opening STL file", -1003);
@@ -286,34 +298,88 @@ void ReadStlFile::readFile()
   static const size_t k_StlElementCount = 12;
   float v[k_StlElementCount];
   unsigned short attr;
-  for (int32_t t = 0; t < triCount; ++t)
+  for(int32_t t = 0; t < triCount; ++t)
   {
     fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f);
 
     fread(reinterpret_cast<void*>(&attr), sizeof(unsigned short), 1, f);
-    if (attr > 0)
+    if(attr > 0)
     {
-      std::vector<unsigned char> buffer(attr); // Allocate a buffer for the STL attribute data to be placed into
-      fread( reinterpret_cast<void*>(&(buffer.front())), attr, 1, f); // Read the bytes into the buffer so that we can skip it.
+      std::vector<unsigned char> buffer(attr);                       // Allocate a buffer for the STL attribute data to be placed into
+      fread(reinterpret_cast<void*>(&(buffer.front())), attr, 1, f); // Read the bytes into the buffer so that we can skip it.
     }
-    if(v[3] < m_minXcoord) { m_minXcoord = v[3]; }
-    if(v[3] > m_maxXcoord) { m_maxXcoord = v[3]; }
-    if(v[4] < m_minYcoord) { m_minYcoord = v[4]; }
-    if(v[4] > m_maxYcoord) { m_maxYcoord = v[4]; }
-    if(v[5] < m_minZcoord) { m_minZcoord = v[5]; }
-    if(v[5] > m_maxZcoord) { m_maxZcoord = v[5]; }
-    if(v[6] < m_minXcoord) { m_minXcoord = v[6]; }
-    if(v[6] > m_maxXcoord) { m_maxXcoord = v[6]; }
-    if(v[7] < m_minYcoord) { m_minYcoord = v[7]; }
-    if(v[7] > m_maxYcoord) { m_maxYcoord = v[7]; }
-    if(v[8] < m_minZcoord) { m_minZcoord = v[8]; }
-    if(v[8] > m_maxZcoord) { m_maxZcoord = v[8]; }
-    if(v[9] < m_minXcoord) { m_minXcoord = v[9]; }
-    if(v[9] > m_maxXcoord) { m_maxXcoord = v[9]; }
-    if(v[10] < m_minYcoord) { m_minYcoord = v[10]; }
-    if(v[10] > m_maxYcoord) { m_maxYcoord = v[10]; }
-    if(v[11] < m_minZcoord) { m_minZcoord = v[11]; }
-    if(v[11] > m_maxZcoord) { m_maxZcoord = v[11]; }
+    if(v[3] < m_minXcoord)
+    {
+      m_minXcoord = v[3];
+    }
+    if(v[3] > m_maxXcoord)
+    {
+      m_maxXcoord = v[3];
+    }
+    if(v[4] < m_minYcoord)
+    {
+      m_minYcoord = v[4];
+    }
+    if(v[4] > m_maxYcoord)
+    {
+      m_maxYcoord = v[4];
+    }
+    if(v[5] < m_minZcoord)
+    {
+      m_minZcoord = v[5];
+    }
+    if(v[5] > m_maxZcoord)
+    {
+      m_maxZcoord = v[5];
+    }
+    if(v[6] < m_minXcoord)
+    {
+      m_minXcoord = v[6];
+    }
+    if(v[6] > m_maxXcoord)
+    {
+      m_maxXcoord = v[6];
+    }
+    if(v[7] < m_minYcoord)
+    {
+      m_minYcoord = v[7];
+    }
+    if(v[7] > m_maxYcoord)
+    {
+      m_maxYcoord = v[7];
+    }
+    if(v[8] < m_minZcoord)
+    {
+      m_minZcoord = v[8];
+    }
+    if(v[8] > m_maxZcoord)
+    {
+      m_maxZcoord = v[8];
+    }
+    if(v[9] < m_minXcoord)
+    {
+      m_minXcoord = v[9];
+    }
+    if(v[9] > m_maxXcoord)
+    {
+      m_maxXcoord = v[9];
+    }
+    if(v[10] < m_minYcoord)
+    {
+      m_minYcoord = v[10];
+    }
+    if(v[10] > m_maxYcoord)
+    {
+      m_maxYcoord = v[10];
+    }
+    if(v[11] < m_minZcoord)
+    {
+      m_minZcoord = v[11];
+    }
+    if(v[11] > m_maxZcoord)
+    {
+      m_maxZcoord = v[11];
+    }
     m_FaceNormals[3 * t + 0] = v[0];
     m_FaceNormals[3 * t + 1] = v[1];
     m_FaceNormals[3 * t + 2] = v[2];
@@ -351,18 +417,27 @@ void ReadStlFile::eliminate_duplicate_nodes()
   float stepY = (m_maxYcoord - m_minYcoord) / 100.0f;
   float stepZ = (m_maxZcoord - m_minZcoord) / 100.0f;
 
-  QVector<QVector<size_t> > nodesInBin(100 * 100 * 100);
+  QVector<QVector<size_t>> nodesInBin(100 * 100 * 100);
 
   // determine (xyz) bin each node falls in - used to speed up node comparison
   int32_t bin = 0, xBin = 0, yBin = 0, zBin = 0;
-  for (int64_t i = 0; i < nNodes; i++)
+  for(int64_t i = 0; i < nNodes; i++)
   {
     xBin = (vertex[i * 3] - m_minXcoord) / stepX;
     yBin = (vertex[i * 3 + 1] - m_minYcoord) / stepY;
     zBin = (vertex[i * 3 + 2] - m_minZcoord) / stepZ;
-    if (xBin == 100) { xBin = 99; }
-    if (yBin == 100) { yBin = 99; }
-    if (zBin == 100) { zBin = 99; }
+    if(xBin == 100)
+    {
+      xBin = 99;
+    }
+    if(yBin == 100)
+    {
+      yBin = 99;
+    }
+    if(zBin == 100)
+    {
+      zBin = 99;
+    }
     bin = (zBin * 10000) + (yBin * 100) + xBin;
     nodesInBin[bin].push_back(i);
   }
@@ -370,7 +445,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
   // Create array to hold unique node numbers
   Int64ArrayType::Pointer uniqueIdsPtr = Int64ArrayType::CreateArray(nNodes, "uniqueIds");
   int64_t* uniqueIds = uniqueIdsPtr->getPointer(0);
-  for (int64_t i = 0; i < nNodes; i++)
+  for(int64_t i = 0; i < nNodes; i++)
   {
     uniqueIds[i] = i;
   }
@@ -380,13 +455,11 @@ void ReadStlFile::eliminate_duplicate_nodes()
   bool doParallel = true;
 #endif
 
-  //Parallel algorithm to find duplicate nodes
+// Parallel algorithm to find duplicate nodes
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, 100 * 100 * 100),
-                      FindUniqueIdsImpl(triangleGeom->getVertices(), nodesInBin, uniqueIds), tbb::auto_partitioner());
-
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, 100 * 100 * 100), FindUniqueIdsImpl(triangleGeom->getVertices(), nodesInBin, uniqueIds), tbb::auto_partitioner());
   }
   else
 #endif
@@ -395,9 +468,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
     serial.convert(0, 100 * 100 * 100);
   }
 
-  //renumber the unique nodes
+  // renumber the unique nodes
   int64_t uniqueCount = 0;
-  for (int64_t i = 0; i < nNodes; i++)
+  for(int64_t i = 0; i < nNodes; i++)
   {
     if(uniqueIds[i] == i)
     {
@@ -411,7 +484,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
   }
 
   // Move nodes to unique Id and then resize nodes array
-  for (int64_t i = 0; i < nNodes; i++)
+  for(int64_t i = 0; i < nNodes; i++)
   {
     vertex[uniqueIds[i] * 3] = vertex[i * 3];
     vertex[uniqueIds[i] * 3 + 1] = vertex[i * 3 + 1];
@@ -421,7 +494,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
 
   // Update the triangle nodes to reflect the unique ids
   int64_t node1 = 0, node2 = 0, node3 = 0;
-  for (int64_t i = 0; i < nTriangles; i++)
+  for(int64_t i = 0; i < nTriangles; i++)
   {
     node1 = triangles[i * 3];
     node2 = triangles[i * 3 + 1];
@@ -469,23 +542,29 @@ const QString ReadStlFile::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadStlFile::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadStlFile::getSubGroupName()
-{ return SIMPL::FilterSubGroups::InputFilters; }
+{
+  return SIMPL::FilterSubGroups::InputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadStlFile::getHumanLabel()
-{ return "Read STL File"; }
+{
+  return "Read STL File";
+}

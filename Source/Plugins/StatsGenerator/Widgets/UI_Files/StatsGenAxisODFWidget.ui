@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SGAxisODFWidget</class>
- <widget class="QWidget" name="SGAxisODFWidget">
+ <class>StatsGenAxisODFWidget</class>
+ <widget class="QWidget" name="StatsGenAxisODFWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -139,7 +139,7 @@
                  <string/>
                 </property>
                 <property name="icon">
-                 <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+                 <iconset>
                   <normaloff>:/add2.png</normaloff>:/add2.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -258,7 +258,7 @@
                  <string/>
                 </property>
                 <property name="icon">
-                 <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+                 <iconset>
                   <normaloff>:/delete2.png</normaloff>:/delete2.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -521,8 +521,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>830</width>
-                <height>331</height>
+                <width>98</width>
+                <height>30</height>
                </rect>
               </property>
               <property name="sizePolicy">

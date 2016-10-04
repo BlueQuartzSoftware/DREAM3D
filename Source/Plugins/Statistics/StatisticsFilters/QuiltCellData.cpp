@@ -36,30 +36,28 @@
 #include "QuiltCellData.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 // Include the MOC generated file for this class
 #include "moc_QuiltCellData.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QuiltCellData::QuiltCellData() :
-  AbstractFilter(),
-  m_SelectedCellArrayPath("", "", ""),
-  m_OutputDataContainerName(SIMPL::Defaults::NewImageDataContainerName),
-  m_OutputAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_OutputArrayName("Quilt_Data"),
-  m_OutputArray(nullptr)
+QuiltCellData::QuiltCellData()
+: AbstractFilter()
+, m_SelectedCellArrayPath("", "", "")
+, m_OutputDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
+, m_OutputAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_OutputArrayName("Quilt_Data")
+, m_OutputArray(nullptr)
 {
   m_QuiltStep.x = 2;
   m_QuiltStep.y = 2;
@@ -107,12 +105,12 @@ void QuiltCellData::setupFilterParameters()
 void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setOutputDataContainerName( reader->readString( "OutputDataContainerName", getOutputDataContainerName() ) );
-  setOutputAttributeMatrixName( reader->readString( "OutputAttributeMatrixName", getOutputAttributeMatrixName() ) );
-  setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
-  setQuiltStep( reader->readIntVec3("QuiltStep", getQuiltStep() ) );
-  setPatchSize( reader->readIntVec3("PatchSize", getPatchSize() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setOutputDataContainerName(reader->readString("OutputDataContainerName", getOutputDataContainerName()));
+  setOutputAttributeMatrixName(reader->readString("OutputAttributeMatrixName", getOutputAttributeMatrixName()));
+  setOutputArrayName(reader->readString("OutputArrayName", getOutputArrayName()));
+  setQuiltStep(reader->readIntVec3("QuiltStep", getQuiltStep()));
+  setPatchSize(reader->readIntVec3("PatchSize", getPatchSize()));
   reader->closeFilterGroup();
 }
 
@@ -121,7 +119,6 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 void QuiltCellData::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -185,19 +182,28 @@ void QuiltCellData::dataCheck()
 
   // Next check the existing DataContainer/AttributeMatrix
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get())
+  {
+    return;
+  }
 
-  //Establish the dimensions, resolutions and origin of the new data container
-  size_t dcDims[3] = { 0, 0, 0};
+  // Establish the dimensions, resolutions and origin of the new data container
+  size_t dcDims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  float res[3] = {m_QuiltStep.x* m->getGeometryAs<ImageGeom>()->getXRes(), m_QuiltStep.y* m->getGeometryAs<ImageGeom>()->getYRes(), m_QuiltStep.z* m->getGeometryAs<ImageGeom>()->getZRes()};
+  float res[3] = {m_QuiltStep.x * m->getGeometryAs<ImageGeom>()->getXRes(), m_QuiltStep.y * m->getGeometryAs<ImageGeom>()->getYRes(), m_QuiltStep.z * m->getGeometryAs<ImageGeom>()->getZRes()};
 
   // Create a new DataContainer
   DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   ImageGeom::Pointer newImage = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m2->setGeometry(newImage);
@@ -205,28 +211,43 @@ void QuiltCellData::dataCheck()
   int newDimX = int(dcDims[0] / m_QuiltStep.x);
   int newDimY = int(dcDims[1] / m_QuiltStep.y);
   int newDimZ = int(dcDims[2] / m_QuiltStep.z);
-  if(dcDims[0] == 1) { newDimX = 1; }
-  if(dcDims[1] == 1) { newDimY = 1; }
-  if(dcDims[2] == 1) { newDimZ = 1; }
+  if(dcDims[0] == 1)
+  {
+    newDimX = 1;
+  }
+  if(dcDims[1] == 1)
+  {
+    newDimY = 1;
+  }
+  if(dcDims[2] == 1)
+  {
+    newDimZ = 1;
+  }
 
   m2->getGeometryAs<ImageGeom>()->setDimensions(newDimX, newDimY, newDimZ);
   m2->getGeometryAs<ImageGeom>()->setResolution(res);
   m2->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
 
-  //Create the cell attrMat in the new data container
+  // Create the cell attrMat in the new data container
   QVector<size_t> tDims(3, 0);
   tDims[0] = m2->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m2->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m2->getGeometryAs<ImageGeom>()->getZPoints();
   AttributeMatrix::Pointer newCellAttrMat = m2->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0 || nullptr == newCellAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == newCellAttrMat.get())
+  {
+    return;
+  }
 
-  //Get the name and create the array in the new data attrMat
+  // Get the name and create the array in the new data attrMat
   QVector<size_t> dims(1, 1);
-  tempPath.update(getOutputDataContainerName(), getOutputAttributeMatrixName(), getOutputArrayName() );
-  m_OutputArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_OutputArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_OutputArray = m_OutputArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getOutputDataContainerName(), getOutputAttributeMatrixName(), getOutputArrayName());
+  m_OutputArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
+                                                                                                                    dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_OutputArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_OutputArray = m_OutputArrayPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -245,12 +266,11 @@ void QuiltCellData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t zc, IntVec3_t pSize, int64_t xDim, int64_t yDim, int64_t zDim)
+template <typename T> float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t zc, IntVec3_t pSize, int64_t xDim, int64_t yDim, int64_t zDim)
 {
   float value = 0.0;
   DataArray<T>* cellArray = DataArray<T>::SafePointerDownCast(inputData.get());
-  if (nullptr == cellArray)
+  if(nullptr == cellArray)
   {
     return 0.0;
   }
@@ -267,20 +287,19 @@ float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t z
   int zRangeMin = -floorf((float)pSize.z / 2.0f);
   int zRangeMax = floorf((float)pSize.z / 2.0f);
 
-  if (pSize.x == 1)
+  if(pSize.x == 1)
   {
     xRangeMin = 0;
     xRangeMax = 1;
   }
 
-  if (pSize.y == 1)
+  if(pSize.y == 1)
   {
     yRangeMin = 0;
     yRangeMax = 1;
   }
 
-
-  if (pSize.z == 1)
+  if(pSize.z == 1)
   {
     zRangeMin = 0;
     zRangeMax = 1;
@@ -308,7 +327,7 @@ float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t z
       }
     }
   }
-  if (count == 0)
+  if(count == 0)
   {
     value = 0;
   }
@@ -327,7 +346,10 @@ void QuiltCellData::execute()
   QString ss;
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedCellArrayPath.getDataContainerName());
   DataContainer::Pointer m2 = getDataContainerArray()->getDataContainer(getOutputDataContainerName());
@@ -338,7 +360,7 @@ void QuiltCellData::execute()
   m2->getGeometryAs<ImageGeom>()->getDimensions(dc2Dims[0], dc2Dims[1], dc2Dims[2]);
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
-  if (nullptr == inputData.get())
+  if(nullptr == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayPath.getDataArrayName());
     setErrorCondition(-11001);
@@ -348,7 +370,7 @@ void QuiltCellData::execute()
 
   QString dType = inputData->getTypeAsString();
 
-  int64_t dims[3] = { 0, 0, 0 };
+  int64_t dims[3] = {0, 0, 0};
   dims[0] = static_cast<int64_t>(dcDims[0]);
   dims[1] = static_cast<int64_t>(dcDims[1]);
   dims[2] = static_cast<int64_t>(dcDims[2]);
@@ -365,49 +387,49 @@ void QuiltCellData::execute()
       {
         xc = i * m_QuiltStep.x + m_QuiltStep.x / 2;
         yc = j * m_QuiltStep.y + m_QuiltStep.y / 2;
-        //zc = k * m_QuiltStep.z + m_QuiltStep.z / 2;
+        // zc = k * m_QuiltStep.z + m_QuiltStep.z / 2;
         zc = 0;
-        if (dType.compare("int8_t") == 0)
+        if(dType.compare("int8_t") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<int8_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("uint8_t") == 0)
+        else if(dType.compare("uint8_t") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<uint8_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("int16_t") == 0)
+        else if(dType.compare("int16_t") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<int16_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("uint16_t") == 0)
+        else if(dType.compare("uint16_t") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<uint16_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("int32_t") == 0)
+        else if(dType.compare("int32_t") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<int32_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("uint32_t") == 0)
+        else if(dType.compare("uint32_t") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<uint32_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("int64_t") == 0)
+        else if(dType.compare("int64_t") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<int64_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("uint64_t") == 0)
+        else if(dType.compare("uint64_t") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<uint64_t>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("float") == 0)
+        else if(dType.compare("float") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<float>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("double") == 0)
+        else if(dType.compare("double") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<double>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
-        else if (dType.compare("bool") == 0)
+        else if(dType.compare("bool") == 0)
         {
           m_OutputArray[zStride + yStride + i] = quiltData<bool>(inputData, xc, yc, zc, m_PatchSize, dims[0], dims[1], dims[2]);
         }
@@ -417,7 +439,6 @@ void QuiltCellData::execute()
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -455,7 +476,7 @@ const QString QuiltCellData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 
@@ -463,19 +484,22 @@ const QString QuiltCellData::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString QuiltCellData::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
-
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString QuiltCellData::getSubGroupName()
-{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
-
+{
+  return SIMPL::FilterSubGroups::EnsembleStatsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString QuiltCellData::getHumanLabel()
-{ return "Quilt Cell Data"; }
-
+{
+  return "Quilt Cell Data";
+}

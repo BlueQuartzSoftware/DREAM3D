@@ -39,15 +39,15 @@
 
 #include "SIMPLib/Common/Constants.h"
 
-#include "ImportASCIIDataWizard.h"
 #include "ASCIIDataModel.h"
 #include "AddHeadersDialog.h"
+#include "ImportASCIIDataWizard.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TupleSelectionPage::TupleSelectionPage(const QString &inputFilePath, QWidget* parent) :
-  AbstractWizardPage(inputFilePath, parent)
+TupleSelectionPage::TupleSelectionPage(const QString& inputFilePath, QWidget* parent)
+: AbstractWizardPage(inputFilePath, parent)
 {
   setupUi(this);
 
@@ -59,7 +59,6 @@ TupleSelectionPage::TupleSelectionPage(const QString &inputFilePath, QWidget* pa
 // -----------------------------------------------------------------------------
 TupleSelectionPage::~TupleSelectionPage()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -99,13 +98,12 @@ void TupleSelectionPage::refreshModel()
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, beginIndex);
 
   // Refresh the headers
-  if (hasHeadersRadio->isChecked())
+  if(hasHeadersRadio->isChecked())
   {
     on_headersIndexLineEdit_textChanged(headersIndexLineEdit->text());
   }
   else
   {
-
   }
 }
 

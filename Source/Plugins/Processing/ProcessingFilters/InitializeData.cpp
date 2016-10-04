@@ -35,20 +35,20 @@
 
 #include "InitializeData.h"
 
-#include <QtCore/QDateTime>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDateTime>
 
 #include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_real.hpp>
 #include <boost/random/uniform_int.hpp>
+#include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -64,7 +64,7 @@
 void delay(int seconds)
 {
   QTime dieTime = QTime::currentTime().addSecs(seconds);
-  while (QTime::currentTime() < dieTime)
+  while(QTime::currentTime() < dieTime)
   {
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
   }
@@ -73,16 +73,16 @@ void delay(int seconds)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InitializeData::InitializeData() :
-  AbstractFilter(),
-  m_XMin(0),
-  m_YMin(0),
-  m_ZMin(0),
-  m_XMax(0),
-  m_YMax(0),
-  m_ZMax(0),
-  m_InitType(Manual),
-  m_InitValue(0)
+InitializeData::InitializeData()
+: AbstractFilter()
+, m_XMin(0)
+, m_YMin(0)
+, m_ZMin(0)
+, m_XMax(0)
+, m_YMax(0)
+, m_ZMax(0)
+, m_InitType(Manual)
+, m_InitValue(0)
 {
   setupFilterParameters();
 }
@@ -103,7 +103,8 @@ void InitializeData::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
+                                                                                                                            SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Cell Arrays", CellAttributeMatrixPaths, FilterParameter::RequiredArray, InitializeData, req));
   }
   parameters.push_back(SIMPL_NEW_INTEGER_FP("X Min (Column)", XMin, FilterParameter::Parameter, InitializeData));
@@ -128,7 +129,8 @@ void InitializeData::setupFilterParameters()
     choices.push_back("Random With Range");
     parameter->setChoices(choices);
     QStringList linkedProps;
-    linkedProps << "InitValue" << "InitRange";
+    linkedProps << "InitValue"
+                << "InitRange";
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Parameter);
@@ -145,13 +147,13 @@ void InitializeData::setupFilterParameters()
 void InitializeData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellAttributeMatrixPaths( reader->readDataArrayPathVector("CellAttributeMatrixPaths", getCellAttributeMatrixPaths() ) );
-  setXMin( reader->readValue("XMin", getXMin()) );
-  setYMin( reader->readValue("YMin", getYMin()) );
-  setZMin( reader->readValue("ZMin", getZMin()) );
-  setXMax( reader->readValue("XMax", getXMax()) );
-  setYMax( reader->readValue("YMax", getYMax()) );
-  setZMax( reader->readValue("ZMax", getZMax()) );
+  setCellAttributeMatrixPaths(reader->readDataArrayPathVector("CellAttributeMatrixPaths", getCellAttributeMatrixPaths()));
+  setXMin(reader->readValue("XMin", getXMin()));
+  setYMin(reader->readValue("YMin", getYMin()));
+  setZMin(reader->readValue("ZMin", getZMin()));
+  setXMax(reader->readValue("XMax", getXMax()));
+  setYMax(reader->readValue("YMax", getYMax()));
+  setZMax(reader->readValue("ZMax", getZMax()));
   setInitType(reader->readValue("InitType", getInitType()));
   setInitValue(reader->readValue("InitValue", getInitValue()));
   setInitRange(reader->readPairOfDoubles("InitRange", getInitRange()));
@@ -163,7 +165,6 @@ void InitializeData::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 void InitializeData::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -173,7 +174,7 @@ void InitializeData::dataCheck()
 {
   setErrorCondition(0);
 
-  if (m_CellAttributeMatrixPaths.size() <= 0)
+  if(m_CellAttributeMatrixPaths.size() <= 0)
   {
     QString ss = "At least one data array must be selected.";
     setErrorCondition(-5550);
@@ -185,57 +186,60 @@ void InitializeData::dataCheck()
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, attributeMatrixPath, -301);
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, attributeMatrixPath.getDataContainerName());
-  if(nullptr == image.get()) { return; }
+  if(nullptr == image.get())
+  {
+    return;
+  }
 
-  if (getXMax() < getXMin())
+  if(getXMax() < getXMin())
   {
     QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
     setErrorCondition(-5551);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getYMax() < getYMin())
+  if(getYMax() < getYMin())
   {
     QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
     setErrorCondition(-5552);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getZMax() < getZMin())
+  if(getZMax() < getZMin())
   {
     QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
     setErrorCondition(-5553);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getXMin() < 0)
+  if(getXMin() < 0)
   {
     QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
     setErrorCondition(-5554);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getYMin() < 0)
+  if(getYMin() < 0)
   {
     QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
     setErrorCondition(-5555);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getZMin() < 0)
+  if(getZMin() < 0)
   {
     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
     setErrorCondition(-5556);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getXMax() > (static_cast<int64_t>(image->getXPoints()) - 1))
+  if(getXMax() > (static_cast<int64_t>(image->getXPoints()) - 1))
   {
     QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(image->getXPoints()) - 1);
     setErrorCondition(-5557);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getYMax() > (static_cast<int64_t>(image->getYPoints()) - 1))
+  if(getYMax() > (static_cast<int64_t>(image->getYPoints()) - 1))
   {
     QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(image->getYPoints()) - 1);
     setErrorCondition(-5558);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if (getZMax() > (static_cast<int64_t>(image->getZPoints()) - 1))
+  if(getZMax() > (static_cast<int64_t>(image->getZPoints()) - 1))
   {
     QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(image->getZPoints()) - 1);
     setErrorCondition(-5559);
@@ -244,60 +248,59 @@ void InitializeData::dataCheck()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(attributeMatrixPath.getDataContainerName());
 
-  size_t udims[3] =
-  { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   QString attrMatName = attributeMatrixPath.getAttributeMatrixName();
   QList<QString> voxelArrayNames = DataArrayPath::GetDataArrayNames(m_CellAttributeMatrixPaths);
 
-  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
 
     QString type = p->getTypeAsString();
-    if (type == "int8_t")
+    if(type == "int8_t")
     {
       checkInitialization<int8_t>(p);
     }
-    else if (type == "int16_t")
+    else if(type == "int16_t")
     {
       checkInitialization<int16_t>(p);
     }
-    else if (type == "int32_t")
+    else if(type == "int32_t")
     {
       checkInitialization<int32_t>(p);
     }
-    else if (type == "int64_t")
+    else if(type == "int64_t")
     {
       checkInitialization<int64_t>(p);
     }
-    else if (type == "uint8_t")
+    else if(type == "uint8_t")
     {
       checkInitialization<uint8_t>(p);
     }
-    else if (type == "uint16_t")
+    else if(type == "uint16_t")
     {
       checkInitialization<uint16_t>(p);
     }
-    else if (type == "uint32_t")
+    else if(type == "uint32_t")
     {
       checkInitialization<uint32_t>(p);
     }
-    else if (type == "uint64_t")
+    else if(type == "uint64_t")
     {
       checkInitialization<uint64_t>(p);
     }
-    else if (type == "float")
+    else if(type == "float")
     {
       checkInitialization<float>(p);
     }
-    else if (type == "double")
+    else if(type == "double")
     {
       checkInitialization<double>(p);
     }
 
-    if (getErrorCondition() < 0)
+    if(getErrorCondition() < 0)
     {
       return;
     }
@@ -307,15 +310,14 @@ void InitializeData::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T>
-void InitializeData::checkInitialization(IDataArray::Pointer p)
+template <typename T> void InitializeData::checkInitialization(IDataArray::Pointer p)
 {
   QString arrayName = p->getName();
 
-  if (m_InitType == Manual)
+  if(m_InitType == Manual)
   {
     double input = m_InitValue;
-    if (input < static_cast<double>(std::numeric_limits<T>().lowest()) || input > static_cast<double>(std::numeric_limits<T>().max()))
+    if(input < static_cast<double>(std::numeric_limits<T>().lowest()) || input > static_cast<double>(std::numeric_limits<T>().max()))
     {
       setErrorCondition(-4000);
       QString ss = QObject::tr("%1: The initialization value could not be converted. The valid range is %2 to %3").arg(arrayName).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
@@ -323,25 +325,25 @@ void InitializeData::checkInitialization(IDataArray::Pointer p)
       return;
     }
   }
-  else if (m_InitType == RandomWithRange)
+  else if(m_InitType == RandomWithRange)
   {
     double min = m_InitRange.first;
     double max = m_InitRange.second;
-    if (min > max)
+    if(min > max)
     {
       QString ss = arrayName + ": Invalid initialization range.  Minimum value is larger than maximum value.";
       setErrorCondition(-5550);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    else if (min < static_cast<double>(std::numeric_limits<T>().lowest()) || max > static_cast<double>(std::numeric_limits<T>().max()))
+    else if(min < static_cast<double>(std::numeric_limits<T>().lowest()) || max > static_cast<double>(std::numeric_limits<T>().max()))
     {
       setErrorCondition(-4001);
       QString ss = QObject::tr("%1: The initialization range can only be from %2 to %3").arg(arrayName).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    else if (min == max)
+    else if(min == max)
     {
       setErrorCondition(-4002);
       QString ss = arrayName + ": The initialization range must have differing values";
@@ -371,63 +373,66 @@ void InitializeData::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataArrayPath attributeMatrixPath(m_CellAttributeMatrixPaths[0].getDataContainerName(), m_CellAttributeMatrixPaths[0].getAttributeMatrixName(), "");
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(attributeMatrixPath.getDataContainerName());
 
-  size_t udims[3] =
-  { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  { static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]), };
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+  };
 
   QString attrMatName = attributeMatrixPath.getAttributeMatrixName();
   QList<QString> voxelArrayNames = DataArrayPath::GetDataArrayNames(m_CellAttributeMatrixPaths);
 
-  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
 
     QString type = p->getTypeAsString();
-    if (type == "int8_t")
+    if(type == "int8_t")
     {
       initializeArrayWithInts<int8_t>(p, dims);
     }
-    else if (type == "int16_t")
+    else if(type == "int16_t")
     {
       initializeArrayWithInts<int16_t>(p, dims);
     }
-    else if (type == "int32_t")
+    else if(type == "int32_t")
     {
       initializeArrayWithInts<int32_t>(p, dims);
     }
-    else if (type == "int64_t")
+    else if(type == "int64_t")
     {
       initializeArrayWithInts<int64_t>(p, dims);
     }
-    else if (type == "uint8_t")
+    else if(type == "uint8_t")
     {
       initializeArrayWithInts<uint8_t>(p, dims);
     }
-    else if (type == "uint16_t")
+    else if(type == "uint16_t")
     {
       initializeArrayWithInts<uint16_t>(p, dims);
     }
-    else if (type == "uint32_t")
+    else if(type == "uint32_t")
     {
       initializeArrayWithInts<uint32_t>(p, dims);
     }
-    else if (type == "uint64_t")
+    else if(type == "uint64_t")
     {
       initializeArrayWithInts<uint64_t>(p, dims);
     }
-    else if (type == "float")
+    else if(type == "float")
     {
       initializeArrayWithReals<float>(p, dims);
     }
-    else if (type == "double")
+    else if(type == "double")
     {
       initializeArrayWithReals<double>(p, dims);
     }
@@ -441,12 +446,11 @@ void InitializeData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T>
-void InitializeData::initializeArrayWithInts(IDataArray::Pointer p, int64_t dims[3])
+template <typename T> void InitializeData::initializeArrayWithInts(IDataArray::Pointer p, int64_t dims[3])
 {
   T rangeMin;
   T rangeMax;
-  if (m_InitType == RandomWithRange)
+  if(m_InitType == RandomWithRange)
   {
     rangeMin = m_InitRange.first;
     rangeMax = m_InitRange.second;
@@ -467,15 +471,15 @@ void InitializeData::initializeArrayWithInts(IDataArray::Pointer p, int64_t dims
   std::shared_ptr<IntGenerator> intGeneratorPtr = std::shared_ptr<IntGenerator>(new IntGenerator(*randomNumberGenerator, *distribution));
   IntGenerator& intGenerator = *intGeneratorPtr;
 
-  for (int32_t k = m_ZMin; k < m_ZMax + 1; k++)
+  for(int32_t k = m_ZMin; k < m_ZMax + 1; k++)
   {
-    for (int32_t j = m_YMin; j < m_YMax + 1; j++)
+    for(int32_t j = m_YMin; j < m_YMax + 1; j++)
     {
-      for (int32_t i = m_XMin; i < m_XMax + 1; i++)
+      for(int32_t i = m_XMin; i < m_XMax + 1; i++)
       {
         size_t index = (k * dims[0] * dims[1]) + (j * dims[0]) + i;
 
-        if (m_InitType == Manual)
+        if(m_InitType == Manual)
         {
           T num = static_cast<T>(m_InitValue);
           p->initializeTuple(index, &num);
@@ -493,12 +497,11 @@ void InitializeData::initializeArrayWithInts(IDataArray::Pointer p, int64_t dims
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T>
-void InitializeData::initializeArrayWithReals(IDataArray::Pointer p, int64_t dims[3])
+template <typename T> void InitializeData::initializeArrayWithReals(IDataArray::Pointer p, int64_t dims[3])
 {
   T rangeMin;
   T rangeMax;
-  if (m_InitType == RandomWithRange)
+  if(m_InitType == RandomWithRange)
   {
     rangeMin = static_cast<T>(m_InitRange.first);
     rangeMax = static_cast<T>(m_InitRange.second);
@@ -519,15 +522,15 @@ void InitializeData::initializeArrayWithReals(IDataArray::Pointer p, int64_t dim
   std::shared_ptr<RealGenerator> realGeneratorPtr = std::shared_ptr<RealGenerator>(new RealGenerator(*randomNumberGenerator, *distribution));
   RealGenerator& realGenerator = *realGeneratorPtr;
 
-  for (int32_t k = m_ZMin; k < m_ZMax + 1; k++)
+  for(int32_t k = m_ZMin; k < m_ZMax + 1; k++)
   {
-    for (int32_t j = m_YMin; j < m_YMax + 1; j++)
+    for(int32_t j = m_YMin; j < m_YMax + 1; j++)
     {
-      for (int32_t i = m_XMin; i < m_XMax + 1; i++)
+      for(int32_t i = m_XMin; i < m_XMax + 1; i++)
       {
         size_t index = (k * dims[0] * dims[1]) + (j * dims[0]) + i;
 
-        if (m_InitType == Manual)
+        if(m_InitType == Manual)
         {
           T num = static_cast<T>(m_InitValue);
           p->initializeTuple(index, &num);
@@ -578,23 +581,29 @@ const QString InitializeData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
+  vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InitializeData::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InitializeData::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CleanupFilters; }
+{
+  return SIMPL::FilterSubGroups::CleanupFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InitializeData::getHumanLabel()
-{ return "Initialize Data"; }
+{
+  return "Initialize Data";
+}

@@ -40,9 +40,9 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
@@ -54,19 +54,17 @@
 // Include the MOC generated file for this class
 #include "moc_VisualizeGBCDGMT.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VisualizeGBCDGMT::VisualizeGBCDGMT() :
-  AbstractFilter(),
-  m_OutputFile(""),
-  m_PhaseOfInterest(1),
-  m_GBCDArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceEnsembleAttributeMatrixName, SIMPL::EnsembleData::GBCD),
-  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
-  m_GBCD(nullptr),
-  m_CrystalStructures(nullptr)
+VisualizeGBCDGMT::VisualizeGBCDGMT()
+: AbstractFilter()
+, m_OutputFile("")
+, m_PhaseOfInterest(1)
+, m_GBCDArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceEnsembleAttributeMatrixName, SIMPL::EnsembleData::GBCD)
+, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+, m_GBCD(nullptr)
+, m_CrystalStructures(nullptr)
 {
   m_MisorientationRotation.angle = 0.0f;
   m_MisorientationRotation.h = 0.0f;
@@ -96,7 +94,8 @@ void VisualizeGBCDGMT::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output GMT File", OutputFile, FilterParameter::Parameter, VisualizeGBCDGMT, "*.dat", "DAT File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::FaceEnsemble, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize,
+                                                                                                                  SIMPL::AttributeMatrixType::FaceEnsemble, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("GBCD", GBCDArrayPath, FilterParameter::RequiredArray, VisualizeGBCDGMT, req));
   }
   {
@@ -115,7 +114,7 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
   setGBCDArrayPath(reader->readDataArrayPath("GBCDArrayPath", getGBCDArrayPath()));
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
   setOutputFile(reader->readString("OutputFile", getOutputFile()));
-  setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1) );
+  setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1));
   setPhaseOfInterest(reader->readValue("PhaseOfInterest", getPhaseOfInterest()));
   reader->closeFilterGroup();
 }
@@ -138,31 +137,30 @@ void VisualizeGBCDGMT::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName());
 
-  if (getOutputFile().isEmpty() == true)
+  if(getOutputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr( "The output file must be set");
+    QString ss = QObject::tr("The output file must be set");
     setErrorCondition(-1000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-
   QFileInfo fi(getOutputFile());
   QDir parentPath = fi.path();
-  if (parentPath.exists() == false && getInPreflight())
+  if(parentPath.exists() == false && getInPreflight())
   {
-    QString ss = QObject::tr( "The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
+    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if (fi.suffix().compare("") == 0)
+  if(fi.suffix().compare("") == 0)
   {
     setOutputFile(getOutputFile().append(".dat"));
   }
 
   // Make sure the file name ends with _1 so the GMT scripts work correctly
   QString fName = fi.baseName();
-  if (fName.endsWith("_1") == false)
+  if(fName.endsWith("_1") == false)
   {
     fName = fName + "_1";
     QString absPath = fi.absolutePath() + "/" + fName + ".dat";
@@ -170,30 +168,36 @@ void VisualizeGBCDGMT::dataCheck()
   }
 
   QVector<size_t> cDims(1, 1);
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   IDataArray::Pointer tmpGBCDPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getGBCDArrayPath());
-  if(getErrorCondition() < 0) { return; }
-
-  if (nullptr != tmpGBCDPtr.get())
+  if(getErrorCondition() < 0)
   {
-    QVector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
-    m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    return;
   }
 
-  if (nullptr != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
+  if(nullptr != tmpGBCDPtr.get())
+  {
+    QVector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
+    m_GBCDPtr =
+        getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_GBCDPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_GBCD = m_GBCDPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
+
+  if(nullptr != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
     QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -216,7 +220,10 @@ void VisualizeGBCDGMT::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getGBCDArrayPath().getDataContainerName());
 
@@ -225,7 +232,7 @@ void VisualizeGBCDGMT::execute()
   QFileInfo fi(getOutputFile());
 
   QDir dir(fi.path());
-  if (!dir.mkpath("."))
+  if(!dir.mkpath("."))
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
@@ -235,7 +242,7 @@ void VisualizeGBCDGMT::execute()
   }
 
   QFile file(getOutputFile());
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+  if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
     setErrorCondition(-100);
@@ -257,16 +264,16 @@ void VisualizeGBCDGMT::execute()
   float* gbcdLimits = gbcdLimitsArray->getPointer(0);
 
   // Original Ranges from Dave R.
-  //m_GBCDlimits[0] = 0.0f;
-  //m_GBCDlimits[1] = cosf(1.0f*m_pi);
-  //m_GBCDlimits[2] = 0.0f;
-  //m_GBCDlimits[3] = 0.0f;
-  //m_GBCDlimits[4] = cosf(1.0f*m_pi);
-  //m_GBCDlimits[5] = 2.0f*m_pi;
-  //m_GBCDlimits[6] = cosf(0.0f);
-  //m_GBCDlimits[7] = 2.0f*m_pi;
-  //m_GBCDlimits[8] = 2.0f*m_pi;
-  //m_GBCDlimits[9] = cosf(0.0f);
+  // m_GBCDlimits[0] = 0.0f;
+  // m_GBCDlimits[1] = cosf(1.0f*m_pi);
+  // m_GBCDlimits[2] = 0.0f;
+  // m_GBCDlimits[3] = 0.0f;
+  // m_GBCDlimits[4] = cosf(1.0f*m_pi);
+  // m_GBCDlimits[5] = 2.0f*m_pi;
+  // m_GBCDlimits[6] = cosf(0.0f);
+  // m_GBCDlimits[7] = 2.0f*m_pi;
+  // m_GBCDlimits[8] = 2.0f*m_pi;
+  // m_GBCDlimits[9] = cosf(0.0f);
 
   // Greg R. Ranges
   gbcdLimits[0] = 0.0f;
@@ -295,22 +302,22 @@ void VisualizeGBCDGMT::execute()
   gbcdDeltas[3] = (gbcdLimits[8] - gbcdLimits[3]) / float(gbcdSizes[3]);
   gbcdDeltas[4] = (gbcdLimits[9] - gbcdLimits[4]) / float(gbcdSizes[4]);
 
-  float vec[3] = { 0.0f, 0.0f, 0.0f };
-  float vec2[3] = { 0.0f, 0.0f, 0.0f };
-  float rotNormal[3] = { 0.0f, 0.0f, 0.0f };
-  float rotNormal2[3] = { 0.0f, 0.0f, 0.0f };
-  float sqCoord[2] = { 0.0f, 0.0f };
-  float dg[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float dgt[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float dg1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float dg2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float sym1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float sym2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float sym2t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float mis_euler1[3] = { 0.0f, 0.0f, 0.0f };
+  float vec[3] = {0.0f, 0.0f, 0.0f};
+  float vec2[3] = {0.0f, 0.0f, 0.0f};
+  float rotNormal[3] = {0.0f, 0.0f, 0.0f};
+  float rotNormal2[3] = {0.0f, 0.0f, 0.0f};
+  float sqCoord[2] = {0.0f, 0.0f};
+  float dg[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float dgt[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float dg1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float dg2[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float sym1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float sym2[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float sym2t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  float mis_euler1[3] = {0.0f, 0.0f, 0.0f};
 
   float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180;
-  float normAxis[3] = { m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l };
+  float normAxis[3] = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
   MatrixMath::Normalize3x1(normAxis);
   // convert axis angle to matrix representation of misorientation
   FOrientArrayType om(9, 0.0f);
@@ -347,9 +354,9 @@ void VisualizeGBCDGMT::execute()
 
   std::vector<float> gmtValues;
 
-  for (int32_t k = 0; k < phiPoints + 1; k++)
+  for(int32_t k = 0; k < phiPoints + 1; k++)
   {
-    for (int32_t l = 0; l < thetaPoints + 1; l++)
+    for(int32_t l = 0; l < thetaPoints + 1; l++)
     {
       // get (x,y) for stereographic projection pixel
       theta = float(l) * thetaRes;
@@ -364,11 +371,11 @@ void VisualizeGBCDGMT::execute()
       MatrixMath::Multiply3x3with3x1(dgt, vec, vec2);
 
       // Loop over all the symetry operators in the given cystal symmetry
-      for (int32_t i = 0; i < n_sym; i++)
+      for(int32_t i = 0; i < n_sym; i++)
       {
         // get symmetry operator1
         orientOps->getMatSymOp(i, sym1);
-        for (int32_t j = 0; j < n_sym; j++)
+        for(int32_t j = 0; j < n_sym; j++)
         {
           // get symmetry operator2
           orientOps->getMatSymOp(j, sym2);
@@ -379,7 +386,7 @@ void VisualizeGBCDGMT::execute()
           // convert to euler angle
           FOrientArrayType mEuler(mis_euler1, 3);
           FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
-          if (mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
+          if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             // find bins in GBCD
@@ -393,11 +400,14 @@ void VisualizeGBCDGMT::execute()
             // Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
             int32_t location4 = int32_t((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
             int32_t location5 = int32_t((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
-            if (location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
-                location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
+            if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 && location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] &&
+               location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
-              if (nhCheck == false) { hemisphere = 1; }
+              if(nhCheck == false)
+              {
+                hemisphere = 1;
+              }
               sum += m_GBCD[(m_PhaseOfInterest * totalGBCDBins) + 2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
               count++;
             }
@@ -409,7 +419,7 @@ void VisualizeGBCDGMT::execute()
           MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
           // convert to euler angle
           FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
-          if (mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
+          if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             // find bins in GBCD
@@ -423,11 +433,14 @@ void VisualizeGBCDGMT::execute()
             // Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
             int32_t location4 = int32_t((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
             int32_t location5 = int32_t((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
-            if (location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
-                location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
+            if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 && location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] &&
+               location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
-              if (nhCheck == false) { hemisphere = 1; }
+              if(nhCheck == false)
+              {
+                hemisphere = 1;
+              }
               sum += m_GBCD[(m_PhaseOfInterest * totalGBCDBins) + 2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
               count++;
             }
@@ -442,7 +455,7 @@ void VisualizeGBCDGMT::execute()
 
   FILE* f = nullptr;
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
-  if (nullptr == f)
+  if(nullptr == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
     setErrorCondition(-1);
@@ -454,7 +467,7 @@ void VisualizeGBCDGMT::execute()
   fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, m_MisorientationRotation.angle);
   size_t size = gmtValues.size() / 3;
 
-  for (size_t i = 0; i < size; i++)
+  for(size_t i = 0; i < size; i++)
   {
     fprintf(f, "%f %f %f\n", gmtValues[3 * i], gmtValues[3 * i + 1], gmtValues[3 * i + 2]);
   }
@@ -471,12 +484,12 @@ bool VisualizeGBCDGMT::getSquareCoord(float* xstl1_norm1, float* sqCoord)
 {
   bool nhCheck = false;
   float adjust = 1.0;
-  if (xstl1_norm1[2] >= 0.0)
+  if(xstl1_norm1[2] >= 0.0)
   {
     adjust = -1.0;
     nhCheck = true;
   }
-  if (fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
+  if(fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
   {
     sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
     sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
@@ -524,23 +537,29 @@ const QString VisualizeGBCDGMT::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDGMT::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDGMT::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDGMT::getHumanLabel()
-{ return "Write GBCD Pole Figure (GMT 5)"; }
+{
+  return "Write GBCD Pole Figure (GMT 5)";
+}

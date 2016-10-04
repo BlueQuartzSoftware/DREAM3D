@@ -40,8 +40,8 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
@@ -53,16 +53,14 @@
 // Include the MOC generated file for this class
 #include "moc_AbaqusSurfaceMeshWriter.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter() :
-  AbstractFilter(),
-  m_OutputFile(""),
-  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceLabels(nullptr)
+AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter()
+: AbstractFilter()
+, m_OutputFile("")
+, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
+, m_SurfaceMeshFaceLabels(nullptr)
 {
   setupFilterParameters();
 }
@@ -83,7 +81,8 @@ void AbaqusSurfaceMeshWriter::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, AbaqusSurfaceMeshWriter, "*.inp"));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, AbaqusSurfaceMeshWriter, req));
   }
   setFilterParameters(parameters);
@@ -95,8 +94,8 @@ void AbaqusSurfaceMeshWriter::setupFilterParameters()
 void AbaqusSurfaceMeshWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
-  setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
+  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath()));
+  setOutputFile(reader->readString("OutputFile", getOutputFile()));
   reader->closeFilterGroup();
 }
 
@@ -105,7 +104,6 @@ void AbaqusSurfaceMeshWriter::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 void AbaqusSurfaceMeshWriter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +113,7 @@ void AbaqusSurfaceMeshWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  if (m_OutputFile.isEmpty() == true)
+  if(m_OutputFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "The output file must be set", getErrorCondition());
@@ -123,22 +121,31 @@ void AbaqusSurfaceMeshWriter::dataCheck()
 
   QFileInfo fi(m_OutputFile);
   QDir parentPath = fi.path();
-  if (parentPath.exists() == false)
+  if(parentPath.exists() == false)
   {
-    QString ss = QObject::tr( "The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
+    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
   QVector<IDataArray::Pointer> dataArrays;
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
-  if(getErrorCondition() >= 0) { dataArrays.push_back(triangles->getTriangles()); }
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(triangles->getTriangles());
+  }
 
   QVector<size_t> cDims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock()); }
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
+                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
+  }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
@@ -164,7 +171,10 @@ void AbaqusSurfaceMeshWriter::execute()
   int32_t err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
@@ -184,7 +194,7 @@ void AbaqusSurfaceMeshWriter::execute()
 
   // Store all the unique Spins
   std::set<int32_t> uniqueSpins;
-  for (int64_t i = 0; i < triangleGeom->getNumberOfTris(); i++)
+  for(int64_t i = 0; i < triangleGeom->getNumberOfTris(); i++)
   {
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2]);
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2 + 1]);
@@ -234,7 +244,7 @@ void AbaqusSurfaceMeshWriter::execute()
 // -----------------------------------------------------------------------------
 int32_t AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int64_t nodeCount, int64_t triCount, int featureCount)
 {
-  if (nullptr == f)
+  if(nullptr == f)
   {
     return -1;
   }
@@ -260,9 +270,9 @@ int32_t AbaqusSurfaceMeshWriter::writeNodes(FILE* f)
   int64_t numNodes = triangleGeom->getNumberOfVertices();
   int32_t err = 0;
   fprintf(f, "*Node,NSET=NALL\n");
-  //1, 72.520433763730, 70.306420652241, 100.000000000000
+  // 1, 72.520433763730, 70.306420652241, 100.000000000000
   // Abaqus Starts number at 1 NOT 0(Zero).
-  for (int64_t i = 1; i <= numNodes; ++i)
+  for(int64_t i = 1; i <= numNodes; ++i)
   {
     fprintf(f, "%lld, %0.6f, %0.6f, %0.6f\n", (long long int)i, nodes[(i - 1) * 3], nodes[(i - 1) * 3 + 1], nodes[(i - 1) * 3 + 2]);
   }
@@ -281,7 +291,7 @@ int32_t AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
   int64_t* triangles = triangleGeom->getTriPointer(0);
 
   fprintf(f, "*ELEMENT, TYPE=%s\n", TRI_ELEMENT_TYPE);
-  for (int64_t i = 1; i <= numTri; ++i)
+  for(int64_t i = 1; i <= numTri; ++i)
   {
     // When we get the node index, add 1 to it because Abaqus number is 1 based.
     int64_t nId0 = triangles[(i - 1) * 3] + 1;
@@ -298,7 +308,7 @@ int32_t AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
 int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 {
   //*Elset, elset=Feature1
-  //1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+  // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
   int32_t err = 0;
 
   TriangleGeom::Pointer triangleGeo = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
@@ -307,7 +317,7 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 
   // Store all the unique Spins
   std::set<int32_t> uniqueSpins;
-  for (int64_t i = 0; i < nTriangles; i++)
+  for(int64_t i = 0; i < nTriangles; i++)
   {
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2]);
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2 + 1]);
@@ -315,11 +325,14 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 
   int32_t spin = 0;
 
-  //Loop over the unique Spins
-  for (std::set<int32_t>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  // Loop over the unique Spins
+  for(std::set<int32_t>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter)
   {
     spin = *spinIter;
-    if (spin < 0) { continue; }
+    if(spin < 0)
+    {
+      continue;
+    }
 
     fprintf(f, "*ELSET, ELSET=Feature%d\n", spin);
 
@@ -330,17 +343,17 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 
     // Loop over all the triangles for this spin
     int64_t lineCount = 0;
-    for (int64_t t = 0; t < nTriangles; ++t)
+    for(int64_t t = 0; t < nTriangles; ++t)
     {
-      if (m_SurfaceMeshFaceLabels[t * 2] != spin && m_SurfaceMeshFaceLabels[t * 2 + 1] != spin)
+      if(m_SurfaceMeshFaceLabels[t * 2] != spin && m_SurfaceMeshFaceLabels[t * 2 + 1] != spin)
       {
         continue; // We do not match either spin so move to the next triangle
       }
 
       // Only print 15 Triangles per line
-      if (lineCount == 15)
+      if(lineCount == 15)
       {
-        fprintf (f, ", %lld\n", (long long int)(t));
+        fprintf(f, ", %lld\n", (long long int)(t));
         lineCount = 0;
       }
       else if(lineCount == 0) // First value on the line
@@ -353,10 +366,9 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
         fprintf(f, ", %lld", (long long int)(t));
         lineCount++;
       }
-
     }
     // Make sure we have a new line at the end of the section
-    if (lineCount != 0)
+    if(lineCount != 0)
     {
       fprintf(f, "\n");
     }
@@ -400,23 +412,29 @@ const QString AbaqusSurfaceMeshWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AbaqusSurfaceMeshWriter::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AbaqusSurfaceMeshWriter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AbaqusSurfaceMeshWriter::getHumanLabel()
-{ return "Write Abaqus Surface Mesh"; }
+{
+  return "Write Abaqus Surface Mesh";
+}

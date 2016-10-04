@@ -38,40 +38,38 @@
 #include <limits>
 
 #include <QtCore/QSettings>
+#include <QtGui/QDoubleValidator>
+#include <QtGui/QIntValidator>
+#include <QtGui/QMouseEvent>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QTreeWidgetItem>
-#include <QtGui/QIntValidator>
-#include <QtGui/QDoubleValidator>
-#include <QtGui/QMouseEvent>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
-#include "StatsGenerator/Widgets/SGCurveTracker.h"
-
+#include "StatsGenerator/Widgets/StatsGenCurveTracker.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
-#include <qwt_plot_grid.h>
+#include <qwt_picker_machine.h>
+#include <qwt_plot_canvas.h>
 #include <qwt_plot_curve.h>
+#include <qwt_plot_grid.h>
+#include <qwt_plot_layout.h>
 #include <qwt_plot_marker.h>
 #include <qwt_plot_shapeitem.h>
-#include <qwt_plot_layout.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_symbol.h>
-#include <qwt_picker_machine.h>
 #include <qwt_scale_widget.h>
-
+#include <qwt_symbol.h>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_StatsGenFeatureSizeWidget.cpp"
@@ -79,15 +77,15 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenFeatureSizeWidget::StatsGenFeatureSizeWidget(QWidget* parent) :
-  QWidget(parent),
-  m_Mu(1.0f),
-  m_Sigma(0.1f),
-  m_MinCutOff(5.0f),
-  m_MaxCutOff(5.0f),
-  m_BinStep(0.5f),
-  m_PhaseIndex(-1),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+StatsGenFeatureSizeWidget::StatsGenFeatureSizeWidget(QWidget* parent)
+: QWidget(parent)
+, m_Mu(1.0f)
+, m_Sigma(0.1f)
+, m_MinCutOff(5.0f)
+, m_MaxCutOff(5.0f)
+, m_BinStep(0.5f)
+, m_PhaseIndex(-1)
+, m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
   setupUi(this);
   setupGui();
@@ -98,7 +96,6 @@ StatsGenFeatureSizeWidget::StatsGenFeatureSizeWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 StatsGenFeatureSizeWidget::~StatsGenFeatureSizeWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -149,22 +146,21 @@ void StatsGenFeatureSizeWidget::setupGui()
   qwtStr.setText(QString("Probability of Sampling ESD \nfrom the Distribution"));
   m_SizeDistributionPlot->setAxisTitle(QwtPlot::yLeft, qwtStr);
 
-  m_SizeDistributionPlot->plotLayout()->setAlignCanvasToScales( true );
-  for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
+  m_SizeDistributionPlot->plotLayout()->setAlignCanvasToScales(true);
+  for(int axis = 0; axis < QwtPlot::axisCnt; axis++)
   {
-    m_SizeDistributionPlot->axisWidget(axis)->setMargin( 0 );
+    m_SizeDistributionPlot->axisWidget(axis)->setMargin(0);
   }
-  QwtPlotCanvas *canvas = new QwtPlotCanvas();
-  canvas->setAutoFillBackground( false );
-  canvas->setFrameStyle( QFrame::NoFrame );
-  //canvas->setPalette(pal);
-  m_SizeDistributionPlot->setCanvas( canvas );
+  QwtPlotCanvas* canvas = new QwtPlotCanvas();
+  canvas->setAutoFillBackground(false);
+  canvas->setFrameStyle(QFrame::NoFrame);
+  // canvas->setPalette(pal);
+  m_SizeDistributionPlot->setCanvas(canvas);
 
   QwtPlotPicker* plotPicker = new QwtPlotPicker(m_SizeDistributionPlot->xBottom, m_SizeDistributionPlot->yLeft, QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, m_SizeDistributionPlot->canvas());
   QwtPickerMachine* pickerMachine = new QwtPickerClickPointMachine();
   plotPicker->setStateMachine(pickerMachine);
   connect(plotPicker, SIGNAL(selected(const QPointF&)), this, SLOT(plotPointSelected(const QPointF&)));
-
 
 #if 0
   m_grid = new QwtPlotGrid;
@@ -175,10 +171,8 @@ void StatsGenFeatureSizeWidget::setupGui()
   m_grid->attach(m_SizeDistributionPlot);
 #endif
 
-
   updateSizeDistributionPlot();
   calculateNumberOfBins();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -191,19 +185,19 @@ void StatsGenFeatureSizeWidget::plotPointSelected(const QPointF& point)
   {
     QwtPlotShapeItem* item = m_BarChartItems[i];
 
-    //qDebug()  << "\t" << item->boundingRect();
-    if( item->boundingRect().contains(point) )
+    // qDebug()  << "\t" << item->boundingRect();
+    if(item->boundingRect().contains(point))
     {
       QColor fillColor = QColor("IndianRed");
-      fillColor.setAlpha( 200 );
-      item->setBrush( fillColor );
+      fillColor.setAlpha(200);
+      item->setBrush(fillColor);
       selectedBin = i;
     }
     else
     {
       QColor fillColor = QColor("RoyalBlue");
-      fillColor.setAlpha( 200 );
-      item->setBrush( fillColor );
+      fillColor.setAlpha(200);
+      item->setBrush(fillColor);
     }
   }
   m_SizeDistributionPlot->replot();
@@ -213,9 +207,9 @@ void StatsGenFeatureSizeWidget::plotPointSelected(const QPointF& point)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenFeatureSizeWidget::mousePressEvent(QMouseEvent *event)
+void StatsGenFeatureSizeWidget::mousePressEvent(QMouseEvent* event)
 {
-//  qDebug() << "mousePressedEvent";
+  //  qDebug() << "mousePressedEvent";
 }
 
 // -----------------------------------------------------------------------------
@@ -227,27 +221,27 @@ int StatsGenFeatureSizeWidget::gatherSizeDistributionFromGui(float& mu, float& s
 
   bool ok = false;
   mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
   sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
   minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
   maxCutOff = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
   stepSize = loc.toFloat(m_BinStepSize->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
@@ -308,7 +302,7 @@ bool StatsGenFeatureSizeWidget::validateMuSigma()
     return false;
   }
 
-  if (muValid && sigmaValid && minValid && maxValid)
+  if(muValid && sigmaValid && minValid && maxValid)
   {
     emit userEnteredValidData(true);
     return true;
@@ -318,7 +312,6 @@ bool StatsGenFeatureSizeWidget::validateMuSigma()
   emit userEnteredValidData(false);
   return false;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -340,7 +333,7 @@ void StatsGenFeatureSizeWidget::on_m_FeatureESD_editingFinished()
 void StatsGenFeatureSizeWidget::on_m_Mu_SizeDistribution_textChanged(const QString& text)
 {
   Q_UNUSED(text)
-  if (!validateMuSigma())
+  if(!validateMuSigma())
   {
     return;
   }
@@ -356,11 +349,11 @@ void StatsGenFeatureSizeWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
     m_FeatureESD->blockSignals(false);
   }
 
-  if (updateSizeDistributionPlot() < 0)
+  if(updateSizeDistributionPlot() < 0)
   {
     return;
   }
-  //m_Mu_SizeDistribution->setFocus();
+  // m_Mu_SizeDistribution->setFocus();
   if(calculateNumberOfBins() < 0)
   {
     return;
@@ -374,11 +367,11 @@ void StatsGenFeatureSizeWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
 void StatsGenFeatureSizeWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& text)
 {
   Q_UNUSED(text)
-  if (!validateMuSigma())
+  if(!validateMuSigma())
   {
     return;
   }
-  if (updateSizeDistributionPlot() < 0)
+  if(updateSizeDistributionPlot() < 0)
   {
     return;
   }
@@ -396,11 +389,11 @@ void StatsGenFeatureSizeWidget::on_m_Sigma_SizeDistribution_textChanged(const QS
 void StatsGenFeatureSizeWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
 {
   Q_UNUSED(text)
-  if (!validateMuSigma())
+  if(!validateMuSigma())
   {
     return;
   }
-  if (updateSizeDistributionPlot() < 0)
+  if(updateSizeDistributionPlot() < 0)
   {
     return;
   }
@@ -418,11 +411,11 @@ void StatsGenFeatureSizeWidget::on_m_MinSigmaCutOff_textChanged(const QString& t
 void StatsGenFeatureSizeWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
 {
   Q_UNUSED(text)
-  if (!validateMuSigma())
+  if(!validateMuSigma())
   {
     return;
   }
-  if (updateSizeDistributionPlot() < 0)
+  if(updateSizeDistributionPlot() < 0)
   {
     return;
   }
@@ -440,11 +433,11 @@ void StatsGenFeatureSizeWidget::on_m_MaxSigmaCutOff_textChanged(const QString& t
 void StatsGenFeatureSizeWidget::on_m_BinStepSize_valueChanged(double v)
 {
   Q_UNUSED(v)
-  if (!validateMuSigma())
+  if(!validateMuSigma())
   {
     return;
   }
-  if (updateSizeDistributionPlot() < 0)
+  if(updateSizeDistributionPlot() < 0)
   {
     return;
   }
@@ -454,7 +447,6 @@ void StatsGenFeatureSizeWidget::on_m_BinStepSize_valueChanged(double v)
   }
   emit dataChanged();
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -468,7 +460,7 @@ int StatsGenFeatureSizeWidget::calculateNumberOfBins()
   float stepSize = 1.0;
   float max, min;
   int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
-  if (err < 0)
+  if(err < 0)
   {
     return err;
   }
@@ -500,30 +492,23 @@ int StatsGenFeatureSizeWidget::calculateNumberOfBins(float mu, float sigma, floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenFeatureSizeWidget::computeBinsAndCutOffs( float mu, float sigma,
-                                               float minCutOff, float maxCutOff,
-                                               float binStepSize,
-                                               QwtArray<float>& binsizes,
-                                               QwtArray<float>& xCo,
-                                               QwtArray<float>& yCo,
-                                               float& xMax, float& yMax,
-                                               QwtArray<float>& x,
-                                               QwtArray<float>& y)
+int StatsGenFeatureSizeWidget::computeBinsAndCutOffs(float mu, float sigma, float minCutOff, float maxCutOff, float binStepSize, QwtArray<float>& binsizes, QwtArray<float>& xCo, QwtArray<float>& yCo,
+                                                     float& xMax, float& yMax, QwtArray<float>& x, QwtArray<float>& y)
 {
   int err = 0;
   int size = 250;
 
-  err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size, minCutOff, maxCutOff);
-  if (err == 1)
+  err = StatsGen::GenLogNormalPlotData<QwtArray<float>>(mu, sigma, x, y, size, minCutOff, maxCutOff);
+  if(err == 1)
   {
-    //TODO: Present Error Message
+    // TODO: Present Error Message
     return -1;
   }
 
   xMax = x.last();
-  for (int i = 0; i < size; ++i)
+  for(int i = 0; i < size; ++i)
   {
-    if (y[i] > yMax)
+    if(y[i] > yMax)
     {
       yMax = y[i];
     }
@@ -533,7 +518,7 @@ int StatsGenFeatureSizeWidget::computeBinsAndCutOffs( float mu, float sigma,
   yCo.clear();
   int numsizebins = 1;
   binsizes.clear();
-  err = StatsGen::GenCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
+  err = StatsGen::GenCutOff<float, QwtArray<float>>(mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
   return err;
 }
@@ -549,7 +534,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   float maxCutOff = 1.0;
   float stepSize = 1.0;
   int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
-  if (err < 0)
+  if(err < 0)
   {
     return err;
   }
@@ -557,14 +542,14 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   QwtArray<float> xCo;
   QwtArray<float> yCo;
   QwtArray<float> binsizes;
-  float xMax = std::numeric_limits<float >::min();
-  float yMax = std::numeric_limits<float >::min();
+  float xMax = std::numeric_limits<float>::min();
+  float yMax = std::numeric_limits<float>::min();
   QwtArray<float> x;
   QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
 
   // Adjust the BinStepSize so that there are at least 2x as many x points as bins.
-  while(binsizes.size() > x.size()/2)
+  while(binsizes.size() > x.size() / 2)
   {
     m_BinStepSize->blockSignals(true);
     m_BinStepSize->stepUp();
@@ -573,9 +558,12 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
     err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
   }
 
-  if (err < 0) { return err; }
+  if(err < 0)
+  {
+    return err;
+  }
 
-  if (nullptr == m_SizeDistributionCurve)
+  if(nullptr == m_SizeDistributionCurve)
   {
     m_SizeDistributionCurve = new QwtPlotCurve("Size Distribution");
     m_SizeDistributionCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
@@ -591,17 +579,16 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
 
     QColor color = QColor("Black");
     m_SizeDistCenterPointCurve->setPen(color, 2);
-    m_SizeDistCenterPointCurve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
+    m_SizeDistCenterPointCurve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
     m_SizeDistCenterPointCurve->setStyle(QwtPlotCurve::NoCurve);
-    QwtSymbol *symbol = new QwtSymbol( QwtSymbol::VLine,
-        QBrush( Qt::white ), QPen( color, 1 ), QSize( 1, 16 ) );
-    m_SizeDistCenterPointCurve->setSymbol( symbol );
+    QwtSymbol* symbol = new QwtSymbol(QwtSymbol::VLine, QBrush(Qt::white), QPen(color, 1), QSize(1, 16));
+    m_SizeDistCenterPointCurve->setSymbol(symbol);
 
     m_SizeDistCenterPointCurve->attach(m_SizeDistributionPlot);
   }
 
   // Place a vertical Line on the plot where the Min and Max Cutoff values are
-  if (nullptr == m_CutOffMin)
+  if(nullptr == m_CutOffMin)
   {
     m_CutOffMin = new QwtPlotMarker();
     m_CutOffMin->attach(m_SizeDistributionPlot);
@@ -617,7 +604,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   m_CutOffMin->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
   m_CutOffMin->setXValue(xCo[0]);
 
-  if (nullptr == m_CutOffMax)
+  if(nullptr == m_CutOffMax)
   {
     m_CutOffMax = new QwtPlotMarker();
     m_CutOffMax->attach(m_SizeDistributionPlot);
@@ -634,7 +621,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
 
   QwtArray<double> xD(x.size());
   QwtArray<double> yD(x.size());
-  for (int i = 0; i < x.size(); ++i)
+  for(int i = 0; i < x.size(); ++i)
   {
     xD[i] = static_cast<double>(x[i]);
     yD[i] = static_cast<double>(y[i]);
@@ -669,35 +656,35 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   int j = 0;
   for(int i = 0; i < binsizes.count(); i++)
   {
-    QwtPlotShapeItem *item = new QwtPlotShapeItem( "" );
-    item->setItemAttribute( QwtPlotItem::Legend, false );
-    item->setLegendMode( QwtPlotShapeItem::LegendShape );
-    item->setLegendIconSize( QSize( 20, 20 ) );
-    item->setRenderHint( QwtPlotItem::RenderAntialiased, true );
-
+    QwtPlotShapeItem* item = new QwtPlotShapeItem("");
+    item->setItemAttribute(QwtPlotItem::Legend, false);
+    item->setLegendMode(QwtPlotShapeItem::LegendShape);
+    item->setLegendIconSize(QSize(20, 20));
+    item->setRenderHint(QwtPlotItem::RenderAntialiased, true);
 
     int jStart = j;
-    //qDebug() << indexStart << "\t" << indexMid << "\t" << indexEnd;
+    // qDebug() << indexStart << "\t" << indexMid << "\t" << indexEnd;
     while(j < x.size() && xEnd > x[j])
     {
       j++;
     }
 
-    int iSize = j-jStart;
+    int iSize = j - jStart;
     if(iSize == 0)
     {
       return -1;
     }
 
+    int midIndex = jStart + iSize / 2;
 
-    int midIndex = jStart + iSize/2;
-
-    if ((iSize % 2) == 0)
+    if((iSize % 2) == 0)
     {
-      iSize = jStart + iSize/2;
-      xBinCenter[i] = (x[iSize] + x[iSize - 1])/2.0;
-      yBinCenter[i] = (y[iSize] + y[iSize - 1])/2.0;
-    } else {
+      iSize = jStart + iSize / 2;
+      xBinCenter[i] = (x[iSize] + x[iSize - 1]) / 2.0;
+      yBinCenter[i] = (y[iSize] + y[iSize - 1]) / 2.0;
+    }
+    else
+    {
       if(midIndex < x.size())
       {
         xBinCenter[i] = x[midIndex];
@@ -705,8 +692,8 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
       }
     }
 
-//    qDebug() << i << "\t" << jStart << "\t" << j << "\t" << xStart << "\t" << (xStart + binWidth) << "\t" << midIndex
-//    << "(" << xStart <<  y[midIndex] << ")  (" <<  binWidth << y[midIndex] << ")";
+    //    qDebug() << i << "\t" << jStart << "\t" << j << "\t" << xStart << "\t" << (xStart + binWidth) << "\t" << midIndex
+    //    << "(" << xStart <<  y[midIndex] << ")  (" <<  binWidth << y[midIndex] << ")";
 
     // The coordinates are done in traditional cartesion coordinate system and NOT in CS Graphics Coordinate system
     QRectF rect = QRectF(xStart, 0.0, binWidth, yBinCenter[i]);
@@ -715,14 +702,14 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
     path.addRect(rect);
 
     QColor fillColor = QColor("RoyalBlue");
-    fillColor.setAlpha( 200 );
+    fillColor.setAlpha(200);
 
-    QPen pen( Qt::black, 1 );
-    pen.setJoinStyle( Qt::MiterJoin );
-    item->setPen( pen );
-    item->setBrush( fillColor );
+    QPen pen(Qt::black, 1);
+    pen.setJoinStyle(Qt::MiterJoin);
+    item->setPen(pen);
+    item->setBrush(fillColor);
 
-    item->setShape( path );
+    item->setShape(path);
     item->attach(m_SizeDistributionPlot);
     m_BarChartItems.push_back(item);
 
@@ -748,17 +735,23 @@ void StatsGenFeatureSizeWidget::plotSizeDistribution()
   float maxCutOff = 1.0;
   float stepSize = 1.0;
   int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
-  if (err == 0) { return; }
+  if(err == 0)
+  {
+    return;
+  }
 
   QwtArray<float> xCo;
   QwtArray<float> yCo;
   QwtArray<float> binSizes;
-  float xMax = std::numeric_limits<float >::min();
-  float yMax = std::numeric_limits<float >::min();
+  float xMax = std::numeric_limits<float>::min();
+  float yMax = std::numeric_limits<float>::min();
   QwtArray<float> x;
   QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binSizes, xCo, yCo, xMax, yMax, x, y);
-  if (err < 0) { return; }
+  if(err < 0)
+  {
+    return;
+  }
 
   m_Mu = mu;
   m_Sigma = sigma;
@@ -766,7 +759,6 @@ void StatsGenFeatureSizeWidget::plotSizeDistribution()
   m_MinCutOff = minCutOff;
   m_BinStep = stepSize;
   m_BinSizes = binSizes;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -790,7 +782,7 @@ int StatsGenFeatureSizeWidget::getStatisticsData(PrimaryStatsData* primaryStatsD
   QwtArray<float> x;
   QwtArray<float> y;
   int err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, binStep, binsizes, xCo, yCo, xMax, yMax, x, y);
-  if (err < 0)
+  if(err < 0)
   {
     return err;
   }
@@ -818,7 +810,6 @@ int StatsGenFeatureSizeWidget::getStatisticsData(PrimaryStatsData* primaryStatsD
     primaryStatsData->setFeatureSizeDistribution(data);
     primaryStatsData->setFeatureSize_DistType(SIMPL::DistributionType::LogNormal);
   }
-
 
   return err;
 }

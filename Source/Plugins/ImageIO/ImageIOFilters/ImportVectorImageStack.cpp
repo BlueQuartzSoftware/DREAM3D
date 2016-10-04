@@ -45,38 +45,36 @@
 #include <QtGui/QImageReader>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
-#include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/FilterParameters/ImportVectorImageStackFilterParameter.h"
+#include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/ImageIOVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_ImportVectorImageStack.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStack::ImportVectorImageStack() :
-  AbstractFilter(),
-  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_StartIndex(0),
-  m_EndIndex(0),
-  m_InputPath(""),
-  m_FilePrefix(""),
-  m_Separator(""),
-  m_FileSuffix(""),
-  m_FileExtension(""),
-  m_PaddingDigits(0),
-  m_RefFrameZDir(SIMPL::RefFrameZDir::LowtoHigh),
-  m_VectorDataArrayName(SIMPL::CellData::VectorData),
-  m_VectorData(nullptr)
+ImportVectorImageStack::ImportVectorImageStack()
+: AbstractFilter()
+, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_StartIndex(0)
+, m_EndIndex(0)
+, m_InputPath("")
+, m_FilePrefix("")
+, m_Separator("")
+, m_FileSuffix("")
+, m_FileExtension("")
+, m_PaddingDigits(0)
+, m_RefFrameZDir(SIMPL::RefFrameZDir::LowtoHigh)
+, m_VectorDataArrayName(SIMPL::CellData::VectorData)
+, m_VectorData(nullptr)
 {
 
   m_Origin.x = 0.0;
@@ -86,7 +84,6 @@ ImportVectorImageStack::ImportVectorImageStack() :
   m_Resolution.x = 1.0;
   m_Resolution.y = 1.0;
   m_Resolution.z = 1.0;
-
 
   setupFilterParameters();
 }
@@ -120,22 +117,22 @@ void ImportVectorImageStack::setupFilterParameters()
 void ImportVectorImageStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
-  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
-  setVectorDataArrayName( reader->readString("VectorDataArrayName", getVectorDataArrayName()) );
-  setStartIndex( reader->readValue("StartIndex", getStartIndex()) );
-  setEndIndex( reader->readValue("EndIndex", getEndIndex()) );
-  setStartComp( reader->readValue("StartComp", getStartComp()) );
-  setEndComp( reader->readValue("EndComp", getEndComp()) );
-  setPaddingDigits( reader->readValue("PaddingDigits", getPaddingDigits()) );
-  setRefFrameZDir( reader->readValue("RefFrameZDir", getRefFrameZDir()) );
-  setInputPath( reader->readString("InputPath", getInputPath()) );
-  setFilePrefix( reader->readString("FilePrefix", getFilePrefix()) );
-  setSeparator( reader->readString("Separator", getSeparator()) );
-  setFileSuffix( reader->readString("FileSuffix", getFileSuffix()) );
-  setFileExtension( reader->readString("FileExtension", getFileExtension()) );
-  setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
-  setResolution( reader->readFloatVec3("Resolution", getResolution()) );
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
+  setVectorDataArrayName(reader->readString("VectorDataArrayName", getVectorDataArrayName()));
+  setStartIndex(reader->readValue("StartIndex", getStartIndex()));
+  setEndIndex(reader->readValue("EndIndex", getEndIndex()));
+  setStartComp(reader->readValue("StartComp", getStartComp()));
+  setEndComp(reader->readValue("EndComp", getEndComp()));
+  setPaddingDigits(reader->readValue("PaddingDigits", getPaddingDigits()));
+  setRefFrameZDir(reader->readValue("RefFrameZDir", getRefFrameZDir()));
+  setInputPath(reader->readString("InputPath", getInputPath()));
+  setFilePrefix(reader->readString("FilePrefix", getFilePrefix()));
+  setSeparator(reader->readString("Separator", getSeparator()));
+  setFileSuffix(reader->readString("FileSuffix", getFileSuffix()));
+  setFileExtension(reader->readString("FileExtension", getFileExtension()));
+  setOrigin(reader->readFloatVec3("Origin", getOrigin()));
+  setResolution(reader->readFloatVec3("Resolution", getResolution()));
   reader->closeFilterGroup();
 }
 
@@ -144,7 +141,6 @@ void ImportVectorImageStack::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 void ImportVectorImageStack::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -164,7 +160,10 @@ void ImportVectorImageStack::dataCheck()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if (getErrorCondition() < 0 || nullptr == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get())
+  {
+    return;
+  }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
@@ -172,15 +171,19 @@ void ImportVectorImageStack::dataCheck()
   bool hasMissingFiles = false;
   bool stackLowToHigh = false;
 
-  if( SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  else if (SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  if(SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir)
+  {
+    stackLowToHigh = true;
+  }
+  else if(SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir)
+  {
+    stackLowToHigh = false;
+  }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateVectorFileList(m_StartIndex, m_EndIndex, m_StartComp, m_EndComp,
-                              hasMissingFiles, stackLowToHigh, m_InputPath,
-                              m_FilePrefix, m_Separator, m_FileSuffix, m_FileExtension,
-                              m_PaddingDigits);
-  if (fileList.size() == 0)
+  QVector<QString> fileList = FilePathGenerator::GenerateVectorFileList(m_StartIndex, m_EndIndex, m_StartComp, m_EndComp, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_Separator,
+                                                                        m_FileSuffix, m_FileExtension, m_PaddingDigits);
+  if(fileList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-11);
@@ -200,18 +203,18 @@ void ImportVectorImageStack::dataCheck()
     QImage::Format format = reader.imageFormat();
     switch(format)
     {
-      case QImage::Format_Indexed8:
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
-      case QImage::Format_Grayscale8:
+    case QImage::Format_Indexed8:
+#if(QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+    case QImage::Format_Grayscale8:
 #endif
-        pixelBytes = 1;
-        break;
-      case QImage::Format_RGB32:
-      case QImage::Format_ARGB32:
-        pixelBytes = 4;
-        break;
-      default:
-         pixelBytes = 0;
+      pixelBytes = 1;
+      break;
+    case QImage::Format_RGB32:
+    case QImage::Format_ARGB32:
+      pixelBytes = 4;
+      break;
+    default:
+      pixelBytes = 0;
     }
 
     if(pixelBytes == 0)
@@ -240,7 +243,10 @@ void ImportVectorImageStack::dataCheck()
     {
       err = -1;
       QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
-                               " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
+                               " dim[0]=%1  dim[1]=%2  dim[2]=%3")
+                       .arg(dims[0])
+                       .arg(dims[1])
+                       .arg(dims[2]);
       setErrorCondition(err);
       notifyErrorMessage(getHumanLabel(), ss, err);
     }
@@ -256,53 +262,59 @@ void ImportVectorImageStack::dataCheck()
       tDims[i] = dims[i];
     }
     AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-    if(getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
 
-    //set up component dimensions for the vector image array
+    // set up component dimensions for the vector image array
     QVector<size_t> arraydims(2);
     arraydims[0] = ((m_EndComp - m_StartComp) + 1);
     arraydims[1] = pixelBytes;
 
     // This would be for a gray scale image
-    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName() );
-    m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName());
+    m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
+        this, tempPath, 0, arraydims);          /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_VectorDataPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_VectorData = m_VectorDataPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-// This is code for adding to an existing data container --- kept only for reference in case we want to implement this later
-//  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, ImportVectorImageStack>(this, getDataContainerName());
-//  if(getErrorCondition() < 0) { return; }
+  // This is code for adding to an existing data container --- kept only for reference in case we want to implement this later
+  //  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, ImportVectorImageStack>(this, getDataContainerName());
+  //  if(getErrorCondition() < 0) { return; }
 
-//  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), SIMPL::AttributeMatrixType::Cell);
-//  if(getErrorCondition() < 0) { return; }
+  //  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), SIMPL::AttributeMatrixType::Cell);
+  //  if(getErrorCondition() < 0) { return; }
 
-//  QVector<size_t> tDims = cellAttrMat->getTupleDimensions();
-//  if(tDims.size() != 3)
-//  {
-//    QString ss = QObject::tr("Existing DataContainer has different number of tuple dimensions than images being read");
-//    setErrorCondition(-12);
-//    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-//    return;
-//  }
-//  for(int i = 0; i < tDims.size(); i++)
-//  {
-//    if(tDims[i] != dims[i])
-//    {
-//      QString ss = QObject::tr("Existing DataContainer has a tuple dimension different than images being read");
-//      setErrorCondition(-12);
-//      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-//      return;
-//    }
-//  }
+  //  QVector<size_t> tDims = cellAttrMat->getTupleDimensions();
+  //  if(tDims.size() != 3)
+  //  {
+  //    QString ss = QObject::tr("Existing DataContainer has different number of tuple dimensions than images being read");
+  //    setErrorCondition(-12);
+  //    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  //    return;
+  //  }
+  //  for(int i = 0; i < tDims.size(); i++)
+  //  {
+  //    if(tDims[i] != dims[i])
+  //    {
+  //      QString ss = QObject::tr("Existing DataContainer has a tuple dimension different than images being read");
+  //      setErrorCondition(-12);
+  //      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  //      return;
+  //    }
+  //  }
 
-//  QVector<size_t> arraydims(1, fileList.size());
-//  // This would be for a gray scale image
-//  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName() );
-//  m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-//  if( nullptr != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-//  { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  //  QVector<size_t> arraydims(1, fileList.size());
+  //  // This would be for a gray scale image
+  //  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName() );
+  //  m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance
+  //  variable that is a weak_ptr<> */
+  //  if( nullptr != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  //  { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -325,7 +337,10 @@ void ImportVectorImageStack::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
@@ -333,11 +348,11 @@ void ImportVectorImageStack::execute()
   QVector<size_t> tDims = cellAttrMat->getTupleDimensions();
   size_t imageWidth = tDims[0];
   size_t imageHeight = tDims[1];
-  //size_t numVecImages = tDims[2];
+  // size_t numVecImages = tDims[2];
 
   size_t numComps = m_VectorDataPtr.lock()->getNumberOfComponents();
   QVector<size_t> cDims = m_VectorDataPtr.lock()->getComponentDimensions();
-  //size_t vecDim = cDims[0];
+  // size_t vecDim = cDims[0];
   size_t pixDepth = cDims[1];
 
   size_t numCompsPerVecImage = imageHeight * imageWidth * numComps;
@@ -353,24 +368,27 @@ void ImportVectorImageStack::execute()
   bool hasMissingFiles = false;
   bool stackLowToHigh = false;
 
-  if( SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  else if (SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  if(SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir)
+  {
+    stackLowToHigh = true;
+  }
+  else if(SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir)
+  {
+    stackLowToHigh = false;
+  }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateVectorFileList(m_StartIndex, m_EndIndex,
-                              m_StartComp, m_EndComp, hasMissingFiles, stackLowToHigh, m_InputPath,
-                              m_FilePrefix, m_Separator, m_FileSuffix, m_FileExtension,
-                              m_PaddingDigits);
+  QVector<QString> fileList = FilePathGenerator::GenerateVectorFileList(m_StartIndex, m_EndIndex, m_StartComp, m_EndComp, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_Separator,
+                                                                        m_FileSuffix, m_FileExtension, m_PaddingDigits);
 
-
-  for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
+  for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
   {
     QString imageFName = *filepath;
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
     notifyStatusMessage(getHumanLabel(), ss);
 
     QImage image(imageFName);
-    if (image.isNull() == true)
+    if(image.isNull() == true)
     {
       setErrorCondition(-14000);
       notifyErrorMessage(getHumanLabel(), "Failed to load Image file", getErrorCondition());
@@ -417,7 +435,6 @@ void ImportVectorImageStack::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -426,7 +443,7 @@ AbstractFilter::Pointer ImportVectorImageStack::newFilterInstance(bool copyFilte
   ImportVectorImageStack::Pointer filter = ImportVectorImageStack::New();
   if(true == copyFilterParameters)
   {
-    filter->setFilterParameters(getFilterParameters() );
+    filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
     SIMPL_COPY_INSTANCEVAR(DataContainerName)
@@ -473,7 +490,7 @@ const QString ImportVectorImageStack::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ImageIO::Version::Major() << "." << ImageIO::Version::Minor() << "." << ImageIO::Version::Patch();
+  vStream << ImageIO::Version::Major() << "." << ImageIO::Version::Minor() << "." << ImageIO::Version::Patch();
   return version;
 }
 
@@ -481,19 +498,22 @@ const QString ImportVectorImageStack::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ImportVectorImageStack::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
-
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportVectorImageStack::getSubGroupName()
-{ return SIMPL::FilterSubGroups::InputFilters; }
-
+{
+  return SIMPL::FilterSubGroups::InputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportVectorImageStack::getHumanLabel()
-{ return "Import Images (3D Vector Stack)"; }
-
+{
+  return "Import Images (3D Vector Stack)";
+}

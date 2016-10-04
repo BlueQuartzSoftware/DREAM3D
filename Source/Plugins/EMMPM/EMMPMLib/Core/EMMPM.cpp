@@ -33,28 +33,26 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include "EMMPMLib/EMMPMLib.h"
-#include "EMMPMLib/Common/MSVCDefines.h"
 #include "EMMPMLib/Common/EMMPM_Math.h"
 #include "EMMPMLib/Common/EMTime.h"
-#include "EMMPMLib/Core/InitializationFunctions.h"
-#include "EMMPMLib/Core/EMMPMUtilities.h"
+#include "EMMPMLib/Common/MSVCDefines.h"
 #include "EMMPMLib/Core/EMCalculation.h"
-
+#include "EMMPMLib/Core/EMMPMUtilities.h"
+#include "EMMPMLib/Core/InitializationFunctions.h"
+#include "EMMPMLib/EMMPMLib.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EMMPM::EMMPM() :
-  Observable(),
-  m_StatsDelegate(nullptr),
-  m_ErrorCondition(0)
+EMMPM::EMMPM()
+: Observable()
+, m_StatsDelegate(nullptr)
+, m_ErrorCondition(0)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -62,58 +60,65 @@ EMMPM::EMMPM() :
 // -----------------------------------------------------------------------------
 EMMPM::~EMMPM()
 {
-
 }
 
+#define PRINT_DATA(var) printf("%s: %d\n", #var, data->var);
 
+#define PRINT_DATA_DOUBLE(var) printf("%s: %f\n", #var, data->var);
 
-#define PRINT_DATA(var)\
-  printf("%s: %d\n", #var, data->var);
+#define PRINT_DATA_CHAR(var) printf("%s: %s\n", #var, data->var);
 
-#define PRINT_DATA_DOUBLE(var)\
-  printf("%s: %f\n", #var, data->var);
-
-#define PRINT_DATA_CHAR(var)\
-  printf("%s: %s\n", #var, data->var);
-
-
-#define PRINT_CHAR_ARRAY(var)\
-  printf("%s[MAX_CLASSES]; ", #var);\
-  for (i = 0; i < EMMPM_MAX_CLASSES; i++) {\
-    printf("%d  ", data->var[i]);}\
+#define PRINT_CHAR_ARRAY(var)                                                                                                                                                                          \
+  printf("%s[MAX_CLASSES]; ", #var);                                                                                                                                                                   \
+  for(i = 0; i < EMMPM_MAX_CLASSES; i++)                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    printf("%d  ", data->var[i]);                                                                                                                                                                      \
+  }                                                                                                                                                                                                    \
   printf("\n");
 
-
-#define PRINT_DOUBLE_ARRAY(var)\
-  printf("%s[MAX_CLASSES]; ", #var);\
-  for (i = 0; i < EMMPM_MAX_CLASSES; i++){ \
-    printf("%f  ", data->var[i]);}\
+#define PRINT_DOUBLE_ARRAY(var)                                                                                                                                                                        \
+  printf("%s[MAX_CLASSES]; ", #var);                                                                                                                                                                   \
+  for(i = 0; i < EMMPM_MAX_CLASSES; i++)                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    printf("%f  ", data->var[i]);                                                                                                                                                                      \
+  }                                                                                                                                                                                                    \
   printf("\n");
 
-#define PRINT_INT_ARRAY(var)\
-  printf("%s[MAX_CLASSES]; ", #var);\
-  for (i = 0; i < EMMPM_MAX_CLASSES; i++){ \
-    printf("%d  ", data->var[i]);}\
+#define PRINT_INT_ARRAY(var)                                                                                                                                                                           \
+  printf("%s[MAX_CLASSES]; ", #var);                                                                                                                                                                   \
+  for(i = 0; i < EMMPM_MAX_CLASSES; i++)                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    printf("%d  ", data->var[i]);                                                                                                                                                                      \
+  }                                                                                                                                                                                                    \
   printf("\n");
 
-#define PRINT_UINT_ARRAY(var)\
-  {printf("%s[MAX_CLASSES]; ", #var);\
-    unsigned int ui;\
-    for (i = 0; i < EMMPM_MAX_CLASSES; i++){ \
-      ui = data->var[i];\
-      printf("%u  ", ui);}\
-    printf("\n");}
+#define PRINT_UINT_ARRAY(var)                                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    printf("%s[MAX_CLASSES]; ", #var);                                                                                                                                                                 \
+    unsigned int ui;                                                                                                                                                                                   \
+    for(i = 0; i < EMMPM_MAX_CLASSES; i++)                                                                                                                                                             \
+    {                                                                                                                                                                                                  \
+      ui = data->var[i];                                                                                                                                                                               \
+      printf("%u  ", ui);                                                                                                                                                                              \
+    }                                                                                                                                                                                                  \
+    printf("\n");                                                                                                                                                                                      \
+  }
 
-#define PRINT_2D_UINT_ARRAY(var, r, c)\
-  {printf("%s[%s][%s];\n  ", #var, #r, #c);\
-    for (i = 0; i < r; i++){ \
-      for (j = 0; j < c; j++) {\
-        ui = data->var[i][j];\
-        printf("%u  ", ui);}\
-      printf("\n  ");} }
+#define PRINT_2D_UINT_ARRAY(var, r, c)                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    printf("%s[%s][%s];\n  ", #var, #r, #c);                                                                                                                                                           \
+    for(i = 0; i < r; i++)                                                                                                                                                                             \
+    {                                                                                                                                                                                                  \
+      for(j = 0; j < c; j++)                                                                                                                                                                           \
+      {                                                                                                                                                                                                \
+        ui = data->var[i][j];                                                                                                                                                                          \
+        printf("%u  ", ui);                                                                                                                                                                            \
+      }                                                                                                                                                                                                \
+      printf("\n  ");                                                                                                                                                                                  \
+    }                                                                                                                                                                                                  \
+  }
 
-#define PRINT_POINTER(var)\
-  printf("%p\n", data->var);
+#define PRINT_POINTER(var) printf("%p\n", data->var);
 
 // -----------------------------------------------------------------------------
 //
@@ -173,27 +178,30 @@ void EMMPM::execute()
   EMMPM_Data* data = getData().get();
 
   char msgbuff[256];
-  //unsigned long long int millis = 0;
+  // unsigned long long int millis = 0;
   memset(msgbuff, 0, 256);
 
   // Copy the input image into data->y arrays
   EMMPMUtilities::ConvertInputImageToWorkingImage(m_Data);
-//  millis = EMMPM_getMilliSeconds();
-//  millis = millis << 32; // push off the high bits
-//  millis = millis >> 32; // bring back the low bits
-  //data->rngVars = init_genrand( (unsigned long)(millis));
+  //  millis = EMMPM_getMilliSeconds();
+  //  millis = millis << 32; // push off the high bits
+  //  millis = millis >> 32; // bring back the low bits
+  // data->rngVars = init_genrand( (unsigned long)(millis));
 
-  if (data->cancel) { data->progress = 100.0; return; }
-
+  if(data->cancel)
+  {
+    data->progress = 100.0;
+    return;
+  }
 
   /* Initialize the Curvature Penalty variables:  */
   data->ccost = nullptr;
-  if (data->useCurvaturePenalty)
+  if(data->useCurvaturePenalty)
   {
     CurvatureInitialization::Pointer curvatureInit = CurvatureInitialization::New();
     curvatureInit->initCurvatureVariables(m_Data);
 
-    if (data->ccost == nullptr)
+    if(data->ccost == nullptr)
     {
       setErrorCondition(-55100);
       notifyErrorMessage(getHumanLabel(), "Error Allocating Curvature Variables Memory", getErrorCondition());
@@ -201,18 +209,17 @@ void EMMPM::execute()
     }
   }
 
-
   /* Initialize the Edge Gradient Penalty variables */
   data->nw = nullptr;
   data->ew = nullptr;
   data->sw = nullptr;
   data->nw = nullptr;
-  if (data->useGradientPenalty)
+  if(data->useGradientPenalty)
   {
     GradientVariablesInitialization::Pointer gradientInit = GradientVariablesInitialization::New();
     gradientInit->initialize(m_Data);
 
-    if (data->ns == nullptr || data->ew == nullptr || data->nw == nullptr || data->sw == nullptr)
+    if(data->ns == nullptr || data->ew == nullptr || data->nw == nullptr || data->sw == nullptr)
     {
       setErrorCondition(-55000);
       notifyErrorMessage(getHumanLabel(), "Error Allocating Gradient Variables Memory", getErrorCondition());
@@ -227,8 +234,11 @@ void EMMPM::execute()
   XtArrayInitialization::Pointer xtInit = XtArrayInitialization::New();
   xtInit->initialize(m_Data);
 
-
-  if (data->cancel) { data->progress = 100.0; return; }
+  if(data->cancel)
+  {
+    data->progress = 100.0;
+    return;
+  }
 
 #if 0
   /* Allocate space for the output image, and copy a scaled xt
@@ -249,17 +259,15 @@ void EMMPM::execute()
   em->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(em.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  connect(em.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
 
   em->execute();
 
   data->progress = 100.0;
   m_StatsDelegate->reportProgress(getData());
-//  notify("", data->progress, UpdateProgressValue);
-//  notify("EM/MPM Completed.", 100, UpdateProgressValueAndMessage);
+  //  notify("", data->progress, UpdateProgressValue);
+  //  notify("EM/MPM Completed.", 100, UpdateProgressValueAndMessage);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -268,4 +276,3 @@ const QString EMMPM::getHumanLabel()
 {
   return "EMMPM";
 }
-

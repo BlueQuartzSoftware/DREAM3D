@@ -39,13 +39,13 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNRingNeighbors::FindNRingNeighbors() :
-  m_TriangleId(-1),
-  m_RegionId0(0),
-  m_RegionId1(0),
-  m_Ring(2),
-  m_WriteBinaryFile(false),
-  m_WriteConformalMesh(true)
+FindNRingNeighbors::FindNRingNeighbors()
+: m_TriangleId(-1)
+, m_RegionId0(0)
+, m_RegionId1(0)
+, m_Ring(2)
+, m_WriteBinaryFile(false)
+, m_WriteConformalMesh(true)
 {
 }
 
@@ -81,15 +81,15 @@ int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t
   int64_t* triangles = triangleGeom->getTriPointer(0);
   int32_t err = 0;
 
-  //Clear out all the previous triangles.
+  // Clear out all the previous triangles.
   m_NRingTriangles.clear();
 
   // Make sure we have the proper connectivity built
   ElementDynamicList::Pointer node2TrianglePtr = triangleGeom->getElementsContainingVert();
-  if (node2TrianglePtr.get() == nullptr)
+  if(node2TrianglePtr.get() == nullptr)
   {
     err = triangleGeom->findElementsContainingVert();
-    if (err < 0)
+    if(err < 0)
     {
       return err;
     }
@@ -101,7 +101,7 @@ int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t
   bool check1 = faceLabels[m_TriangleId * 2 + 1] == m_RegionId0 && faceLabels[m_TriangleId * 2] == m_RegionId1;
 
 #if 1
-  if ( check0 == false && check1 == false)
+  if(check0 == false && check1 == false)
   {
     qDebug() << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << "\n";
     qDebug() << "Region Ids are: " << faceLabels[m_TriangleId * 2] << " & " << faceLabels[m_TriangleId * 2 + 1] << "\n";
@@ -112,14 +112,14 @@ int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t
   // Add our seed triangle
   m_NRingTriangles.insert(m_TriangleId);
 
-  for (int64_t ring = 0; ring < m_Ring; ++ring)
+  for(int64_t ring = 0; ring < m_Ring; ++ring)
   {
     // Make a copy of the 1 Ring Triangles that we just found so that we can use those triangles as the
     // seed triangles for the 2 Ring triangles
     UniqueFaceIds_t lcvTriangles(m_NRingTriangles);
 
     // Now that we have the 1 ring triangles, get the 2 Ring neighbors from that list
-    for (UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
+    for(UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
     {
       int64_t triangleIdx = *triIter;
       // For each node, get the triangle ids that the node belongs to
@@ -130,12 +130,12 @@ int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t
         int64_t* data = node2TrianglePtr->getElementListPointer(triangles[triangleIdx * 3 + i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
-        for (uint16_t t = 0; t < tCount; ++t)
+        for(uint16_t t = 0; t < tCount; ++t)
         {
           int64_t tid = data[t];
           check0 = faceLabels[tid * 2] == m_RegionId0 && faceLabels[tid * 2 + 1] == m_RegionId1;
           check1 = faceLabels[tid * 2 + 1] == m_RegionId0 && faceLabels[tid * 2] == m_RegionId1;
-          if (check0 == true || check1 == true)
+          if(check0 == true || check1 == true)
           {
             m_NRingTriangles.insert(tid);
           }

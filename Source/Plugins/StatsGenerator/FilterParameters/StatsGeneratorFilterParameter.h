@@ -40,14 +40,25 @@ class StatsGeneratorFilterParameter : public FilterParameter
 {
 public:
   SIMPL_SHARED_POINTERS(StatsGeneratorFilterParameter)
-    SIMPL_STATIC_NEW_MACRO(StatsGeneratorFilterParameter)
-    SIMPL_TYPE_MACRO(StatsGeneratorFilterParameter)
+  SIMPL_STATIC_NEW_MACRO(StatsGeneratorFilterParameter)
+  SIMPL_TYPE_MACRO(StatsGeneratorFilterParameter)
 
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& defaultValue, Category category,
-     int groupIndex = -1);
+  /**
+   * @brief New
+   * @param humanLabel
+   * @param propertyName
+   * @param defaultValue
+   * @param category
+   * @param groupIndex
+   * @return
+   */
+  static Pointer New(const QString& humanLabel,
+                     const QString& propertyName,
+                     const QString& defaultValue,
+                     Category category,
+                     int groupIndex = -1);
 
-    virtual ~StatsGeneratorFilterParameter();
+  virtual ~StatsGeneratorFilterParameter();
 
   /**
    * @brief getWidgetType Returns the type of widget that displays and controls
@@ -56,13 +67,12 @@ public:
    */
   QString getWidgetType();
 
-
 protected:
   StatsGeneratorFilterParameter();
 
 private:
   StatsGeneratorFilterParameter(const StatsGeneratorFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const StatsGeneratorFilterParameter&); // Operator '=' Not Implemented
+  void operator=(const StatsGeneratorFilterParameter&);                // Operator '=' Not Implemented
 };
 
 #endif /* _statsgeneratorfilterparameter_h_ */

@@ -35,24 +35,24 @@
 
 #include "ReadEdaxH5DataWidget.h"
 
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QComboBox>
 
 #include "SIMPLib/Common/Constants.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
-#include "SVWidgetsLib/QtSupport/QtSMacros.h"
 #include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
+#include "SVWidgetsLib/QtSupport/QtSMacros.h"
 
-#include "OrientationAnalysis/OrientationAnalysisFilters/ReadEdaxH5Data.h"
 #include "OrientationAnalysis/FilterParameters/ReadEdaxH5DataFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/ReadEdaxH5Data.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadEdaxH5DataWidget::ReadEdaxH5DataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent)
+ReadEdaxH5DataWidget::ReadEdaxH5DataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
+: FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<ReadEdaxH5DataFilterParameter*>(parameter);
 
@@ -68,7 +68,6 @@ ReadEdaxH5DataWidget::ReadEdaxH5DataWidget(FilterParameter* parameter, AbstractF
 // -----------------------------------------------------------------------------
 ReadEdaxH5DataWidget::~ReadEdaxH5DataWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -86,7 +85,6 @@ AbstractFilter* ReadEdaxH5DataWidget::getFilter() const
 {
   return m_Filter;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -110,16 +108,13 @@ FilterParameter* ReadEdaxH5DataWidget::getFilterParameter() const
 void ReadEdaxH5DataWidget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
+  connect(m_Filter, SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   QStringList selectedList = m_Filter->getSelectedScanNames();
   selectedScanNames->addItems(selectedList);
@@ -135,7 +130,7 @@ void ReadEdaxH5DataWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (nullptr == filter)
+  if(nullptr == filter)
   {
     QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was nullptr.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
@@ -145,7 +140,7 @@ void ReadEdaxH5DataWidget::filterNeedsInputParameters(AbstractFilter* filter)
   Q_ASSERT_X(nullptr != readEdax, "ReadEdaxH5DataWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   QStringList scanNames;
-  for (int i = 0; i < selectedScanNames->count(); i++)
+  for(int i = 0; i < selectedScanNames->count(); i++)
   {
     scanNames.push_back(selectedScanNames->item(i)->text());
   }
@@ -158,7 +153,6 @@ void ReadEdaxH5DataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::beforePreflight()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -174,13 +168,13 @@ void ReadEdaxH5DataWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::updateList()
 {
-  if (getFilter())
+  if(getFilter())
   {
     // Get the list of choices from the filter
     QString listProp = m_FilterParameter->getListProperty();
 
     QVariant var = getFilter()->property(listProp.toLatin1().constData());
-    if (var.isValid() == false)
+    if(var.isValid() == false)
     {
       qDebug() << "Error getting Property " << m_FilterParameter->getListProperty() << " from Filter";
     }
@@ -192,11 +186,11 @@ void ReadEdaxH5DataWidget::updateList()
 
     sortList(totalScanNames, Qt::AscendingOrder);
 
-    for (int i = 0; i < selectedScanNames->count(); i++)
+    for(int i = 0; i < selectedScanNames->count(); i++)
     {
       QString name = selectedScanNames->item(i)->text();
       QList<QListWidgetItem*> list = totalScanNames->findItems(name, Qt::MatchExactly);
-      for (int j = 0; j < list.size(); j++)
+      for(int j = 0; j < list.size(); j++)
       {
         list[j]->setFlags(list[j]->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
       }
@@ -211,11 +205,11 @@ void ReadEdaxH5DataWidget::updateList()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::on_addScanName_pressed()
 {
-  if (nullptr != totalScanNames->currentItem())
+  if(nullptr != totalScanNames->currentItem())
   {
     QModelIndexList indexList = totalScanNames->selectionModel()->selectedRows();
 
-    for (int i = 0; i < indexList.size(); i++)
+    for(int i = 0; i < indexList.size(); i++)
     {
       QString currentName = totalScanNames->item(indexList[i].row())->text();
       selectedScanNames->addItem(currentName);
@@ -232,16 +226,16 @@ void ReadEdaxH5DataWidget::on_addScanName_pressed()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::on_removeScanName_pressed()
 {
-  if (nullptr != selectedScanNames->currentItem())
+  if(nullptr != selectedScanNames->currentItem())
   {
     QModelIndexList indexList = selectedScanNames->selectionModel()->selectedRows();
     QList<QPersistentModelIndex> persistentIndexList;
-    for (int i = 0; i < indexList.size(); i++)
+    for(int i = 0; i < indexList.size(); i++)
     {
       persistentIndexList.push_back(QPersistentModelIndex(indexList[i]));
     }
 
-    for (int i = 0; i < persistentIndexList.size(); i++)
+    for(int i = 0; i < persistentIndexList.size(); i++)
     {
       QListWidgetItem* item = selectedScanNames->takeItem(persistentIndexList[i].row());
       delete item;
@@ -258,7 +252,7 @@ void ReadEdaxH5DataWidget::on_removeScanName_pressed()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::on_stackLowToHighBtn_toggled(bool checked)
 {
-  if (checked == true)
+  if(checked == true)
   {
     sortList(selectedScanNames, Qt::AscendingOrder);
   }
@@ -276,18 +270,18 @@ void ReadEdaxH5DataWidget::on_stackLowToHighBtn_toggled(bool checked)
 void ReadEdaxH5DataWidget::sortList(DREAM3DListWidget* listWidget, Qt::SortOrder order)
 {
   QMap<int, QString> sortingMap;
-  for (int i = 0; i < listWidget->count(); i++)
+  for(int i = 0; i < listWidget->count(); i++)
   {
     QRegularExpression regExp("([A-Z]|[a-z]|_)+|\\d+");
     QString selectedScanName = listWidget->item(i)->text();
     QRegularExpressionMatchIterator iter = regExp.globalMatch(selectedScanName);
 
-    while (iter.hasNext())
+    while(iter.hasNext())
     {
       QRegularExpressionMatch match = iter.next();
       bool ok;
       int num = match.captured().toInt(&ok);
-      if (ok == true)
+      if(ok == true)
       {
         sortingMap.insert(num, selectedScanName);
       }
@@ -295,10 +289,10 @@ void ReadEdaxH5DataWidget::sortList(DREAM3DListWidget* listWidget, Qt::SortOrder
   }
 
   QStringList scanNames;
-  if (order == Qt::AscendingOrder)
+  if(order == Qt::AscendingOrder)
   {
     QMapIterator<int, QString> iter(sortingMap);
-    while (iter.hasNext())
+    while(iter.hasNext())
     {
       iter.next();
       scanNames.push_back(iter.value());
@@ -308,7 +302,7 @@ void ReadEdaxH5DataWidget::sortList(DREAM3DListWidget* listWidget, Qt::SortOrder
   {
     QMapIterator<int, QString> iter(sortingMap);
     iter.toBack();
-    while (iter.hasPrevious())
+    while(iter.hasPrevious())
     {
       iter.previous();
       scanNames.push_back(iter.value());
@@ -318,4 +312,3 @@ void ReadEdaxH5DataWidget::sortList(DREAM3DListWidget* listWidget, Qt::SortOrder
   listWidget->clear();
   listWidget->addItems(scanNames);
 }
-

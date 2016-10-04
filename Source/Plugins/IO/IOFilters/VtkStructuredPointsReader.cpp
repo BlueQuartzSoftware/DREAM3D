@@ -41,39 +41,36 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-#define vtkErrorMacro(msg)\
-  std::cout  msg
+#define vtkErrorMacro(msg) std::cout msg
 
 #define kBufferSize 1024
 
 // Include the MOC generated file for this class
 #include "moc_VtkStructuredPointsReader.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VtkStructuredPointsReader::VtkStructuredPointsReader() :
-  AbstractFilter(),
-  m_ReadCellData(true),
-  m_VolumeDataContainerName("ImageDataContainer_CellData"),
-  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_ReadPointData(true),
-  m_VertexDataContainerName("ImageDataContainer_PointData"),
-  m_VertexAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_InputFile(""),
-  m_Comment(""),
-  m_DatasetType(""),
-  m_FileIsBinary(true)
+VtkStructuredPointsReader::VtkStructuredPointsReader()
+: AbstractFilter()
+, m_ReadCellData(true)
+, m_VolumeDataContainerName("ImageDataContainer_CellData")
+, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_ReadPointData(true)
+, m_VertexDataContainerName("ImageDataContainer_PointData")
+, m_VertexAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_InputFile("")
+, m_Comment("")
+, m_DatasetType("")
+, m_FileIsBinary(true)
 {
   setupFilterParameters();
 }
@@ -85,7 +82,6 @@ VtkStructuredPointsReader::~VtkStructuredPointsReader()
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -94,10 +90,12 @@ void VtkStructuredPointsReader::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input VTK File", InputFile, FilterParameter::Parameter, VtkStructuredPointsReader));
   QStringList linkedProps;
-  linkedProps << "VertexDataContainerName" << "VertexAttributeMatrixName";
+  linkedProps << "VertexDataContainerName"
+              << "VertexAttributeMatrixName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Point Data", ReadPointData, FilterParameter::Parameter, VtkStructuredPointsReader, linkedProps));
   linkedProps.clear();
-  linkedProps << "VolumeDataContainerName" << "CellAttributeMatrixName";
+  linkedProps << "VolumeDataContainerName"
+              << "CellAttributeMatrixName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Cell Data", ReadCellData, FilterParameter::Parameter, VtkStructuredPointsReader, linkedProps));
   parameters.push_back(SIMPL_NEW_STRING_FP("Point Data Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Data Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
@@ -107,7 +105,6 @@ void VtkStructuredPointsReader::setupFilterParameters()
   setFilterParameters(parameters);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -115,10 +112,10 @@ void VtkStructuredPointsReader::readFilterParameters(AbstractFilterParametersRea
 {
   reader->openFilterGroup(this, index);
   setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName()));
-  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
-  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
-  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
-  setInputFile( reader->readString( "InputFile", getInputFile() ) );
+  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName()));
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
+  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
+  setInputFile(reader->readString("InputFile", getInputFile()));
   setReadPointData(reader->readValue("ReadPointData", getReadPointData()));
   setReadCellData(reader->readValue("ReadCellData", getReadCellData()));
   reader->closeFilterGroup();
@@ -141,13 +138,13 @@ void VtkStructuredPointsReader::dataCheck()
   setErrorCondition(0);
 
   QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-61000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if(fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-61001);
@@ -163,24 +160,36 @@ void VtkStructuredPointsReader::dataCheck()
   }
 
   // Last chance sanity check
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
   DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
-  if(getErrorCondition() < 0 && nullptr == pointData_DataContainer) { return; }
+  if(getErrorCondition() < 0 && nullptr == pointData_DataContainer)
+  {
+    return;
+  }
 
   ImageGeom::Pointer pointDataGeom = ImageGeom::CreateGeometry(getVertexDataContainerName());
   pointData_DataContainer->setGeometry(pointDataGeom);
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Create a Volume Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
   DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
-  if(getErrorCondition() < 0 && nullptr == cellData_DataContainer) { return; }
+  if(getErrorCondition() < 0 && nullptr == cellData_DataContainer)
+  {
+    return;
+  }
 
   ImageGeom::Pointer cellDataGeom = ImageGeom::CreateGeometry(getVolumeDataContainerName());
   cellData_DataContainer->setGeometry(cellDataGeom);
@@ -190,29 +199,32 @@ void VtkStructuredPointsReader::dataCheck()
   tDims[1] = 0;
   tDims[2] = 0;
   AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Scan through the file
   readFile();
 
   // now check to see what the user wanted
-  if (!getReadPointData())
+  if(!getReadPointData())
   {
     getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
   }
-  if (!getReadCellData())
+  if(!getReadCellData())
   {
     getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
   }
 
   // If there was no Cell Data, remove that dataContainer
-  if (cellAttrMat->getNumAttributeArrays() == 0)
+  if(cellAttrMat->getNumAttributeArrays() == 0)
   {
     getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
   }
 
   // If there were no Point Arrays then remove that dataContainer
-  if (pointAttrMat->getNumAttributeArrays() == 0)
+  if(pointAttrMat->getNumAttributeArrays() == 0)
   {
     getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
   }
@@ -247,39 +259,67 @@ void VtkStructuredPointsReader::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 size_t VtkStructuredPointsReader::parseByteSize(QString text)
 {
-  if (text.compare("unsigned_char") == 0) {return 1; }
-  if (text.compare("char") == 0) {return 1; }
-  if (text.compare("unsigned_short") == 0) {return 2; }
-  if (text.compare("short") == 0) {return 2; }
-  if (text.compare("unsigned_int") == 0) {return 4; }
-  if (text.compare("int") == 0) {return 4; }
-  if (text.compare("unsigned_long") == 0) {return 8; }
-  if (text.compare("long") == 0) {return 8; }
-  if (text.compare("float") == 0) {return 4; }
-  if (text.compare("double") == 0) {return 8; }
+  if(text.compare("unsigned_char") == 0)
+  {
+    return 1;
+  }
+  if(text.compare("char") == 0)
+  {
+    return 1;
+  }
+  if(text.compare("unsigned_short") == 0)
+  {
+    return 2;
+  }
+  if(text.compare("short") == 0)
+  {
+    return 2;
+  }
+  if(text.compare("unsigned_int") == 0)
+  {
+    return 4;
+  }
+  if(text.compare("int") == 0)
+  {
+    return 4;
+  }
+  if(text.compare("unsigned_long") == 0)
+  {
+    return 8;
+  }
+  if(text.compare("long") == 0)
+  {
+    return 8;
+  }
+  if(text.compare("float") == 0)
+  {
+    return 4;
+  }
+  if(text.compare("double") == 0)
+  {
+    return 8;
+  }
   return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-int32_t skipVolume(std::istream& in, bool binary, size_t totalSize)
+template <typename T> int32_t skipVolume(std::istream& in, bool binary, size_t totalSize)
 {
   int32_t err = 0;
-  if (binary == true)
+  if(binary == true)
   {
     std::istream::pos_type pos = in.tellg();
     qint64 newPos = totalSize * sizeof(T) + 1;
     in.seekg(newPos, std::ios_base::cur); // Move relative to the current position
     pos = in.tellg();
-    if (in.fail())
+    if(in.fail())
     {
       // check if the position to jump to is past the end of the file
       return -1;
@@ -288,7 +328,7 @@ int32_t skipVolume(std::istream& in, bool binary, size_t totalSize)
   else
   {
     T tmp;
-    for (size_t z = 0; z < totalSize; ++z)
+    for(size_t z = 0; z < totalSize; ++z)
     {
       in >> tmp;
     }
@@ -299,10 +339,9 @@ int32_t skipVolume(std::istream& in, bool binary, size_t totalSize)
 // -----------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------
-template<typename T>
-int32_t vtkReadBinaryData(std::istream& in, T* data, int32_t numTuples, int32_t numComp)
+template <typename T> int32_t vtkReadBinaryData(std::istream& in, T* data, int32_t numTuples, int32_t numComp)
 {
-  if (numTuples == 0 || numComp == 0)
+  if(numTuples == 0 || numComp == 0)
   {
     // nothing to read here.
     return 1;
@@ -317,7 +356,7 @@ int32_t vtkReadBinaryData(std::istream& in, T* data, int32_t numTuples, int32_t 
   // Now start reading the data in chunks if needed.
   size_t chunkSize = DEFAULT_BLOCKSIZE;
   // Sanity check the chunk size to make sure it is not any larger than the chunk of data we are about to read
-  if (numBytesToRead < DEFAULT_BLOCKSIZE)
+  if(numBytesToRead < DEFAULT_BLOCKSIZE)
   {
     chunkSize = numBytesToRead;
   }
@@ -335,30 +374,30 @@ int32_t vtkReadBinaryData(std::istream& in, T* data, int32_t numTuples, int32_t 
     chunkptr = chunkptr + bytes_read;
     master_counter += bytes_read;
 
-    if (numBytesToRead - master_counter < chunkSize)
+    if(numBytesToRead - master_counter < chunkSize)
     {
       chunkSize = numBytesToRead - master_counter;
     }
-    if (master_counter >= numBytesToRead)
+    if(master_counter >= numBytesToRead)
     {
       break;
     }
-    if (in.good())
+    if(in.good())
     {
-      //std::cout << "all data read successfully." << in.gcount() << std::endl;
+      // std::cout << "all data read successfully." << in.gcount() << std::endl;
     }
 
-    if ((in.rdstate() & std::ifstream::failbit) != 0)
+    if((in.rdstate() & std::ifstream::failbit) != 0)
     {
       std::cout << "FAIL " << in.gcount() << " could be read. Needed " << chunkSize << " total bytes read = " << master_counter << std::endl;
       return -12020;
     }
-    if ((in.rdstate() & std::ifstream::eofbit) != 0)
+    if((in.rdstate() & std::ifstream::eofbit) != 0)
     {
       std::cout << "EOF " << in.gcount() << " could be read. Needed " << chunkSize << " total bytes read = " << master_counter << std::endl;
       return -12021;
     }
-    if ((in.rdstate() & std::ifstream::badbit) != 0)
+    if((in.rdstate() & std::ifstream::badbit) != 0)
     {
       std::cout << "BAD " << in.gcount() << " could be read. Needed " << chunkSize << " total bytes read = " << master_counter << std::endl;
       return -12021;
@@ -370,9 +409,7 @@ int32_t vtkReadBinaryData(std::istream& in, T* data, int32_t numTuples, int32_t 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-int32_t readDataChunk(AttributeMatrix::Pointer attrMat, std::istream& in, bool inPreflight, bool binary,
-                      const QString& scalarName, int32_t scalarNumComp)
+template <typename T> int32_t readDataChunk(AttributeMatrix::Pointer attrMat, std::istream& in, bool inPreflight, bool binary, const QString& scalarName, int32_t scalarNumComp)
 {
   size_t numTuples = attrMat->getNumberOfTuples();
 
@@ -382,28 +419,30 @@ int32_t readDataChunk(AttributeMatrix::Pointer attrMat, std::istream& in, bool i
   typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(tDims, cDims, scalarName, !inPreflight);
   data->initializeWithZeros();
   attrMat->addAttributeArray(data->getName(), data);
-  if (inPreflight == true)
+  if(inPreflight == true)
   {
     return skipVolume<T>(in, binary, numTuples * scalarNumComp);
   }
   else
   {
-    if (binary)
+    if(binary)
     {
       int32_t err = vtkReadBinaryData<T>(in, data->getPointer(0), numTuples, scalarNumComp);
-      if( err < 0 )
+      if(err < 0)
       {
-        std::cout << "Error Reading Binary Data '" << scalarName.toStdString() << "' " << attrMat->getName().toStdString()
-                  << " numTuples = " << numTuples << std::endl;
+        std::cout << "Error Reading Binary Data '" << scalarName.toStdString() << "' " << attrMat->getName().toStdString() << " numTuples = " << numTuples << std::endl;
         return err;
       }
-      if(BIGENDIAN == 0) {data->byteSwapElements(); }
+      if(BIGENDIAN == 0)
+      {
+        data->byteSwapElements();
+      }
     }
     else
     {
       T value = static_cast<T>(0.0);
       size_t totalSize = numTuples * scalarNumComp;
-      for (size_t i = 0; i < totalSize; ++i)
+      for(size_t i = 0; i < totalSize; ++i)
       {
         in >> value;
         data->setValue(i, value);
@@ -427,13 +466,13 @@ int32_t VtkStructuredPointsReader::readHeader()
 int32_t VtkStructuredPointsReader::readLine(std::istream& in, char* result, size_t length)
 {
   in.getline(result, length);
-  if (in.fail())
+  if(in.fail())
   {
-    if (in.eof())
+    if(in.eof())
     {
       return 0;
     }
-    if (in.gcount() == length)
+    if(in.gcount() == length)
     {
       // Read kBufferSize chars; ignoring the rest of the line.
       in.clear();
@@ -450,13 +489,12 @@ int32_t VtkStructuredPointsReader::readString(std::istream& in, char* result, si
 {
   in.width(length);
   in >> result;
-  if (in.fail())
+  if(in.fail())
   {
     return 0;
   }
   return 1;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -466,7 +504,7 @@ char* VtkStructuredPointsReader::lowerCase(char* str, const size_t len)
   size_t i;
   char* s;
 
-  for ( i = 0, s = str; *s != '\0' && i < len; s++, i++)
+  for(i = 0, s = str; *s != '\0' && i < len; s++, i++)
   {
     *s = tolower(*s);
   }
@@ -476,7 +514,7 @@ char* VtkStructuredPointsReader::lowerCase(char* str, const size_t len)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t VtkStructuredPointsReader:: readFile()
+int32_t VtkStructuredPointsReader::readFile()
 {
   int32_t err = 0;
 
@@ -488,7 +526,7 @@ int32_t VtkStructuredPointsReader:: readFile()
 
   std::ifstream in(getInputFile().toLatin1().constData(), std::ios_base::in | std::ios_base::binary);
 
-  if (!in.is_open())
+  if(!in.is_open())
   {
     QString msg = QObject::tr("Error opening output file '%1'").arg(getInputFile());
     setErrorCondition(-61003);
@@ -504,11 +542,11 @@ int32_t VtkStructuredPointsReader:: readFile()
   setComment(QString(buf));
   err = readLine(in, buffer, kBufferSize); // Read Line 3 - BINARY or ASCII
   QString fileType(buf);
-  if (fileType.startsWith("BINARY") == true)
+  if(fileType.startsWith("BINARY") == true)
   {
     setFileIsBinary(true);
   }
-  else if (fileType.startsWith("ASCII") == true)
+  else if(fileType.startsWith("ASCII") == true)
   {
     setFileIsBinary(false);
   }
@@ -523,7 +561,7 @@ int32_t VtkStructuredPointsReader:: readFile()
   // Read Line 4 - Type of Dataset
   err = readLine(in, buffer, kBufferSize);
   QList<QByteArray> words = buf.split(' ');
-  if (words.size() != 2)
+  if(words.size() != 2)
   {
     QString ss = QObject::tr("Error reading the type of data set. Was expecting 2 words but got %1").arg(QString(buf));
     setErrorCondition(-61005);
@@ -535,7 +573,7 @@ int32_t VtkStructuredPointsReader:: readFile()
   setDatasetType(dataset); // Should be STRUCTURED_POINTS
 
   bool ok = false;
-  err = readLine(in, buffer, kBufferSize);  // Read Line 5 which is the Dimension values
+  err = readLine(in, buffer, kBufferSize); // Read Line 5 which is the Dimension values
   // But we need the 'extents' which is one less in all directions (unless dim=1)
   QVector<size_t> dims(3, 0);
   QList<QByteArray> tokens = buf.split(' ');
@@ -583,12 +621,12 @@ int32_t VtkStructuredPointsReader:: readFile()
   int32_t npts = 0, ncells = 0;
   int32_t numPts = 0;
 
-  if ( word.startsWith("CELL_DATA") )
+  if(word.startsWith("CELL_DATA"))
   {
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
     m_CurrentAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
     ncells = tokens[1].toInt(&ok);
-    if (m_CurrentAttrMat->getNumberOfTuples() != ncells)
+    if(m_CurrentAttrMat->getNumberOfTuples() != ncells)
     {
       setErrorCondition(-61006);
       notifyErrorMessage(getHumanLabel(), QString("Number of cells does not match number of tuples in the Attribute Matrix"), getErrorCondition());
@@ -596,12 +634,12 @@ int32_t VtkStructuredPointsReader:: readFile()
     }
     this->readDataTypeSection(in, ncells, "point_data");
   }
-  else if ( word.startsWith("POINT_DATA") )
+  else if(word.startsWith("POINT_DATA"))
   {
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
     m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
     npts = tokens[1].toInt(&ok);
-    if (m_CurrentAttrMat->getNumberOfTuples() != npts)
+    if(m_CurrentAttrMat->getNumberOfTuples() != npts)
     {
       setErrorCondition(-61007);
       notifyErrorMessage(getHumanLabel(), QString("Number of points does not match number of tuples in the Attribute Matrix"), getErrorCondition());
@@ -625,20 +663,20 @@ int32_t VtkStructuredPointsReader::readDataTypeSection(std::istream& in, int32_t
   char* line = buf.data();
 
   // Read keywords until end-of-file
-  while (this->readString(in, line, kBufferSize))
+  while(this->readString(in, line, kBufferSize))
   {
     // read scalar data
-    if ( ! strncmp(lowerCase(line, kBufferSize), "scalars", 7) )
+    if(!strncmp(lowerCase(line, kBufferSize), "scalars", 7))
     {
-      if ( this->readScalarData(in, numValues) <= 0 )
+      if(this->readScalarData(in, numValues) <= 0)
       {
         return 0;
       }
     }
     // read vector data
-    else if ( ! strncmp(line, "vectors", 7) )
+    else if(!strncmp(line, "vectors", 7))
     {
-      if ( this->readVectorData(in, numValues) <= 0 )
+      if(this->readVectorData(in, numValues) <= 0)
       {
         return 0;
       }
@@ -734,19 +772,19 @@ int32_t VtkStructuredPointsReader::readDataTypeSection(std::istream& in, int32_t
 #endif
 
     // maybe bumped into cell data
-    else if ( ! strncmp(line, nextKeyWord.c_str(), 9) )
+    else if(!strncmp(line, nextKeyWord.c_str(), 9))
     {
       bool ok = false;
-      if (readString(in, line, 256))
+      if(readString(in, line, 256))
       {
-        if (nextKeyWord.compare("cell_data") == 0)
+        if(nextKeyWord.compare("cell_data") == 0)
         {
           DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
           m_CurrentAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
           int32_t ncells = QString(line).toInt(&ok);
           this->readDataTypeSection(in, ncells, "point_data");
         }
-        else if (nextKeyWord.compare("point_data") == 0)
+        else if(nextKeyWord.compare("point_data") == 0)
         {
           DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
           m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
@@ -757,7 +795,7 @@ int32_t VtkStructuredPointsReader::readDataTypeSection(std::istream& in, int32_t
     }
     else
     {
-      //vtkErrorMacro(<< "Unsupported point attribute type: " << line
+      // vtkErrorMacro(<< "Unsupported point attribute type: " << line
       //<< " for file: " << (this->FileName?this->FileName:"(Null FileName)"));
       return 0;
     }
@@ -770,7 +808,7 @@ int32_t VtkStructuredPointsReader::readDataTypeSection(std::istream& in, int32_t
 // ------------------------------------------------------------------------
 int32_t VtkStructuredPointsReader::DecodeString(char* resname, const char* name)
 {
-  if ( !resname || !name )
+  if(!resname || !name)
   {
     return 0;
   }
@@ -780,11 +818,11 @@ int32_t VtkStructuredPointsReader::DecodeString(char* resname, const char* name)
   size_t len = strlen(name);
   size_t reslen = 0;
   char buffer[10] = "0x";
-  while (name[cc])
+  while(name[cc])
   {
-    if ( name[cc] == '%' )
+    if(name[cc] == '%')
     {
-      if ( cc <= (len - 3) )
+      if(cc <= (len - 3))
       {
         buffer[2] = name[cc + 1];
         buffer[3] = name[cc + 2];
@@ -800,13 +838,12 @@ int32_t VtkStructuredPointsReader::DecodeString(char* resname, const char* name)
       str << name[cc];
       reslen++;
     }
-    cc ++;
+    cc++;
   }
   strncpy(resname, str.str().c_str(), reslen + 1);
   resname[reslen] = 0;
   return static_cast<int32_t>(reslen);
 }
-
 
 // ------------------------------------------------------------------------
 //
@@ -817,47 +854,47 @@ int32_t VtkStructuredPointsReader::readScalarData(std::istream& in, int32_t numP
   int32_t numComp = 1;
   char buffer[1024];
 
-  if (!(this->readString(in, buffer, 1024) && this->readString(in, line, 1024)))
+  if(!(this->readString(in, buffer, 1024) && this->readString(in, line, 1024)))
   {
-    vtkErrorMacro( << "Cannot read scalar header!" << " for file: "
-                   << (getInputFile().toStdString()));
+    vtkErrorMacro(<< "Cannot read scalar header!"
+                  << " for file: " << (getInputFile().toStdString()));
     return 0;
   }
 
   this->DecodeString(name, buffer);
 
-  if (!this->readString(in, key, 1024))
+  if(!this->readString(in, key, 1024))
   {
-    vtkErrorMacro( << "Cannot read scalar header!" << " for file: "
-                   << getInputFile().toStdString());
+    vtkErrorMacro(<< "Cannot read scalar header!"
+                  << " for file: " << getInputFile().toStdString());
     return 0;
   }
 
   QString scalarType(line);
 
   // the next string could be an integer number of components or a lookup table
-  if (strcmp(this->lowerCase(key, 256), "lookup_table"))
+  if(strcmp(this->lowerCase(key, 256), "lookup_table"))
   {
     numComp = atoi(key);
-    if (numComp < 1 || !this->readString(in, key, 1024))
+    if(numComp < 1 || !this->readString(in, key, 1024))
     {
-      vtkErrorMacro( << "Cannot read scalar header!" << " for file: "
-                     << getInputFile().toStdString());
+      vtkErrorMacro(<< "Cannot read scalar header!"
+                    << " for file: " << getInputFile().toStdString());
       return 0;
     }
   }
 
-  if (strcmp(this->lowerCase(key, 256), "lookup_table"))
+  if(strcmp(this->lowerCase(key, 256), "lookup_table"))
   {
-    vtkErrorMacro( << "Lookup table must be specified with scalar.\n" <<
-                   "Use \"LOOKUP_TABLE default\" to use default table.");
+    vtkErrorMacro(<< "Lookup table must be specified with scalar.\n"
+                  << "Use \"LOOKUP_TABLE default\" to use default table.");
     return 0;
   }
 
-  if (!this->readString(in, tableName, 1024))
+  if(!this->readString(in, tableName, 1024))
   {
-    vtkErrorMacro( << "Cannot read scalar header!" << " for file: "
-                   << getInputFile().toStdString());
+    vtkErrorMacro(<< "Cannot read scalar header!"
+                  << " for file: " << getInputFile().toStdString());
     return 0;
   }
 
@@ -866,50 +903,49 @@ int32_t VtkStructuredPointsReader::readScalarData(std::istream& in, int32_t numP
 
   int32_t err = 1;
   // Read the data
-  if (scalarType.compare("unsigned_char") == 0)
+  if(scalarType.compare("unsigned_char") == 0)
   {
     err = readDataChunk<uint8_t>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
-  else if (scalarType.compare("char") == 0)
+  else if(scalarType.compare("char") == 0)
   {
     err = readDataChunk<int8_t>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
-  else if (scalarType.compare("unsigned_short") == 0)
+  else if(scalarType.compare("unsigned_short") == 0)
   {
     err = readDataChunk<uint16_t>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
-  else if (scalarType.compare("short") == 0)
+  else if(scalarType.compare("short") == 0)
   {
     err = readDataChunk<int16_t>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
-  else if (scalarType.compare("unsigned_int") == 0)
+  else if(scalarType.compare("unsigned_int") == 0)
   {
     err = readDataChunk<uint32_t>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
-  else if (scalarType.compare("int") == 0)
+  else if(scalarType.compare("int") == 0)
   {
     err = readDataChunk<int32_t>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
-  else if (scalarType.compare("unsigned_long") == 0)
+  else if(scalarType.compare("unsigned_long") == 0)
   {
     err = readDataChunk<qint64>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
-  else if (scalarType.compare("long") == 0)
+  else if(scalarType.compare("long") == 0)
   {
     err = readDataChunk<quint64>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
-  else if (scalarType.compare("float") == 0)
+  else if(scalarType.compare("float") == 0)
   {
     err = readDataChunk<float>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
-  else if (scalarType.compare("double") == 0)
+  else if(scalarType.compare("double") == 0)
   {
     err = readDataChunk<double>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
   }
 
   return err;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -973,7 +1009,7 @@ int32_t VtkStructuredPointsReader::parseCoordinateLine(const char* input, size_t
   char text1[256];
   int32_t i = 0;
   int32_t n = sscanf(input, "%s %d %s", text, &i, text1);
-  if (n != 3)
+  if(n != 3)
   {
     value = -1;
     return -1;
@@ -1200,23 +1236,29 @@ const QString VtkStructuredPointsReader::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VtkStructuredPointsReader::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VtkStructuredPointsReader::getSubGroupName()
-{ return SIMPL::FilterSubGroups::InputFilters; }
+{
+  return SIMPL::FilterSubGroups::InputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VtkStructuredPointsReader::getHumanLabel()
-{ return "VTK STRUCTURED_POINTS Reader"; }
+{
+  return "VTK STRUCTURED_POINTS Reader";
+}

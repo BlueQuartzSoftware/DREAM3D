@@ -41,10 +41,10 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
@@ -53,30 +53,29 @@
 // Include the MOC generated file for this class
 #include "moc_MergeTwins.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MergeTwins::MergeTwins() :
-  GroupFeatures(),
-  m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName),
-  m_AxisTolerance(1.0f),
-  m_AngleTolerance(1.0f),
-  m_RandomizeParentIds(true),
-  m_FeatureIdsArrayPath("", "", ""),
-  m_FeaturePhasesArrayPath("", "", ""),
-  m_AvgQuatsArrayPath("", "", ""),
-  m_CrystalStructuresArrayPath("", "", ""),
-  m_CellParentIdsArrayName(SIMPL::CellData::ParentIds),
-  m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds),
-  m_ActiveArrayName(SIMPL::FeatureData::Active),
-  m_FeatureIds(nullptr),
-  m_AvgQuats(nullptr),
-  m_FeaturePhases(nullptr),
-  m_CrystalStructures(nullptr),
-  m_Active(nullptr),
-  m_CellParentIds(nullptr),
-  m_FeatureParentIds(nullptr)
+MergeTwins::MergeTwins()
+: GroupFeatures()
+, m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName)
+, m_AxisTolerance(1.0f)
+, m_AngleTolerance(1.0f)
+, m_RandomizeParentIds(true)
+, m_FeatureIdsArrayPath("", "", "")
+, m_FeaturePhasesArrayPath("", "", "")
+, m_AvgQuatsArrayPath("", "", "")
+, m_CrystalStructuresArrayPath("", "", "")
+, m_CellParentIdsArrayName(SIMPL::CellData::ParentIds)
+, m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds)
+, m_ActiveArrayName(SIMPL::FeatureData::Active)
+, m_FeatureIds(nullptr)
+, m_AvgQuats(nullptr)
+, m_FeaturePhases(nullptr)
+, m_CrystalStructures(nullptr)
+, m_Active(nullptr)
+, m_CellParentIds(nullptr)
+, m_FeatureParentIds(nullptr)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -135,16 +134,16 @@ void MergeTwins::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   GroupFeatures::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-  setNewCellFeatureAttributeMatrixName(reader->readString("NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName() ) );
-  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName() ) );
-  setFeatureParentIdsArrayName(reader->readString("FeatureParentIdsArrayName", getFeatureParentIdsArrayName() ) );
-  setCellParentIdsArrayName(reader->readString("CellParentIdsArrayName", getCellParentIdsArrayName() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setAxisTolerance( reader->readValue("AxisTolerance", getAxisTolerance()) );
-  setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
+  setNewCellFeatureAttributeMatrixName(reader->readString("NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName()));
+  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName()));
+  setFeatureParentIdsArrayName(reader->readString("FeatureParentIdsArrayName", getFeatureParentIdsArrayName()));
+  setCellParentIdsArrayName(reader->readString("CellParentIdsArrayName", getCellParentIdsArrayName()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath()));
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setAxisTolerance(reader->readValue("AxisTolerance", getAxisTolerance()));
+  setAngleTolerance(reader->readValue("AngleTolerance", getAngleTolerance()));
   reader->closeFilterGroup();
 }
 
@@ -155,8 +154,10 @@ void MergeTwins::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Active = m_ActivePtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -176,10 +177,16 @@ void MergeTwins::dataCheck()
   DataArrayPath tempPath;
 
   GroupFeatures::dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == m.get())
+  {
+    return;
+  }
 
   QVector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
@@ -189,43 +196,70 @@ void MergeTwins::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   // Cell Data
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellParentIdsArrayName() );
-  m_CellParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellParentIdsArrayName());
+  m_CellParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, -1, cDims);                /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellParentIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Data
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getFeaturePhasesArrayPath()); }
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getFeaturePhasesArrayPath());
+  }
 
-  tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), m_FeaturePhasesArrayPath.getAttributeMatrixName(), getFeatureParentIdsArrayName() );
-  m_FeatureParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureParentIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), m_FeaturePhasesArrayPath.getAttributeMatrixName(), getFeatureParentIdsArrayName());
+  m_FeatureParentIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, -1, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureParentIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureParentIds = m_FeatureParentIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 4;
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAvgQuatsArrayPath()); }
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(),
+                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AvgQuatsPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getAvgQuatsArrayPath());
+  }
 
   // New Feature Data
   cDims[0] = 1;
-  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getNewCellFeatureAttributeMatrixName(), getActiveArrayName() );
-  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getNewCellFeatureAttributeMatrixName(), getActiveArrayName());
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true,
+                                                                                                             cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Active = m_ActivePtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Ensemble Data
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -261,14 +295,20 @@ int32_t MergeTwins::getSeed(int32_t newFid)
 
   size_t counter = 0;
   randfeature = int32_t(float(rg.genrand_res53()) * float(totalFMinus1));
-  while (seed == -1 && counter < numfeatures)
+  while(seed == -1 && counter < numfeatures)
   {
-    if (randfeature > totalFMinus1) { randfeature = randfeature - numfeatures; }
-    if (m_FeatureParentIds[randfeature] == -1) { seed = randfeature; }
+    if(randfeature > totalFMinus1)
+    {
+      randfeature = randfeature - numfeatures;
+    }
+    if(m_FeatureParentIds[randfeature] == -1)
+    {
+      seed = randfeature;
+    }
     randfeature++;
     counter++;
   }
-  if (seed >= 0)
+  if(seed >= 0)
   {
     m_FeatureParentIds[seed] = newFid;
     QVector<size_t> tDims(1, newFid + 1);
@@ -290,20 +330,23 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
   QuatF q2 = QuaternionMathF::New();
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  if (m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
+  if(m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
     QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
     uint32_t phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
     QuaternionMathF::Copy(avgQuats[neighborFeature], q2);
     uint32_t phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
-    if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Cubic_High))
+    if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Cubic_High))
     {
       w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
       w = w * (180.0f / SIMPLib::Constants::k_Pi);
       float axisdiff111 = acosf(fabsf(n1) * 0.57735f + fabsf(n2) * 0.57735f + fabsf(n3) * 0.57735f);
       float angdiff60 = fabsf(w - 60.0f);
-      if (axisdiff111 < m_AxisToleranceRad && angdiff60 < m_AngleTolerance) { twin = true; }
-      if (twin == true)
+      if(axisdiff111 < m_AxisToleranceRad && angdiff60 < m_AngleTolerance)
+      {
+        twin = true;
+      }
+      if(twin == true)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
         return true;
@@ -328,7 +371,10 @@ void MergeTwins::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
@@ -337,7 +383,7 @@ void MergeTwins::execute()
   GroupFeatures::execute();
 
   size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
-  if (totalFeatures < 2)
+  if(totalFeatures < 2)
   {
     setErrorCondition(-87000);
     notifyErrorMessage(getHumanLabel(), "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", getErrorCondition());
@@ -346,39 +392,41 @@ void MergeTwins::execute()
 
   int32_t numParents = 0;
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  for (size_t k = 0; k < totalPoints; k++)
+  for(size_t k = 0; k < totalPoints; k++)
   {
     int32_t featurename = m_FeatureIds[k];
     m_CellParentIds[k] = m_FeatureParentIds[featurename];
-    if (m_FeatureParentIds[featurename] > numParents) { numParents = m_FeatureParentIds[featurename]; }
+    if(m_FeatureParentIds[featurename] > numParents)
+    {
+      numParents = m_FeatureParentIds[featurename];
+    }
   }
   numParents += 1;
 
   notifyStatusMessage(getHumanLabel(), "Characterizing Twins");
   characterize_twins();
 
-  if (true == m_RandomizeParentIds)
+  if(true == m_RandomizeParentIds)
   {
     // Generate all the numbers up front
     const int32_t rangeMin = 1;
     const int32_t rangeMax = numParents - 1;
     typedef boost::uniform_int<int32_t> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator < RandomNumberGenerator&,
-            NumberDistribution > Generator;
+    typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
     Generator numberGenerator(generator, distribution);
 
-    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
+    generator.seed(static_cast<boost::uint32_t>(QDateTime::currentMSecsSinceEpoch())); // seed with the current time
 
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "_INTERNAL_USE_ONLY_NewParentIds");
     int32_t* pid = rndNumbers->getPointer(0);
     pid[0] = 0;
     QSet<int32_t> parentIdSet;
     parentIdSet.insert(0);
-    for (int32_t i = 1; i < numParents; ++i)
+    for(int32_t i = 1; i < numParents; ++i)
     {
       pid[i] = i; // numberGenerator();
       parentIdSet.insert(pid[i]);
@@ -388,10 +436,10 @@ void MergeTwins::execute()
     int32_t temp = 0;
 
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (int32_t i = 1; i < numParents; i++)
+    for(int32_t i = 1; i < numParents; i++)
     {
       r = numberGenerator(); // Random remaining position.
-      if (r >= numParents)
+      if(r >= numParents)
       {
         continue;
       }
@@ -401,7 +449,7 @@ void MergeTwins::execute()
     }
 
     // Now adjust all the Feature Id values for each Voxel
-    for (size_t i = 0; i < totalPoints; ++i)
+    for(size_t i = 0; i < totalPoints; ++i)
     {
       m_CellParentIds[i] = pid[m_CellParentIds[i]];
       m_FeatureParentIds[m_FeatureIds[i]] = m_CellParentIds[i];
@@ -447,23 +495,29 @@ const QString MergeTwins::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
+  vStream << Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MergeTwins::getGroupName()
-{ return SIMPL::FilterGroups::ReconstructionFilters; }
+{
+  return SIMPL::FilterGroups::ReconstructionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MergeTwins::getSubGroupName()
-{return SIMPL::FilterSubGroups::GroupingFilters;}
+{
+  return SIMPL::FilterSubGroups::GroupingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MergeTwins::getHumanLabel()
-{ return "Merge Twins"; }
+{
+  return "Merge Twins";
+}

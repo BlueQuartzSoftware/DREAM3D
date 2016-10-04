@@ -43,8 +43,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EditHeadersDialog::EditHeadersDialog(QWidget* parent) :
-QDialog(parent)
+EditHeadersDialog::EditHeadersDialog(QWidget* parent)
+: QDialog(parent)
 {
   setupUi(this);
 
@@ -56,7 +56,6 @@ QDialog(parent)
 // -----------------------------------------------------------------------------
 EditHeadersDialog::~EditHeadersDialog()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -71,7 +70,7 @@ void EditHeadersDialog::setupGui()
   // Ensure the headers storage vector is the correct size
   m_Headers.resize(model->columnCount());
 
-  for (int i = 0; i < model->columnCount(); i++)
+  for(int i = 0; i < model->columnCount(); i++)
   {
     QLabel* label = new QLabel(this);
     QString columnName = "Column " + QString::number(i + 1) + ":";
@@ -98,13 +97,13 @@ void EditHeadersDialog::m_ButtonBox_accepted()
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  for (int i = 0; i < model->columnCount(); i++)
+  for(int i = 0; i < model->columnCount(); i++)
   {
     QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
-    if (nullptr != item)
+    if(nullptr != item)
     {
       QLineEdit* lineEdit = dynamic_cast<QLineEdit*>(item->widget());
-      if (nullptr != lineEdit)
+      if(nullptr != lineEdit)
       {
         m_Headers[i] = lineEdit->text();
       }
@@ -137,13 +136,13 @@ void EditHeadersDialog::setHeaders(QVector<QString> headers)
 {
   m_Headers = headers;
 
-  for (int i = 0; i < headers.size(); i++)
+  for(int i = 0; i < headers.size(); i++)
   {
     QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
-    if (nullptr != item)
+    if(nullptr != item)
     {
       QLineEdit* lineEdit = dynamic_cast<QLineEdit*>(item->widget());
-      if (nullptr != lineEdit)
+      if(nullptr != lineEdit)
       {
         lineEdit->setText(headers[i]);
       }

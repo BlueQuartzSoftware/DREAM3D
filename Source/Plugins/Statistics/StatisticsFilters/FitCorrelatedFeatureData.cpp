@@ -37,38 +37,36 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
-#include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
+#include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 
 // Include the MOC generated file for this class
 #include "moc_FitCorrelatedFeatureData.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FitCorrelatedFeatureData::FitCorrelatedFeatureData() :
-  AbstractFilter(),
-  m_SelectedFeatureArrayPath("", "", ""),
-  m_CorrelatedFeatureArrayPath("", "", ""),
-  m_DistributionType(SIMPL::DistributionType::UnknownDistributionType),
-  m_NumberOfCorrelatedBins(1),
-  m_RemoveBiasedFeatures(false),
-  m_FeaturePhasesArrayPath("", "", ""),
-  m_BiasedFeaturesArrayPath("", "", ""),
-  m_NewEnsembleArrayArrayPath("", "", ""),
-  m_BiasedFeatures(nullptr),
-  m_NewEnsembleArray(nullptr),
-  m_FeaturePhases(nullptr)
+FitCorrelatedFeatureData::FitCorrelatedFeatureData()
+: AbstractFilter()
+, m_SelectedFeatureArrayPath("", "", "")
+, m_CorrelatedFeatureArrayPath("", "", "")
+, m_DistributionType(SIMPL::DistributionType::UnknownDistributionType)
+, m_NumberOfCorrelatedBins(1)
+, m_RemoveBiasedFeatures(false)
+, m_FeaturePhasesArrayPath("", "", "")
+, m_BiasedFeaturesArrayPath("", "", "")
+, m_NewEnsembleArrayArrayPath("", "", "")
+, m_BiasedFeatures(nullptr)
+, m_NewEnsembleArray(nullptr)
+, m_FeaturePhases(nullptr)
 {
   setupFilterParameters();
 }
@@ -94,7 +92,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(FitCorrelatedFeatureData, this, DistributionType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(FitCorrelatedFeatureData, this, DistributionType));
 
-    //parameter->setValueType("unsigned int");
+    // parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");
@@ -138,13 +136,13 @@ void FitCorrelatedFeatureData::readFilterParameters(AbstractFilterParametersRead
 {
   reader->openFilterGroup(this, index);
   setNewEnsembleArrayArrayPath(reader->readDataArrayPath("NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath()));
-  setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
-  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
-  setCorrelatedFeatureArrayPath( reader->readDataArrayPath( "CorrelatedFeatureArrayPath", getCorrelatedFeatureArrayPath() ) );
-  setDistributionType( reader->readValue( "DistributionType", getDistributionType() ) );
-  setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
-  setNumberOfCorrelatedBins( reader->readValue( "NumberOfCorrelatedBins", getNumberOfCorrelatedBins() ) );
+  setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath()));
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath()));
+  setSelectedFeatureArrayPath(reader->readDataArrayPath("SelectedFeatureArrayPath", getSelectedFeatureArrayPath()));
+  setCorrelatedFeatureArrayPath(reader->readDataArrayPath("CorrelatedFeatureArrayPath", getCorrelatedFeatureArrayPath()));
+  setDistributionType(reader->readValue("DistributionType", getDistributionType()));
+  setRemoveBiasedFeatures(reader->readValue("RemoveBiasedFeatures", getRemoveBiasedFeatures()));
+  setNumberOfCorrelatedBins(reader->readValue("NumberOfCorrelatedBins", getNumberOfCorrelatedBins()));
   reader->closeFilterGroup();
 }
 
@@ -153,7 +151,6 @@ void FitCorrelatedFeatureData::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -164,9 +161,12 @@ void FitCorrelatedFeatureData::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> dims(1, 1);
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
+                                                                                                           dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_SelectedFeatureArrayPath.isEmpty() == true)
   {
@@ -182,25 +182,41 @@ void FitCorrelatedFeatureData::dataCheck()
   int numComp = 0;
   QString distType("UNKNOWN");
   // Determining number of components and name given distribution type
-  if (m_DistributionType == SIMPL::DistributionType::Beta) { distType = "Beta", numComp = SIMPL::DistributionType::BetaColumnCount; }
-  else if (m_DistributionType == SIMPL::DistributionType::LogNormal) { distType = "LogNormal", numComp = SIMPL::DistributionType::LogNormalColumnCount; }
-  else if (m_DistributionType == SIMPL::DistributionType::Power) { distType = "PowerLaw", numComp = SIMPL::DistributionType::PowerLawColumnCount; }
+  if(m_DistributionType == SIMPL::DistributionType::Beta)
+  {
+    distType = "Beta", numComp = SIMPL::DistributionType::BetaColumnCount;
+  }
+  else if(m_DistributionType == SIMPL::DistributionType::LogNormal)
+  {
+    distType = "LogNormal", numComp = SIMPL::DistributionType::LogNormalColumnCount;
+  }
+  else if(m_DistributionType == SIMPL::DistributionType::Power)
+  {
+    distType = "PowerLaw", numComp = SIMPL::DistributionType::PowerLawColumnCount;
+  }
 
-  getNewEnsembleArrayArrayPath().setDataArrayName(m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit") + QString("CorrelatedTo") + m_CorrelatedFeatureArrayPath.getDataArrayName());
+  getNewEnsembleArrayArrayPath().setDataArrayName(m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit") + QString("CorrelatedTo") +
+                                                  m_CorrelatedFeatureArrayPath.getDataArrayName());
   dims.resize(2);
   dims[0] = m_NumberOfCorrelatedBins;
   dims[1] = numComp;
-  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getNewEnsembleArrayArrayPath(), 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(
+      this, getNewEnsembleArrayArrayPath(), 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NewEnsembleArrayPtr.lock().get())   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_RemoveBiasedFeatures == true)
   {
     dims.resize(1);
     dims[0] = 1;
-    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(),
+                                                                                                           dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_BiasedFeaturesPtr.lock().get())                                                               /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
 
@@ -220,8 +236,9 @@ void FitCorrelatedFeatureData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds, int32_t numEnsembles, unsigned int dType, Int32ArrayType::Pointer binArray, int numBins, bool removeBiasedFeatures, bool* biasedFeatures)
+template <typename T>
+void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds, int32_t numEnsembles, unsigned int dType, Int32ArrayType::Pointer binArray, int numBins, bool removeBiasedFeatures,
+             bool* biasedFeatures)
 {
   StatsData::Pointer sData = StatsData::New();
 
@@ -231,7 +248,7 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
   distributionAnalysis.push_back(PowerLawOps::New());
 
   DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
-  if (nullptr == featureArray)
+  if(nullptr == featureArray)
   {
     return;
   }
@@ -240,17 +257,26 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
   int numComp = 1;
 
   // Determining number of components and name given distribution type
-  if (dType == SIMPL::DistributionType::Beta) { distType = "Beta", numComp = SIMPL::DistributionType::BetaColumnCount; }
-  else if (dType == SIMPL::DistributionType::LogNormal) { distType = "LogNormal", numComp = SIMPL::DistributionType::LogNormalColumnCount; }
-  else if (dType == SIMPL::DistributionType::Power) { distType = "PowerLaw", numComp = SIMPL::DistributionType::PowerLawColumnCount; }
+  if(dType == SIMPL::DistributionType::Beta)
+  {
+    distType = "Beta", numComp = SIMPL::DistributionType::BetaColumnCount;
+  }
+  else if(dType == SIMPL::DistributionType::LogNormal)
+  {
+    distType = "LogNormal", numComp = SIMPL::DistributionType::LogNormalColumnCount;
+  }
+  else if(dType == SIMPL::DistributionType::Power)
+  {
+    distType = "PowerLaw", numComp = SIMPL::DistributionType::PowerLawColumnCount;
+  }
 
   T* fPtr = featureArray->getPointer(0);
   int32_t* bPtr = binArray->getPointer(0);
 
-  //float max;
-  //float min;
+  // float max;
+  // float min;
   std::vector<VectorOfFloatArray> dist;
-  std::vector<std::vector<std::vector<float > > > values;
+  std::vector<std::vector<std::vector<float>>> values;
 
   size_t numfeatures = featureArray->getNumberOfTuples();
 
@@ -264,7 +290,7 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
   }
 
   int32_t ensemble;
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     if(removeBiasedFeatures == false || biasedFeatures[i] == false)
     {
@@ -272,10 +298,10 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
       values[ensemble][bPtr[i]].push_back(static_cast<float>(fPtr[i]));
     }
   }
-  for (int64_t i = 1; i < numEnsembles; i++)
+  for(int64_t i = 1; i < numEnsembles; i++)
   {
     distributionAnalysis[dType]->calculateCorrelatedParameters(values[i], dist[i]);
-    for (int j = 0; j < numBins; j++)
+    for(int j = 0; j < numBins; j++)
     {
       for(int k = 0; k < numComp; k++)
       {
@@ -290,10 +316,9 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-Int32ArrayType::Pointer binData(typename DataArray<T>::Pointer featureArray, int64_t numBins)
+template <typename T> Int32ArrayType::Pointer binData(typename DataArray<T>::Pointer featureArray, int64_t numBins)
 {
-  if (nullptr == featureArray.get())
+  if(nullptr == featureArray.get())
   {
     return Int32ArrayType::NullPointer();
   }
@@ -307,16 +332,22 @@ Int32ArrayType::Pointer binData(typename DataArray<T>::Pointer featureArray, int
   float max = -100000000.0;
   float min = 100000000.0;
 
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
-    if(static_cast<T>(fPtr[i]) < min) { min = static_cast<T>(fPtr[i]); }
-    if(static_cast<T>(fPtr[i]) > max) { max = static_cast<T>(fPtr[i]); }
+    if(static_cast<T>(fPtr[i]) < min)
+    {
+      min = static_cast<T>(fPtr[i]);
+    }
+    if(static_cast<T>(fPtr[i]) > max)
+    {
+      max = static_cast<T>(fPtr[i]);
+    }
   }
-  //to make sure the max value feature doesn't walk off the end of the array, add a small value to the max
+  // to make sure the max value feature doesn't walk off the end of the array, add a small value to the max
   max += 0.000001f;
 
   float step = (max - min) / numBins;
-  for (size_t i = 1; i < numfeatures; i++)
+  for(size_t i = 1; i < numfeatures; i++)
   {
     bPtr[i] = (fPtr[i] - min) / step;
   }
@@ -330,7 +361,10 @@ void FitCorrelatedFeatureData::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedFeatureArrayPath.getDataContainerName());
   int64_t numEnsembles = m_NewEnsembleArrayPtr.lock()->getNumberOfTuples();
@@ -338,7 +372,7 @@ void FitCorrelatedFeatureData::execute()
   QString ss;
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayPath.getDataArrayName());
-  if (nullptr == inputData.get())
+  if(nullptr == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayPath.getDataArrayName());
     setErrorCondition(-11001);
@@ -346,7 +380,7 @@ void FitCorrelatedFeatureData::execute()
     return;
   }
   IDataArray::Pointer correlatedData = m->getAttributeMatrix(m_CorrelatedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_CorrelatedFeatureArrayPath.getDataArrayName());
-  if (nullptr == correlatedData.get())
+  if(nullptr == correlatedData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_CorrelatedFeatureArrayPath.getDataArrayName());
     setErrorCondition(-11001);
@@ -354,100 +388,99 @@ void FitCorrelatedFeatureData::execute()
     return;
   }
 
-  //determine the bin of the correlated array each value of the array to fit falls in
+  // determine the bin of the correlated array each value of the array to fit falls in
   QString dType = correlatedData->getTypeAsString();
   Int32ArrayType::Pointer binArray = Int32ArrayType::NullPointer();
-  if (dType.compare("int8_t") == 0)
+  if(dType.compare("int8_t") == 0)
   {
     binArray = binData<int8_t>(std::dynamic_pointer_cast<Int8ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("uint8_t") == 0)
+  else if(dType.compare("uint8_t") == 0)
   {
     binArray = binData<uint8_t>(std::dynamic_pointer_cast<UInt8ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("int16_t") == 0)
+  else if(dType.compare("int16_t") == 0)
   {
     binArray = binData<int16_t>(std::dynamic_pointer_cast<Int16ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("uint16_t") == 0)
+  else if(dType.compare("uint16_t") == 0)
   {
     binArray = binData<uint16_t>(std::dynamic_pointer_cast<UInt16ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("int32_t") == 0)
+  else if(dType.compare("int32_t") == 0)
   {
     binArray = binData<int32_t>(std::dynamic_pointer_cast<Int32ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("uint32_t") == 0)
+  else if(dType.compare("uint32_t") == 0)
   {
     binArray = binData<uint32_t>(std::dynamic_pointer_cast<UInt32ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("int64_t") == 0)
+  else if(dType.compare("int64_t") == 0)
   {
     binArray = binData<int64_t>(std::dynamic_pointer_cast<Int64ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("uint64_t") == 0)
+  else if(dType.compare("uint64_t") == 0)
   {
     binArray = binData<uint64_t>(std::dynamic_pointer_cast<UInt64ArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("float") == 0)
+  else if(dType.compare("float") == 0)
   {
     binArray = binData<float>(std::dynamic_pointer_cast<FloatArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
-  else if (dType.compare("double") == 0)
+  else if(dType.compare("double") == 0)
   {
     binArray = binData<double>(std::dynamic_pointer_cast<DoubleArrayType>(correlatedData), m_NumberOfCorrelatedBins);
   }
 
   // fit the data
   dType = inputData->getTypeAsString();
-  if (dType.compare("int8_t") == 0)
+  if(dType.compare("int8_t") == 0)
   {
     fitData<int8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("uint8_t") == 0)
+  else if(dType.compare("uint8_t") == 0)
   {
     fitData<uint8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("int16_t") == 0)
+  else if(dType.compare("int16_t") == 0)
   {
     fitData<int16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("uint16_t") == 0)
+  else if(dType.compare("uint16_t") == 0)
   {
     fitData<uint16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("int32_t") == 0)
+  else if(dType.compare("int32_t") == 0)
   {
     fitData<int32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("uint32_t") == 0)
+  else if(dType.compare("uint32_t") == 0)
   {
     fitData<uint32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("int64_t") == 0)
+  else if(dType.compare("int64_t") == 0)
   {
     fitData<int64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("uint64_t") == 0)
+  else if(dType.compare("uint64_t") == 0)
   {
     fitData<uint64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("float") == 0)
+  else if(dType.compare("float") == 0)
   {
     fitData<float>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("double") == 0)
+  else if(dType.compare("double") == 0)
   {
     fitData<double>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
-  else if (dType.compare("bool") == 0)
+  else if(dType.compare("bool") == 0)
   {
     fitData<bool>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -485,7 +518,7 @@ const QString FitCorrelatedFeatureData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 
@@ -493,19 +526,22 @@ const QString FitCorrelatedFeatureData::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FitCorrelatedFeatureData::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
-
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FitCorrelatedFeatureData::getSubGroupName()
-{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
-
+{
+  return SIMPL::FilterSubGroups::EnsembleStatsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FitCorrelatedFeatureData::getHumanLabel()
-{ return "Fit Correlated Distributions To Feature Data"; }
-
+{
+  return "Fit Correlated Distributions To Feature Data";
+}

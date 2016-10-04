@@ -36,15 +36,15 @@
 #include "RegularGridSampleSurfaceMesh.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -54,15 +54,15 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
-  SampleSurfaceMesh(),
-  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_XPoints(0),
-  m_YPoints(0),
-  m_ZPoints(0),
-  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
-  m_FeatureIds(nullptr)
+RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh()
+: SampleSurfaceMesh()
+, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_XPoints(0)
+, m_YPoints(0)
+, m_ZPoints(0)
+, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
+, m_FeatureIds(nullptr)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -115,8 +115,8 @@ void RegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParameters
   setResolution(reader->readFloatVec3("Resolution", getResolution()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
   setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
-  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
-  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
+  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
   reader->closeFilterGroup();
 }
 
@@ -125,7 +125,6 @@ void RegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void RegularGridSampleSurfaceMesh::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -137,7 +136,10 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
@@ -152,13 +154,19 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if (getErrorCondition() < 0 || nullptr == cellAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == cellAttrMat.get())
+  {
+    return;
+  }
 
   QVector<size_t> cDims(1, 1);
-  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -183,12 +191,12 @@ VertexGeom::Pointer RegularGridSampleSurfaceMesh::generate_points()
   VertexGeom::Pointer points = VertexGeom::CreateGeometry((m_XPoints * m_YPoints * m_ZPoints), "_INTERNAL_USE_ONLY_points");
 
   int64_t count = 0;
-  float coords[3] = { 0.0f, 0.0f, 0.0f };
-  for (int64_t k = 0; k < m_ZPoints; k++)
+  float coords[3] = {0.0f, 0.0f, 0.0f};
+  for(int64_t k = 0; k < m_ZPoints; k++)
   {
-    for (int64_t j = 0; j < m_YPoints; j++)
+    for(int64_t j = 0; j < m_YPoints; j++)
     {
-      for (int64_t i = 0; i < m_XPoints; i++)
+      for(int64_t i = 0; i < m_XPoints; i++)
       {
         coords[0] = (float(i) + 0.5f) * m_Resolution.x + m_Origin.x;
         coords[1] = (float(j) + 0.5f) * m_Resolution.y + m_Origin.y;
@@ -208,7 +216,7 @@ VertexGeom::Pointer RegularGridSampleSurfaceMesh::generate_points()
 void RegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
 {
   int32_t* ids = iArray->getPointer(0);
-  for (int64_t i = 0; i < (m_XPoints * m_YPoints * m_ZPoints); i++)
+  for(int64_t i = 0; i < (m_XPoints * m_YPoints * m_ZPoints); i++)
   {
     m_FeatureIds[i] = ids[i];
   }
@@ -221,7 +229,10 @@ void RegularGridSampleSurfaceMesh::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   SIMPL_RANDOMNG_NEW()
 
@@ -272,23 +283,29 @@ const QString RegularGridSampleSurfaceMesh::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
+  vStream << Sampling::Version::Major() << "." << Sampling::Version::Minor() << "." << Sampling::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RegularGridSampleSurfaceMesh::getGroupName()
-{ return SIMPL::FilterGroups::SamplingFilters; }
+{
+  return SIMPL::FilterGroups::SamplingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RegularGridSampleSurfaceMesh::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ResolutionFilters; }
+{
+  return SIMPL::FilterSubGroups::ResolutionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RegularGridSampleSurfaceMesh::getHumanLabel()
-{ return "Sample Triangle Geometry on Regular Grid"; }
+{
+  return "Sample Triangle Geometry on Regular Grid";
+}

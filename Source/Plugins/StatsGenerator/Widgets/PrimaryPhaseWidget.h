@@ -16,7 +16,7 @@
 #include "SIMPLib/SIMPLib.h"
 
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
-#include "StatsGenerator/Widgets/SGWidget.h"
+#include "StatsGenerator/Widgets/StatsGenWidget.h"
 #include "StatsGenerator/ui_PrimaryPhaseWidget.h"
 
 #ifndef QwtArray
@@ -30,13 +30,13 @@ class QDoubleValidator;
 class QComboBox;
 class StatsGenPlotWidget;
 class StatsGenODFWidget;
-class SGAxisODFWidget;
+class StatsGenAxisODFWidget;
 
 
 /**
  * @brief The PrimaryPhaseWidget class
  */
-class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
+class PrimaryPhaseWidget : public StatsGenWidget, private Ui::PrimaryPhaseWidget
 {
   Q_OBJECT
 
@@ -65,8 +65,8 @@ public:
   void setODFWidgetWidget(StatsGenODFWidget* w);
   StatsGenODFWidget* getODFWidgetWidget();
 
-  void setAxisODFWidget(SGAxisODFWidget* w);
-  SGAxisODFWidget* getAxisODFWidget();
+  void setAxisODFWidget(StatsGenAxisODFWidget* w);
+  StatsGenAxisODFWidget* getAxisODFWidget();
 
   void setFeatureSizeWidget(StatsGenFeatureSizeWidget* w);
   StatsGenFeatureSizeWidget* getFeatureSizeWidget();

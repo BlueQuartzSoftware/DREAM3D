@@ -49,7 +49,7 @@
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
-#include "StatsGenerator/Widgets/SGWidget.h"
+#include "StatsGenerator/Widgets/StatsGenWidget.h"
 #include "StatsGenerator/Widgets/PrimaryPhaseWidget.h"
 #include "StatsGenerator/Widgets/PrecipitatePhaseWidget.h"
 #include "StatsGenerator/Widgets/MatrixPhaseWidget.h"

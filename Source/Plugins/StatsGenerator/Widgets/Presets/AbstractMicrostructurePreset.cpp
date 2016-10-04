@@ -37,18 +37,17 @@
 
 #include <QtCore/QVector>
 
-#include "StatsGenerator/Widgets/SGAxisODFWidget.h"
-#include "StatsGenerator/Widgets/StatsGenODFWidget.h"
+#include "StatsGenerator/Widgets/StatsGenAxisODFWidget.h"
 #include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
-#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
+#include "StatsGenerator/Widgets/StatsGenODFWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractMicrostructurePreset::AbstractMicrostructurePreset()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -56,17 +55,16 @@ AbstractMicrostructurePreset::AbstractMicrostructurePreset()
 // -----------------------------------------------------------------------------
 AbstractMicrostructurePreset::~AbstractMicrostructurePreset()
 {
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractMicrostructurePreset::initializeAxisODFTableModel(SGAxisODFWidget* widget)
+void AbstractMicrostructurePreset::initializeAxisODFTableModel(StatsGenAxisODFWidget* widget)
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGODFTableModel* model = (widget->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -85,7 +83,7 @@ void AbstractMicrostructurePreset::initializeODFTableModel(StatsGenODFWidget* wi
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGODFTableModel* model = (widget->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -104,7 +102,7 @@ void AbstractMicrostructurePreset::initializeMDFTableModel(StatsGenMDFWidget* wi
 {
   // This line basically makes sure we have the distribution type we are looking for
   SGMDFTableModel* model = (widget->tableModel());
-  if (nullptr == model)
+  if(nullptr == model)
   {
     return;
   }
@@ -124,8 +122,8 @@ QVector<QColor> AbstractMicrostructurePreset::GenerateColors(int count, int satu
   float increment = 360.0 / count;
   for(int i = 0; i < count; i++)
   {
-     QColor c = QColor::fromHsv(i*increment, saturation, value, 255);
-     colors[i] = c;
+    QColor c = QColor::fromHsv(i * increment, saturation, value, 255);
+    colors[i] = c;
   }
   return colors;
 }

@@ -38,8 +38,8 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Statistics/StatisticsConstants.h"
@@ -48,19 +48,17 @@
 // Include the MOC generated file for this class
 #include "moc_FindSurfaceAreaToVolume.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSurfaceAreaToVolume::FindSurfaceAreaToVolume() :
-  AbstractFilter(),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells),
-  m_SurfaceAreaVolumeRatioArrayName(SIMPL::FeatureData::SurfaceAreaVol),
-  m_FeatureIds(nullptr),
-  m_NumCells(nullptr),
-  m_SurfaceAreaVolumeRatio(nullptr)
+FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()
+: AbstractFilter()
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells)
+, m_SurfaceAreaVolumeRatioArrayName(SIMPL::FeatureData::SurfaceAreaVol)
+, m_FeatureIds(nullptr)
+, m_NumCells(nullptr)
+, m_SurfaceAreaVolumeRatio(nullptr)
 {
   setupFilterParameters();
 }
@@ -79,12 +77,14 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindSurfaceAreaToVolume, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Cells", NumCellsArrayPath, FilterParameter::RequiredArray, FindSurfaceAreaToVolume, req));
   }
@@ -99,7 +99,7 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
 void FindSurfaceAreaToVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   setNumCellsArrayPath(reader->readDataArrayPath("NumCellsArrayPath", getNumCellsArrayPath()));
   setSurfaceAreaVolumeRatioArrayName(reader->readString("SurfaceAreaVolumeRatioArrayName", getSurfaceAreaVolumeRatioArrayName()));
   reader->closeFilterGroup();
@@ -110,7 +110,6 @@ void FindSurfaceAreaToVolume::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -124,20 +123,28 @@ void FindSurfaceAreaToVolume::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
   m_NumCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumCellsArrayPath(), cDims);
-  if( nullptr != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_NumCellsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
-  tempPath.update(getNumCellsArrayPath().getDataContainerName(), getNumCellsArrayPath().getAttributeMatrixName(), getSurfaceAreaVolumeRatioArrayName() );
-  m_SurfaceAreaVolumeRatioPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceAreaVolumeRatioPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceAreaVolumeRatio = m_SurfaceAreaVolumeRatioPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getNumCellsArrayPath().getDataContainerName(), getNumCellsArrayPath().getAttributeMatrixName(), getSurfaceAreaVolumeRatioArrayName());
+  m_SurfaceAreaVolumeRatioPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, cDims);                          /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceAreaVolumeRatioPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceAreaVolumeRatio = m_SurfaceAreaVolumeRatioPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -160,7 +167,10 @@ void FindSurfaceAreaToVolume::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Validate that the selected InArray has tuples equal to the largest
   // Feature Id; the filter would not crash otherwise, but the user should
@@ -170,12 +180,12 @@ void FindSurfaceAreaToVolume::execute()
   bool mismatchedFeatures = false;
   int32_t largestFeature = 0;
   size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  for (size_t i = 0; i < numTuples; i ++)
+  for(size_t i = 0; i < numTuples; i++)
   {
-    if (m_FeatureIds[i] > largestFeature)
+    if(m_FeatureIds[i] > largestFeature)
     {
       largestFeature = m_FeatureIds[i];
-      if (largestFeature >= numFeatures)
+      if(largestFeature >= numFeatures)
       {
         mismatchedFeatures = true;
         break;
@@ -183,7 +193,7 @@ void FindSurfaceAreaToVolume::execute()
     }
   }
 
-  if (mismatchedFeatures == true)
+  if(mismatchedFeatures == true)
   {
     QString ss = QObject::tr("The number of Features in the NumCells array (%1) is larger than the largest Feature Id in the FeatureIds array").arg(numFeatures);
     setErrorCondition(-5555);
@@ -191,7 +201,7 @@ void FindSurfaceAreaToVolume::execute()
     return;
   }
 
-  if (largestFeature != (numFeatures - 1))
+  if(largestFeature != (numFeatures - 1))
   {
     QString ss = QObject::tr("The number of Features in the NumCells array (%1) does not match the largest Feature Id in the FeatureIds array").arg(numFeatures);
     setErrorCondition(-5555);
@@ -210,7 +220,7 @@ void FindSurfaceAreaToVolume::execute()
 
   std::vector<float> featureSurfaceArea(numFeatures);
 
-  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   neighpoints[0] = -xPoints * yPoints;
   neighpoints[1] = -xPoints;
   neighpoints[2] = -1;
@@ -224,39 +234,57 @@ void FindSurfaceAreaToVolume::execute()
   int64_t neighbor = 0;
 
   int64_t zStride = 0, yStride = 0;
-  for (int64_t i = 0; i < zPoints; i++)
+  for(int64_t i = 0; i < zPoints; i++)
   {
     zStride = i * xPoints * yPoints;
-    for (int64_t j = 0; j < yPoints; j++)
+    for(int64_t j = 0; j < yPoints; j++)
     {
       yStride = j * xPoints;
-      for (int64_t k = 0; k < xPoints; k++)
+      for(int64_t k = 0; k < xPoints; k++)
       {
         onsurf = 0.0f;
         feature = m_FeatureIds[zStride + yStride + k];
-        if (feature > 0)
+        if(feature > 0)
         {
-          for (int32_t l = 0; l < 6; l++)
+          for(int32_t l = 0; l < 6; l++)
           {
             good = true;
             neighbor = zStride + yStride + k + neighpoints[l];
-            if (l == 0 && i == 0) { good = false; }
-            if (l == 5 && i == (zPoints - 1)) { good = false; }
-            if (l == 1 && j == 0) { good = false; }
-            if (l == 4 && j == (yPoints - 1)) { good = false; }
-            if (l == 2 && k == 0) { good = false; }
-            if (l == 3 && k == (xPoints - 1)) { good = false; }
-            if (good == true && m_FeatureIds[neighbor] != feature)
+            if(l == 0 && i == 0)
             {
-              if (l == 0 || l == 5)  // XY face shared
+              good = false;
+            }
+            if(l == 5 && i == (zPoints - 1))
+            {
+              good = false;
+            }
+            if(l == 1 && j == 0)
+            {
+              good = false;
+            }
+            if(l == 4 && j == (yPoints - 1))
+            {
+              good = false;
+            }
+            if(l == 2 && k == 0)
+            {
+              good = false;
+            }
+            if(l == 3 && k == (xPoints - 1))
+            {
+              good = false;
+            }
+            if(good == true && m_FeatureIds[neighbor] != feature)
+            {
+              if(l == 0 || l == 5) // XY face shared
               {
                 onsurf = onsurf + xRes * yRes;
               }
-              if (l == 1 || l == 4)  //YZ face shared
+              if(l == 1 || l == 4) // YZ face shared
               {
                 onsurf = onsurf + yRes * zRes;
               }
-              if (l == 2 || l == 3)  //XZ face shared
+              if(l == 2 || l == 3) // XZ face shared
               {
                 onsurf = onsurf + zRes * xRes;
               }
@@ -269,7 +297,7 @@ void FindSurfaceAreaToVolume::execute()
     }
   }
 
-  for (int32_t i = 1; i < numFeatures; i++)
+  for(int32_t i = 1; i < numFeatures; i++)
   {
     m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i] / (m_NumCells[i] * xRes * yRes * zRes);
   }
@@ -313,23 +341,29 @@ const QString FindSurfaceAreaToVolume::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
+  vStream << Statistics::Version::Major() << "." << Statistics::Version::Minor() << "." << Statistics::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getHumanLabel()
-{ return "Find Surface Area to Volume"; }
+{
+  return "Find Surface Area to Volume";
+}

@@ -36,19 +36,19 @@
 #include "GenerateIPFColors.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
@@ -58,96 +58,97 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-
 /**
  * @brief The GenerateIPFColorsImpl class implements a threaded algorithm that computes the IPF
  * colors for each element in a geometry
  */
 class GenerateIPFColorsImpl
 {
-  public:
-    GenerateIPFColorsImpl(FloatVec3_t referenceDir, float* eulers, int32_t* phases, uint32_t* crystalStructures,
-                          bool* goodVoxels, uint8_t* colors) :
-      m_ReferenceDir(referenceDir),
-      m_CellEulerAngles(eulers),
-      m_CellPhases(phases),
-      m_CrystalStructures(crystalStructures),
-      m_GoodVoxels(goodVoxels),
-      m_CellIPFColors(colors)
-    {}
-    virtual ~GenerateIPFColorsImpl() {}
+public:
+  GenerateIPFColorsImpl(FloatVec3_t referenceDir, float* eulers, int32_t* phases, uint32_t* crystalStructures, bool* goodVoxels, uint8_t* colors)
+  : m_ReferenceDir(referenceDir)
+  , m_CellEulerAngles(eulers)
+  , m_CellPhases(phases)
+  , m_CrystalStructures(crystalStructures)
+  , m_GoodVoxels(goodVoxels)
+  , m_CellIPFColors(colors)
+  {
+  }
+  virtual ~GenerateIPFColorsImpl()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    QVector<SpaceGroupOps::Pointer> ops = SpaceGroupOps::getOrientationOpsQVector();
+    double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
+    double dEuler[3] = {0.0, 0.0, 0.0};
+    SIMPL::Rgb argb = 0x00000000;
+    int32_t phase = 0;
+    bool calcIPF = false;
+    size_t index = 0;
+    for(size_t i = start; i < end; i++)
     {
-      QVector<SpaceGroupOps::Pointer> ops = SpaceGroupOps::getOrientationOpsQVector();
-      double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
-      double dEuler[3] = {0.0, 0.0, 0.0};
-      SIMPL::Rgb argb = 0x00000000;
-      int32_t phase = 0;
-      bool calcIPF = false;
-      size_t index = 0;
-      for (size_t i = start; i < end; i++)
+      phase = m_CellPhases[i];
+      index = i * 3;
+      m_CellIPFColors[index] = 0;
+      m_CellIPFColors[index + 1] = 0;
+      m_CellIPFColors[index + 2] = 0;
+      dEuler[0] = m_CellEulerAngles[index];
+      dEuler[1] = m_CellEulerAngles[index + 1];
+      dEuler[2] = m_CellEulerAngles[index + 2];
+
+      // Make sure we are using a valid Euler Angles with valid crystal symmetry
+      calcIPF = true;
+      if(nullptr != m_GoodVoxels)
       {
-        phase = m_CellPhases[i];
-        index = i * 3;
-        m_CellIPFColors[index] = 0;
-        m_CellIPFColors[index + 1] = 0;
-        m_CellIPFColors[index + 2] = 0;
-        dEuler[0] = m_CellEulerAngles[index];
-        dEuler[1] = m_CellEulerAngles[index + 1];
-        dEuler[2] = m_CellEulerAngles[index + 2];
+        calcIPF = m_GoodVoxels[i];
+      }
 
-        // Make sure we are using a valid Euler Angles with valid crystal symmetry
-        calcIPF = true;
-        if (nullptr != m_GoodVoxels) { calcIPF = m_GoodVoxels[i]; }
-
-        if (calcIPF && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
-        {
-          argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
-          m_CellIPFColors[index] = RgbColor::dRed(argb);
-          m_CellIPFColors[index + 1] = RgbColor::dGreen(argb);
-          m_CellIPFColors[index + 2] = RgbColor::dBlue(argb);
-        }
+      if(calcIPF && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
+      {
+        argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
+        m_CellIPFColors[index] = RgbColor::dRed(argb);
+        m_CellIPFColors[index + 1] = RgbColor::dGreen(argb);
+        m_CellIPFColors[index + 2] = RgbColor::dBlue(argb);
       }
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
-  private:
-    FloatVec3_t  m_ReferenceDir;
-    float* m_CellEulerAngles;
-    int32_t* m_CellPhases;
-    unsigned int* m_CrystalStructures;
-    bool* m_GoodVoxels;
-    uint8_t* m_CellIPFColors;
-
+private:
+  FloatVec3_t m_ReferenceDir;
+  float* m_CellEulerAngles;
+  int32_t* m_CellPhases;
+  unsigned int* m_CrystalStructures;
+  bool* m_GoodVoxels;
+  uint8_t* m_CellIPFColors;
 };
 
 // Include the MOC generated file for this class
 #include "moc_GenerateIPFColors.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateIPFColors::GenerateIPFColors() :
-  AbstractFilter(),
-  m_CellPhasesArrayPath("", "", ""),
-  m_CellEulerAnglesArrayPath("", "", ""),
-  m_CrystalStructuresArrayPath("", "", ""),
-  m_UseGoodVoxels(false),
-  m_GoodVoxelsArrayPath("", "", ""),
-  m_CellIPFColorsArrayName(SIMPL::CellData::IPFColor),
-  m_CellPhases(nullptr),
-  m_CellEulerAngles(nullptr),
-  m_CrystalStructures(nullptr),
-  m_GoodVoxels(nullptr),
-  m_CellIPFColors(nullptr)
+GenerateIPFColors::GenerateIPFColors()
+: AbstractFilter()
+, m_CellPhasesArrayPath("", "", "")
+, m_CellEulerAnglesArrayPath("", "", "")
+, m_CrystalStructuresArrayPath("", "", "")
+, m_UseGoodVoxels(false)
+, m_GoodVoxelsArrayPath("", "", "")
+, m_CellIPFColorsArrayName(SIMPL::CellData::IPFColor)
+, m_CellPhases(nullptr)
+, m_CellEulerAngles(nullptr)
+, m_CrystalStructures(nullptr)
+, m_GoodVoxels(nullptr)
+, m_CellIPFColors(nullptr)
 {
   m_ReferenceDir.x = 0.0f;
   m_ReferenceDir.y = 0.0f;
@@ -197,13 +198,13 @@ void GenerateIPFColors::setupFilterParameters()
 void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels() ) );
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
-  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
-  setCellIPFColorsArrayName(reader->readString("CellIPFColorsArrayName", getCellIPFColorsArrayName() ) );
-  setReferenceDir( reader->readFloatVec3("ReferenceDir", getReferenceDir() ) );
+  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels()));
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath()));
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
+  setCellIPFColorsArrayName(reader->readString("CellIPFColorsArrayName", getCellIPFColorsArrayName()));
+  setReferenceDir(reader->readFloatVec3("ReferenceDir", getReferenceDir()));
   reader->closeFilterGroup();
 }
 
@@ -212,7 +213,6 @@ void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -226,36 +226,60 @@ void GenerateIPFColors::dataCheck()
   QVector<DataArrayPath> dataArraypaths;
 
   QVector<size_t> cDims(1, 1);
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArraypaths.push_back(getCellPhasesArrayPath()); }
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArraypaths.push_back(getCellPhasesArrayPath());
+  }
 
   cDims[0] = 3;
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArraypaths.push_back(getCellEulerAnglesArrayPath()); }
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellEulerAnglesPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArraypaths.push_back(getCellEulerAnglesArrayPath());
+  }
 
   cDims[0] = 1;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
-  tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), getCellEulerAnglesArrayPath().getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellIPFColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), getCellEulerAnglesArrayPath().getAttributeMatrixName(), getCellIPFColorsArrayName());
+  m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
+      this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellIPFColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if (getUseGoodVoxels() == true)
+  if(getUseGoodVoxels() == true)
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0) { dataArraypaths.push_back(getGoodVoxelsArrayPath()); }
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                       cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0)
+    {
+      dataArraypaths.push_back(getGoodVoxelsArrayPath());
+    }
   }
   else
   {
@@ -285,7 +309,10 @@ void GenerateIPFColors::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
@@ -299,10 +326,10 @@ void GenerateIPFColors::execute()
 #endif
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      GenerateIPFColorsImpl(normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, m_GoodVoxels, m_CellIPFColors), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateIPFColorsImpl(normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, m_GoodVoxels, m_CellIPFColors),
+                      tbb::auto_partitioner());
   }
   else
 #endif
@@ -351,23 +378,29 @@ const QString GenerateIPFColors::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getGroupName()
-{ return SIMPL::FilterGroups::ProcessingFilters; }
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographyFilters; }
+{
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getHumanLabel()
-{ return "Generate IPF Colors"; }
+{
+  return "Generate IPF Colors";
+}

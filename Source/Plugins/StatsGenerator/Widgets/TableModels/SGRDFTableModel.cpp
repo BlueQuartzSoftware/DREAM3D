@@ -36,8 +36,8 @@
 #include "SGRDFTableModel.h"
 #include <iostream>
 
-#include <QtWidgets/QStyleOptionComboBox>
 #include <QtWidgets/QAbstractItemDelegate>
+#include <QtWidgets/QStyleOptionComboBox>
 
 #include "Applications/SIMPLView/SIMPLViewApplication.h"
 
@@ -47,9 +47,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGRDFTableModel::SGRDFTableModel(QObject* parent) :
-  QAbstractTableModel(parent),
-  m_RowCount(0)
+SGRDFTableModel::SGRDFTableModel(QObject* parent)
+: QAbstractTableModel(parent)
+, m_RowCount(0)
 {
   m_ColumnCount = ColumnCount;
 }
@@ -67,15 +67,15 @@ SGRDFTableModel::~SGRDFTableModel()
 Qt::ItemFlags SGRDFTableModel::flags(const QModelIndex& index) const
 {
   //  qDebug() << "SGRDFTableModel::flags" << "\n";
-  if (!index.isValid())
+  if(!index.isValid())
   {
     return Qt::NoItemFlags;
   }
   Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
-  if (index.isValid())
+  if(index.isValid())
   {
     int col = index.column();
-    if (col < SGRDFTableModel::ColumnCount)
+    if(col < SGRDFTableModel::ColumnCount)
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
@@ -89,37 +89,40 @@ Qt::ItemFlags SGRDFTableModel::flags(const QModelIndex& index) const
 QVariant SGRDFTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
-  if (!index.isValid())
+  if(!index.isValid())
   {
     return QVariant();
   }
 
-  if (role == Qt::SizeHintRole)
+  if(role == Qt::SizeHintRole)
   {
     QStyleOptionComboBox comboBox;
     comboBox.currentText = QString("10001");
-    if (index.column() < SGRDFTableModel::ColumnCount)
+    if(index.column() < SGRDFTableModel::ColumnCount)
     {
       const QString header = headerData(index.column(), Qt::Horizontal, Qt::DisplayRole).toString();
-      if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
+      if(header.length() > comboBox.currentText.length())
+      {
+        comboBox.currentText = header;
+      }
     }
     else
     {
       Q_ASSERT(false);
     }
-    QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
+    QFontMetrics fontMetrics(data(index, Qt::FontRole).value<QFont>());
     comboBox.fontMetrics = fontMetrics;
     QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
     return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
-  else if (role == Qt::TextAlignmentRole)
+  else if(role == Qt::TextAlignmentRole)
   {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
-  else if (role == Qt::DisplayRole || role == Qt::EditRole)
+  else if(role == Qt::DisplayRole || role == Qt::EditRole)
   {
     int col = index.column();
-    if (col == Frequency)
+    if(col == Frequency)
     {
       return QVariant(m_Frequencies[index.row()]);
     }
@@ -133,17 +136,16 @@ QVariant SGRDFTableModel::data(const QModelIndex& index, qint32 role) const
 // -----------------------------------------------------------------------------
 QVariant SGRDFTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     switch(section)
     {
-      case Frequency:
-        return QVariant(QString("Normalized Fequency"));
-        break;
-      default:
-        break;
+    case Frequency:
+      return QVariant(QString("Normalized Fequency"));
+      break;
+    default:
+      break;
     }
-
   }
   return QVariant();
 }
@@ -172,17 +174,13 @@ bool SGRDFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& 
   return false;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 bool SGRDFTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   // qDebug() << "SGRDFTableModel::setData " << value.toString() << "\n";
-  if (!index.isValid() || role != Qt::EditRole || index.row() < 0
-      || index.row() >= m_Frequencies.count()
-      || index.column() < 0 || index.column()
-      >= m_ColumnCount)
+  if(!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Frequencies.count() || index.column() < 0 || index.column() >= m_ColumnCount)
   {
     return false;
   }
@@ -191,12 +189,11 @@ bool SGRDFTableModel::setData(const QModelIndex& index, const QVariant& value, i
   qint32 col = index.column();
   switch(col)
   {
-    case Frequency:
-      m_Frequencies[row] = value.toFloat(&ok);
-      break;
-    default:
-      Q_ASSERT(false);
-
+  case Frequency:
+    m_Frequencies[row] = value.toFloat(&ok);
+    break;
+  default:
+    Q_ASSERT(false);
   }
 
   emit dataChanged(index, index);
@@ -210,7 +207,7 @@ bool SGRDFTableModel::insertRows(int row, int count, const QModelIndex& index)
 {
   int freq = 0;
   beginInsertRows(QModelIndex(), row, row + count - 1);
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
     m_Frequencies.append(freq);
     m_RowCount = m_Frequencies.count();
@@ -225,12 +222,12 @@ bool SGRDFTableModel::insertRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 bool SGRDFTableModel::removeRows(int row, int count, const QModelIndex& index)
 {
-  if (count < 1)
+  if(count < 1)
   {
     return true;
   } // No Rows to remove
   beginRemoveRows(QModelIndex(), row, row + count - 1);
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
     m_Frequencies.remove(row);
     m_RowCount = m_Frequencies.count();
@@ -248,11 +245,11 @@ QVector<float> SGRDFTableModel::getData(int col)
 
   switch(col)
   {
-    case Frequency:
-      return m_Frequencies;
-      break;
-    default:
-      Q_ASSERT(false);
+  case Frequency:
+    return m_Frequencies;
+    break;
+  default:
+    Q_ASSERT(false);
   }
   return QVector<float>();
 }
@@ -264,11 +261,11 @@ int SGRDFTableModel::getDataValue(int col, int row)
 {
   switch(col)
   {
-    case Frequency:
-      return m_Frequencies[row];
-      break;
-    default:
-      Q_ASSERT(false);
+  case Frequency:
+    return m_Frequencies[row];
+    break;
+  default:
+    Q_ASSERT(false);
   }
   return 0;
 }
@@ -280,11 +277,11 @@ void SGRDFTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
-    case Frequency:
-      m_Frequencies = data;
-      break;
-    default:
-      Q_ASSERT(false);
+  case Frequency:
+    m_Frequencies = data;
+    break;
+  default:
+    Q_ASSERT(false);
   }
 }
 
@@ -304,46 +301,43 @@ QAbstractItemDelegate* SGRDFTableModel::getItemDelegate()
   return new SGRDFItemDelegate();
 }
 
-#define ADD_INITIAL_ROW_VALUE(name, weight, sigma)\
-  insertRow(rowCount());\
-  QModelIndex textureIndex = index(rowCount() - 1, SGRDFTableModel::Texture);\
-  setData(textureIndex, QVariant(QString(name)), Qt::EditRole);\
-  QModelIndex weightIndex = index(rowCount() - 1, SGRDFTableModel::Weight);\
-  setData(weightIndex, QVariant(weight), Qt::EditRole);\
-  QModelIndex sigmaIndex = index(rowCount() - 1, SGRDFTableModel::Sigma);\
-  setData(sigmaIndex, QVariant(sigma), Qt::EditRole);\
+#define ADD_INITIAL_ROW_VALUE(name, weight, sigma)                                                                                                                                                     \
+  insertRow(rowCount());                                                                                                                                                                               \
+  QModelIndex textureIndex = index(rowCount() - 1, SGRDFTableModel::Texture);                                                                                                                          \
+  setData(textureIndex, QVariant(QString(name)), Qt::EditRole);                                                                                                                                        \
+  QModelIndex weightIndex = index(rowCount() - 1, SGRDFTableModel::Weight);                                                                                                                            \
+  setData(weightIndex, QVariant(weight), Qt::EditRole);                                                                                                                                                \
+  QModelIndex sigmaIndex = index(rowCount() - 1, SGRDFTableModel::Sigma);                                                                                                                              \
+  setData(sigmaIndex, QVariant(sigma), Qt::EditRole);
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-  void SGRDFTableModel::setInitialValues()
-  {
-
-  }
+void SGRDFTableModel::setInitialValues()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-  void SGRDFTableModel::setTableData(QVector<float> freqs)
+void SGRDFTableModel::setTableData(QVector<float> freqs)
+{
+  qint32 count = freqs.count();
+
+  qint32 row = 0;
+  // Remove all the current rows in the table model
+  removeRows(0, rowCount());
+  QModelIndex topLeft;
+  QModelIndex botRight;
+  if(count >= 1)
   {
-    qint32 count = freqs.count();
-
-    qint32 row = 0;
-    // Remove all the current rows in the table model
-    removeRows(0, rowCount());
-    QModelIndex topLeft;
-    QModelIndex botRight;
-    if (count >= 1)
-    {
-      // Now mass insert the data to the table then emit that the data has changed
-      beginInsertRows(QModelIndex(), row, row + count - 1);
-      m_Frequencies = freqs;
-      m_RowCount = count;
-      endInsertRows();
-      createIndex(0, 0);
-      createIndex(count - 1, ColumnCount);
-    }
-    emit dataChanged(topLeft, botRight);
+    // Now mass insert the data to the table then emit that the data has changed
+    beginInsertRows(QModelIndex(), row, row + count - 1);
+    m_Frequencies = freqs;
+    m_RowCount = count;
+    endInsertRows();
+    createIndex(0, 0);
+    createIndex(count - 1, ColumnCount);
   }
-
-
+  emit dataChanged(topLeft, botRight);
+}

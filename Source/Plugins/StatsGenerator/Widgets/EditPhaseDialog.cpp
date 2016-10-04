@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "EditPhaseDialog.h"
 
 #include "SIMPLib/Common/PhaseType.h"
@@ -44,12 +43,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
-  QDialog(parent),
-  m_OtherPhaseFractions(0.0),
-  m_PhaseFractionValidator(nullptr),
-  m_ParentPhaseValidator(nullptr),
-  m_PptFractionValidator(nullptr)
+EditPhaseDialog::EditPhaseDialog(QWidget* parent)
+: QDialog(parent)
 {
   setupUi(this);
   setupGui();
@@ -60,7 +55,6 @@ EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
 // -----------------------------------------------------------------------------
 EditPhaseDialog::~EditPhaseDialog()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -88,7 +82,10 @@ float EditPhaseDialog::getPhaseFraction()
   bool ok = false;
   QLocale loc = QLocale::system();
   float d = loc.toFloat(phaseFraction->text(), &ok);
-  if (ok) { return d; }
+  if(ok)
+  {
+    return d;
+  }
   return -1.0;
 }
 
@@ -108,7 +105,10 @@ float EditPhaseDialog::getPptFraction()
   bool ok = false;
   QLocale loc = QLocale::system();
   float d = loc.toFloat(pptFraction->text(), &ok);
-  if (ok) { return d; }
+  if(ok)
+  {
+    return d;
+  }
   return -1.0;
 }
 
@@ -118,25 +118,6 @@ float EditPhaseDialog::getPptFraction()
 void EditPhaseDialog::setPptFraction(float d)
 {
   pptFraction->setText(QString::number(d));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-unsigned int EditPhaseDialog::getParentPhase()
-{
-  bool ok = false;
-  unsigned int d = ParentPhase->text().toUInt(&ok);
-  if (ok) { return d; }
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EditPhaseDialog::setParentPhase(unsigned int d)
-{
-  ParentPhase->setText(QString::number(d));
 }
 
 // -----------------------------------------------------------------------------
@@ -154,7 +135,7 @@ unsigned int EditPhaseDialog::getPhaseType()
 {
   int index = phaseTypeCombo->currentIndex();
 
-  if (index == 2)
+  if(index == 2)
   {
     return SIMPL::PhaseType::MatrixPhase;
   }
@@ -164,9 +145,9 @@ unsigned int EditPhaseDialog::getPhaseType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setPhaseName(QString &name)
+void EditPhaseDialog::setPhaseName(QString& name)
 {
-    m_PhaseName->setText(name);
+  m_PhaseName->setText(name);
 }
 
 // -----------------------------------------------------------------------------
@@ -186,21 +167,29 @@ void EditPhaseDialog::setupGui()
 
   m_PhaseFractionValidator = new QDoubleValidator(phaseFraction);
   m_PhaseFractionValidator->setLocale(loc);
-  m_ParentPhaseValidator = new QDoubleValidator(ParentPhase);
-  m_ParentPhaseValidator->setLocale(loc);
   m_PptFractionValidator = new QDoubleValidator(pptFraction);
   m_PptFractionValidator->setLocale(loc);
   m_PptFractionValidator->setBottom(0.0);
   m_PptFractionValidator->setTop(1.0);
   m_PptFractionValidator->setDecimals(6);
-  if(m_EditFlag == true) { phaseTypeCombo->setEnabled(false); }
-  if(m_EditFlag == false) { phaseTypeCombo->setEnabled(true); }
-  if(m_EditFlag == true) { phaseTypeComboLabel->setEnabled(false); }
-  if(m_EditFlag == false) { phaseTypeComboLabel->setEnabled(true); }
+  if(m_EditFlag == true)
+  {
+    phaseTypeCombo->setEnabled(false);
+  }
+  if(m_EditFlag == false)
+  {
+    phaseTypeCombo->setEnabled(true);
+  }
+  if(m_EditFlag == true)
+  {
+    phaseTypeComboLabel->setEnabled(false);
+  }
+  if(m_EditFlag == false)
+  {
+    phaseTypeComboLabel->setEnabled(true);
+  }
   pptFraction->setEnabled(false);
-  ParentPhase->setEnabled(false);
   pptFractionLabel->setEnabled(false);
-  ParentPhaseLabel->setEnabled(false);
   on_phaseFraction_textChanged(QString());
   m_PhaseName->setText("Name of Phase");
 }
@@ -208,12 +197,13 @@ void EditPhaseDialog::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::on_phaseFraction_textChanged(const QString& string)
+void EditPhaseDialog::on_phaseFraction_textChanged(const QString& str)
 {
+  Q_UNUSED(str)
   bool ok = false;
   QLocale loc = QLocale::system();
   float d = loc.toFloat(phaseFraction->text(), &ok);
-  if (ok)
+  if(ok)
   {
     float total = d + m_OtherPhaseFractions;
     total = d / total;
@@ -244,8 +234,9 @@ void EditPhaseDialog::setEditFlag(bool flag)
 // -----------------------------------------------------------------------------
 void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
 {
+  Q_UNUSED(index);
   bool b = false;
-  if (static_cast<unsigned int>(phaseTypeCombo->currentIndex()) == SIMPL::PhaseType::PrecipitatePhase)
+  if(static_cast<unsigned int>(phaseTypeCombo->currentIndex()) == SIMPL::PhaseType::PrecipitatePhase)
   {
     b = true;
   }
@@ -253,12 +244,8 @@ void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
   pptFractionLabel->setEnabled(b);
 
   b = false;
-  if (static_cast<unsigned int>(phaseTypeCombo->currentIndex()) == SIMPL::PhaseType::TransformationPhase)
+  if(static_cast<unsigned int>(phaseTypeCombo->currentIndex()) == SIMPL::PhaseType::TransformationPhase)
   {
     b = true;
   }
-  ParentPhase->setEnabled(b);
-  ParentPhaseLabel->setEnabled(b);
 }
-
-

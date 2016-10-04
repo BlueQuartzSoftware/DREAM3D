@@ -39,53 +39,50 @@
 
 #include <iostream>
 
-#include <QtCore/QString>
-#include <QtCore/QFileInfo>
-#include <QtCore/QString>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QString>
+#include <QtCore/QString>
 
-#include <QtGui/QPainter>
+#include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <QtGui/QImage>
-#include <QtGui/QColor>
+#include <QtGui/QPainter>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-
-#define SET_DIRECTION(i, j, k)\
-  direction[0] = i; direction[1] = j; direction[2] = k;
-
-
+#define SET_DIRECTION(i, j, k)                                                                                                                                                                         \
+  direction[0] = i;                                                                                                                                                                                    \
+  direction[1] = j;                                                                                                                                                                                    \
+  direction[2] = k;
 
 #define WRITE_EULERS_TEXT_FILE 1
 
 // Include the MOC generated file for this class
 #include "moc_WriteStatsGenOdfAngleFile.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile() :
-  AbstractFilter(),
-  m_OutputFile(""),
-  m_CellPhasesArrayPath("", "", ""),
-  m_CellEulerAnglesArrayPath("", "", ""),
-  m_ConvertToDegrees(false),
-  m_UseGoodVoxels(false),
-  m_GoodVoxelsArrayPath("", "", "")
+WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile()
+: AbstractFilter()
+, m_OutputFile("")
+, m_CellPhasesArrayPath("", "", "")
+, m_CellEulerAnglesArrayPath("", "", "")
+, m_ConvertToDegrees(false)
+, m_UseGoodVoxels(false)
+, m_GoodVoxelsArrayPath("", "", "")
 {
   setupFilterParameters();
 }
@@ -133,12 +130,12 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
 void WriteStatsGenOdfAngleFile::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setConvertToDegrees(reader->readValue("ConvertToDegrees", getConvertToDegrees() ) );
-  setOutputFile( reader->readString("OutputFile", getOutputFile()));
-  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels() ) );
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
-  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
+  setConvertToDegrees(reader->readValue("ConvertToDegrees", getConvertToDegrees()));
+  setOutputFile(reader->readString("OutputFile", getOutputFile()));
+  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels()));
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath()));
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -147,7 +144,6 @@ void WriteStatsGenOdfAngleFile::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 void WriteStatsGenOdfAngleFile::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -158,45 +154,51 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   setErrorCondition(0);
 
   QString ss;
-  if (getOutputFile().isEmpty() == true)
+  if(getOutputFile().isEmpty() == true)
   {
-    ss = QObject::tr( "The output file must be set");
+    ss = QObject::tr("The output file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QFileInfo fi(getOutputFile());
   QDir parentPath = fi.path();
-  if (parentPath.exists() == false)
+  if(parentPath.exists() == false)
   {
-    ss = QObject::tr( "The directory path for the output file does not exist");
+    ss = QObject::tr("The directory path for the output file does not exist");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
-
   QVector<size_t> cDims(1, 1);
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 3;
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellEulerAnglesPtr.lock().get())                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
-  if (getUseGoodVoxels() == true)
+  if(getUseGoodVoxels() == true)
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                       cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   else
   {
     m_GoodVoxels = nullptr;
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -222,13 +224,15 @@ void WriteStatsGenOdfAngleFile::execute()
   int err = 0;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Figure out how many unique phase values we have by looping over all the phase values
   int64_t totalPoints = m_CellPhasesPtr.lock()->getNumberOfTuples();
   std::set<int32_t> uniquePhases;
-  for (int64_t i = 0; i < totalPoints; i++)
+  for(int64_t i = 0; i < totalPoints; i++)
   {
     uniquePhases.insert(m_CellPhases[i]);
   }
@@ -241,7 +245,7 @@ void WriteStatsGenOdfAngleFile::execute()
   QString fname = fi.completeBaseName();
   QString suffix = fi.suffix();
 
-  for (std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
+  for(std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
   {
     /* Let the GUI know we are done with this filter */
     QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
@@ -251,7 +255,7 @@ void WriteStatsGenOdfAngleFile::execute()
     QString absFilePath = absPath + "/" + fname + "_Phase_" + QString::number(*iter) + "." + suffix;
 
     QFile file(absFilePath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
     {
       setErrorCondition(-99000);
       QString ss = QObject::tr("Error creating output file '%1'").arg(absFilePath);
@@ -265,7 +269,7 @@ void WriteStatsGenOdfAngleFile::execute()
     int32_t lineCount = determineOutputLineCount(totalPoints, *iter);
 
     int err = writeOutputFile(out, lineCount, totalPoints, *iter);
-    if (err < 0)
+    if(err < 0)
     {
       setErrorCondition(-99001);
       QString ss = QObject::tr("Error writing output file '%1'").arg(absFilePath);
@@ -274,9 +278,7 @@ void WriteStatsGenOdfAngleFile::execute()
     }
     out.flush();
     file.close(); // Close the file
-
   }
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -290,10 +292,16 @@ int WriteStatsGenOdfAngleFile::determineOutputLineCount(int64_t totalPoints, int
   int32_t lineCount = 0;
   for(int64_t i = 0; i < totalPoints; i++)
   {
-    if (m_CellPhases[i] == phase)
+    if(m_CellPhases[i] == phase)
     {
-      if(m_UseGoodVoxels == false) { lineCount++; }
-      else if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true ) { lineCount++; }
+      if(m_UseGoodVoxels == false)
+      {
+        lineCount++;
+      }
+      else if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true)
+      {
+        lineCount++;
+      }
     }
   }
 
@@ -306,12 +314,12 @@ int WriteStatsGenOdfAngleFile::determineOutputLineCount(int64_t totalPoints, int
 int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase)
 {
   bool writeLine = false;
-  out <<  "# All lines starting with '#' are comments and should come before the header.\n";
-  out <<  "# DREAM.3D StatsGenerator Angles Input File\n";
-  out <<  "# DREAM.3D Version " << OrientationAnalysis::Version::Complete() << "\n";
-  out <<  "# Angle Data is space delimited.\n";
-  out <<  "# Euler0 Euler1 Euler2 Weight Sigma\n";
-  out <<  "Angle Count:" << lineCount << "\n";
+  out << "# All lines starting with '#' are comments and should come before the header.\n";
+  out << "# DREAM.3D StatsGenerator Angles Input File\n";
+  out << "# DREAM.3D Version " << OrientationAnalysis::Version::Complete() << "\n";
+  out << "# Angle Data is space delimited.\n";
+  out << "# Euler0 Euler1 Euler2 Weight Sigma\n";
+  out << "Angle Count:" << lineCount << "\n";
 
   float weight = 1.0f;
   float sigma = 1.0f;
@@ -320,10 +328,16 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
   {
     writeLine = false;
 
-    if (m_CellPhases[i] == phase)
+    if(m_CellPhases[i] == phase)
     {
-      if(m_UseGoodVoxels == false) { writeLine = true; }
-      else if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true ) { writeLine = true; }
+      if(m_UseGoodVoxels == false)
+      {
+        writeLine = true;
+      }
+      else if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true)
+      {
+        writeLine = true;
+      }
     }
 
     if(writeLine == true)
@@ -380,7 +394,7 @@ const QString WriteStatsGenOdfAngleFile::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 
@@ -388,19 +402,22 @@ const QString WriteStatsGenOdfAngleFile::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString WriteStatsGenOdfAngleFile::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
-
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteStatsGenOdfAngleFile::getSubGroupName()
-{ return "Output"; }
-
+{
+  return "Output";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteStatsGenOdfAngleFile::getHumanLabel()
-{ return "Write StatsGenerator ODF Angle File"; }
-
+{
+  return "Write StatsGenerator ODF Angle File";
+}

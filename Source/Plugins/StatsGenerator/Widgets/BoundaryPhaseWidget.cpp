@@ -33,31 +33,29 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "BoundaryPhaseWidget.h"
 
 #include <iostream>
 #include <limits>
 
-#include <QtCore/QString>
 #include <QtCore/QSettings>
+#include <QtCore/QString>
 #include <QtWidgets/QMessageBox>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
-#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
+#include "SIMPLib/StatsData/StatsData.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
-#include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
+#include <qwt_plot_grid.h>
 #include <qwt_plot_marker.h>
-
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_BoundaryPhaseWidget.cpp"
@@ -65,9 +63,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget* parent) :
-  SGWidget(parent),
-  m_grid(nullptr)
+BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget* parent)
+: StatsGenWidget(parent)
+, m_grid(nullptr)
 {
   setTabTitle("Boundary");
   setPhaseType(SIMPL::PhaseType::PrimaryPhase);
@@ -81,16 +79,13 @@ BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 BoundaryPhaseWidget::~BoundaryPhaseWidget()
 {
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void BoundaryPhaseWidget::setupGui()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -100,29 +95,27 @@ int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool 
 {
   Q_UNUSED(preflight)
 
-  if (getPhaseIndex() < 1)
+  if(getPhaseIndex() < 1)
   {
-    QMessageBox::critical(this, tr("StatsGenerator"),
-                          tr("The Phase Index is Less than 1. This is not allowed."),
-                          QMessageBox::Default);
+    QMessageBox::critical(this, tr("StatsGenerator"), tr("The Phase Index is Less than 1. This is not allowed."), QMessageBox::Default);
     return -1;
   }
   int retErr = 0;
   float calcPhaseFraction = getPhaseFraction() / getTotalPhaseFraction();
 
-  //size_t ensembles = attrMat->getNumberOfTuples();
+  // size_t ensembles = attrMat->getNumberOfTuples();
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   crystalStructures[getPhaseIndex()] = getCrystalStructure();
   phaseTypes[getPhaseIndex()] = getPhaseType();
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
-  if (nullptr != statsDataArray)
+  if(nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
     BoundaryStatsData* boundaryStatsData = BoundaryStatsData::SafePointerDownCast(statsData.get());
@@ -142,16 +135,16 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   setCrystalStructure(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   setPhaseType(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
-  if (statsDataArray == nullptr)
+  if(statsDataArray == nullptr)
   {
     return;
   }
@@ -160,7 +153,6 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
 
   setPhaseName(statsData->getName());
   setPhaseFraction(boundaryStatsData->getPhaseFraction());
-
 }
 
 // -----------------------------------------------------------------------------

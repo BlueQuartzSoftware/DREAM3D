@@ -39,37 +39,34 @@
 #include <limits>
 
 #include <QtCore/QSettings>
+#include <QtGui/QDoubleValidator>
+#include <QtGui/QIntValidator>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
-#include <QtWidgets/QLineEdit>
-#include <QtGui/QIntValidator>
-#include <QtGui/QDoubleValidator>
-
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
-#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/StatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
-#include "StatsGenerator/Widgets/StatsGenRDFWidget.h"
 #include "StatsGenerator/Widgets/Presets/MicrostructurePresetManager.h"
-#include "StatsGenerator/Widgets/Presets/PrecipitateRolledPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrecipitateEquiaxedPreset.h"
-
+#include "StatsGenerator/Widgets/Presets/PrecipitateRolledPreset.h"
+#include "StatsGenerator/Widgets/StatsGenRDFWidget.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
-
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_PrecipitatePhaseWidget.cpp"
@@ -77,9 +74,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrecipitatePhaseWidget::PrecipitatePhaseWidget(QWidget* parent) :
-  PrimaryPhaseWidget(parent),
-  m_PptFraction(-1.0f)
+PrecipitatePhaseWidget::PrecipitatePhaseWidget(QWidget* parent)
+: PrimaryPhaseWidget(parent)
+, m_PptFraction(-1.0f)
 {
   setTabTitle("Precipitate");
   setupGui();
@@ -92,7 +89,6 @@ PrecipitatePhaseWidget::~PrecipitatePhaseWidget()
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -104,7 +100,7 @@ void PrecipitatePhaseWidget::setupGui()
   // Register all of our Microstructure Preset Factories
   AbstractMicrostructurePresetFactory::Pointer presetFactory = AbstractMicrostructurePresetFactory::NullPointer();
 
-  //Register the Equiaxed Preset
+  // Register the Equiaxed Preset
   presetFactory = RegisterPresetFactory<PrecipitateEquiaxedPresetFactory>(getMicrostructurePresetCombo());
   QString presetName = (presetFactory->displayName());
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
@@ -208,8 +204,8 @@ void PrecipitatePhaseWidget::setupGui()
 
   removeNeighborsPlotWidget();
 
-  QWidget *rdfTab;
-  QHBoxLayout *horizontalLayout_2;
+  QWidget* rdfTab;
+  QHBoxLayout* horizontalLayout_2;
 
   rdfTab = new QWidget();
   rdfTab->setObjectName(QStringLiteral("rdfTab"));
@@ -221,18 +217,14 @@ void PrecipitatePhaseWidget::setupGui()
   horizontalLayout_2->addWidget(m_RdfPlot);
   getTabWidget()->addTab(rdfTab, m_RdfPlot->getTabTitle());
 
-  connect(m_RdfPlot, SIGNAL(rdfParametersChanged()),
-          this, SIGNAL(dataChanged()));
+  connect(m_RdfPlot, SIGNAL(rdfParametersChanged()), this, SIGNAL(dataChanged()));
 
-  connect(getFeatureSizeWidget(), SIGNAL(dataChanged()),
-          this, SIGNAL(dataChanged()));
+  connect(getFeatureSizeWidget(), SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 
-  connect(getFeatureSizeWidget(), SIGNAL(userEnteredValidData(bool)),
-          getGenerateDefaultDataBtn(), SLOT(setEnabled(bool)));
+  connect(getFeatureSizeWidget(), SIGNAL(userEnteredValidData(bool)), getGenerateDefaultDataBtn(), SLOT(setEnabled(bool)));
 
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -240,7 +232,7 @@ void PrecipitatePhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::setPhaseIndex(int index)
 {
-  SGWidget::setPhaseIndex(index);
+  StatsGenWidget::setPhaseIndex(index);
   getFeatureSizeWidget()->setPhaseIndex(index);
   getOmega3PlotWidget()->setPhaseIndex(index);
   getBOverAPlotPlotWidget()->setPhaseIndex(index);
@@ -254,7 +246,7 @@ void PrecipitatePhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::setCrystalStructure(unsigned int xtal)
 {
-  SGWidget::setCrystalStructure(xtal);
+  StatsGenWidget::setCrystalStructure(xtal);
   getFeatureSizeWidget()->setCrystalStructure(xtal);
   getOmega3PlotWidget()->setCrystalStructure(xtal);
   getBOverAPlotPlotWidget()->setCrystalStructure(xtal);
@@ -270,7 +262,7 @@ void PrecipitatePhaseWidget::setCrystalStructure(unsigned int xtal)
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::updatePlots()
 {
-  if (getDataHasBeenGenerated() == true)
+  if(getDataHasBeenGenerated() == true)
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
     progress.setWindowModality(Qt::WindowModal);
@@ -344,11 +336,9 @@ void PrecipitatePhaseWidget::on_m_GenerateDefaultData_clicked()
 // -----------------------------------------------------------------------------
 int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
-  if (getPhaseIndex() < 1)
+  if(getPhaseIndex() < 1)
   {
-    QMessageBox::critical(this, tr("StatsGenerator"),
-                          tr("The Phase Index is Less than 1. This is not allowed."),
-                          QMessageBox::Default);
+    QMessageBox::critical(this, tr("StatsGenerator"), tr("The Phase Index is Less than 1. This is not allowed."), QMessageBox::Default);
     return -1;
   }
   int retErr = 0;
@@ -369,7 +359,7 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
   QwtArray<float> x;
   QwtArray<float> y;
   err = getFeatureSizeWidget()->computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, binStep, binsizes, xCo, yCo, xMax, yMax, x, y);
-  if (err < 0)
+  if(err < 0)
   {
     return err;
   }
@@ -383,15 +373,15 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   crystalStructures[getPhaseIndex()] = getCrystalStructure();
   phaseTypes[getPhaseIndex()] = getPhaseType();
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
-  if (nullptr != statsDataArray)
+  if(nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
     PrecipitateStatsData* precipitateStatsData = PrecipitateStatsData::SafePointerDownCast(statsData.get());
@@ -453,16 +443,16 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   setCrystalStructure(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   setPhaseType(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
-  if (statsDataArray == nullptr)
+  if(statsDataArray == nullptr)
   {
     return;
   }
@@ -483,7 +473,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   FloatArrayType::Pointer bins = precipitateStatsData->getBinNumbers();
 
   // Now have each of the plots set it's own data
-  QVector<float> qbins (static_cast<int>(bins->getNumberOfTuples()));
+  QVector<float> qbins(static_cast<int>(bins->getNumberOfTuples()));
   for(int i = 0; i < qbins.size(); ++i)
   {
     qbins[i] = bins->getValue(i);

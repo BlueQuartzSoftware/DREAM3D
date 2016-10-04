@@ -42,9 +42,9 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
@@ -54,20 +54,18 @@
 // Include the MOC generated file for this class
 #include "moc_GenerateVectorColors.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateVectorColors::GenerateVectorColors() :
-  AbstractFilter(),
-  m_VectorsArrayPath("", "", ""),
-  m_GoodVoxelsArrayPath("", "", ""),
-  m_CellVectorColorsArrayName(SIMPL::CellData::VectorColor),
-  m_UseGoodVoxels(false),
-  m_Vectors(nullptr),
-  m_GoodVoxels(nullptr),
-  m_CellVectorColors(nullptr)
+GenerateVectorColors::GenerateVectorColors()
+: AbstractFilter()
+, m_VectorsArrayPath("", "", "")
+, m_GoodVoxelsArrayPath("", "", "")
+, m_CellVectorColorsArrayName(SIMPL::CellData::VectorColor)
+, m_UseGoodVoxels(false)
+, m_Vectors(nullptr)
+, m_GoodVoxels(nullptr)
+, m_CellVectorColors(nullptr)
 {
   setupFilterParameters();
 }
@@ -108,10 +106,10 @@ void GenerateVectorColors::setupFilterParameters()
 void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels() ) );
-  setCellVectorColorsArrayName(reader->readString("CellVectorColorsArrayName", getCellVectorColorsArrayName() ) );
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setVectorsArrayPath(reader->readDataArrayPath("VectorsArrayPath", getVectorsArrayPath() ) );
+  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels()));
+  setCellVectorColorsArrayName(reader->readString("CellVectorColorsArrayName", getCellVectorColorsArrayName()));
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
+  setVectorsArrayPath(reader->readDataArrayPath("VectorsArrayPath", getVectorsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -120,7 +118,6 @@ void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 void GenerateVectorColors::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -135,25 +132,40 @@ void GenerateVectorColors::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 3);
-  m_VectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getVectorsArrayPath()); };
+  m_VectorsPtr =
+      getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_VectorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_Vectors = m_VectorsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() >= 0)
+  {
+    dataArrayPaths.push_back(getVectorsArrayPath());
+  };
 
-  tempPath.update(getVectorsArrayPath().getDataContainerName(), getVectorsArrayPath().getAttributeMatrixName(), getCellVectorColorsArrayName() );
-  m_CellVectorColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_CellVectorColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CellVectorColors = m_CellVectorColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getVectorsArrayPath().getDataContainerName(), getVectorsArrayPath().getAttributeMatrixName(), getCellVectorColorsArrayName());
+  m_CellVectorColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
+      this, tempPath, 0, cDims);                    /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CellVectorColorsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CellVectorColors = m_CellVectorColorsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to ignore it
-  if (getUseGoodVoxels() == true)
+  if(getUseGoodVoxels() == true)
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getGoodVoxelsArrayPath()); };
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                       cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() >= 0)
+    {
+      dataArrayPaths.push_back(getGoodVoxelsArrayPath());
+    };
   }
   else
   {
@@ -183,35 +195,38 @@ void GenerateVectorColors::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
-  //typedef Eigen::Array<float, 3, 1> ArrayType;
+  // typedef Eigen::Array<float, 3, 1> ArrayType;
   typedef Eigen::Map<Eigen::Vector3f> VectorMapType;
 
   size_t totalPoints = m_VectorsPtr.lock()->getNumberOfTuples();
 
   bool missingGoodVoxels = true;
-  if (nullptr != m_GoodVoxels)
+  if(nullptr != m_GoodVoxels)
   {
     missingGoodVoxels = false;
   }
 
   size_t index = 0;
 
-  //SIMPL::Rgb argb = 0x00000000;
+  // SIMPL::Rgb argb = 0x00000000;
 
   // Write the IPF Coloring Cell Data
-  for (size_t i = 0; i < totalPoints; i++)
+  for(size_t i = 0; i < totalPoints; i++)
   {
     index = i * 3;
     m_CellVectorColors[index] = 0;
     m_CellVectorColors[index + 1] = 0;
     m_CellVectorColors[index + 2] = 0;
 
-    float dir[3] = { 0.0f, 0.0f, 0.0f };
+    float dir[3] = {0.0f, 0.0f, 0.0f};
     float r = 0, g = 0, b = 0;
     SIMPL::Rgb argb;
-    if (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+    if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
     {
       dir[0] = m_Vectors[index + 0];
       dir[1] = m_Vectors[index + 1];
@@ -220,26 +235,30 @@ void GenerateVectorColors::execute()
       VectorMapType array(const_cast<float*>(dir));
       array.normalize();
 
-      if (dir[2] < 0) {
+      if(dir[2] < 0)
+      {
         array = array * -1.0f;
       }
       float trend = atan2f(dir[1], dir[0]) * (180.0 / SIMPLib::Constants::k_Pi);
       float plunge = acosf(dir[2]) * (180.0 / SIMPLib::Constants::k_Pi);
-      if (trend < 0.0) { trend += 360.0; }
-      if (trend <= 120.0)
+      if(trend < 0.0)
+      {
+        trend += 360.0;
+      }
+      if(trend <= 120.0)
       {
         r = 255.0 * ((120.0 - trend) / 120.0);
         g = 255.0 * (trend / 120.0);
         b = 0.0;
       }
-      if (trend > 120.0 && trend <= 240.0)
+      if(trend > 120.0 && trend <= 240.0)
       {
         trend -= 120.0;
         r = 0.0;
         g = 255.0 * ((120.0 - trend) / 120.0);
         b = 255.0 * (trend / 120.0);
       }
-      if (trend > 240.0 && trend < 360.0)
+      if(trend > 240.0 && trend < 360.0)
       {
         trend -= 240.0;
         r = 255.0 * (trend / 120.0);
@@ -252,9 +271,18 @@ void GenerateVectorColors::execute()
       r += (deltaR * ((90.0 - plunge) / 90.0));
       g += (deltaG * ((90.0 - plunge) / 90.0));
       b += (deltaB * ((90.0 - plunge) / 90.0));
-      if (r > 255.0) { r = 255.0; }
-      if (g > 255.0) { g = 255.0; }
-      if (b > 255.0) { b = 255.0; }
+      if(r > 255.0)
+      {
+        r = 255.0;
+      }
+      if(g > 255.0)
+      {
+        g = 255.0;
+      }
+      if(b > 255.0)
+      {
+        b = 255.0;
+      }
       argb = RgbColor::dRgb(r, g, b, 255);
       m_CellVectorColors[index] = RgbColor::dRed(argb);
       m_CellVectorColors[index + 1] = RgbColor::dGreen(argb);
@@ -302,23 +330,29 @@ const QString GenerateVectorColors::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Generic::Version::Major() << "." << Generic::Version::Minor() << "." << Generic::Version::Patch();
+  vStream << Generic::Version::Major() << "." << Generic::Version::Minor() << "." << Generic::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getGroupName()
-{ return SIMPL::FilterGroups::GenericFilters; }
+{
+  return SIMPL::FilterGroups::GenericFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographyFilters; }
+{
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getHumanLabel()
-{ return "Generate Vector Colors"; }
+{
+  return "Generate Vector Colors";
+}

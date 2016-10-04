@@ -36,29 +36,26 @@
 #include "ConvertOrientations.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-
-#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 // Include the MOC generated file for this class
 #include "moc_ConvertOrientations.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertOrientations::ConvertOrientations() :
-  AbstractFilter(),
-  m_InputType(0),
-  m_OutputType(1)
+ConvertOrientations::ConvertOrientations()
+: AbstractFilter()
+, m_InputType(0)
+, m_OutputType(1)
 {
   setupFilterParameters();
 }
@@ -121,8 +118,8 @@ void ConvertOrientations::setupFilterParameters()
 void ConvertOrientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputType(reader->readValue("InputType", getInputType() ) );
-  setOutputType(reader->readValue("OutputType", getOutputType() ) );
+  setInputType(reader->readValue("InputType", getInputType()));
+  setOutputType(reader->readValue("OutputType", getOutputType()));
   setInputOrientationArrayPath(reader->readDataArrayPath("InputOrientationArrayPath", getInputOrientationArrayPath()));
   setOutputOrientationArrayName(reader->readString("OutputOrientationArrayName", getOutputOrientationArrayName()));
   reader->closeFilterGroup();
@@ -133,7 +130,6 @@ void ConvertOrientations::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 void ConvertOrientations::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -150,14 +146,14 @@ void ConvertOrientations::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if( getInputType() < OrientationConverter<float>::GetMinIndex() || getInputType() > OrientationConverter<float>::GetMaxIndex() )
+  if(getInputType() < OrientationConverter<float>::GetMinIndex() || getInputType() > OrientationConverter<float>::GetMaxIndex())
   {
     QString ss = QObject::tr("There was an error with teh selection of the input orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
     setErrorCondition(-1001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if( getOutputType() < OrientationConverter<float>::GetMinIndex() || getOutputType() > OrientationConverter<float>::GetMaxIndex() )
+  if(getOutputType() < OrientationConverter<float>::GetMinIndex() || getOutputType() > OrientationConverter<float>::GetMaxIndex())
   {
     QString ss = QObject::tr("There was an error with the selection of the output orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
     setErrorCondition(-1002);
@@ -166,7 +162,10 @@ void ConvertOrientations::dataCheck()
 
   // We need to return NOW because the next lines assume we have and index that is within
   // the valid bounds
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Figure out what kind of Array the user selected
   // Get the input data and create the output Data appropriately
@@ -190,8 +189,6 @@ void ConvertOrientations::dataCheck()
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
     getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, outputArrayPath, 0, outputCDims);
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -207,13 +204,10 @@ void ConvertOrientations::preflight()
   setInPreflight(false);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::Pointer inputOrientations,
-                            typename DataArray<T>::Pointer outputOrientations)
+template <typename T> void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::Pointer inputOrientations, typename DataArray<T>::Pointer outputOrientations)
 {
   typedef typename DataArray<T>::Pointer ArrayType;
   typedef OrientationConverter<T> OCType;
@@ -241,13 +235,12 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
     return;
   }
 
-  if(!output->copyIntoArray(outputOrientations) )
+  if(!output->copyIntoArray(outputOrientations))
   {
     QString ss = QObject::tr("There was an error copying the final results into the output array.");
     filter->setErrorCondition(-1003);
     filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -257,7 +250,10 @@ void ConvertOrientations::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getInputOrientationArrayPath());
 
@@ -281,7 +277,6 @@ void ConvertOrientations::execute()
     DoubleArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, outputArrayPath, outputCDims);
     generateRepresentation<double>(this, dArray, outData);
   }
-
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -322,23 +317,29 @@ const QString ConvertOrientations::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getGroupName()
-{ return SIMPL::FilterGroups::OrientationAnalysisFilters; }
+{
+  return SIMPL::FilterGroups::OrientationAnalysisFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ConversionFilters; }
+{
+  return SIMPL::FilterSubGroups::ConversionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getHumanLabel()
-{ return "Convert Orientation Representation"; }
+{
+  return "Convert Orientation Representation";
+}

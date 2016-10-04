@@ -35,34 +35,29 @@
 
 #include "LammpsFileWriter.h"
 
-
-
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QtEndian>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-
 // Include the MOC generated file for this class
 #include "moc_LammpsFileWriter.cpp"
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LammpsFileWriter::LammpsFileWriter() :
-  AbstractFilter(),
-  m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName),
-  m_LammpsFile("")
+LammpsFileWriter::LammpsFileWriter()
+: AbstractFilter()
+, m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
+, m_LammpsFile("")
 {
   setupFilterParameters();
 }
@@ -97,8 +92,8 @@ void LammpsFileWriter::setupFilterParameters()
 void LammpsFileWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setLammpsFile( reader->readString( "LammpsFile", getLammpsFile() ) );
-  setVertexDataContainerName( reader->readString( "VertexDataContainerName", getVertexDataContainerName() ) );
+  setLammpsFile(reader->readString("LammpsFile", getLammpsFile()));
+  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName()));
   reader->closeFilterGroup();
 }
 
@@ -107,7 +102,6 @@ void LammpsFileWriter::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 void LammpsFileWriter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -117,17 +111,23 @@ void LammpsFileWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  if (m_LammpsFile.isEmpty() == true)
+  if(m_LammpsFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "Lammps Output file is Not set correctly", -1003);
   }
 
   DataContainer::Pointer v = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_VertexDataContainerName);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   VertexGeom::Pointer vertices = v->getPrereqGeometry<VertexGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // We MUST have Nodes
   if(nullptr == vertices->getVertices().get())
@@ -155,10 +155,13 @@ void LammpsFileWriter::preflight()
 // -----------------------------------------------------------------------------
 void LammpsFileWriter::execute()
 {
-  //int err = 0;
+  // int err = 0;
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer v = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
 
@@ -169,7 +172,7 @@ void LammpsFileWriter::execute()
   // Open the output VTK File for writing
   FILE* lammpsFile = nullptr;
   lammpsFile = fopen(m_LammpsFile.toLatin1().data(), "wb");
-  if (nullptr == lammpsFile)
+  if(nullptr == lammpsFile)
   {
     QString ss = QObject::tr(": Error creating LAMMPS output file '%1'").arg(getLammpsFile());
     setErrorCondition(-11000);
@@ -187,20 +190,38 @@ void LammpsFileWriter::execute()
   int atomType = 1;
   float pos[3] = {0.0f, 0.0f, 0.0f};
 
-  for (int64_t i = 0; i < numAtoms; i++)
+  for(int64_t i = 0; i < numAtoms; i++)
   {
     vertices->getCoords(i, pos);
-    if(pos[0] < xMin) { xMin = pos[0]; }
-    if(pos[0] > xMax) { xMax = pos[0]; }
-    if(pos[1] < yMin) { yMin = pos[1]; }
-    if(pos[1] > yMax) { yMax = pos[1]; }
-    if(pos[2] < zMin) { zMin = pos[2]; }
-    if(pos[2] > zMax) { zMax = pos[2]; }
+    if(pos[0] < xMin)
+    {
+      xMin = pos[0];
+    }
+    if(pos[0] > xMax)
+    {
+      xMax = pos[0];
+    }
+    if(pos[1] < yMin)
+    {
+      yMin = pos[1];
+    }
+    if(pos[1] > yMax)
+    {
+      yMax = pos[1];
+    }
+    if(pos[2] < zMin)
+    {
+      zMin = pos[2];
+    }
+    if(pos[2] > zMax)
+    {
+      zMax = pos[2];
+    }
   }
 
   fprintf(lammpsFile, "LAMMPS data file from restart file: timestep = 1, procs = 4\n");
   fprintf(lammpsFile, "\n");
-  fprintf(lammpsFile, "%lld atoms\n", (long long int)(numAtoms) );
+  fprintf(lammpsFile, "%lld atoms\n", (long long int)(numAtoms));
   fprintf(lammpsFile, "\n");
   fprintf(lammpsFile, "1 atom types\n");
   fprintf(lammpsFile, "\n");
@@ -216,10 +237,10 @@ void LammpsFileWriter::execute()
   fprintf(lammpsFile, "\n");
 
   // Write the Atom positions (Vertices)
-  for (int64_t i = 0; i < numAtoms; i++)
+  for(int64_t i = 0; i < numAtoms; i++)
   {
     vertices->getCoords(i, pos);
-    fprintf(lammpsFile, "%lld %d %f %f %f %d %d %d\n", (long long int)(i), atomType, pos[0], pos[1], pos[2], dummy , dummy, dummy); // Write the positions to the output file
+    fprintf(lammpsFile, "%lld %d %f %f %f %d %d %d\n", (long long int)(i), atomType, pos[0], pos[1], pos[2], dummy, dummy, dummy); // Write the positions to the output file
   }
 
   fprintf(lammpsFile, "\n");
@@ -276,7 +297,7 @@ const QString LammpsFileWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 
@@ -284,19 +305,22 @@ const QString LammpsFileWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
-
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
-
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getHumanLabel()
-{ return "Write Lammps File"; }
-
+{
+  return "Write Lammps File";
+}

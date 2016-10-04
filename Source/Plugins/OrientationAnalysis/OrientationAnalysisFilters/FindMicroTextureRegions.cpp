@@ -37,12 +37,12 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -50,20 +50,18 @@
 // Include the MOC generated file for this class
 #include "moc_FindMicroTextureRegions.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindMicroTextureRegions::FindMicroTextureRegions() :
-  AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
-  m_MicroTextureRegionNumCellsArrayName("MicroTextureRegionNumCells"),
-  m_MicroTextureRegionFractionOccupiedArrayName("MicroTextureRegionFractionOccupied"),
-  m_MicroTextureRegionNumCells(nullptr),
-  m_MicroTextureRegionFractionOccupied(nullptr),
-  m_FeatureIds(nullptr)
+FindMicroTextureRegions::FindMicroTextureRegions()
+: AbstractFilter()
+, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
+, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_MicroTextureRegionNumCellsArrayName("MicroTextureRegionNumCells")
+, m_MicroTextureRegionFractionOccupiedArrayName("MicroTextureRegionFractionOccupied")
+, m_MicroTextureRegionNumCells(nullptr)
+, m_MicroTextureRegionFractionOccupied(nullptr)
+, m_FeatureIds(nullptr)
 {
   setupFilterParameters();
 }
@@ -86,7 +84,8 @@ void FindMicroTextureRegions::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("FeatureIds", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindMicroTextureRegions, req));
   }
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::UnknownGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req =
+        AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::UnknownGeometry);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix Name", CellFeatureAttributeMatrixName, FilterParameter::RequiredArray, FindMicroTextureRegions, req));
   }
 
@@ -101,9 +100,9 @@ void FindMicroTextureRegions::readFilterParameters(AbstractFilterParametersReade
 {
   reader->openFilterGroup(this, index);
   setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setMicroTextureRegionFractionOccupiedArrayName(reader->readString("MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName() ) );
-  setMicroTextureRegionNumCellsArrayName(reader->readString("MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName() ) );
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setMicroTextureRegionFractionOccupiedArrayName(reader->readString("MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName()));
+  setMicroTextureRegionNumCellsArrayName(reader->readString("MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName()));
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -112,7 +111,6 @@ void FindMicroTextureRegions::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -125,25 +123,39 @@ void FindMicroTextureRegions::dataCheck()
 
   QVector<size_t> dims(1, 1);
   // Cell Data
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
+                                                                                                        dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == image.get())
+  {
+    return;
+  }
 
   // Feature Data
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getMicroTextureRegionNumCellsArrayName() );
-  m_MicroTextureRegionNumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_MicroTextureRegionNumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_MicroTextureRegionNumCells = m_MicroTextureRegionNumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getMicroTextureRegionFractionOccupiedArrayName() );
-  m_MicroTextureRegionFractionOccupiedPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_MicroTextureRegionFractionOccupiedPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_MicroTextureRegionFractionOccupied = m_MicroTextureRegionFractionOccupiedPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getMicroTextureRegionNumCellsArrayName());
+  m_MicroTextureRegionNumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, dims);                               /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_MicroTextureRegionNumCellsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_MicroTextureRegionNumCells = m_MicroTextureRegionNumCellsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getMicroTextureRegionFractionOccupiedArrayName());
+  m_MicroTextureRegionFractionOccupiedPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0, dims);                                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_MicroTextureRegionFractionOccupiedPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_MicroTextureRegionFractionOccupied = m_MicroTextureRegionFractionOccupiedPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -165,7 +177,10 @@ void FindMicroTextureRegions::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   find_microtextureregions();
   notifyStatusMessage(getHumanLabel(), "FindMicroTextureRegions Completed");
@@ -205,7 +220,7 @@ void FindMicroTextureRegions::find_microtextureregions()
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
   // Initialize every element to 0.0 or max Dimension
-  for (size_t i = 0; i < nummicrotextureregions * 1; i++)
+  for(size_t i = 0; i < nummicrotextureregions * 1; i++)
   {
     microtextureregioncounts[i] = 0.0f;
     microtextureregionxmins[i] = xRes * (float)xPoints;
@@ -216,15 +231,15 @@ void FindMicroTextureRegions::find_microtextureregions()
     microtextureregionzmaxs[i] = 0.0f;
   }
 
-  for (size_t j = 0; j < totalPoints; j++)
+  for(size_t j = 0; j < totalPoints; j++)
   {
     int mtnum = m_FeatureIds[j];
     microtextureregioncounts[mtnum]++;
   }
 
-  for (size_t i = 1; i < nummicrotextureregions; i++)
+  for(size_t i = 1; i < nummicrotextureregions; i++)
   {
-    m_MicroTextureRegionNumCells[i] = static_cast<int32_t>( microtextureregioncounts[i] );
+    m_MicroTextureRegionNumCells[i] = static_cast<int32_t>(microtextureregioncounts[i]);
   }
 
   float x, y, z;
@@ -232,7 +247,7 @@ void FindMicroTextureRegions::find_microtextureregions()
   for(size_t i = 0; i < zPoints; i++)
   {
     zStride = i * xPoints * yPoints;
-    for (size_t j = 0; j < yPoints; j++)
+    for(size_t j = 0; j < yPoints; j++)
     {
       yStride = j * xPoints;
       for(size_t k = 0; k < xPoints; k++)
@@ -241,21 +256,39 @@ void FindMicroTextureRegions::find_microtextureregions()
         x = float(k) * xRes;
         y = float(j) * yRes;
         z = float(i) * zRes;
-        if (x > microtextureregionxmaxs[mtnum]) { microtextureregionxmaxs[mtnum] = x; }
-        if (y > microtextureregionymaxs[mtnum]) { microtextureregionymaxs[mtnum] = y; }
-        if (z > microtextureregionzmaxs[mtnum]) { microtextureregionzmaxs[mtnum] = z; }
-        if (x < microtextureregionxmins[mtnum]) { microtextureregionxmins[mtnum] = x; }
-        if (y < microtextureregionymins[mtnum]) { microtextureregionymins[mtnum] = y; }
-        if (z < microtextureregionzmins[mtnum]) { microtextureregionzmins[mtnum] = z; }
+        if(x > microtextureregionxmaxs[mtnum])
+        {
+          microtextureregionxmaxs[mtnum] = x;
+        }
+        if(y > microtextureregionymaxs[mtnum])
+        {
+          microtextureregionymaxs[mtnum] = y;
+        }
+        if(z > microtextureregionzmaxs[mtnum])
+        {
+          microtextureregionzmaxs[mtnum] = z;
+        }
+        if(x < microtextureregionxmins[mtnum])
+        {
+          microtextureregionxmins[mtnum] = x;
+        }
+        if(y < microtextureregionymins[mtnum])
+        {
+          microtextureregionymins[mtnum] = y;
+        }
+        if(z < microtextureregionzmins[mtnum])
+        {
+          microtextureregionzmins[mtnum] = z;
+        }
       }
     }
   }
 
-  for (size_t i = 1; i < nummicrotextureregions; i++)
+  for(size_t i = 1; i < nummicrotextureregions; i++)
   {
     float xlength = (microtextureregionxmaxs[i] - microtextureregionxmins[i]) + xRes;
     float ylength = (microtextureregionymaxs[i] - microtextureregionymins[i]) + yRes;
-    if (zPoints == 1)
+    if(zPoints == 1)
     {
       float zlength = (microtextureregionzmaxs[i] - microtextureregionzmins[i]) + zRes;
       float prismvolume = xlength * ylength * zlength;
@@ -268,7 +301,6 @@ void FindMicroTextureRegions::find_microtextureregions()
     }
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -306,7 +338,7 @@ const QString FindMicroTextureRegions::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
   return version;
 }
 
@@ -314,19 +346,22 @@ const QString FindMicroTextureRegions::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindMicroTextureRegions::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
-
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindMicroTextureRegions::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
-
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindMicroTextureRegions::getHumanLabel()
-{ return "Find MicroTexture Regions"; }
-
+{
+  return "Find MicroTexture Regions";
+}

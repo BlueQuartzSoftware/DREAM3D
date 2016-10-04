@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>TransformationPhaseWidget</class>
- <widget class="SGWidget" name="TransformationPhaseWidget">
+ <widget class="StatsGenWidget" name="TransformationPhaseWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -545,7 +545,7 @@ font-size: 12px;
        <string>ODF</string>
       </attribute>
      </widget>
-     <widget class="SGAxisODFWidget" name="m_AxisODFWidget">
+     <widget class="StatsGenAxisODFWidget" name="m_AxisODFWidget">
       <attribute name="title">
        <string>Axis ODF</string>
       </attribute>
@@ -556,9 +556,9 @@ font-size: 12px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SGWidget</class>
+   <class>StatsGenWidget</class>
    <extends>QWidget</extends>
-   <header location="global">SGWidget.h</header>
+   <header location="global">StatsGenWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -580,9 +580,9 @@ font-size: 12px;
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>SGAxisODFWidget</class>
+   <class>StatsGenAxisODFWidget</class>
    <extends>QWidget</extends>
-   <header location="global">SGAxisODFWidget.h</header>
+   <header location="global">StatsGenAxisODFWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

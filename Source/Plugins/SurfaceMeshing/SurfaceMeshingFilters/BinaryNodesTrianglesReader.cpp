@@ -35,16 +35,15 @@
 
 #include "BinaryNodesTrianglesReader.h"
 
-#include <QtCore/QtDebug>
 #include <QtCore/QString>
+#include <QtCore/QtDebug>
 #include <sstream>
 
-
-#include "SIMPLib/Common/ScopedFileMonitor.hpp"
-#include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "BinaryNodesTrianglesReader.h"
@@ -52,21 +51,20 @@
 // Include the MOC generated file for this class
 #include "moc_BinaryNodesTrianglesReader.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
-  SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName),
-  m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName),
-  m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName),
-  m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshNodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType),
-  m_BinaryNodesFile(""),
-  m_BinaryTrianglesFile(""),
-  m_SurfaceMeshNodeTypes(nullptr),
-  m_FaceLabels(nullptr)
+BinaryNodesTrianglesReader::BinaryNodesTrianglesReader()
+: SurfaceMeshFilter()
+, m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
+, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
+, m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
+, m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
+, m_SurfaceMeshNodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
+, m_BinaryNodesFile("")
+, m_BinaryTrianglesFile("")
+, m_SurfaceMeshNodeTypes(nullptr)
+, m_FaceLabels(nullptr)
 {
   setupFilterParameters();
 }
@@ -108,8 +106,10 @@ void BinaryNodesTrianglesReader::updateVertexInstancePointers()
 {
   setErrorCondition(0);
 
-  if( nullptr != m_SurfaceMeshNodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshNodeTypes = m_SurfaceMeshNodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_SurfaceMeshNodeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshNodeTypes = m_SurfaceMeshNodeTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -119,8 +119,10 @@ void BinaryNodesTrianglesReader::updateFaceInstancePointers()
 {
   setErrorCondition(0);
 
-  if( nullptr != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_FaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -128,7 +130,6 @@ void BinaryNodesTrianglesReader::updateFaceInstancePointers()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -136,14 +137,14 @@ void BinaryNodesTrianglesReader::initialize()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::dataCheck()
 {
-  if (getBinaryNodesFile().isEmpty() == true)
+  if(getBinaryNodesFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (getBinaryNodesFile().isEmpty() == true)
+  if(getBinaryNodesFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);
@@ -155,30 +156,43 @@ void BinaryNodesTrianglesReader::dataCheck()
   QVector<size_t> dims(1, 1);
 
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Vertex);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Face);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);
   TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, vertices, SIMPL::Geometry::TriangleGeometry, !getInPreflight());
   sm->setGeometry(triangleGeom);
 
   dims[0] = 2;
-  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName() );
-  m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName());
+  m_FaceLabelsPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshNodeTypesArrayName() );
-  m_SurfaceMeshNodeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_SurfaceMeshNodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshNodeTypes = m_SurfaceMeshNodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
+  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshNodeTypesArrayName());
+  m_SurfaceMeshNodeTypesPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshNodeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshNodeTypes = m_SurfaceMeshNodeTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -202,7 +216,10 @@ void BinaryNodesTrianglesReader::execute()
   QString ss;
   setErrorCondition(err);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   /* Place all your code to execute your filter here. */
   err = read();
@@ -211,7 +228,6 @@ void BinaryNodesTrianglesReader::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -291,13 +307,13 @@ int BinaryNodesTrianglesReader::read()
   vertAttrMat->resizeAttributeArrays(tDims);
   updateVertexInstancePointers();
   {
-    QString ss  = QObject::tr("Reading Nodes file into Memory");
+    QString ss = QObject::tr("Reading Nodes file into Memory");
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   size_t nread = 0;
   SurfaceMesh::NodesFile::NodesFileRecord_t nRecord;
 
-  for (size_t i = 0; i < nNodes; i++)
+  for(size_t i = 0; i < nNodes; i++)
   {
     nread = fread(&nRecord, SurfaceMesh::NodesFile::ByteCount, 1, nodesFile); // Read one set of positions from the nodes file
     if(nread != 1)
@@ -325,7 +341,7 @@ int BinaryNodesTrianglesReader::read()
   updateFaceInstancePointers();
 
   SurfaceMesh::TrianglesFile::TrianglesFileRecord_t tRecord;
-  for (size_t i = 0; i < nTriangles; i++)
+  for(size_t i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
     nread = fread(&tRecord, SurfaceMesh::TrianglesFile::ByteCount, 1, triFile);

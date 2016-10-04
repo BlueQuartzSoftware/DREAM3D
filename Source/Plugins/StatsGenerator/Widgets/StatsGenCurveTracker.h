@@ -39,10 +39,10 @@ class QwtPlotCurve;
 /**
  * @brief The CurveTracker class
  */
-class SGCurveTracker : public QwtPlotPicker
+class StatsGenCurveTracker : public QwtPlotPicker
 {
 public:
-  SGCurveTracker(QWidget*);
+  StatsGenCurveTracker(QWidget*);
 
 protected:
   virtual QwtText trackerTextF(const QPointF&) const;

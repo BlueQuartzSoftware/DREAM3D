@@ -54,21 +54,18 @@
 // Include the MOC generated file for this class
 #include "moc_NodesTrianglesToStl.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NodesTrianglesToStl::NodesTrianglesToStl() :
-  AbstractFilter(),
-  m_NodesFile(""),
-  m_TrianglesFile(""),
-  m_OutputStlDirectory(""),
-  m_OutputStlPrefix("")
+NodesTrianglesToStl::NodesTrianglesToStl()
+: AbstractFilter()
+, m_NodesFile("")
+, m_TrianglesFile("")
+, m_OutputStlDirectory("")
+, m_OutputStlPrefix("")
 {
   setupFilterParameters();
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -98,10 +95,10 @@ void NodesTrianglesToStl::setupFilterParameters()
 void NodesTrianglesToStl::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setNodesFile( reader->readString( "NodesFile", getNodesFile() ) );
-  setTrianglesFile( reader->readString( "TrianglesFile", getTrianglesFile() ) );
-  setOutputStlDirectory( reader->readString( "OutputStlDirectory", getOutputStlDirectory() ) );
-  setOutputStlPrefix( reader->readString( "OutputStlPrefix", getOutputStlPrefix() ) );
+  setNodesFile(reader->readString("NodesFile", getNodesFile()));
+  setTrianglesFile(reader->readString("TrianglesFile", getTrianglesFile()));
+  setOutputStlDirectory(reader->readString("OutputStlDirectory", getOutputStlDirectory()));
+  setOutputStlPrefix(reader->readString("OutputStlPrefix", getOutputStlPrefix()));
   /* readString END*/
   reader->closeFilterGroup();
 }
@@ -111,7 +108,6 @@ void NodesTrianglesToStl::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -123,16 +119,18 @@ void NodesTrianglesToStl::dataCheck()
 
   QFileInfo fi(m_TrianglesFile);
 
-  if (m_TrianglesFile.isEmpty() == true)
+  if(m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
     notifyErrorMessage(getHumanLabel(), "Triangles file path or name is emtpy", -1001);
   }
-  else if (fi.exists() == false)
+  else if(fi.exists() == false)
   {
 
-    if (getInPreflight())
-    { notifyWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004); }
+    if(getInPreflight())
+    {
+      notifyWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+    }
     else
     {
       setErrorCondition(-1001);
@@ -141,16 +139,18 @@ void NodesTrianglesToStl::dataCheck()
   }
 
   QFileInfo fii(m_NodesFile);
-  if (m_NodesFile.isEmpty() == true)
+  if(m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
     notifyErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
-  else if (fii.exists() == false)
+  else if(fii.exists() == false)
   {
 
-    if (getInPreflight())
-    { notifyWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005); }
+    if(getInPreflight())
+    {
+      notifyWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
+    }
     else
     {
       setErrorCondition(-1002);
@@ -158,7 +158,7 @@ void NodesTrianglesToStl::dataCheck()
     }
   }
 
-  if (m_OutputStlDirectory.isEmpty() == true)
+  if(m_OutputStlDirectory.isEmpty() == true)
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
@@ -178,16 +178,18 @@ void NodesTrianglesToStl::preflight()
   setInPreflight(false);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::execute()
 {
-  //int err = 0;
+  // int err = 0;
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QDir stlDir(getOutputStlDirectory());
@@ -199,7 +201,6 @@ void NodesTrianglesToStl::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-
 
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
@@ -241,8 +242,7 @@ void NodesTrianglesToStl::execute()
 
   int nodeId = 0;
   int nodeKind = 0;
-  float pos[3] =
-  { 0.0f, 0.0f, 0.0f };
+  float pos[3] = {0.0f, 0.0f, 0.0f};
   size_t nread = 0;
   // Read the POINTS data (Vertex)
   QMap<int, int> nodeIdToIndex;
@@ -250,7 +250,7 @@ void NodesTrianglesToStl::execute()
   SharedVertexList::Pointer nodesPtr = SharedVertexList::CreateArray(nNodes, cDims, SIMPL::VertexData::SurfaceMeshNodes);
   float* nodes = nodesPtr->getPointer(0);
 
-  for (int i = 0; i < nNodes; i++)
+  for(int i = 0; i < nNodes; i++)
   {
     nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
     if(nread != 5)
@@ -278,7 +278,7 @@ void NodesTrianglesToStl::execute()
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
-  for (int i = 0; i < nTriangles; i++)
+  for(int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
     nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
@@ -290,7 +290,6 @@ void NodesTrianglesToStl::execute()
     uniqueSpins.insert(tData[7]);
     uniqueSpins.insert(tData[8]);
   }
-
 
   unsigned char data[50];
   float* normal = (float*)data;
@@ -307,8 +306,8 @@ void NodesTrianglesToStl::execute()
   int spin = 0;
   int triCount = 0;
 
-  //Loop over the unique Spins
-  for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  // Loop over the unique Spins
+  for(QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter)
   {
     spin = *spinIter;
 
@@ -346,13 +345,13 @@ void NodesTrianglesToStl::execute()
       vert1[1] = static_cast<float>(nodes[nId0 * 3 + 1]);
       vert1[2] = static_cast<float>(nodes[nId0 * 3 + 2]);
 
-      if (faceLabels[t * 2] == spin)
+      if(faceLabels[t * 2] == spin)
       {
         // winding = 0; // 0 = Write it using forward spin
       }
-      else if (faceLabels[t * 2 + 1] == spin)
+      else if(faceLabels[t * 2 + 1] == spin)
       {
-        //winding = 1; // Write it using backward spin
+        // winding = 1; // Write it using backward spin
         // Switch the 2 node indices
         int temp = nId1;
         nId1 = nId2;
@@ -391,7 +390,7 @@ void NodesTrianglesToStl::execute()
       normal[2] = normal[2] / length;
 
       totalWritten = fwrite(data, 1, 50, f);
-      if (totalWritten != 50)
+      if(totalWritten != 50)
       {
 
         QString ss = QObject::tr("Error Writing STL File. Not enough elements written for feature id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
@@ -413,19 +412,21 @@ void NodesTrianglesToStl::execute()
   return;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int NodesTrianglesToStl::writeHeader(FILE* f, const QString& header, int triCount)
 {
-  if (nullptr == f)
+  if(nullptr == f)
   {
     return -1;
   }
   char h[80];
   size_t headlength = 80;
-  if(header.length() < 80) { headlength = header.length(); }
+  if(header.length() < 80)
+  {
+    headlength = header.length();
+  }
   ::memset(h, 0, 80);
   ::memcpy(h, header.data(), headlength);
   // Return the number of bytes written - which should be 80
@@ -444,15 +445,11 @@ int NodesTrianglesToStl::writeNumTrianglesToFile(const QString& filename, int tr
 
   FILE* out = fopen(filename.toLatin1().data(), "r+b");
   fseek(out, 80L, SEEK_SET);
-  fwrite( (char*)(&triCount), 1, 4, out);
+  fwrite((char*)(&triCount), 1, 4, out);
   fclose(out);
 
   return err;
 }
-
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -496,7 +493,7 @@ const QString NodesTrianglesToStl::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 
@@ -504,19 +501,22 @@ const QString NodesTrianglesToStl::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToStl::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
-
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToStl::getSubGroupName()
-{ return SIMPL::FilterSubGroups::OutputFilters; }
-
+{
+  return SIMPL::FilterSubGroups::OutputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToStl::getHumanLabel()
-{ return "Convert Nodes & Triangles To STL Files"; }
-
+{
+  return "Convert Nodes & Triangles To STL Files";
+}

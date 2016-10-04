@@ -36,33 +36,29 @@
 
 #include <sstream>
 
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 
-
-#include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
-#include "SIMPLib/VTKUtils/VTKUtil.hpp"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/VTKUtils/VTKUtil.hpp"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-
 namespace Detail
 {
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <class Geometry>
-void WriteVTKHeader(FILE* f, DataContainer::Pointer m, bool isBinary)
+template <class Geometry> void WriteVTKHeader(FILE* f, DataContainer::Pointer m, bool isBinary)
 {
 
   size_t xpoints = m->getGeometryAs<Geometry>()->getXPoints() + 1;
@@ -74,7 +70,8 @@ void WriteVTKHeader(FILE* f, DataContainer::Pointer m, bool isBinary)
   if(isBinary)
   {
     fprintf(f, "BINARY\n");
-  } else
+  }
+  else
   {
     fprintf(f, "ASCII\n");
   }
@@ -94,8 +91,7 @@ void WriteVTKHeader(FILE* f, DataContainer::Pointer m, bool isBinary)
       * @param max The maximum value of the axis
       * @param step The step value between each point on the axis.
       */
-template <typename T>
-int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
+template <typename T> int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
 {
   int err = 0;
 #if CMP_SIZEOF_LONG == 8 && !defined(__APPLE__)
@@ -122,8 +118,8 @@ int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T 
       fclose(f);
       return -1;
     }
-
-  } else
+  }
+  else
   {
     T d;
     for(int idx = 0; idx < npoints; ++idx)
@@ -143,12 +139,11 @@ int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T>
-void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPtr, bool writeBinary)
+template <typename T> void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPtr, bool writeBinary)
 {
   QString ss = QObject::tr("Writing Cell Data %1").arg(iDataPtr->getName());
   filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
-  //qDebug() << "Writing DataArray " << iDataPtr->getName() << " To a VTK File";
+  // qDebug() << "Writing DataArray " << iDataPtr->getName() << " To a VTK File";
 
   typedef DataArray<T> ArrayType;
 
@@ -186,7 +181,8 @@ void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPt
       {
         array->byteSwapElements();
       }
-    } else
+    }
+    else
     {
       std::stringstream ss;
       for(size_t i = 0; i < totalElements; i++)
@@ -199,7 +195,8 @@ void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPt
         {
           ss << " " << static_cast<int>(val[i]);
         }
-        else {
+        else
+        {
           ss << " " << val[i];
         }
       }
@@ -210,19 +207,16 @@ void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPt
 }
 }
 
-
 // Include the MOC generated file for this class
 #include "moc_VtkRectilinearGridWriter.cpp"
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 VtkRectilinearGridWriter::VtkRectilinearGridWriter()
-: AbstractFilter(),
-  m_OutputFile(""),
-  m_WriteBinaryFile(false)
+: AbstractFilter()
+, m_OutputFile("")
+, m_WriteBinaryFile(false)
 {
   setupFilterParameters();
 }
@@ -294,7 +288,8 @@ void VtkRectilinearGridWriter::dataCheck()
       QString ss = QObject::tr("The directory path for the output file does not exist.");
       notifyWarningMessage(getHumanLabel(), ss, -1);
     }
-  } else
+  }
+  else
   {
     QString ss = QObject::tr("The output file path is a path to an existing directory. Please change the path to point to a file");
     setErrorCondition(-1);
@@ -308,7 +303,6 @@ void VtkRectilinearGridWriter::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-
 
   QVector<DataArrayPath> paths = getSelectedDataArrayPaths();
 
@@ -379,11 +373,11 @@ void VtkRectilinearGridWriter::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(dcName);
 
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-  size_t dims[3] = { 0, 0, 0 };
+  size_t dims[3] = {0, 0, 0};
   image->getDimensions(dims);
-  float res[3] = { 0.0f, 0.0f, 0.0f };
+  float res[3] = {0.0f, 0.0f, 0.0f};
   image->getResolution(res);
-  float origin[3] = { 0.0f, 0.0f, 0.0f };
+  float origin[3] = {0.0f, 0.0f, 0.0f};
   image->getOrigin(origin);
 
   int err = 0;
@@ -464,12 +458,10 @@ void VtkRectilinearGridWriter::execute()
 #endif
   }
 
-
   // The scopedFileMonitor will fclose() the FILE pointer for us
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -519,7 +511,6 @@ const QString VtkRectilinearGridWriter::getGroupName()
   return SIMPL::FilterGroups::IOFilters;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -527,7 +518,6 @@ const QString VtkRectilinearGridWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
-
 
 // -----------------------------------------------------------------------------
 //

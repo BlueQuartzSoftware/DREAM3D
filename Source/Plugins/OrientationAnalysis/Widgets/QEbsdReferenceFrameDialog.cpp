@@ -37,58 +37,54 @@
 
 #include <iostream>
 
-
-#include <QtCore/QPropertyAnimation>
-#include <QtCore/QtEndian>
-#include <QtCore/QStateMachine>
 #include <QtCore/QFileInfo>
+#include <QtCore/QPropertyAnimation>
+#include <QtCore/QStateMachine>
+#include <QtCore/QtEndian>
 
+#include <QtGui/QColor>
+#include <QtGui/QFont>
+#include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtWidgets/QGraphicsPixmapItem>
-#include <QtWidgets/QPushButton>
-#include <QtGui/QColor>
-#include <QtGui/QPainter>
-#include <QtGui/QFont>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QPushButton>
 
-#include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/TSL/AngConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-
+#include "SIMPLib/SIMPLib.h"
 
 #include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
 
+#include "OrientationAnalysis/OrientationAnalysisFilters/ChangeAngleRepresentation.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/GenerateIPFColors.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadCtfData.h"
-#include "OrientationAnalysis/OrientationAnalysisFilters/GenerateIPFColors.h"
-#include "OrientationAnalysis/OrientationAnalysisFilters/ChangeAngleRepresentation.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QEbsdReferenceFrameDialog::QEbsdReferenceFrameDialog(QString filename, QWidget* parent) :
-  QDialog(parent),
-  m_EbsdFileName(filename),
-  m_OriginGroup(nullptr)
+QEbsdReferenceFrameDialog::QEbsdReferenceFrameDialog(QString filename, QWidget* parent)
+: QDialog(parent)
+, m_EbsdFileName(filename)
+, m_OriginGroup(nullptr)
 {
   setupUi(this);
 
   setupGui();
 
-
   loadEbsdData();
   updateGraphicsView();
   m_NoTransBtn->setChecked(true);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -101,20 +97,21 @@ QEbsdReferenceFrameDialog::~QEbsdReferenceFrameDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#define ZOOM_MENU(var, menu, slot)\
-  {\
-    QAction* action = new QAction(menu);\
-    action->setText( #var );\
-    QString actionName("action_z" #var "Action");\
-    action->setObjectName(actionName);\
-    zoomMenu->addAction(action);\
-    connect(action, SIGNAL(triggered()), this, SLOT(slot())); \
+#define ZOOM_MENU(var, menu, slot)                                                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    QAction* action = new QAction(menu);                                                                                                                                                               \
+    action->setText(#var);                                                                                                                                                                             \
+    QString actionName("action_z" #var "Action");                                                                                                                                                      \
+    action->setObjectName(actionName);                                                                                                                                                                 \
+    zoomMenu->addAction(action);                                                                                                                                                                       \
+    connect(action, SIGNAL(triggered()), this, SLOT(slot()));                                                                                                                                          \
   }
 
-#define ZOOM_MENU_SLOT_DEF(var, index)\
-  void QEbsdReferenceFrameDialog::z##var##_triggered() {\
-    zoomButton->setText(#var " % ");\
-    m_EbsdView->setZoomIndex(index);\
+#define ZOOM_MENU_SLOT_DEF(var, index)                                                                                                                                                                 \
+  void QEbsdReferenceFrameDialog::z##var##_triggered()                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    zoomButton->setText(#var " % ");                                                                                                                                                                   \
+    m_EbsdView->setZoomIndex(index);                                                                                                                                                                   \
   }
 
 ZOOM_MENU_SLOT_DEF(10, 0)
@@ -135,8 +132,6 @@ void QEbsdReferenceFrameDialog::on_fitToWindow_clicked()
   m_EbsdView->setZoomIndex(9);
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -147,21 +142,14 @@ void QEbsdReferenceFrameDialog::setupGui()
   m_OriginGroup->addButton(m_HKLdefaultBtn);
   m_OriginGroup->addButton(m_HEDMdefaultBtn);
   m_OriginGroup->addButton(m_NoTransBtn);
-  connect(m_TSLdefaultBtn, SIGNAL(toggled(bool)),
-          this, SLOT(originChanged(bool)));
-  connect(m_HKLdefaultBtn, SIGNAL(toggled(bool)),
-          this, SLOT(originChanged(bool)));
-  connect(m_HEDMdefaultBtn, SIGNAL(toggled(bool)),
-          this, SLOT(originChanged(bool)));
-  connect(m_NoTransBtn, SIGNAL(toggled(bool)),
-          this, SLOT(originChanged(bool)));
+  connect(m_TSLdefaultBtn, SIGNAL(toggled(bool)), this, SLOT(originChanged(bool)));
+  connect(m_HKLdefaultBtn, SIGNAL(toggled(bool)), this, SLOT(originChanged(bool)));
+  connect(m_HEDMdefaultBtn, SIGNAL(toggled(bool)), this, SLOT(originChanged(bool)));
+  connect(m_NoTransBtn, SIGNAL(toggled(bool)), this, SLOT(originChanged(bool)));
 
-  connect(degToRads, SIGNAL(stateChanged(int)),
-          this, SLOT(degToRagsChanged(int)));
+  connect(degToRads, SIGNAL(stateChanged(int)), this, SLOT(degToRagsChanged(int)));
 
-
-  connect(refDir, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(referenceDirectionChanged()));
+  connect(refDir, SIGNAL(currentIndexChanged(int)), this, SLOT(referenceDirectionChanged()));
 
   QMenu* zoomMenu = new QMenu(this);
   ZOOM_MENU(10, zoomMenu, z10_triggered);
@@ -225,10 +213,22 @@ void QEbsdReferenceFrameDialog::setNoTrans(bool checked)
 // -----------------------------------------------------------------------------
 Ebsd::EbsdToSampleCoordinateMapping QEbsdReferenceFrameDialog::getSelectedOrigin()
 {
-  if (m_TSLdefaultBtn->isChecked()) { return Ebsd::TSLdefault; }
-  if (m_HKLdefaultBtn->isChecked()) { return Ebsd::HKLdefault; }
-  if (m_HEDMdefaultBtn->isChecked()) { return Ebsd::HEDMdefault; }
-  if (m_NoTransBtn->isChecked()) { return Ebsd::UnknownCoordinateMapping; }
+  if(m_TSLdefaultBtn->isChecked())
+  {
+    return Ebsd::TSLdefault;
+  }
+  if(m_HKLdefaultBtn->isChecked())
+  {
+    return Ebsd::HKLdefault;
+  }
+  if(m_HEDMdefaultBtn->isChecked())
+  {
+    return Ebsd::HEDMdefault;
+  }
+  if(m_NoTransBtn->isChecked())
+  {
+    return Ebsd::UnknownCoordinateMapping;
+  }
   return Ebsd::UnknownCoordinateMapping;
 }
 
@@ -269,7 +269,10 @@ bool QEbsdReferenceFrameDialog::getNoTranschecked()
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::loadEbsdData()
 {
-  if (m_EbsdFileName.isEmpty() == true) { return; }
+  if(m_EbsdFileName.isEmpty() == true)
+  {
+    return;
+  }
   DataContainerArray::Pointer dca = DataContainerArray::New();
   QString dcName;
   QString cellAttrMatName;
@@ -287,7 +290,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     reader->setDataContainerArray(dca);
     reader->execute();
     int err = reader->getErrorCondition();
-    if (err < 0)
+    if(err < 0)
     {
       QMessageBox msgBox;
       msgBox.setText("Error Reading ANG File");
@@ -317,7 +320,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     reader->execute();
     int err = reader->getErrorCondition();
 
-    if (err < 0)
+    if(err < 0)
     {
       QMessageBox msgBox;
       msgBox.setText("Error Reading CTF File");
@@ -340,13 +343,13 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::CtfFile::CrystalStructures);
   }
 
-  //If they want to convert the Eulers to Radians
+  // If they want to convert the Eulers to Radians
   if(degToRads->isChecked() == true)
   {
     QString filtName = ChangeAngleRepresentation::ClassName();
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer convertEulerFactory = fm->getFactoryForFilter(filtName);
-    if (nullptr != convertEulerFactory.get() )
+    if(nullptr != convertEulerFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has
       // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -361,7 +364,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       convert->setDataContainerArray(dca);
       convert->execute();
       int err = convert->getErrorCondition();
-      if (err < 0)
+      if(err < 0)
       {
         m_BaseImage = QImage();
         m_DisplayedImage = QImage();
@@ -378,10 +381,8 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       msgBox.setStandardButtons(QMessageBox::Ok);
       msgBox.setDefaultButton(QMessageBox::Ok);
       msgBox.exec();
-
     }
   }
-
 
   // We can use this filter directly because it is in the current plugin
   GenerateIPFColors::Pointer ipfColorFilter = GenerateIPFColors::New();
@@ -389,7 +390,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   ref.x = 0;
   ref.y = 0;
   ref.z = 0;
-  if (refDir->currentIndex() == 0)
+  if(refDir->currentIndex() == 0)
   {
     ref.x = 1;
   }
@@ -408,7 +409,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   ipfColorFilter->setCrystalStructuresArrayPath(crystalStructuresArrayPath);
   ipfColorFilter->execute();
   int err = ipfColorFilter->getErrorCondition();
-  if (err < 0)
+  if(err < 0)
   {
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();
@@ -441,7 +442,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(cellAttrMatName);
 
   IDataArray::Pointer arrayPtr = attrMat->getAttributeArray(ipfColorFilter->getCellIPFColorsArrayName());
-  if (nullptr == arrayPtr.get())
+  if(nullptr == arrayPtr.get())
   {
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();
@@ -456,7 +457,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     uint8_t* scanLine = image.scanLine(y);
     for(size_t x = 0; x < dims[0]; ++x)
     {
-#if defined (CMP_WORDS_BIGENDIAN)
+#if defined(CMP_WORDS_BIGENDIAN)
 #error
 #else
       scanLine[x * 4 + 3] = 0xFF;
@@ -466,7 +467,6 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       scanLine[x * 4 + 0] = ipfColors[index + 2];
 #endif
     }
-
   }
   m_BaseImage = image.mirrored(false, true);
   m_DisplayedImage = m_BaseImage;
@@ -477,11 +477,14 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::originChanged(bool checked)
 {
-  if (checked == false) { return; }
+  if(checked == false)
+  {
+    return;
+  }
 
   updateGraphicsView();
 
-  if (checked == true)
+  if(checked == true)
   {
     updateDisplay();
   }
@@ -498,7 +501,6 @@ void QEbsdReferenceFrameDialog::originChanged(bool checked)
   eulerTrans.k = 0.0f;
   eulerTrans.l = 1.0f;
 
-
   getSampleTranformation(sampleTrans);
   getEulerTranformation(eulerTrans);
 
@@ -506,7 +508,6 @@ void QEbsdReferenceFrameDialog::originChanged(bool checked)
   QString eulerTransLabel = QString::number(eulerTrans.angle) + " @ <" + QString::number(eulerTrans.h) + QString::number(eulerTrans.k) + QString::number(eulerTrans.l) + ">";
   m_SampleTransformationLabel->setText(sampleTransLabel);
   m_EulerTransformationLabel->setText(eulerTransLabel);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -520,22 +521,21 @@ void QEbsdReferenceFrameDialog::getSampleTranformation(AxisAngleInput_t& input)
   input.k = 0.0f;
   input.l = 1.0f;
 
-
-  if (getTSLchecked() == true)
+  if(getTSLchecked() == true)
   {
     input.angle = 180.0;
     input.h = 0.0;
     input.k = 1.0;
     input.l = 0.0;
   }
-  else if (getHKLchecked() == true)
+  else if(getHKLchecked() == true)
   {
     input.angle = 180.0;
     input.h = 0.0;
     input.k = 1.0;
     input.l = 0.0;
   }
-  else if (getHEDMchecked() == true)
+  else if(getHEDMchecked() == true)
   {
     input.angle = 0.0;
     input.h = 0.0;
@@ -554,58 +554,55 @@ void QEbsdReferenceFrameDialog::getEulerTranformation(AxisAngleInput_t& input)
   input.k = 0.0f;
   input.l = 1.0f;
 
-  if (getTSLchecked() == true)
+  if(getTSLchecked() == true)
   {
     input.angle = 90.0;
     input.h = 0.0;
     input.k = 0.0;
     input.l = 1.0;
   }
-  else if (getHKLchecked() == true)
+  else if(getHKLchecked() == true)
   {
     input.angle = 0.0;
     input.h = 0.0;
     input.k = 0.0;
     input.l = 1.0;
   }
-  else if (getHEDMchecked() == true)
+  else if(getHEDMchecked() == true)
   {
     input.angle = 0.0;
     input.h = 0.0;
     input.k = 0.0;
     input.l = 1.0;
   }
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::updateGraphicsView()
 {
-  if (m_TSLdefaultBtn->isChecked())
+  if(m_TSLdefaultBtn->isChecked())
   {
     m_DisplayedImage = m_BaseImage.mirrored(true, false);
   }
-  else if (m_HKLdefaultBtn->isChecked())
+  else if(m_HKLdefaultBtn->isChecked())
   {
     m_DisplayedImage = m_BaseImage.mirrored(true, false);
   }
-  else if (m_HEDMdefaultBtn->isChecked())
+  else if(m_HEDMdefaultBtn->isChecked())
   {
     m_DisplayedImage = m_BaseImage;
   }
-  else if (m_NoTransBtn->isChecked())
+  else if(m_NoTransBtn->isChecked())
   {
     m_DisplayedImage = m_BaseImage;
   }
-
 
   QSize size = m_DisplayedImage.size();
   // If the EBSD map is larger than 1024 pixels in either height or width then rescale
   // back to 1024 pixels
-  if (size.width() > 1024 || size.height() > 1024)
+  if(size.width() > 1024 || size.height() > 1024)
   {
     QSize gvSize(1024, 1024);
     m_DisplayedImage = m_DisplayedImage.scaled(gvSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -642,11 +639,9 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
     painter.end();
   }
 
-
   int pxOffset = 2 * pxWide;
   int pyOffset = 2 * pxHigh;
   // Get a QPainter object to add some more details to the image
-
 
   int pImageWidth = imageWidth + pxOffset * 2;
   int pImageHeight = imageHeight + pyOffset * 2;
@@ -689,17 +684,16 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
   penWidth = 3;
   painter.setPen(QPen(QColor(0, 0, 0, 180), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
   // Draw the X-Axis
-  painter.drawLine(pxOffset - 3, pImageHeight - pyOffset + 3, pImageWidth  / 2, pImageHeight - pyOffset + 3);
+  painter.drawLine(pxOffset - 3, pImageHeight - pyOffset + 3, pImageWidth / 2, pImageHeight - pyOffset + 3);
   // Draw the Y-Axis
   painter.drawLine(pxOffset - 3, pImageHeight - pyOffset + 3, pxOffset - 3, pImageHeight / 2);
 
   //    painter.drawLine(pxOffset, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
   //  painter.drawLine(pImageWidth / 2, pyOffset, pImageWidth / 2, pImageHeight - pyOffset);
 
-
   painter.end();
   // Scale the image down to 225 pixels
-  return pImage;//.scaled(225, 225, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+  return pImage; //.scaled(225, 225, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 // -----------------------------------------------------------------------------
@@ -719,7 +713,6 @@ void QEbsdReferenceFrameDialog::degToRagsChanged(int state)
   originChanged(true);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -736,4 +729,3 @@ void QEbsdReferenceFrameDialog::on_showHelp_clicked()
 {
   QtSHelpUrlGenerator::generateAndOpenHTMLUrl("ebsdtoh5ebsd", this);
 }
-

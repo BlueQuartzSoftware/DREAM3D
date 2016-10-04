@@ -287,9 +287,5 @@ if(DREAM3D_BUILD_TESTING)
   include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
-set(BUILD_EXAMPLES ON)
-if(BUILD_EXAMPLES)
-    include(${${PLUGIN_NAME}_SOURCE_DIR}/Examples/Examples.cmake)
-endif()
-
+include(${${PLUGIN_NAME}_SOURCE_DIR}/Examples/Examples.cmake)
 

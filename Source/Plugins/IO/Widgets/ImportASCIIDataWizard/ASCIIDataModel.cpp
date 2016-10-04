@@ -35,8 +35,8 @@
 
 #include "ASCIIDataModel.h"
 
-#include <QtGui/QFont>
 #include <QtGui/QColor>
+#include <QtGui/QFont>
 
 #include "SIMPLib/Common/Constants.h"
 
@@ -47,10 +47,9 @@ ASCIIDataModel* ASCIIDataModel::self = nullptr;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ASCIIDataModel::ASCIIDataModel(QObject* parent) :
-QAbstractTableModel(parent)
+ASCIIDataModel::ASCIIDataModel(QObject* parent)
+: QAbstractTableModel(parent)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -58,7 +57,6 @@ QAbstractTableModel(parent)
 // -----------------------------------------------------------------------------
 ASCIIDataModel::~ASCIIDataModel()
 {
-  
 }
 
 // -----------------------------------------------------------------------------
@@ -66,7 +64,7 @@ ASCIIDataModel::~ASCIIDataModel()
 // -----------------------------------------------------------------------------
 ASCIIDataModel* ASCIIDataModel::Instance()
 {
-  if (self == nullptr)
+  if(self == nullptr)
   {
     self = new ASCIIDataModel();
   }
@@ -87,14 +85,14 @@ int ASCIIDataModel::columnCount(const QModelIndex& parent) const
 // -----------------------------------------------------------------------------
 QVariant ASCIIDataModel::data(const QModelIndex& index, int role) const
 {
-  if (!index.isValid())
+  if(!index.isValid())
   {
     return QVariant();
   }
 
-  if (role == Qt::DisplayRole)
+  if(role == Qt::DisplayRole)
   {
-    if (index.row() == 0)
+    if(index.row() == 0)
     {
       QString dataType = m_ColumnDataType[index.column()];
       return dataType;
@@ -106,23 +104,23 @@ QVariant ASCIIDataModel::data(const QModelIndex& index, int role) const
       return item->data(index.column());
     }
   }
-  else if (role == Qt::FontRole)
+  else if(role == Qt::FontRole)
   {
-    if (index.row() == 0)
+    if(index.row() == 0)
     {
       QFont font;
       font.setItalic(true);
       return font;
     }
   }
-  else if (role == Qt::TextAlignmentRole)
+  else if(role == Qt::TextAlignmentRole)
   {
     return Qt::AlignCenter;
   }
-  else if (role == Qt::BackgroundRole)
+  else if(role == Qt::BackgroundRole)
   {
 
-    if (columnHasErrors(index.column()) == true)
+    if(columnHasErrors(index.column()) == true)
     {
       return QColor(255, 191, 193);
     }
@@ -140,7 +138,7 @@ QVariant ASCIIDataModel::data(const QModelIndex& index, int role) const
 // -----------------------------------------------------------------------------
 Qt::ItemFlags ASCIIDataModel::flags(const QModelIndex& index) const
 {
-  if (!index.isValid())
+  if(!index.isValid())
   {
     return 0;
   }
@@ -154,10 +152,10 @@ Qt::ItemFlags ASCIIDataModel::flags(const QModelIndex& index) const
 // -----------------------------------------------------------------------------
 ASCIIDataItem* ASCIIDataModel::getItem(const QModelIndex& index) const
 {
-  if (index.isValid())
+  if(index.isValid())
   {
     ASCIIDataItem* item = m_TableItems[index.row()];
-    if (item)
+    if(item)
     {
       return item;
     }
@@ -168,27 +166,26 @@ ASCIIDataItem* ASCIIDataModel::getItem(const QModelIndex& index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant ASCIIDataModel::headerData(int section, Qt::Orientation orientation,
-  int role) const
+QVariant ASCIIDataModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (section < 0)
+  if(section < 0)
   {
     return QVariant();
   }
 
-  if (section < m_HorizontalHeaders.size() && orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  if(section < m_HorizontalHeaders.size() && orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     return m_HorizontalHeaders[section];
   }
-  else if (section < m_VerticalHeaders.size() && orientation == Qt::Vertical && role == Qt::DisplayRole)
+  else if(section < m_VerticalHeaders.size() && orientation == Qt::Vertical && role == Qt::DisplayRole)
   {
-    if (section == 0)
+    if(section == 0)
     {
       return "Data Type";
     }
     else
     {
-      return m_VerticalHeaders[section-1];
+      return m_VerticalHeaders[section - 1];
     }
   }
 
@@ -198,15 +195,15 @@ QVariant ASCIIDataModel::headerData(int section, Qt::Orientation orientation,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ASCIIDataModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role)
+bool ASCIIDataModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant& value, int role)
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     m_HorizontalHeaders[section] = value.toString();
     emit headerDataChanged(Qt::Horizontal, section, section);
     return true;
   }
-  else if (orientation == Qt::Vertical && role == Qt::DisplayRole)
+  else if(orientation == Qt::Vertical && role == Qt::DisplayRole)
   {
     m_VerticalHeaders[section] = value.toString();
     emit headerDataChanged(Qt::Vertical, section, section);
@@ -252,7 +249,7 @@ bool ASCIIDataModel::insertColumns(int position, int columns, const QModelIndex&
   m_HorizontalHeaders.insert(position, columns, "");
   m_ColumnDataType.insert(position, columns, SIMPL::TypeNames::Double);
   m_ColumnHasErrors.insert(position, columns, false);
-  for (int i = 0; i < m_TableItems.size(); i++)
+  for(int i = 0; i < m_TableItems.size(); i++)
   {
     m_TableItems[i]->insertColumns(position, columns);
   }
@@ -270,7 +267,7 @@ bool ASCIIDataModel::removeColumns(int position, int columns, const QModelIndex&
   m_HorizontalHeaders.remove(position, columns);
   m_ColumnDataType.remove(position, columns);
   m_ColumnHasErrors.remove(position, columns);
-  for (int i = 0; i < m_TableItems.size(); i++)
+  for(int i = 0; i < m_TableItems.size(); i++)
   {
     m_TableItems[i]->removeColumns(position, columns);
   }
@@ -294,14 +291,14 @@ bool ASCIIDataModel::setData(const QModelIndex& index, const QVariant& value, in
 {
   int row = index.row();
 
-  if (index.column() >= m_HorizontalHeaders.size())
+  if(index.column() >= m_HorizontalHeaders.size())
   {
     return false;
   }
 
   bool result = m_TableItems[row]->setData(index.column(), value);
 
-  if (result)
+  if(result)
   {
     emit dataChanged(index, index);
   }
@@ -315,7 +312,7 @@ bool ASCIIDataModel::setData(const QModelIndex& index, const QVariant& value, in
 QStringList ASCIIDataModel::originalStrings()
 {
   QStringList lines;
-  for (int i = 0; i < m_TableItems.size(); i++)
+  for(int i = 0; i < m_TableItems.size(); i++)
   {
     lines.push_back(m_TableItems[i]->originalString());
   }
@@ -349,7 +346,7 @@ QString ASCIIDataModel::columnDataType(const int column) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ASCIIDataModel::setColumnDataType(const int column, const QString &type)
+void ASCIIDataModel::setColumnDataType(const int column, const QString& type)
 {
   m_ColumnDataType[column] = type;
 
@@ -368,7 +365,7 @@ bool ASCIIDataModel::columnHasErrors(const int column) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ASCIIDataModel::setColumnHasErrors(const int column, const bool &value)
+void ASCIIDataModel::setColumnHasErrors(const int column, const bool& value)
 {
   m_ColumnHasErrors[column] = value;
 }
@@ -378,13 +375,13 @@ void ASCIIDataModel::setColumnHasErrors(const int column, const bool &value)
 // -----------------------------------------------------------------------------
 void ASCIIDataModel::clear()
 {
-  if (rowCount() > 0)
+  if(rowCount() > 0)
   {
     removeRows(0, rowCount());
     m_VerticalHeaders.clear();
   }
 
-  if (columnCount() > 0)
+  if(columnCount() > 0)
   {
     removeColumns(0, columnCount());
     m_HorizontalHeaders.clear();
@@ -396,11 +393,11 @@ void ASCIIDataModel::clear()
 // -----------------------------------------------------------------------------
 void ASCIIDataModel::clearContents()
 {
-  if (rowCount() > 0 && columnCount() > 0)
+  if(rowCount() > 0 && columnCount() > 0)
   {
-    for (int row = 0; row < rowCount(); row++)
+    for(int row = 0; row < rowCount(); row++)
     {
-      for (int col = 0; col < columnCount(); col++)
+      for(int col = 0; col < columnCount(); col++)
       {
         QModelIndex index = this->index(row, col);
         setData(index, "", Qt::DisplayRole);
@@ -414,24 +411,20 @@ void ASCIIDataModel::clearContents()
 // -----------------------------------------------------------------------------
 void ASCIIDataModel::clearHeaders(Qt::Orientation orientation)
 {
-  if (orientation == Qt::Horizontal)
+  if(orientation == Qt::Horizontal)
   {
-    for (int i = 0; i < m_HorizontalHeaders.size(); i++)
+    for(int i = 0; i < m_HorizontalHeaders.size(); i++)
     {
       m_HorizontalHeaders[i] = "";
     }
     emit headerDataChanged(Qt::Horizontal, 0, m_HorizontalHeaders.size() - 1);
   }
-  else if (orientation == Qt::Vertical)
+  else if(orientation == Qt::Vertical)
   {
-    for (int i = 0; i < m_VerticalHeaders.size(); i++)
+    for(int i = 0; i < m_VerticalHeaders.size(); i++)
     {
       m_VerticalHeaders[i] = "";
     }
     emit headerDataChanged(Qt::Vertical, 0, m_VerticalHeaders.size() - 1);
   }
 }
-
-
-
-

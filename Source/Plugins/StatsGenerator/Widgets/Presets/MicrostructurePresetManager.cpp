@@ -48,7 +48,6 @@ MicrostructurePresetManager::MicrostructurePresetManager()
 // -----------------------------------------------------------------------------
 MicrostructurePresetManager::~MicrostructurePresetManager()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -58,9 +57,9 @@ MicrostructurePresetManager::Pointer MicrostructurePresetManager::instance()
 {
   static MicrostructurePresetManager::Pointer singleton;
 
-  if (singleton.get() == nullptr)
+  if(singleton.get() == nullptr)
   {
-    singleton.reset (new MicrostructurePresetManager() );
+    singleton.reset(new MicrostructurePresetManager());
   }
   return singleton;
 }
@@ -75,8 +74,6 @@ void MicrostructurePresetManager::registerKnownFactories()
   AbstractMicrostructurePreset::Pointer h5TiffMicrostructurePresetFactory ( new H5TiffMicrostructurePresetFactory() );
   MicrostructurePresetManager::registerFactory(h5TiffMicrostructurePresetFactory);
 #endif
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -84,11 +81,11 @@ void MicrostructurePresetManager::registerKnownFactories()
 // -----------------------------------------------------------------------------
 void MicrostructurePresetManager::registerFactory(AbstractMicrostructurePresetFactory::Pointer importer)
 {
-  if (nullptr != importer.get() )
+  if(nullptr != importer.get())
   {
     // Instantiate the Instance Manager for import delegates
     MicrostructurePresetManager::Pointer idManager = MicrostructurePresetManager::instance();
-    idManager->addFactory( importer );
+    idManager->addFactory(importer);
   }
 }
 
@@ -98,20 +95,19 @@ void MicrostructurePresetManager::registerFactory(AbstractMicrostructurePresetFa
 AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewPreset(const QString& classname)
 {
   MicrostructurePresetManager::Pointer idManager = MicrostructurePresetManager::instance();
-  return idManager->createPreset( classname );
+  return idManager->createPreset(classname);
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createPreset(const QString& classname)
 {
-  //std::cout << "MicrostructurePresetManager::newMicrostructurePreset -> Trying to create MicrostructurePreset for '" << classname << "'" << std::endl;
+  // std::cout << "MicrostructurePresetManager::newMicrostructurePreset -> Trying to create MicrostructurePreset for '" << classname << "'" << std::endl;
   AbstractMicrostructurePreset::Pointer MicrostructurePreset;
-  for (AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter )
+  for(AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter)
   {
-    if ( (*(iter))->canCreateClass(classname) == true)
+    if((*(iter))->canCreateClass(classname) == true)
     {
       return (*(iter)).get()->newMicrostructurePreset();
     }
@@ -133,9 +129,9 @@ void MicrostructurePresetManager::addFactory(AbstractMicrostructurePresetFactory
 // -----------------------------------------------------------------------------
 AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getFactory(const QString& classname)
 {
-  for (AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter )
+  for(AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter)
   {
-    if ( (*(iter))->canCreateClass(classname) == true)
+    if((*(iter))->canCreateClass(classname) == true)
     {
       return *(iter);
     }
@@ -143,4 +139,3 @@ AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getFac
   AbstractMicrostructurePresetFactory::Pointer nullPointer;
   return nullPointer;
 }
-

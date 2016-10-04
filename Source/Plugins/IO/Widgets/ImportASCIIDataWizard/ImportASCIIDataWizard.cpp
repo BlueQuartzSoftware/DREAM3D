@@ -37,10 +37,10 @@
 
 #include <QtCore/QFile>
 
-#include "DelimitedPage.h"
-#include "DataFormatPage.h"
 #include "ASCIIDataModel.h"
 #include "ASCIIWizardData.hpp"
+#include "DataFormatPage.h"
+#include "DelimitedPage.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -57,9 +57,9 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, int n
   resize(721, 683);
 
   // This adds the refresh button that refreshes the preview table.  We may use this on a future release.
-  //m_RefreshBtn = new QPushButton("Refresh", this);
-  //connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
-  //setButton(QWizard::HelpButton, m_RefreshBtn);
+  // m_RefreshBtn = new QPushButton("Refresh", this);
+  // connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
+  // setButton(QWizard::HelpButton, m_RefreshBtn);
 
   DelimitedPage* dPage = new DelimitedPage(inputFilePath, numLines, this);
   setPage(Delimited, dPage);
@@ -86,9 +86,9 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataCo
   resize(721, 683);
 
   // This adds the refresh button that refreshes the preview table.  We may use this on a future release.
-  //m_RefreshBtn = new QPushButton("Refresh", this);
-  //connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
-  //setButton(QWizard::HelpButton, m_RefreshBtn);
+  // m_RefreshBtn = new QPushButton("Refresh", this);
+  // connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
+  // setButton(QWizard::HelpButton, m_RefreshBtn);
 
   DelimitedPage* dPage = new DelimitedPage(m_InputFilePath, m_NumLines, this);
   setPage(Delimited, dPage);
@@ -98,7 +98,6 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataCo
   dfPage->getTupleTable()->clearTupleDimensions();
   dfPage->getTupleTable()->addTupleDimensions(wizardData->tupleDims);
 
-
   setField("consecutiveDelimiters", wizardData->consecutiveDelimiters);
 
   setField("tabAsDelimiter", false);
@@ -106,14 +105,13 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataCo
   setField("commaAsDelimiter", false);
   setField("spaceAsDelimiter", false);
 
-
   if(wizardData->delimiters.contains('\t'))
   {
     setField("tabAsDelimiter", true);
   }
   if(wizardData->delimiters.contains(';'))
   {
-     setField("semicolonAsDelimiter", true);
+    setField("semicolonAsDelimiter", true);
   }
   if(wizardData->delimiters.contains(','))
   {
@@ -160,7 +158,6 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataCo
 // -----------------------------------------------------------------------------
 ImportASCIIDataWizard::~ImportASCIIDataWizard()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -169,19 +166,19 @@ ImportASCIIDataWizard::~ImportASCIIDataWizard()
 QList<char> ImportASCIIDataWizard::ConvertToDelimiters(bool tabAsDelimiter, bool semicolonAsDelimiter, bool commaAsDelimiter, bool spaceAsDelimiter)
 {
   QList<char> delimiters;
-  if (tabAsDelimiter == true)
+  if(tabAsDelimiter == true)
   {
     delimiters.push_back('\t');
   }
-  if (semicolonAsDelimiter == true)
+  if(semicolonAsDelimiter == true)
   {
     delimiters.push_back(';');
   }
-  if (commaAsDelimiter == true)
+  if(commaAsDelimiter == true)
   {
     delimiters.push_back(',');
   }
-  if (spaceAsDelimiter == true)
+  if(spaceAsDelimiter == true)
   {
     delimiters.push_back(' ');
   }
@@ -192,11 +189,11 @@ QList<char> ImportASCIIDataWizard::ConvertToDelimiters(bool tabAsDelimiter, bool
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImportASCIIDataWizard::ReadLine(const QString &inputFilePath, int line)
+QString ImportASCIIDataWizard::ReadLine(const QString& inputFilePath, int line)
 {
   QStringList lines = ReadLines(inputFilePath, line, 1);
 
-  if (lines.size() != 1)
+  if(lines.size() != 1)
   {
     return QString();
   }
@@ -207,22 +204,22 @@ QString ImportASCIIDataWizard::ReadLine(const QString &inputFilePath, int line)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList ImportASCIIDataWizard::ReadLines(const QString &inputFilePath, int beginLine, int numOfLines)
+QStringList ImportASCIIDataWizard::ReadLines(const QString& inputFilePath, int beginLine, int numOfLines)
 {
   QStringList result;
 
   QFile inputFile(inputFilePath);
-  if (inputFile.open(QIODevice::ReadOnly))
+  if(inputFile.open(QIODevice::ReadOnly))
   {
     QTextStream in(&inputFile);
 
-    for (int i = 1; i < beginLine; i++)
+    for(int i = 1; i < beginLine; i++)
     {
       // Skip all lines before "value"
       in.readLine();
     }
 
-    for (int i = beginLine; i < beginLine + numOfLines; i++)
+    for(int i = beginLine; i < beginLine + numOfLines; i++)
     {
       QString line = in.readLine();
       result.push_back(line);
@@ -240,26 +237,26 @@ QStringList ImportASCIIDataWizard::TokenizeLine(QString line, QList<char> delimi
 {
   QStringList tokenList;
 
-  if (delimiters.isEmpty() == true)
+  if(delimiters.isEmpty() == true)
   {
     tokenList.push_back(line);
     return tokenList;
   }
 
   int start = 0;
-  for (int i=0; i<line.size(); i++)
+  for(int i = 0; i < line.size(); i++)
   {
     char character = line.at(i).toLatin1();
-    if (delimiters.contains(character) == true)
+    if(delimiters.contains(character) == true)
     {
       QString token = line.mid(start, i - start);
-      if (token.isEmpty() == false)
+      if(token.isEmpty() == false)
       {
         tokenList.push_back(token);
 
-        if (consecutiveDelimiters == true)
+        if(consecutiveDelimiters == true)
         {
-          while (i < line.size() - 1 && delimiters.contains(character) == true)
+          while(i < line.size() - 1 && delimiters.contains(character) == true)
           {
             i++;
             character = line.at(i).toLatin1();
@@ -273,7 +270,7 @@ QStringList ImportASCIIDataWizard::TokenizeLine(QString line, QList<char> delimi
   }
 
   QString token = line.mid(start, line.size() - start);
-  if (token.isEmpty() == false)
+  if(token.isEmpty() == false)
   {
     tokenList.push_back(token);
   }
@@ -287,7 +284,7 @@ QStringList ImportASCIIDataWizard::TokenizeLine(QString line, QList<char> delimi
 QList<QStringList> ImportASCIIDataWizard::TokenizeLines(QStringList lines, QList<char> delimiters, bool consecutiveDelimiters)
 {
   QList<QStringList> tokenizedLines;
-  for (int row = 0; row < lines.size(); row++)
+  for(int row = 0; row < lines.size(); row++)
   {
     QString line = lines[row];
     QStringList tokenizedLine = TokenizeLine(line, delimiters, consecutiveDelimiters);
@@ -308,16 +305,16 @@ void ImportASCIIDataWizard::InsertTokenizedLines(QList<QStringList> tokenizedLin
 
   int vHeaderIndex = firstRowHeaderIndex;
 
-  for (int row = 0; row < tokenizedLines.size(); row++)
+  for(int row = 0; row < tokenizedLines.size(); row++)
   {
     QStringList tokenizedLine = tokenizedLines[row];
 
-    while (model->columnCount() < tokenizedLine.size())
+    while(model->columnCount() < tokenizedLine.size())
     {
       model->insertColumn(model->columnCount());
     }
 
-    for (int column = 0; column < tokenizedLine.size(); column++)
+    for(int column = 0; column < tokenizedLine.size(); column++)
     {
       QString token = tokenizedLine[column];
       QModelIndex index = model->index(row, column);
@@ -337,7 +334,7 @@ void ImportASCIIDataWizard::InsertLines(QStringList lines, int firstRowHeaderInd
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   model->insertColumn(0);
-  for (int row = 0; row < lines.size(); row++)
+  for(int row = 0; row < lines.size(); row++)
   {
     QString line = lines[row];
     QModelIndex index = model->index(row, 0);
@@ -352,12 +349,12 @@ void ImportASCIIDataWizard::LoadOriginalLines(QStringList lines)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  if (model->rowCount() > 0)
+  if(model->rowCount() > 0)
   {
     model->removeRows(0, model->rowCount());
   }
 
-  for (int i = 0; i < lines.size(); i++)
+  for(int i = 0; i < lines.size(); i++)
   {
     QString line = lines[i];
 
@@ -380,7 +377,7 @@ void ImportASCIIDataWizard::refreshModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWizard::setInputFilePath(const QString &inputFilePath)
+void ImportASCIIDataWizard::setInputFilePath(const QString& inputFilePath)
 {
   m_InputFilePath = inputFilePath;
 }
@@ -414,7 +411,7 @@ QStringList ImportASCIIDataWizard::getHeaders()
   QStringList headers;
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  for (int i = 0; i < model->columnCount(); i++)
+  for(int i = 0; i < model->columnCount(); i++)
   {
     QString header = model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString();
     headers.push_back(header);
@@ -431,7 +428,7 @@ QStringList ImportASCIIDataWizard::getDataTypes()
   QStringList dataTypes;
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  for (int i = 0; i < model->columnCount(); i++)
+  for(int i = 0; i < model->columnCount(); i++)
   {
     QString dataType = model->columnDataType(i);
     dataTypes.push_back(dataType);
@@ -462,7 +459,7 @@ QString ImportASCIIDataWizard::getInputFilePath()
 QVector<size_t> ImportASCIIDataWizard::getTupleDims()
 {
   DataFormatPage* dfPage = dynamic_cast<DataFormatPage*>(page(DataFormat));
-  if (nullptr != dfPage)
+  if(nullptr != dfPage)
   {
     return dfPage->getTupleTable()->getData();
   }

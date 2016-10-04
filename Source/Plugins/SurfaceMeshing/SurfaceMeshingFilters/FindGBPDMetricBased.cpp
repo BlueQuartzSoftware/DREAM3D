@@ -49,24 +49,24 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
+#include "tbb/concurrent_vector.h"
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
-#include "tbb/concurrent_vector.h"
 #endif
 
 // Include the MOC generated file for this class
@@ -78,34 +78,35 @@
  */
 class TriAreaAndNormals
 {
-  public:
-    double area;
-    float normal_grain1_x;
-    float normal_grain1_y;
-    float normal_grain1_z;
-    float normal_grain2_x;
-    float normal_grain2_y;
-    float normal_grain2_z;
+public:
+  double area;
+  float normal_grain1_x;
+  float normal_grain1_y;
+  float normal_grain1_z;
+  float normal_grain2_x;
+  float normal_grain2_y;
+  float normal_grain2_z;
 
-    TriAreaAndNormals(double __area, float n1x, float n1y, float n1z, float n2x, float n2y, float n2z) :
-      area(__area),
-      normal_grain1_x(n1x),
-      normal_grain1_y(n1y),
-      normal_grain1_z(n1z),
-      normal_grain2_x(n2x),
-      normal_grain2_y(n2y),
-      normal_grain2_z(n2z)
-    {
-    }
+  TriAreaAndNormals(double __area, float n1x, float n1y, float n1z, float n2x, float n2y, float n2z)
+  : area(__area)
+  , normal_grain1_x(n1x)
+  , normal_grain1_y(n1y)
+  , normal_grain1_z(n1z)
+  , normal_grain2_x(n2x)
+  , normal_grain2_y(n2y)
+  , normal_grain2_z(n2z)
+  {
+  }
 
-    bool operator <(const TriAreaAndNormals& other)
-    {
-      return area < other.area;
-    }
+  bool operator<(const TriAreaAndNormals& other)
+  {
+    return area < other.area;
+  }
 
-    TriAreaAndNormals() {
-      TriAreaAndNormals(0.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-    }
+  TriAreaAndNormals()
+  {
+    TriAreaAndNormals(0.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+  }
 };
 
 /**
@@ -114,130 +115,126 @@ class TriAreaAndNormals
  */
 class TrisSelector
 {
-    // corresponding to Phase of Interest
-    bool m_ExcludeTripleLines;
-    int64_t *m_Triangles;
-    int8_t *m_NodeTypes;
+  // corresponding to Phase of Interest
+  bool m_ExcludeTripleLines;
+  int64_t* m_Triangles;
+  int8_t* m_NodeTypes;
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
+  tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
 #else
-    QVector<TriAreaAndNormals>* selectedTris;
+  QVector<TriAreaAndNormals>* selectedTris;
 #endif
-    int32_t m_PhaseOfInterest;
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    uint32_t cryst;
-    int32_t nsym;
-    uint32_t* m_CrystalStructures;
-    float* m_Eulers;
-    int32_t* m_Phases;
-    int32_t* m_FaceLabels;
-    double* m_FaceNormals;
-    double* m_FaceAreas;
+  int32_t m_PhaseOfInterest;
+  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  uint32_t cryst;
+  int32_t nsym;
+  uint32_t* m_CrystalStructures;
+  float* m_Eulers;
+  int32_t* m_Phases;
+  int32_t* m_FaceLabels;
+  double* m_FaceNormals;
+  double* m_FaceAreas;
 
-  public:
-    TrisSelector(
-        bool __m_ExcludeTripleLines,
-        int64_t *__m_Triangles,
-        int8_t *__m_NodeTypes,
-
-    #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-        tbb::concurrent_vector<TriAreaAndNormals>* __selectedTris,
-    #else
-        QVector<TriAreaAndNormals>* __selectedTris,
-    #endif
-        int32_t __m_PhaseOfInterest,
-        uint32_t* __m_CrystalStructures,
-        float* __m_Eulers,
-        int32_t* __m_Phases,
-        int32_t* __m_FaceLabels,
-        double* __m_FaceNormals,
-        double* __m_FaceAreas
-        ) :
-      m_ExcludeTripleLines(__m_ExcludeTripleLines),
-      m_Triangles(__m_Triangles),
-      m_NodeTypes(__m_NodeTypes),
-      selectedTris(__selectedTris),
-      m_PhaseOfInterest(__m_PhaseOfInterest),
-      m_CrystalStructures(__m_CrystalStructures),
-      m_Eulers(__m_Eulers),
-      m_Phases(__m_Phases),
-      m_FaceLabels(__m_FaceLabels),
-      m_FaceNormals(__m_FaceNormals),
-      m_FaceAreas(__m_FaceAreas)
-    {
-      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
-      cryst = __m_CrystalStructures[__m_PhaseOfInterest];
-      nsym = m_OrientationOps[cryst]->getNumSymOps();
-    }
-
-    virtual ~TrisSelector() {}
-
-    void select(size_t start, size_t end) const
-    {
-      float g1ea[3] = { 0.0f, 0.0f, 0.0f };
-      float g2ea[3] = { 0.0f, 0.0f, 0.0f };
-
-      float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      float g2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-      float normal_lab[3] = { 0.0f, 0.0f, 0.0f };
-      float normal_grain1[3] = { 0.0f, 0.0f, 0.0f };
-      float normal_grain2[3] = { 0.0f, 0.0f, 0.0f };
-
-      for (size_t triIdx = start; triIdx < end; triIdx++)
-      {
-        int32_t feature1 = m_FaceLabels[2 * triIdx];
-        int32_t feature2 = m_FaceLabels[2 * triIdx + 1];
-
-        if (feature1 < 1 || feature2 < 1) { continue; }
-        if (m_Phases[feature1] != m_Phases[feature2])  { continue; }
-        if (m_Phases[feature1] != m_PhaseOfInterest || m_Phases[feature2] != m_PhaseOfInterest) { continue; }
-
-        if (m_ExcludeTripleLines == true)
-        {
-          int64_t node1 = m_Triangles[triIdx * 3];
-          int64_t node2 = m_Triangles[triIdx * 3 + 1];
-          int64_t node3 = m_Triangles[triIdx * 3 + 2];
-
-          if (m_NodeTypes[node1] != 2 || m_NodeTypes[node2] != 2 || m_NodeTypes[node3] != 2) { continue; }
-        }
-
-        normal_lab[0] = static_cast<float>(m_FaceNormals[3 * triIdx]);
-        normal_lab[1] = static_cast<float>(m_FaceNormals[3 * triIdx + 1]);
-        normal_lab[2] = static_cast<float>(m_FaceNormals[3 * triIdx + 2]);
-
-        for (int whichEa = 0; whichEa < 3; whichEa++)
-        {
-          g1ea[whichEa] = m_Eulers[3 * feature1 + whichEa];
-          g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
-        }
-
-        FOrientArrayType om(9, 0.0f);
-        FOrientTransformsType::eu2om(FOrientArrayType(g1ea, 3), om);
-        om.toGMatrix(g1);
-        FOrientTransformsType::eu2om(FOrientArrayType(g2ea, 3), om);
-        om.toGMatrix(g2);
-
-        MatrixMath::Multiply3x3with3x1(g1, normal_lab, normal_grain1);
-        MatrixMath::Multiply3x3with3x1(g2, normal_lab, normal_grain2);
-
-        (*selectedTris).push_back(TriAreaAndNormals(
-                                    m_FaceAreas[triIdx],
-                                    normal_grain1[0],
-                                    normal_grain1[1],
-                                    normal_grain1[2],
-                                    -normal_grain2[0],
-                                    -normal_grain2[1],
-                                    -normal_grain2[2]
-                                  ));
-      }
-    }
+public:
+  TrisSelector(bool __m_ExcludeTripleLines, int64_t* __m_Triangles, int8_t* __m_NodeTypes,
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
+               tbb::concurrent_vector<TriAreaAndNormals>* __selectedTris,
+#else
+               QVector<TriAreaAndNormals>* __selectedTris,
+#endif
+               int32_t __m_PhaseOfInterest, uint32_t* __m_CrystalStructures, float* __m_Eulers, int32_t* __m_Phases, int32_t* __m_FaceLabels, double* __m_FaceNormals, double* __m_FaceAreas)
+  : m_ExcludeTripleLines(__m_ExcludeTripleLines)
+  , m_Triangles(__m_Triangles)
+  , m_NodeTypes(__m_NodeTypes)
+  , selectedTris(__selectedTris)
+  , m_PhaseOfInterest(__m_PhaseOfInterest)
+  , m_CrystalStructures(__m_CrystalStructures)
+  , m_Eulers(__m_Eulers)
+  , m_Phases(__m_Phases)
+  , m_FaceLabels(__m_FaceLabels)
+  , m_FaceNormals(__m_FaceNormals)
+  , m_FaceAreas(__m_FaceAreas)
+  {
+    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    cryst = __m_CrystalStructures[__m_PhaseOfInterest];
+    nsym = m_OrientationOps[cryst]->getNumSymOps();
+  }
+
+  virtual ~TrisSelector()
+  {
+  }
+
+  void select(size_t start, size_t end) const
+  {
+    float g1ea[3] = {0.0f, 0.0f, 0.0f};
+    float g2ea[3] = {0.0f, 0.0f, 0.0f};
+
+    float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    float g2[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+
+    float normal_lab[3] = {0.0f, 0.0f, 0.0f};
+    float normal_grain1[3] = {0.0f, 0.0f, 0.0f};
+    float normal_grain2[3] = {0.0f, 0.0f, 0.0f};
+
+    for(size_t triIdx = start; triIdx < end; triIdx++)
     {
-      select(r.begin(), r.end());
+      int32_t feature1 = m_FaceLabels[2 * triIdx];
+      int32_t feature2 = m_FaceLabels[2 * triIdx + 1];
+
+      if(feature1 < 1 || feature2 < 1)
+      {
+        continue;
+      }
+      if(m_Phases[feature1] != m_Phases[feature2])
+      {
+        continue;
+      }
+      if(m_Phases[feature1] != m_PhaseOfInterest || m_Phases[feature2] != m_PhaseOfInterest)
+      {
+        continue;
+      }
+
+      if(m_ExcludeTripleLines == true)
+      {
+        int64_t node1 = m_Triangles[triIdx * 3];
+        int64_t node2 = m_Triangles[triIdx * 3 + 1];
+        int64_t node3 = m_Triangles[triIdx * 3 + 2];
+
+        if(m_NodeTypes[node1] != 2 || m_NodeTypes[node2] != 2 || m_NodeTypes[node3] != 2)
+        {
+          continue;
+        }
+      }
+
+      normal_lab[0] = static_cast<float>(m_FaceNormals[3 * triIdx]);
+      normal_lab[1] = static_cast<float>(m_FaceNormals[3 * triIdx + 1]);
+      normal_lab[2] = static_cast<float>(m_FaceNormals[3 * triIdx + 2]);
+
+      for(int whichEa = 0; whichEa < 3; whichEa++)
+      {
+        g1ea[whichEa] = m_Eulers[3 * feature1 + whichEa];
+        g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
+      }
+
+      FOrientArrayType om(9, 0.0f);
+      FOrientTransformsType::eu2om(FOrientArrayType(g1ea, 3), om);
+      om.toGMatrix(g1);
+      FOrientTransformsType::eu2om(FOrientArrayType(g2ea, 3), om);
+      om.toGMatrix(g2);
+
+      MatrixMath::Multiply3x3with3x1(g1, normal_lab, normal_grain1);
+      MatrixMath::Multiply3x3with3x1(g2, normal_lab, normal_grain2);
+
+      (*selectedTris).push_back(TriAreaAndNormals(m_FaceAreas[triIdx], normal_grain1[0], normal_grain1[1], normal_grain1[2], -normal_grain2[0], -normal_grain2[1], -normal_grain2[2]));
     }
+  }
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    select(r.begin(), r.end());
+  }
 #endif
 };
 
@@ -247,169 +244,150 @@ class TrisSelector
  */
 class ProbeDistrib
 {
-    QVector<double>* distribValues;
-    QVector<double>* errorValues;
-    QVector<float>* samplPtsX;
-    QVector<float>* samplPtsY;
-    QVector<float>* samplPtsZ;
+  QVector<double>* distribValues;
+  QVector<double>* errorValues;
+  QVector<float>* samplPtsX;
+  QVector<float>* samplPtsY;
+  QVector<float>* samplPtsZ;
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    tbb::concurrent_vector<TriAreaAndNormals> selectedTris;
+  tbb::concurrent_vector<TriAreaAndNormals> selectedTris;
 #else
-    QVector<TriAreaAndNormals> selectedTris;
+  QVector<TriAreaAndNormals> selectedTris;
 #endif
-    float limitDist;
-    double totalFaceArea;
-    int numDistinctGBs;
-    double ballVolume;
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    uint32_t cryst;
-    int32_t nsym;
+  float limitDist;
+  double totalFaceArea;
+  int numDistinctGBs;
+  double ballVolume;
+  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  uint32_t cryst;
+  int32_t nsym;
 
-  public:
-    ProbeDistrib(
-        QVector<double>* __distribValues,
-        QVector<double>* __errorValues,
-        QVector<float> *__samplPtsX,
-        QVector<float> *__samplPtsY,
-        QVector<float> *__samplPtsZ,
-    #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-        tbb::concurrent_vector<TriAreaAndNormals> __selectedTris,
-    #else
-        QVector<TriAreaAndNormals> __selectedTris,
-    #endif
-        float __limitDist,
-        double __totalFaceArea,
-        int __numDistinctGBs,
-        double __ballVolume,
-        int32_t __cryst
-        ) :
-      distribValues(__distribValues),
-      errorValues(__errorValues),
-      samplPtsX(__samplPtsX),
-      samplPtsY(__samplPtsY),
-      samplPtsZ(__samplPtsZ),
-      selectedTris(__selectedTris),
-      limitDist(__limitDist),
-      totalFaceArea(__totalFaceArea),
-      numDistinctGBs(__numDistinctGBs),
-      ballVolume(__ballVolume),
-      cryst(__cryst)
+public:
+  ProbeDistrib(QVector<double>* __distribValues, QVector<double>* __errorValues, QVector<float>* __samplPtsX, QVector<float>* __samplPtsY, QVector<float>* __samplPtsZ,
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+               tbb::concurrent_vector<TriAreaAndNormals> __selectedTris,
+#else
+               QVector<TriAreaAndNormals> __selectedTris,
+#endif
+               float __limitDist, double __totalFaceArea, int __numDistinctGBs, double __ballVolume, int32_t __cryst)
+  : distribValues(__distribValues)
+  , errorValues(__errorValues)
+  , samplPtsX(__samplPtsX)
+  , samplPtsY(__samplPtsY)
+  , samplPtsZ(__samplPtsZ)
+  , selectedTris(__selectedTris)
+  , limitDist(__limitDist)
+  , totalFaceArea(__totalFaceArea)
+  , numDistinctGBs(__numDistinctGBs)
+  , ballVolume(__ballVolume)
+  , cryst(__cryst)
+  {
+    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    nsym = m_OrientationOps[__cryst]->getNumSymOps();
+  }
+
+  virtual ~ProbeDistrib()
+  {
+  }
+
+  void probe(size_t start, size_t end) const
+  {
+    for(size_t ptIdx = start; ptIdx < end; ptIdx++)
     {
-      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
-      nsym = m_OrientationOps[__cryst]->getNumSymOps();
-    }
+      double __c = 0.0;
 
-    virtual ~ProbeDistrib() {}
+      float probeNormal[3] = {(*samplPtsX).at(ptIdx), (*samplPtsY).at(ptIdx), (*samplPtsZ).at(ptIdx)};
 
-    void probe(size_t start, size_t end) const
-    {
-      for (size_t ptIdx = start; ptIdx < end; ptIdx++)
+      for(int triRepresIdx = 0; triRepresIdx < static_cast<int>(selectedTris.size()); triRepresIdx++)
       {
-        double __c = 0.0;
+        float normal1[3] = {selectedTris[triRepresIdx].normal_grain1_x, selectedTris[triRepresIdx].normal_grain1_y, selectedTris[triRepresIdx].normal_grain1_z};
 
-        float probeNormal[3] = { (*samplPtsX).at(ptIdx), (*samplPtsY).at(ptIdx), (*samplPtsZ).at(ptIdx) };
+        float normal2[3] = {selectedTris[triRepresIdx].normal_grain2_x, selectedTris[triRepresIdx].normal_grain2_y, selectedTris[triRepresIdx].normal_grain2_z};
 
-        for (int triRepresIdx = 0; triRepresIdx < static_cast<int>(selectedTris.size()); triRepresIdx++)
+        float sym[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+
+        for(int j = 0; j < nsym; j++)
         {
-          float normal1[3] = {
-            selectedTris[triRepresIdx].normal_grain1_x,
-            selectedTris[triRepresIdx].normal_grain1_y,
-            selectedTris[triRepresIdx].normal_grain1_z };
+          m_OrientationOps[cryst]->getMatSymOp(j, sym);
 
-          float normal2[3] = {
-            selectedTris[triRepresIdx].normal_grain2_x,
-            selectedTris[triRepresIdx].normal_grain2_y,
-            selectedTris[triRepresIdx].normal_grain2_z };
+          float sym_normal1[3] = {0.0f, 0.0f, 0.0f};
+          float sym_normal2[3] = {0.0f, 0.0f, 0.0f};
 
-          float sym[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+          MatrixMath::Multiply3x3with3x1(sym, normal1, sym_normal1);
+          MatrixMath::Multiply3x3with3x1(sym, normal2, sym_normal2);
 
-          for (int j = 0; j < nsym; j++)
+          for(int inversion = 0; inversion <= 1; inversion++)
           {
-            m_OrientationOps[cryst]->getMatSymOp(j, sym);
+            float sign = 1.0f;
+            if(inversion == 1)
+              sign = -1.0f;
 
-            float sym_normal1[3] = { 0.0f, 0.0f, 0.0f };
-            float sym_normal2[3] = { 0.0f, 0.0f, 0.0f };
+            float gamma1 = acosf(sign * (probeNormal[0] * sym_normal1[0] + probeNormal[1] * sym_normal1[1] + probeNormal[2] * sym_normal1[2]));
 
-            MatrixMath::Multiply3x3with3x1(sym, normal1, sym_normal1);
-            MatrixMath::Multiply3x3with3x1(sym, normal2, sym_normal2);
+            float gamma2 = acosf(sign * (probeNormal[0] * sym_normal2[0] + probeNormal[1] * sym_normal2[1] + probeNormal[2] * sym_normal2[2]));
 
-            for (int inversion = 0; inversion <= 1; inversion++)
+            if(gamma1 < limitDist)
             {
-              float sign = 1.0f;
-              if (inversion == 1) sign = -1.0f;
-
-              float gamma1 = acosf(sign * (
-                                     probeNormal[0] * sym_normal1[0] +
-                                     probeNormal[1] * sym_normal1[1] +
-                                     probeNormal[2] * sym_normal1[2]));
-
-              float gamma2 = acosf(sign * (
-                                     probeNormal[0] * sym_normal2[0] +
-                                     probeNormal[1] * sym_normal2[1] +
-                                     probeNormal[2] * sym_normal2[2]));
-
-              if (gamma1 < limitDist)
-              {
-                // Kahan summation algorithm
-                double __y = selectedTris[triRepresIdx].area - __c;
-                double __t = (*distribValues)[ptIdx] + __y;
-                __c = (__t - (*distribValues)[ptIdx]);
-                __c -=__y;
-                (*distribValues)[ptIdx] = __t;
-              }
-              if (gamma2 < limitDist)
-              {
-                double __y = selectedTris[triRepresIdx].area - __c;
-                double __t = (*distribValues)[ptIdx] + __y;
-                __c = (__t - (*distribValues)[ptIdx]);
-                __c -= __y;
-                (*distribValues)[ptIdx] = __t;
-              }
+              // Kahan summation algorithm
+              double __y = selectedTris[triRepresIdx].area - __c;
+              double __t = (*distribValues)[ptIdx] + __y;
+              __c = (__t - (*distribValues)[ptIdx]);
+              __c -= __y;
+              (*distribValues)[ptIdx] = __t;
+            }
+            if(gamma2 < limitDist)
+            {
+              double __y = selectedTris[triRepresIdx].area - __c;
+              double __t = (*distribValues)[ptIdx] + __y;
+              __c = (__t - (*distribValues)[ptIdx]);
+              __c -= __y;
+              (*distribValues)[ptIdx] = __t;
             }
           }
         }
-        (*errorValues)[ptIdx] = sqrt((*distribValues)[ptIdx] / totalFaceArea / double(numDistinctGBs)) / ballVolume;
-        (*distribValues)[ptIdx] /= totalFaceArea;
-        (*distribValues)[ptIdx] /= ballVolume;
       }
+      (*errorValues)[ptIdx] = sqrt((*distribValues)[ptIdx] / totalFaceArea / double(numDistinctGBs)) / ballVolume;
+      (*distribValues)[ptIdx] /= totalFaceArea;
+      (*distribValues)[ptIdx] /= ballVolume;
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      probe(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    probe(r.begin(), r.end());
+  }
 #endif
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGBPDMetricBased::FindGBPDMetricBased() :
-  SurfaceMeshFilter(),
-  m_PhaseOfInterest(1),
-  m_LimitDist(7.0f),
-  m_NumSamplPts(3000),
-  m_ExcludeTripleLines(false),
-  m_DistOutputFile(""),
-  m_ErrOutputFile(""),
-  m_SaveRelativeErr(false),
-  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
-  m_FeatureEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgEulerAngles),
-  m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases),
-  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals),
-  m_SurfaceMeshFaceAreasArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas),
-  m_SurfaceMeshFeatureFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "FaceLabels"),
-  m_NodeTypesArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType),
-  m_CrystalStructures(nullptr),
-  m_FeatureEulerAngles(nullptr),
-  m_FeaturePhases(nullptr),
-  m_SurfaceMeshFaceAreas(nullptr),
-  m_SurfaceMeshFaceLabels(nullptr),
-  m_SurfaceMeshFaceNormals(nullptr),
-  m_SurfaceMeshFeatureFaceLabels(nullptr),
-  m_NodeTypes(nullptr)
+FindGBPDMetricBased::FindGBPDMetricBased()
+: SurfaceMeshFilter()
+, m_PhaseOfInterest(1)
+, m_LimitDist(7.0f)
+, m_NumSamplPts(3000)
+, m_ExcludeTripleLines(false)
+, m_DistOutputFile("")
+, m_ErrOutputFile("")
+, m_SaveRelativeErr(false)
+, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+, m_FeatureEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgEulerAngles)
+, m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
+, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
+, m_SurfaceMeshFaceNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals)
+, m_SurfaceMeshFaceAreasArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas)
+, m_SurfaceMeshFeatureFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "FaceLabels")
+, m_NodeTypesArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType)
+, m_CrystalStructures(nullptr)
+, m_FeatureEulerAngles(nullptr)
+, m_FeaturePhases(nullptr)
+, m_SurfaceMeshFaceAreas(nullptr)
+, m_SurfaceMeshFaceLabels(nullptr)
+, m_SurfaceMeshFaceNormals(nullptr)
+, m_SurfaceMeshFeatureFaceLabels(nullptr)
+, m_NodeTypes(nullptr)
 {
   setupFilterParameters();
 }
@@ -436,39 +414,47 @@ void FindGBPDMetricBased::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Save Relative Errors Instead of Their Absolute Values", SaveRelativeErr, FilterParameter::Parameter, FindGBPDMetricBased));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Node Types", NodeTypesArrayPath, FilterParameter::RequiredArray, FindGBPDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, FindGBPDMetricBased, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 3, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Normals", SurfaceMeshFaceNormalsArrayPath, FilterParameter::RequiredArray, FindGBPDMetricBased, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, 1, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Areas", SurfaceMeshFaceAreasArrayPath, FilterParameter::RequiredArray, FindGBPDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::FaceFeature, SIMPL::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::FaceFeature, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Face Labels", SurfaceMeshFeatureFaceLabelsArrayPath, FilterParameter::RequiredArray, FindGBPDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Euler Angles", FeatureEulerAnglesArrayPath, FilterParameter::RequiredArray, FindGBPDMetricBased, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, FindGBPDMetricBased, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindGBPDMetricBased, req));
   }
   setFilterParameters(parameters);
@@ -503,7 +489,6 @@ void FindGBPDMetricBased::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 void FindGBPDMetricBased::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -514,7 +499,7 @@ void FindGBPDMetricBased::dataCheck()
   setErrorCondition(0);
 
   // Number of Sampling Points (filter params.)
-  if (getNumSamplPts() < 1)
+  if(getNumSamplPts() < 1)
   {
     QString ss = QObject::tr("The number of sampling points must be greater than zero");
     notifyErrorMessage(getHumanLabel(), ss, -1);
@@ -522,21 +507,21 @@ void FindGBPDMetricBased::dataCheck()
   }
 
   // Set some reasonable value, but allow user to use more if he/she knows what he/she does
-  if (getNumSamplPts() > 5000)
+  if(getNumSamplPts() > 5000)
   {
     QString ss = QObject::tr("Most likely, you do not need to use that many sampling points");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
   // Output files (filter params.)
-  if (getDistOutputFile().isEmpty() == true)
+  if(getDistOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The output file for saving the distribution must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1000);
     setErrorCondition(-1);
   }
 
-  if (getErrOutputFile().isEmpty() == true)
+  if(getErrOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The output file for saving the distribution errors must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1000);
@@ -550,7 +535,7 @@ void FindGBPDMetricBased::dataCheck()
 
   QFileInfo distOutFileInfo(getDistOutputFile());
   QDir distParentPath = distOutFileInfo.path();
-  if (distParentPath.exists() == false)
+  if(distParentPath.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the distribution output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
@@ -558,24 +543,24 @@ void FindGBPDMetricBased::dataCheck()
 
   QFileInfo errOutFileInfo(getErrOutputFile());
   QDir errParentPath = errOutFileInfo.path();
-  if (errParentPath.exists() == false)
+  if(errParentPath.exists() == false)
   {
     QString ss = QObject::tr("The directory path for the distribution errors output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if (distOutFileInfo.suffix().compare("") == 0)
+  if(distOutFileInfo.suffix().compare("") == 0)
   {
     setDistOutputFile(getDistOutputFile().append(".dat"));
   }
-  if (errOutFileInfo.suffix().compare("") == 0)
+  if(errOutFileInfo.suffix().compare("") == 0)
   {
     setErrOutputFile(getErrOutputFile().append(".dat"));
   }
 
   // Make sure the file name ends with _1 so the GMT scripts work correctly
   QString distFName = distOutFileInfo.baseName();
-  if (distFName.endsWith("_1") == false)
+  if(distFName.endsWith("_1") == false)
   {
     distFName = distFName + "_1";
     QString absPath = distOutFileInfo.absolutePath() + "/" + distFName + ".dat";
@@ -583,14 +568,14 @@ void FindGBPDMetricBased::dataCheck()
   }
 
   QString errFName = errOutFileInfo.baseName();
-  if (errFName.endsWith("_1") == false)
+  if(errFName.endsWith("_1") == false)
   {
     errFName = errFName + "_1";
     QString absPath = errOutFileInfo.absolutePath() + "/" + errFName + ".dat";
     setErrOutputFile(absPath);
   }
 
-  if (getDistOutputFile().isEmpty() == false && getDistOutputFile() == getErrOutputFile())
+  if(getDistOutputFile().isEmpty() == false && getDistOutputFile() == getErrOutputFile())
   {
     QString ss = QObject::tr("The output files must be different");
     notifyErrorMessage(getHumanLabel(), ss, -1);
@@ -599,14 +584,17 @@ void FindGBPDMetricBased::dataCheck()
 
   // Crystal Structures
   QVector<size_t> cDims(1, 1);
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
+                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Phase of Interest
-  if (nullptr != m_CrystalStructuresPtr.lock().get())
+  if(nullptr != m_CrystalStructuresPtr.lock().get())
   {
-    if (getPhaseOfInterest() >= static_cast<int>(m_CrystalStructuresPtr.lock()->getNumberOfTuples()) || getPhaseOfInterest() <= 0)
+    if(getPhaseOfInterest() >= static_cast<int>(m_CrystalStructuresPtr.lock()->getNumberOfTuples()) || getPhaseOfInterest() <= 0)
     {
       QString ss = QObject::tr("The phase index is either larger than the number of Ensembles or smaller than 1");
       notifyErrorMessage(getHumanLabel(), ss, -1);
@@ -616,45 +604,66 @@ void FindGBPDMetricBased::dataCheck()
 
   // Euler Angels
   cDims[0] = 3;
-  m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_FeatureEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(),
+                                                                                                              cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Phases
   cDims[0] = 1;
-  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_FeaturePhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
+                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Face Labels
   cDims[0] = 2;
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
+                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Face Normals
   cDims[0] = 3;
-  m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_SurfaceMeshFaceNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceNormalsArrayPath(),
+                                                                                                                   cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshFaceNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Face Areas
   cDims[0] = 1;
-  m_SurfaceMeshFaceAreasPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceAreasArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_SurfaceMeshFaceAreasPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_SurfaceMeshFaceAreasPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshFaceAreasArrayPath(),
+                                                                                                                 cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshFaceAreasPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshFaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Face Labels
   cDims[0] = 2;
-  m_SurfaceMeshFeatureFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFeatureFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_SurfaceMeshFeatureFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_SurfaceMeshFeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_SurfaceMeshFeatureFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(
+      this, getSurfaceMeshFeatureFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_SurfaceMeshFeatureFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_SurfaceMeshFeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Node Types
   cDims[0] = 1;
-  m_NodeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getNodeTypesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_NodeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_NodeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getNodeTypesArrayPath(),
+                                                                                                      cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NodeTypesPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -663,46 +672,44 @@ void FindGBPDMetricBased::dataCheck()
 void FindGBPDMetricBased::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBPDMetricBased::appendSamplPtsFixedZenith(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
-                                                           double theta, double minPhi, double maxPhi, double step)
+void FindGBPDMetricBased::appendSamplPtsFixedZenith(QVector<float>* xVec, QVector<float>* yVec, QVector<float>* zVec, double theta, double minPhi, double maxPhi, double step)
 {
-  for (double phi = minPhi; phi <= maxPhi; phi += step)
+  for(double phi = minPhi; phi <= maxPhi; phi += step)
   {
-    (*xVec).push_back( sinf(static_cast<float>(theta)) * cosf(static_cast<float>(phi)) );
-    (*yVec).push_back( sinf(static_cast<float>(theta)) * sinf(static_cast<float>(phi)) );
-    (*zVec).push_back( cosf(static_cast<float>(theta)) );
+    (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(phi)));
+    (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(phi)));
+    (*zVec).push_back(cosf(static_cast<float>(theta)));
   }
-  (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(maxPhi)) );
-  (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(maxPhi)) );
-  (*zVec).push_back(cosf(static_cast<float>(theta)) );
+  (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(maxPhi)));
+  (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(maxPhi)));
+  (*zVec).push_back(cosf(static_cast<float>(theta)));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBPDMetricBased::appendSamplPtsFixedAzimuth(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
-                                                            double phi, double minTheta, double maxTheta, double step)
+void FindGBPDMetricBased::appendSamplPtsFixedAzimuth(QVector<float>* xVec, QVector<float>* yVec, QVector<float>* zVec, double phi, double minTheta, double maxTheta, double step)
 {
-  for (double theta = minTheta; theta <= maxTheta; theta += step)
+  for(double theta = minTheta; theta <= maxTheta; theta += step)
   {
-    (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(phi)) );
-    (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(phi)) );
-    (*zVec).push_back(cosf(static_cast<float>(theta)) );
+    (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(phi)));
+    (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(phi)));
+    (*zVec).push_back(cosf(static_cast<float>(theta)));
   }
-  (*xVec).push_back(sinf(static_cast<float>(maxTheta)) * cosf(static_cast<float>(phi)) );
-  (*yVec).push_back(sinf(static_cast<float>(maxTheta)) * sinf(static_cast<float>(phi)) );
-  (*zVec).push_back(cosf(static_cast<float>(maxTheta)) );
+  (*xVec).push_back(sinf(static_cast<float>(maxTheta)) * cosf(static_cast<float>(phi)));
+  (*yVec).push_back(sinf(static_cast<float>(maxTheta)) * sinf(static_cast<float>(phi)));
+  (*zVec).push_back(cosf(static_cast<float>(maxTheta)));
 }
 
 // -----------------------------------------------------------------------------
@@ -712,7 +719,10 @@ void FindGBPDMetricBased::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   m_LimitDist *= SIMPLib::Constants::k_PiOver180;
 
@@ -726,8 +736,7 @@ void FindGBPDMetricBased::execute()
   int32_t* m_FeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
   int8_t* m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
 
-
-  if (m_CrystalStructures[m_PhaseOfInterest] > 10)
+  if(m_CrystalStructures[m_PhaseOfInterest] > 10)
   {
     QString ss = QObject::tr("Unsupported CrystalStructure");
     notifyErrorMessage(getHumanLabel(), ss, -1);
@@ -746,7 +755,7 @@ void FindGBPDMetricBased::execute()
   QFileInfo distOutFileInfo(getDistOutputFile());
 
   QDir distOutFileDir(distOutFileInfo.path());
-  if (!distOutFileDir.mkpath("."))
+  if(!distOutFileDir.mkpath("."))
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(distOutFileDir.path());
@@ -756,7 +765,7 @@ void FindGBPDMetricBased::execute()
   }
 
   QFile distOutFile(getDistOutputFile());
-  if (!distOutFile.open(QIODevice::WriteOnly | QIODevice::Text))
+  if(!distOutFile.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getDistOutputFile());
     setErrorCondition(-100);
@@ -767,7 +776,7 @@ void FindGBPDMetricBased::execute()
   QFileInfo errOutFileInfo(getDistOutputFile());
 
   QDir errOutFileDir(errOutFileInfo.path());
-  if (!errOutFileDir.mkpath("."))
+  if(!errOutFileDir.mkpath("."))
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(errOutFileDir.path());
@@ -777,7 +786,7 @@ void FindGBPDMetricBased::execute()
   }
 
   QFile errOutFile(getDistOutputFile());
-  if (!errOutFile.open(QIODevice::WriteOnly | QIODevice::Text))
+  if(!errOutFile.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getDistOutputFile());
     setErrorCondition(-100);
@@ -788,7 +797,7 @@ void FindGBPDMetricBased::execute()
   // Open the output files, should be opened and checked before starting computations
   FILE* fDist = nullptr;
   fDist = fopen(m_DistOutputFile.toLatin1().data(), "wb");
-  if (nullptr == fDist)
+  if(nullptr == fDist)
   {
     QString ss = QObject::tr("Error opening distribution output file '%1'").arg(m_DistOutputFile);
     setErrorCondition(-1);
@@ -798,7 +807,7 @@ void FindGBPDMetricBased::execute()
 
   FILE* fErr = nullptr;
   fErr = fopen(m_ErrOutputFile.toLatin1().data(), "wb");
-  if (nullptr == fErr)
+  if(nullptr == fErr)
   {
     QString ss = QObject::tr("Error opening distribution errors output file '%1'").arg(m_ErrOutputFile);
     setErrorCondition(-1);
@@ -830,17 +839,21 @@ void FindGBPDMetricBased::execute()
   float _inc = 2.3999632f; // = pi * (3 - sqrt(5))
   float _off = 2.0f / float(numSamplPts_WholeSph);
 
-  for (int ptIdx_WholeSph = 0; ptIdx_WholeSph < numSamplPts_WholeSph; ptIdx_WholeSph++)
+  for(int ptIdx_WholeSph = 0; ptIdx_WholeSph < numSamplPts_WholeSph; ptIdx_WholeSph++)
   {
-    if (getCancel() == true) { return; }
+    if(getCancel() == true)
+    {
+      return;
+    }
 
     float _y = (float(ptIdx_WholeSph) * _off) - 1.0f + (0.5f * _off);
-    float _r = sqrtf(fmaxf(1.0f - _y*_y, 0.0f));
+    float _r = sqrtf(fmaxf(1.0f - _y * _y, 0.0f));
     float _phi = float(ptIdx_WholeSph) * _inc;
 
     float z = sinf(_phi) * _r;
 
-    if (z >= 0.0f) {
+    if(z >= 0.0f)
+    {
       samplPtsX_HemiSph.push_back(cosf(_phi) * _r);
       samplPtsY_HemiSph.push_back(_y);
       samplPtsZ_HemiSph.push_back(z);
@@ -848,46 +861,73 @@ void FindGBPDMetricBased::execute()
   }
 
   // now, select the points from the SST
-  for (int ptIdx_HemiSph = 0; ptIdx_HemiSph < samplPtsX_HemiSph.size(); ptIdx_HemiSph++)
+  for(int ptIdx_HemiSph = 0; ptIdx_HemiSph < samplPtsX_HemiSph.size(); ptIdx_HemiSph++)
   {
-    if (getCancel() == true) { return; }
+    if(getCancel() == true)
+    {
+      return;
+    }
 
     float x = samplPtsX_HemiSph[ptIdx_HemiSph];
     float y = samplPtsY_HemiSph[ptIdx_HemiSph];
     float z = samplPtsZ_HemiSph[ptIdx_HemiSph];
 
-    if (cryst == 0) // 6/mmm
+    if(cryst == 0) // 6/mmm
     {
-      if (x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_1OverRoot3) { continue; }
+      if(x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_1OverRoot3)
+      {
+        continue;
+      }
     }
-    if (cryst == 1) // m-3m
+    if(cryst == 1) // m-3m
     {
-        if (y < 0.0f || x < y || z < x) { continue; }
+      if(y < 0.0f || x < y || z < x)
+      {
+        continue;
+      }
     }
-    if (cryst == 2 || cryst == 10) // 6/m || -3m
+    if(cryst == 2 || cryst == 10) // 6/m || -3m
     {
-      if (x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_Sqrt3) { continue; }
+      if(x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_Sqrt3)
+      {
+        continue;
+      }
     }
-    if (cryst == 3) // m-3
+    if(cryst == 3) // m-3
     {
-      if (x < 0.0f || y < 0.0f || z < x || z < y) { continue; }
+      if(x < 0.0f || y < 0.0f || z < x || z < y)
+      {
+        continue;
+      }
     }
     // cryst = 4  =>  -1
-    if (cryst == 5) // 2/m
+    if(cryst == 5) // 2/m
     {
-      if (y < 0.0f) { continue; }
+      if(y < 0.0f)
+      {
+        continue;
+      }
     }
-    if (cryst == 6 || cryst == 7) // mmm || 4/m
+    if(cryst == 6 || cryst == 7) // mmm || 4/m
     {
-      if (x < 0.0f || y < 0.0f) { continue; }
+      if(x < 0.0f || y < 0.0f)
+      {
+        continue;
+      }
     }
-    if (cryst == 8) // 4/mmm
+    if(cryst == 8) // 4/mmm
     {
-      if (x < 0.0f || y < 0.0f || y > x) { continue; }
+      if(x < 0.0f || y < 0.0f || y > x)
+      {
+        continue;
+      }
     }
-    if (cryst == 9) // -3
+    if(cryst == 9) // -3
     {
-      if (y < 0.0f || x < -y * SIMPLib::Constants::k_1OverRoot3) { continue; }
+      if(y < 0.0f || x < -y * SIMPLib::Constants::k_1OverRoot3)
+      {
+        continue;
+      }
     }
 
     samplPtsX.push_back(x);
@@ -899,18 +939,18 @@ void FindGBPDMetricBased::execute()
   const double deg = SIMPLib::Constants::k_PiOver180;
   const double density = m_LimitDist;
 
-  if (cryst == 0) // 6/mmm
+  if(cryst == 0) // 6/mmm
   {
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 30.0 * deg, 0.0, 90.0 * deg, density);
     appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 30.0 * deg, density);
   }
-  if (cryst == 1) // m-3m
+  if(cryst == 1) // m-3m
   {
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 45.0 * deg, density);
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, acos(SIMPLib::Constants::k_1OverRoot3), density);
 
-    for (double phi = 0; phi <= 45.0f * deg; phi += density)
+    for(double phi = 0; phi <= 45.0f * deg; phi += density)
     {
       double cosPhi = cos(phi);
       double sinPhi = sin(phi);
@@ -923,17 +963,17 @@ void FindGBPDMetricBased::execute()
       samplPtsZ.push_back(static_cast<float>(cosAtan1OverCosPhi));
     }
   }
-  if (cryst == 2 || cryst == 10) // 6/m ||  -3m
+  if(cryst == 2 || cryst == 10) // 6/m ||  -3m
   {
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 60.0 * deg, 0.0, 90.0 * deg, density);
     appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 60.0 * deg, density);
   }
-  if (cryst == 3) // m-3
+  if(cryst == 3) // m-3
   {
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 45.0 * deg, density);
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, density);
-    for (double phi = 0; phi <= 45.0f * deg; phi += density)
+    for(double phi = 0; phi <= 45.0f * deg; phi += density)
     {
       double cosPhi = cos(phi);
       double sinPhi = sin(phi);
@@ -950,28 +990,28 @@ void FindGBPDMetricBased::execute()
       samplPtsZ.push_back(static_cast<float>(cosAtan1OverCosPhi));
     }
   }
-  if (cryst == 4) // -1
+  if(cryst == 4) // -1
   {
     appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 360.0 * deg, density);
   }
-  if (cryst == 5) // 2/m
+  if(cryst == 5) // 2/m
   {
     appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 180.0 * deg, density);
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, -90.0 * deg, 90.0 * deg, density);
   }
-  if (cryst == 6 || cryst == 7) // mmm || 4/m
+  if(cryst == 6 || cryst == 7) // mmm || 4/m
   {
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, density);
     appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, density);
   }
-  if (cryst == 8) // 4/mmm
+  if(cryst == 8) // 4/mmm
   {
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, 90.0 * deg, density);
     appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, density);
   }
-  if (cryst == 9) // -3
+  if(cryst == 9) // -3
   {
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
     appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 120.0 * deg, 0.0, 90.0 * deg, density);
@@ -990,52 +1030,35 @@ void FindGBPDMetricBased::execute()
 #endif
 
   size_t trisChunkSize = 50000;
-  if (numMeshTris < trisChunkSize) { trisChunkSize = numMeshTris; }
-
-  for (size_t i = 0; i < numMeshTris; i = i + trisChunkSize)
+  if(numMeshTris < trisChunkSize)
   {
-    if (getCancel() == true) { return; }
+    trisChunkSize = numMeshTris;
+  }
+
+  for(size_t i = 0; i < numMeshTris; i = i + trisChunkSize)
+  {
+    if(getCancel() == true)
+    {
+      return;
+    }
     ss = QObject::tr("--> Selecting triangles corresponding to Phase Of Interest");
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    if (i + trisChunkSize >= numMeshTris)
+    if(i + trisChunkSize >= numMeshTris)
     {
       trisChunkSize = numMeshTris - i;
     }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize),
-        TrisSelector(
-          m_ExcludeTripleLines,
-          m_Triangles,
-          m_NodeTypes,
-          &selectedTris,
-          m_PhaseOfInterest,
-          m_CrystalStructures,
-          m_Eulers,
-          m_Phases,
-          m_FaceLabels,
-          m_FaceNormals,
-          m_FaceAreas
-        ), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize), TrisSelector(m_ExcludeTripleLines, m_Triangles, m_NodeTypes, &selectedTris, m_PhaseOfInterest, m_CrystalStructures, m_Eulers,
+                                                                                       m_Phases, m_FaceLabels, m_FaceNormals, m_FaceAreas),
+                        tbb::auto_partitioner());
     }
     else
 #endif
     {
-      TrisSelector serial(
-        m_ExcludeTripleLines,
-        m_Triangles,
-        m_NodeTypes,
-        &selectedTris,
-        m_PhaseOfInterest,
-        m_CrystalStructures,
-        m_Eulers,
-        m_Phases,
-        m_FaceLabels,
-        m_FaceNormals,
-        m_FaceAreas
-        );
+      TrisSelector serial(m_ExcludeTripleLines, m_Triangles, m_NodeTypes, &selectedTris, m_PhaseOfInterest, m_CrystalStructures, m_Eulers, m_Phases, m_FaceLabels, m_FaceNormals, m_FaceAreas);
       serial.select(i, i + trisChunkSize);
     }
   }
@@ -1044,72 +1067,67 @@ void FindGBPDMetricBased::execute()
   int32_t numDistinctGBs = 0;
   int32_t numFaceFeatures = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getNumberOfTuples();
 
-  for (int featureFaceIdx = 0; featureFaceIdx < numFaceFeatures; featureFaceIdx++)
+  for(int featureFaceIdx = 0; featureFaceIdx < numFaceFeatures; featureFaceIdx++)
   {
     int32_t feature1 = m_FeatureFaceLabels[2 * featureFaceIdx];
     int32_t feature2 = m_FeatureFaceLabels[2 * featureFaceIdx + 1];
 
-    if (feature1 < 1 || feature2 < 1) { continue; }
-    if (m_FeaturePhases[feature1] != m_FeaturePhases[feature2])  { continue; }
-    if (m_FeaturePhases[feature1] != m_PhaseOfInterest || m_FeaturePhases[feature2] != m_PhaseOfInterest) { continue; }
+    if(feature1 < 1 || feature2 < 1)
+    {
+      continue;
+    }
+    if(m_FeaturePhases[feature1] != m_FeaturePhases[feature2])
+    {
+      continue;
+    }
+    if(m_FeaturePhases[feature1] != m_PhaseOfInterest || m_FeaturePhases[feature2] != m_PhaseOfInterest)
+    {
+      continue;
+    }
 
     numDistinctGBs++;
   }
 
   // ----------------- determining distribution values at the sampling points (and their errors) ---
   double totalFaceArea = 0.0;
-  for (int i = 0; i < static_cast<int>(selectedTris.size()); i++) { totalFaceArea += selectedTris.at(i).area; }
+  for(int i = 0; i < static_cast<int>(selectedTris.size()); i++)
+  {
+    totalFaceArea += selectedTris.at(i).area;
+  }
 
   QVector<double> distribValues(samplPtsX.size(), 0.0);
   QVector<double> errorValues(samplPtsX.size(), 0.0);
 
   int32_t pointsChunkSize = 20;
-  if (samplPtsX.size() < pointsChunkSize) { pointsChunkSize = samplPtsX.size(); }
-
-  for (int32_t i = 0; i < samplPtsX.size(); i = i + pointsChunkSize)
+  if(samplPtsX.size() < pointsChunkSize)
   {
-    if (getCancel() == true) { return; }
+    pointsChunkSize = samplPtsX.size();
+  }
+
+  for(int32_t i = 0; i < samplPtsX.size(); i = i + pointsChunkSize)
+  {
+    if(getCancel() == true)
+    {
+      return;
+    }
     ss = QObject::tr("--> Determining GBPD values (%1%)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    if (i + pointsChunkSize >= samplPtsX.size())
+    if(i + pointsChunkSize >= samplPtsX.size())
     {
       pointsChunkSize = samplPtsX.size() - i;
     }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    if (doParallel == true)
+    if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + pointsChunkSize),
-        ProbeDistrib(
-        &distribValues,
-        &errorValues,
-        &samplPtsX,
-        &samplPtsY,
-        &samplPtsZ,
-        selectedTris,
-        m_LimitDist,
-        totalFaceArea,
-        numDistinctGBs,
-        ballVolume,
-        cryst
-        ), tbb::auto_partitioner());
+                        ProbeDistrib(&distribValues, &errorValues, &samplPtsX, &samplPtsY, &samplPtsZ, selectedTris, m_LimitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst),
+                        tbb::auto_partitioner());
     }
     else
 #endif
     {
-      ProbeDistrib serial(
-        &distribValues,
-        &errorValues,
-        &samplPtsX,
-        &samplPtsY,
-        &samplPtsZ,
-        selectedTris,
-        m_LimitDist,
-        totalFaceArea,
-        numDistinctGBs,
-        ballVolume,
-        cryst
-        );
+      ProbeDistrib serial(&distribValues, &errorValues, &samplPtsX, &samplPtsY, &samplPtsZ, selectedTris, m_LimitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst);
       serial.probe(i, i + pointsChunkSize);
     }
   }
@@ -1118,18 +1136,18 @@ void FindGBPDMetricBased::execute()
   fprintf(fDist, "%.1f %.1f %.1f %.1f\n", 0.0f, 0.0f, 0.0f, 0.0f);
   fprintf(fErr, "%.1f %.1f %.1f %.1f\n", 0.0f, 0.0f, 0.0f, 0.0f);
 
-  for (int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++)
+  for(int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++)
   {
-    float point[3] = { samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx) };
-    float sym[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    float point[3] = {samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx)};
+    float sym[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
 
-    for (int j = 0; j < nsym; j++)
+    for(int j = 0; j < nsym; j++)
     {
       m_OrientationOps[cryst]->getMatSymOp(j, sym);
-      float sym_point[3] = { 0.0f, 0.0f, 0.0f };
+      float sym_point[3] = {0.0f, 0.0f, 0.0f};
       MatrixMath::Multiply3x3with3x1(sym, point, sym_point);
 
-      if (sym_point[2] < 0.0f)
+      if(sym_point[2] < 0.0f)
       {
         sym_point[0] = -sym_point[0];
         sym_point[1] = -sym_point[1];
@@ -1144,14 +1162,14 @@ void FindGBPDMetricBased::execute()
 
       fprintf(fDist, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, distribValues[ptIdx]);
 
-      if (m_SaveRelativeErr == false)
+      if(m_SaveRelativeErr == false)
       {
         fprintf(fErr, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, errorValues[ptIdx]);
       }
       else
       {
         double saneErr = 100.0;
-        if (distribValues[ptIdx] > 1e-10)
+        if(distribValues[ptIdx] > 1e-10)
         {
           saneErr = fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
         }
@@ -1162,7 +1180,7 @@ void FindGBPDMetricBased::execute()
   fclose(fDist);
   fclose(fErr);
 
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     QString ss = QObject::tr("Something went wrong");
     setErrorCondition(-1);
@@ -1190,7 +1208,9 @@ AbstractFilter::Pointer FindGBPDMetricBased::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString FindGBPDMetricBased::getCompiledLibraryName()
-{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
+{
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1207,7 +1227,7 @@ const QString FindGBPDMetricBased::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 
@@ -1215,16 +1235,22 @@ const QString FindGBPDMetricBased::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindGBPDMetricBased::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+{
+  return SIMPL::FilterGroups::StatisticsFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindGBPDMetricBased::getSubGroupName()
-{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
+{
+  return SIMPL::FilterSubGroups::CrystallographicFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindGBPDMetricBased::getHumanLabel()
-{ return "Find GBPD (Metric-Based Approach)"; }
+{
+  return "Find GBPD (Metric-Based Approach)";
+}

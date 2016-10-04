@@ -42,10 +42,10 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -53,19 +53,18 @@
 // Include the MOC generated file for this class
 #include "moc_VASPReader.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VASPReader::VASPReader() :
-  FileReader(),
-  m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName),
-  m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName),
-  m_InputFile(""),
-  m_AtomVelocitiesArrayName(SIMPL::VertexData::AtomVelocities),
-  m_AtomTypesArrayName(SIMPL::VertexData::AtomTypes),
-  m_AtomVelocities(nullptr),
-  m_AtomTypes(nullptr)
+VASPReader::VASPReader()
+: FileReader()
+, m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
+, m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
+, m_InputFile("")
+, m_AtomVelocitiesArrayName(SIMPL::VertexData::AtomVelocities)
+, m_AtomTypesArrayName(SIMPL::VertexData::AtomTypes)
+, m_AtomVelocities(nullptr)
+, m_AtomTypes(nullptr)
 {
   setupFilterParameters();
 }
@@ -98,11 +97,11 @@ void VASPReader::setupFilterParameters()
 void VASPReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName() ) );
-  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
-  setAtomTypesArrayName(reader->readString("AtomTypesArrayName", getAtomTypesArrayName() ) );
-  setAtomVelocitiesArrayName(reader->readString("AtomVelocitiesArrayName", getAtomVelocitiesArrayName() ) );
-  setInputFile( reader->readString( "InputFile", getInputFile() ) );
+  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName()));
+  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
+  setAtomTypesArrayName(reader->readString("AtomTypesArrayName", getAtomTypesArrayName()));
+  setAtomVelocitiesArrayName(reader->readString("AtomVelocitiesArrayName", getAtomVelocitiesArrayName()));
+  setInputFile(reader->readString("InputFile", getInputFile()));
   reader->closeFilterGroup();
 }
 
@@ -113,10 +112,14 @@ void VASPReader::updateVertexInstancePointers()
 {
   setErrorCondition(0);
 
-  if( nullptr != m_AtomVelocitiesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if( nullptr != m_AtomTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_AtomVelocitiesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0);
+  }                                          /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_AtomTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -129,7 +132,13 @@ void VASPReader::initialize()
     m_InStream.close();
   }
   latticeConstant = 0.0f;
-  for(size_t i = 0; i < 3; i++) { for(size_t j=0;j<3;j++) { latticeVectors[i][j] = 0.0f;} }
+  for(size_t i = 0; i < 3; i++)
+  {
+    for(size_t j = 0; j < 3; j++)
+    {
+      latticeVectors[i][j] = 0.0f;
+    }
+  }
   atomNumbers.clear();
   totalAtoms = -1;
 }
@@ -143,23 +152,29 @@ void VASPReader::dataCheck()
   setErrorCondition(0);
   initialize();
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-  QVector<size_t> tDims (1, 0);
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+  QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Vertex);
-  if(getErrorCondition() < 0 || nullptr == vertexAttrMat.get()) { return; }
+  if(getErrorCondition() < 0 || nullptr == vertexAttrMat.get())
+  {
+    return;
+  }
 
   VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   m->setGeometry(vertex);
 
   QFileInfo fi(getInputFile());
 
-  if (getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if(fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
@@ -167,21 +182,27 @@ void VASPReader::dataCheck()
   }
 
   QVector<size_t> dims(1, 3);
-  tempPath.update(getVertexDataContainerName(), getVertexAttributeMatrixName(), getAtomVelocitiesArrayName() );
-  m_AtomVelocitiesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AtomVelocitiesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getVertexDataContainerName(), getVertexAttributeMatrixName(), getAtomVelocitiesArrayName());
+  m_AtomVelocitiesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+      this, tempPath, 0.0, dims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AtomVelocitiesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  tempPath.update(getVertexDataContainerName(), getVertexAttributeMatrixName(), getAtomTypesArrayName() );
-  m_AtomTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_AtomTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getVertexDataContainerName(), getVertexAttributeMatrixName(), getAtomTypesArrayName());
+  m_AtomTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0,
+                                                                                                                      dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_AtomTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if (getInputFile().isEmpty() == false && fi.exists() == true)
+  if(getInputFile().isEmpty() == false && fi.exists() == true)
   {
     // We need to read the header of the input file to get the dimensions
     m_InStream.setFileName(getInputFile());
-    if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
+    if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QString ss = QObject::tr("VASPReader Input file could not be opened: %1").arg(getInputFile());
       setErrorCondition(-100);
@@ -191,7 +212,7 @@ void VASPReader::dataCheck()
 
     int error = readHeader();
     m_InStream.close();
-    if (error < 0)
+    if(error < 0)
     {
       setErrorCondition(error);
       QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a VASP file?");
@@ -221,10 +242,13 @@ void VASPReader::execute()
   int err = 0;
 
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   m_InStream.setFileName(getInputFile());
-  if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
+  if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("VASPReader Input file could not be opened: %1").arg(getInputFile());
     setErrorCondition(-100);
@@ -244,9 +268,7 @@ void VASPReader::execute()
   {
     return;
   }
-
 }
-
 
 //-----------------------------------------------------------------------------
 //
@@ -265,15 +287,15 @@ int VASPReader::readHeader()
 
   bool ok = false;
   // Process the header information
-//  bool done = false;
-  //read Title line
+  //  bool done = false;
+  // read Title line
   buf = m_InStream.readLine();
-  //read Lattice Constant line
+  // read Lattice Constant line
   buf = m_InStream.readLine();
   buf = buf.trimmed();
   tokens = buf.split(' ');
   latticeConstant = tokens[0].toFloat(&ok);
-  //read Lattice Vector lines
+  // read Lattice Vector lines
   buf = m_InStream.readLine();
   buf = buf.trimmed();
   buf = buf.simplified();
@@ -295,9 +317,9 @@ int VASPReader::readHeader()
   latticeVectors[2][0] = tokens[0].toFloat(&ok);
   latticeVectors[2][1] = tokens[1].toFloat(&ok);
   latticeVectors[2][2] = tokens[2].toFloat(&ok);
-  //read Atom Type line
+  // read Atom Type line
   buf = m_InStream.readLine();
-  //read Atom Number line
+  // read Atom Number line
   buf = m_InStream.readLine();
   buf = buf.trimmed();
   buf = buf.simplified();
@@ -333,7 +355,7 @@ int VASPReader::readFile()
   VertexGeom::Pointer verticesPtr = m->getGeometryAs<VertexGeom>();
   float* vertex = verticesPtr->getVertexPointer(0);
 
-  //read the blank line
+  // read the blank line
   buf = m_InStream.readLine();
   bool ok = false;
 
@@ -361,7 +383,7 @@ int VASPReader::readFile()
       index++;
     }
   }
-  //read the blank line
+  // read the blank line
   buf = m_InStream.readLine();
 
   float vel[3];
@@ -393,7 +415,6 @@ int VASPReader::readFile()
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -431,7 +452,7 @@ const QString VASPReader::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
+  vStream << IO::Version::Major() << "." << IO::Version::Minor() << "." << IO::Version::Patch();
   return version;
 }
 
@@ -439,19 +460,22 @@ const QString VASPReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString VASPReader::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
-
+{
+  return SIMPL::FilterGroups::IOFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VASPReader::getSubGroupName()
-{ return SIMPL::FilterSubGroups::InputFilters; }
-
+{
+  return SIMPL::FilterSubGroups::InputFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VASPReader::getHumanLabel()
-{ return "Read VASP File"; }
-
+{
+  return "Read VASP File";
+}

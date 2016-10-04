@@ -229,7 +229,9 @@ endif()
 # Build the SimpleITKExplicit Library.
 option(DREAM3D_USE_ITK "Use ITK For Image Processing" ON)
 if(DREAM3D_USE_ITK)
+  # SimpleITK Explicit needs the next variable to be set:
   set(EXE_DEBUG_EXTENSION "_debug")
+  # Now add the subdirectory.
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
   get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
 endif()

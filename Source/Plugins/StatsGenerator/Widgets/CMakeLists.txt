@@ -65,7 +65,7 @@ set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/SGAxisODFWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenMDFWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenRDFWidget.cpp
-    ${StatsGenerator_SOURCE_DIR}/SGWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/StatsGenWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.cpp
     ${StatsGenerator_SOURCE_DIR}/PrimaryPhaseWidget.cpp
@@ -86,7 +86,7 @@ SET(StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGAxisODFWidget.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenMDFWidget.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenRDFWidget.h
-    ${StatsGenerator_SOURCE_DIR}/SGWidget.h
+    ${StatsGenerator_SOURCE_DIR}/StatsGenWidget.h
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.h
     ${StatsGenerator_SOURCE_DIR}/PrimaryPhaseWidget.h

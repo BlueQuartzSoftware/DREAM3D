@@ -38,22 +38,23 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadH5EbsdFilterParameter::ReadH5EbsdFilterParameter() :
-FilterParameter()
-{}
+ReadH5EbsdFilterParameter::ReadH5EbsdFilterParameter()
+: FilterParameter()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ReadH5EbsdFilterParameter::~ReadH5EbsdFilterParameter()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, ReadH5Ebsd* filter, const QString& fileExtension,
-  const QString& fileType, int groupIndex)
+ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, ReadH5Ebsd* filter,
+                                                                  const QString& fileExtension, const QString& fileType, int groupIndex)
 {
   ReadH5EbsdFilterParameter::Pointer ptr = ReadH5EbsdFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -67,7 +68,6 @@ ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::New(const QString&
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ QString ReadH5EbsdFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5EbsdFilterParameter::readJson(const QJsonObject &json)
+void ReadH5EbsdFilterParameter::readJson(const QJsonObject& json)
 {
   m_Filter->setInputFile(json["InputFile"].toString());
   m_Filter->setZStartIndex(json["ZStartIndex"].toInt());
@@ -90,7 +90,7 @@ void ReadH5EbsdFilterParameter::readJson(const QJsonObject &json)
 
   QSet<QString> selectedArrayNames;
   QJsonArray selectedArrayNamesObj = json["SelectedArrayNames"].toArray();
-  for (int i=0; i<selectedArrayNamesObj.size(); i++)
+  for(int i = 0; i < selectedArrayNamesObj.size(); i++)
   {
     selectedArrayNames.insert(selectedArrayNamesObj[i].toString());
   }
@@ -100,7 +100,7 @@ void ReadH5EbsdFilterParameter::readJson(const QJsonObject &json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5EbsdFilterParameter::writeJson(QJsonObject &json)
+void ReadH5EbsdFilterParameter::writeJson(QJsonObject& json)
 {
   json["InputFile"] = m_Filter->getInputFile();
   json["ZStartIndex"] = m_Filter->getZStartIndex();
@@ -111,11 +111,10 @@ void ReadH5EbsdFilterParameter::writeJson(QJsonObject &json)
 
   QJsonArray selectedArrayNamesObj;
   QSetIterator<QString> iter(m_Filter->getSelectedArrayNames());
-  while (iter.hasNext())
+  while(iter.hasNext())
   {
     QString selectedArrayName = iter.next();
     selectedArrayNamesObj.push_back(selectedArrayName);
   }
   json["SelectedArrayNames"] = selectedArrayNamesObj;
 }
-

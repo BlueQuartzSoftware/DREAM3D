@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "SGAbstractTableModel.h"
 #include <iostream>
 
@@ -44,8 +43,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGAbstractTableModel::SGAbstractTableModel(QObject* parent) :
-  QAbstractTableModel(parent)
+SGAbstractTableModel::SGAbstractTableModel(QObject* parent)
+: QAbstractTableModel(parent)
 {
 }
 
@@ -55,4 +54,3 @@ SGAbstractTableModel::SGAbstractTableModel(QObject* parent) :
 SGAbstractTableModel::~SGAbstractTableModel()
 {
 }
-

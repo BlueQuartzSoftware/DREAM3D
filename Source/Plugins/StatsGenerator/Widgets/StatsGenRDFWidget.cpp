@@ -39,37 +39,34 @@
 #include <iostream>
 
 //-- Qt Includes
-#include <QtWidgets/QAbstractItemDelegate>
 #include <QtConcurrent/QtConcurrentMap>
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtCore/QString>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
+#include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
-#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QFileDialog>
-
+#include <QtWidgets/QMessageBox>
 
 #include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
 #include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
-#include <qwt_series_data.h>
-#include <qwt_interval.h>
-#include <qwt_point_3d.h>
 #include <qwt_compat.h>
-
+#include <qwt_interval.h>
+#include <qwt_plot.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
+#include <qwt_point_3d.h>
+#include <qwt_scale_draw.h>
+#include <qwt_series_data.h>
+#include <qwt_symbol.h>
 
 #include "SIMPLib/Math/RadialDistributionFunction.h"
 
 #include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
-
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_StatsGenRDFWidget.cpp"
@@ -77,9 +74,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenRDFWidget::StatsGenRDFWidget(QWidget* parent) :
-  QWidget(parent),
-  m_RDFTableModel(nullptr)
+StatsGenRDFWidget::StatsGenRDFWidget(QWidget* parent)
+: QWidget(parent)
+, m_RDFTableModel(nullptr)
 {
   this->setupUi(this);
   this->setupGui();
@@ -90,7 +87,7 @@ StatsGenRDFWidget::StatsGenRDFWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 StatsGenRDFWidget::~StatsGenRDFWidget()
 {
-  if (nullptr != m_RDFTableModel)
+  if(nullptr != m_RDFTableModel)
   {
     m_RDFTableModel->deleteLater();
   }
@@ -169,9 +166,8 @@ void StatsGenRDFWidget::setupGui()
   QAbstractItemDelegate* aid = m_RDFTableModel->getItemDelegate();
   m_RDFTableView->setItemDelegate(aid);
   m_PlotCurve = new QwtPlotCurve;
-  //GenerateTestData(m_RDFPlot);
+  // GenerateTestData(m_RDFPlot);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -180,7 +176,7 @@ void StatsGenRDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 {
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
-  plot->setCanvasBackground( Qt::black ); //Set the Background colour
+  plot->setCanvasBackground(Qt::black); // Set the Background colour
 }
 
 // -----------------------------------------------------------------------------
@@ -288,7 +284,7 @@ void StatsGenRDFWidget::updateRDFPlot(QVector<float>& freqs)
 
   double pos = minDist;
 
-  for (qint32 i = 0; i < numValues; ++i)
+  for(qint32 i = 0; i < numValues; ++i)
   {
     xD[i] = pos;
     yD[i] = static_cast<double>(freqs.at(i));
@@ -303,12 +299,12 @@ void StatsGenRDFWidget::updateRDFPlot(QVector<float>& freqs)
   curve->setData(xD, yD);
 #endif
   curve->setStyle(QwtPlotCurve::Lines);
-  //Use Antialiasing to improve plot render quality
-  curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
+  // Use Antialiasing to improve plot render quality
+  curve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
   QPen pen;
   pen.setColor(Qt::white);
   pen.setWidth(2);
-  curve->setPen(pen);//Set colour and thickness for drawing the curve
+  curve->setPen(pen); // Set colour and thickness for drawing the curve
   curve->attach(m_RDFPlot);
   m_RDFPlot->replot();
 }
@@ -330,7 +326,7 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsign
   if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-//    arrays = pp->getMDF_Weights();
+    //    arrays = pp->getMDF_Weights();
     RdfData::Pointer rdf = pp->getRadialDistFunction();
     if(nullptr != rdf.get())
     {
@@ -355,7 +351,6 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsign
   // Generate the RDF table Plot? which adds value to the Table?
   on_generateRDFBtn_clicked();
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -386,21 +381,21 @@ RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
   rdf->setMinDistance(minDist);
   rdf->setMaxDistance(maxDist);
 
-  //Here we want to take whatever the user entered in and normalize
-  //it by what it would look like if a large number of particles were
-  //randomly thrown in the same size box.
-  //So, for example, if the user chooses a random distribution to start with
-  //the actual values they would store would be very close to 1.0, signifying that
-  //in each bin, it is about 1.0x above a random distribution.
-  //The user will not see the normalized by random values in the StatsGen Widget table,
-  //but they will be stored normalized by random in the HDF5 file
+  // Here we want to take whatever the user entered in and normalize
+  // it by what it would look like if a large number of particles were
+  // randomly thrown in the same size box.
+  // So, for example, if the user chooses a random distribution to start with
+  // the actual values they would store would be very close to 1.0, signifying that
+  // in each bin, it is about 1.0x above a random distribution.
+  // The user will not see the normalized by random values in the StatsGen Widget table,
+  // but they will be stored normalized by random in the HDF5 file
 
   QVector<float> qRdfData = m_RDFTableModel->getData(SGRDFTableModel::Frequency);
   std::vector<float> randomFreq = RadialDistributionFunction::GenerateRandomDistribution(minDistLE->text().toFloat(&ok), maxDistLE->text().toFloat(&ok), numBinsLE->text().toInt(&ok), boxDims, boxRes);
 
-  for (int i = 0; i < qRdfDataFinal.size(); i++)
+  for(int i = 0; i < qRdfDataFinal.size(); i++)
   {
-    if (i + 1 < qRdfData.size() && i+1 < randomFreq.size())
+    if(i + 1 < qRdfData.size() && i + 1 < randomFreq.size())
     {
       qRdfDataFinal[i] = qRdfData[i + 1] / randomFreq[i + 1];
     }

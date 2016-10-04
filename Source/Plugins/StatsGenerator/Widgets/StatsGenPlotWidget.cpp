@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "StatsGenPlotWidget.h"
 
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -43,33 +42,31 @@
 #include <limits>
 
 //-- Qt Includes
-#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 
-
 //-- Qwt Includes
 #include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
 #include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_plot_grid.h>
-#include <qwt_symbol.h>
-#include <qwt_series_data.h>
-#include <qwt_interval.h>
-#include <qwt_point_3d.h>
 #include <qwt_compat.h>
+#include <qwt_interval.h>
+#include <qwt_plot.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_grid.h>
 #include <qwt_plot_layout.h>
-#include <qwt_scale_widget.h>
 #include <qwt_plot_magnifier.h>
+#include <qwt_plot_marker.h>
 #include <qwt_plot_panner.h>
 #include <qwt_plot_textlabel.h>
-
+#include <qwt_point_3d.h>
+#include <qwt_scale_draw.h>
+#include <qwt_scale_widget.h>
+#include <qwt_series_data.h>
+#include <qwt_symbol.h>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -79,12 +76,11 @@
 #include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
 
-
 #include "OrientationLib/Texture/StatsGen.hpp"
 
-#define SG_ERROR_CHECK(name)\
-  qDebug() << "Error writing HDF5 data to " << name << "\n";\
-  qDebug() << "  File: " << __FILE__ << "\n";\
+#define SG_ERROR_CHECK(name)                                                                                                                                                                           \
+  qDebug() << "Error writing HDF5 data to " << name << "\n";                                                                                                                                           \
+  qDebug() << "  File: " << __FILE__ << "\n";                                                                                                                                                          \
   qDebug() << "  Line: " << __LINE__ << "\n";
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
@@ -95,25 +91,24 @@ namespace UIA
 const static int Alpha = 255;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenPlotWidget::StatsGenPlotWidget(QWidget* parent) :
-  QWidget(parent),
-  m_Mu(1.0f),
-  m_Sigma(0.1f),
-  m_MinCutOff(5.0f),
-  m_MaxCutOff(5.0f),
-  m_BinStep(0.5f),
-  m_PhaseIndex(-1),
-  m_DistributionType(SIMPL::DistributionType::UnknownDistributionType),
-  m_TableModel(nullptr),
-  m_grid(nullptr),
-  m_StatsType(SIMPL::StatisticsType::UnknownStatisticsGroup),
-  m_UserUpdatedData(false),
-  m_TableViewWidget(nullptr),
-  m_TableView(nullptr)
+StatsGenPlotWidget::StatsGenPlotWidget(QWidget* parent)
+: QWidget(parent)
+, m_Mu(1.0f)
+, m_Sigma(0.1f)
+, m_MinCutOff(5.0f)
+, m_MaxCutOff(5.0f)
+, m_BinStep(0.5f)
+, m_PhaseIndex(-1)
+, m_DistributionType(SIMPL::DistributionType::UnknownDistributionType)
+, m_TableModel(nullptr)
+, m_grid(nullptr)
+, m_StatsType(SIMPL::StatisticsType::UnknownStatisticsGroup)
+, m_UserUpdatedData(false)
+, m_TableViewWidget(nullptr)
+, m_TableView(nullptr)
 {
   this->setupUi(this);
   this->setupGui();
@@ -139,9 +134,7 @@ void StatsGenPlotWidget::setStatisticsType(unsigned int distributionType)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma,
-                                                   float minCutOff, float maxCutOff,
-                                                   float binStepSize)
+void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma, float minCutOff, float maxCutOff, float binStepSize)
 {
   m_Mu = mu;
   m_Sigma = sigma;
@@ -153,29 +146,21 @@ void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::extractStatsData(int index,
-                                         QVector<float>&  binNumbers,
-                                         VectorOfFloatArray arrays)
+int StatsGenPlotWidget::extractStatsData(int index, QVector<float>& binNumbers, VectorOfFloatArray arrays)
 {
   int err = 0;
-  if (m_StatsType == SIMPL::StatisticsType::UnknownStatisticsGroup)
+  if(m_StatsType == SIMPL::StatisticsType::UnknownStatisticsGroup)
   {
-    QMessageBox::critical(this, tr("StatsGenerator"),
-                          tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
-                          QMessageBox::Ok,
-                          QMessageBox::Ok);
+    QMessageBox::critical(this, tr("StatsGenerator"), tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
+                          QMessageBox::Ok, QMessageBox::Ok);
     return -1;
   }
 
-  if (m_DistributionType == SIMPL::DistributionType::UnknownDistributionType)
+  if(m_DistributionType == SIMPL::DistributionType::UnknownDistributionType)
   {
-    QMessageBox::critical(this, tr("StatsGenerator"),
-                          tr("The 'Distribution Type' was of an unknown type."),
-                          QMessageBox::Ok,
-                          QMessageBox::Ok);
+    QMessageBox::critical(this, tr("StatsGenerator"), tr("The 'Distribution Type' was of an unknown type."), QMessageBox::Ok, QMessageBox::Ok);
     return -1;
   }
-
 
   // Remove all the current rows in the table model
   m_TableModel->removeRows(0, m_TableModel->rowCount());
@@ -186,14 +171,14 @@ int StatsGenPlotWidget::extractStatsData(int index,
   qint32 count = binNumbers.count();
   QVector<QColor> colors = AbstractMicrostructurePreset::GenerateColors(count, 160, 255);
 
-  QVector<QVector<float> > data;
+  QVector<QVector<float>> data;
 
   for(VectorOfFloatArray::size_type i = 0; i < arrays.size(); ++i)
   {
     QVector<float> col(static_cast<int>(arrays[i]->getNumberOfTuples()));
-    if (arrays[i]->getNumberOfTuples() > 0)
+    if(arrays[i]->getNumberOfTuples() > 0)
     {
-      ::memcpy( &(col.front()), arrays[i]->getVoidPointer(0), sizeof(float)*col.size() );
+      ::memcpy(&(col.front()), arrays[i]->getVoidPointer(0), sizeof(float) * col.size());
     }
     data.push_back(col);
   }
@@ -209,28 +194,23 @@ int StatsGenPlotWidget::extractStatsData(int index,
   return err;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
 {
   VectorOfFloatArray data;
-  if (m_StatsType == SIMPL::StatisticsType::UnknownStatisticsGroup)
+  if(m_StatsType == SIMPL::StatisticsType::UnknownStatisticsGroup)
   {
-    QMessageBox::critical(this, tr("StatsGenerator"),
-                          tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
-                          QMessageBox::Ok,
-                          QMessageBox::Ok);
+    QMessageBox::critical(this, tr("StatsGenerator"), tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
+                          QMessageBox::Ok, QMessageBox::Ok);
     return data;
   }
 
-  if (m_DistributionType == SIMPL::DistributionType::UnknownDistributionType)
+  if(m_DistributionType == SIMPL::DistributionType::UnknownDistributionType)
   {
-    QMessageBox::critical(this, tr("StatsGenerator"),
-                          tr("This Plot has not been assigned a known Distribution Type. This should be happening from within the program. Contact the developer."),
-                          QMessageBox::Ok,
-                          QMessageBox::Ok);
+    QMessageBox::critical(this, tr("StatsGenerator"), tr("This Plot has not been assigned a known Distribution Type. This should be happening from within the program. Contact the developer."),
+                          QMessageBox::Ok, QMessageBox::Ok);
     return data;
   }
 
@@ -246,36 +226,36 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   // Create a new Table Model
   switch(m_DistributionType)
   {
-    case SIMPL::DistributionType::Beta:
-      v0 = m_TableModel->getData(SGBetaTableModel::Alpha);
-      v1 = m_TableModel->getData(SGBetaTableModel::Beta);
-      col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Alpha);
-      col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::Beta);
-      data.push_back(col0);
-      data.push_back(col1);
-      break;
-    case SIMPL::DistributionType::LogNormal:
-      v0 = m_TableModel->getData(SGLogNormalTableModel::Average);
-      v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev);
-      col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Average);
-      col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::StandardDeviation);
-      data.push_back(col0);
-      data.push_back(col1);
-      break;
-      //    case SIMPL::DistributionType::Power:
-      //      v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha);
-      //      v1 = m_TableModel->getData(SGPowerLawTableModel::K);
-      //      v2 = m_TableModel->getData(SGPowerLawTableModel::Beta);
-      //      col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Alpha);
-      //      col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::Exp_k);
-      //      col2 = FloatArrayType::FromQVector(v2, SIMPL::StringConstants::Beta);
-      //      data.push_back(col0);
-      //      data.push_back(col1);
-      //      data.push_back(col2);
-      //      break;
+  case SIMPL::DistributionType::Beta:
+    v0 = m_TableModel->getData(SGBetaTableModel::Alpha);
+    v1 = m_TableModel->getData(SGBetaTableModel::Beta);
+    col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Alpha);
+    col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::Beta);
+    data.push_back(col0);
+    data.push_back(col1);
+    break;
+  case SIMPL::DistributionType::LogNormal:
+    v0 = m_TableModel->getData(SGLogNormalTableModel::Average);
+    v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev);
+    col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Average);
+    col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::StandardDeviation);
+    data.push_back(col0);
+    data.push_back(col1);
+    break;
+  //    case SIMPL::DistributionType::Power:
+  //      v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha);
+  //      v1 = m_TableModel->getData(SGPowerLawTableModel::K);
+  //      v2 = m_TableModel->getData(SGPowerLawTableModel::Beta);
+  //      col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Alpha);
+  //      col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::Exp_k);
+  //      col2 = FloatArrayType::FromQVector(v2, SIMPL::StringConstants::Beta);
+  //      data.push_back(col0);
+  //      data.push_back(col1);
+  //      data.push_back(col2);
+  //      break;
 
-    default:
-      return data;
+  default:
+    return data;
   }
   return data;
 }
@@ -287,7 +267,7 @@ void StatsGenPlotWidget::resetTableModel()
 {
   QVector<float> bins;
   // Get a copy of the bins from the current TableModel if available
-  if (nullptr != m_TableModel)
+  if(nullptr != m_TableModel)
   {
     bins = m_TableModel->getBinNumbers();
   }
@@ -295,18 +275,18 @@ void StatsGenPlotWidget::resetTableModel()
   // Create a new Table Model
   switch(m_DistributionType)
   {
-    case SIMPL::DistributionType::Beta:
-      m_TableModel = new SGBetaTableModel;
-      break;
-    case SIMPL::DistributionType::LogNormal:
-      m_TableModel = new SGLogNormalTableModel;
-      break;
-      //    case SIMPL::DistributionType::Power:
-      //      m_TableModel = new SGPowerLawTableModel;
-      //      break;
+  case SIMPL::DistributionType::Beta:
+    m_TableModel = new SGBetaTableModel;
+    break;
+  case SIMPL::DistributionType::LogNormal:
+    m_TableModel = new SGLogNormalTableModel;
+    break;
+  //    case SIMPL::DistributionType::Power:
+  //      m_TableModel = new SGPowerLawTableModel;
+  //      break;
 
-    default:
-      return;
+  default:
+    return;
   }
 
   QAbstractItemModel* model = m_TableView->model();
@@ -316,13 +296,9 @@ void StatsGenPlotWidget::resetTableModel()
 
   m_TableView->setItemDelegate(aid);
 
-  connect(m_TableModel, SIGNAL(layoutChanged()),
-          this, SLOT(updatePlotCurves()));
-  connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-          this, SLOT(updatePlotCurves()));
-  connect(aid, SIGNAL(commitData(QWidget*)),
-          this, SLOT(userCommittedData(QWidget*)));
-
+  connect(m_TableModel, SIGNAL(layoutChanged()), this, SLOT(updatePlotCurves()));
+  connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updatePlotCurves()));
+  connect(aid, SIGNAL(commitData(QWidget*)), this, SLOT(userCommittedData(QWidget*)));
 }
 
 // -----------------------------------------------------------------------------
@@ -342,7 +318,7 @@ void StatsGenPlotWidget::setDistributionType(unsigned int curveType, bool update
   m_DistributionType = curveType;
   //  distributionTypeCombo->setCurrentIndex(m_DistributionType);
   resetTableModel();
-  if (updatePlots)
+  if(updatePlots)
   {
     // Update the plots
     updatePlotCurves();
@@ -360,7 +336,7 @@ void StatsGenPlotWidget::blockDistributionTypeChanges(bool block)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setDataTitle(const QString &title)
+void StatsGenPlotWidget::setDataTitle(const QString& title)
 {
   QString dataWidgetTitle = QString("%1 Data").arg(title);
   m_TableViewWidget->setWindowTitle(dataWidgetTitle);
@@ -369,7 +345,7 @@ void StatsGenPlotWidget::setDataTitle(const QString &title)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setPlotTitle(const QString &title)
+void StatsGenPlotWidget::setPlotTitle(const QString& title)
 {
 #if 0
   QwtText plotTitle(title);
@@ -395,21 +371,21 @@ void StatsGenPlotWidget::setPlotTitle(const QString &title)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setXAxisName(const QString &name)
+void StatsGenPlotWidget::setXAxisName(const QString& name)
 {
-    QwtText qwtStr = QwtText(name);
-    qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
-    m_PlotView->setAxisTitle(QwtPlot::xBottom, qwtStr);
+  QwtText qwtStr = QwtText(name);
+  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  m_PlotView->setAxisTitle(QwtPlot::xBottom, qwtStr);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setYAxisName(const QString &name)
+void StatsGenPlotWidget::setYAxisName(const QString& name)
 {
-    QwtText qwtStr = QwtText(name);
-    qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
-    m_PlotView->setAxisTitle(QwtPlot::yLeft, qwtStr);
+  QwtText qwtStr = QwtText(name);
+  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  m_PlotView->setAxisTitle(QwtPlot::yLeft, qwtStr);
 }
 
 // -----------------------------------------------------------------------------
@@ -423,34 +399,33 @@ void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPl
   pal.setColor(QPalette::Foreground, Qt::white);
   pal.setColor(QPalette::Window, Qt::black);
 
-  plot->plotLayout()->setAlignCanvasToScales( true );
-  for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
+  plot->plotLayout()->setAlignCanvasToScales(true);
+  for(int axis = 0; axis < QwtPlot::axisCnt; axis++)
   {
-    plot->axisWidget(axis)->setMargin( 0 );
-    //plot->axisWidget(axis)->setPalette(pal);
+    plot->axisWidget(axis)->setMargin(0);
+    // plot->axisWidget(axis)->setPalette(pal);
   }
-  QwtPlotCanvas *canvas = new QwtPlotCanvas();
-  canvas->setAutoFillBackground( false );
-  canvas->setFrameStyle( QFrame::NoFrame );
+  QwtPlotCanvas* canvas = new QwtPlotCanvas();
+  canvas->setAutoFillBackground(false);
+  canvas->setFrameStyle(QFrame::NoFrame);
   canvas->setPalette(pal);
-  plot->setCanvas( canvas );
+  plot->setCanvas(canvas);
 
   QFont font;
   font.setBold(true);
 
   QwtText xAxis(xAxisName);
-  xAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+  xAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   xAxis.setFont(font);
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
 
   QwtText yAxis(yAxisName);
-  yAxis.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+  yAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   yAxis.setFont(font);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
 
   const int margin = 0;
-  plot->setContentsMargins( margin, margin, margin, margin );
-
+  plot->setContentsMargins(margin, margin, margin, margin);
 }
 
 // -----------------------------------------------------------------------------
@@ -471,11 +446,9 @@ void StatsGenPlotWidget::requestContextMenu(const QPoint& pos)
   m_ContextMenuPoint = mapped;
   QMenu menu;
   QAction* editData = new QAction(QString("Edit Data"), &menu);
-  connect(editData, SIGNAL(triggered(bool)),
-          this, SLOT(showDataWindow(bool)));
+  connect(editData, SIGNAL(triggered(bool)), this, SLOT(showDataWindow(bool)));
   menu.addAction(editData);
   menu.exec(mapped);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -484,8 +457,7 @@ void StatsGenPlotWidget::requestContextMenu(const QPoint& pos)
 void StatsGenPlotWidget::setupGui()
 {
   this->setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(this,SIGNAL(customContextMenuRequested(const QPoint &  )),
-          this,SLOT(requestContextMenu(const QPoint &)));
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(requestContextMenu(const QPoint&)));
 
   m_TableViewWidget = new QWidget(nullptr);
   m_TableViewWidget->setObjectName(QStringLiteral("m_TableViewWidget"));
@@ -516,30 +488,30 @@ void StatsGenPlotWidget::setupGui()
   initQwtPlot("", "", m_PlotView);
 
   resetTableModel();
-  if (nullptr != m_TableModel)
+  if(nullptr != m_TableModel)
   {
     // Update the plots
     updatePlotCurves();
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::highlightCurve(int index)
 {
-  if(m_TableModel == nullptr) {
+  if(m_TableModel == nullptr)
+  {
     return;
   }
   qint32 nRows = m_TableModel->rowCount();
 
-  for (qint32 r = 0; r < nRows; ++r)
+  for(qint32 r = 0; r < nRows; ++r)
   {
 
     QColor c = QColor(m_TableModel->getColor(r));
     c.setAlpha(UIA::Alpha);
-    if(index == r )
+    if(index == r)
     {
       QwtPlotCurve* curve = m_PlotCurves[r];
       curve->setPen(QPen(c, 2));
@@ -557,7 +529,6 @@ void StatsGenPlotWidget::highlightCurve(int index)
       curve->setPen(QPen(c, 1.5));
       curve->detach();
     }
-
   }
   m_PlotView->replot();
 }
@@ -567,12 +538,12 @@ void StatsGenPlotWidget::highlightCurve(int index)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::updatePlotCurves()
 {
-  //Loop over each entry in the table
+  // Loop over each entry in the table
   QwtPlotCurve* curve = nullptr;
 
   // Delete all the plots
   qint32 nRows = m_PlotCurves.count();
-  for (qint32 r = nRows - 1; r >= 0; --r)
+  for(qint32 r = nRows - 1; r >= 0; --r)
   {
     curve = m_PlotCurves[r];
     curve->detach();
@@ -580,7 +551,8 @@ void StatsGenPlotWidget::updatePlotCurves()
     delete curve;
   }
 
-  if(m_TableModel == nullptr) {
+  if(m_TableModel == nullptr)
+  {
     return;
   }
   nRows = m_TableModel->rowCount();
@@ -588,9 +560,9 @@ void StatsGenPlotWidget::updatePlotCurves()
   float xMax = 0.0;
   float yMax = 0.0;
 
-  for (qint32 r = 0; r < nRows; ++r)
+  for(qint32 r = 0; r < nRows; ++r)
   {
-    if (r == m_PlotCurves.size())
+    if(r == m_PlotCurves.size())
     {
       curve = new QwtPlotCurve("");
       curve->setRenderHint(QwtPlotItem::RenderAntialiased);
@@ -610,21 +582,20 @@ void StatsGenPlotWidget::updatePlotCurves()
 
     switch(m_DistributionType)
     {
-      case SIMPL::DistributionType::Beta:
-        createBetaCurve(r, xMax, yMax);
-        break;
-      case SIMPL::DistributionType::LogNormal:
-        createLogNormalCurve(r, xMax, yMax);
-        break;
-        //      case SIMPL::DistributionType::Power:
-        //        createPowerCurve(r, xMax, yMax);
-        //        break;
-      default:
-        break;
+    case SIMPL::DistributionType::Beta:
+      createBetaCurve(r, xMax, yMax);
+      break;
+    case SIMPL::DistributionType::LogNormal:
+      createLogNormalCurve(r, xMax, yMax);
+      break;
+    //      case SIMPL::DistributionType::Power:
+    //        createPowerCurve(r, xMax, yMax);
+    //        break;
+    default:
+      break;
     }
   }
   m_PlotView->replot();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -645,26 +616,26 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float& xMax, float& yMax)
   float alpha = m_TableModel->getDataValue(SGBetaTableModel::Alpha, tableRow);
   float beta = m_TableModel->getDataValue(SGBetaTableModel::Beta, tableRow);
   int size = 256;
-  QwtArray<float > x;
-  QwtArray<float > y;
+  QwtArray<float> x;
+  QwtArray<float> y;
 
-  err = StatsGen::GenBetaPlotData<QwtArray<float > > (alpha, beta, x, y, size);
-  if (err == 1)
+  err = StatsGen::GenBetaPlotData<QwtArray<float>>(alpha, beta, x, y, size);
+  if(err == 1)
   {
-    //TODO: Present Error Message
+    // TODO: Present Error Message
     return;
   }
 
   QwtArray<double> xD(size);
   QwtArray<double> yD(size);
-  for (int i = 0; i < size; ++i)
+  for(int i = 0; i < size; ++i)
   {
     //   qDebug() << x[i] << "  " << y[i] << "\n";
-    if (x[i] > xMax)
+    if(x[i] > xMax)
     {
       xMax = x[i];
     }
-    if (y[i] > yMax)
+    if(y[i] > yMax)
     {
       yMax = y[i];
     }
@@ -675,7 +646,6 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float& xMax, float& yMax)
 
   m_PlotView->setAxisScale(QwtPlot::yLeft, 0.0, yMax * 1.05);
   m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -688,26 +658,26 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float& xMax, float& 
   float avg = m_TableModel->getDataValue(SGLogNormalTableModel::Average, tableRow);
   float stdDev = m_TableModel->getDataValue(SGLogNormalTableModel::StdDev, tableRow);
   int size = 256;
-  QwtArray<float > x;
-  QwtArray<float > y;
+  QwtArray<float> x;
+  QwtArray<float> y;
 
-  err = StatsGen::GenLogNormalPlotData<QwtArray<float>> (avg, stdDev, x, y, size);
-  if (err == 1)
+  err = StatsGen::GenLogNormalPlotData<QwtArray<float>>(avg, stdDev, x, y, size);
+  if(err == 1)
   {
-    //TODO: Present Error Message
+    // TODO: Present Error Message
     return;
   }
 
   QwtArray<double> xD(size);
   QwtArray<double> yD(size);
-  for (int i = 0; i < size; ++i)
+  for(int i = 0; i < size; ++i)
   {
     //   qDebug() << x[i] << "  " << y[i] << "\n";
-    if (x[i] > xMax)
+    if(x[i] > xMax)
     {
       xMax = x[i];
     }
-    if (y[i] > yMax)
+    if(y[i] > yMax)
     {
       yMax = y[i];
     }
@@ -715,7 +685,6 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float& xMax, float& 
     yD[i] = static_cast<double>(y[i]);
   }
   curve->setSamples(xD, yD);
-
 
   m_PlotView->setAxisScale(QwtPlot::yLeft, 0.0, yMax * 1.05);
   m_PlotView->setAxisScale(QwtPlot::xBottom, 0.0, xMax);
@@ -735,23 +704,23 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, float& xMax, float& yMax
   QwtArray<float> x;
   QwtArray<float> y;
 
-  err = StatsGen::GenPowerLawPlotData<QwtArray<float > > (alpha, k, beta, x, y, size);
-  if (err == 1)
+  err = StatsGen::GenPowerLawPlotData<QwtArray<float>>(alpha, k, beta, x, y, size);
+  if(err == 1)
   {
-    //TODO: Present Error Message
+    // TODO: Present Error Message
     return;
   }
 
   QwtArray<double> xD(size);
   QwtArray<double> yD(size);
-  for (int i = 0; i < size; ++i)
+  for(int i = 0; i < size; ++i)
   {
     //   qDebug() << x[i] << "  " << y[i] << "\n";
-    if (x[i] > xMax)
+    if(x[i] > xMax)
     {
       xMax = x[i];
     }
-    if (y[i] > yMax)
+    if(y[i] > yMax)
     {
       yMax = y[i];
     }
@@ -778,7 +747,6 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setBins(QVector<float>& binNumbers)
 {
-
 
 #if 1
   if (m_UserUpdatedData == true)

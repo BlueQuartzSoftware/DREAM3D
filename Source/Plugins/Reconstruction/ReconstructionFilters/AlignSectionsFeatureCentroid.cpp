@@ -39,8 +39,8 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -52,12 +52,12 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
-  AlignSections(),
-  m_ReferenceSlice(0),
-  m_UseReferenceSlice(false),
-  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
-  m_GoodVoxels(nullptr)
+AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid()
+: AlignSections()
+, m_ReferenceSlice(0)
+, m_UseReferenceSlice(false)
+, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_GoodVoxels(nullptr)
 {
   // only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();
@@ -82,7 +82,8 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Reference Slice", ReferenceSlice, FilterParameter::Parameter, AlignSectionsFeatureCentroid));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, AlignSectionsFeatureCentroid, req));
   }
   setFilterParameters(parameters);
@@ -94,9 +95,9 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
 {
   AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setUseReferenceSlice( reader->readValue("UseReferenceSlice", getUseReferenceSlice()) );
-  setReferenceSlice( reader->readValue("ReferenceSlice", getReferenceSlice()) );
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath()));
+  setUseReferenceSlice(reader->readValue("UseReferenceSlice", getUseReferenceSlice()));
+  setReferenceSlice(reader->readValue("ReferenceSlice", getReferenceSlice()));
   reader->closeFilterGroup();
 }
 
@@ -105,7 +106,6 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -121,13 +121,18 @@ void AlignSectionsFeatureCentroid::dataCheck()
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, m_GoodVoxelsArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
-  if (m_ReferenceSlice > image->getZPoints())
+  if(m_ReferenceSlice > image->getZPoints())
   {
     QString ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied reference slice (%2)").arg(image->getZPoints()).arg(m_ReferenceSlice);
     setErrorCondition(-5556);
@@ -135,10 +140,16 @@ void AlignSectionsFeatureCentroid::dataCheck()
   }
 
   QVector<size_t> cDims(1, 1);
-  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  {
+    m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -162,18 +173,15 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   std::ofstream outFile;
-  if (getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts() == true)
   {
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
-  size_t udims[3] = { 0, 0, 0 };
+  size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  int64_t dims[3] =
-  {
-    static_cast<int64_t>(udims[0]),
-    static_cast<int64_t>(udims[1]),
-    static_cast<int64_t>(udims[2]),
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   int64_t newxshift = 0;
@@ -186,7 +194,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
   std::vector<float> xCentroid(dims[2], 0.0f);
   std::vector<float> yCentroid(dims[2], 0.0f);
 
-  for (int64_t iter = 0; iter < dims[2]; iter++)
+  for(int64_t iter = 0; iter < dims[2]; iter++)
   {
     count = 0;
     xCentroid[iter] = 0;
@@ -194,13 +202,13 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
 
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(((float)iter / dims[2]) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    slice = static_cast<int>( (dims[2] - 1) - iter );
-    for (int64_t l = 0; l < dims[1]; l++)
+    slice = static_cast<int>((dims[2] - 1) - iter);
+    for(int64_t l = 0; l < dims[1]; l++)
     {
-      for (int64_t n = 0; n < dims[0]; n++)
+      for(int64_t n = 0; n < dims[0]; n++)
       {
-        point = ((slice) * dims[0] * dims[1]) + (l * dims[0]) + n;
-        if (m_GoodVoxels[point] == true)
+        point = ((slice)*dims[0] * dims[1]) + (l * dims[0]) + n;
+        if(m_GoodVoxels[point] == true)
         {
           xCentroid[iter] = xCentroid[iter] + (float(n) * xRes);
           yCentroid[iter] = yCentroid[iter] + (float(l) * yRes);
@@ -211,10 +219,10 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
     xCentroid[iter] = xCentroid[iter] / float(count);
     yCentroid[iter] = yCentroid[iter] / float(count);
   }
-  for (int64_t iter = 1; iter < dims[2]; iter++)
+  for(int64_t iter = 1; iter < dims[2]; iter++)
   {
     slice = (dims[2] - 1) - iter;
-    if (m_UseReferenceSlice == true)
+    if(m_UseReferenceSlice == true)
     {
       xshifts[iter] = static_cast<int64_t>((xCentroid[iter] - xCentroid[m_ReferenceSlice]) / xRes);
       yshifts[iter] = static_cast<int64_t>((yCentroid[iter] - yCentroid[m_ReferenceSlice]) / yRes);
@@ -224,12 +232,12 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
       xshifts[iter] = xshifts[iter - 1] + static_cast<int64_t>((xCentroid[iter] - xCentroid[iter - 1]) / xRes);
       yshifts[iter] = yshifts[iter - 1] + static_cast<int64_t>((yCentroid[iter] - yCentroid[iter - 1]) / yRes);
     }
-    if (getWriteAlignmentShifts() == true)
+    if(getWriteAlignmentShifts() == true)
     {
       outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << " " << xCentroid[iter] << " " << yCentroid[iter] << std::endl;
     }
   }
-  if (getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts() == true)
   {
     outFile.close();
   }
@@ -242,7 +250,10 @@ void AlignSectionsFeatureCentroid::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   AlignSections::execute();
 
@@ -286,23 +297,29 @@ const QString AlignSectionsFeatureCentroid::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
+  vStream << Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeatureCentroid::getGroupName()
-{ return SIMPL::FilterGroups::ReconstructionFilters; }
+{
+  return SIMPL::FilterGroups::ReconstructionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeatureCentroid::getSubGroupName()
-{return SIMPL::FilterSubGroups::AlignmentFilters;}
+{
+  return SIMPL::FilterSubGroups::AlignmentFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeatureCentroid::getHumanLabel()
-{ return "Align Sections (Feature Centroid)"; }
+{
+  return "Align Sections (Feature Centroid)";
+}
