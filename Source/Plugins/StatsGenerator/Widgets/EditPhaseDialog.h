@@ -76,9 +76,6 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     float getPptFraction();
     void setPptFraction(float d);
 
-    unsigned int getParentPhase();
-    void setParentPhase(unsigned int d);
-
     void setPhaseName(QString &name);
     QString getPhaseName();
 
@@ -91,11 +88,11 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     void setupGui();
 
   private:
-    float m_OtherPhaseFractions;
-    bool m_EditFlag;
-    QDoubleValidator* m_PhaseFractionValidator;
-    QDoubleValidator* m_ParentPhaseValidator;
-    QDoubleValidator* m_PptFractionValidator;
+    float m_OtherPhaseFractions = 0.0f;
+    bool m_EditFlag = false;
+    QDoubleValidator* m_PhaseFractionValidator = nullptr;
+    QDoubleValidator* m_PptFractionValidator = nullptr;
+
     EditPhaseDialog(const EditPhaseDialog&); // Copy Constructor Not Implemented
     void operator=(const EditPhaseDialog&); // Operator '=' Not Implemented
 };

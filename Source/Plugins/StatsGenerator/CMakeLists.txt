@@ -288,6 +288,4 @@ if(DREAM3D_BUILD_TESTING)
 endif()
 
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Examples/Examples.cmake)
-include(${${PLUGIN_NAME}_SOURCE_DIR}/Tools/Tools.cmake)
-
 

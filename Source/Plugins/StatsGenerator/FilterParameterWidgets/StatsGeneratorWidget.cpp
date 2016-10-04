@@ -380,7 +380,6 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       tpw->setCrystalStructure(dialog.getCrystalStructure());
       tpw->setPhaseFraction(dialog.getPhaseFraction());
       tpw->setPhaseType(dialog.getPhaseType());
-      tpw->setParentPhase(dialog.getParentPhase());
       tpw->setPhaseName(dialog.getPhaseName());
       QString cName = tpw->getComboString();
       tpw->setObjectName(cName);
@@ -474,7 +473,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
     TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(sgwidget);
     if(tpw)
     {
-      dialog.setParentPhase(tpw->getParentPhase());
+     // dialog.setParentPhase(tpw->getParentPhase());
     }
   }
   else if(dialog.getPhaseType() == SIMPL::PhaseType::MatrixPhase)
@@ -517,7 +516,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       tpw->setCrystalStructure(dialog.getCrystalStructure());
       tpw->setPhaseFraction(dialog.getPhaseFraction());
       tpw->setPhaseType(dialog.getPhaseType());
-      tpw->setParentPhase(dialog.getParentPhase());
+      //tpw->setParentPhase(dialog.getParentPhase());
       tpw->setPhaseName(dialog.getPhaseName());
       QString cName = tpw->getComboString();
       setWindowModified(true);
