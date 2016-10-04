@@ -70,7 +70,7 @@ class PrecipitateRolledPreset : public AbstractMicrostructurePreset
     void initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
     void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
 
-    void initializeAxisODFTableModel(SGAxisODFWidget* widget);
+    void initializeAxisODFTableModel(StatsGenAxisODFWidget* widget);
 
 
     SIMPL_INSTANCE_PROPERTY(float, AspectRatio1)

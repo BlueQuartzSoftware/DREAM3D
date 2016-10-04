@@ -35,22 +35,22 @@
 #include <QtCore/QJsonDocument>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/H5FilterParametersReader.h"
 #include "SIMPLib/FilterParameters/H5FilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
 
-#include "StatsGenerator/StatsGeneratorConstants.h"
-#include "StatsGenerator/StatsGeneratorVersion.h"
 #include "StatsGenerator/FilterParameters/StatsGeneratorFilterParameter.h"
+#include "StatsGenerator/StatsGeneratorConstants.h"
 #include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorUtilities.h"
+#include "StatsGenerator/StatsGeneratorVersion.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -60,13 +60,14 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorFilter::StatsGeneratorFilter() :
-  AbstractFilter(),
-  m_StatsGeneratorDataContainerName(SIMPL::Defaults::StatsGenerator),
-  m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName),
-  m_StatsDataArrayName(SIMPL::EnsembleData::Statistics),
-  m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures),
-  m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
+StatsGeneratorFilter::StatsGeneratorFilter()
+: AbstractFilter()
+, m_StatsGeneratorDataContainerName(SIMPL::Defaults::StatsGenerator)
+, m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
+, m_StatsDataArrayName(SIMPL::EnsembleData::Statistics)
+, m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
+, m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
+, m_PhaseNamesArrayName(SIMPL::EnsembleData::PhaseName)
 {
   setupFilterParameters();
 }
@@ -101,13 +102,14 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
 
   // Clear the array as we are going to populate the entire array with new objects
-  if (nullptr != m_StatsDataArray) {
+  if(nullptr != m_StatsDataArray)
+  {
     m_StatsDataArray = StatsDataArray::NullPointer();
   }
 
   m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET");
 
-  if (dynamic_cast<H5FilterParametersReader*>(reader))
+  if(dynamic_cast<H5FilterParametersReader*>(reader))
   {
     QString jsonString = reader->readString("StatsDataArray", "");
     QJsonDocument jDoc = QJsonDocument::fromJson(jsonString.toUtf8());
@@ -115,7 +117,7 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
     size_t numTuples = m_StatsDataArray->getNumberOfTuples();
     readArray(jDoc.object(), numTuples);
   }
-  else if (dynamic_cast<JsonFilterParametersReader*>(reader))
+  else if(dynamic_cast<JsonFilterParametersReader*>(reader))
   {
     JsonFilterParametersReader* jsonReader = dynamic_cast<JsonFilterParametersReader*>(reader);
     QJsonObject& jsonRoot = jsonReader->getCurrentGroupObject();
@@ -133,15 +135,15 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
   reader->closeFilterGroup();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorFilter::readFilterParameters(QJsonObject &obj)
+void StatsGeneratorFilter::readFilterParameters(QJsonObject& obj)
 {
 
   // Clear the array as we are going to populate the entire array with new objects
-  if (nullptr != m_StatsDataArray) {
+  if(nullptr != m_StatsDataArray)
+  {
     m_StatsDataArray = StatsDataArray::NullPointer();
   }
 
@@ -152,22 +154,20 @@ void StatsGeneratorFilter::readFilterParameters(QJsonObject &obj)
   readArray(obj, numTuples);
 
   QVector<FilterParameter::Pointer> filterParameters = getFilterParameters();
-  for (int i=0; i<filterParameters.size(); i++)
+  for(int i = 0; i < filterParameters.size(); i++)
   {
     FilterParameter::Pointer fp = filterParameters[i];
     fp->readJson(obj);
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorFilter::writeFilterParameters(QJsonObject &obj)
+void StatsGeneratorFilter::writeFilterParameters(QJsonObject& obj)
 {
   QVector<FilterParameter::Pointer> filterParameters = getFilterParameters();
-  for (int i=0; i<filterParameters.size(); i++)
+  for(int i = 0; i < filterParameters.size(); i++)
   {
     FilterParameter::Pointer fp = filterParameters[i];
     fp->writeJson(obj);
@@ -177,14 +177,12 @@ void StatsGeneratorFilter::writeFilterParameters(QJsonObject &obj)
   {
     m_StatsDataArray->writeToJson(obj, m_CrystalStructures);
   }
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTuples)
+void StatsGeneratorFilter::readArray(const QJsonObject& jsonRoot, size_t numTuples)
 {
   QJsonObject statsObject = jsonRoot["StatsDataArray"].toObject();
 
@@ -196,8 +194,11 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
   m_PhaseTypes = UInt32ArrayType::CreateArray(numTuples, SIMPL::EnsembleData::PhaseTypes, true);
   m_PhaseTypes->initializeWithValue(SIMPL::PhaseType::UnknownPhaseType);
 
+  m_PhaseNames = StringDataArray::CreateArray(numTuples, SIMPL::EnsembleData::PhaseName, true);
+  m_PhaseNames->initializeWithValue(QString("Unknown Phase"));
+
   // Start from index 1. Index 0 is always junk.
-  for (int index = 1; index < phaseCount; index++)
+  for(int index = 1; index < phaseCount; index++)
   {
     QString phaseAsString = QString::number(index);
     QJsonObject phaseObject = statsObject[phaseAsString].toObject();
@@ -207,6 +208,9 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
 
     unsigned int pt = m_StatsDataArray->getStatsData(index)->getPhaseType();
     m_PhaseTypes->setValue(index, pt);
+
+    QString phaseName = phaseObject[SIMPL::EnsembleData::PhaseName].toString();
+    m_PhaseNames->setValue(index, phaseName);
   }
 }
 
@@ -215,7 +219,6 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -223,11 +226,15 @@ void StatsGeneratorFilter::initialize()
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::dataCheck()
 {
-  if (nullptr != m_StatsDataArray)
+  qDebug() << getNameOfClass() << "::dataCheck()";
+  if(nullptr != m_StatsDataArray)
   {
     getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getStatsGeneratorDataContainerName());
 
-    if (getErrorCondition() < 0) { return; }
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
 
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getStatsGeneratorDataContainerName());
 
@@ -236,14 +243,19 @@ void StatsGeneratorFilter::dataCheck()
 
     cellEnsembleAttrMat->addAttributeArray(getStatsDataArrayName(), m_StatsDataArray);
 
-    if (nullptr != m_CrystalStructures)
+    if(nullptr != m_CrystalStructures)
     {
       cellEnsembleAttrMat->addAttributeArray(getCrystalStructuresArrayName(), m_CrystalStructures);
     }
 
-    if (nullptr != m_PhaseTypes)
+    if(nullptr != m_PhaseTypes)
     {
       cellEnsembleAttrMat->addAttributeArray(getPhaseTypesArrayName(), m_PhaseTypes);
+    }
+
+    if(nullptr != m_PhaseNames)
+    {
+      cellEnsembleAttrMat->addAttributeArray(getPhaseNamesArrayName(), m_PhaseNames);
     }
   }
   else
@@ -261,12 +273,12 @@ void StatsGeneratorFilter::dataCheck()
 void StatsGeneratorFilter::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -276,18 +288,24 @@ void StatsGeneratorFilter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   // Create the ODF, MDF, Axis ODF, bin numbers and RDF (precipitate ONLY) for EACH PHASE
   // These arrays are re-created here because they MAY be junk having come from the GUI,
   // since we avoid re-computing these during preflights and the user may not have
   // decided to click the update buttons
   size_t count = m_StatsDataArray->getNumberOfTuples();
-  for (size_t c = 0; c < count; c++)
+  for(size_t c = 0; c < count; c++)
   {
-    if (getCancel() == true) { return; }
+    if(getCancel() == true)
+    {
+      return;
+    }
     StatsData::Pointer statsData = m_StatsDataArray->getStatsData(c);
-    if (nullptr != statsData)
+    if(nullptr != statsData)
     {
       // Pull the ODF, MDF and AxisODF weights from the StatsDataArray
       uint32_t phaseType = m_PhaseTypes->getValue(c);
@@ -295,7 +313,7 @@ void StatsGeneratorFilter::execute()
       VectorOfFloatArray odfWeights;
       VectorOfFloatArray mdfWeights;
       VectorOfFloatArray aodfWeights;
-      if (phaseType == SIMPL::PhaseType::PrimaryPhase)
+      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
       {
         PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsData);
         pp->generateBinNumbers();
@@ -303,7 +321,7 @@ void StatsGeneratorFilter::execute()
         mdfWeights = pp->getMDF_Weights();
         aodfWeights = pp->getAxisODF_Weights();
       }
-      else if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
+      else if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
       {
         PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
         pp->generateBinNumbers();
@@ -313,14 +331,13 @@ void StatsGeneratorFilter::execute()
 
         // RDF Data ************************************************************************
         RdfData::Pointer rdf = pp->getRadialDistFunction();
-        float boxSize[3] = { 0.0f, 0.0f, 0.0f };
-        float boxRes[3] = { 0.0f, 0.0f, 0.0f };
+        float boxSize[3] = {0.0f, 0.0f, 0.0f};
+        float boxRes[3] = {0.0f, 0.0f, 0.0f};
         rdf->getBoxSize(boxSize);
         rdf->getBoxResolution(boxRes);
-        std::vector<float> boxSizeVec = { boxSize[0], boxSize[1], boxSize[2] };
-        std::vector<float> boxResVec = { boxRes[0], boxRes[1], boxRes[2] };
-        std::vector<float> freqs = RadialDistributionFunction::GenerateRandomDistribution(rdf->getMinDistance(), rdf->getMaxDistance(),
-                                                                                          rdf->getNumberOfBins(), boxSizeVec, boxResVec);
+        std::vector<float> boxSizeVec = {boxSize[0], boxSize[1], boxSize[2]};
+        std::vector<float> boxResVec = {boxRes[0], boxRes[1], boxRes[2]};
+        std::vector<float> freqs = RadialDistributionFunction::GenerateRandomDistribution(rdf->getMinDistance(), rdf->getMaxDistance(), rdf->getNumberOfBins(), boxSizeVec, boxResVec);
         RdfData::Pointer cleanRDF = RdfData::New();
         cleanRDF->setFrequencies(freqs);
         cleanRDF->setMinDistance(rdf->getMinDistance());
@@ -330,7 +347,7 @@ void StatsGeneratorFilter::execute()
         cleanRDF->setBoxResolution(boxRes);
         pp->setRadialDistFunction(cleanRDF);
       }
-      else if (phaseType == SIMPL::PhaseType::TransformationPhase)
+      else if(phaseType == SIMPL::PhaseType::TransformationPhase)
       {
         TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsData);
         tp->generateBinNumbers();
@@ -346,10 +363,10 @@ void StatsGeneratorFilter::execute()
       QVector<float> weights;
       QVector<float> sigmas;
 
-      if (odfWeights.size() == 5)
+      if(odfWeights.size() == 5)
       {
         size_t odfCount = odfWeights[0]->getNumberOfTuples();
-        for (size_t i = 0; i < odfCount; i++)
+        for(size_t i = 0; i < odfCount; i++)
         {
           e1s.push_back(odfWeights[0]->getValue(i));
           e2s.push_back(odfWeights[1]->getValue(i));
@@ -367,10 +384,10 @@ void StatsGeneratorFilter::execute()
       QVector<float> mdf_axes;
       QVector<float> mdf_weights;
 
-      if (mdfWeights.size() == 3)
+      if(mdfWeights.size() == 3)
       {
         size_t mdfCount = mdfWeights[0]->getNumberOfTuples();
-        for (size_t i = 0; i < mdfCount; i++)
+        for(size_t i = 0; i < mdfCount; i++)
         {
           mdf_angles.push_back(mdfWeights[0]->getValue(i));
           mdf_axes.push_back(mdfWeights[1]->getComponent(i, 0));
@@ -393,10 +410,10 @@ void StatsGeneratorFilter::execute()
       QVector<float> axis_weights;
       QVector<float> axis_sigmas;
 
-      if (aodfWeights.size() == 5)
+      if(aodfWeights.size() == 5)
       {
         size_t aodfCount = aodfWeights[0]->getNumberOfTuples();
-        for (size_t i = 0; i < aodfCount; i++)
+        for(size_t i = 0; i < aodfCount; i++)
         {
           axis_e1s.push_back(aodfWeights[0]->getValue(i));
           axis_e2s.push_back(aodfWeights[1]->getValue(i));
@@ -420,22 +437,26 @@ void StatsGeneratorFilter::execute()
 AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterParameters)
 {
   StatsGeneratorFilter::Pointer filter = StatsGeneratorFilter::New();
-  if (true == copyFilterParameters)
+  if(true == copyFilterParameters)
   {
     filter->setStatsGeneratorDataContainerName(getStatsGeneratorDataContainerName());
     filter->setCellEnsembleAttributeMatrixName(getCellEnsembleAttributeMatrixName());
     filter->setStatsDataArrayName(getStatsDataArrayName());
     filter->setCrystalStructuresArrayName(getCrystalStructuresArrayName());
     filter->setPhaseTypesArrayName(getPhaseTypesArrayName());
-    if (m_CrystalStructures)
+    if(m_CrystalStructures)
     {
       filter->setCrystalStructures(std::dynamic_pointer_cast<UInt32ArrayType>(m_CrystalStructures->deepCopy(getInPreflight())));
     }
-    if (m_PhaseTypes)
+    if(m_PhaseTypes)
     {
       filter->setPhaseTypes(std::dynamic_pointer_cast<UInt32ArrayType>(m_PhaseTypes->deepCopy(getInPreflight())));
     }
-    if (m_StatsDataArray)
+    if(m_PhaseNames)
+    {
+      filter->setPhaseNames(std::dynamic_pointer_cast<StringDataArray>(m_PhaseNames->deepCopy(getInPreflight())));
+    }
+    if(m_StatsDataArray)
     {
       filter->setStatsDataArray(std::dynamic_pointer_cast<StatsDataArray>(m_StatsDataArray->deepCopy(getInPreflight())));
     }
@@ -447,13 +468,17 @@ AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getCompiledLibraryName()
-{ return StatsGeneratorConstants::StatsGeneratorBaseName; }
+{
+  return StatsGeneratorConstants::StatsGeneratorBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getBrandingString()
-{ return "StatsGenerator"; }
+{
+  return "StatsGenerator";
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -462,7 +487,7 @@ const QString StatsGeneratorFilter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  StatsGenerator::Version::Major() << "." << StatsGenerator::Version::Minor() << "." << StatsGenerator::Version::Patch();
+  vStream << StatsGenerator::Version::Major() << "." << StatsGenerator::Version::Minor() << "." << StatsGenerator::Version::Patch();
   return version;
 }
 
@@ -470,17 +495,22 @@ const QString StatsGeneratorFilter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getGroupName()
-{ return SIMPL::FilterGroups::SyntheticBuildingFilters; }
+{
+  return SIMPL::FilterGroups::SyntheticBuildingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getSubGroupName()
-{ return SIMPL::FilterSubGroups::GenerationFilters; }
+{
+  return SIMPL::FilterSubGroups::GenerationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getHumanLabel()
-{ return "StatsGenerator"; }
-
+{
+  return "StatsGenerator";
+}

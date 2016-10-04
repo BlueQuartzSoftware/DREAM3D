@@ -90,7 +90,7 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
       switch(col)
       {
         case SGLogNormalTableModel::BinNumber:
-          return NULL;
+          return nullptr;
           break;
 
         case SGLogNormalTableModel::Average:

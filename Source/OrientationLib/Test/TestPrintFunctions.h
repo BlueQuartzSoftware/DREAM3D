@@ -121,7 +121,7 @@ namespace OrientationPrinters
     {
       DataArrayPath daPath(DCName, AMName, k_InputNames[i]);
       QVector<size_t> cDims(1, k_CompDims[i]);
-      typename DataArray<K>::Pointer data = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(NULL, daPath, cDims);
+      typename DataArray<K>::Pointer data = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(nullptr, daPath, cDims);
       std::cout << "'" << data->getName().toStdString() << "'" << "\t";
       QString text;
       QTextStream ss(&text);

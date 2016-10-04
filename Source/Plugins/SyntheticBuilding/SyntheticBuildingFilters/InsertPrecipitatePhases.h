@@ -422,13 +422,13 @@ class InsertPrecipitatePhases : public AbstractFilter
     int64_t m_ZPoints;
     int64_t m_TotalPoints;
 
-    // Cell Data - make sure these are all initialized to NULL in the constructor
+    // Cell Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_DATAARRAY_VARIABLE(bool, Mask)
     DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
 
-    // Feature Data - make sure these are all initialized to NULL in the constructor
+    // Feature Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
     DEFINE_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
@@ -439,7 +439,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
     NeighborList<float>::WeakPointer m_ClusteringList;
 
-    // Ensemble Data - make sure these are all initialized to NULL in the constructor
+    // Ensemble Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)

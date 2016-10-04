@@ -40,22 +40,24 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertHexGridToSquareGridFilterParameter::ConvertHexGridToSquareGridFilterParameter() :
-FilterParameter()
-{}
+ConvertHexGridToSquareGridFilterParameter::ConvertHexGridToSquareGridFilterParameter()
+: FilterParameter()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGridFilterParameter::~ConvertHexGridToSquareGridFilterParameter()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, ConvertHexGridToSquareGrid *filter, const QString& fileExtension,
-  const QString& fileType, int groupIndex)
+ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
+                                                                                                  Category category, ConvertHexGridToSquareGrid* filter, const QString& fileExtension,
+                                                                                                  const QString& fileType, int groupIndex)
 {
   ConvertHexGridToSquareGridFilterParameter::Pointer ptr = ConvertHexGridToSquareGridFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -70,7 +72,6 @@ ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFil
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -82,7 +83,7 @@ QString ConvertHexGridToSquareGridFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGridFilterParameter::readJson(const QJsonObject &json)
+void ConvertHexGridToSquareGridFilterParameter::readJson(const QJsonObject& json)
 {
   m_Filter->setFileExtension(json["FileExtension"].toString());
   m_Filter->setFilePrefix(json["FilePrefix"].toString());
@@ -100,7 +101,7 @@ void ConvertHexGridToSquareGridFilterParameter::readJson(const QJsonObject &json
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGridFilterParameter::writeJson(QJsonObject &json)
+void ConvertHexGridToSquareGridFilterParameter::writeJson(QJsonObject& json)
 {
   json["FileExtension"] = m_Filter->getFileExtension();
   json["FilePrefix"] = m_Filter->getFilePrefix();
@@ -114,4 +115,3 @@ void ConvertHexGridToSquareGridFilterParameter::writeJson(QJsonObject &json)
   json["ZEndIndex"] = QString::number(m_Filter->getZEndIndex());
   json["ZStartIndex"] = QString::number(m_Filter->getZStartIndex());
 }
-

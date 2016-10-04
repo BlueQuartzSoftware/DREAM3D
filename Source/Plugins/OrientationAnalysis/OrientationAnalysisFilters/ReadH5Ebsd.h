@@ -251,9 +251,9 @@ class ReadH5Ebsd : public AbstractFilter
     int32_t loadInfo(EbsdReader* reader)
     {
       DataContainer::Pointer vdc = getDataContainerArray()->getDataContainer(getDataContainerName());
-      if(NULL == vdc) { return -1;}
+      if(nullptr == vdc) { return -1;}
       AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
-      if(NULL == attrMatrix.get() ) { return -2; }
+      if(nullptr == attrMatrix.get() ) { return -2; }
 
       reader->setFileName(m_InputFile);
       reader->setSliceStart(m_ZStartIndex);

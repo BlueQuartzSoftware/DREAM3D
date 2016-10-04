@@ -37,6 +37,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 
 /**
  * @brief The StatsGeneratorFilter class. See [Filter documentation](@ref statsgeneratorfilter) for details.
@@ -67,6 +68,9 @@ class StatsGeneratorFilter : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
     Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
+    SIMPL_FILTER_PARAMETER(QString, PhaseNamesArrayName)
+    Q_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
+
     SIMPL_FILTER_PARAMETER(StatsDataArray::Pointer, StatsDataArray)
     Q_PROPERTY(StatsDataArray::Pointer StatsDataArray READ getStatsDataArray WRITE setStatsDataArray)
 
@@ -75,6 +79,9 @@ class StatsGeneratorFilter : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(UInt32ArrayType::Pointer, PhaseTypes)
     Q_PROPERTY(UInt32ArrayType::Pointer PhaseTypes READ getPhaseTypes WRITE setPhaseTypes)
+
+    SIMPL_FILTER_PARAMETER(StringDataArray::Pointer, PhaseNames)
+    Q_PROPERTY(StringDataArray::Pointer PhaseNames READ getPhaseNames WRITE setPhaseNames)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

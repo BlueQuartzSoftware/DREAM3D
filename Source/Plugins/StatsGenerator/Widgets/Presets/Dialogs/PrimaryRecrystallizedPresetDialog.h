@@ -54,7 +54,7 @@ class PrimaryRecrystallizedPresetDialog : public QDialog
     Q_OBJECT
 
   public:
-    PrimaryRecrystallizedPresetDialog(QWidget* parent = NULL);
+    PrimaryRecrystallizedPresetDialog(QWidget* parent = nullptr);
     virtual ~PrimaryRecrystallizedPresetDialog();
 
     float getPercentRecrystallized();

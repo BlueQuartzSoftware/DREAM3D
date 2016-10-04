@@ -38,13 +38,11 @@
 // Include the MOC generated file for this class
 #include "moc_SurfaceMeshFilter.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshFilter::SurfaceMeshFilter() :
-  AbstractFilter()
+SurfaceMeshFilter::SurfaceMeshFilter()
+: AbstractFilter()
 {
   setupFilterParameters();
 }

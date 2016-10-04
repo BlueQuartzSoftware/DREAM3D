@@ -56,7 +56,7 @@ class TupleSelectionPage : public AbstractWizardPage, private Ui::TupleSelection
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    TupleSelectionPage(const QString &inputFilePath, QWidget* parent = NULL);
+    TupleSelectionPage(const QString &inputFilePath, QWidget* parent = nullptr);
 
     virtual ~TupleSelectionPage();
 

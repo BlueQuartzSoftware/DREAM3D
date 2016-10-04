@@ -38,8 +38,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HomochoricWidget::HomochoricWidget(QWidget* parent) :
-  OrientationWidget(parent)
+HomochoricWidget::HomochoricWidget(QWidget* parent)
+: OrientationWidget(parent)
 {
   setupUi(this);
 
@@ -51,7 +51,6 @@ HomochoricWidget::HomochoricWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 HomochoricWidget::~HomochoricWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -63,12 +62,9 @@ void HomochoricWidget::setupGui()
   h2->setValidator(new QDoubleValidator(h2));
   h3->setValidator(new QDoubleValidator(h3));
 
-  connect(h1, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(h2, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(h3, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
+  connect(h1, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(h2, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(h3, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -78,12 +74,12 @@ void HomochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if (calculator->getInputType() == OrientationConverter<double>::Homochoric)
+  if(calculator->getInputType() == OrientationConverter<double>::Homochoric)
   {
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if (calculator->getHasErrors() == true)
+  else if(calculator->getHasErrors() == true)
   {
     h1->setText("nan");
     h2->setText("nan");
@@ -94,7 +90,7 @@ void HomochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 
   QVector<double> hValues = calculator->getValues(OrientationConverter<double>::Homochoric);
 
-  if (hValues.size() == 3)
+  if(hValues.size() == 3)
   {
     h1->setText(QString::number(hValues[0]));
     h2->setText(QString::number(hValues[1]));
@@ -105,16 +101,16 @@ void HomochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void HomochoricWidget::valuesUpdated(const QString &text)
+void HomochoricWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ho_check(values);
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
-  
+
   emit clearErrorTable();
 
-  if (errorCode >= 0)
+  if(errorCode >= 0)
   {
     emit valuesChanged(values, OrientationConverter<double>::Homochoric, false);
   }
@@ -132,15 +128,15 @@ QVector<double> HomochoricWidget::getValues()
 {
   QVector<double> values;
 
-  if (h1->text() == "nan")
+  if(h1->text() == "nan")
   {
     h1->setText("0");
   }
-  if (h2->text() == "nan")
+  if(h2->text() == "nan")
   {
     h2->setText("0");
   }
-  if (h3->text() == "nan")
+  if(h3->text() == "nan")
   {
     h3->setText("0");
   }
@@ -151,4 +147,3 @@ QVector<double> HomochoricWidget::getValues()
 
   return values;
 }
-

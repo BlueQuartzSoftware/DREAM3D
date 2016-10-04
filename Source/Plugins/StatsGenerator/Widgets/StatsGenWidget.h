@@ -33,15 +33,17 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgwidget_h_
-#define _sgwidget_h_
+#ifndef _StatsGenWidget_h_
+#define _StatsGenWidget_h_
 
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QComboBox>
 
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
+#include "StatsGenerator/Widgets/Presets/MicrostructurePresetManager.h"
 
 class QwtPlotZoomer;
 class QwtPlotPicker;
@@ -53,14 +55,14 @@ class QwtPlotMarker;
 /*
  *
  */
-class SGWidget : public QWidget
+class StatsGenWidget : public QWidget
 {
 
     Q_OBJECT
 
   public:
-    SGWidget(QWidget* parent = 0);
-    virtual ~SGWidget();
+    StatsGenWidget(QWidget* parent = 0);
+    virtual ~StatsGenWidget();
 
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType)
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
@@ -69,28 +71,47 @@ class SGWidget : public QWidget
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(bool, BulkLoadFailure)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(QString, TabTitle)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(QString, PhaseName)
+    SIMPL_INSTANCE_PROPERTY(AbstractMicrostructurePreset::Pointer, MicroPreset)
 
     virtual void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
     virtual int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
 
     virtual QString getComboString();
-    virtual QString getTabTitle();
 
-    virtual void on_m_GenerateDefaultData_clicked();
+    /**
+     * @brief RegisterPresetFactory
+     * @param microstructurePresetCombo
+     * @return
+     */
+    template<typename T>
+    AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* microstructurePresetCombo)
+    {
+      AbstractMicrostructurePresetFactory::Pointer presetFactory = T::New();
+      MicrostructurePresetManager::registerFactory(presetFactory);
+      QString displayString = (presetFactory->displayName());
+      microstructurePresetCombo->addItem(displayString);
+      return presetFactory;
+    }
 
-  public slots:
+    virtual void generateDefaultData();
 
-  protected slots:
-    virtual void dataWasEdited();
+//  public slots:
+//    virtual void on_m_GenerateDefaultData_clicked();
 
-  signals:
-    void phaseParametersChanged();
+//  protected slots:
+
+//    virtual void dataWasEdited();
+
+//  signals:
+//    void phaseParametersChanged();
 
   protected:
 
   private:
-    SGWidget(const SGWidget&); // Copy Constructor Not Implemented
-    void operator=(const SGWidget&); // Operator '=' Not Implemented
+    StatsGenWidget(const StatsGenWidget&); // Copy Constructor Not Implemented
+    void operator=(const StatsGenWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* SGWIDGET_H_ */
+#endif /* StatsGenWidget_H_ */

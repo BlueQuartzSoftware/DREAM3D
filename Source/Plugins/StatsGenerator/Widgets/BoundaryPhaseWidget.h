@@ -41,7 +41,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 
-#include "StatsGenerator/Widgets/SGWidget.h"
+#include "StatsGenerator/Widgets/StatsGenWidget.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
 
 #include "ui_BoundaryPhaseWidget.h"
@@ -52,7 +52,7 @@ class QwtPlotGrid;
 /*
  *
  */
-class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
+class BoundaryPhaseWidget : public StatsGenWidget, private Ui::BoundaryPhaseWidget
 {
 
     Q_OBJECT
@@ -63,21 +63,14 @@ class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
 
     void updatePlots();
 
-    SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
-    SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-    SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
-    SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
-    SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+    void extractStatsData(AttributeMatrix::Pointer attrMat, int index) override;
 
-    void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
+    int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false) override;
 
-    QString getComboString();
-    QString getTabTitle();
-
-    int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
+    virtual QIcon getPhaseIcon();
 
   protected slots:
-    void dataWasEdited();
+
 
   protected:
 

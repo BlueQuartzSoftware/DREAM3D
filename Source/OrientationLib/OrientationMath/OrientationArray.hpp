@@ -67,7 +67,7 @@ class OrientationArray
      * @param init Initialization value to be assigned to each element
      */
     OrientationArray(size_t size, T init = (T)(0) ) :
-      m_Ptr(NULL),
+      m_Ptr(nullptr),
       m_Size(size),
       m_Owns(true)
     {
@@ -98,7 +98,7 @@ class OrientationArray
      * @param val2
      */
     OrientationArray(T val0, T val1, T val2 ) :
-      m_Ptr(NULL),
+      m_Ptr(nullptr),
       m_Size(3),
       m_Owns(true)
     {
@@ -116,7 +116,7 @@ class OrientationArray
      * @param val3
      */
     OrientationArray(T val0, T val1, T val2, T val3 ) :
-      m_Ptr(NULL),
+      m_Ptr(nullptr),
       m_Size(4),
       m_Owns(true)
     {
@@ -132,7 +132,7 @@ class OrientationArray
     * @param quat
     */
     explicit OrientationArray(typename QuaternionMath<T>::Quaternion quat) :
-      m_Ptr(NULL),
+      m_Ptr(nullptr),
       m_Size(4),
       m_Owns(true)
     {
@@ -148,7 +148,7 @@ class OrientationArray
     * @param quat
     */
     explicit OrientationArray(T g[3][3]) :
-      m_Ptr(NULL),
+      m_Ptr(nullptr),
       m_Size(9),
       m_Owns(true)
     {
@@ -171,7 +171,7 @@ class OrientationArray
      * @param rhs Incoming OrientationArray class to copy
      */
     OrientationArray(const OrientationArray<T>& rhs) :
-      m_Ptr(NULL),
+      m_Ptr(nullptr),
       m_Size(rhs.m_Size),
       m_Owns(true)
     {
@@ -184,11 +184,11 @@ class OrientationArray
      */
     virtual ~OrientationArray()
     {
-      if(m_Ptr != NULL && m_Owns == true)
+      if(m_Ptr != nullptr && m_Owns == true)
       {
         free(m_Ptr);
       }
-      m_Ptr = NULL;
+      m_Ptr = nullptr;
     }
 
     /**
@@ -198,10 +198,10 @@ class OrientationArray
      */
     void operator=(const OrientationArray& rhs)
     {
-      if(m_Ptr != NULL && m_Owns == true)
+      if(m_Ptr != nullptr && m_Owns == true)
       {
         free(m_Ptr);
-        m_Ptr = NULL;
+        m_Ptr = nullptr;
 
         m_Size = rhs.size();
         allocate();
@@ -210,7 +210,7 @@ class OrientationArray
       if(m_Owns == false)
       {
         assert(m_Size == rhs.size());
-        assert(m_Ptr != NULL);
+        assert(m_Ptr != nullptr);
         ::memcpy(m_Ptr, rhs.m_Ptr, sizeof(T) * m_Size); // Copy the bytes over to the new array
       }
     }
@@ -347,11 +347,11 @@ class OrientationArray
       // Wipe out the array completely if new size is zero.
       if (newSize == 0)
       {
-        if(m_Ptr != NULL && m_Owns == true)
+        if(m_Ptr != nullptr && m_Owns == true)
         {
           free(m_Ptr);
         }
-        m_Ptr = NULL;
+        m_Ptr = nullptr;
         m_Owns = false;
         m_Size = 0;
         return;
@@ -371,7 +371,7 @@ class OrientationArray
         if (!newArray)
         {
           free(m_Ptr);
-          m_Ptr = NULL;
+          m_Ptr = nullptr;
           m_Owns = false;
           m_Size = 0;
           return;
@@ -383,20 +383,20 @@ class OrientationArray
         if (!newArray)
         {
           free(m_Ptr);
-          m_Ptr = NULL;
+          m_Ptr = nullptr;
           m_Owns = false;
           m_Size = 0;
           return;
         }
 
         // Copy the data from the old array.
-        if (m_Ptr != NULL)
+        if (m_Ptr != nullptr)
         {
           memcpy(newArray, m_Ptr, (newSize < m_Size ? newSize : m_Size) * sizeof(T));
         }
         // Free the old array
         free(m_Ptr);
-        m_Ptr = NULL;
+        m_Ptr = nullptr;
       }
 
       // Allocation was successful.  Save it.
@@ -417,17 +417,17 @@ class OrientationArray
     void allocate()
     {
 
-      if(m_Ptr != NULL && m_Owns == true)
+      if(m_Ptr != nullptr && m_Owns == true)
       {
         free(m_Ptr);
-        m_Ptr = NULL;
+        m_Ptr = nullptr;
       }
-      else if(m_Ptr != NULL && m_Owns == false)
+      else if(m_Ptr != nullptr && m_Owns == false)
       {
         assert(false); // If the pointer is owned by another class then we can not allocate.
       }
-      // If we made it this far the pointer should be NULL and we can go ahead and allocate our memory
-      if(m_Ptr == NULL)
+      // If we made it this far the pointer should be nullptr and we can go ahead and allocate our memory
+      if(m_Ptr == nullptr)
       {
         m_Ptr = reinterpret_cast<T*>(malloc(sizeof(T) * m_Size));
         ::memset(m_Ptr, 0, sizeof(T) * m_Size);

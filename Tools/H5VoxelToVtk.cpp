@@ -205,8 +205,8 @@ int main(int argc, char** argv)
 
 
   int64_t totalPoints = m->getTotalPoints();
-  int32_t* m_FeatureIds = NULL;
-  m_FeatureIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(SIMPL::CellData::FeatureIds, totalPoints, 1, NULL);
+  int32_t* m_FeatureIds = nullptr;
+  m_FeatureIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(SIMPL::CellData::FeatureIds, totalPoints, 1, nullptr);
   if (0 == m_FeatureIds )
   {
     ss << "Filter " << getNameOfClass() << " requires the data array '" <<

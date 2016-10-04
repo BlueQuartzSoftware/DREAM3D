@@ -113,7 +113,7 @@ void ExecutePipeline(const QString& pipelineFile)
     pipeline = jsonReader->readPipelineFromFile(pipelineFile);
   }
 
-  if (NULL == pipeline.get())
+  if (nullptr == pipeline.get())
   {
     std::cout << "An error occurred trying to read the pipeline file. Exiting now." << std::endl;
     err = EXIT_FAILURE;

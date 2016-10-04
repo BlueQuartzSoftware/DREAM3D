@@ -59,7 +59,7 @@ class TupleTableWidget : public QWidget, private Ui::TupleTableWidget
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    TupleTableWidget(QWidget* parent = NULL);
+    TupleTableWidget(QWidget* parent = nullptr);
 
     virtual ~TupleTableWidget();
 

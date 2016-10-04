@@ -267,13 +267,91 @@ class Filter
      std::vector<IFilterParameter::Pointer> m_FilterParameters;
 };
 
+
+class FilterThing
+{
+public:
+    FilterThing(int i) : m_i(i) { }
+
+    // The callback function that Caller will call.
+    void setIndex(int i)
+    {
+        printf("  Callee::setIndex() inside callback\n");
+        m_i = i;
+    }
+
+    int getIndex() { return m_i; }
+private:
+    // To prove "this" is indeed valid within callbackFunction().
+  int m_i;
+};
+
+typedef std::function<void(int)> FilterSetterType;
+
+class FilterParm
+{
+public:
+    // Clients can connect their callback with this.
+    void connectCallback(FilterSetterType cb)
+    {
+        m_cb = cb;
+    }
+
+    FilterSetterType getSetterType() { return m_cb; }
+
+    // Test the callback to make sure it works.
+    void test()
+    {
+        printf("Caller::test() calling callback...\n");
+        m_cb(10);
+
+        //printf("Result (50): %d\n", i);
+    }
+
+private:
+    // The callback provided by the client via connectCallback().
+    FilterSetterType m_cb;
+};
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+  {
+
+    FilterParm fp;
+    FilterThing filter(5);
+
+    // Connect the callback.  Like with the C-style function pointer and
+    // static function, we use a lambda to get back into the object.
+    fp.connectCallback([&filter](int i) { return filter.setIndex(i); });
+
+    // Test the callback
+    fp.test();
+
+    FilterSetterType setter = fp.getSetterType();
+    setter(234234);
+    printf("Result: %d\n", filter.getIndex());
 
 
+#if 0
+    QVector<FilterParameter::Pointer> fps = segmentationFilter->getFilterParameters();
+    for(auto&& parameter : fps)
+    {
+      if(parameter->getPropertyName() == "ScalarArrayPath")
+      {
+        DataArraySelectionFilterParameter::Pointer dasfp = std::dynamic_pointer_cast<DataArraySelectionFilterParameter>(parameter);
+        //DataArraySelectionFilterParameter::SetterCallbackType setter;
+        if(dasfp) { dasfp->getSetterCallback()(maskPath); }
+        //setter(maskPath);
+        break;
+      }
+    }
+
+#endif
+  }
 
   QJsonObject jsonRoot;
   {

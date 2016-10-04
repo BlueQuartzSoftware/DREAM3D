@@ -779,7 +779,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
     g->run(GenerateIntensityMapImpl(coords[2].get(), &config, intensity010.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
-    g = NULL;
+    g = nullptr;
   }
   else
 #endif
@@ -870,7 +870,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
     g->run(GeneratePoleFigureRgbaImageImpl(intensity010.get(), &config, image010.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
-    g = NULL;
+    g = nullptr;
   }
   else
 #endif

@@ -64,7 +64,7 @@ H5OIMReader::H5OIMReader() :
   AngReader(),
   m_HDF5Path(),
   m_ReadPatternData(false),
-  m_PatternData(NULL),
+  m_PatternData(nullptr),
   m_ReadAllArrays(true)
 {
 
@@ -583,7 +583,7 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
   if(rank == 1)
   {
     hsize_t dimsFam[1];
-    int nDims = H5Sget_simple_extent_dims(dataspace, dimsFam, NULL);
+    int nDims = H5Sget_simple_extent_dims(dataspace, dimsFam, nullptr);
     if(nDims > 0)
     {
       data = boost::shared_array<HKLFamily_t>(new HKLFamily_t[dimsFam[0]]); // (HKLFamily_t *) calloc(dimsFam[0], sizeof(HKLFamily_t));
@@ -620,7 +620,7 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
 #define ANG_READER_ALLOCATE_AND_READ(name, h5name, type)\
   if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ang::name) != m_ArrayNames.end()) {\
     type* _##name = allocateArray<type>(totalDataRows);\
-    if (NULL != _##name) {\
+    if (nullptr != _##name) {\
       ::memset(_##name, 0, numBytes);\
       err = QH5Lite::readPointerDataset(gid, h5name, _##name);\
       if (err < 0) {\

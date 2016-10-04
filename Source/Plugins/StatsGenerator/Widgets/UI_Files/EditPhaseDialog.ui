@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>443</width>
+    <width>394</width>
     <height>221</height>
    </rect>
   </property>
@@ -28,13 +28,6 @@
    </property>
    <item>
     <layout class="QFormLayout" name="formLayout">
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Fraction</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -101,6 +94,13 @@
        </item>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Fraction</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
       <widget class="QLineEdit" name="phaseFraction"/>
      </item>
@@ -155,14 +155,14 @@
       <widget class="QLineEdit" name="pptFraction"/>
      </item>
      <item row="5" column="0">
-      <widget class="QLabel" name="ParentPhaseLabel">
+      <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Parent Phase</string>
+        <string>Phase Name</string>
        </property>
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QLineEdit" name="ParentPhase"/>
+      <widget class="QLineEdit" name="m_PhaseName"/>
      </item>
     </layout>
    </item>

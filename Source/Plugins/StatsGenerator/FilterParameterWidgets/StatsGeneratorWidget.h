@@ -49,7 +49,7 @@
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
-#include "StatsGenerator/Widgets/SGWidget.h"
+#include "StatsGenerator/Widgets/StatsGenWidget.h"
 #include "StatsGenerator/Widgets/PrimaryPhaseWidget.h"
 #include "StatsGenerator/Widgets/PrecipitatePhaseWidget.h"
 #include "StatsGenerator/Widgets/MatrixPhaseWidget.h"
@@ -73,7 +73,7 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     Q_OBJECT
 
   public:
-    StatsGeneratorWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    StatsGeneratorWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
     virtual ~StatsGeneratorWidget();
 
     void adjustWindowTitle();
@@ -86,7 +86,7 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     void filterNeedsInputParameters(AbstractFilter* filter);
     void on_updatePipelineBtn_clicked();
 
-    /* Menu Slots */
+   // void on_m_GenerateDefaultData_clicked();
     void on_saveH5Btn_clicked();
     void on_actionSaveAs_triggered();
     void on_addPhase_clicked();
@@ -98,13 +98,14 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
+    void parametersChanged(); // This function MUST be named this way
 
   protected:
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     void setupGui();
+
 
     /**
      * @brief Verifies that a path exists on the file system.

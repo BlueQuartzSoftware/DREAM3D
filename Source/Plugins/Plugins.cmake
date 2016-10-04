@@ -81,7 +81,7 @@ function(DREAM3D_ADD_PLUGINS)
             endif()
           endif()
       endif()
-      
+
       # Mark these variables as advanced
       mark_as_advanced(${d3dPlugin}_SOURCE_DIR)
 
@@ -127,6 +127,7 @@ set(DREAM3D_BASE_PLUGINS
 get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)
 include_directories(${DREAM3D_PARENT_DIR}/DREAM3D_Plugins)
 include_directories(${DREAM3D_PARENT_DIR})
+set(DREAM3D_ALL_PLUGINS ${DREAM3D_BASE_PLUGINS} ${DREAM3D_EXTRA_PLUGINS} )
 
 message(STATUS "*******************************************************")
 message(STATUS "* Base Plugins                                        *")

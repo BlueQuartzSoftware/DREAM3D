@@ -64,7 +64,7 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
 
     /**
      * @brief Performs the Morphological filtering on the input image
-     * @param data Non NULL EMMPM_Data pointer
+     * @param data Non nullptr EMMPM_Data pointer
      * @param curve
      * @param se
      * @param r
@@ -73,7 +73,7 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
 
     /**
      * @brief Main entry point for the morphological filter
-     * @param data Non NULL EMMPM_Data pointer
+     * @param data Non nullptr EMMPM_Data pointer
      */
     void multiSE(EMMPM_Data* data);
 

@@ -65,7 +65,7 @@ int PowerLawOps::calculateParameters(std::vector<float>& data, FloatArrayType::P
   {
     for(std::vector<float>::size_type i = 0; i < data.size(); i++)
     {
-      if (data[i] < min)
+      if(data[i] < min)
       {
         min = data[i];
       }
@@ -89,7 +89,7 @@ int PowerLawOps::calculateParameters(std::vector<float>& data, FloatArrayType::P
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs)
+int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float>>& data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float alpha = 0;
@@ -101,7 +101,7 @@ int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> >&
       min = std::numeric_limits<float>::max();
       for(std::vector<float>::size_type j = 0; j < data[i].size(); j++)
       {
-        if (data[i][j] < min)
+        if(data[i][j] < min)
         {
           min = data[i][j];
         }
@@ -126,4 +126,3 @@ int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> >&
   }
   return err;
 }
-

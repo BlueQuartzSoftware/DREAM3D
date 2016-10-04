@@ -52,7 +52,7 @@ class PrecipitateRolledPresetDialog : public QDialog
 {
     Q_OBJECT
   public:
-    PrecipitateRolledPresetDialog(QWidget* parent = NULL);
+    PrecipitateRolledPresetDialog(QWidget* parent = nullptr);
     virtual ~PrecipitateRolledPresetDialog();
 
     float getA();

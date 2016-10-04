@@ -1,15 +1,15 @@
 
 
-#include <QtCore/QDebug>
-#include <QtCore/QString>
 #include <QtCore/QByteArray>
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
+#include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
-#include <QtCore/QJsonArray>
 #include <QtCore/QJsonValue>
+#include <QtCore/QString>
 
 #include "StatsGeneratorExample.h"
 
@@ -34,18 +34,18 @@ QString getOutputDir()
  * @param inputFile
  * @return
  */
-QByteArray readFile(const QString &inputFile)
+QByteArray readFile(const QString& inputFile)
 {
 
   QFileInfo fi(inputFile);
-  if (!fi.exists())
+  if(!fi.exists())
   {
     qDebug() << "Input file '" << inputFile << "' does not exist.";
     return QByteArray();
   }
 
   QFile source(inputFile);
-  if(!source.open(QFile::ReadOnly) )
+  if(!source.open(QFile::ReadOnly))
   {
     qDebug() << "Error opening '" << inputFile << "' for reading";
     return QByteArray();
@@ -54,7 +54,6 @@ QByteArray readFile(const QString &inputFile)
   QByteArray contents = source.readAll();
   source.close();
   return contents;
-
 }
 
 /**
@@ -62,7 +61,7 @@ QByteArray readFile(const QString &inputFile)
  * @param json
  * @return
  */
-QJsonDocument parseInputFile(const QByteArray &json)
+QJsonDocument parseInputFile(const QByteArray& json)
 {
 
   QJsonParseError error;
@@ -82,12 +81,16 @@ QJsonDocument parseInputFile(const QByteArray &json)
  * @param root
  * @return The number of filters in the pipeline or -1 if there was an error
  */
-int findNumberOfFilters(const QJsonObject &root)
+int findNumberOfFilters(const QJsonObject& root)
 {
   QJsonValue pipelineBuilderObj = root["PipelineBuilder"];
-  if(pipelineBuilderObj.isUndefined()) { return -1; }
+  if(pipelineBuilderObj.isUndefined())
+  {
+    return -1;
+  }
   QJsonValue numberFilters = pipelineBuilderObj.toObject().value("Number_Filters");
-  if(!numberFilters.isUndefined()) {
+  if(!numberFilters.isUndefined())
+  {
     return numberFilters.toInt(-1);
   }
   return -1;
@@ -100,7 +103,7 @@ int findNumberOfFilters(const QJsonObject &root)
  * @param numFilters
  * @return The index of the StatsGeneratorFilter in the pipeline or -1 if it is not found.
  */
-int findStatsGenFilter(const QJsonObject &root, int numFilters)
+int findStatsGenFilter(const QJsonObject& root, int numFilters)
 {
   int index = -1;
   for(int i = 0; i < numFilters; i++)
@@ -109,7 +112,7 @@ int findStatsGenFilter(const QJsonObject &root, int numFilters)
     if(filter.isObject())
     {
       QString filterName = filter.toObject().value("Filter_Name").toString();
-      if( !filterName.isEmpty() && filterName.compare("StatsGeneratorFilter") == 0)
+      if(!filterName.isEmpty() && filterName.compare("StatsGeneratorFilter") == 0)
       {
         return i;
       }
@@ -151,7 +154,7 @@ int findStatsGenFilter(const QJsonObject &root, int numFilters)
  * @param phase The phase of interest
  * @param avgSize The new value to set into the json
  */
-void adjustAverageGrainSize(QJsonObject &root, int index, int phase, float avgSize)
+void adjustAverageGrainSize(QJsonObject& root, int index, int phase, float avgSize)
 {
   // Drill down through the filter index to get the Json Object for the filter
   QJsonObject filterObj = root[QString::number(index)].toObject();
@@ -172,7 +175,6 @@ void adjustAverageGrainSize(QJsonObject &root, int index, int phase, float avgSi
 
   iter = root.insert(QString::number(index), filterObj);
   // and finally return.
-
 }
 
 /**
@@ -182,7 +184,7 @@ void adjustAverageGrainSize(QJsonObject &root, int index, int phase, float avgSi
  * @param root
  * @param index
  */
-void writePipelineFile(const QJsonObject &root, const QString index)
+void writePipelineFile(const QJsonObject& root, const QString index)
 {
   QString filePath = getOutputDir() + QDir::separator() + "PipelineFile-" + index + ".json";
   QFile file(filePath);
@@ -202,7 +204,7 @@ void writePipelineFile(const QJsonObject &root, const QString index)
  * @param argv
  * @return
  */
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   Q_UNUSED(argc);
   Q_UNUSED(argv);
@@ -223,7 +225,10 @@ int main(int argc, char *argv[])
     // of "n" by inspecting the top level "PipelineBuilder" object and get the "Number_Filters"
     // integer value.
     int numFilters = findNumberOfFilters(root);
-    if(numFilters < 1) { return 1; }
+    if(numFilters < 1)
+    {
+      return 1;
+    }
 
     // Now we need to find the filter index that is the "StatsGeneratorFilter" by using the "Filter_Name"
     // key that is in each numbered entry of the pipeline file.

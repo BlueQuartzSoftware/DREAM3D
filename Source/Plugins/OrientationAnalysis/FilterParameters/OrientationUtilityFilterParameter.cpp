@@ -38,21 +38,23 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtilityFilterParameter::OrientationUtilityFilterParameter() :
-FilterParameter()
-{}
+OrientationUtilityFilterParameter::OrientationUtilityFilterParameter()
+: FilterParameter()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 OrientationUtilityFilterParameter::~OrientationUtilityFilterParameter()
-{}
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, int groupIndex)
+OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category,
+                                                                                  int groupIndex)
 {
   OrientationUtilityFilterParameter::Pointer ptr = OrientationUtilityFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -65,7 +67,6 @@ OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::Ne
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -73,4 +74,3 @@ QString OrientationUtilityFilterParameter::getWidgetType()
 {
   return QString("OrientationUtilityWidget");
 }
-

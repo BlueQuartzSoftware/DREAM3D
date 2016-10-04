@@ -40,8 +40,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EulerWidget::EulerWidget(QWidget* parent) :
-  OrientationWidget(parent)
+EulerWidget::EulerWidget(QWidget* parent)
+: OrientationWidget(parent)
 {
   setupUi(this);
 
@@ -53,7 +53,6 @@ EulerWidget::EulerWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 EulerWidget::~EulerWidget()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -65,12 +64,9 @@ void EulerWidget::setupGui()
   e2->setValidator(new QRegExpValidator(QRegExp("([-+]?[0-9]*\\.?[0-9]+)|pi"), e2));
   e3->setValidator(new QRegExpValidator(QRegExp("([-+]?[0-9]*\\.?[0-9]+)|pi"), e3));
 
-  connect(e1, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(e2, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
-  connect(e3, SIGNAL(textEdited(const QString&)),
-    this, SLOT(valuesUpdated(const QString&)));
+  connect(e1, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(e2, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
+  connect(e3, SIGNAL(textEdited(const QString&)), this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -80,12 +76,12 @@ void EulerWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if (calculator->getInputType() == OrientationConverter<double>::Euler)
+  if(calculator->getInputType() == OrientationConverter<double>::Euler)
   {
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if (calculator->getHasErrors() == true)
+  else if(calculator->getHasErrors() == true)
   {
     e1->setText("nan");
     e2->setText("nan");
@@ -96,12 +92,12 @@ void EulerWidget::updateData(OrientationUtilityCalculator* calculator)
 
   QVector<double> eValues = calculator->getValues(OrientationConverter<double>::Euler);
 
-  if (m_AngleMeasurement == Degrees)
+  if(m_AngleMeasurement == Degrees)
   {
     eValues = toDegrees(eValues);
   }
 
-  if (eValues.size() == 3)
+  if(eValues.size() == 3)
   {
     e1->setText(QString::number(eValues[0]));
     e2->setText(QString::number(eValues[1]));
@@ -112,11 +108,11 @@ void EulerWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EulerWidget::valuesUpdated(const QString &text)
+void EulerWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
 
-  if (m_AngleMeasurement == Degrees)
+  if(m_AngleMeasurement == Degrees)
   {
     values = toRadians(values);
   }
@@ -127,7 +123,7 @@ void EulerWidget::valuesUpdated(const QString &text)
 
   emit clearErrorTable();
 
-  if (errorCode >= 0)
+  if(errorCode >= 0)
   {
     emit valuesChanged(values, OrientationConverter<double>::Euler, false);
   }
@@ -145,7 +141,7 @@ void EulerWidget::convertData(bool isDegrees)
 {
   QVector<double> values = getValues();
 
-  if (isDegrees == true)
+  if(isDegrees == true)
   {
     values = toDegrees(values);
   }
@@ -166,9 +162,9 @@ QVector<double> EulerWidget::getValues()
 {
   QVector<double> values;
 
-  if (e1->text() == "p" || e1->text() == "pi")
+  if(e1->text() == "p" || e1->text() == "pi")
   {
-    if (m_AngleMeasurement == Degrees)
+    if(m_AngleMeasurement == Degrees)
     {
       e1->setText("180");
     }
@@ -177,14 +173,14 @@ QVector<double> EulerWidget::getValues()
       e1->setText(QString::number(SIMPLib::Constants::k_Pi));
     }
   }
-  else if (e1->text() == "nan")
+  else if(e1->text() == "nan")
   {
     e1->setText("0");
   }
 
-  if (e2->text() == "p" || e2->text() == "pi")
+  if(e2->text() == "p" || e2->text() == "pi")
   {
-    if (m_AngleMeasurement == Degrees)
+    if(m_AngleMeasurement == Degrees)
     {
       e2->setText("180");
     }
@@ -193,14 +189,14 @@ QVector<double> EulerWidget::getValues()
       e2->setText(QString::number(SIMPLib::Constants::k_Pi));
     }
   }
-  else if (e2->text() == "nan")
+  else if(e2->text() == "nan")
   {
     e2->setText("0");
   }
 
-  if (e3->text() == "p" || e3->text() == "pi")
+  if(e3->text() == "p" || e3->text() == "pi")
   {
-    if (m_AngleMeasurement == Degrees)
+    if(m_AngleMeasurement == Degrees)
     {
       e3->setText("180");
     }
@@ -209,7 +205,7 @@ QVector<double> EulerWidget::getValues()
       e3->setText(QString::number(SIMPLib::Constants::k_Pi));
     }
   }
-  else if (e3->text() == "nan")
+  else if(e3->text() == "nan")
   {
     e3->setText("0");
   }
@@ -226,7 +222,7 @@ QVector<double> EulerWidget::getValues()
 // -----------------------------------------------------------------------------
 QVector<double> EulerWidget::toDegrees(QVector<double> data)
 {
-  for (int i = 0; i < data.size(); i++)
+  for(int i = 0; i < data.size(); i++)
   {
     double radVal = data[i];
     double degVal = radVal * SIMPLib::Constants::k_RadToDeg;
@@ -241,7 +237,7 @@ QVector<double> EulerWidget::toDegrees(QVector<double> data)
 // -----------------------------------------------------------------------------
 QVector<double> EulerWidget::toRadians(QVector<double> data)
 {
-  for (int i = 0; i < data.size(); i++)
+  for(int i = 0; i < data.size(); i++)
   {
     double degVal = data[i];
     double radVal = degVal * SIMPLib::Constants::k_DegToRad;
@@ -250,4 +246,3 @@ QVector<double> EulerWidget::toRadians(QVector<double> data)
 
   return data;
 }
-

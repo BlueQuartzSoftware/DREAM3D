@@ -33,61 +33,39 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "TransformationPhaseWidget.h"
-
 
 #include <iostream>
 #include <limits>
 
-#include <QtCore/QString>
-#include <QtCore/QSettings>
-#include <QtCore/QRunnable>
-#include <QtCore/QThreadPool>
 #include <QtConcurrent/QtConcurrentRun>
+#include <QtCore/QRunnable>
+#include <QtCore/QSettings>
+#include <QtCore/QString>
+#include <QtCore/QThreadPool>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
-
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/Widgets/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
-#include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
-
+#include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
-#include <qwt_plot_grid.h>
 #include <qwt_plot_curve.h>
+#include <qwt_plot_grid.h>
 #include <qwt_plot_marker.h>
-
-#define CHECK_ERROR_ON_WRITE(var, msg)\
-  if (err < 0) {\
-    QMessageBox::critical(this, tr("StatsGenerator"),\
-                          tr("There was an error writing the " msg " to the HDF5 file"),\
-                          QMessageBox::Ok,\
-                          QMessageBox::Ok);\
-    return err;\
-  }
-
-
-#define CHECK_STATS_READ_ERROR(err, group, dataset)\
-  if (err < 0) {\
-    qDebug() << "TransformationPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-    qDebug() << "  File: " << __FILE__ << "\n";\
-    qDebug() << "  Line: " << __LINE__ << "\n";\
-    return err;\
-  }
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_TransformationPhaseWidget.cpp"
@@ -95,21 +73,17 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent) :
-  SGWidget(parent),
-  m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
-  m_PhaseFraction(1.0),
-  m_TotalPhaseFraction(1.0),
-  m_ParentPhase(0),
-  m_DataHasBeenGenerated(false),
-  m_BulkLoadFailure(false),
-  m_PhaseIndex(0),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-  m_SizeDistributionCurve(NULL),
-  m_CutOffMin(NULL),
-  m_CutOffMax(NULL),
-  m_grid(NULL)
+TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent)
+: StatsGenWidget(parent)
+, m_ParentPhase(0)
+, m_SizeDistributionCurve(nullptr)
+, m_CutOffMin(nullptr)
+, m_CutOffMax(nullptr)
+, m_grid(nullptr)
 {
+  setTabTitle("Transformation");
+  setPhaseType(SIMPL::PhaseType::PrimaryPhase);
+  setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();
 }
@@ -119,35 +93,6 @@ TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 TransformationPhaseWidget::~TransformationPhaseWidget()
 {
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TransformationPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int index)
-{
-  //qDebug() << "on_microstructurePresetCombo_currentIndexChanged" << "\n";
-  QString presetName = microstructurePresetCombo->currentText();
-
-  //Factory Method to get an instantiated object of the correct type?
-  MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  m_MicroPreset = manager->createNewPreset(presetName);
-  m_MicroPreset->displayUserInputDialog();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* microstructurePresetCombo)
-{
-  AbstractMicrostructurePresetFactory::Pointer presetFactory = T::New();
-  MicrostructurePresetManager::registerFactory(presetFactory);
-  QString displayString = presetFactory->displayName();
-  microstructurePresetCombo->addItem(displayString);
-  return presetFactory;
 }
 
 // -----------------------------------------------------------------------------
@@ -166,7 +111,7 @@ void TransformationPhaseWidget::setupGui()
   // Register all of our Microstructure Preset Factories
   AbstractMicrostructurePresetFactory::Pointer presetFactory = AbstractMicrostructurePresetFactory::NullPointer();
 
-  //Register the Equiaxed Preset
+  // Register the Equiaxed Preset
   presetFactory = RegisterPresetFactory<PrimaryEquiaxedPresetFactory>(microstructurePresetCombo);
   QString presetName = presetFactory->displayName();
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
@@ -178,7 +123,6 @@ void TransformationPhaseWidget::setupGui()
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);
   microstructurePresetCombo->blockSignals(false);
-
 
   float mu = 1.0f;
   float sigma = 0.1f;
@@ -200,10 +144,8 @@ void TransformationPhaseWidget::setupGui()
   w->setMinCutOff(minCutOff);
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
-  connect(m_Omega3Plot, SIGNAL(userEditedData()),
-          this, SLOT(dataWasEdited()));
-  connect(m_Omega3Plot, SIGNAL(userEditedData()),
-          this, SIGNAL(phaseParametersChanged()));
+  connect(m_Omega3Plot, SIGNAL(userEditedData()), this, SLOT(dataWasEdited()));
+  connect(m_Omega3Plot, SIGNAL(userEditedData()), this, SIGNAL(phaseParametersChanged()));
 
   w = m_BOverAPlot;
   w->setPlotTitle(QString("B/A Shape Distribution"));
@@ -218,10 +160,8 @@ void TransformationPhaseWidget::setupGui()
   w->setMinCutOff(minCutOff);
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
-  connect(m_BOverAPlot, SIGNAL(userEditedData()),
-          this, SLOT(dataWasEdited()));
-  connect(m_BOverAPlot, SIGNAL(userEditedData()),
-          this, SIGNAL(phaseParametersChanged()));
+  connect(m_BOverAPlot, SIGNAL(userEditedData()), this, SLOT(dataWasEdited()));
+  connect(m_BOverAPlot, SIGNAL(userEditedData()), this, SIGNAL(phaseParametersChanged()));
 
   w = m_COverAPlot;
   w->setPlotTitle(QString("C/A Shape Distribution"));
@@ -236,10 +176,8 @@ void TransformationPhaseWidget::setupGui()
   w->setMinCutOff(minCutOff);
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
-  connect(m_COverAPlot, SIGNAL(userEditedData()),
-          this, SLOT(dataWasEdited()));
-  connect(m_COverAPlot, SIGNAL(userEditedData()),
-          this, SIGNAL(phaseParametersChanged()));
+  connect(m_COverAPlot, SIGNAL(userEditedData()), this, SLOT(dataWasEdited()));
+  connect(m_COverAPlot, SIGNAL(userEditedData()), this, SIGNAL(phaseParametersChanged()));
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
   m_SizeDistributionPlot->setTitle("Size Distribution");
@@ -247,7 +185,7 @@ void TransformationPhaseWidget::setupGui()
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);
   m_grid->enableYMin(true);
-#if (QWT_VERSION > 0x060000)
+#if(QWT_VERSION > 0x060000)
   m_grid->setMajorPen(QPen(Qt::gray, 0, Qt::SolidLine));
   m_grid->setMinorPen(QPen(Qt::lightGray, 0, Qt::DotLine));
 #else
@@ -265,12 +203,9 @@ void TransformationPhaseWidget::setupGui()
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
   m_AxisODFWidget->setEnableAxisDecorations(false);
 
-  connect(m_ODFWidget, SIGNAL(odfParametersChanged()),
-          this, SIGNAL(phaseParametersChanged()));
-  connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)),
-          this, SLOT(bulkLoadEvent(bool)));
-  connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()),
-          this, SIGNAL(phaseParametersChanged()));
+  connect(m_ODFWidget, SIGNAL(odfParametersChanged()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)), this, SLOT(bulkLoadEvent(bool)));
+  connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()), this, SIGNAL(phaseParametersChanged()));
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
@@ -320,25 +255,6 @@ unsigned int TransformationPhaseWidget::getCrystalStructure() const
   return m_CrystalStructure;
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString TransformationPhaseWidget::getComboString()
-{
-  QString s = QString::number(m_PhaseIndex);
-  s.append(" - ");
-  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
-  {
-    s.append("Cubic");
-  }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
-  {
-    s.append("Hexagonal");
-  }
-  return s;
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -348,27 +264,27 @@ int TransformationPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& s
 
   bool ok = false;
   mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
   sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
   minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
   maxCutOff = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
   stepSize = loc.toFloat(m_BinStepSize->text(), &ok);
-  if (ok == false)
+  if(ok == false)
   {
     return 0;
   }
@@ -381,7 +297,7 @@ int TransformationPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& s
 void TransformationPhaseWidget::setTabsPlotTabsEnabled(bool b)
 {
   qint32 count = this->tabWidget->count();
-  for (qint32 i = 1; i < count; ++i)
+  for(qint32 i = 1; i < count; ++i)
   {
     this->tabWidget->setTabEnabled(i, b);
   }
@@ -401,7 +317,7 @@ void TransformationPhaseWidget::dataWasEdited()
 // -----------------------------------------------------------------------------
 void TransformationPhaseWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList)
+  foreach(QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -412,7 +328,7 @@ void TransformationPhaseWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void TransformationPhaseWidget::updatePlots()
 {
-  if (m_DataHasBeenGenerated == true)
+  if(m_DataHasBeenGenerated == true)
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
     progress.setWindowModality(Qt::WindowModal);
@@ -432,6 +348,14 @@ void TransformationPhaseWidget::updatePlots()
 
     progress.setValue(4);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TransformationPhaseWidget::generateDefaultData()
+{
+  on_m_GenerateDefaultData_clicked();
 }
 
 // -----------------------------------------------------------------------------
@@ -517,11 +441,10 @@ void TransformationPhaseWidget::calculateNumberOfBins()
   float stepSize = 1.0;
   float max, min;
   int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
-  if (err == 0)
+  if(err == 0)
   {
     return;
   }
-
 
   int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
   m_NumberBinsGenerated->setText(QString::number(n));
@@ -540,37 +463,29 @@ int TransformationPhaseWidget::calculateNumberOfBins(float mu, float sigma, floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TransformationPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
-                                                      float minCutOff, float maxCutOff,
-                                                      float binStepSize,
-                                                      QwtArray<float>& binsizes,
-                                                      QwtArray<float>& xCo,
-                                                      QwtArray<float>& yCo,
-                                                      float& xMax, float& yMax,
-                                                      QwtArray<float>& x,
-                                                      QwtArray<float>& y)
+int TransformationPhaseWidget::computeBinsAndCutOffs(float mu, float sigma, float minCutOff, float maxCutOff, float binStepSize, QwtArray<float>& binsizes, QwtArray<float>& xCo, QwtArray<float>& yCo,
+                                                     float& xMax, float& yMax, QwtArray<float>& x, QwtArray<float>& y)
 {
   int err = 0;
   int size = 250;
 
-
-  err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
-  if (err == 1)
+  err = StatsGen::GenLogNormalPlotData<QwtArray<float>>(mu, sigma, x, y, size);
+  if(err == 1)
   {
-    //TODO: Present Error Message
+    // TODO: Present Error Message
     return -1;
   }
 
-//  float xMax = std::numeric_limits<float >::min();
-//  float yMax = std::numeric_limits<float >::min();
-  for (int i = 0; i < size; ++i)
+  //  float xMax = std::numeric_limits<float >::min();
+  //  float yMax = std::numeric_limits<float >::min();
+  for(int i = 0; i < size; ++i)
   {
     //   qDebug() << x[i] << "  " << y[i] << "\n";
-    if (x[i] > xMax)
+    if(x[i] > xMax)
     {
       xMax = x[i];
     }
-    if (y[i] > yMax)
+    if(y[i] > yMax)
     {
       yMax = y[i];
     }
@@ -581,11 +496,10 @@ int TransformationPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   int numsizebins = 1;
   binsizes.clear();
   // QwtArray<int> numfeatures;
-  err = StatsGen::GenCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
+  err = StatsGen::GenCutOff<float, QwtArray<float>>(mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
   return 0;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -599,7 +513,7 @@ void TransformationPhaseWidget::updateSizeDistributionPlot()
   float maxCutOff = 1.0;
   float stepSize = 1.0;
   int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
-  if (err == 0)
+  if(err == 0)
   {
     return;
   }
@@ -607,14 +521,17 @@ void TransformationPhaseWidget::updateSizeDistributionPlot()
   QwtArray<float> xCo;
   QwtArray<float> yCo;
   QwtArray<float> binsizes;
-  float xMax = std::numeric_limits<float >::min();
-  float yMax = std::numeric_limits<float >::min();
+  float xMax = std::numeric_limits<float>::min();
+  float yMax = std::numeric_limits<float>::min();
   QwtArray<float> x;
   QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
-  if (err < 0) { return; }
+  if(err < 0)
+  {
+    return;
+  }
 
-  if (NULL == m_SizeDistributionCurve)
+  if(nullptr == m_SizeDistributionCurve)
   {
     m_SizeDistributionCurve = new QwtPlotCurve("Size Distribution");
     m_SizeDistributionCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
@@ -623,7 +540,7 @@ void TransformationPhaseWidget::updateSizeDistributionPlot()
   }
 
   // Place a vertical Line on the plot where the Min and Max Cutoff values are
-  if (NULL == m_CutOffMin)
+  if(nullptr == m_CutOffMin)
   {
     m_CutOffMin = new QwtPlotMarker();
     m_CutOffMin->attach(m_SizeDistributionPlot);
@@ -635,7 +552,7 @@ void TransformationPhaseWidget::updateSizeDistributionPlot()
   m_CutOffMin->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
   m_CutOffMin->setXValue(xCo[0]);
 
-  if (NULL == m_CutOffMax)
+  if(nullptr == m_CutOffMax)
   {
     m_CutOffMax = new QwtPlotMarker();
     m_CutOffMax->attach(m_SizeDistributionPlot);
@@ -649,7 +566,7 @@ void TransformationPhaseWidget::updateSizeDistributionPlot()
 
   QwtArray<double> xD(x.size());
   QwtArray<double> yD(x.size());
-  for (int i = 0; i < x.size(); ++i)
+  for(int i = 0; i < x.size(); ++i)
   {
     xD[i] = static_cast<double>(x[i]);
     yD[i] = static_cast<double>(y[i]);
@@ -681,7 +598,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
   float maxCutOff = 1.0;
   float stepSize = 1.0;
   int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
-  if (err == 0)
+  if(err == 0)
   {
     return;
   }
@@ -689,12 +606,15 @@ void TransformationPhaseWidget::plotSizeDistribution()
   QwtArray<float> xCo;
   QwtArray<float> yCo;
   QwtArray<float> binsizes;
-  float xMax = std::numeric_limits<float >::min();
-  float yMax = std::numeric_limits<float >::min();
+  float xMax = std::numeric_limits<float>::min();
+  float yMax = std::numeric_limits<float>::min();
   QwtArray<float> x;
   QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
-  if (err < 0) { return; }
+  if(err < 0)
+  {
+    return;
+  }
 
   // Now that we have bins and feature sizes, push those to the other plot widgets
   // Setup Each Plot Widget
@@ -712,19 +632,16 @@ void TransformationPhaseWidget::plotSizeDistribution()
   m_MicroPreset->initializeODFTableModel(m_ODFWidget);
   m_MicroPreset->initializeAxisODFTableModel(m_AxisODFWidget);
   m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
-
 }
 
-
-#define SGWIGET_WRITE_ERROR_CHECK(var)\
-  if (err < 0)  {\
-    QString msg ("Error Writing Data ");\
-    msg.append((var));\
-    msg.append(" to the HDF5 file");\
-    QMessageBox::critical(this, tr("StatsGenerator"),\
-                          msg,\
-                          QMessageBox::Default);\
-    retErr = -1;\
+#define SGWIGET_WRITE_ERROR_CHECK(var)                                                                                                                                                                 \
+  if(err < 0)                                                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    QString msg("Error Writing Data ");                                                                                                                                                                \
+    msg.append((var));                                                                                                                                                                                 \
+    msg.append(" to the HDF5 file");                                                                                                                                                                   \
+    QMessageBox::critical(this, tr("StatsGenerator"), msg, QMessageBox::Default);                                                                                                                      \
+    retErr = -1;                                                                                                                                                                                       \
   }
 
 // -----------------------------------------------------------------------------
@@ -732,11 +649,9 @@ void TransformationPhaseWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
-  if (m_PhaseIndex < 1)
+  if(m_PhaseIndex < 1)
   {
-    QMessageBox::critical(this, tr("StatsGenerator"),
-                          tr("The Phase Index is Less than 1. This is not allowed."),
-                          QMessageBox::Default);
+    QMessageBox::critical(this, tr("StatsGenerator"), tr("The Phase Index is Less than 1. This is not allowed."), QMessageBox::Default);
     return -1;
   }
   int retErr = 0;
@@ -745,7 +660,7 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
   float sigma = 1.0f;
   float minCutOff = 1.0f;
   float maxCutOff = 1.0f;
-// float stepSize = 1.0f;
+  // float stepSize = 1.0f;
   float binStep = 1.0f;
   gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, binStep);
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
@@ -758,7 +673,7 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
   QwtArray<float> x;
   QwtArray<float> y;
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, binStep, binsizes, xCo, yCo, xMax, yMax, x, y);
-  if (err < 0)
+  if(err < 0)
   {
     return err;
   }
@@ -772,18 +687,19 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
-  if (NULL != statsDataArray)
+  if(nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
     TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
+    statsData->setName(getPhaseName());
 
     transformationStatsData->setPhaseFraction(calcPhaseFraction);
     transformationStatsData->setParentPhase(m_ParentPhase);
@@ -842,22 +758,23 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   m_PhaseType = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
 
-  if (statsDataArray == NULL)
+  if(statsDataArray == nullptr)
   {
     return;
   }
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
   TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
+  setPhaseName(statsData->getName());
 
   m_PhaseFraction = transformationStatsData->getPhaseFraction();
 
@@ -867,12 +784,10 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
   m_ODFWidget->setCrystalStructure(m_CrystalStructure);
-// m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
-
+  // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
 
   /* SEt the BinNumbers data set */
   FloatArrayType::Pointer bins = transformationStatsData->getBinNumbers();
-
 
   /* Set the Feature_Diameter_Info Data */
 
@@ -912,7 +827,7 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_NumberBinsGenerated->setText(QString::number(bins->getNumberOfTuples()));
 
   // Now have each of the plots set it's own data
-  QVector<float> qbins (static_cast<int>(bins->getNumberOfTuples()));
+  QVector<float> qbins(static_cast<int>(bins->getNumberOfTuples()));
   for(int i = 0; i < qbins.size(); ++i)
   {
     qbins[i] = bins->getValue(i);
@@ -939,15 +854,4 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);
   m_DataHasBeenGenerated = true;
-
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString TransformationPhaseWidget::getTabTitle()
-{
-  return QString("Transformation");
-}
-

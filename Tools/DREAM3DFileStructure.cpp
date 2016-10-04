@@ -46,7 +46,7 @@ DREAM3DFileStructure::~DREAM3DFileStructure()
  * transferred to the DataContainerReader as a static function perhaps or used
  * elsewhere in the code. The GUI would generate the "Proxy" structure then pass
  * that Proxy Structure to the DataContainer reader as an DREAM3D_PROPERTY. If
- * the Proxy was NULL in the DataContainer then that would signal the DataContainerReader
+ * the Proxy was nullptr in the DataContainer then that would signal the DataContainerReader
  * to read EVERY thing from the file. If the Proxy was valid but essentially empty
  * then nothing is read from the file. If the Proxy has some structure saved in it
  * then the DataContainer reader would know exactly what to read.

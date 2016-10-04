@@ -61,7 +61,7 @@ class OrientationUtilityWidget : public FilterParameterWidget, private Ui::Orien
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    OrientationUtilityWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    OrientationUtilityWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
     virtual ~OrientationUtilityWidget();
 

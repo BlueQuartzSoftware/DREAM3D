@@ -39,8 +39,14 @@ cd $SDK_INSTALL
 if [ -e "$SDK_INSTALL/$BOOST_ARCHIVE_NAME" ];
 then
   tar -xvzf $BOOST_ARCHIVE_NAME
-  mv "$SDK_INSTALL/$BOOST_FOLDER_NAME" "$SDK_INSTALL/${BOOST_FOLDER_NAME}_source"
 fi
+
+if [ -e "$SDK_INSTALL/${BOOST_FOLDER_NAME}_source" ];
+ then
+  rm -rf "$SDK_INSTALL/${BOOST_FOLDER_NAME}_source"
+fi
+
+mv "$SDK_INSTALL/$BOOST_FOLDER_NAME" "$SDK_INSTALL/${BOOST_FOLDER_NAME}_source"
 
 CPPSTD=c++11    #c++89, c++99, c++14
 STDLIB=libc++   # libstdc++
@@ -48,12 +54,12 @@ COMPILER=clang++
 PARALLEL_MAKE=$PARALLEL_BUILD   # how many threads to make boost with
 
 
-CXX_FLAGS="-isysroot $OSX_SDK -mmacosx-version-min=$OSX_DEPLOYMENT_TARGET -std=$CPPSTD -stdlib=$STDLIB "
-
+CXX_FLAGS="-isysroot $OSX_SDK -mmacosx-version-min=$OSX_DEPLOYMENT_TARGET -std=$CPPSTD -stdlib=$STDLIB"
+LINKER_FLAGS="-stdlib=$STDLIB"
 cd "$SDK_INSTALL/${BOOST_FOLDER_NAME}_source"
 ./bootstrap.sh
 ./b2 headers
-./b2 -j$PARALLEL_BUILD --prefix=$SDK_INSTALL/boost-$BOOST_VERSION --layout=system --build-dir=x64 --architecture=x86 address-model=64 variant=release link=shared threading=multi runtime-link=shared cxxflags="$CXX_FLAGS" linkflags="-stdlib=$STDLIB" install
+./b2 -j$PARALLEL_BUILD --prefix=$SDK_INSTALL/boost-$BOOST_VERSION --layout=system --build-dir=x64 --architecture=x86 address-model=64 variant=release link=shared threading=multi runtime-link=shared cxxflags="$CXX_FLAGS" linkflags="${LINKER_FLAGS}" install
 mkdir -p $SDK_INSTALL/boost-$BOOST_VERSION/lib/Debug
 mkdir -p $SDK_INSTALL/boost-$BOOST_VERSION/lib/Release
 

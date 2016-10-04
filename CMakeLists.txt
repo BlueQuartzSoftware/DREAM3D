@@ -36,7 +36,11 @@
 message(STATUS "********* STARTING DREAM3D CONFIGURATION ***********************")
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
-  message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
+  get_property(DREAM3D_SDK_STATUS_PRINTED GLOBAL PROPERTY DREAM3D_SDK_STATUS_PRINTED)
+  if(NOT DREAM3D_SDK_STATUS_PRINTED)
+    message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
+    set_property(GLOBAL PROPERTY DREAM3D_SDK_STATUS_PRINTED TRUE)
+  endif()
 endif()
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
@@ -214,18 +218,20 @@ if("${SIMPLPluginList}" STREQUAL "")
 endif()
 
 
-get_property(SIMPLLibSearchDirs GLOBAL PROPERTY SIMPLLibSearchDirs)
-if("${SIMPLLibSearchDirs}" STREQUAL "")
-  set_property(GLOBAL PROPERTY SIMPLLibSearchDirs "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt")
-  get_property(SIMPLLibSearchDirs GLOBAL PROPERTY SIMPLLibSearchDirs)
-  file(WRITE "${SIMPLLibSearchDirs}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY};")
+get_property(SIMPLibSearchDirs GLOBAL PROPERTY SIMPLibSearchDirs)
+if("${SIMPLibSearchDirs}" STREQUAL "")
+  set_property(GLOBAL PROPERTY SIMPLibSearchDirs "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt")
+  get_property(SIMPLibSearchDirs GLOBAL PROPERTY SIMPLibSearchDirs)
+  file(WRITE "${SIMPLibSearchDirs}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY};")
 endif()
 
 # --------------------------------------------------------------------
 # Build the SimpleITKExplicit Library.
-option(SIMPLib_USE_ITK "Use ITK For Image Processing" ON)
-if(SIMPLib_USE_ITK)
+option(DREAM3D_USE_ITK "Use ITK For Image Processing" ON)
+if(DREAM3D_USE_ITK)
+  # SimpleITK Explicit needs the next variable to be set:
   set(EXE_DEBUG_EXTENSION "_debug")
+  # Now add the subdirectory.
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
   get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
 endif()
@@ -257,7 +263,7 @@ set(DREAM3D_SUPPORT_DIR ${PROJECT_SOURCE_DIR}/Support)
 
 set(CMP_ENABLE_PLUGINS "1")
 set(CMP_PLUGIN_LIST_FILE "${SIMPLPluginList}")
-set(CMP_PLUGIN_SEARCHDIR_FILE "${SIMPLLibSearchDirs}")
+set(CMP_PLUGIN_SEARCHDIR_FILE "${SIMPLibSearchDirs}")
 file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/plugins;")
 file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
 set(CMP_LIB_SEARCH_DIRS "")
@@ -331,13 +337,14 @@ set(Boost_NO_BOOST_CMAKE 1)
 FIND_PACKAGE(Boost)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+list(APPEND CMP_LIB_SEARCH_DIRS ${Boost_LIBRARY_DIRS})
 
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
 set(SIMPLib_USE_PARALLEL_ALGORITHMS "")
-option(SIMPLib_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms" ON)
-if(SIMPLib_USE_MULTITHREADED_ALGOS)
+option(SIMPL_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms" ON)
+if(SIMPL_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
     if(TBB_FOUND)
         include_directories(${TBB_INCLUDE_DIRS} )
@@ -369,7 +376,11 @@ endif()
 # Find the Doxygen package
 FIND_PACKAGE(Doxygen)
 if(DOXYGEN_FOUND)
-  message(STATUS "Doxygen Found at ${DOXYGEN_EXECUTABLE}")
+  get_property(Doxygen_STATUS_PRINTED GLOBAL PROPERTY Doxygen_STATUS_PRINTED)
+  if(NOT Doxygen_STATUS_PRINTED)
+    message(STATUS "Doxygen Found at ${DOXYGEN_EXECUTABLE}")
+    set_property(GLOBAL PROPERTY Doxygen_STATUS_PRINTED TRUE)
+  endif()
 else()
   message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
 endif()
@@ -427,7 +438,7 @@ ENDif(CMAKE_COMPILER_IS_GNUCXX)
 if(MSVC)
  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
  add_definitions(-D_SCL_SECURE_NO_WARNINGS)
- option(SIMPLib_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
+ option(SIMPL_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
 endif()
 
 
@@ -473,35 +484,35 @@ include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 
 # add the Command line utilities
 # Figure out here if we are going to build the command line tools
-option(SIMPLib_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
-if( SIMPLib_BUILD_CLI_TOOLS )
+option(SIMPL_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
+if( SIMPL_BUILD_CLI_TOOLS )
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 endif()
 
 
 #-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
-option(SIMPLib_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
-if(SIMPLib_BUILD_DOCUMENTATION)
+option(SIMPL_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
+if(SIMPL_BUILD_DOCUMENTATION)
   set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
   set(DOX_GENERATE_RTF "NO")
-  option(SIMPLib_GENERATE_RTF "Generate RTF Documentation" OFF)
-  if(SIMPLib_GENERATE_RTF STREQUAL "ON")
+  option(SIMPL_GENERATE_RTF "Generate RTF Documentation" OFF)
+  if(SIMPL_GENERATE_RTF STREQUAL "ON")
     set(DOX_GENERATE_RTF "YES")
   endif()
 
   # By default we generate the Documentation in HTML format
   set(DOX_GENERATE_HTML "NO")
-  option(SIMPLib_GENERATE_HTML "Generate HTML Documentation" ON)
-  if(SIMPLib_GENERATE_HTML STREQUAL "ON")
+  option(SIMPL_GENERATE_HTML "Generate HTML Documentation" ON)
+  if(SIMPL_GENERATE_HTML STREQUAL "ON")
     set(DOX_GENERATE_HTML "YES")
   endif()
 
   #most windows machines do NOT have LATEX built in so default this to OFF
   set(DOX_GENERATE_LATEX "NO")
-  option(SIMPLib_GENERATE_LATEX "Generate PDF Documentation" OFF)
-  if(SIMPLib_GENERATE_LATEX STREQUAL "ON")
+  option(SIMPL_GENERATE_LATEX "Generate PDF Documentation" OFF)
+  if(SIMPL_GENERATE_LATEX STREQUAL "ON")
     set(DOX_GENERATE_LATEX "YES")
     # Check for existence of LaTex executable files
     INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
@@ -579,13 +590,18 @@ endif()
 #-- This is example code that loops over all the DocGroups and each .md BUILD_WITH_INSTALL_RPATH
 #-- the filter DocGroup
 if (0)
-get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
-foreach(DocGroup ${DREAM3DDoc_GROUPS})
-  #message(STATUS "  DocGroup: ${DocGroup}" )
-  get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup})
-  foreach(docListItem ${DocGroupList})
-    #message(STATUS "    ${docListItem}")
+  get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
+  foreach(DocGroup ${DREAM3DDoc_GROUPS})
+    #message(STATUS "  DocGroup: ${DocGroup}" )
+    get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup})
+    foreach(docListItem ${DocGroupList})
+      #message(STATUS "    ${docListItem}")
+    endforeach()
   endforeach()
-endforeach()
 endif()
+
+
+#----------------------------------------------------------------------------------------
+# After we are all done, then update the LibrarySearchDirs.txt file
+  file(APPEND "${SIMPLibSearchDirs}" "${CMP_LIB_SEARCH_DIRS};")
 

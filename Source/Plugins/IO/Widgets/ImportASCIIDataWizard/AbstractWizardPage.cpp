@@ -37,17 +37,16 @@
 
 #include <QtCore/QFile>
 
-#include "ImportASCIIDataWizard.h"
 #include "ASCIIDataModel.h"
+#include "ImportASCIIDataWizard.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractWizardPage::AbstractWizardPage(const QString &inputFilePath, QWidget* parent) :
-  QWizardPage(parent),
-  m_InputFilePath(inputFilePath)
+AbstractWizardPage::AbstractWizardPage(const QString& inputFilePath, QWidget* parent)
+: QWizardPage(parent)
+, m_InputFilePath(inputFilePath)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -55,7 +54,6 @@ AbstractWizardPage::AbstractWizardPage(const QString &inputFilePath, QWidget* pa
 // -----------------------------------------------------------------------------
 AbstractWizardPage::~AbstractWizardPage()
 {
-
 }
 
 // -----------------------------------------------------------------------------

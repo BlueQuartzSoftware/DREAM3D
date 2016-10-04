@@ -35,15 +35,14 @@
 
 #include "ReverseTriangleWinding.h"
 
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #endif
 
@@ -56,51 +55,53 @@
  */
 class ReverseWindingImpl
 {
-    SharedTriList::Pointer m_Triangles;
+  SharedTriList::Pointer m_Triangles;
 
-  public:
-    ReverseWindingImpl(SharedTriList::Pointer triangles) :
-      m_Triangles(triangles)
-    {}
-    virtual ~ReverseWindingImpl() {}
+public:
+  ReverseWindingImpl(SharedTriList::Pointer triangles)
+  : m_Triangles(triangles)
+  {
+  }
+  virtual ~ReverseWindingImpl()
+  {
+  }
 
-    void generate(size_t start, size_t end) const
+  void generate(size_t start, size_t end) const
+  {
+    int64_t* triangles = m_Triangles->getPointer(0);
+
+    for(size_t i = start; i < end; i++)
     {
-      int64_t* triangles = m_Triangles->getPointer(0);
+      // Swap the indices
+      int64_t nId0 = triangles[i * 3 + 0];
+      int64_t nId2 = triangles[i * 3 + 2];
 
-      for (size_t i = start; i < end; i++)
-      {
-        // Swap the indices
-        int64_t nId0 = triangles[i * 3 + 0];
-        int64_t nId2 = triangles[i * 3 + 2];
-
-        triangles[i * 3 + 0] = nId2;
-        triangles[i * 3 + 2] = nId0;
-      }
+      triangles[i * 3 + 0] = nId2;
+      triangles[i * 3 + 2] = nId0;
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    /**
-     * @brief operator () This is called from the TBB stye of code
-     * @param r The range to compute the values
-     */
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      generate(r.begin(), r.end());
-    }
+  /**
+   * @brief operator () This is called from the TBB stye of code
+   * @param r The range to compute the values
+   */
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    generate(r.begin(), r.end());
+  }
 #endif
 };
 
 // Include the MOC generated file for this class
 #include "moc_ReverseTriangleWinding.cpp"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReverseTriangleWinding::ReverseTriangleWinding() :
-  SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
+ReverseTriangleWinding::ReverseTriangleWinding()
+: SurfaceMeshFilter()
+, m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
 {
   setupFilterParameters();
 }
@@ -132,7 +133,7 @@ void ReverseTriangleWinding::setupFilterParameters()
 void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
+  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
   reader->closeFilterGroup();
 }
 
@@ -141,7 +142,6 @@ void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -172,7 +172,10 @@ void ReverseTriangleWinding::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
 
@@ -183,11 +186,9 @@ void ReverseTriangleWinding::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
-                      ReverseWindingImpl(triangleGeom->getTriangles()), tbb::auto_partitioner());
-
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()), ReverseWindingImpl(triangleGeom->getTriangles()), tbb::auto_partitioner());
   }
   else
 #endif
@@ -236,23 +237,29 @@ const QString ReverseTriangleWinding::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getGroupName()
-{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
+{
+  return SIMPL::FilterGroups::SurfaceMeshingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getSubGroupName()
-{ return SIMPL::FilterSubGroups::ConnectivityArrangementFilters; }
+{
+  return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getHumanLabel()
-{ return "Reverse Triangle Winding"; }
+{
+  return "Reverse Triangle Winding";
+}

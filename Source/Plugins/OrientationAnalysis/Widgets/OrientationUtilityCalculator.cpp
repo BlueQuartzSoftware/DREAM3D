@@ -47,13 +47,12 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtilityCalculator::OrientationUtilityCalculator(QWidget* parent) :
-  QWidget(parent),
-  m_InputData(QVector<double>()),
-  m_InputType(OrientationConverter<double>::UnknownOrientationType),
-  m_HasErrors(false)
+OrientationUtilityCalculator::OrientationUtilityCalculator(QWidget* parent)
+: QWidget(parent)
+, m_InputData(QVector<double>())
+, m_InputType(OrientationConverter<double>::UnknownOrientationType)
+, m_HasErrors(false)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -61,7 +60,6 @@ OrientationUtilityCalculator::OrientationUtilityCalculator(QWidget* parent) :
 // -----------------------------------------------------------------------------
 OrientationUtilityCalculator::~OrientationUtilityCalculator()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -111,7 +109,7 @@ QVector<double> OrientationUtilityCalculator::getValues(OrientationConverter<dou
 
   QVector<size_t> cDims(1, m_InputData.size());
   DataArray<double>::Pointer inputDataArray = DataArray<double>::CreateArray(1, cDims, "Input Data");
-  for (int i = 0; i < m_InputData.size(); i++)
+  for(int i = 0; i < m_InputData.size(); i++)
   {
     inputDataArray->setComponent(0, i, m_InputData[i]);
   }
@@ -122,11 +120,10 @@ QVector<double> OrientationUtilityCalculator::getValues(OrientationConverter<dou
   DataArray<double>::Pointer output = converters[m_InputType]->getOutputData();
 
   QVector<double> outputData;
-  for (int i = 0; i < output->getNumberOfComponents(); i++)
+  for(int i = 0; i < output->getNumberOfComponents(); i++)
   {
     outputData.push_back(output->getComponent(0, i));
   }
 
   return outputData;
 }
-

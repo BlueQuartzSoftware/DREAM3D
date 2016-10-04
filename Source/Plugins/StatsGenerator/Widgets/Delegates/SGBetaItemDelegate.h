@@ -89,7 +89,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
       switch(col)
       {
         case SGBetaTableModel::BinNumber:
-          return NULL;
+          return nullptr;
           break;
 
         case SGBetaTableModel::Alpha:

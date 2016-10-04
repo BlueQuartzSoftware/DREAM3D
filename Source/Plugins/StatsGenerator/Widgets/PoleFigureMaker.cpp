@@ -33,23 +33,21 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "PoleFigureMaker.h"
 
 #include <iostream>
 
 #include <QtGui/QColor>
-#include <QtGui/QPainter>
 #include <QtGui/QFont>
+#include <QtGui/QPainter>
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PoleFigureMaker::PoleFigureMaker() :
-  m_KernelWeightsInited(false)
+PoleFigureMaker::PoleFigureMaker()
+: m_KernelWeightsInited(false)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -87,7 +85,6 @@ void PoleFigureMaker::generateKernelWeigths(int kernelWidth, int kernelHeight)
 }
 #endif
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -99,20 +96,18 @@ void PoleFigureMaker::generateKernelWeigths(int kernelWidth, int kernelHeight)
   float delta = 0;
   m_KernelWeights.resize((kernelWidth + 1) * (kernelHeight + 1) * 4);
 
-
   float sigma = 1.0;
   float mu = 0.0;
   float root2Pi = sqrt(2.0 * M_PI);
   float OneOverSigmaRoot2Pi = 1.0 / (sigma * root2Pi);
   float TwoSigmaSqrd = 2.0 * sigma * sigma;
 
-
-  for (int ky = -kernelHeight; ky <= kernelHeight; ++ky)
+  for(int ky = -kernelHeight; ky <= kernelHeight; ++ky)
   {
-    for (int kx = -kernelWidth; kx <= kernelWidth; ++kx)
+    for(int kx = -kernelWidth; kx <= kernelWidth; ++kx)
     {
       delta = (kx) * (kx) + (ky) * (ky) + 1;
-      m_KernelWeights[index] = OneOverSigmaRoot2Pi * exp(-(delta - mu) * (delta - mu) / TwoSigmaSqrd );
+      m_KernelWeights[index] = OneOverSigmaRoot2Pi * exp(-(delta - mu) * (delta - mu) / TwoSigmaSqrd);
       ++index;
     }
     //  printf("\n");
@@ -120,37 +115,29 @@ void PoleFigureMaker::generateKernelWeigths(int kernelWidth, int kernelHeight)
   m_KernelWeightsInited = true;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PoleFigureMaker::countPixelNeighbors(int imageWidth, int imageHeight,
-                                         int pX, int pY,
-                                         QVector<qint32>& data,
-                                         QVector<qint32>& counts,
-                                         int kernelWidth, int kernelHeight, bool genmask)
+int PoleFigureMaker::countPixelNeighbors(int imageWidth, int imageHeight, int pX, int pY, QVector<qint32>& data, QVector<qint32>& counts, int kernelWidth, int kernelHeight, bool genmask)
 {
   int xCoord, yCoord;
   int index = 0;
 
-
   // This figures out if we are "inside" the circle or not
   float radSqrd = (float)(imageWidth / 2.0f) * (imageWidth / 2.0f);
-  float cX = imageWidth / 2.0f; // Center x
+  float cX = imageWidth / 2.0f;  // Center x
   float cY = imageHeight / 2.0f; // Center y
   int targetIndex = (imageWidth * pY) + pX;
   float delta = (pX - cX) * (pX - cX) + (pY - cY) * (pY - cY);
 
-  if (genmask == true)
+  if(genmask == true)
   {
-    if (delta > radSqrd)
+    if(delta > radSqrd)
     {
       counts[targetIndex] = 0;
     }
     return counts[targetIndex];
   }
-
 
   // This pixel (px, py) is inside the circle so figure out the count
   int kernelWeightIndex = -1;
@@ -161,16 +148,22 @@ int PoleFigureMaker::countPixelNeighbors(int imageWidth, int imageHeight,
       ++kernelWeightIndex;
       xCoord = kX + pX;
       yCoord = kY + pY;
-      if (xCoord < 0 || yCoord < 0) { continue; } // outside physical image to left/top
-      if (xCoord >= imageWidth || yCoord >= imageHeight) { continue; } // Outside to right/bottom
+      if(xCoord < 0 || yCoord < 0)
+      {
+        continue;
+      } // outside physical image to left/top
+      if(xCoord >= imageWidth || yCoord >= imageHeight)
+      {
+        continue;
+      }                                       // Outside to right/bottom
       index = (imageWidth * yCoord) + xCoord; // Compute the index into the main image array
-      if (data[index] > 0) // If the pixel is "on" it has a point in it
+      if(data[index] > 0)                     // If the pixel is "on" it has a point in it
       {
         // Increment the neighbor count for this pixel only if it is within the circle
         delta = (xCoord - cX) * (xCoord - cX) + (yCoord - cY) * (yCoord - cY);
-        if (delta <= radSqrd)
+        if(delta <= radSqrd)
         {
-          counts[targetIndex] += ( data[index] /* m_KernelWeights[kernelWeightIndex] */ );
+          counts[targetIndex] += (data[index] /* m_KernelWeights[kernelWeightIndex] */);
         }
       }
     }
@@ -194,7 +187,6 @@ QImage PoleFigureMaker::generateColorPoleFigureImage(const PoleFigureData& confi
   // Generate the Kernel Weights
   generateKernelWeigths(kernelWidth, kernelHeight);
 
-
   // Allocate an array to hold the image data and initialize it to all zeros
   QVector<qint32> data(imageWidth * imageHeight, 1);
   QVector<qint32> counts(imageWidth * imageHeight, 0);
@@ -209,42 +201,54 @@ QImage PoleFigureMaker::generateColorPoleFigureImage(const PoleFigureData& confi
 
   // Loop over all the data and get the x,y coords (scaled) and turn on the data pixel
   // This discretizes the data onto the pixel grid
-  for (int i = 0; i < size; ++i)
+  for(int i = 0; i < size; ++i)
   {
     int xCoord = (xPoints[i] + 1) * imageWidth / 2;
     int yCoord = (yPoints[i] + 1) * imageHeight / 2;
-    data[ yCoord * imageWidth + xCoord]++;
-    if (data[ yCoord * imageWidth + xCoord] > max) { max = data[ yCoord * imageWidth + xCoord];}
-    if (data[ yCoord * imageWidth + xCoord] < min) { min = data[ yCoord * imageWidth + xCoord];}
-
-  }
-
-// qDebug() << "Max Data[]: " << max << "\n";
-
-  qint32 value = 0;
-  for (int yCoord = 0; yCoord < imageHeight; ++yCoord)
-  {
-    for (int xCoord = 0; xCoord < imageWidth; ++xCoord)
+    data[yCoord * imageWidth + xCoord]++;
+    if(data[yCoord * imageWidth + xCoord] > max)
     {
-      value = countPixelNeighbors(imageWidth, imageHeight, xCoord, yCoord, data, counts, kernelWidth, kernelHeight);
-      if (value > max) { max = value;}
-      if (value < min) { min = value;}
+      max = data[yCoord * imageWidth + xCoord];
+    }
+    if(data[yCoord * imageWidth + xCoord] < min)
+    {
+      min = data[yCoord * imageWidth + xCoord];
     }
   }
 
+  // qDebug() << "Max Data[]: " << max << "\n";
 
+  qint32 value = 0;
+  for(int yCoord = 0; yCoord < imageHeight; ++yCoord)
+  {
+    for(int xCoord = 0; xCoord < imageWidth; ++xCoord)
+    {
+      value = countPixelNeighbors(imageWidth, imageHeight, xCoord, yCoord, data, counts, kernelWidth, kernelHeight);
+      if(value > max)
+      {
+        max = value;
+      }
+      if(value < min)
+      {
+        min = value;
+      }
+    }
+  }
 
   value = 0;
-  for (int yCoord = 0; yCoord < imageHeight; ++yCoord)
+  for(int yCoord = 0; yCoord < imageHeight; ++yCoord)
   {
-    for (int xCoord = 0; xCoord < imageWidth; ++xCoord)
+    for(int xCoord = 0; xCoord < imageWidth; ++xCoord)
     {
       value = countPixelNeighbors(imageWidth, imageHeight, xCoord, yCoord, data, counts, kernelWidth, kernelHeight, true);
     }
   }
 
-  if (max < 14) { max = 14; }
-  QImage image (imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+  if(max < 14)
+  {
+    max = 14;
+  }
+  QImage image(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
   image.fill(0);
   qint32 numColors = max + 1;
 
@@ -252,7 +256,7 @@ QImage PoleFigureMaker::generateColorPoleFigureImage(const PoleFigureData& confi
   qint32 range = max - min;
 
   float r, g, b;
-  for (int i = 0; i < numColors; i++)
+  for(int i = 0; i < numColors; i++)
   {
     int val = min + ((float)i / numColors) * range;
     getColorCorrespondingTovalue(val, r, g, b, max, min);
@@ -261,9 +265,9 @@ QImage PoleFigureMaker::generateColorPoleFigureImage(const PoleFigureData& confi
   // Index 0 is all white which is every pixel outside of the ODF circle
   colorTable[0] = QColor(255, 255, 255, 255);
 
-  for (int yCoord = 0; yCoord < imageHeight; ++yCoord)
+  for(int yCoord = 0; yCoord < imageHeight; ++yCoord)
   {
-    for (int xCoord = 0; xCoord < imageWidth; ++xCoord)
+    for(int xCoord = 0; xCoord < imageWidth; ++xCoord)
     {
       quint32 colorIndex = counts[yCoord * imageWidth + xCoord];
       image.setPixel(xCoord, yCoord, colorTable[colorIndex].rgba());
@@ -286,7 +290,6 @@ QImage PoleFigureMaker::generatePoleFigureImage(const PoleFigureData& config)
 
   QImage image(imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
 
-
   QVector<float> xPoints = config.xData;
   QVector<float> yPoints = config.yData;
   int size = yPoints.size();
@@ -297,15 +300,16 @@ QImage PoleFigureMaker::generatePoleFigureImage(const PoleFigureData& config)
   QRgb black_Rgba = black.rgba();
 
   // Flip the pixels to black that came from the data xy coords
-  for (int i = 0; i < size; ++i)
+  for(int i = 0; i < size; ++i)
   {
     //    float xp = xPoints[i];
     //    float yp = yPoints[i];
     int xCoord = (xPoints[i] + 1) * imageWidth / 2;
     int yCoord = (yPoints[i] + 1) * imageHeight / 2;
-    if (xCoord > imageWidth || yCoord > imageHeight)
+    if(xCoord > imageWidth || yCoord > imageHeight)
     {
-      qDebug() << "This is bad" << "\n";
+      qDebug() << "This is bad"
+               << "\n";
     }
     image.setPixel(xCoord, yCoord, black_Rgba);
   }
@@ -314,7 +318,6 @@ QImage PoleFigureMaker::generatePoleFigureImage(const PoleFigureData& config)
   image = image.mirrored(true, false);
 
   return paintImage(config.imageSize[0], config.imageSize[1], config.label, image);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -339,11 +342,9 @@ QImage PoleFigureMaker::paintImage(int imageWidth, int imageHeight, QString labe
     painter.end();
   }
 
-
   int pxOffset = 2 * pxWide;
   int pyOffset = 2 * pxHigh;
   // Get a QPainter object to add some more details to the image
-
 
   int pImageWidth = imageWidth + pxOffset * 2;
   int pImageHeight = imageHeight + pyOffset * 2;
@@ -388,10 +389,10 @@ QImage PoleFigureMaker::paintImage(int imageWidth, int imageHeight, QString labe
 
   painter.end();
   // Scale the image down to 225 pixels
-  return pImage;//.scaled(225, 225, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+  return pImage; //.scaled(225, 225, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
-///getColorCorrespondingToValue ////////////////////////////////////////////////
+/// getColorCorrespondingToValue ////////////////////////////////////////////////
 //
 // Assumes you've already generated min and max -- the extrema for the data
 // to which you're applying the color map. Then define the number of colorNodes
@@ -401,24 +402,21 @@ QImage PoleFigureMaker::paintImage(int imageWidth, int imageHeight, QString labe
 // values will be returned in the reference-to-float parameters r, g, and b.
 //
 ////////////////////////////////////////////////////////////////////////////////
-void PoleFigureMaker::getColorCorrespondingTovalue(float val,
-                                                   float& r, float& g, float& b,
-                                                   float max, float min)
+void PoleFigureMaker::getColorCorrespondingTovalue(float val, float& r, float& g, float& b, float max, float min)
 {
   static const int numColorNodes = 8;
-  float color[numColorNodes][3] =
-  {
-    {0.0f, 1.0f / 255.0f, 253.0f / 255.0f}, // blue
-    {105.0f / 255.0f, 145.0f / 255.0f, 2.0f / 255.0f}, // yellow
-    {1.0f / 255.0f, 255.0f / 255.0f, 29.0f / 255.0f}, // Green
-    {180.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f},
-    {255.0f / 255.0f, 215.0f / 255.0f, 6.0f / 255.0f},
-    {255.0f / 255.0f, 143.0f / 255.0f, 1.0f / 255.0f},
-    {255.0f / 255.0f, 69.0f / 255.0f, 0.0f / 255.0f},
-    {253.0f / 255.0f, 1.0f / 255.0f, 0.0f / 255.0f} // red
+  float color[numColorNodes][3] = {
+      {0.0f, 1.0f / 255.0f, 253.0f / 255.0f},            // blue
+      {105.0f / 255.0f, 145.0f / 255.0f, 2.0f / 255.0f}, // yellow
+      {1.0f / 255.0f, 255.0f / 255.0f, 29.0f / 255.0f},  // Green
+      {180.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f},
+      {255.0f / 255.0f, 215.0f / 255.0f, 6.0f / 255.0f},
+      {255.0f / 255.0f, 143.0f / 255.0f, 1.0f / 255.0f},
+      {255.0f / 255.0f, 69.0f / 255.0f, 0.0f / 255.0f},
+      {253.0f / 255.0f, 1.0f / 255.0f, 0.0f / 255.0f} // red
   };
   float range = max - min;
-  for (int i = 0; i < (numColorNodes - 1); i++)
+  for(int i = 0; i < (numColorNodes - 1); i++)
   {
     float currFloor = min + ((float)i / (numColorNodes - 1)) * range;
     float currCeil = min + ((float)(i + 1) / (numColorNodes - 1)) * range;
@@ -432,4 +430,3 @@ void PoleFigureMaker::getColorCorrespondingTovalue(float val,
     }
   }
 }
-

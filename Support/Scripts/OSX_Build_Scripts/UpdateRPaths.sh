@@ -31,21 +31,14 @@ function printStatus()
     fi  
 }
 
-printStatus "************** Fixing up ITK 4.9.1 **********************"
+printStatus "************** Fixing up ${1} **********************"
 
 
 InstallPrefix="${1}"
 printStatus "InstallPrefix = ${InstallPrefix}"
 
-InstallPrefix="${1}"
-PackageInstallDest="${1}"
-ProjectBinaryDir=@PROJECT_INSTALL_DIR@
-ApplicationName="@osx_app_name@"
-ApplicationExe="${InstallPrefix}/${ProjectBinaryDir}/${ApplicationName}"
-
 LibDirName="lib"
 LibPath="${InstallPrefix}/${LibDirName}"
-#InstallNameLib="@executable_path/../${LibDirName}"
 InstallNameLib=${LibPath}
 
 
@@ -191,16 +184,12 @@ function UpdateFrameworkInstallName()
 # -----------------------------------------------------------------------------
 #  uses install_name_tool to correct this library
 #  $1 is a linked library
-#  $2 is the executable
+#  $2 is the executable or library
 # -----------------------------------------------------------------------------
 function UpdateDylibInstallName()
 {
     printStatus "  |- UpdateDylibInstallName $1"
     if [[ -e ${1} ]]; then
-        #-- Copy the library using the current "install_name" as the path
-        #printStatus "  |- Copying Library '${1}' into app bundle"
-        #cp "${1}" "${LibPath}/."
-        
         # Update the Executables link path to this library
         oldPath="${1}"
         libName=`basename ${oldPath}`
@@ -274,9 +263,9 @@ do
     #echo "------------------"
     echo "[${k}/${total}] Changing " $l
     let k=k+1
-    ApplicationExe=$l
+    TargetFile=$l
     # for itk library get the linked libraries
-    otool -L "${LibPath}/${ApplicationExe}" > "${tmpFile}"
+    otool -L "${LibPath}/${TargetFile}" > "${tmpFile}"
 
     i=0
     exec 9<"${tmpFile}"
@@ -284,7 +273,7 @@ do
     do
         # For each output line from the 'otool'
         if [[ ${i} -gt 0 ]]; then
-            UpdateExecutableDependencies "${line}" "${ApplicationExe}"     
+            UpdateExecutableDependencies "${line}" "${TargetFile}"     
         fi
         let i=i+1
     done

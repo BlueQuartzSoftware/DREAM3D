@@ -82,7 +82,7 @@ using namespace H5Support_NAMESPACE;
 
 #define WRITE_EBSD_DATA_ARRAY(reader, m_msgType, gid, key)\
   {\
-    if (NULL != dataPtr) {\
+    if (nullptr != dataPtr) {\
       err = QH5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
       if (err < 0) {\
         QString ss = \
@@ -279,7 +279,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
   yRes = reader.getYStep();
 
   float* zPtr = reader.getZPointer();
-  if(NULL != zPtr)
+  if(nullptr != zPtr)
   {
     WRITE_EBSD_HEADER_DATA(reader, int, ZCells, Ebsd::Ctf::ZCells)
     zDim = reader.getZCells();
@@ -347,7 +347,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
     if(numType == Ebsd::Int32)
     {
       int32_t* dataPtr = static_cast<int32_t*>(reader.getPointerByName(columnNames[i]));
-      if(NULL == dataPtr)
+      if(nullptr == dataPtr)
       {
         assert(false);
       } // We are going to crash here. I would rather crash than have bad data
@@ -357,7 +357,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
     else if(numType == Ebsd::Float)
     {
       float* dataPtr = static_cast<float*>(reader.getPointerByName(columnNames[i]));
-      if(NULL == dataPtr)
+      if(nullptr == dataPtr)
       {
         assert(false);
       } // We are going to crash here. I would rather crash than have bad data
@@ -416,7 +416,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
     QVector<m_msgType> tempVar = reader->get##prpty();\
     dims[0] = tempVar.size();\
     m_msgType* dataPtr = &(tempVar.front());\
-    if (NULL != dataPtr) {\
+    if (nullptr != dataPtr) {\
       err = QH5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
       if (err < 0) {\
         QString ss = \

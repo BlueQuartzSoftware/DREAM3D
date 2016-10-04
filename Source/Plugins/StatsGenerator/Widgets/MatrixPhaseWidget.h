@@ -38,7 +38,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 
-#include "StatsGenerator/Widgets/SGWidget.h"
+#include "StatsGenerator/Widgets/StatsGenWidget.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
 
 #include "ui_MatrixPhaseWidget.h"
@@ -50,7 +50,7 @@ class QwtPlotMarker;
 /*
  *
  */
-class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
+class MatrixPhaseWidget : public StatsGenWidget, private Ui::MatrixPhaseWidget
 {
 
     Q_OBJECT
@@ -61,21 +61,14 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
 
     void updatePlots();
 
-    SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
-    SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-    SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
-    SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
-    SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+    void extractStatsData(AttributeMatrix::Pointer attrMat, int index) override;
 
-    void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
-    QString getComboString();
-    QString getTabTitle();
+    int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false) override;
 
-    int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
+    QIcon getPhaseIcon();
 
   protected slots:
-    void dataWasEdited();
 
   protected:
 

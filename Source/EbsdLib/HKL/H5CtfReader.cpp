@@ -230,12 +230,12 @@ int H5CtfReader::readHeader(hid_t parId)
 #define CTF_READER_ALLOCATE_AND_READ(name, type)\
   if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ctf::name) != m_ArrayNames.end()) {\
     type* _##name = allocateArray<type>(totalDataRows);\
-    if (NULL != _##name) {\
+    if (nullptr != _##name) {\
       ::memset(_##name, 0, numBytes);\
       err = QH5Lite::readPointerDataset(gid, Ebsd::Ctf::name, _##name);\
       if (err < 0) {\
         deallocateArrayData(_##name); /*deallocate the array*/\
-        _##name = NULL;\
+        _##name = nullptr;\
         setErrorCode(-90020);\
         ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
            "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\

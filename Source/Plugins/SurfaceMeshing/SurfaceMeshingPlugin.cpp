@@ -38,13 +38,12 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
+#include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
-#include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
-
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_SurfaceMeshingPlugin.cpp"
@@ -52,17 +51,16 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshingPlugin::SurfaceMeshingPlugin() :
-  m_Version(SurfaceMeshing::Version::Package()),
-  m_CompatibilityVersion(SurfaceMeshing::Version::Package()),
-  m_Vendor(BlueQuartz::VendorName),
-  m_URL(BlueQuartz::URL),
-  m_Location(""),
-  m_Copyright(BlueQuartz::Copyright),
-  m_Filters(QList<QString>()),
-  m_DidLoad(false)
+SurfaceMeshingPlugin::SurfaceMeshingPlugin()
+: m_Version(SurfaceMeshing::Version::Package())
+, m_CompatibilityVersion(SurfaceMeshing::Version::Package())
+, m_Vendor(BlueQuartz::VendorName)
+, m_URL(BlueQuartz::URL)
+, m_Location("")
+, m_Copyright(BlueQuartz::Copyright)
+, m_Filters(QList<QString>())
+, m_DidLoad(false)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -129,9 +127,9 @@ QString SurfaceMeshingPlugin::getDescription()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--Description was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -157,9 +155,9 @@ QString SurfaceMeshingPlugin::getLicense()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--License was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -180,14 +178,14 @@ QMap<QString, QString> SurfaceMeshingPlugin::getThirdPartyLicenses()
   fileStrList.push_back(":/ThirdParty/Qt.txt");
   fileStrList.push_back(":/ThirdParty/Qwt.txt");
 
-  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  for(QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
   {
     QFile file(*iter);
     QFileInfo licenseFileInfo(file);
 
-    if ( licenseFileInfo.exists() )
+    if(licenseFileInfo.exists())
     {
-      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      if(file.open(QIODevice::ReadOnly | QIODevice::Text))
       {
         QTextStream in(&file);
         licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
@@ -227,7 +225,6 @@ void SurfaceMeshingPlugin::setLocation(QString filePath)
 // -----------------------------------------------------------------------------
 void SurfaceMeshingPlugin::writeSettings(QSettings& prefs)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -235,8 +232,7 @@ void SurfaceMeshingPlugin::writeSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 void SurfaceMeshingPlugin::readSettings(QSettings& prefs)
 {
-
 }
 
-#include "SurfaceMeshingFilters/RegisterKnownFilters.cpp"
 #include "SurfaceMeshing/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "SurfaceMeshingFilters/RegisterKnownFilters.cpp"

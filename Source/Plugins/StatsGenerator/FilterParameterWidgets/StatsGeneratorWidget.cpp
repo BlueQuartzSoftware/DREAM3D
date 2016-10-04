@@ -33,49 +33,45 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "StatsGeneratorWidget.h"
 
-
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtCore/QString>
-#include <QtCore/QSettings>
-#include <QtCore/QVector>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QSettings>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QFileDialog>
 #include <QtGui/QDesktopServices>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
-
-#include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "SIMPLib/DataArrays/StatsDataArray.h"
-#include "SIMPLib/StatsData/PrimaryStatsData.h"
-#include "SIMPLib/StatsData/PrecipitateStatsData.h"
-#include "SIMPLib/StatsData/TransformationStatsData.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/TransformationStatsData.h"
 
 #include "SIMPLib/Common/FilterPipeline.h"
-#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 
 #include "SVWidgetsLib/QtSupport/QtSApplicationAboutBoxDialog.h"
-#include "SVWidgetsLib/QtSupport/QtSRecentFileList.h"
 #include "SVWidgetsLib/QtSupport/QtSHelpDialog.h"
+#include "SVWidgetsLib/QtSupport/QtSRecentFileList.h"
 
 #include "Applications/SIMPLView/SIMPLViewApplication.h"
 
-#include "StatsGenerator/Widgets/EditPhaseDialog.h"
 #include "StatsGenerator/FilterParameters/StatsGeneratorFilterParameter.h"
 #include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorFilter.h"
-
+#include "StatsGenerator/Widgets/EditPhaseDialog.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 //#include "moc_StatsGeneratorWidget.cpp"
@@ -83,14 +79,14 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorWidget::StatsGeneratorWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent)
+StatsGeneratorWidget::StatsGeneratorWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
+: FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<StatsGeneratorFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != nullptr, "nullptr Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilterParameter object");
 
   m_Filter = dynamic_cast<StatsGeneratorFilter*>(filter);
-  Q_ASSERT_X(m_Filter != NULL, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilter filter");
+  Q_ASSERT_X(m_Filter != nullptr, "nullptr Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilter filter");
 
   m_OpenDialogLastDirectory = QDir::homePath();
   setWidgetIsExpanding(true);
@@ -114,24 +110,21 @@ void StatsGeneratorWidget::setupGui()
   updatePipelineBtn->hide();
   saveH5Btn->hide();
   saveJsonBtn->hide();
-  //openStatsFile->hide();
+  // openStatsFile->hide();
 
   // Catch when the filter is about to execute the preflight
-  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(getFilter(), SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
+  connect(getFilter(), SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   phaseTabs->clear();
 
   StatsDataArray::Pointer sda = m_Filter->getStatsDataArray();
-  if( (sda && sda->getNumberOfTuples() == 0) || !sda)
+  if((sda && sda->getNumberOfTuples() == 0) || !sda)
   {
     PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget;
     ppw->setPhaseIndex(1);
@@ -139,10 +132,9 @@ void StatsGeneratorWidget::setupGui()
     ppw->setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
     ppw->setPhaseFraction(1.0);
     ppw->setTotalPhaseFraction(1.0);
-    phaseTabs->addTab(ppw, "Primary Phase");
+    phaseTabs->addTab(ppw, "Primary");
 
-    connect(ppw, SIGNAL(phaseParametersChanged()),
-            this, SIGNAL(parametersChanged()));
+    connect(ppw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
   }
   else
   {
@@ -158,11 +150,11 @@ void StatsGeneratorWidget::setupGui()
     UInt32ArrayType::Pointer crystalStructures = m_Filter->getCrystalStructures();
     cellEnsembleAttrMat->addAttributeArray(crystalStructures->getName(), crystalStructures);
 
-    for (size_t phase = 1; phase < ensembles; ++phase)
+    for(size_t phase = 1; phase < ensembles; ++phase)
     {
       progress.setValue(phase);
 
-      if (progress.wasCanceled())
+      if(progress.wasCanceled())
       {
         return;
       }
@@ -205,7 +197,6 @@ void StatsGeneratorWidget::setupGui()
       }
       else
       {
-
       }
     }
     progress.setValue(ensembles);
@@ -230,7 +221,7 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   StatsGeneratorFilter* statsGenFilter = dynamic_cast<StatsGeneratorFilter*>(filter);
 
-  if (NULL != statsGenFilter)
+  if(nullptr != statsGenFilter)
   {
     DataContainerArray::Pointer dca = generateDataContainerArray();
     DataContainer::Pointer dc = dca->getDataContainer(SIMPL::Defaults::StatsGenerator);
@@ -245,9 +236,24 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
     iDataArray = cellEnsembleAttrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
     UInt32ArrayType::Pointer phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray);
 
+    iDataArray = cellEnsembleAttrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
+    StringDataArray::Pointer phaseNames = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
+
     statsGenFilter->setStatsDataArray(statsDataArray);
     statsGenFilter->setCrystalStructures(crystalStructures);
     statsGenFilter->setPhaseTypes(phaseTypes);
+    statsGenFilter->setPhaseNames(phaseNames);
+
+    //    QString str;
+    //    QTextStream out(&str);
+    //    for(size_t i = 0; i < phaseNames->getNumberOfTuples(); i++)
+    //    {
+    //      phaseNames->printTuple(out, i);
+    //      out << ", ";
+    //      phaseNames->printTuple(out, i);
+    //      qDebug() << str;
+    //      str.clear();
+    //    }
   }
 }
 
@@ -256,29 +262,31 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::beforePreflight()
 {
- for (int i = 0; i < phaseTabs->count(); i++)
- {
-   SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
-   if (!qobject_cast<MatrixPhaseWidget*>(sgwidget) &&
-       !qobject_cast<BoundaryPhaseWidget*>(sgwidget) &&
-       !qobject_cast<TransformationPhaseWidget*>(sgwidget))
-   {
-     if (!sgwidget->getDataHasBeenGenerated())
-     {
-       m_Filter->setErrorCondition(-1);
-       QString ss = QObject::tr("Statistics data needs to be generated for phase %1 (%2)\n"
-                                "Click the Create Data button to generate the statistics data").arg(sgwidget->getPhaseIndex()).arg(sgwidget->getTabTitle());
-       m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
-     }
-     if (sgwidget->getBulkLoadFailure())
-     {
-       m_Filter->setErrorCondition(-1);
-       QString ss = QObject::tr("A valid angles file is needed to bulk load orientaiton weights and spreads for phase %1 (%2)\n"
-                                "Select an angles file and click the Load Data button to load the orientations").arg(sgwidget->getPhaseIndex()).arg(sgwidget->getTabTitle());
-       m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
-     }
-   }
- }
+  for(int i = 0; i < phaseTabs->count(); i++)
+  {
+    StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(i));
+    if(!qobject_cast<MatrixPhaseWidget*>(sgwidget) && !qobject_cast<BoundaryPhaseWidget*>(sgwidget) && !qobject_cast<TransformationPhaseWidget*>(sgwidget))
+    {
+      if(!sgwidget->getDataHasBeenGenerated())
+      {
+        m_Filter->setErrorCondition(-1);
+        QString ss = QObject::tr("Statistics data needs to be generated for phase %1 (%2)\n"
+                                 "Click the Create Data button to generate the statistics data")
+                         .arg(sgwidget->getPhaseIndex())
+                         .arg(sgwidget->getTabTitle());
+        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+      }
+      if(sgwidget->getBulkLoadFailure())
+      {
+        m_Filter->setErrorCondition(-1);
+        QString ss = QObject::tr("A valid angles file is needed to bulk load orientaiton weights and spreads for phase %1 (%2)\n"
+                                 "Select an angles file and click the Load Data button to load the orientations")
+                         .arg(sgwidget->getPhaseIndex())
+                         .arg(sgwidget->getTabTitle());
+        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -293,29 +301,26 @@ void StatsGeneratorWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::on_addPhase_clicked()
 {
-  // Ensure the Current SGWidget has generated its data first:
-  SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->currentWidget());
-  if (false == sgwidget->getDataHasBeenGenerated())
+  // Ensure the Current StatsGenWidget has generated its data first:
+  StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->currentWidget());
+  if(false == sgwidget->getDataHasBeenGenerated())
   {
-    int r = QMessageBox::warning(this, tr("StatsGenerator"),
-                                 tr("Data for the current phase has NOT been generated.\nDo you want to generate it now?"),
-                                 QMessageBox::Ok | QMessageBox::Cancel);
-    if (r == QMessageBox::Ok)
+    int r = QMessageBox::warning(this, tr("StatsGenerator"), tr("Data for the current phase has NOT been generated.\nDo you want to generate it now?"), QMessageBox::Ok | QMessageBox::Cancel);
+    if(r == QMessageBox::Ok)
     {
       // The user wants to generate the data. Generate it and move on
-      sgwidget->on_m_GenerateDefaultData_clicked();
+      sgwidget->generateDefaultData();
     }
-    else if (r == QMessageBox::Cancel)
+    else if(r == QMessageBox::Cancel)
     {
       return;
     }
   }
 
-
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < phaseTabs->count(); ++p)
   {
-    SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
+    StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(p));
     phaseFractionTotal += sgwidget->getPhaseFraction();
   }
 
@@ -323,21 +328,22 @@ void StatsGeneratorWidget::on_addPhase_clicked()
   dialog.setEditFlag(true);
   dialog.setOtherPhaseFractionTotal(static_cast<float>(phaseFractionTotal));
   int r = dialog.exec();
-  if (r == QDialog::Accepted)
+  if(r == QDialog::Accepted)
   {
     if(dialog.getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget();
       phaseTabs->addTab(ppw, "Primary");
 
-      connect(ppw, SIGNAL(phaseParametersChanged()),
-              this, SIGNAL(parametersChanged()));
+      connect(ppw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
 
       ppw->setPhaseIndex(phaseTabs->count());
       ppw->setPhaseType(SIMPL::PhaseType::PrimaryPhase);
       ppw->setCrystalStructure(dialog.getCrystalStructure());
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
+      ppw->setPhaseName(dialog.getPhaseName());
+
       QString cName = ppw->getComboString();
       ppw->setObjectName(cName);
       ppw->updatePlots();
@@ -348,8 +354,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       PrecipitatePhaseWidget* ppw = new PrecipitatePhaseWidget();
       phaseTabs->addTab(ppw, "Precipitate");
 
-      connect(ppw, SIGNAL(phaseParametersChanged()),
-              this, SIGNAL(parametersChanged()));
+      connect(ppw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
 
       ppw->setPhaseIndex(phaseTabs->count());
       ppw->setPhaseType(SIMPL::PhaseType::PrecipitatePhase);
@@ -357,6 +362,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
       ppw->setPptFraction(dialog.getPptFraction());
+      ppw->setPhaseName(dialog.getPhaseName());
       QString cName = ppw->getComboString();
       ppw->setObjectName(cName);
       ppw->updatePlots();
@@ -367,15 +373,14 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       TransformationPhaseWidget* tpw = new TransformationPhaseWidget();
       phaseTabs->addTab(tpw, "Transformation");
 
-      connect(tpw, SIGNAL(phaseParametersChanged()),
-              this, SIGNAL(parametersChanged()));
+      connect(tpw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
 
       tpw->setPhaseIndex(phaseTabs->count());
       tpw->setPhaseType(SIMPL::PhaseType::TransformationPhase);
       tpw->setCrystalStructure(dialog.getCrystalStructure());
       tpw->setPhaseFraction(dialog.getPhaseFraction());
       tpw->setPhaseType(dialog.getPhaseType());
-      tpw->setParentPhase(dialog.getParentPhase());
+      tpw->setPhaseName(dialog.getPhaseName());
       QString cName = tpw->getComboString();
       tpw->setObjectName(cName);
       tpw->updatePlots();
@@ -386,14 +391,14 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       MatrixPhaseWidget* mpw = new MatrixPhaseWidget();
       phaseTabs->addTab(mpw, "Matrix");
 
-      connect(mpw, SIGNAL(phaseParametersChanged()),
-              this, SIGNAL(parametersChanged()));
+      connect(mpw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
 
       mpw->setPhaseIndex(phaseTabs->count());
       mpw->setPhaseType(SIMPL::PhaseType::MatrixPhase);
       mpw->setCrystalStructure(dialog.getCrystalStructure());
       mpw->setPhaseFraction(dialog.getPhaseFraction());
       mpw->setPhaseType(dialog.getPhaseType());
+      mpw->setPhaseName(dialog.getPhaseName());
       QString cName = mpw->getComboString();
       mpw->setObjectName(cName);
       setWindowModified(true);
@@ -403,14 +408,14 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       BoundaryPhaseWidget* bpw = new BoundaryPhaseWidget();
       phaseTabs->addTab(bpw, "Boundary");
 
-      connect(bpw, SIGNAL(phaseParametersChanged()),
-              this, SIGNAL(parametersChanged()));
+      connect(bpw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
 
       bpw->setPhaseIndex(phaseTabs->count());
       bpw->setPhaseType(SIMPL::PhaseType::BoundaryPhase);
       bpw->setCrystalStructure(dialog.getCrystalStructure());
       bpw->setPhaseFraction(dialog.getPhaseFraction());
       bpw->setPhaseType(dialog.getPhaseType());
+      bpw->setPhaseName(dialog.getPhaseName());
       QString cName = bpw->getComboString();
       bpw->setObjectName(cName);
       setWindowModified(true);
@@ -431,12 +436,12 @@ void StatsGeneratorWidget::on_editPhase_clicked()
   EditPhaseDialog dialog;
   dialog.setEditFlag(false);
 
-  SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->currentWidget());
+  StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->currentWidget());
 
-  for (int p = 0; p < phaseTabs->count(); ++p)
+  for(int p = 0; p < phaseTabs->count(); ++p)
   {
-    SGWidget* currentWidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
-    if(sgwidget != currentWidget )
+    StatsGenWidget* currentWidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(p));
+    if(sgwidget != currentWidget)
     {
       phaseFractionTotal += currentWidget->getPhaseFraction();
     }
@@ -448,6 +453,8 @@ void StatsGeneratorWidget::on_editPhase_clicked()
   dialog.setPhaseType(sgwidget->getPhaseType());
   dialog.setOtherPhaseFractionTotal(static_cast<float>(phaseFractionTotal));
   dialog.setCrystalStructure(sgwidget->getCrystalStructure());
+  QString phaseName = sgwidget->getPhaseName();
+  dialog.setPhaseName(phaseName);
 
   if(dialog.getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
   {
@@ -456,12 +463,18 @@ void StatsGeneratorWidget::on_editPhase_clicked()
   else if(dialog.getPhaseType() == SIMPL::PhaseType::PrecipitatePhase)
   {
     PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(sgwidget);
-    if (ppw) { dialog.setPptFraction(ppw->getPptFraction()); }
+    if(ppw)
+    {
+      dialog.setPptFraction(ppw->getPptFraction());
+    }
   }
   else if(dialog.getPhaseType() == SIMPL::PhaseType::TransformationPhase)
   {
     TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(sgwidget);
-    if (tpw) { dialog.setParentPhase(tpw->getParentPhase()); }
+    if(tpw)
+    {
+     // dialog.setParentPhase(tpw->getParentPhase());
+    }
   }
   else if(dialog.getPhaseType() == SIMPL::PhaseType::MatrixPhase)
   {
@@ -480,6 +493,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       ppw->setCrystalStructure(dialog.getCrystalStructure());
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
+      ppw->setPhaseName(dialog.getPhaseName());
       QString cName = ppw->getComboString();
       setWindowModified(true);
       ppw->updatePlots();
@@ -491,6 +505,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
       ppw->setPptFraction(dialog.getPptFraction());
+      ppw->setPhaseName(dialog.getPhaseName());
       QString cName = ppw->getComboString();
       setWindowModified(true);
       ppw->updatePlots();
@@ -501,7 +516,8 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       tpw->setCrystalStructure(dialog.getCrystalStructure());
       tpw->setPhaseFraction(dialog.getPhaseFraction());
       tpw->setPhaseType(dialog.getPhaseType());
-      tpw->setParentPhase(dialog.getParentPhase());
+      //tpw->setParentPhase(dialog.getParentPhase());
+      tpw->setPhaseName(dialog.getPhaseName());
       QString cName = tpw->getComboString();
       setWindowModified(true);
       tpw->updatePlots();
@@ -512,6 +528,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       mpw->setCrystalStructure(dialog.getCrystalStructure());
       mpw->setPhaseFraction(dialog.getPhaseFraction());
       mpw->setPhaseType(dialog.getPhaseType());
+      mpw->setPhaseName(dialog.getPhaseName());
       QString cName = mpw->getComboString();
       setWindowModified(true);
     }
@@ -521,42 +538,42 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       bpw->setCrystalStructure(dialog.getCrystalStructure());
       bpw->setPhaseFraction(dialog.getPhaseFraction());
       bpw->setPhaseType(dialog.getPhaseType());
+      bpw->setPhaseName(dialog.getPhaseName());
       QString cName = bpw->getComboString();
       setWindowModified(true);
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorWidget::on_phaseTabs_tabCloseRequested ( int index )
+void StatsGeneratorWidget::on_phaseTabs_tabCloseRequested(int index)
 {
   if(phaseTabs->count() > 1)
   {
     // Remove the SGPhase object from the vector
-    SGWidget* currentWidget = qobject_cast<SGWidget*>(phaseTabs->widget(index));
+    StatsGenWidget* currentWidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(index));
     phaseTabs->removeTab(index);
     currentWidget->deleteLater(); // Actually delete it
 
     // Reset the phase index for each SGPhase object
-    for (int p = 0; p < phaseTabs->count(); ++p)
+    for(int p = 0; p < phaseTabs->count(); ++p)
     {
-      SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
+      StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(p));
       sgwidget->setPhaseIndex(p + 1);
       sgwidget->setObjectName(sgwidget->getComboString());
     }
 
 #if 0
-    SGWidget* widget = m_SGWidgets[0];
+    StatsGenWidget* widget = m_StatsGenWidgets[0];
 
-    verticalLayout_2->removeWidget(m_SGWidget);
-    m_SGWidget->hide();
-    m_SGWidget->deleteLater();
-    m_SGWidget = widget;
-    verticalLayout_2->addWidget(m_SGWidget);
-    m_SGWidget->show();
+    verticalLayout_2->removeWidget(m_StatsGenWidget);
+    m_StatsGenWidget->hide();
+    m_StatsGenWidget->deleteLater();
+    m_StatsGenWidget = widget;
+    verticalLayout_2->addWidget(m_StatsGenWidget);
+    m_StatsGenWidget->show();
 #endif
   }
   setWindowModified(true);
@@ -587,7 +604,7 @@ bool StatsGeneratorWidget::verifyOutputPathParentExists(QString outFilePath, QLi
 bool StatsGeneratorWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
   QFileInfo fileinfo(outFilePath);
-  if (false == fileinfo.exists())
+  if(false == fileinfo.exists())
   {
     lineEdit->setStyleSheet("border: 1px solid red;");
   }
@@ -646,49 +663,53 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   phaseTypes->setValue(0, SIMPL::PhaseType::UnknownPhaseType);
   cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
 
+  StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
+  phaseNames->setValue(0, SIMPL::PhaseType::UnknownPhase);
+  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
+
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < phaseTabs->count(); ++p)
   {
-    SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
+    StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(p));
     phaseFractionTotal += sgwidget->getPhaseFraction();
   }
 
   // Loop on all the phases
-  for (int i = 0; i < phaseTabs->count(); ++i)
+  for(int i = 0; i < phaseTabs->count(); ++i)
   {
-    SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
+    StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->widget(i));
     sgwidget->setTotalPhaseFraction(static_cast<float>(phaseFractionTotal));
-    if (sgwidget->getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData::Pointer data = PrimaryStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if (sgwidget->getPhaseType() == SIMPL::PhaseType::PrecipitatePhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if (sgwidget->getPhaseType() == SIMPL::PhaseType::TransformationPhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData::Pointer data = TransformationStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if (sgwidget->getPhaseType() == SIMPL::PhaseType::MatrixPhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::MatrixPhase)
     {
       MatrixStatsData::Pointer data = MatrixStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if (sgwidget->getPhaseType() == SIMPL::PhaseType::BoundaryPhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::BoundaryPhase)
     {
       BoundaryStatsData::Pointer data = BoundaryStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
     err = sgwidget->gatherStatsData(cellEnsembleAttrMat);
-    if (err < 0)
+    if(err < 0)
     {
-      QString  msg("Internal error gathering statistics from Statistics Widgets.\nError code ");
+      QString msg("Internal error gathering statistics from Statistics Widgets.\nError code ");
       msg.append(QString::number(err));
-      QMessageBox::critical(this, QString("Gather StatsData Error"), msg , QMessageBox::Ok);
+      QMessageBox::critical(this, QString("Gather StatsData Error"), msg, QMessageBox::Ok);
       return DataContainerArray::NullPointer();
     }
   }
@@ -702,37 +723,38 @@ void StatsGeneratorWidget::on_saveJsonBtn_clicked()
 {
 
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.json";
-  QString outFile = QFileDialog::getSaveFileName(this, tr("Save JSON File"),
-                                                 proposedFile,
-                                                 tr("JSON Files (*.json)") );
+  QString outFile = QFileDialog::getSaveFileName(this, tr("Save JSON File"), proposedFile, tr("JSON Files (*.json)"));
 
-  if ( true == outFile.isEmpty() ) { return;  }
-  QFileInfo fi (outFile);
+  if(true == outFile.isEmpty())
+  {
+    return;
+  }
+  QFileInfo fi(outFile);
   QString ext = fi.suffix();
   m_OpenDialogLastDirectory = fi.path();
 
   DataContainerArray::Pointer dca = generateDataContainerArray();
-  AttributeMatrix::Pointer am  = dca->getAttributeMatrix(DataArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, ""));
+  AttributeMatrix::Pointer am = dca->getAttributeMatrix(DataArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, ""));
 
   IDataArray::Pointer ida = am->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray::Pointer sda = std::dynamic_pointer_cast<StatsDataArray>(ida);
-  if(NULL == sda.get())
+  if(nullptr == sda.get())
   {
-    QMessageBox::critical(this, QString("JSON File Save Error"), QString("StatsDataArray was NULL or Invalid") , QMessageBox::Ok);
+    QMessageBox::critical(this, QString("JSON File Save Error"), QString("StatsDataArray was nullptr or Invalid"), QMessageBox::Ok);
     return;
   }
 
   IDataArray::Pointer iDataArray = am->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  //unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  // unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   QJsonObject jsonRoot;
 
-  sda->writeToJson(jsonRoot, std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray));
+  sda->writeToJson(jsonRoot, std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray));
 
   QJsonDocument doc(jsonRoot);
 
   QFile file(outFile);
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+  if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
     return;
 
   QByteArray binary = doc.toJson();
@@ -746,13 +768,14 @@ void StatsGeneratorWidget::on_saveH5Btn_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
 
-  QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM.3D File"),
-                                                proposedFile,
-                                                tr("DREAM.3D Files (*.dream3d)") );
+  QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM.3D File"), proposedFile, tr("DREAM.3D Files (*.dream3d)"));
 
-  if ( true == h5file.isEmpty() ) { return;  }
+  if(true == h5file.isEmpty())
+  {
+    return;
+  }
 
-  QFileInfo fi (h5file);
+  QFileInfo fi(h5file);
   QString ext = fi.suffix();
   m_OpenDialogLastDirectory = fi.path();
 
@@ -764,7 +787,7 @@ void StatsGeneratorWidget::on_saveH5Btn_clicked()
   writer->setWriteXdmfFile(false);
   writer->setWritePipeline(false);
   writer->execute();
-  // Force the clean up of the writer by assigning a NULL pointer which will
+  // Force the clean up of the writer by assigning a nullptr pointer which will
   // have the effect of executing the destructor of the H5StatsWriter Class
   writer = DataContainerWriter::NullPointer();
 
@@ -772,35 +795,31 @@ void StatsGeneratorWidget::on_saveH5Btn_clicked()
   setWindowModified(false);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::on_openStatsFile_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
-  QString h5file = QFileDialog::getOpenFileName(this,
-                                                tr("Open Statistics File"),
-                                                proposedFile,
-                                                tr("DREAM3D Files (*.dream3d);;H5Stats Files(*.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
+  QString h5file = QFileDialog::getOpenFileName(this, tr("Open Statistics File"), proposedFile, tr("DREAM3D Files (*.dream3d);;H5Stats Files(*.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
   if(true == h5file.isEmpty())
   {
     return;
   }
 
   // Make sure the file path is not empty and does exist on the system
-  if (true == h5file.isEmpty())
+  if(true == h5file.isEmpty())
   {
     QString ss = QObject::tr("Input file was empty").arg(h5file);
-    QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
+    QMessageBox::critical(this, QString("File Open Error"), ss, QMessageBox::Ok);
     return;
   }
 
   QFileInfo fi(h5file);
-  if (fi.exists() == false)
+  if(fi.exists() == false)
   {
     QString ss = QObject::tr("Input file does not exist").arg(fi.absoluteFilePath());
-    QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
+    QMessageBox::critical(this, QString("File Open Error"), ss, QMessageBox::Ok);
     return;
   }
 
@@ -821,7 +840,7 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
   if(fileId < 0)
   {
     QString ss = QObject::tr(": Error opening input file '%1'").arg(h5file);
-    QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
+    QMessageBox::critical(this, QString("File Open Error"), ss, QMessageBox::Ok);
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
@@ -841,16 +860,18 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
   hid_t amGid = H5Gopen(dcGid, SIMPL::Defaults::CellEnsembleAttributeMatrixName.toLatin1().constData(), 0);
   scopedFileSentinel.addGroupId(&amGid);
 
-
   // We need to read one of the arrays to get the number of phases so that we can resize our attributeMatrix
   UInt32ArrayType::Pointer phases = UInt32ArrayType::CreateArray(1, SIMPL::EnsembleData::PhaseTypes);
   int err = phases->readH5Data(amGid);
-  if (err < 0)
+  if(err < 0)
   {
 
     QString title = QObject::tr("Error Opening DataArray");
-    QString msg = QObject::tr("Error opening 'PhaseTypes' data array at location '%1/%2/%3/%4'").arg(SIMPL::StringConstants::DataContainerGroupName)
-        .arg(SIMPL::Defaults::StatsGenerator).arg(SIMPL::Defaults::CellEnsembleAttributeMatrixName).arg(SIMPL::EnsembleData::PhaseTypes);
+    QString msg = QObject::tr("Error opening 'PhaseTypes' data array at location '%1/%2/%3/%4'")
+                      .arg(SIMPL::StringConstants::DataContainerGroupName)
+                      .arg(SIMPL::Defaults::StatsGenerator)
+                      .arg(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
+                      .arg(SIMPL::EnsembleData::PhaseTypes);
     QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
     return;
   }
@@ -862,22 +883,21 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
   cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", false);
 
   // Get the number of Phases
-  size_t ensembles = cellEnsembleAttrMat->getNumTuples();
+  size_t ensembles = cellEnsembleAttrMat->getNumberOfTuples();
 
   QProgressDialog progress("Opening Stats File....", "Cancel", 0, ensembles, this);
   progress.setWindowModality(Qt::WindowModal);
 
-
   IDataArray::Pointer iDataArray = cellEnsembleAttrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects
-  for (size_t phase = 1; phase < ensembles; ++phase)
+  for(size_t phase = 1; phase < ensembles; ++phase)
   {
     progress.setValue(phase);
 
-    if (progress.wasCanceled())
+    if(progress.wasCanceled())
     {
       return;
     }
@@ -919,7 +939,6 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
     }
     else
     {
-
     }
   }
   progress.setValue(ensembles);

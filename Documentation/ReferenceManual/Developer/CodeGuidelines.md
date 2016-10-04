@@ -41,20 +41,20 @@ should be avoided at all costs. This usage is important since the number of byte
     uint64_t  64 Bit UnSinged Integer
 
 # Special Constants #
-NULL should be used in conjunction with only raw pointers and 0 (zero) should be used in conjunction with numeric values:
+nullptr should be used in conjunction with only raw pointers and 0 (zero) should be used in conjunction with numeric values:
 
-    int* value = NULL; // Good
+    int* value = nullptr; // Good
     int* value = 0; // Bad
 
     int i = 0; // Good
-    int i = NULL; // Bad 
+    int i = nullptr; // Bad 
 
 # Variable Initialization #
 *Never* rely on the compiler to initialize variables or pointers for you. Always initialize your variables before first use:
 
     int i; // Bad, unless this is pure "C" then you have NO choice
     i = 0; // Good. The variable has a known starting value
-    float* f = NULL; // Good (if the compiler will let you do this)
+    float* f = nullptr; // Good (if the compiler will let you do this)
     char buffer[512]; // Allocation of char buffer but will be filled with junk
     memset(buffer, 0, 512); // Good. Splat Zeros across the array
 

@@ -64,19 +64,20 @@
 //-- C++11 Includes
 #include <memory>
 
-
+#ifndef SHARED_IS_NULL
 #define SHARED_IS_NULL(ptr)\
-  (  (ptr).get() == NULL )
+  (  (ptr).get() == nullptr )
+#endif
 
 /**
- * @brief Creates a static method that returns a NULL pointer wrapped in a
+ * @brief Creates a static method that returns a nullptr pointer wrapped in a
  * std::shared_ptr<>
  * @param thisClass The name of the class.
  */
 #define EBSD_NULL_SHARED_POINTER(thisClass)\
   static Pointer NullPointer(void)\
   { \
-    return Pointer(static_cast<thisClass*>(NULL));\
+    return Pointer(static_cast<thisClass*>(nullptr));\
   }
 
 #ifndef QT_SHARED_POINTERS
@@ -169,7 +170,7 @@
   template <class Target, class Source>\
   inline Target polymorphic_downcast(Source* x) { \
     if( dynamic_cast<Target>(x) != x ) { \
-      return NULL;\
+      return nullptr;\
     }\
     return static_cast<Target>(x);\
   }
@@ -193,7 +194,7 @@
   template <class Target, class Source>\
   static Target polymorphic_downcast(Source* x) { \
     if( dynamic_cast<Target>(x) != x ) { \
-      return NULL;\
+      return nullptr;\
     }\
     return static_cast<Target>(x);\
   }
@@ -299,7 +300,7 @@
 #define EbsdHeader_SET_PROPERTY( HeaderType, m_msgType, prpty, key) \
   void set##prpty(m_msgType value) { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get()); \
-    if (NULL != p) { p->setValue(value); } else {\
+    if (nullptr != p) { p->setValue(value); } else {\
       std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl;} }
 
 /**
@@ -308,7 +309,7 @@
 #define EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key) \
   m_msgType get##prpty() { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get());\
-    if (NULL != p) { return p->getValue(); } else {\
+    if (nullptr != p) { return p->getValue(); } else {\
       std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl; return 0;} }
 
 
@@ -325,10 +326,10 @@
   m_msgType* get##name##Pointer() { return m_##var; }\
   void set##name##Pointer(m_msgType* f)\
   {\
-    if (m_##var != NULL && m_##var != f)\
+    if (m_##var != nullptr && m_##var != f)\
     {\
       deallocateArrayData(m_##var);\
-      m_##var = NULL;\
+      m_##var = nullptr;\
     }\
     m_##var = f;\
   }

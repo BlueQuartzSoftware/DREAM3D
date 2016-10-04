@@ -46,17 +46,15 @@
 // Include the MOC generated file for this class
 #include "moc_GroupFeatures.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GroupFeatures::GroupFeatures() :
-  AbstractFilter(),
-  m_ContiguousNeighborListArrayPath("", "", ""),
-  m_NonContiguousNeighborListArrayPath("", "", ""),
-  m_UseNonContiguousNeighbors(false),
-  m_PatchGrouping(false)
+GroupFeatures::GroupFeatures()
+: AbstractFilter()
+, m_ContiguousNeighborListArrayPath("", "", "")
+, m_NonContiguousNeighborListArrayPath("", "", "")
+, m_UseNonContiguousNeighbors(false)
+, m_PatchGrouping(false)
 {
   m_ContiguousNeighborList = NeighborList<int32_t>::NullPointer();
   m_NonContiguousNeighborList = NeighborList<int32_t>::NullPointer();
@@ -97,9 +95,9 @@ void GroupFeatures::setupFilterParameters()
 void GroupFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setUseNonContiguousNeighbors( reader->readValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors()) );
-  setContiguousNeighborListArrayPath( reader->readDataArrayPath("ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath()));
-  setNonContiguousNeighborListArrayPath( reader->readDataArrayPath("NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath()));
+  setUseNonContiguousNeighbors(reader->readValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors()));
+  setContiguousNeighborListArrayPath(reader->readDataArrayPath("ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath()));
+  setNonContiguousNeighborListArrayPath(reader->readDataArrayPath("NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -181,7 +179,10 @@ void GroupFeatures::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   NeighborList<int32_t>& neighborlist = *(m_ContiguousNeighborList.lock());
   NeighborList<int32_t>* nonContigNeighList = m_NonContiguousNeighborList.lock().get();
@@ -193,51 +194,72 @@ void GroupFeatures::execute()
   int32_t list1size = 0, list2size = 0, listsize = 0;
   int32_t neigh = 0;
 
-  while (seed >= 0)
+  while(seed >= 0)
   {
     parentcount++;
     seed = getSeed(parentcount);
-    if (seed >= 0)
+    if(seed >= 0)
     {
       grouplist.push_back(seed);
-      for (std::vector<int32_t>::size_type j = 0; j < grouplist.size(); j++)
+      for(std::vector<int32_t>::size_type j = 0; j < grouplist.size(); j++)
       {
         int32_t firstfeature = grouplist[j];
         list1size = int32_t(neighborlist[firstfeature].size());
-        if (m_UseNonContiguousNeighbors == true) { list2size = nonContigNeighList->getListSize(firstfeature); }
-        for (int32_t k = 0; k < 2; k++)
+        if(m_UseNonContiguousNeighbors == true)
         {
-          if (m_PatchGrouping == true) { k = 1; }
-          if (k == 0) { listsize = list1size; }
-          else if (k == 1) { listsize = list2size; }
-          for (int32_t l = 0; l < listsize; l++)
+          list2size = nonContigNeighList->getListSize(firstfeature);
+        }
+        for(int32_t k = 0; k < 2; k++)
+        {
+          if(m_PatchGrouping == true)
           {
-            if (k == 0) { neigh = neighborlist[firstfeature][l]; }
-            else if (k == 1) { neigh = nonContigNeighList->getListReference(firstfeature)[l]; }
-            if (neigh != firstfeature)
+            k = 1;
+          }
+          if(k == 0)
+          {
+            listsize = list1size;
+          }
+          else if(k == 1)
+          {
+            listsize = list2size;
+          }
+          for(int32_t l = 0; l < listsize; l++)
+          {
+            if(k == 0)
             {
-              if (determineGrouping(firstfeature, neigh, parentcount) == true)
+              neigh = neighborlist[firstfeature][l];
+            }
+            else if(k == 1)
+            {
+              neigh = nonContigNeighList->getListReference(firstfeature)[l];
+            }
+            if(neigh != firstfeature)
+            {
+              if(determineGrouping(firstfeature, neigh, parentcount) == true)
               {
-                if (m_PatchGrouping == false) { grouplist.push_back(neigh); }
+                if(m_PatchGrouping == false)
+                {
+                  grouplist.push_back(neigh);
+                }
               }
             }
           }
         }
       }
-      if (m_PatchGrouping == true)
+      if(m_PatchGrouping == true)
       {
-        if (growPatch(parentcount) == true)
+        if(growPatch(parentcount) == true)
         {
-          for (std::vector<int32_t>::size_type j = 0; j < grouplist.size(); j++)
+          for(std::vector<int32_t>::size_type j = 0; j < grouplist.size(); j++)
           {
             int32_t firstfeature = grouplist[j];
             listsize = int32_t(neighborlist[firstfeature].size());
-            for (int32_t l = 0; l < listsize; l++)
+            for(int32_t l = 0; l < listsize; l++)
             {
               neigh = neighborlist[firstfeature][l];
-              if (neigh != firstfeature)
+              if(neigh != firstfeature)
               {
-                if (growGrouping(firstfeature, neigh, parentcount) == true)
+                if(growGrouping(firstfeature, neigh, parentcount) == true)
                 {
                   grouplist.push_back(neigh);
                 }
@@ -290,23 +312,29 @@ const QString GroupFeatures::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
+  vStream << Reconstruction::Version::Major() << "." << Reconstruction::Version::Minor() << "." << Reconstruction::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GroupFeatures::getGroupName()
-{ return SIMPL::FilterGroups::ReconstructionFilters; }
+{
+  return SIMPL::FilterGroups::ReconstructionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GroupFeatures::getSubGroupName()
-{ return SIMPL::FilterSubGroups::SegmentationFilters; }
+{
+  return SIMPL::FilterSubGroups::SegmentationFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GroupFeatures::getHumanLabel()
-{ return "Group Features"; }
+{
+  return "Group Features";
+}
