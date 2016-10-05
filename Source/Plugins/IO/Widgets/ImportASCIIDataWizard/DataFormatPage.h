@@ -82,6 +82,11 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
 
     /**
      * @brief checkHeaders
+     */
+    void checkHeaders();
+
+    /**
+     * @brief checkHeaders
      * @param headers
      */
     void checkHeaders(QVector<QString> headers);
@@ -185,6 +190,8 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
   protected slots:
     void on_startRowSpin_valueChanged(int i);
     void on_hasHeadersRadio_toggled(bool checked);
+    void on_doesNotHaveHeadersRadio_toggled(bool checked);
+    void on_useDefaultHeaders_toggled(bool checked);
     void on_amAutomatically_stateChanged(int state);
     void on_selectedAMBtn_pressed();
     void on_selectedDCBtn_pressed();
@@ -195,7 +202,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     void on_dataTypeCB_currentTextChanged(const QString &text);
 
     void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
-    bool checkTupleDimensions(QVector<size_t> tupleDims) const;
+    bool checkTupleDimensions(QVector<size_t> tupleDims);
 
   private:
     int                                             m_NumLines;
@@ -208,7 +215,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     QPointer<QtSFaderWidget>                        m_FaderWidget;
 
     bool validateHeaders(QVector<QString> headers);
-    bool validateTupleDimensions(QVector<size_t> tupleDims) const;
+    bool validateTupleDimensions(QVector<size_t> tupleDims);
 
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented

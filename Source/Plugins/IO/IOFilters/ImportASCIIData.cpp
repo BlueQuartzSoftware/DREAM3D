@@ -302,6 +302,11 @@ void ImportASCIIData::dataCheck()
     {
       // Attribute Matrix already exists, so you need to pick a different attribute matrix name
     }
+    else
+    {
+      DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, selectedPath.getDataContainerName());
+      dc->createNonPrereqAttributeMatrix(this, selectedPath.getAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
+    }
   }
 
   // Create the arrays
@@ -312,12 +317,6 @@ void ImportASCIIData::dataCheck()
 
     DataArrayPath arrayPath = selectedPath;
     arrayPath.setDataArrayName(name);
-
-    if (automaticAM == true)
-    {
-      DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, selectedPath.getDataContainerName());
-      dc->createNonPrereqAttributeMatrix(this, selectedPath.getAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
-    }
 
     if (dataType == SIMPL::TypeNames::Double)
     {

@@ -166,7 +166,11 @@ void DataFormatPage::showEvent(QShowEvent* event)
       model->setColumnHasErrors(i, true);
       arrayErrLabel->setText("Column headers cannot be empty.");
       arrayErrLabel->show();
-      wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    }
+    else
+    {
+      model->setColumnHasErrors(i, false);
+      arrayErrLabel->hide();
     }
   }
 
@@ -177,6 +181,15 @@ void DataFormatPage::showEvent(QShowEvent* event)
   else
   {
     tupleDimsGB->show();
+  }
+
+  if (isComplete() == true)
+  {
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+  }
+  else
+  {
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
   }
 }
 
@@ -195,10 +208,12 @@ void DataFormatPage::amItemSelected(QString path)
     QString ss = "The attribute matrix '" + dap.getAttributeMatrixName() + "' does not have the same tuple dimensions as the data in the file.";
     amSelectionError->setText(ss);
     amSelectionError->show();
+    selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
   }
   else
   {
     amSelectionError->hide();
+    selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(true));
   }
 
   ImportASCIIDataWizard* importWizard = dynamic_cast<ImportASCIIDataWizard*>(wizard());
@@ -218,10 +233,12 @@ void DataFormatPage::amItemSelected(QString path)
         QString ss = "The header name \"" + headerName + "\" matches an array name that already exists in the selected attribute matrix.";
         amSelectionError->setText(ss);
         amSelectionError->show();
+        selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
       }
       else
       {
         amSelectionError->hide();
+        selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(true));
       }
     }
   }
@@ -246,16 +263,18 @@ void DataFormatPage::dcItemSelected(QString path)
   DataArrayPath dap = DataArrayPath::Deserialize(path, Detail::Delimiter);
   dap.setAttributeMatrixName(amName->text());
 
-  AttributeMatrix::Pointer am = m_Dca->getAttributeMatrix(dap);
-  if (am != nullptr)
+  if (m_Dca->doesAttributeMatrixExist(dap) == true)
   {
     QString ss = "An attribute matrix with that name already exists in the selected data container.  Choose a different attribute matrix name.";
     amCreationError->setText(ss);
     amCreationError->show();
+    QtSStyles::LineEditErrorStyle(amName);
     return;
   }
 
   amCreationError->hide();
+  selectedDCBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(true));
+  QtSStyles::LineEditClearStyle(amName);
 }
 
 // -----------------------------------------------------------------------------
@@ -447,20 +466,20 @@ QPoint DataFormatPage::adjustedMenuPosition(QPushButton* pushButton)
   int desktopHeight = QApplication::desktop()->availableGeometry(pushButton).height();
 
   // If the menu is going to go off the screen in the X-axis, reposition it until it's completely on the screen
-  while (point.x() + menuSize.width() > desktopWidth)
+  while(point.x() + menuSize.width() > desktopWidth)
   {
     point.setX(point.x() - 1);
   }
 
   QPoint localButtonCoords = pushButton->geometry().bottomLeft();
-  QPoint globalButtonCoords = mapToGlobal(localButtonCoords);
-  //qDebug() << "QApplication::desktop()->geometry().width(): " << desktopWidth << "," << desktopHeight;
-  //qDebug() << "localButtonCoords: " << localButtonCoords << "\tglobalButtonCoords: " << globalButtonCoords;
+  QPoint globalButtonCoords = pushButton->mapToGlobal(localButtonCoords);
+  //  qDebug() << "QApplication::desktop()->geometry().width(): " << desktopWidth << "," << desktopHeight;
+  //  qDebug() << "localButtonCoords: " << localButtonCoords << "\tglobalButtonCoords: " << globalButtonCoords;
 
   point.setY(globalButtonCoords.y());
 
   // If the menu is going to go off the screen in the Y-axis, reposition it until it's completely on the screen
-  while (point.y() + menuSize.height() > desktopHeight)
+  while(point.y() + menuSize.height() > desktopHeight)
   {
     point.setY(point.y() - 1);
   }
@@ -485,8 +504,6 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   model->clear();
 
-  tupleCountLabel->setText(QString::number(m_NumLines - value + 1));
-
   bool tabAsDelimiter = field("tabAsDelimiter").toBool();
   bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
   bool commaAsDelimiter = field("commaAsDelimiter").toBool();
@@ -500,6 +517,15 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
 
   QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
+
+  // Update headers
+  on_hasHeadersRadio_toggled(hasHeadersRadio->isChecked());
+  on_doesNotHaveHeadersRadio_toggled(doesNotHaveHeadersRadio->isChecked());
+  on_useDefaultHeaders_toggled(useDefaultHeaders->isChecked());
+
+  // Update Tuple Dimensions
+  tupleCountLabel->setText(QString::number(m_NumLines - value + 1));
+  checkTupleDimensions(getTupleTable()->getData());
 
   if (isComplete() == true)
   {
@@ -523,7 +549,14 @@ bool DataFormatPage::isComplete() const
     return false;
   }
 
-  if ((amAutomatically->isChecked() == false && selectedAMBtn->text().isEmpty()) || (amAutomatically->isChecked() == true && (selectedDCBtn->text().isEmpty() || amName->text().isEmpty())))
+  if (amAutomatically->isChecked() == false)
+  {
+    if (selectedAMBtn->text().isEmpty())
+    {
+      return false;
+    }
+  }
+  else if (selectedDCBtn->text().isEmpty() || amName->text().isEmpty())
   {
     return false;
   }
@@ -573,7 +606,7 @@ void DataFormatPage::on_amAutomatically_stateChanged(int state)
 void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
 {
   if(checked == true)
-  {
+  {    
     editHeadersBtn->setDisabled(true);
     lineNumberLabel->setEnabled(true);
     headersIndexLineEdit->setEnabled(true);
@@ -581,17 +614,63 @@ void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
     // Reload the headers
     on_headersIndexLineEdit_textChanged(headersIndexLineEdit->text());
   }
-  else
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_doesNotHaveHeadersRadio_toggled(bool checked)
+{
+  if (checked == true)
   {
     editHeadersBtn->setEnabled(true);
     lineNumberLabel->setDisabled(true);
     headersIndexLineEdit->setDisabled(true);
 
     ASCIIDataModel* model = ASCIIDataModel::Instance();
+    QVector<QString> headers;
+    if (m_EditHeadersDialog != nullptr)
+    {
+      headers = m_EditHeadersDialog->getHeaders();
+    }
+
     for(int i = 0; i < model->columnCount(); i++)
     {
-      model->setHeaderData(i, Qt::Horizontal, "", Qt::DisplayRole);
+      if (i < headers.size())
+      {
+        model->setHeaderData(i, Qt::Horizontal, headers[i], Qt::DisplayRole);
+      }
+      else
+      {
+        model->setHeaderData(i, Qt::Horizontal, "", Qt::DisplayRole);
+      }
     }
+
+    checkHeaders();
+    emit completeChanged();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_useDefaultHeaders_toggled(bool checked)
+{
+  if (checked == true)
+  {
+    editHeadersBtn->setDisabled(true);
+    lineNumberLabel->setDisabled(true);
+    headersIndexLineEdit->setDisabled(true);
+
+    ASCIIDataModel* model = ASCIIDataModel::Instance();
+    for(int i = 0; i < model->columnCount(); i++)
+    {
+      QString arrayName = "Array " + QString::number(i+1);
+      model->setHeaderData(i, Qt::Horizontal, arrayName, Qt::DisplayRole);
+    }
+
+    checkHeaders();
+    emit completeChanged();
   }
 }
 
@@ -721,28 +800,28 @@ void DataFormatPage::updateSelection(const QItemSelection& selected, const QItem
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims) const
+bool DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims)
 {
   if (validateTupleDimensions(tupleDims) == false)
   {
     tupleTableErrLabel->setText("The current tuple dimensions do not match the total number of tuples.");
     tupleTableErrLabel->show();
-    wizard()->button(QWizard::FinishButton)->setDisabled(true);
     return false;
   }
   else
   {
     tupleTableErrLabel->setText("");
     tupleTableErrLabel->hide();
-    wizard()->button(QWizard::FinishButton)->setEnabled(true);
     return true;
   }
+
+  emit completeChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataFormatPage::validateTupleDimensions(QVector<size_t> tupleDims) const
+bool DataFormatPage::validateTupleDimensions(QVector<size_t> tupleDims)
 {
   int tupleTotal = 1;
 
@@ -898,6 +977,21 @@ void DataFormatPage::launchEditHeadersDialog()
       wizard()->button(QWizard::FinishButton)->setDisabled(true);
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::checkHeaders()
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  QVector<QString> headers;
+  for(int i = 0; i < model->columnCount(); i++)
+  {
+    headers.push_back(model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString());
+  }
+
+  checkHeaders(headers);
 }
 
 // -----------------------------------------------------------------------------

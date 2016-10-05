@@ -93,30 +93,6 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0" colspan="2">
-         <widget class="QRadioButton" name="hasHeadersRadio">
-          <property name="text">
-           <string>My data has headers.</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="2">
-         <widget class="QRadioButton" name="doesNotHaveHeadersRadio">
-          <property name="text">
-           <string>My data does NOT have headers.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QPushButton" name="editHeadersBtn">
-          <property name="text">
-           <string>Edit Headers</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="3" colspan="2">
          <widget class="QLineEdit" name="headersIndexLineEdit">
           <property name="text">
@@ -165,6 +141,37 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QRadioButton" name="doesNotHaveHeadersRadio">
+          <property name="text">
+           <string>My data does NOT have headers.</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="editHeadersBtn">
+          <property name="text">
+           <string>Edit Headers</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QRadioButton" name="hasHeadersRadio">
+          <property name="text">
+           <string>My data has headers.</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QRadioButton" name="useDefaultHeaders">
+          <property name="text">
+           <string>Use default headers.</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
