@@ -45,10 +45,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataWizard::ImportASCIIDataWizard(const QString& inputFilePath, int numLines, QWidget* parent)
-: QWizard(parent)
-, m_InputFilePath(inputFilePath)
-, m_NumLines(numLines)
+ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent) :
+  QWizard(parent),
+  m_InputFilePath(inputFilePath),
+  m_NumLines(numLines),
+  m_Dca(dca)
 {
   setWindowTitle("ASCII Data Import Wizard");
   setOptions(QWizard::NoBackButtonOnStartPage /*| QWizard::HaveHelpButton */);
@@ -63,7 +64,7 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString& inputFilePath, int n
   DelimitedPage* dPage = new DelimitedPage(inputFilePath, numLines, this);
   setPage(Delimited, dPage);
 
-  DataFormatPage* dfPage = new DataFormatPage(inputFilePath, numLines, this);
+  DataFormatPage* dfPage = new DataFormatPage(inputFilePath, numLines, dca, this);
   setPage(DataFormat, dfPage);
 
 #ifndef Q_OS_MAC
@@ -76,8 +77,8 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString& inputFilePath, int n
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidget* parent)
-: QWizard(parent)
+ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataContainerArray::Pointer dca, QWidget* parent) :
+  QWizard(parent)
 {
   setWindowTitle("ASCII Data Import Wizard");
   setOptions(QWizard::NoBackButtonOnStartPage /*| QWizard::HaveHelpButton */);
@@ -92,7 +93,7 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidge
   DelimitedPage* dPage = new DelimitedPage(m_InputFilePath, m_NumLines, this);
   setPage(Delimited, dPage);
 
-  DataFormatPage* dfPage = new DataFormatPage(m_InputFilePath, m_NumLines, this);
+  DataFormatPage* dfPage = new DataFormatPage(m_InputFilePath, m_NumLines, dca, this);
   setPage(DataFormat, dfPage);
   dfPage->getTupleTable()->clearTupleDimensions();
   dfPage->getTupleTable()->addTupleDimensions(wizardData->tupleDims);
@@ -464,4 +465,38 @@ QVector<size_t> ImportASCIIDataWizard::getTupleDims()
   }
 
   return QVector<size_t>();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ImportASCIIDataWizard::getAutomaticAM()
+{
+  DataFormatPage* dfPage = dynamic_cast<DataFormatPage*>(page(DataFormat));
+  if (NULL != dfPage)
+  {
+    return dfPage->getAutomaticAM();
+  }
+
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath ImportASCIIDataWizard::getSelectedPath()
+{
+  DataFormatPage* dfPage = dynamic_cast<DataFormatPage*>(page(DataFormat));
+  if (NULL != dfPage)
+  {
+    DataArrayPath dap = dfPage->getSelectedPath();
+    if (dfPage->getAutomaticAM() == true)
+    {
+      dap.setAttributeMatrixName(dfPage->getAMName());
+    }
+
+    return dap;
+  }
+
+  return DataArrayPath();
 }

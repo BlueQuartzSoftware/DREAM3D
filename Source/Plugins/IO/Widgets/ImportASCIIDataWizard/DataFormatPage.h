@@ -39,12 +39,16 @@
 
 #include <QtWidgets/QWizardPage>
 
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #include "AbstractWizardPage.h"
 
 #include "ui_DataFormatPage.h"
 
 class ASCIIDataModel;
 class EditHeadersDialog;
+class QSignalMapper;
+class QtSFaderWidget;
 
 class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
 {
@@ -57,7 +61,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DataFormatPage(const QString &inputFilePath, int numLines, QWidget* parent = nullptr);
+    DataFormatPage(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent = nullptr);
 
     virtual ~DataFormatPage();
 
@@ -77,6 +81,17 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     void launchEditHeadersDialog();
 
     /**
+     * @brief checkHeaders
+     */
+    void checkHeaders();
+
+    /**
+     * @brief checkHeaders
+     * @param headers
+     */
+    void checkHeaders(QVector<QString> headers);
+
+    /**
     * @brief Controls which page to navigate to after the user clicks "Next" button
     */
     virtual int nextId() const;
@@ -86,14 +101,100 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     */
     virtual void cleanupPage();
 
+    /**
+     * @brief isComplete
+     * @return
+     */
+    bool isComplete() const;
+
+    /**
+     * @brief getTupleTable
+     * @return
+     */
     TupleTableWidget* getTupleTable();
 
+    /**
+     * @brief getAutomaticAM
+     * @return
+     */
+    bool getAutomaticAM();
+
+    /**
+     * @brief getSelectedPath
+     * @return
+     */
+    DataArrayPath getSelectedPath();
+
+    /**
+     * @brief getAMName
+     * @return
+     */
+    QString getAMName();
+
+    /**
+     * @brief eventFilter
+     * @param obj
+     * @param event
+     * @return
+     */
+    bool eventFilter(QObject* obj, QEvent* event);
+
+  public slots:
+    /**
+     * @brief dcaItemSelected
+     * @param path
+     */
+    void amItemSelected(QString path);
+
+    /**
+     * @brief dcaItemSelected
+     * @param path
+     */
+    void dcItemSelected(QString path);
+
+    /**
+     * @brief on_amName_returnPressed
+     */
+//    void on_amName_returnPressed();
+
+    /**
+     * @brief on_applyChangesBtn_clicked
+     */
+    void on_applyChangesBtn_clicked();
+
+    /**
+     * @brief hideButton
+     */
+    void hideButton();
+
+    /**
+     * @brief widgetChanged
+     * @param msg
+     */
+    void widgetChanged(const QString& msg);
+
   protected:
+    /**
+     * @brief showEvent
+     * @param event
+     */
     void showEvent(QShowEvent* event);
+
+    /**
+     * @brief adjustedMenuPosition
+     * @param pushButton
+     * @return
+     */
+    QPoint adjustedMenuPosition(QPushButton* pushButton);
 
   protected slots:
     void on_startRowSpin_valueChanged(int i);
     void on_hasHeadersRadio_toggled(bool checked);
+    void on_doesNotHaveHeadersRadio_toggled(bool checked);
+    void on_useDefaultHeaders_toggled(bool checked);
+    void on_amAutomatically_stateChanged(int state);
+    void on_selectedAMBtn_pressed();
+    void on_selectedDCBtn_pressed();
     void on_headersIndexLineEdit_textChanged(const QString &text);
     void on_editHeadersBtn_clicked();
     void on_dataTypeRadio_clicked();
@@ -101,13 +202,20 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     void on_dataTypeCB_currentTextChanged(const QString &text);
 
     void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
-    void checkTupleDimensions(QVector<size_t> tupleDims);
+    bool checkTupleDimensions(QVector<size_t> tupleDims);
 
   private:
     int                                             m_NumLines;
     EditHeadersDialog*                              m_EditHeadersDialog;
+    DataContainerArray::Pointer                     m_Dca;
 
-    void validateHeaders(QVector<QString> headers);
+    QSignalMapper*                                  m_AMMenuMapper;
+    QSignalMapper*                                  m_DCMenuMapper;
+
+    QPointer<QtSFaderWidget>                        m_FaderWidget;
+
+    bool validateHeaders(QVector<QString> headers);
+    bool validateTupleDimensions(QVector<size_t> tupleDims);
 
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented
