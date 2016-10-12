@@ -165,10 +165,6 @@ public:
       err = importASCIIData->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::EMPTY_ATTR_MATRIX)
 
-      var.setValue(DataArrayPath(dc->getName(), am->getName(), ""));
-      propWasSet = importASCIIData->setProperty("AttributeMatrixPath", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
       importASCIIData->setDataContainerArray(dca);
 
       return importASCIIData;
@@ -188,6 +184,7 @@ public:
     QString outputType = output->getTypeAsString();
 
     ASCIIWizardData data;
+    data.automaticAM = false;
     data.beginIndex = 1;
     data.consecutiveDelimiters = false;
     data.dataHeaders.push_back(DataArrayName);
@@ -195,6 +192,7 @@ public:
     data.delimiters.push_back(delimiter);
     data.inputFilePath = UnitTest::ImportASCIIDataTest::TestFile1;
     data.numberOfLines = 10;
+    data.selectedPath = DataArrayPath(DataContainerName, AttributeMatrixName, "");
     data.tupleDims = QVector<size_t>(1, 10);
 
     // Test Using Expected Input - Double/Float

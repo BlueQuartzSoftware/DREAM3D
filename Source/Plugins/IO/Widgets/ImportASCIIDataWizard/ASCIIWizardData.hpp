@@ -42,6 +42,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QMetaType>
 
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 
 class ASCIIWizardData
 {
@@ -62,10 +63,12 @@ public:
   QList<char> delimiters;
   bool consecutiveDelimiters;
   QVector<size_t> tupleDims;
+  bool automaticAM;
+  DataArrayPath selectedPath;
 
   bool isEmpty()
   {
-    if (inputFilePath.isEmpty() && dataHeaders.isEmpty() && dataTypes.isEmpty() && tupleDims.isEmpty() && beginIndex < 0 && numberOfLines < 0)
+    if (inputFilePath.isEmpty() && dataHeaders.isEmpty() && dataTypes.isEmpty() && tupleDims.isEmpty() && beginIndex < 0 && numberOfLines < 0 && selectedPath.isEmpty())
     {
       return true;
     }
@@ -82,6 +85,7 @@ public:
       qDebug() << "delimiters: " << delimiters;
       qDebug() << "consecutiveDelimiters: " << consecutiveDelimiters;
       qDebug() << "tupleDims:" << tupleDims;
+      qDebug() << "automaticAM:" << automaticAM;
 
   }
 };

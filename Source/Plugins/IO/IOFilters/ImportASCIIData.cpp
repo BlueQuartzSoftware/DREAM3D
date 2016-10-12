@@ -46,11 +46,6 @@ void ImportASCIIData::setupFilterParameters()
 
   parameters.push_back(ImportASCIIDataFilterParameter::New("ASCII Wizard Data", "WizardData", "", FilterParameter::Parameter));
 
-  {
-    AttributeMatrixSelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Attribute Matrix", AttributeMatrixPath, FilterParameter::Parameter, ImportASCIIData, req));
-  }
-
   setFilterParameters(parameters);
 }
 
@@ -90,7 +85,6 @@ void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reade
   data.tupleDims = tDims;
 
   setWizardData(data);
-  setAttributeMatrixPath(reader->readDataArrayPath("AttributeMatrixPath", getAttributeMatrixPath()));
 
   reader->closeFilterGroup();
 }
@@ -108,6 +102,12 @@ void ImportASCIIData::readFilterParameters(QJsonObject& obj)
   m_WizardData.consecutiveDelimiters = static_cast<bool>(obj[prefix + "ConsecutiveDelimiters"].toInt());
   m_WizardData.inputFilePath = obj[prefix + "InputFilePath"].toString();
   m_WizardData.numberOfLines = obj[prefix + "NumberOfLines"].toInt();
+  m_WizardData.automaticAM = obj[prefix + "AutomaticAM"].toBool();
+
+  DataArrayPath dap;
+  QJsonObject dapObj = obj[prefix + "SelectedPath"].toObject();
+  dap.readJson(dapObj);
+  m_WizardData.selectedPath = dap;
 
   {
     QJsonArray jsonArray = obj[prefix + "DataHeaders"].toArray();
@@ -166,6 +166,11 @@ void ImportASCIIData::writeFilterParameters(QJsonObject& obj)
   obj[prefix + "ConsecutiveDelimiters"] = static_cast<int>(m_WizardData.consecutiveDelimiters);
   obj[prefix + "InputFilePath"] = m_WizardData.inputFilePath;
   obj[prefix + "NumberOfLines"] = m_WizardData.numberOfLines;
+  obj[prefix + "AutomaticAM"] = m_WizardData.automaticAM;
+
+  QJsonObject dapObj;
+  m_WizardData.selectedPath.writeJson(dapObj);
+  obj[prefix + "SelectedPath"] = dapObj;
 
   {
     QJsonArray jsonArray;
@@ -233,6 +238,8 @@ void ImportASCIIData::dataCheck()
   QString inputFilePath = wizardData.inputFilePath;
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
+  bool automaticAM = wizardData.automaticAM;
+  DataArrayPath selectedPath = wizardData.selectedPath;
   QVector<size_t> tDims = wizardData.tupleDims;
   QVector<size_t> cDims(1, 1);
 
@@ -250,54 +257,68 @@ void ImportASCIIData::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixPath);
-  if(nullptr == am.get())
+  if (automaticAM == false)
   {
-    QString ss = "The attribute matrix input is empty. Please select an attribute matrix.";
-    setErrorCondition(EMPTY_ATTR_MATRIX);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-  else if(am->getTupleDimensions() != tDims)
-  {
-
-    QString ss = "The attribute matrix '" + m_AttributeMatrixPath.getAttributeMatrixName() + "' does not have the same tuple dimensions as the data in the file '" + fi.fileName() + "'.";
-    QTextStream out(&ss);
-    out << m_AttributeMatrixPath.getAttributeMatrixName() << " tuple dims: " << am->getTupleDimensions().at(0) << "\n";
-    out << fi.fileName() << "tuple dims: " << tDims[0] << "\n";
-    setErrorCondition(INCONSISTENT_TUPLES);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  QStringList amArrays = am->getAttributeArrayNames();
-  for(int i = 0; i < amArrays.size(); i++)
-  {
-    QString amArrayName = amArrays[i];
-    for(int j = 0; j < headers.size(); j++)
+    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(selectedPath);
+    if(nullptr == am.get())
     {
-      QString headerName = headers[j];
-      if(amArrayName == headerName)
+      QString ss = "The attribute matrix input is empty. Please select an attribute matrix.";
+      setErrorCondition(EMPTY_ATTR_MATRIX);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+    if (am->getTupleDimensions() != tDims)
+    {
+      QString ss = "The attribute matrix '" + selectedPath.getAttributeMatrixName() + "' does not have the same tuple dimensions as the data in the file '" + fi.fileName() + "'.";
+      QTextStream out(&ss);
+      out << selectedPath.getAttributeMatrixName() << " tuple dims: " << am->getTupleDimensions().at(0) << "\n";
+      out << fi.fileName() << "tuple dims: " << tDims[0] << "\n";
+      setErrorCondition(INCONSISTENT_TUPLES);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    QStringList amArrays = am->getAttributeArrayNames();
+    for (int i = 0; i < amArrays.size(); i++)
+    {
+      QString amArrayName = amArrays[i];
+      for (int j = 0; j < headers.size(); j++)
       {
-        QString ss = "The header name \"" + headerName + "\" matches an array name that already exists in the selected attribute matrix.";
-        setErrorCondition(DUPLICATE_NAMES);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
+        QString headerName = headers[j];
+        if (amArrayName == headerName)
+        {
+          QString ss = "The header name \"" + headerName + "\" matches an array name that already exists in the selected attribute matrix.";
+          setErrorCondition(DUPLICATE_NAMES);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          return;
+        }
       }
+    }
+  }
+  else
+  {
+    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(selectedPath);
+    if (am != nullptr)
+    {
+      // Attribute Matrix already exists, so you need to pick a different attribute matrix name
+    }
+    else
+    {
+      DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, selectedPath.getDataContainerName());
+      dc->createNonPrereqAttributeMatrix(this, selectedPath.getAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
     }
   }
 
   // Create the arrays
-  QList<AbstractDataParser::Pointer> dataParsers;
   for(int i = 0; i < dataTypes.size(); i++)
   {
     QString dataType = dataTypes[i];
     QString name = headers[i];
 
-    DataArrayPath arrayPath = m_AttributeMatrixPath;
+    DataArrayPath arrayPath = selectedPath;
     arrayPath.setDataArrayName(name);
 
-    if(dataType == SIMPL::TypeNames::Double)
+    if (dataType == SIMPL::TypeNames::Double)
     {
       DoubleArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
