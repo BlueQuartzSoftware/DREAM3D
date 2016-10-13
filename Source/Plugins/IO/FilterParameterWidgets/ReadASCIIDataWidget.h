@@ -43,15 +43,15 @@
 
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
-#include "ui_ImportASCIIDataWidget.h"
+#include "ui_ReadASCIIDataWidget.h"
 
 class QtSFSDropLabel;
-class ImportASCIIDataFilterParameter;
+class ReadASCIIDataFilterParameter;
 class ImportASCIIDataWizard;
-class ImportASCIIData;
+class ReadASCIIData;
 class LineCounterObject;
 
-class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportASCIIDataWidget
+class ReadASCIIDataWidget : public FilterParameterWidget, private Ui::ReadASCIIDataWidget
 {
   Q_OBJECT
 
@@ -62,9 +62,9 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    ImportASCIIDataWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
+    ReadASCIIDataWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
-    virtual ~ImportASCIIDataWidget();
+    virtual ~ReadASCIIDataWidget();
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
@@ -89,8 +89,8 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
     void parametersChanged();
 
   private:
-    ImportASCIIDataFilterParameter*                   m_FilterParameter;
-    ImportASCIIData*                                  m_Filter;
+    ReadASCIIDataFilterParameter*                   m_FilterParameter;
+    ReadASCIIData*                                    m_Filter;
 
     ImportASCIIDataWizard*                            m_ImportWizard;
 
@@ -100,8 +100,8 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
     QThread*                                          m_WorkerThread;
     LineCounterObject*                                m_LineCounter;
 
-    ImportASCIIDataWidget(const ImportASCIIDataWidget&); // Copy Constructor Not Implemented
-    void operator=(const ImportASCIIDataWidget&); // Operator '=' Not Implemented
+    ReadASCIIDataWidget(const ReadASCIIDataWidget&); // Copy Constructor Not Implemented
+    void operator=(const ReadASCIIDataWidget&); // Operator '=' Not Implemented
 };
 
 #endif /* ImportASCIIDataWidget_H_ */

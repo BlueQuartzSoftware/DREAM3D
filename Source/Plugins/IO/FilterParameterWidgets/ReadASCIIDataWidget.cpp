@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ImportASCIIDataWidget.h"
+#include "ReadASCIIDataWidget.h"
 
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QFileDialog>
@@ -43,7 +43,7 @@
 
 #include "SIMPLib/Common/AbstractFilter.h"
 
-#include "FilterParameters/ImportASCIIDataFilterParameter.h"
+#include "FilterParameters/ReadASCIIDataFilterParameter.h"
 
 #include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
 #include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
@@ -51,25 +51,25 @@
 #include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
 #include "Widgets/ImportASCIIDataWizard/LineCounterObject.h"
 
-#include "IOFilters/ImportASCIIData.h"
+#include "IOFilters/ReadASCIIData.h"
 
 // Initialize private static member variable
-QString ImportASCIIDataWidget::m_OpenDialogLastDirectory = "";
+QString ReadASCIIDataWidget::m_OpenDialogLastDirectory = "";
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
+ReadASCIIDataWidget::ReadASCIIDataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
 : FilterParameterWidget(parameter, filter, parent)
 , m_ImportWizard(nullptr)
 , m_WorkerThread(nullptr)
 , m_LineCounter(nullptr)
 {
-  m_FilterParameter = dynamic_cast<ImportASCIIDataFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != nullptr, "nullptr Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIDataFilterParameter object");
+  m_FilterParameter = dynamic_cast<ReadASCIIDataFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != nullptr, "nullptr Pointer", "ReadASCIIDataWidget can ONLY be used with an ReadASCIIDataFilterParameter object");
 
-  m_Filter = dynamic_cast<ImportASCIIData*>(filter);
-  Q_ASSERT_X(m_Filter != nullptr, "nullptr Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIData filter");
+  m_Filter = dynamic_cast<ReadASCIIData*>(filter);
+  Q_ASSERT_X(m_Filter != nullptr, "nullptr Pointer", "ReadASCIIDataWidget can ONLY be used with an ReadASCIIData filter");
 
   setupUi(this);
 
@@ -79,14 +79,14 @@ ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, Abstrac
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataWidget::~ImportASCIIDataWidget()
+ReadASCIIDataWidget::~ReadASCIIDataWidget()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWidget::setupGui()
+void ReadASCIIDataWidget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
@@ -142,7 +142,7 @@ void ImportASCIIDataWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWidget::on_importFileBtn_pressed()
+void ReadASCIIDataWidget::on_importFileBtn_pressed()
 {
   // Clean up previous wizard and settings
   if(nullptr != m_ImportWizard)
@@ -306,7 +306,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWidget::updateProgress(double percentage)
+void ReadASCIIDataWidget::updateProgress(double percentage)
 {
   int64_t progressInt = static_cast<int64_t>(percentage);
   loadingProgress->setText(QString::number(progressInt) + "%");
@@ -315,7 +315,7 @@ void ImportASCIIDataWidget::updateProgress(double percentage)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWidget::lineCountDidFinish()
+void ReadASCIIDataWidget::lineCountDidFinish()
 {
   loadingProgress->setText("0%");
   loadingProgress->hide();
@@ -357,7 +357,7 @@ void ImportASCIIDataWidget::lineCountDidFinish()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWidget::on_editHeadersBtn_pressed()
+void ReadASCIIDataWidget::on_editHeadersBtn_pressed()
 {
   if(nullptr != m_ImportWizard)
   {
@@ -373,7 +373,7 @@ void ImportASCIIDataWidget::on_editHeadersBtn_pressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWidget::on_removeFileBtn_pressed()
+void ReadASCIIDataWidget::on_removeFileBtn_pressed()
 {
   delete m_ImportWizard;
   m_ImportWizard = nullptr;
@@ -393,7 +393,7 @@ void ImportASCIIDataWidget::on_removeFileBtn_pressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
+void ReadASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   ASCIIWizardData data;
   int numOfLines = -1;
@@ -427,13 +427,13 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWidget::beforePreflight()
+void ReadASCIIDataWidget::beforePreflight()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWidget::afterPreflight()
+void ReadASCIIDataWidget::afterPreflight()
 {
 }

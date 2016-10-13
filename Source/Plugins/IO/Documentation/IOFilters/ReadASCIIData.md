@@ -1,4 +1,4 @@
-Import ASCII Data {#importasciidata}
+Import ASCII Data {#readasciidata}
 =============
 
 ## Group (Subgroup) ##
@@ -13,11 +13,11 @@ This **Filter** reads ASCII data from any text-based file and imports the data i
 
 After clicking the **Import Data...** button and selecting a file, a wizard appears. The user can choose how the data is delimited: comma (,), tab, semicolon (;) or space ( ). The user may also elect to treat consecutive delimiters as one delimiter.
 
-![Selecting how the data is separated](Import_ASCII_1.png)
+![Selecting how the data is separated](Read_ASCII_1.png)
 
 ### Selecting the Delimiter ###
 
-![Selecting the delimiting character(s)](Import_ASCII_2.png)
+![Selecting the delimiting character(s)](Read_ASCII_2.png)
 
 ### Selecting Import Rows, Data Representation and Column Headers ###
 
@@ -29,12 +29,12 @@ On the last page, the user can set the following information:
 + Column data format (choosing the data type or deciding to skip the column)
 
 
-![Setting Numerical Representations, Column Headers and other information](Import_ASCII_3.png)
+![Setting Numerical Representations, Column Headers and other information](Read_ASCII_3.png)
 
 
 If the data does not have any headers, the user can set a string value for each column. These values will be used as the name of the **Attribute Array** in DREAM.3D.
 
-![Setting Names of each Column which will be used as the name of each **Attribute Array** ](Import_ASCII_4.png)
+![Setting Names of each Column which will be used as the name of each **Attribute Array** ](Read_ASCII_4.png)
 
 ## Parameters ##
 | Name | Type | Description |

@@ -2,8 +2,8 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _importasciidata_h_
-#define _importasciidata_h_
+#ifndef _readasciidata_h_
+#define _readasciidata_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -12,18 +12,18 @@
 #include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
 
 /**
- * @brief The ImportASCIIData class. See [Filter documentation](@ref importasciidata) for details.
+ * @brief The ReadASCIIData class. See [Filter documentation](@ref ReadASCIIData) for details.
  */
-class ImportASCIIData : public AbstractFilter
+class ReadASCIIData : public AbstractFilter
 {
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(ImportASCIIData)
-    SIMPL_STATIC_NEW_MACRO(ImportASCIIData)
-    SIMPL_TYPE_MACRO_SUPER(ImportASCIIData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ReadASCIIData)
+    SIMPL_STATIC_NEW_MACRO(ReadASCIIData)
+    SIMPL_TYPE_MACRO_SUPER(ReadASCIIData, AbstractFilter)
 
-    virtual ~ImportASCIIData();
+    virtual ~ReadASCIIData();
 
     SIMPL_FILTER_PARAMETER(ASCIIWizardData, WizardData)
       Q_PROPERTY(ASCIIWizardData WizardData READ getWizardData WRITE setWizardData)
@@ -119,7 +119,7 @@ class ImportASCIIData : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ImportASCIIData();
+    ReadASCIIData();
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -134,8 +134,8 @@ class ImportASCIIData : public AbstractFilter
   private:
     QMap<int, IDataArray::Pointer>        m_ASCIIArrayMap;
 
-    ImportASCIIData(const ImportASCIIData&); // Copy Constructor Not Implemented
-    void operator=(const ImportASCIIData&); // Operator '=' Not Implemented
+    ReadASCIIData(const ReadASCIIData&); // Copy Constructor Not Implemented
+    void operator=(const ReadASCIIData&); // Operator '=' Not Implemented
 };
 
-#endif /* _ImportASCIIData_H_ */
+#endif /* _readasciidata_h_ */

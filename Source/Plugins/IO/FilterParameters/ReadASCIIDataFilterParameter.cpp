@@ -33,14 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ImportASCIIDataFilterParameter.h"
+#include "ReadASCIIDataFilterParameter.h"
 
 #include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataFilterParameter::ImportASCIIDataFilterParameter()
+ReadASCIIDataFilterParameter::ReadASCIIDataFilterParameter()
 : FilterParameter()
 {
 }
@@ -48,16 +48,16 @@ ImportASCIIDataFilterParameter::ImportASCIIDataFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataFilterParameter::~ImportASCIIDataFilterParameter()
+ReadASCIIDataFilterParameter::~ReadASCIIDataFilterParameter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataFilterParameter::Pointer ImportASCIIDataFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, int groupIndex)
+ReadASCIIDataFilterParameter::Pointer ReadASCIIDataFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, int groupIndex)
 {
-  ImportASCIIDataFilterParameter::Pointer ptr = ImportASCIIDataFilterParameter::New();
+  ReadASCIIDataFilterParameter::Pointer ptr = ReadASCIIDataFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setDefaultValue(defaultValue);
@@ -70,7 +70,7 @@ ImportASCIIDataFilterParameter::Pointer ImportASCIIDataFilterParameter::New(cons
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImportASCIIDataFilterParameter::getWidgetType()
+QString ReadASCIIDataFilterParameter::getWidgetType()
 {
-  return QString("ImportASCIIDataWidget");
+  return QString("ReadASCIIDataWidget");
 }

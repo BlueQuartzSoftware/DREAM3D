@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ExportData.h"
+#include "WriteASCIIData.h"
 
 #include <QtCore/QDir>
 
@@ -53,15 +53,15 @@
  * @brief The ExportDataPrivate class is a templated class that implements a method to generically
  * export data to an ASCII file
  */
-template <typename TInputType> class ExportDataPrivate
+template <typename TInputType> class WriteASCIIDataPrivate
 {
 public:
   typedef DataArray<TInputType> DataArrayType;
 
-  ExportDataPrivate()
+  WriteASCIIDataPrivate()
   {
   }
-  virtual ~ExportDataPrivate()
+  virtual ~WriteASCIIDataPrivate()
   {
   }
 
@@ -76,7 +76,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void static Execute(ExportData* filter, IDataArray::Pointer inputData, char delimeter, QString outputFile, int32_t MaxValPerLine)
+  void static Execute(WriteASCIIData* filter, IDataArray::Pointer inputData, char delimeter, QString outputFile, int32_t MaxValPerLine)
   {
     typename DataArrayType::Pointer inputArray = std::dynamic_pointer_cast<DataArrayType>(inputData);
 
@@ -123,12 +123,12 @@ public:
 };
 
 // Include the MOC generated file for this class
-#include "moc_ExportData.cpp"
+#include "moc_WriteASCIIData.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExportData::ExportData()
+WriteASCIIData::WriteASCIIData()
 : AbstractFilter()
 , m_SelectedDataArrayPaths(QVector<DataArrayPath>())
 , m_OutputPath("")
@@ -142,25 +142,25 @@ ExportData::ExportData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExportData::~ExportData()
+WriteASCIIData::~WriteASCIIData()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExportData::setupFilterParameters()
+void WriteASCIIData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, ExportData));
-  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Parameter, ExportData));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Tuples Per Line", MaxValPerLine, FilterParameter::Parameter, ExportData));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, WriteASCIIData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Parameter, WriteASCIIData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Tuples Per Line", MaxValPerLine, FilterParameter::Parameter, WriteASCIIData));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New(); // Delimiter choice
     parameter->setHumanLabel("Delimiter");
     parameter->setPropertyName("Delimeter");
-    parameter->setSetterCallback(SIMPL_BIND_SETTER(ExportData, this, Delimeter));
-    parameter->setGetterCallback(SIMPL_BIND_GETTER(ExportData, this, Delimeter));
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(WriteASCIIData, this, Delimeter));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(WriteASCIIData, this, Delimeter));
 
     QVector<QString> choices;
     choices.push_back(", (comma)");
@@ -174,7 +174,7 @@ void ExportData::setupFilterParameters()
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Export", SelectedDataArrayPaths, FilterParameter::RequiredArray, ExportData, req));
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Export", SelectedDataArrayPaths, FilterParameter::RequiredArray, WriteASCIIData, req));
   }
   setFilterParameters(parameters);
 }
@@ -182,7 +182,7 @@ void ExportData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExportData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void WriteASCIIData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSelectedDataArrayPaths(reader->readDataArrayPathVector("SelectedDataArrayPaths", getSelectedDataArrayPaths()));
@@ -196,7 +196,7 @@ void ExportData::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExportData::initialize()
+void WriteASCIIData::initialize()
 {
   m_SelectedWeakPtrVector.clear();
 }
@@ -204,7 +204,7 @@ void ExportData::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExportData::dataCheck()
+void WriteASCIIData::dataCheck()
 {
   // Make sure the weak pointer vector is cleared before we begin...
   m_SelectedWeakPtrVector.clear();
@@ -256,7 +256,7 @@ void ExportData::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExportData::preflight()
+void WriteASCIIData::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -269,7 +269,7 @@ void ExportData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExportData::execute()
+void WriteASCIIData::execute()
 {
   setErrorCondition(0);
   initialize();
@@ -313,7 +313,7 @@ void ExportData::execute()
 
     char delimeter = lookupDelimeter();
 
-    EXECUTE_TEMPLATE(this, ExportDataPrivate, selectedArrayPtr.lock(), this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine)
+    EXECUTE_TEMPLATE(this, WriteASCIIDataPrivate, selectedArrayPtr.lock(), this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine)
 
     if(getErrorCondition() < 0)
     {
@@ -327,7 +327,7 @@ void ExportData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char ExportData::lookupDelimeter()
+char WriteASCIIData::lookupDelimeter()
 {
   char del = ' ';
   switch(m_Delimeter)
@@ -356,9 +356,9 @@ char ExportData::lookupDelimeter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ExportData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer WriteASCIIData::newFilterInstance(bool copyFilterParameters)
 {
-  ExportData::Pointer filter = ExportData::New();
+  WriteASCIIData::Pointer filter = WriteASCIIData::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -369,7 +369,7 @@ AbstractFilter::Pointer ExportData::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExportData::getCompiledLibraryName()
+const QString WriteASCIIData::getCompiledLibraryName()
 {
   return IOConstants::IOBaseName;
 }
@@ -377,7 +377,7 @@ const QString ExportData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExportData::getBrandingString()
+const QString WriteASCIIData::getBrandingString()
 {
   return "IO";
 }
@@ -385,7 +385,7 @@ const QString ExportData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExportData::getFilterVersion()
+const QString WriteASCIIData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
@@ -395,7 +395,7 @@ const QString ExportData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExportData::getGroupName()
+const QString WriteASCIIData::getGroupName()
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -403,7 +403,7 @@ const QString ExportData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExportData::getSubGroupName()
+const QString WriteASCIIData::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -411,7 +411,7 @@ const QString ExportData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExportData::getHumanLabel()
+const QString WriteASCIIData::getHumanLabel()
 {
-  return "Export Data (ASCII Text)";
+  return "Write ASCII Data";
 }

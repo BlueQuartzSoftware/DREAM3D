@@ -2,7 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ImportASCIIData.h"
+#include "ReadASCIIData.h"
 
 #include <QtCore/QFileInfo>
 
@@ -10,7 +10,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 
-#include "FilterParameters/ImportASCIIDataFilterParameter.h"
+#include "FilterParameters/ReadASCIIDataFilterParameter.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -19,12 +19,12 @@
 #include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
 
 // Include the MOC generated file for this class
-#include "moc_ImportASCIIData.cpp"
+#include "moc_ReadASCIIData.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIData::ImportASCIIData()
+ReadASCIIData::ReadASCIIData()
 : AbstractFilter()
 {
   setupFilterParameters();
@@ -33,18 +33,18 @@ ImportASCIIData::ImportASCIIData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIData::~ImportASCIIData()
+ReadASCIIData::~ReadASCIIData()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIData::setupFilterParameters()
+void ReadASCIIData::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(ImportASCIIDataFilterParameter::New("ASCII Wizard Data", "WizardData", "", FilterParameter::Parameter));
+  parameters.push_back(ReadASCIIDataFilterParameter::New("ASCII Wizard Data", "WizardData", "", FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 }
@@ -52,7 +52,7 @@ void ImportASCIIData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ReadASCIIData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
 
@@ -92,7 +92,7 @@ void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIData::readFilterParameters(QJsonObject& obj)
+void ReadASCIIData::readFilterParameters(QJsonObject& obj)
 {
   AbstractFilter::readFilterParameters(obj);
 
@@ -156,7 +156,7 @@ void ImportASCIIData::readFilterParameters(QJsonObject& obj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIData::writeFilterParameters(QJsonObject& obj)
+void ReadASCIIData::writeFilterParameters(QJsonObject& obj)
 {
   AbstractFilter::writeFilterParameters(obj);
 
@@ -213,7 +213,7 @@ void ImportASCIIData::writeFilterParameters(QJsonObject& obj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIData::initialize()
+void ReadASCIIData::initialize()
 {
   m_ASCIIArrayMap.clear();
 }
@@ -221,7 +221,7 @@ void ImportASCIIData::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIData::dataCheck()
+void ReadASCIIData::dataCheck()
 {
   setErrorCondition(0);
   m_ASCIIArrayMap.clear();
@@ -374,7 +374,7 @@ void ImportASCIIData::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIData::preflight()
+void ReadASCIIData::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true);              // Set the fact that we are preflighting.
@@ -388,7 +388,7 @@ void ImportASCIIData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIData::execute()
+void ReadASCIIData::execute()
 {
   setErrorCondition(0);
   initialize();
@@ -557,9 +557,9 @@ void ImportASCIIData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ImportASCIIData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ReadASCIIData::newFilterInstance(bool copyFilterParameters)
 {
-  ImportASCIIData::Pointer filter = ImportASCIIData::New();
+  ReadASCIIData::Pointer filter = ReadASCIIData::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -570,7 +570,7 @@ AbstractFilter::Pointer ImportASCIIData::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportASCIIData::getCompiledLibraryName()
+const QString ReadASCIIData::getCompiledLibraryName()
 {
   return IOConstants::IOBaseName;
 }
@@ -578,7 +578,7 @@ const QString ImportASCIIData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportASCIIData::getGroupName()
+const QString ReadASCIIData::getGroupName()
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -586,7 +586,7 @@ const QString ImportASCIIData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportASCIIData::getSubGroupName()
+const QString ReadASCIIData::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -594,7 +594,7 @@ const QString ImportASCIIData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportASCIIData::getHumanLabel()
+const QString ReadASCIIData::getHumanLabel()
 {
-  return "Import ASCII Data";
+  return "Read ASCII Data";
 }

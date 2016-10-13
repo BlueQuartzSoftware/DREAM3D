@@ -24,23 +24,23 @@ set(_PublicFilters
   AvizoUniformCoordinateWriter
   DxReader
   DxWriter
-  ExportData
   FeatureDataCSVWriter
   FeatureInfoReader
   GBCDTriangleDumper
   LosAlamosFFTWriter
   PhReader
   PhWriter
+  ReadASCIIData
   ReadStlFile
   SPParksTextReader
   SPParksWriter
   VisualizeGBCDGMT
   VisualizeGBCDPoleFigure
+  VtkRectilinearGridWriter
   VtkStructuredPointsReader
+  WriteASCIIData
   WriteStlFile
   WriteTriangleGeometry
-  VtkRectilinearGridWriter
-  ImportASCIIData
 )
 
 #--------------

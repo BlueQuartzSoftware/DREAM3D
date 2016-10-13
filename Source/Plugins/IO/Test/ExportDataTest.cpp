@@ -88,8 +88,8 @@ public:
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the ExportData Filter from the FilterManager
-    QString filtName = "ExportData";
+    // Now instantiate the WriteASCIIData Filter from the FilterManager
+    QString filtName = "WriteASCIIData";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if(nullptr == filterFactory.get())
@@ -178,7 +178,7 @@ public:
     DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
     // Now instantiate the EnsembleInfoReader Filter from the FilterManager
-    QString filtName = "ExportData";
+    QString filtName = "WriteASCIIData";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if(nullptr != filterFactory.get())

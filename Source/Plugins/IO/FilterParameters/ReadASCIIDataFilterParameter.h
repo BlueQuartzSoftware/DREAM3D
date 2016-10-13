@@ -40,27 +40,27 @@
 
 class ASCIIWizardData;
 
-class ImportASCIIDataFilterParameter : public FilterParameter
+class ReadASCIIDataFilterParameter : public FilterParameter
 {
 public:
-  SIMPL_SHARED_POINTERS(ImportASCIIDataFilterParameter)
-    SIMPL_STATIC_NEW_MACRO(ImportASCIIDataFilterParameter)
-    SIMPL_TYPE_MACRO(ImportASCIIDataFilterParameter)
+  SIMPL_SHARED_POINTERS(ReadASCIIDataFilterParameter)
+    SIMPL_STATIC_NEW_MACRO(ReadASCIIDataFilterParameter)
+    SIMPL_TYPE_MACRO(ReadASCIIDataFilterParameter)
 
   static Pointer New(const QString& humanLabel, const QString& propertyName,
                      const QVariant& defaultValue, Category category,
                      int groupIndex = -1);
 
-  virtual ~ImportASCIIDataFilterParameter();
+  virtual ~ReadASCIIDataFilterParameter();
 
   QString getWidgetType();
 
 protected:
-  ImportASCIIDataFilterParameter();
+  ReadASCIIDataFilterParameter();
 
 private:
-  ImportASCIIDataFilterParameter(const ImportASCIIDataFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ImportASCIIDataFilterParameter&); // Operator '=' Not Implemented
+  ReadASCIIDataFilterParameter(const ReadASCIIDataFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const ReadASCIIDataFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _ImportVectorImageStackFilterParameter_H_ */

@@ -34,25 +34,25 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _exportdata_h_
-#define _exportdata_h_
+#ifndef _writeasciidata_h_
+#define _writeasciidata_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
- * @brief The ExportData class. See [Filter documentation](@ref exportdata) for details.
+ * @brief The WriteASCIIData class. See [Filter documentation](@ref writeasciidata) for details.
  */
-class ExportData : public AbstractFilter
+class WriteASCIIData : public AbstractFilter
 {
     Q_OBJECT
   public:
-    SIMPL_SHARED_POINTERS(ExportData)
-    SIMPL_STATIC_NEW_MACRO(ExportData)
-    SIMPL_TYPE_MACRO_SUPER(ExportData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(WriteASCIIData)
+    SIMPL_STATIC_NEW_MACRO(WriteASCIIData)
+    SIMPL_TYPE_MACRO_SUPER(WriteASCIIData, AbstractFilter)
 
-    virtual ~ExportData();
+    virtual ~WriteASCIIData();
 
     SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
     Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
@@ -161,7 +161,7 @@ class ExportData : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ExportData();
+    WriteASCIIData();
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -183,8 +183,8 @@ class ExportData : public AbstractFilter
 
     QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
 
-    ExportData(const ExportData&); // Copy Constructor Not Implemented
-    void operator=(const ExportData&); // Operator '=' Not Implemented
+    WriteASCIIData(const WriteASCIIData&); // Copy Constructor Not Implemented
+    void operator=(const WriteASCIIData&); // Operator '=' Not Implemented
 };
 
-#endif /* _ExportData_H_ */
+#endif /* _writeasciidata_h_ */
