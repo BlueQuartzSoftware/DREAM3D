@@ -90,7 +90,7 @@ function(AddItkCopyInstallRules)
                                     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
                                     # COMMENT "  Copy: ${DllLibPath} To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/"
                                     )
-                set_target_properties(ZZ_${itk_LIBVAR}_DLL_${UpperBType}-Copy PROPERTIES FOLDER ZZ_Itk_COPY_FILES)
+                set_target_properties(ZZ_${itk_LIBVAR}_DLL_${UpperBType}-Copy PROPERTIES FOLDER ZZ_COPY_FILES/${BTYPE}/Itk)
                 install(FILES ${DllLibPath} DESTINATION "${itk_INSTALL_DIR}" CONFIGURATIONS ${BTYPE} COMPONENT Applications)
               endif()
             endif()
