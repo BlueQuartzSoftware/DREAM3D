@@ -451,8 +451,18 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
         volgood = true;
         if(pp->getFeatureSize_DistType() == SIMPL::DistributionType::LogNormal)
         {
-          float avgdiam = pp->getFeatureSizeDistribution().at(0)->getValue(0);
-          float sddiam = pp->getFeatureSizeDistribution().at(1)->getValue(0);
+          VectorOfFloatArray fsdist = pp->getFeatureSizeDistribution();
+          float avgdiam = 1.0f;
+          float sddiam = 0.1f;
+          if(fsdist.size() >= 2)
+          {
+            avgdiam = pp->getFeatureSizeDistribution().at(0)->getValue(0);
+            sddiam = pp->getFeatureSizeDistribution().at(1)->getValue(0);
+          }
+          else
+          {
+            return QString("-1");
+          }
           diam = rg.genrand_norm(avgdiam, sddiam);
           diam = expf(diam);
           if(diam >= pp->getMaxFeatureDiameter())

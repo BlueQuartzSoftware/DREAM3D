@@ -37,11 +37,23 @@
 
 #include <QtCore/QVector>
 
-#include "StatsGenerator/Widgets/StatsGenAxisODFWidget.h"
-#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
-#include "StatsGenerator/Widgets/StatsGenODFWidget.h"
-#include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
+const QString AbstractMicrostructurePreset::kOmega3Distribution = "Omega3";
+const QString AbstractMicrostructurePreset::kBOverADistribution = "BOverA";
+const QString AbstractMicrostructurePreset::kCOverADistribution = "COverA";
+const QString AbstractMicrostructurePreset::kClusterDistribution = "Clustering";
+const QString AbstractMicrostructurePreset::kNeighborDistribution = "Neighbor";
+const QString AbstractMicrostructurePreset::kBinNumbers = "BinNumbers";
+const QString AbstractMicrostructurePreset::kAlpha = "Alpha";
+const QString AbstractMicrostructurePreset::kBeta = "Beta";
+const QString AbstractMicrostructurePreset::kColor = "Color";
+const QString AbstractMicrostructurePreset::kMu = "Mu";
+const QString AbstractMicrostructurePreset::kSigma = "Sigma";
+const QString AbstractMicrostructurePreset::kEuler1 = "Euler1";
+const QString AbstractMicrostructurePreset::kEuler2 = "Euler2";
+const QString AbstractMicrostructurePreset::kEuler3 = "Euler3";
+const QString AbstractMicrostructurePreset::kWeight = "Weight";
+const QString AbstractMicrostructurePreset::kAngles = "Angles";
+const QString AbstractMicrostructurePreset::kAxis = "Axis";
 
 // -----------------------------------------------------------------------------
 //
@@ -60,56 +72,56 @@ AbstractMicrostructurePreset::~AbstractMicrostructurePreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractMicrostructurePreset::initializeAxisODFTableModel(StatsGenAxisODFWidget* widget)
+QString AbstractMicrostructurePreset::getName()
 {
-  // This line basically makes sure we have the distribution type we are looking for
-  SGODFTableModel* model = (widget->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
-  QVector<float> e1;
-  QVector<float> e2;
-  QVector<float> e3;
-  QVector<float> weights;
-  QVector<float> sigmas;
-  model->setTableData(e1, e2, e3, weights, sigmas);
+  return QString::fromLatin1("Unknown Preset");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractMicrostructurePreset::initializeODFTableModel(StatsGenODFWidget* widget)
+void AbstractMicrostructurePreset::initializeAxisODFTableModel(QMap<QString, QVector<float>>& data)
 {
-  // This line basically makes sure we have the distribution type we are looking for
-  SGODFTableModel* model = (widget->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
   QVector<float> e1;
   QVector<float> e2;
   QVector<float> e3;
   QVector<float> weights;
   QVector<float> sigmas;
-  model->setTableData(e1, e2, e3, weights, sigmas);
+  data[kEuler1] = e1;
+  data[kEuler2] = e2;
+  data[kEuler3] = e3;
+  data[kWeight] = weights;
+  data[kSigma] = sigmas;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractMicrostructurePreset::initializeMDFTableModel(StatsGenMDFWidget* widget)
+void AbstractMicrostructurePreset::initializeODFTableModel(QMap<QString, QVector<float>>& data)
 {
-  // This line basically makes sure we have the distribution type we are looking for
-  SGMDFTableModel* model = (widget->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
+  QVector<float> e1;
+  QVector<float> e2;
+  QVector<float> e3;
+  QVector<float> weights;
+  QVector<float> sigmas;
+  data[kEuler1] = e1;
+  data[kEuler2] = e2;
+  data[kEuler3] = e3;
+  data[kWeight] = weights;
+  data[kSigma] = sigmas;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractMicrostructurePreset::initializeMDFTableModel(QMap<QString, QVector<float>>& data)
+{
   QVector<float> angles;
   QVector<float> axis;
   QVector<float> weights;
-  model->setTableData(angles, axis, weights);
+  data[kAngles] = angles;
+  data[kAngles] = axis;
+  data[kWeight] = weights;
 }
 
 // -----------------------------------------------------------------------------

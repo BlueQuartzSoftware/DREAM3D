@@ -62,8 +62,8 @@ public:
   void setCOverAPlotWidget(StatsGenPlotWidget* w);
   StatsGenPlotWidget* getCOverAPlotWidget();
 
-  void setODFWidgetWidget(StatsGenODFWidget* w);
-  StatsGenODFWidget* getODFWidgetWidget();
+  void setODFWidget(StatsGenODFWidget* w);
+  StatsGenODFWidget* getODFWidget();
 
   void setAxisODFWidget(StatsGenAxisODFWidget* w);
   StatsGenAxisODFWidget* getAxisODFWidget();

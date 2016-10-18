@@ -234,8 +234,12 @@ QVector<float> StatsGeneratorUtilities::GenerateODFData(unsigned int crystalStru
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData, unsigned int phaseType, unsigned int crystalStruct, QVector<float>& odf, QVector<float>& angles, QVector<float>& axes,
-                                                            QVector<float>& weights, bool computeMDF)
+void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData, unsigned int phaseType, unsigned int crystalStruct,
+                                                            QVector<float>& odf,
+                                                            QVector<float>& angles,
+                                                            QVector<float>& axes,
+                                                            QVector<float>& weights,
+                                                            bool computeMDF)
 {
   QVector<float> x;
   QVector<float> y;

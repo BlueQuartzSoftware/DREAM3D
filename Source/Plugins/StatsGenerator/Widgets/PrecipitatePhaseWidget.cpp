@@ -58,11 +58,17 @@
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
+
 #include "StatsGenerator/StatsGeneratorConstants.h"
+#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
+#include "StatsGenerator/Widgets/StatsGenRDFWidget.h"
 #include "StatsGenerator/Widgets/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Widgets/Presets/PrecipitateEquiaxedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrecipitateRolledPreset.h"
-#include "StatsGenerator/Widgets/StatsGenRDFWidget.h"
+#include "StatsGenerator/Widgets/TableModels/SGAbstractTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
+
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot_curve.h>
@@ -185,17 +191,17 @@ void PrecipitatePhaseWidget::setupGui()
 
 
   // For the ODF Tab we want the MDF functionality
-  getODFWidgetWidget()->enableMDFTab(true);
+  getODFWidget()->enableMDFTab(true);
 
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
-  getODFWidgetWidget()->setEnableAxisDecorations(false);
+  getODFWidget()->setEnableAxisDecorations(false);
 
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
   getAxisODFWidget()->setEnableAxisDecorations(false);
 
-  connect(getODFWidgetWidget(), SIGNAL(odfParametersChanged()),
+  connect(getODFWidget(), SIGNAL(odfParametersChanged()),
           this, SIGNAL(phaseParametersChanged()));
-  connect(getODFWidgetWidget(), SIGNAL(bulkLoadEvent(bool)),
+  connect(getODFWidget(), SIGNAL(bulkLoadEvent(bool)),
           this, SLOT(bulkLoadEvent(bool)));
   connect(getAxisODFWidget(), SIGNAL(axisODFParametersChanged()),
           this, SIGNAL(phaseParametersChanged()));
@@ -237,7 +243,7 @@ void PrecipitatePhaseWidget::setPhaseIndex(int index)
   getOmega3PlotWidget()->setPhaseIndex(index);
   getBOverAPlotPlotWidget()->setPhaseIndex(index);
   getCOverAPlotWidget()->setPhaseIndex(index);
-  getODFWidgetWidget()->setPhaseIndex(index);
+  getODFWidget()->setPhaseIndex(index);
   getAxisODFWidget()->setPhaseIndex(index);
 }
 
@@ -251,7 +257,7 @@ void PrecipitatePhaseWidget::setCrystalStructure(unsigned int xtal)
   getOmega3PlotWidget()->setCrystalStructure(xtal);
   getBOverAPlotPlotWidget()->setCrystalStructure(xtal);
   getCOverAPlotWidget()->setCrystalStructure(xtal);
-  getODFWidgetWidget()->setCrystalStructure(xtal);
+  getODFWidget()->setCrystalStructure(xtal);
   /* Note that we do NOT want to set the crystal structure for the AxisODF widget
    * because we need that crystal structure to be OrthoRhombic in order for those
    * calculations to be performed correctly */
@@ -273,43 +279,90 @@ void PrecipitatePhaseWidget::updatePlots()
     getFeatureSizeWidget()->plotSizeDistribution();
 
     // Now that we have bins and feature sizes, push those to the other plot widgets
-    // Setup Each Plot Widget
-    // The MicroPreset class will set the distribution for each of the plots
+       // Setup Each Plot Widget
+       // The MicroPreset class will set the distribution for each of the plots
+       QwtArray<float> binSizes = getFeatureSizeWidget()->getBinSizes();
+       QMap<QString, QVector<float>> data;
+       data[AbstractMicrostructurePreset::kBinNumbers] = binSizes;
+       QVector<QColor> colors;
 
-    float mu = getFeatureSizeWidget()->getMu();
-    float sigma = getFeatureSizeWidget()->getSigma();
-    float minCutOff = getFeatureSizeWidget()->getMinCutOff();
-    float maxCutOff = getFeatureSizeWidget()->getMaxCutOff();
-    float binStepSize = getFeatureSizeWidget()->getBinStep();
-    QwtArray<float> binSizes = getFeatureSizeWidget()->getBinSizes();
+       getMicroPreset()->initializeOmega3TableModel(data, colors);
+       getOmega3PlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
+       SGAbstractTableModel* tmodel = getOmega3PlotWidget()->tableModel();
+       if(tmodel)
+       {
+         QVector<QVector<float>> colData;
+         colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+         colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+         tmodel->setTableData(binSizes, colData, colors);
+       }
 
-    getOmega3PlotWidget()->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-    getMicroPreset()->initializeOmega3TableModel(getOmega3PlotWidget(), binSizes);
+       getMicroPreset()->initializeBOverATableModel(data, colors);
+       getBOverAPlotPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
+       tmodel = getBOverAPlotPlotWidget()->tableModel();
+       if(tmodel)
+       {
+         QVector<QVector<float>> colData;
+         colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+         colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+         tmodel->setTableData(binSizes, colData, colors);
+       }
 
-    getBOverAPlotPlotWidget()->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-    getMicroPreset()->initializeBOverATableModel(getBOverAPlotPlotWidget(), binSizes);
+       getMicroPreset()->initializeCOverATableModel(data, colors);
+       getCOverAPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
+       tmodel = getCOverAPlotWidget()->tableModel();
+       if(tmodel)
+       {
+         QVector<QVector<float>> colData;
+         colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+         colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+         tmodel->setTableData(binSizes, colData, colors);
+       }
+#if 0
+       // Get any presets for the ODF/AxisODF/MDF also
+       getMicroPreset()->initializeODFTableModel(getODFWidget());
+       getMicroPreset()->initializeAxisODFTableModel(getAxisODFWidget());
+       getMicroPreset()->initializeMDFTableModel(getODFWidget()->getMDFWidget());
+#else
+       // Get any presets for the ODF/AxisODF/MDF also
+       getMicroPreset()->initializeODFTableModel(data);
+       SGODFTableModel* model = getODFWidget()->tableModel();
+       if(model)
+       {
+         model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                             data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+       }
 
-    getCOverAPlotWidget()->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-    getMicroPreset()->initializeCOverATableModel(getCOverAPlotWidget(), binSizes);
+       getMicroPreset()->initializeAxisODFTableModel(data);
+       model = getAxisODFWidget()->tableModel();
+       if(model)
+       {
+         model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                             data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+       }
 
-    // Get any presets for the ODF/AxisODF/MDF also
-    getMicroPreset()->initializeODFTableModel(getODFWidgetWidget());
-    getMicroPreset()->initializeAxisODFTableModel(getAxisODFWidget());
-    getMicroPreset()->initializeMDFTableModel(getODFWidgetWidget()->getMDFWidget());
+       // getMicroPreset()->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
+       getMicroPreset()->initializeMDFTableModel(data);
+       SGMDFTableModel* mdfModel = (getODFWidget()->getMDFWidget()->tableModel());
+       if(mdfModel)
+       {
+         mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
+       }
+#endif
+       progress.setValue(2);
+       progress.setLabelText("[2/4] Calculating ODF Data ...");
+       getODFWidget()->updatePlots();
 
-    progress.setValue(2);
-    progress.setLabelText("[2/4] Calculating ODF Data ...");
-    getODFWidgetWidget()->updatePlots();
+       progress.setValue(3);
+       progress.setLabelText("[3/4] Calculating Axis ODF Data ...");
+       getAxisODFWidget()->updatePlots();
 
-    progress.setValue(3);
-    progress.setLabelText("[3/4] Calculating Axis ODF Data ...");
-    getAxisODFWidget()->updatePlots();
+       progress.setValue(4);
+       progress.setLabelText("[4/4] Calculating RDF Data ...");
+       m_RdfPlot->updatePlots();
 
-    progress.setValue(4);
-    progress.setLabelText("[4/4] Calculating RDF Data ...");
-    m_RdfPlot->updatePlots();
+       setTabsPlotTabsEnabled(true);
 
-    setTabsPlotTabsEnabled(true);
   }
 }
 
@@ -427,7 +480,7 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
       precipitateStatsData->setRadialDistFunction(data);
     }
 
-    getODFWidgetWidget()->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase, preflight);
+    getODFWidget()->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase, preflight);
 
     err = getAxisODFWidget()->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase, preflight);
   }
@@ -467,7 +520,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   getOmega3PlotWidget()->setCrystalStructure(getCrystalStructure());
   getBOverAPlotPlotWidget()->setCrystalStructure(getCrystalStructure());
   getCOverAPlotWidget()->setCrystalStructure(getCrystalStructure());
-  getODFWidgetWidget()->setCrystalStructure(getCrystalStructure());
+  getODFWidget()->setCrystalStructure(getCrystalStructure());
 
   /* Set the BinNumbers data set */
   FloatArrayType::Pointer bins = precipitateStatsData->getBinNumbers();
@@ -502,7 +555,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   m_RdfPlot->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
 
   // Set the ODF Data
-  getODFWidgetWidget()->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
+  getODFWidget()->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
 
   // Set the Axis ODF Data
   getAxisODFWidget()->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);

@@ -34,6 +34,19 @@ set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
   StatsGeneratorFilter
 )
 
