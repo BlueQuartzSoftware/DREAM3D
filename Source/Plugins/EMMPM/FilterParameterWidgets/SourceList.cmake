@@ -6,7 +6,7 @@ set(${PLUGIN_NAME}_ParameterWidgets_UIS "")
 # --------------------------------------------------------------------
 # List the name of your custom FilterParameter Widgets in this section
 set(${PLUGIN_NAME}_PARAMETER_WIDGETS
-  # SomeCustomWidget
+  EMMPMWidget
 )
 
 # --------------------------------------------------------------------
@@ -69,7 +69,7 @@ cmp_IDE_GENERATED_PROPERTIES("FilterParameterWidgets/UI_Files" "${${PLUGIN_NAME}
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-#QT5_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_HDRS} )
+QT5_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_HDRS} )
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
