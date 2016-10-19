@@ -40,6 +40,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 /**
  * @brief The FindSizes class. See [Filter documentation](@ref findsizes) for details.
@@ -54,8 +55,8 @@ class FindSizes : public AbstractFilter
 
     virtual ~FindSizes();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -66,8 +67,11 @@ class FindSizes : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
     Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, NumCellsArrayName)
-    Q_PROPERTY(QString NumCellsArrayName READ getNumCellsArrayName WRITE setNumCellsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NumElementsArrayName)
+    Q_PROPERTY(QString NumElementsArrayName READ getNumElementsArrayName WRITE setNumElementsArrayName)
+
+    SIMPL_FILTER_PARAMETER(bool, SaveElementSizes)
+    Q_PROPERTY(bool SaveElementSizes READ getSaveElementSizes WRITE setSaveElementSizes)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -153,6 +157,7 @@ class FindSizes : public AbstractFilter
 
   protected:
     FindSizes();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -163,23 +168,29 @@ class FindSizes : public AbstractFilter
      */
     void initialize();
 
+    /**
+     * @brief findSizes Determines the size of each Feature independent of geometry
+     * @param igeom
+     */
+    void findSizes(IGeometry::Pointer igeom);
 
     /**
-     * @brief find_sizes Determines the size of each Feature
+     * @brief findSizesImage Specialization for determining Feature sizes on ImageGeometries
+     * @param image
      */
-    void find_sizes();
+    void findSizesImage(ImageGeom::Pointer image);
 
     /**
-     * @brief find_sizes2D Determines the size of each Feature (2D version)
+     * @brief findSizesUnstructured Determines the size of each Feature for non-ImageGeometries
+     * @param igeom
      */
-    void find_sizes2D();
+    void findSizesUnstructured(IGeometry::Pointer igeom);
 
   private:
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-
     DEFINE_DATAARRAY_VARIABLE(float, Volumes)
     DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumElements)
 
     FindSizes(const FindSizes&); // Copy Constructor Not Implemented
     void operator=(const FindSizes&); // Operator '=' Not Implemented

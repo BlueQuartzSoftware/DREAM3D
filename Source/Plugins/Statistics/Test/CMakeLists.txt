@@ -59,6 +59,7 @@ configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
 set(TEST_NAMES
   CalculateArrayHistogramTest
   FindDifferenceMapTest
+  FindSizesTest
 )
 
 

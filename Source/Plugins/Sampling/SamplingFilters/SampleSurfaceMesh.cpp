@@ -94,7 +94,7 @@ public:
     for(size_t iter = start; iter < end; iter++)
     {
       // find bounding box for current feature
-      GeometryMath::FindBoundingBoxOfFaces(m_Faces, m_FaceIds->getElementList(iter), ll, ur);
+      GeometryMath::FindBoundingBoxOfFaces(m_Faces.get(), m_FaceIds->getElementList(iter), ll, ur);
       GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
 
       // check points in vertex array to see if they are in the bounding box of the feature
@@ -103,7 +103,7 @@ public:
         point = m_Points->getVertexPointer(i);
         if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
         {
-          code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius, distToBoundary);
+          code = GeometryMath::PointInPolyhedron(m_Faces.get(), m_FaceIds->getElementList(iter), m_FaceBBs.get(), point, ll, ur, radius, distToBoundary);
           if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
           {
             m_PolyIds[i] = iter;
@@ -329,7 +329,7 @@ void SampleSurfaceMesh::execute()
       faceLists->insertCellReference(g2, (linkLoc[g2])++, i);
     }
     // find bounding box for each face
-    GeometryMath::FindBoundingBoxOfFace(triangleGeom, i, ll, ur);
+    GeometryMath::FindBoundingBoxOfFace(triangleGeom.get(), i, ll, ur);
     faceBBs->setCoords(2 * i, ll);
     faceBBs->setCoords(2 * i + 1, ur);
   }
