@@ -289,7 +289,7 @@ public:
     rectGrid_fIDs->initializeWithValue(1);
     rectGrid_fIDs->setValue(2, 2);
     rectGrid_fIDs->setValue(3, 2);
-    rectGrid_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, image2D_fIDs);
+    rectGrid_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, rectGrid_fIDs);
     rectGrid_DC->addAttributeMatrix("RectGridData", rectGrid_AttrMat);
 
     tDims[0] = 2;
