@@ -108,8 +108,8 @@ void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int in
 
   // Factory Method to get an instantiated object of the correct type?
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  getMicroPreset() = manager->createNewPreset(presetName);
-  getMicroPreset()->displayUserInputDialog();
+  AbstractMicrostructurePreset::Pointer preset = manager->createNewPreset(presetName);
+  preset->displayUserInputDialog();
 }
 
 // -----------------------------------------------------------------------------
