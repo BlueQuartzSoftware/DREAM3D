@@ -110,6 +110,7 @@ void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int in
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
   AbstractMicrostructurePreset::Pointer preset = manager->createNewPreset(presetName);
   preset->displayUserInputDialog();
+  setMicroPreset(preset);
 }
 
 // -----------------------------------------------------------------------------
