@@ -50,16 +50,16 @@ set(DOCUMENTATION_SOURCE_FILES
 option(DREAM3D_INCLUDE_DEVELOPER_DOCS "Include the Developer Documentation in the DOxygen Generated output." ON)
 if(DREAM3D_INCLUDE_DEVELOPER_DOCS)
   set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
-    \"${PROJECT_SOURCE_DIR}/Developer/Developer.dox\"
-    \"${PROJECT_SOURCE_DIR}/Developer/CompilerSuite.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/SourceDownload.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/SDKDownload.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/CodeGuidelines.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/ConfigureDREAM3D.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/BuildDREAM3D.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/DevHelperTutorial.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/CodeGuidelines.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/CompilerSuite.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/Compiling_DREAM3D.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/Compiling_External_Libraries.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/ConfigureDREAM3D.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/Developer.dox\"
+    \"${PROJECT_SOURCE_DIR}/Developer/DevHelperTutorial.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/SDKDownload.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/SourceDownload.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/Versioning.md\"
   )
 endif()

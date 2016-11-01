@@ -21,7 +21,7 @@
 * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
 * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* SERVICES; LOSS OF USE, Data, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -41,9 +41,9 @@
 #include "EMMPM/EMMPMLib/Common/StatsDelegate.h"
 #include "EMMPM/EMMPMLib/Core/EMMPM.h"
 #include "EMMPM/EMMPMLib/Core/EMMPMUtilities.h"
-#include "EMMPM/EMMPMLib/Core/EMMPM_Data.h"
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/EMMPMLib.h"
+#include "EMMPM/FilterParameters/EMMPMFilterParameter.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -51,7 +51,9 @@
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/ConstrainedDoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/ConstrainedIntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -66,20 +68,40 @@
 //
 // -----------------------------------------------------------------------------
 EMMPMFilter::EMMPMFilter()
-: AbstractFilter()
-, m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData)
-, m_NumClasses(4)
-, m_ExchangeEnergy(0.5f)
-, m_HistogramLoops(5)
-, m_SegmentationLoops(5)
-, m_UseSimulatedAnnealing(false)
-, m_GradientPenalty(1.0f)
-, m_CurvaturePenalty(1.0f)
-, m_RMax(15.0f)
-, m_EMLoopDelay(1)
-, m_OutputDataArrayPath("", "", "")
-, m_EmmpmInitType(EMMPM_Basic)
+: AbstractFilter(),
+  m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData),
+  m_NumClasses(2),
+  m_ExchangeEnergy(0.5f),
+  m_HistogramLoops(5),
+  m_SegmentationLoops(5),
+  m_UseSimulatedAnnealing(false),
+  m_GradientBetaE(1.0f),
+  m_CurvatureBetaC(1.0f),
+  m_CurvatureRMax(15.0f),
+  m_CurvatureEMLoopDelay(1),
+  m_OutputDataArrayPath("", "", ""),
+  m_EmmpmInitType(EMMPM_Basic),
+  m_Data(EMMPM_Data::New())
 {
+  std::vector<std::vector<double> > tableData(2, std::vector<double>(4));
+  tableData[0][0] = 0;
+  tableData[0][1] = 4.5;
+  tableData[0][2] = 128;
+  tableData[0][3] = 20;
+  tableData[1][0] = 0;
+  tableData[1][1] = 4.5;
+  tableData[1][2] = 128;
+  tableData[1][3] = 20;
+  m_EMMPMTableData.setTableData(tableData);
+
+  QStringList rHeaders;
+  rHeaders << "1" << "2";
+  m_EMMPMTableData.setRowHeaders(rHeaders);
+
+  QStringList cHeaders;
+  cHeaders << "Chem. Pntl" << "Min Std Dev" << "Mean" << "Std Dev";
+  m_EMMPMTableData.setColHeaders(cHeaders);
+
   setupFilterParameters();
 }
 
@@ -96,22 +118,30 @@ EMMPMFilter::~EMMPMFilter()
 void EMMPMFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Classes", NumClasses, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Exchange Energy", ExchangeEnergy, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Histogram Loops (EM)", HistogramLoops, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Segmentation Loops (MPM)", SegmentationLoops, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Use Simulated Annealing", UseSimulatedAnnealing, FilterParameter::Parameter, EMMPMFilter));
-  QStringList linkedProps("GradientPenalty");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gradient Penalty", UseGradientPenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Gradient Penalty (Beta E)", GradientPenalty, FilterParameter::Parameter, EMMPMFilter));
-  linkedProps.clear();
-  linkedProps << "CurvaturePenalty"
-              << "RMax"
-              << "EMLoopDelay";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Curvature Penalty (Beta C)", CurvaturePenalty, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("R Max", RMax, FilterParameter::Parameter, EMMPMFilter));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("EM Loop Delay", EMLoopDelay, FilterParameter::Parameter, EMMPMFilter));
+
+  {
+    EMMPMFilterParameter::Pointer parameter = EMMPMFilterParameter::New();
+    parameter->setHumanLabel("EMMPM Widget");
+    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setFilter(this);
+    parameters.push_back(parameter);
+  }
+
+  {
+    QStringList linkedProps;
+    linkedProps << "GradientBetaE";
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gradient Penalty", UseGradientPenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
+  }
+  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta E", GradientBetaE, FilterParameter::Parameter, EMMPMFilter));
+  {
+    QStringList linkedProps;
+    linkedProps << "CurvatureBetaC" << "CurvatureRMax" << "CurvatureEMLoopDelay";
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Curvature Penalty", UseCurvaturePenalty, FilterParameter::Parameter, EMMPMFilter, linkedProps));
+  }
+  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("Beta C", CurvatureBetaC, FilterParameter::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_CONSTRAINED_DOUBLE_FP("R Max", CurvatureRMax, FilterParameter::Parameter, EMMPMFilter));
+  parameters.push_back(SIMPL_NEW_CONSTRAINED_INT_FP("EM Loop Delay", CurvatureEMLoopDelay, FilterParameter::Parameter, EMMPMFilter));
+
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -139,11 +169,11 @@ void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, i
   setSegmentationLoops(reader->readValue("SegmentationLoops", getSegmentationLoops()));
   setUseSimulatedAnnealing(reader->readValue("UseSimulatedAnnealing", getUseSimulatedAnnealing()));
   setUseGradientPenalty(reader->readValue("UseGradientPenalty", getUseGradientPenalty()));
-  setGradientPenalty(reader->readValue("GradientPenalty", getGradientPenalty()));
+  setGradientBetaE(reader->readValue("GradientPenalty", getGradientBetaE()));
   setUseCurvaturePenalty(reader->readValue("UseCurvaturePenalty", getUseCurvaturePenalty()));
-  setCurvaturePenalty(reader->readValue("CurvaturePenalty", getCurvaturePenalty()));
-  setRMax(reader->readValue("RMax", getRMax()));
-  setEMLoopDelay(reader->readValue("EMLoopDelay", getEMLoopDelay()));
+  setCurvatureBetaC(reader->readValue("CurvaturePenalty", getCurvatureBetaC()));
+  setCurvatureRMax(reader->readValue("RMax", getCurvatureRMax()));
+  setCurvatureEMLoopDelay(reader->readValue("EMLoopDelay", getCurvatureEMLoopDelay()));
   setOutputDataArrayPath(reader->readDataArrayPath("OutputDataArrayPath", getOutputDataArrayPath()));
   reader->closeFilterGroup();
 }
@@ -153,8 +183,23 @@ void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, i
 // -----------------------------------------------------------------------------
 void EMMPMFilter::initialize()
 {
-  m_PreviousMu.clear();
-  m_PreviousSigma.clear();
+  m_Data->initVariables();
+  m_Data->dims = 1; // We operate on a single channel | single component "image".
+
+  m_PreviousMu.resize(getNumClasses() * m_Data->dims);
+  m_PreviousSigma.resize(getNumClasses() * m_Data->dims);
+
+  // Store the values from the table as the previous
+  DynamicTableData tableDataObj = getEMMPMTableData();
+  std::vector<std::vector<double> > tableData = tableDataObj.getTableData();
+  for(std::vector<float>::size_type i = 0; i < getNumClasses(); i++)
+  {
+    for(uint32_t d = 0; d < m_Data->dims; d++)
+    {
+      m_PreviousMu[i * m_Data->dims + d] = tableData[i][2];
+      m_PreviousSigma[i * m_Data->dims + d] = tableData[i][3];
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -172,14 +217,14 @@ void EMMPMFilter::dataCheck()
   if(nullptr != m_InputImagePtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to Data from the DataArray<T> object */
 
   m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
       this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_OutputImagePtr.lock().get())   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to Data from the DataArray<T> object */
 
   if(getNumClasses() > 15)
   {
@@ -234,15 +279,13 @@ void EMMPMFilter::execute()
 // -----------------------------------------------------------------------------
 void EMMPMFilter::segment(EMMPM_InitializationType initType)
 {
-  // Copy all the variables from the filter into the EMmpm data structure.
-  EMMPM_Data::Pointer data = EMMPM_Data::New();
-  data->initVariables();
-  data->initType = initType;
+  // Copy all the variables from the filter into the EMmpm Data structure.
+  m_Data->initType = initType;
 
   InitializationFunction::Pointer initFunction = BasicInitialization::New();
 
   // Set the initialization function based on the parameters
-  switch(data->initType)
+  switch(m_Data->initType)
   {
   case EMMPM_ManualInit:
     initFunction = InitializationFunction::New();
@@ -255,20 +298,22 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
     break;
   }
 
-  data->classes = getNumClasses();
-  data->in_beta = getExchangeEnergy();
-  data->emIterations = getHistogramLoops();
-  data->mpmIterations = getSegmentationLoops();
+  m_Data->classes = getNumClasses();
+  m_Data->in_beta = getExchangeEnergy();
+  m_Data->emIterations = getHistogramLoops();
+  m_Data->mpmIterations = getSegmentationLoops();
 
-  for(int32_t i = 0; i < data->classes; i++)
+  DynamicTableData tableDataObj = getEMMPMTableData();
+  std::vector<std::vector<double> > tableData = tableDataObj.getTableData();
+  for(int32_t i = 0; i < m_Data->classes; i++)
   {
-    int32_t gray = 255 / (data->classes - 1);
+    int32_t gray = 255 / (m_Data->classes - 1);
     // Generate a Gray Scale Color Table
-    data->colorTable[i] = qRgb(i * gray, i * gray, i * gray);
+    m_Data->colorTable[i] = qRgb(i * gray, i * gray, i * gray);
     // Hard code the minimum variance to 4.5; This could be a user option.
-    data->min_variance[i] = 4.5;
+    m_Data->min_variance[i] = tableData[i][1];
     // Do we know what w_gamma is?
-    data->w_gamma[i] = i;
+    m_Data->w_gamma[i] = tableData[i][0];
   }
 
   DataArrayPath dap = getInputDataArrayPath();
@@ -277,36 +322,35 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   IDataArray::Pointer iDataArray = am->getAttributeArray(getInputDataArrayPath().getDataArrayName());
   QVector<size_t> cDims = iDataArray->getComponentDimensions();
 
-  data->columns = tDims[0];
-  data->rows = tDims[1];
-  data->dims = 1; // We operate on a single channel | single component "image".
-  data->inputImageChannels = cDims[0];
+  m_Data->columns = tDims[0];
+  m_Data->rows = tDims[1];
+  m_Data->inputImageChannels = cDims[0];
 
-  data->simulatedAnnealing = (char)(getUseSimulatedAnnealing());
-  data->useGradientPenalty = getUseGradientPenalty();
-  data->beta_e = getGradientPenalty();
-  data->useCurvaturePenalty = getUseCurvaturePenalty();
-  data->beta_c = getCurvaturePenalty();
-  data->r_max = getRMax();
-  data->ccostLoopDelay = getEMLoopDelay();
+  m_Data->simulatedAnnealing = (char)(getUseSimulatedAnnealing());
+  m_Data->useGradientPenalty = getUseGradientPenalty();
+  m_Data->beta_e = getGradientBetaE();
+  m_Data->useCurvaturePenalty = getUseCurvaturePenalty();
+  m_Data->beta_c = getCurvatureBetaC();
+  m_Data->r_max = getCurvatureRMax();
+  m_Data->ccostLoopDelay = getCurvatureEMLoopDelay();
 
-  // Assign our data array allocated input and output images into the EMMPM_Data class
-  data->inputImage = m_InputImage;
-  data->xt = m_OutputImage;
+  // Assign our Data array allocated input and output images into the EMMPData class
+  m_Data->inputImage = m_InputImage;
+  m_Data->xt = m_OutputImage;
 
   // Allocate all the memory here
-  data->allocateDataStructureMemory();
+  m_Data->allocateDataStructureMemory();
 
   // If we are using the "Feedback" loop then we copy the previous Mu/Sigma values into the Mean/Variance
   // variables
-  if(data->initType == EMMPM_ManualInit)
+  if(m_Data->initType == EMMPM_ManualInit)
   {
-    for(int32_t i = 0; i < data->classes; i++)
+    for(int32_t i = 0; i < m_Data->classes; i++)
     {
-      for(uint32_t d = 0; d < data->dims; d++)
+      for(uint32_t d = 0; d < m_Data->dims; d++)
       {
-        data->mean[i * data->dims + d] = m_PreviousMu[i * data->dims + d];
-        data->variance[i * data->dims + d] = m_PreviousSigma[i * data->dims + d];
+        m_Data->mean[i * m_Data->dims + d] = m_PreviousMu[i * m_Data->dims + d];
+        m_Data->variance[i * m_Data->dims + d] = m_PreviousSigma[i * m_Data->dims + d];
       }
     }
   }
@@ -317,7 +361,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   // Start the EM/MPM process going
   EMMPM::Pointer emmpm = EMMPM::New();
 
-  emmpm->setData(data);
+  emmpm->setData(m_Data);
   emmpm->setStatsDelegate(statsDelegate.get());
   emmpm->setInitializationFunction(initFunction);
   emmpm->setMessagePrefix(getMessagePrefix());
@@ -327,24 +371,24 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 
   emmpm->execute();
 
-  // We manually set the pointers to nullptr so that the EMMPM_Data class does not try to free the memory
-  data->inputImage = nullptr;
-  data->xt = nullptr;
+  // We manually set the pointers to nullptr so that the EMMPData class does not try to free the memory
+  m_Data->inputImage = nullptr;
+  m_Data->xt = nullptr;
 
   // Grab the Mu/Sigma values from the current finished segmented image and use those as inputs
   // into the initialization of the next Image to be Segmented
-  m_PreviousMu.resize(getNumClasses() * data->dims);
-  m_PreviousSigma.resize(getNumClasses() * data->dims);
+  m_PreviousMu.resize(getNumClasses() * m_Data->dims);
+  m_PreviousSigma.resize(getNumClasses() * m_Data->dims);
   if(0)
   {
     std::cout << "--------------------------------------------------------------" << std::endl;
     for(std::vector<float>::size_type i = 0; i < getNumClasses(); i++)
     {
-      std::cout << "Mu: " << data->mean[i] << " Variance: " << sqrtf(data->variance[i]) << std::endl;
-      for(uint32_t d = 0; d < data->dims; d++)
+      std::cout << "Mu: " << m_Data->mean[i] << " Variance: " << sqrtf(m_Data->variance[i]) << std::endl;
+      for(uint32_t d = 0; d < m_Data->dims; d++)
       {
-        m_PreviousMu[i * data->dims + d] = data->mean[i * data->dims + d];
-        m_PreviousSigma[i * data->dims + d] = data->variance[i * data->dims + d];
+        m_PreviousMu[i * m_Data->dims + d] = m_Data->mean[i * m_Data->dims + d];
+        m_PreviousSigma[i * m_Data->dims + d] = m_Data->variance[i * m_Data->dims + d];
       }
     }
   }
@@ -361,6 +405,38 @@ AbstractFilter::Pointer EMMPMFilter::newFilterInstance(bool copyFilterParameters
     copyFilterParameterInstanceVariables(filter.get());
   }
   return filter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<float> EMMPMFilter::getPreviousMu()
+{
+  return m_PreviousMu;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setPreviousMu(std::vector<float> prevMu)
+{
+  m_PreviousMu = prevMu;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<float> EMMPMFilter::getPreviousSigma()
+{
+  return m_PreviousSigma;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setPreviousSigma(std::vector<float> prevSigma)
+{
+  m_PreviousSigma = prevSigma;
 }
 
 // -----------------------------------------------------------------------------

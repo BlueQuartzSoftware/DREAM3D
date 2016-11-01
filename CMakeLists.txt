@@ -396,7 +396,7 @@ set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 # Generate our ReadMe and License Files
 configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
                 ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt )
-configure_file(${PROJECT_SOURCE_DIR}/ReadMe-DREAM3D.md
+configure_file(${PROJECT_SOURCE_DIR}/ReadMe.md
                 ${PROJECT_BINARY_DIR}/ReadMe-DREAM3D.md )
 
 # --------------------------------------------------------------------
