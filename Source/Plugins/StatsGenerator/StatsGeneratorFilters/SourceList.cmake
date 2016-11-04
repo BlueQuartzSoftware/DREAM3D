@@ -20,6 +20,7 @@ set(_PublicFilters
   StatsGeneratorFilter
 
   GeneratePrimaryStatsData
+  GeneratePrecipitateStatsData
 )
 
 

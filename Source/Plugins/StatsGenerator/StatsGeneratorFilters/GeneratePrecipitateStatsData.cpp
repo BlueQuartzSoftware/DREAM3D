@@ -2,7 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#include "GeneratePrimaryStatsData.h"
+#include "GeneratePrecipitateStatsData.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -34,12 +34,12 @@
 
 
 // Include the MOC generated file for this class
-#include "moc_GeneratePrimaryStatsData.cpp"
+#include "moc_GeneratePrecipitateStatsData.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GeneratePrimaryStatsData::GeneratePrimaryStatsData()
+GeneratePrecipitateStatsData::GeneratePrecipitateStatsData()
 : AbstractFilter()
 , m_PhaseName("Primary Phase")
 , m_PhaseIndex(-1)
@@ -64,14 +64,14 @@ GeneratePrimaryStatsData::GeneratePrimaryStatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GeneratePrimaryStatsData::~GeneratePrimaryStatsData()
+GeneratePrecipitateStatsData::~GeneratePrecipitateStatsData()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::initialize()
+void GeneratePrecipitateStatsData::initialize()
 {
   setErrorCondition(0);
   setCancel(false);
@@ -85,10 +85,10 @@ void GeneratePrimaryStatsData::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setupFilterParameters()
+void GeneratePrecipitateStatsData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Name", PhaseName, FilterParameter::Parameter, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Name", PhaseName, FilterParameter::Parameter, GeneratePrecipitateStatsData));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Symmetry");
@@ -109,8 +109,8 @@ void GeneratePrimaryStatsData::setupFilterParameters()
 
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Parameter);
-    parameter->setSetterCallback(SIMPL_BIND_SETTER(GeneratePrimaryStatsData, this, CrystalSymmetry));
-    parameter->setGetterCallback(SIMPL_BIND_GETTER(GeneratePrimaryStatsData, this, CrystalSymmetry));
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(GeneratePrecipitateStatsData, this, CrystalSymmetry));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(GeneratePrecipitateStatsData, this, CrystalSymmetry));
     parameters.push_back(parameter);
   }
 
@@ -126,17 +126,17 @@ void GeneratePrimaryStatsData::setupFilterParameters()
 
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Parameter);
-    parameter->setSetterCallback(SIMPL_BIND_SETTER(GeneratePrimaryStatsData, this, MicroPresetModel));
-    parameter->setGetterCallback(SIMPL_BIND_GETTER(GeneratePrimaryStatsData, this, MicroPresetModel));
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(GeneratePrecipitateStatsData, this, MicroPresetModel));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(GeneratePrecipitateStatsData, this, MicroPresetModel));
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Phase Fraction", PhaseFraction, FilterParameter::Parameter, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Mu", Mu, FilterParameter::Parameter, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min.Cut Off", MinCutOff, FilterParameter::Parameter, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Cut Off", MaxCutOff, FilterParameter::Parameter, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Bin Step Size", BinStepSize, FilterParameter::Parameter, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Phase Fraction", PhaseFraction, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Mu", Mu, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min.Cut Off", MinCutOff, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Cut Off", MaxCutOff, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Bin Step Size", BinStepSize, FilterParameter::Parameter, GeneratePrecipitateStatsData));
 
   // Table 3 - Dynamic rows and fixed columns, default data passed in
   {
@@ -145,7 +145,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     std::vector<std::vector<double>> defaultTable(1, std::vector<double>(5, 0.0));
     m_OdfData.setColHeaders(cHeaders);
     m_OdfData.setTableData(defaultTable);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Parameter, GeneratePrecipitateStatsData, false));
   }
   {
     QStringList cHeaders;
@@ -153,7 +153,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     std::vector<std::vector<double>> defaultTable(1, std::vector<double>(5, 0.0));
     m_MdfData.setColHeaders(cHeaders);
     m_MdfData.setTableData(defaultTable);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Parameter, GeneratePrecipitateStatsData, false));
   }
   {
     QStringList cHeaders;
@@ -161,32 +161,32 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     std::vector<std::vector<double>> defaultTable(1, std::vector<double>(5, 0.0));
     m_AxisOdfData.setColHeaders(cHeaders);
     m_AxisOdfData.setTableData(defaultTable);
-    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
+    parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Parameter, GeneratePrecipitateStatsData, false));
   }
   //---------------------------
   PreflightUpdatedValueFilterParameter::Pointer param =
-      SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrimaryStatsData);
+      SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrecipitateStatsData);
   param->setReadOnly(true);
   parameters.push_back(param);
 
   PreflightUpdatedValueFilterParameter::Pointer param2 =
-      SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrimaryStatsData);
+      SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrecipitateStatsData);
   param2->setReadOnly(true);
   parameters.push_back(param2);
 //---------------------------
 
   QStringList linkedProps("DataContainerName");
   linkedProps << "CellEnsembleAttributeMatrixName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrimaryStatsData, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrecipitateStatsData, linkedProps));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, GeneratePrecipitateStatsData));
 
   linkedProps.clear();
   linkedProps << "SelectedEnsembleAttributeMatrix";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Append To Existing AttributeMatrix", AppendToExistingAttributeMatrix, FilterParameter::Parameter, GeneratePrimaryStatsData, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Append To Existing AttributeMatrix", AppendToExistingAttributeMatrix, FilterParameter::Parameter, GeneratePrecipitateStatsData, linkedProps));
   AttributeMatrixSelectionFilterParameter::RequirementType amReq2;
-  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Ensemble AttributeMatrix", SelectedEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrimaryStatsData, amReq2));
+  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Ensemble AttributeMatrix", SelectedEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrecipitateStatsData, amReq2));
   setFilterParameters(parameters);
 }
 
@@ -200,7 +200,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::dataCheck()
+void GeneratePrecipitateStatsData::dataCheck()
 {
   initialize();
   setErrorCondition(0);
@@ -338,7 +338,7 @@ void GeneratePrimaryStatsData::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::preflight()
+void GeneratePrecipitateStatsData::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true);              // Set the fact that we are preflighting.
@@ -352,7 +352,7 @@ void GeneratePrimaryStatsData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::execute()
+void GeneratePrecipitateStatsData::execute()
 {
   initialize();
   dataCheck();
@@ -578,7 +578,7 @@ void GeneratePrimaryStatsData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString GeneratePrimaryStatsData::getNumberOfBins()
+QString GeneratePrecipitateStatsData::getNumberOfBins()
 {
   return m_NumberOfBins;
 }
@@ -586,7 +586,7 @@ QString GeneratePrimaryStatsData::getNumberOfBins()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString GeneratePrimaryStatsData::getFeatureESD()
+QString GeneratePrecipitateStatsData::getFeatureESD()
 {
   return m_FeatureESD;
 }
@@ -594,7 +594,7 @@ QString GeneratePrimaryStatsData::getFeatureESD()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::normalizePhaseFractions(StatsDataArray* statsDataArray)
+void GeneratePrecipitateStatsData::normalizePhaseFractions(StatsDataArray* statsDataArray)
 {
   size_t count = statsDataArray->getNumberOfTuples();
   // Start at index 1 since the first one is junk
@@ -616,9 +616,9 @@ void GeneratePrimaryStatsData::normalizePhaseFractions(StatsDataArray* statsData
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GeneratePrimaryStatsData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GeneratePrecipitateStatsData::newFilterInstance(bool copyFilterParameters)
 {
-  GeneratePrimaryStatsData::Pointer filter = GeneratePrimaryStatsData::New();
+  GeneratePrecipitateStatsData::Pointer filter = GeneratePrecipitateStatsData::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -629,7 +629,7 @@ AbstractFilter::Pointer GeneratePrimaryStatsData::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getCompiledLibraryName()
+const QString GeneratePrecipitateStatsData::getCompiledLibraryName()
 {
   return StatsGeneratorConstants::StatsGeneratorBaseName;
 }
@@ -637,7 +637,7 @@ const QString GeneratePrimaryStatsData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getBrandingString()
+const QString GeneratePrecipitateStatsData::getBrandingString()
 {
   return "StatsGenerator";
 }
@@ -645,7 +645,7 @@ const QString GeneratePrimaryStatsData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getFilterVersion()
+const QString GeneratePrecipitateStatsData::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
@@ -656,7 +656,7 @@ const QString GeneratePrimaryStatsData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getGroupName()
+const QString GeneratePrecipitateStatsData::getGroupName()
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -664,7 +664,7 @@ const QString GeneratePrimaryStatsData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getSubGroupName()
+const QString GeneratePrecipitateStatsData::getSubGroupName()
 {
   return "StatsGenerator";
 }
@@ -672,7 +672,7 @@ const QString GeneratePrimaryStatsData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getHumanLabel()
+const QString GeneratePrecipitateStatsData::getHumanLabel()
 {
-  return "Generate Primary StatsData";
+  return "Generate Precipitate StatsData";
 }

@@ -2,8 +2,8 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _generateprimarystatsdata_h_
-#define _generateprimarystatsdata_h_
+#ifndef _GeneratePrecipitateStatsData_h_
+#define _GeneratePrecipitateStatsData_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -15,18 +15,18 @@ class StringDataArray;
 class PrimaryStatsData;
 
 /**
- * @brief The GeneratePrimaryStatsData class. See [Filter documentation](@ref generateprimarystatsdata) for details.
+ * @brief The GeneratePrecipitateStatsData class. See [Filter documentation](@ref GeneratePrecipitateStatsData) for details.
  */
-class GeneratePrimaryStatsData : public AbstractFilter
+class GeneratePrecipitateStatsData : public AbstractFilter
 {
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(GeneratePrimaryStatsData)
-    SIMPL_STATIC_NEW_MACRO(GeneratePrimaryStatsData)
-    SIMPL_TYPE_MACRO_SUPER(GeneratePrimaryStatsData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GeneratePrecipitateStatsData)
+    SIMPL_STATIC_NEW_MACRO(GeneratePrecipitateStatsData)
+    SIMPL_TYPE_MACRO_SUPER(GeneratePrecipitateStatsData, AbstractFilter)
 
-    virtual ~GeneratePrimaryStatsData();
+    virtual ~GeneratePrecipitateStatsData();
 
     SIMPL_FILTER_PARAMETER(QString, PhaseName)
     Q_PROPERTY(QString PhaseName READ getPhaseName WRITE setPhaseName)
@@ -146,7 +146,7 @@ class GeneratePrimaryStatsData : public AbstractFilter
     /**
      * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
      * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
+     * @param filter Filter instance pointer
      */
     void updateFilterParameters(AbstractFilter* filter);
 
@@ -166,7 +166,7 @@ class GeneratePrimaryStatsData : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    GeneratePrimaryStatsData();
+    GeneratePrecipitateStatsData();
 
     /**
     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -191,8 +191,8 @@ class GeneratePrimaryStatsData : public AbstractFilter
     QString m_NumberOfBins;
     QString m_FeatureESD;
 
-    GeneratePrimaryStatsData(const GeneratePrimaryStatsData&); // Copy Constructor Not Implemented
-    void operator=(const GeneratePrimaryStatsData&); // Operator '=' Not Implemented
+    GeneratePrecipitateStatsData(const GeneratePrecipitateStatsData&); // Copy Constructor Not Implemented
+    void operator=(const GeneratePrecipitateStatsData&); // Operator '=' Not Implemented
 };
 
-#endif /* _GeneratePrimaryStatsData_H_ */
+#endif /* _GeneratePrecipitateStatsData_H_ */
