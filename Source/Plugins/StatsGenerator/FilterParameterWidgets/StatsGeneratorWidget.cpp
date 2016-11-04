@@ -130,6 +130,7 @@ void StatsGeneratorWidget::setupGui()
     ppw->setPhaseIndex(1);
     ppw->setPhaseType(SIMPL::PhaseType::PrimaryPhase);
     ppw->setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
+    ppw->setPhaseName("Primary (1)");
     ppw->setPhaseFraction(1.0);
     ppw->setTotalPhaseFraction(1.0);
     phaseTabs->addTab(ppw, "Primary");
