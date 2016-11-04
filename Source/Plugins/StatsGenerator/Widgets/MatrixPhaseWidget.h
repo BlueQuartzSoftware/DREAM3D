@@ -70,6 +70,9 @@ class MatrixPhaseWidget : public StatsGenWidget, private Ui::MatrixPhaseWidget
 
   protected slots:
 
+  signals:
+  void dataChanged();
+
   protected:
 
     /**

@@ -145,7 +145,7 @@ void TransformationPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(m_Omega3Plot, SIGNAL(userEditedData()), this, SLOT(dataWasEdited()));
-  connect(m_Omega3Plot, SIGNAL(userEditedData()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_Omega3Plot, SIGNAL(userEditedData()), this, SIGNAL(dataChanged()));
 
   w = m_BOverAPlot;
   w->setPlotTitle(QString("B/A Shape Distribution"));
@@ -161,7 +161,7 @@ void TransformationPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(m_BOverAPlot, SIGNAL(userEditedData()), this, SLOT(dataWasEdited()));
-  connect(m_BOverAPlot, SIGNAL(userEditedData()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_BOverAPlot, SIGNAL(userEditedData()), this, SIGNAL(dataChanged()));
 
   w = m_COverAPlot;
   w->setPlotTitle(QString("C/A Shape Distribution"));
@@ -177,7 +177,7 @@ void TransformationPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(m_COverAPlot, SIGNAL(userEditedData()), this, SLOT(dataWasEdited()));
-  connect(m_COverAPlot, SIGNAL(userEditedData()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_COverAPlot, SIGNAL(userEditedData()), this, SIGNAL(dataChanged()));
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
   m_SizeDistributionPlot->setTitle("Size Distribution");
@@ -203,9 +203,9 @@ void TransformationPhaseWidget::setupGui()
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
   m_AxisODFWidget->setEnableAxisDecorations(false);
 
-  connect(m_ODFWidget, SIGNAL(odfParametersChanged()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_ODFWidget, SIGNAL(odfParametersChanged()), this, SIGNAL(dataChanged()));
   connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)), this, SLOT(bulkLoadEvent(bool)));
-  connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()), this, SIGNAL(dataChanged()));
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
@@ -365,7 +365,7 @@ void TransformationPhaseWidget::on_m_GenerateDefaultData_clicked()
 {
   m_DataHasBeenGenerated = true;
   updatePlots();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -384,7 +384,7 @@ void TransformationPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
   updateSizeDistributionPlot();
   m_Mu_SizeDistribution->setFocus();
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -395,7 +395,7 @@ void TransformationPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QS
   updateSizeDistributionPlot();
   m_Sigma_SizeDistribution->setFocus();
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -406,7 +406,7 @@ void TransformationPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& t
   updateSizeDistributionPlot();
   m_MinSigmaCutOff->setFocus();
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -417,7 +417,7 @@ void TransformationPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& t
   updateSizeDistributionPlot();
   m_MaxSigmaCutOff->setFocus();
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -426,7 +426,7 @@ void TransformationPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& t
 void TransformationPhaseWidget::on_m_BinStepSize_valueChanged(double v)
 {
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------

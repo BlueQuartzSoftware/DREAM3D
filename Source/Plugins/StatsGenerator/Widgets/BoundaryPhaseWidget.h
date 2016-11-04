@@ -72,6 +72,9 @@ class BoundaryPhaseWidget : public StatsGenWidget, private Ui::BoundaryPhaseWidg
   protected slots:
 
 
+  signals:
+  void dataChanged();
+
   protected:
 
     /**

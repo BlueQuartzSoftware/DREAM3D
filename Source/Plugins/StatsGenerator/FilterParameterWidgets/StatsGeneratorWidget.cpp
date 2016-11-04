@@ -166,6 +166,7 @@ void StatsGeneratorWidget::setupGui()
         BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       else if(phaseTypes->getValue(phase) == SIMPL::PhaseType::MatrixPhase)
       {
@@ -173,6 +174,7 @@ void StatsGeneratorWidget::setupGui()
         MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       if(phaseTypes->getValue(phase) == SIMPL::PhaseType::PrecipitatePhase)
       {
@@ -180,6 +182,7 @@ void StatsGeneratorWidget::setupGui()
         PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       if(phaseTypes->getValue(phase) == SIMPL::PhaseType::PrimaryPhase)
       {
@@ -187,6 +190,7 @@ void StatsGeneratorWidget::setupGui()
         PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       if(phaseTypes->getValue(phase) == SIMPL::PhaseType::TransformationPhase)
       {
@@ -194,6 +198,7 @@ void StatsGeneratorWidget::setupGui()
         TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       else
       {
@@ -335,7 +340,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget();
       phaseTabs->addTab(ppw, "Primary");
 
-      connect(ppw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
+      connect(ppw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
       ppw->setPhaseIndex(phaseTabs->count());
       ppw->setPhaseType(SIMPL::PhaseType::PrimaryPhase);
@@ -354,7 +359,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       PrecipitatePhaseWidget* ppw = new PrecipitatePhaseWidget();
       phaseTabs->addTab(ppw, "Precipitate");
 
-      connect(ppw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
+      connect(ppw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
       ppw->setPhaseIndex(phaseTabs->count());
       ppw->setPhaseType(SIMPL::PhaseType::PrecipitatePhase);
@@ -373,7 +378,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       TransformationPhaseWidget* tpw = new TransformationPhaseWidget();
       phaseTabs->addTab(tpw, "Transformation");
 
-      connect(tpw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
+      connect(tpw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
       tpw->setPhaseIndex(phaseTabs->count());
       tpw->setPhaseType(SIMPL::PhaseType::TransformationPhase);
@@ -391,7 +396,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       MatrixPhaseWidget* mpw = new MatrixPhaseWidget();
       phaseTabs->addTab(mpw, "Matrix");
 
-      connect(mpw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
+      connect(mpw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
       mpw->setPhaseIndex(phaseTabs->count());
       mpw->setPhaseType(SIMPL::PhaseType::MatrixPhase);
@@ -408,7 +413,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
       BoundaryPhaseWidget* bpw = new BoundaryPhaseWidget();
       phaseTabs->addTab(bpw, "Boundary");
 
-      connect(bpw, SIGNAL(phaseParametersChanged()), this, SIGNAL(parametersChanged()));
+      connect(bpw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
       bpw->setPhaseIndex(phaseTabs->count());
       bpw->setPhaseType(SIMPL::PhaseType::BoundaryPhase);
