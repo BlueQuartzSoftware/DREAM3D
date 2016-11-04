@@ -39,6 +39,7 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -56,6 +57,7 @@ FindBoundaryCells::FindBoundaryCells()
 : AbstractFilter()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells)
+, m_IgnoreFeatureZero(true)
 , m_FeatureIds(nullptr)
 , m_BoundaryCells(nullptr)
 {
@@ -76,6 +78,9 @@ FindBoundaryCells::~FindBoundaryCells()
 void FindBoundaryCells::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Ignore Feature 0", IgnoreFeatureZero, FilterParameter::Parameter, FindBoundaryCells));
+
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -177,6 +182,12 @@ void FindBoundaryCells::execute()
   int32_t good = 0;
   int64_t neighbor = 0;
 
+  int ignoreFeatureZeroVal = 0;
+  if (m_IgnoreFeatureZero == false)
+  {
+    ignoreFeatureZeroVal = -1;
+  }
+
   int64_t zStride = 0, yStride = 0;
   for(int64_t i = 0; i < zPoints; i++)
   {
@@ -218,7 +229,7 @@ void FindBoundaryCells::execute()
             {
               good = 0;
             }
-            if(good == 1 && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
+            if(good == 1 && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > ignoreFeatureZeroVal)
             {
               onsurf++;
             }
