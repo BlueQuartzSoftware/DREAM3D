@@ -145,6 +145,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     std::vector<std::vector<double>> defaultTable(1, std::vector<double>(5, 0.0));
     m_OdfData.setColHeaders(cHeaders);
     m_OdfData.setTableData(defaultTable);
+    m_OdfData.setDynamicRows(true);
     parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
   }
   {
@@ -153,6 +154,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     std::vector<std::vector<double>> defaultTable(1, std::vector<double>(5, 0.0));
     m_MdfData.setColHeaders(cHeaders);
     m_MdfData.setTableData(defaultTable);
+    m_MdfData.setDynamicRows(true);
     parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
   }
   {
@@ -161,6 +163,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     std::vector<std::vector<double>> defaultTable(1, std::vector<double>(5, 0.0));
     m_AxisOdfData.setColHeaders(cHeaders);
     m_AxisOdfData.setTableData(defaultTable);
+    m_AxisOdfData.setDynamicRows(true);
     parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
   }
   //---------------------------
