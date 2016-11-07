@@ -8,30 +8,32 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/DataArrays/StringDataArray.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
-#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/DynamicTableFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec2FilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/Math/RadialDistributionFunction.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
+#include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorUtilities.h"
 #include "StatsGenerator/StatsGeneratorVersion.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
-#include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
-#include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorUtilities.h"
-
+#include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
 
 // Include the MOC generated file for this class
 #include "moc_GeneratePrecipitateStatsData.cpp"
@@ -80,6 +82,13 @@ void GeneratePrecipitateStatsData::initialize()
   m_CrystalStructures = nullptr;
   m_PhaseTypes = nullptr;
   m_PhaseNames = nullptr;
+  m_RdfMinMaxDistance.x = 10;
+  m_RdfMinMaxDistance.y = 80;
+  m_RdfNumBins = 50;
+  m_RdfBoxSize.x = 100;
+  m_RdfBoxSize.y = 100;
+  m_RdfBoxSize.z = 100;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -120,9 +129,8 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
     parameter->setPropertyName("MicroPresetModel");
 
     QVector<QString> choices; // Please add choices to the choices QVector to finish this widget
-    choices << "Primary Equiaxed"
-            << "Primary Rolled"
-            << "Primary Recrystallized";
+    choices << "Precipitate Equiaxed"
+            << "Precipitate Rolled";
 
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Parameter);
@@ -138,46 +146,70 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Cut Off", MaxCutOff, FilterParameter::Parameter, GeneratePrecipitateStatsData));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Bin Step Size", BinStepSize, FilterParameter::Parameter, GeneratePrecipitateStatsData));
 
-  // Table 3 - Dynamic rows and fixed columns, default data passed in
+  // Table 3 - Dynamic rows and fixed columns
   {
     QStringList cHeaders;
-    cHeaders << "Euler 1" << "Euler 2" << "Euler 3" << "Weight" << "Sigma";
+    cHeaders << "Euler 1"
+             << "Euler 2"
+             << "Euler 3"
+             << "Weight"
+             << "Sigma";
     std::vector<std::vector<double>> defaultTable(1, std::vector<double>(5, 0.0));
     m_OdfData.setColHeaders(cHeaders);
     m_OdfData.setTableData(defaultTable);
+    m_OdfData.setDynamicRows(true);
     parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("ODF", OdfData, FilterParameter::Parameter, GeneratePrecipitateStatsData, false));
   }
   {
     QStringList cHeaders;
-    cHeaders << "Angle(w)" << "Axis (h)" << "Axis (k)" << "Axis (l)" << "Weight (MRD)";
+    cHeaders << "Angle(w)"
+             << "Axis (h)"
+             << "Axis (k)"
+             << "Axis (l)"
+             << "Weight (MRD)";
     std::vector<std::vector<double>> defaultTable(1, std::vector<double>(5, 0.0));
     m_MdfData.setColHeaders(cHeaders);
     m_MdfData.setTableData(defaultTable);
+    m_MdfData.setDynamicRows(true);
     parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("MDF", MdfData, FilterParameter::Parameter, GeneratePrecipitateStatsData, false));
   }
   {
     QStringList cHeaders;
-    cHeaders << "Euler 1" << "Euler 2" << "Euler 3" << "Weight" << "Sigma";
+    cHeaders << "Euler 1"
+             << "Euler 2"
+             << "Euler 3"
+             << "Weight"
+             << "Sigma";
     std::vector<std::vector<double>> defaultTable(1, std::vector<double>(5, 0.0));
     m_AxisOdfData.setColHeaders(cHeaders);
     m_AxisOdfData.setTableData(defaultTable);
+    m_AxisOdfData.setDynamicRows(true);
     parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Parameter, GeneratePrecipitateStatsData, false));
   }
+
+  // Insert Parameters for RDF to be calculated.
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC2_FP("[RDF] Min/Max Distance", RdfMinMaxDistance, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("[RDF] Number of Bins", RdfNumBins, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("[RDF] Box Size (X, Y, Z)", RdfBoxSize, FilterParameter::Parameter, GeneratePrecipitateStatsData));
+
+
+
   //---------------------------
-  PreflightUpdatedValueFilterParameter::Pointer param =
-      SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrecipitateStatsData);
+
+  //---------------------------
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrecipitateStatsData);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  PreflightUpdatedValueFilterParameter::Pointer param2 =
-      SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrecipitateStatsData);
+  PreflightUpdatedValueFilterParameter::Pointer param2 = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrecipitateStatsData);
   param2->setReadOnly(true);
   parameters.push_back(param2);
-//---------------------------
+  //---------------------------
 
   QStringList linkedProps("DataContainerName");
   linkedProps << "CellEnsembleAttributeMatrixName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrecipitateStatsData, linkedProps));
+  parameters.push_back(
+      SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrecipitateStatsData, linkedProps));
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, GeneratePrecipitateStatsData));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, GeneratePrecipitateStatsData));
@@ -190,11 +222,11 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
   setFilterParameters(parameters);
 }
 
-
-#define FLOAT_RANGE_CHECK(var, min, max, error)\
-  if(m_##var < min || m_##var > max) {\
-    setErrorCondition(error);\
-    notifyErrorMessage(getHumanLabel(), "Valid range for " #var " is " #min "~" #max, getErrorCondition());\
+#define FLOAT_RANGE_CHECK(var, min, max, error)                                                                                                                                                        \
+  if(m_##var < min || m_##var > max)                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    setErrorCondition(error);                                                                                                                                                                          \
+    notifyErrorMessage(getHumanLabel(), "Valid range for " #var " is " #min "~" #max, getErrorCondition());                                                                                            \
   }
 
 // -----------------------------------------------------------------------------
@@ -210,8 +242,7 @@ void GeneratePrecipitateStatsData::dataCheck()
   FLOAT_RANGE_CHECK(MinCutOff, 0, 1000000, -95002)
   FLOAT_RANGE_CHECK(MaxCutOff, 0, 1000000, -95003)
 
-  if( (m_CreateEnsembleAttributeMatrix && m_AppendToExistingAttributeMatrix)
-      || (!m_CreateEnsembleAttributeMatrix && !m_AppendToExistingAttributeMatrix) )
+  if((m_CreateEnsembleAttributeMatrix && m_AppendToExistingAttributeMatrix) || (!m_CreateEnsembleAttributeMatrix && !m_AppendToExistingAttributeMatrix))
   {
     setErrorCondition(-95010);
     notifyErrorMessage(getHumanLabel(), "CreateEnsembleAttributeMatrix & AppendToExistingAttributeMatrix can NOT both be true or false. One must be true and one must be false.", getErrorCondition());
@@ -228,7 +259,7 @@ void GeneratePrecipitateStatsData::dataCheck()
       return;
     }
 
-    QVector<size_t> tDims(1,2); // we need 2 slots in the array. ZERO=Junk, 1 = our new primary stats data
+    QVector<size_t> tDims(1, 2); // we need 2 slots in the array. ZERO=Junk, 1 = our new primary stats data
     AttributeMatrix::Pointer cellEnsembleAttrMat = dc->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
     if(getErrorCondition() < 0)
     {
@@ -278,7 +309,6 @@ void GeneratePrecipitateStatsData::dataCheck()
     QVector<size_t> tDims(1, cellEnsembleAttrMat->getNumberOfTuples() + 1);
     cellEnsembleAttrMat->resizeAttributeArrays(tDims);
 
-
     StatsDataArray::Pointer statsDataArray = cellEnsembleAttrMat->getAttributeArrayAs<StatsDataArray>(SIMPL::EnsembleData::Statistics);
     if(nullptr == statsDataArray.get())
     {
@@ -289,7 +319,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     m_StatsDataArray = statsDataArray.get();
 
     PrimaryStatsData::Pointer primaryStatsData = PrimaryStatsData::New();
-    statsDataArray->setStatsData(tDims[0]-1, primaryStatsData);
+    statsDataArray->setStatsData(tDims[0] - 1, primaryStatsData);
     m_PrimaryStatsData = primaryStatsData.get();
 
     QVector<size_t> cDims(1, 1);
@@ -321,7 +351,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     }
     m_PhaseNames = phaseNames.get();
 
-    setPhaseIndex(tDims[0]-1); // If we are creating the StatsDataArray then we are the first phase
+    setPhaseIndex(tDims[0] - 1); // If we are creating the StatsDataArray then we are the first phase
   }
 
   // If all goes well, then calculate the number of bins to display back on the user interface.
@@ -332,7 +362,6 @@ void GeneratePrecipitateStatsData::dataCheck()
   float esd = std::exp(m_Mu);
   QLocale loc = QLocale::system();
   m_FeatureESD = loc.toString(esd);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -369,7 +398,7 @@ void GeneratePrecipitateStatsData::execute()
   if(getErrorCondition() < 0)
   {
     QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
+    setErrorCondition(-95012);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -387,7 +416,7 @@ void GeneratePrecipitateStatsData::execute()
     return;
   }
   float yMax = 0.0f;
-  //float xMax = x[size-1];
+  // float xMax = x[size-1];
   for(int i = 0; i < size; ++i)
   {
     if(y[i] > yMax)
@@ -497,6 +526,12 @@ void GeneratePrecipitateStatsData::execute()
     m_PrimaryStatsData->setBOverA_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kNeighborDistribution));
   }
 
+  QString msg;
+  QTextStream ss(&msg);
+
+  ss << getPhaseName() << ":: Initialize ODF Values....";
+  notifyStatusMessage(getHumanLabel(), msg);
+
   {
     absPresetPtr->initializeODFTableModel(dataMap);
 
@@ -509,16 +544,19 @@ void GeneratePrecipitateStatsData::execute()
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
     {
-       e1s.push_back(odfData[i][0] * SIMPLib::Constants::k_PiOver180);
-       e2s.push_back(odfData[i][1] * SIMPLib::Constants::k_PiOver180);
-       e3s.push_back(odfData[i][2] * SIMPLib::Constants::k_PiOver180);
-       weights.push_back(odfData[i][3]);
-       sigmas.push_back(odfData[i][4]);
+      e1s.push_back(odfData[i][0] * SIMPLib::Constants::k_PiOver180);
+      e2s.push_back(odfData[i][1] * SIMPLib::Constants::k_PiOver180);
+      e3s.push_back(odfData[i][2] * SIMPLib::Constants::k_PiOver180);
+      weights.push_back(odfData[i][3]);
+      sigmas.push_back(odfData[i][4]);
     }
     // Convert angles to Radians when this is implemented
     StatsGeneratorUtilities::GenerateODFBinData(m_PrimaryStatsData, SIMPL::PhaseType::PrimaryPhase, m_CrystalSymmetry, e1s, e2s, e3s, weights, sigmas, true);
   }
 
+  msg.clear();
+  ss << getPhaseName() << ":: Initialize MDF Values....";
+  notifyStatusMessage(getHumanLabel(), msg);
   {
     absPresetPtr->initializeMDFTableModel(dataMap);
     QVector<float> e1s;
@@ -529,11 +567,11 @@ void GeneratePrecipitateStatsData::execute()
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
     {
-       e1s.push_back(odfData[i][0] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
-       e2s.push_back(odfData[i][1] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
-       e3s.push_back(odfData[i][2] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
-       odf_weights.push_back(odfData[i][3]);
-       sigmas.push_back(odfData[i][4]);
+      e1s.push_back(odfData[i][0] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
+      e2s.push_back(odfData[i][1] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
+      e3s.push_back(odfData[i][2] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
+      odf_weights.push_back(odfData[i][3]);
+      sigmas.push_back(odfData[i][4]);
     }
 
     QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalSymmetry, e1s, e2s, e3s, odf_weights, sigmas, true);
@@ -544,16 +582,19 @@ void GeneratePrecipitateStatsData::execute()
     std::vector<std::vector<double>> mdfData = m_MdfData.getTableData();
     for(size_t i = 0; i < mdfData.size(); i++)
     {
-       angles.push_back(mdfData[i][0]);
-       axes.push_back(mdfData[i][1]);
-       axes.push_back(mdfData[i][2]);
-       axes.push_back(mdfData[i][3]);
-       weights.push_back(mdfData[i][4]);
+      angles.push_back(mdfData[i][0]);
+      axes.push_back(mdfData[i][1]);
+      axes.push_back(mdfData[i][2]);
+      axes.push_back(mdfData[i][3]);
+      weights.push_back(mdfData[i][4]);
     }
 
     StatsGeneratorUtilities::GenerateMisorientationBinData(m_PrimaryStatsData, SIMPL::PhaseType::PrimaryPhase, m_CrystalSymmetry, odf, angles, axes, weights, true);
   }
 
+  msg.clear();
+  ss << getPhaseName() << ":: Initialize Axis ODF Values....";
+  notifyStatusMessage(getHumanLabel(), msg);
   {
     absPresetPtr->initializeAxisODFTableModel(dataMap);
     QVector<float> e1s;
@@ -564,14 +605,34 @@ void GeneratePrecipitateStatsData::execute()
     std::vector<std::vector<double>> axisOdfData = m_AxisOdfData.getTableData();
     for(size_t i = 0; i < axisOdfData.size(); i++)
     {
-       e1s.push_back(axisOdfData[i][0] * SIMPLib::Constants::k_PiOver180);
-       e2s.push_back(axisOdfData[i][1] * SIMPLib::Constants::k_PiOver180);
-       e3s.push_back(axisOdfData[i][2] * SIMPLib::Constants::k_PiOver180);
-       weights.push_back(axisOdfData[i][3]);
-       sigmas.push_back(axisOdfData[i][4]);
+      e1s.push_back(axisOdfData[i][0] * SIMPLib::Constants::k_PiOver180);
+      e2s.push_back(axisOdfData[i][1] * SIMPLib::Constants::k_PiOver180);
+      e3s.push_back(axisOdfData[i][2] * SIMPLib::Constants::k_PiOver180);
+      weights.push_back(axisOdfData[i][3]);
+      sigmas.push_back(axisOdfData[i][4]);
     }
     StatsGeneratorUtilities::GenerateAxisODFBinData(m_PrimaryStatsData, SIMPL::PhaseType::PrimaryPhase, e1s, e2s, e3s, weights, sigmas, true);
   }
+
+  msg.clear();
+  ss << getPhaseName() << ":: Initialize RDF Values....";
+  notifyStatusMessage(getHumanLabel(), msg);
+
+  {
+    std::vector<float> boxDims(3);
+    boxDims[0] = m_RdfBoxSize.x;
+    boxDims[1] = m_RdfBoxSize.y;
+    boxDims[2] = m_RdfBoxSize.z;
+    std::vector<float> boxRes(3);
+    boxRes[0] = 0.1f;
+    boxRes[1] = 0.1f;
+    boxRes[2] = 0.1f;
+
+    // Generate the RDF Frequencies
+    std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(m_RdfMinMaxDistance.x, m_RdfMinMaxDistance.y, m_RdfNumBins, boxDims, boxRes);
+    QVector<float> qFreq = QVector<float>::fromStdVector(rdfFrequencies);
+  }
+
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
@@ -608,9 +669,8 @@ void GeneratePrecipitateStatsData::normalizePhaseFractions(StatsDataArray* stats
   for(size_t i = 1; i < count; i++)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(i);
-    statsData->setPhaseFraction(statsData->getPhaseFraction()/totalPhaseFraction);
+    statsData->setPhaseFraction(statsData->getPhaseFraction() / totalPhaseFraction);
   }
-
 }
 
 // -----------------------------------------------------------------------------

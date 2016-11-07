@@ -90,6 +90,7 @@ class PrecipitatePhaseWidget : public PrimaryPhaseWidget
     virtual void on_m_GenerateDefaultData_clicked() override;
 
   signals:
+
   void dataChanged();
 
   protected:
