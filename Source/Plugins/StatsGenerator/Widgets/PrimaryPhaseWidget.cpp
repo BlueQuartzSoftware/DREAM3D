@@ -63,6 +63,9 @@
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
+#include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h"
+#include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h"
+
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot_curve.h>
@@ -108,9 +111,58 @@ void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int in
 
   // Factory Method to get an instantiated object of the correct type?
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  AbstractMicrostructurePreset::Pointer preset = manager->createNewPreset(presetName);
-  preset->displayUserInputDialog();
-  setMicroPreset(preset);
+
+  setMicroPreset(manager->createNewPreset(presetName));
+
+  AbstractMicrostructurePreset::Pointer absPreset = getMicroPreset();
+
+  if(std::dynamic_pointer_cast<PrimaryRolledPreset>(absPreset))
+  {
+    PrimaryRolledPresetDialog d(nullptr);
+    bool keepGoing = true;
+    while(keepGoing)
+    {
+      int ret = d.exec();
+      if(ret == QDialog::Accepted)
+      {
+        float a = d.getA();
+        float b = d.getB();
+        float c = d.getC();
+        if(a >= b && b >= c)
+        {
+          // The user clicked the OK button so transfer the values from the dialog into this class
+          PrimaryRolledPreset::Pointer presetPtr = std::dynamic_pointer_cast<PrimaryRolledPreset>(absPreset);
+          presetPtr->setAspectRatio1(d.getA() / d.getB());
+          presetPtr->setAspectRatio2(d.getA() / d.getC());
+          keepGoing = false;
+          emit dataChanged();
+        }
+        else
+        {
+          QMessageBox::critical(&d, "Rolled Preset Error", "The ratios have been entered incorrectly. The following MUST be true: A >= B >= C", QMessageBox::Default);
+        }
+      }
+      else
+      {
+        keepGoing = false; // user clicked the Cancel button
+      }
+    }
+  }
+  else if(std::dynamic_pointer_cast<PrimaryRecrystallizedPreset>(absPreset))
+  {
+    PrimaryRecrystallizedPresetDialog d(nullptr);
+    int ret = d.exec();
+    if(ret == QDialog::Accepted)
+    {
+      // The user clicked the OK button so transfer the values from the dialog into this class
+      PrimaryRecrystallizedPreset::Pointer presetPtr = std::dynamic_pointer_cast<PrimaryRecrystallizedPreset>(absPreset);
+      presetPtr->setPercentRecrystallized(d.getPercentRecrystallized());
+    }
+    else
+    {
+      // Perform any cancellation actions if the user canceled the dialog box
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -565,12 +617,12 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
-  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
-  StringDataArray::Pointer strArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
-
   crystalStructures[getPhaseIndex()] = getCrystalStructure();
   phaseTypes[getPhaseIndex()] = getPhaseType();
-  strArray->setValue(getPhaseIndex(), getPhaseName());
+
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
+  StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
+  phaseNameArray->setValue(getPhaseIndex(), getPhaseName());
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if(nullptr != statsDataArray)
@@ -641,8 +693,13 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   PrimaryStatsData* primaryStatsData = PrimaryStatsData::SafePointerDownCast(statsData.get());
 
   setPhaseFraction(primaryStatsData->getPhaseFraction());
-  setPhaseName(statsData->getName());
 
+  QString phaseName = statsData->getName();
+  if(phaseName.isEmpty())
+  {
+    phaseName = QString("Primary Phase (%1)").arg(index);
+  }
+  setPhaseName(phaseName);
   m_FeatureSizeDistWidget->setCrystalStructure(getCrystalStructure());
   foreach(StatsGenPlotWidget* w, m_SGPlotWidgets)
   {

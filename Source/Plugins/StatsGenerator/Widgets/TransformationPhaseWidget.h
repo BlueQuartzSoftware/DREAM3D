@@ -110,8 +110,9 @@ class TransformationPhaseWidget : public StatsGenWidget, private Ui::Transformat
     void dataWasEdited();
     void bulkLoadEvent(bool fail);
 
+
   signals:
-    void phaseParametersChanged();
+  void dataChanged();
 
   protected:
 

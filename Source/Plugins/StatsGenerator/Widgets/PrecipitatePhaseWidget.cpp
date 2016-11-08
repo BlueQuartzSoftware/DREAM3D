@@ -48,11 +48,12 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 #include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
@@ -380,6 +381,10 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
   crystalStructures[getPhaseIndex()] = getCrystalStructure();
   phaseTypes[getPhaseIndex()] = getPhaseType();
 
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
+  StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
+  phaseNameArray->setValue(getPhaseIndex(), getPhaseName());
+
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if(nullptr != statsDataArray)
   {
@@ -459,8 +464,13 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
   PrecipitateStatsData* precipitateStatsData = PrecipitateStatsData::SafePointerDownCast(statsData.get());
 
-  setPhaseName(statsData->getName());
-  setPhaseFraction(precipitateStatsData->getPhaseFraction());
+
+  QString phaseName = statsData->getName();
+  if(phaseName.isEmpty())
+  {
+    phaseName = QString("Precipitate Phase (%1)").arg(index);
+  }
+  setPhaseName(phaseName);  setPhaseFraction(precipitateStatsData->getPhaseFraction());
   m_PptFraction = precipitateStatsData->getPrecipBoundaryFraction();
 
   getFeatureSizeWidget()->setCrystalStructure(getCrystalStructure());

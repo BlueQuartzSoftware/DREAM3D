@@ -353,7 +353,6 @@ void StatsGenFeatureSizeWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
   {
     return;
   }
-  // m_Mu_SizeDistribution->setFocus();
   if(calculateNumberOfBins() < 0)
   {
     return;

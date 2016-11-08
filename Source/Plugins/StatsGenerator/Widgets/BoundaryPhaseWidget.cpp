@@ -48,6 +48,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
@@ -114,6 +115,10 @@ int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool 
   crystalStructures[getPhaseIndex()] = getCrystalStructure();
   phaseTypes[getPhaseIndex()] = getPhaseType();
 
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
+  StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
+  phaseNameArray->setValue(getPhaseIndex(), getPhaseName());
+
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if(nullptr != statsDataArray)
   {
@@ -151,7 +156,12 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
   BoundaryStatsData* boundaryStatsData = BoundaryStatsData::SafePointerDownCast(statsData.get());
 
-  setPhaseName(statsData->getName());
+  QString phaseName = statsData->getName();
+  if(phaseName.isEmpty())
+  {
+    phaseName = QString("Boundary Phase (%1)").arg(index);
+  }
+  setPhaseName(phaseName);
   setPhaseFraction(boundaryStatsData->getPhaseFraction());
 }
 
