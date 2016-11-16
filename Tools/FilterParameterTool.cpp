@@ -915,17 +915,17 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReplaceText(QString absPath)
+void ReplaceMacros(QString absPath)
 {
   QString filterName;
   QString contents;
   {
     // Read the Source File
     QFileInfo fi(absPath);
-    //    if (fi.baseName().compare("AddFavoriteWidget") != 0)
-    //    {
-    //      return;
-    //    }
+//        if (fi.baseName().compare("CombineAttributeArrays") != 0)
+//        {
+//          return;
+//        }
     filterName = fi.baseName();
     QFile source(absPath);
     source.open(QFile::ReadOnly);
@@ -941,7 +941,12 @@ void ReplaceText(QString absPath)
   QVector<int> lines(0);
 
 
-  QString searchString = "%FILTER_CLASS%";
+  QString searchString = "SIMPL_FILTER_PARAMETER";
+  QString replaceString  = "SIMPL_INSTANCE_PROPERTY_DECL";
+  QString cppReplaceString = "SIMPL_INSTANCE_PROPERTY_DEF";
+
+  QString instanceString = "SIMPL_INSTANCE_PROPERTY";
+  QStringList cppCodeLines;
   QVector<QString> outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
@@ -953,186 +958,50 @@ void ReplaceText(QString absPath)
 
     if(line.contains(searchString))
     {
-      line.replace(searchString, filterName);
+      line.replace(searchString, replaceString);
       didReplace = true;
+      QString cppCode = line;
+      cppCode.replace(replaceString, cppReplaceString);
+      cppCode.replace(cppReplaceString + "(", cppReplaceString + "(" + filterName + ", ");
+      cppCode = cppCode.trimmed();
+      cppCodeLines << cppCode;
     }
+    else if(line.contains(instanceString))
+    {
+      line.replace(instanceString, replaceString);
+      didReplace = true;
+      QString cppCode = line;
+      cppCode.replace(replaceString, cppReplaceString);
+      cppCode.replace(cppReplaceString + "(", cppReplaceString + "(" + filterName + ", ");
+      cppCode = cppCode.trimmed();
+      cppCodeLines << cppCode;
+    }
+
      outLines.push_back(line);
   }
 
-
   writeOutput(didReplace, outLines, absPath);
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool GroupIncludes( const QString& cppFile)
-{
-  QString contents;
+  if(cppCodeLines.isEmpty() == false)
   {
-    // Read the Source File
-        QFileInfo fi(cppFile);
-        if (fi.baseName().compare("EMMPMFilter") != 0)
-        {
-          return false;
-        }
+      absPath.replace(".h", ".cpp");
+      QFile source(absPath);
+      source.open(QFile::ReadOnly);
+      contents = source.readAll();
+      source.close();
 
-    QFile source(cppFile);
-    source.open(QFile::ReadOnly);
-    contents = source.readAll();
-    source.close();
+      outLines.clear();
+      lines.clear();
+      QStringList list = contents.split(QRegExp("\\n"));
+      list.append(cppCodeLines.join("\n"));
+      writeOutput(didReplace, list, absPath);
   }
 
-  //qDebug() << cppFile;
 
-  QStringList names;
-  bool didReplace = false;
-
-  QVector<int> lines(0);
-
-
-  QString searchString = "#include";
-  QVector<QString> outLines;
-  QStringList list = contents.split(QRegExp("\\n"));
-  QStringListIterator sourceLines(list);
-  QString body;
-  QMap<QString, int> lineToInclude;
-  int index = 0;
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-    outLines.push_back(line);
-    if(line.contains(searchString) )
-    {
-      if(line.contains("H5Support/H5Support.h")) { didReplace = true; lineToInclude["[0]\t" + line] = index; lines.push_back(index); }
-      else if(line.contains("H5Support")) { didReplace = true; lineToInclude["[1]\t" + line] = index; lines.push_back(index); }
-
-      else if(line.contains("EbsdLib/EbsdLib.h")) { didReplace = true; lineToInclude["[2]\t" + line] = index; lines.push_back(index); }
-      else if(line.contains("EbsdLib")) { didReplace = true; lineToInclude["[3]\t" + line] = index; lines.push_back(index); }
-
-      else if(line.contains("SIMPLib/SIMPLib.h")) { didReplace = true; lineToInclude["[4]\t" + line] = index; lines.push_back(index); }
-      else if(line.contains("SIMPLib")) { didReplace = true; lineToInclude["[5]\t" + line] = index; lines.push_back(index); }
-
-      else if(line.contains("OrientationLib/OrientationLib.h")) { didReplace = true; lineToInclude["[6]\t" + line] = index; lines.push_back(index); }
-      else if(line.contains("OrientationLib")) { didReplace = true; lineToInclude["[7]\t" + line] = index; lines.push_back(index); }
-    }
-    index++;
-  }
-
-  // qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
-
-  int lineIndex = 0;
-  QMapIterator<QString, int> iter(lineToInclude);
-  while (iter.hasNext())
-  {
-    iter.next();
-    QString str = iter.key();
-    //int l = iter.value();
-    str = str.split('\t').at(1);
-
-      qDebug() << lines[lineIndex]  << " (" << lineIndex << ") " << str;
-
-    outLines[lines[lineIndex]] = str;
-
-    lineIndex++;
-  }
-
- // writeOutput(didReplace, outLines, cppFile);
-
-  return didReplace;
 }
 
 
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool AddIGeometryIncludes(const QString& cppFile)
-{
-  QString contents;
-  {
-    // Read the Source File
-    QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("LaplacianSmoothing") != 0)
-//    {
-//      return false;
-//    }
-
-    QFile source(cppFile);
-    bool isOpen = source.open(QFile::ReadOnly);
-    if(!isOpen)
-    {
-      qDebug() << "FILE OPEN ERROR: " << cppFile;
-      return false;
-    }
-    contents = source.readAll();
-    source.close();
-  }
-
- // qDebug() << cppFile;
-
-  QStringList names;
-  bool didReplace = false;
-  QString outString;
-  QTextStream out(&outString);
-  QString targetInclude = "#include \"SIMPLib/SIMPLibVersion.h\"";
-  bool hasTargetInclude = false;
-  QString targetCode = "SIMPLib::Version::";
-  bool hasTargetCode = false;
-
-  QString simplibInc = "#include \"SIMPLib";
-  int simplibLineIndex = 0;
-
-  QVector<QString> outLines;
-  QStringList list = contents.split(QRegExp("\\n"));
-  QStringListIterator sourceLines(list);
-  QString body;
-
-  out << cppFile << "\n";
-
-  int index = 0;
-
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-    outLines.push_back(line); // Always add the line to the output
-
-    if(line.contains(targetInclude) )
-    {
-      hasTargetInclude = true;
-      out << "    (" << index << ")" << targetInclude << "\n";
-    }
-
-    if(line.contains(simplibInc))
-    {
-      if(index+1 > simplibLineIndex) { simplibLineIndex = index; } // This is the last #include "SIMPLib" header.
-    }
-
-    if(line.contains(targetCode) )
-    {
-      hasTargetCode = true;
-      out << "    (" << index+1 << ")" << targetCode << "\n";
-    }
-//    if(line.contains(prereqCode))
-//    {
-//      hasImageGeomCode = true;
-//      out << "    (" << index << ")" << prereqCode << "\n";
-//    }
-
-    index++;
-  }
-
-  if(hasTargetCode && !hasTargetInclude)
-  {
-    //qDebug() << outString;
-    outLines.insert(simplibLineIndex + 1, targetInclude);
-    didReplace = true;
-  }
-
-  writeOutput(didReplace, outLines, cppFile);
-  return didReplace;
-}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1140,8 +1009,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 {
 
   QStringList filters;
-  filters.append("*.cpp");
-//  filters.append("*.h");
+  //filters.append("*.cpp");
+  filters.append("*.h");
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
   {
@@ -1166,84 +1035,11 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 //    std::cout << itemFilePath.toStdString() << std::endl;
 //    AddIGeometryIncludes(itemFilePath);
 //   GroupIncludes(itemFilePath);
-      ReplaceText(itemFilePath);
+      //ReplaceText(itemFilePath);
+    ReplaceMacros(itemFilePath);
   }
 }
 
-#if 0
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GenerateFilterParametersCode()
-{
-  FilterManager* fm = FilterManager::Instance();
-  FilterManager::Collection factories = fm->getFactories();
-  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
-  // Loop on each filter
-  while(iter.hasNext())
-  {
-    iter.next();
-    IFilterFactory::Pointer factory = iter.value();
-    AbstractFilter::Pointer filter = factory->create();
-
-    if(filter->getCompiledLibraryName() != "TestPlugin")
-    {
-      QString cpp = findPath(filter->getCompiledLibraryName(), filter->getNameOfClass(), ".cpp");
-      //qDebug() << "CPP File: " << cpp;
-      QString h = findPath(filter->getCompiledLibraryName(), filter->getNameOfClass(), ".h");
-
-      //CorrectInitializerList(filter, h, cpp);
-      //SplitFilterHeaderCodes(filter, h, cpp);
-      //FixIncludeGuard(filter, h, cpp);
-      //ValidateParameterReader(filter, h, cpp);
-      //FindFiltersWithMultipleDataArrayPaths(filter);
-      //GroupIncludes(filter, cpp);
-      //GroupIncludes(filter, h);
-    }
-  }
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GenerateMarkDownDocs()
-{
-  FilterManager* fm = FilterManager::Instance();
-  FilterManager::Collection factories = fm->getFactories();
-  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
-  // Loop on each filter
-  while(iter.hasNext())
-  {
-    iter.next();
-    IFilterFactory::Pointer factory = iter.value();
-    AbstractFilter::Pointer filter = factory->create();
-
-    const QMetaObject* metaObject = filter->metaObject();
-//    QStringList methods;
-//    for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
-//      qDebug() << metaObject->method(i).methodSignature();
-
-    std::cout << filter->getHumanLabel().toStdString() << "  {#" << filter->getNameOfClass().toLower().toStdString() << "}" << std::endl;
-    std::cout << "## Group (Subgroup) ##" << std::endl;
-    std::cout << filter->getGroupName().toStdString() << "(" << filter->getSubGroupName().toStdString() << ")" << std::endl;
-
-
-    std::cout << "## Filter Parameters ##" << std::endl;
-    std::cout << "| Property Name | Property Type |" << std::endl;
-    std::cout << "| ------------- | ------------- |" << std::endl;
-    for(int i = metaObject->propertyOffset(); i < metaObject->propertyCount(); ++i)
-    {
-      std::cout << "| " << metaObject->property(i).name() << " | " << metaObject->property(i).typeName() << " |" << std::endl;
-    }
-
-
-  }
-
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
