@@ -58,131 +58,130 @@
 
 class AngImportTest
 {
-  public:
-    AngImportTest(){}
-    virtual ~AngImportTest() {}
+public:
+  AngImportTest()
+  {
+  }
+  virtual ~AngImportTest()
+  {
+  }
 
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void RemoveTestFiles()
-    {
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void RemoveTestFiles()
+  {
 #if REMOVE_TEST_FILES
-      QFile::remove(UnitTest::AngImportTest::H5EbsdOutputFile);
+    QFile::remove(UnitTest::AngImportTest::H5EbsdOutputFile);
 #endif
-    }
+  }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void TestMissingHeaders()
-    {
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestMissingHeaders()
+  {
 
-      AngReader reader;
-      reader.setFileName(UnitTest::AngImportTest::MissingHeader1);
-      int err = reader.readHeaderOnly();
-      // It should read through this header just fine
-      DREAM3D_REQUIRE(err > 0)
+    AngReader reader;
+    reader.setFileName(UnitTest::AngImportTest::MissingHeader1);
+    int err = reader.readHeaderOnly();
+    // It should read through this header just fine
+    DREAM3D_REQUIRE(err > 0)
 
-          int value = reader.getNumEvenCols();
-      DREAM3D_REQUIRE_EQUAL(value, -1)
+    int value = reader.getNumEvenCols();
+    DREAM3D_REQUIRE_EQUAL(value, -1)
 
-          value = reader.getNumOddCols();
-      DREAM3D_REQUIRE_EQUAL(value, -1)
+    value = reader.getNumOddCols();
+    DREAM3D_REQUIRE_EQUAL(value, -1)
 
-          value = reader.getNumRows();
-      DREAM3D_REQUIRE_EQUAL(value, -1)
+    value = reader.getNumRows();
+    DREAM3D_REQUIRE_EQUAL(value, -1)
 
-          float step = reader.getXStep();
-      DREAM3D_REQUIRE_EQUAL(step, 0.0f)
+    float step = reader.getXStep();
+    DREAM3D_REQUIRE_EQUAL(step, 0.0f)
 
-          step = reader.getYStep();
-      DREAM3D_REQUIRE_EQUAL(step, 0.0f)
+    step = reader.getYStep();
+    DREAM3D_REQUIRE_EQUAL(step, 0.0f)
 
-          err = reader.readFile();
-      qDebug() << reader.getErrorMessage();
-      DREAM3D_REQUIRED(err, == , -110)
-    }
+    err = reader.readFile();
+    qDebug() << reader.getErrorMessage();
+    DREAM3D_REQUIRED(err, ==, -110)
+  }
 
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestMissingGrid()
+  {
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void TestMissingGrid()
-    {
+    AngReader reader;
+    reader.setFileName(UnitTest::AngImportTest::GridMissing);
+    int err = reader.readHeaderOnly();
+    // It should read through this header just fine
+    DREAM3D_REQUIRE(err > 0)
 
-      AngReader reader;
-      reader.setFileName(UnitTest::AngImportTest::GridMissing);
-      int err = reader.readHeaderOnly();
-      // It should read through this header just fine
-      DREAM3D_REQUIRE(err > 0)
+    err = reader.readFile();
+    qDebug() << reader.getErrorMessage();
+    DREAM3D_REQUIRED(err, ==, -300)
+  }
 
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestHexGrid()
+  {
 
+    AngReader reader;
+    reader.setFileName(UnitTest::AngImportTest::HexHeader);
+    int err = reader.readHeaderOnly();
+    // It should read through this header just fine
+    DREAM3D_REQUIRE(err > 0)
 
-          err = reader.readFile();
-      qDebug() << reader.getErrorMessage();
-      DREAM3D_REQUIRED(err, == , -300)
-    }
+    err = reader.readFile();
+    qDebug() << reader.getErrorMessage();
+    DREAM3D_REQUIRED(err, ==, -400)
+  }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void TestHexGrid()
-    {
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestShortFile()
+  {
+    AngReader reader;
+    reader.setFileName(UnitTest::AngImportTest::ShortFile);
+    int err = reader.readFile();
+    // It should read through this header just fine but die when reading the file because there is not enough data being read
+    qDebug() << reader.getErrorMessage();
+    DREAM3D_REQUIRED(err, <, 0)
+  }
 
-      AngReader reader;
-      reader.setFileName(UnitTest::AngImportTest::HexHeader);
-      int err = reader.readHeaderOnly();
-      // It should read through this header just fine
-      DREAM3D_REQUIRE(err > 0)
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void TestNormalFile()
+  {
+    // This is just a normal Ang file, well formed and should read without error
+    AngReader reader;
+    reader.setFileName(UnitTest::AngImportTest::TestFile1);
+    int err = reader.readFile();
+    qDebug() << reader.getErrorMessage();
+    DREAM3D_REQUIRED(err, ==, 0)
 
+    size_t numElements = reader.getNumberOfElements();
+    DREAM3D_REQUIRED(numElements, ==, 160)
+    float* ptr = reader.getPhi1Pointer();
+    DREAM3D_REQUIRED(ptr[159], ==, 12.56637f)
+  }
 
+  void operator()()
+  {
+    int err = EXIT_SUCCESS;
 
-          err = reader.readFile();
-      qDebug() << reader.getErrorMessage();
-      DREAM3D_REQUIRED(err, == , -400)
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void TestShortFile()
-    {
-      AngReader reader;
-      reader.setFileName(UnitTest::AngImportTest::ShortFile);
-      int err = reader.readFile();
-      // It should read through this header just fine but die when reading the file because there is not enough data being read
-      qDebug() << reader.getErrorMessage();
-      DREAM3D_REQUIRED(err, < , 0)
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void TestNormalFile()
-    {
-      // This is just a normal Ang file, well formed and should read without error
-      AngReader reader;
-      reader.setFileName(UnitTest::AngImportTest::TestFile1);
-      int err = reader.readFile();
-      qDebug() << reader.getErrorMessage();
-      DREAM3D_REQUIRED(err, == , 0)
-    }
-
-
-    void operator()()
-    {
-      int err = EXIT_SUCCESS;
-
-      DREAM3D_REGISTER_TEST( TestMissingHeaders() )
-          DREAM3D_REGISTER_TEST( TestHexGrid() )
-          DREAM3D_REGISTER_TEST( TestMissingGrid() )
-          DREAM3D_REGISTER_TEST( TestShortFile() )
-          DREAM3D_REGISTER_TEST( TestNormalFile() )
-          DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    }
-
-
+    DREAM3D_REGISTER_TEST(TestMissingHeaders())
+    DREAM3D_REGISTER_TEST(TestHexGrid())
+    DREAM3D_REGISTER_TEST(TestMissingGrid())
+    DREAM3D_REGISTER_TEST(TestShortFile())
+    DREAM3D_REGISTER_TEST(TestNormalFile())
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
+  }
 };
-
