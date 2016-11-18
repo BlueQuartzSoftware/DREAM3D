@@ -305,7 +305,9 @@ void ReadASCIIData::dataCheck()
     else
     {
       DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, selectedPath.getDataContainerName());
-      dc->createNonPrereqAttributeMatrix(this, selectedPath.getAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
+      if(nullptr != dc.get()) {
+        dc->createNonPrereqAttributeMatrix(this, selectedPath.getAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
+      }
     }
   }
 
