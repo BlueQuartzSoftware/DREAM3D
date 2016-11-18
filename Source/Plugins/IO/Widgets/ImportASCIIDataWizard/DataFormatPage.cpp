@@ -36,7 +36,6 @@
 #include "DataFormatPage.h"
 
 #include <QtCore/QSignalMapper>
-#include <QtCore/QFile>
 
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QDesktopWidget>
@@ -1104,6 +1103,15 @@ TupleTableWidget* DataFormatPage::getTupleTable()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataFormatPage::setAutomaticAM(bool automatic)
+{
+  amAutomatically->setChecked(automatic);
+  on_amAutomatically_stateChanged(automatic);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool DataFormatPage::getAutomaticAM()
 {
   return amAutomatically->isChecked();
@@ -1127,7 +1135,24 @@ DataArrayPath DataFormatPage::getSelectedPath()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DataFormatPage::getAMName()
+void DataFormatPage::setAutomaticAttrMatrixName(const QString &name)
+{
+  amName->setText(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::setAutomaticAttrMatrixName(const DataArrayPath &path)
+{
+  amName->setText(path.getAttributeMatrixName());
+  selectedDCBtn->setText(path.getDataContainerName());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataFormatPage::getAutomaticAttrMatrixName()
 {
   return amName->text();
 }

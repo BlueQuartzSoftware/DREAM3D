@@ -35,7 +35,7 @@
 
 #include "ReadASCIIDataFilterParameter.h"
 
-#include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
+#include "IO/IOFilters/util/ASCIIWizardData.hpp"
 
 // -----------------------------------------------------------------------------
 //

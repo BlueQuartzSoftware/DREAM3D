@@ -45,13 +45,15 @@
 
 #include "FilterParameters/ReadASCIIDataFilterParameter.h"
 
-#include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
+#include "IO/IOFilters/util/ASCIIWizardData.hpp"
+#include "IO/IOFilters/ReadASCIIData.h"
+
 #include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
 #include "Widgets/ImportASCIIDataWizard/DataFormatPage.h"
 #include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
 #include "Widgets/ImportASCIIDataWizard/LineCounterObject.h"
 
-#include "IOFilters/ReadASCIIData.h"
+
 
 // Initialize private static member variable
 QString ReadASCIIDataWidget::m_OpenDialogLastDirectory = "";
@@ -81,6 +83,11 @@ ReadASCIIDataWidget::ReadASCIIDataWidget(FilterParameter* parameter, AbstractFil
 // -----------------------------------------------------------------------------
 ReadASCIIDataWidget::~ReadASCIIDataWidget()
 {
+    if(nullptr != m_ImportWizard)
+      m_ImportWizard->deleteLater();
+
+    if(nullptr != m_LineCounter)
+       m_LineCounter->deleteLater();
 }
 
 // -----------------------------------------------------------------------------
@@ -202,7 +209,8 @@ void ReadASCIIDataWidget::on_importFileBtn_pressed()
       }
 
       // Allocate the buffer
-      buffer = (char*)malloc(sizeof(char) * actualSize);
+      std::vector<char> bufferVec(actualSize);
+      buffer = bufferVec.data();
       if(buffer == nullptr)
       {
         QString errorStr = "Error: Unable to allocate memory to read in data from \"" + m_FilePath + "\"";
@@ -263,7 +271,6 @@ void ReadASCIIDataWidget::on_importFileBtn_pressed()
 
       // Close the file and free the memory from the buffer
       qFile.close();
-      free(buffer);
     }
 
     if(m_WorkerThread != nullptr)

@@ -32,13 +32,10 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _linecounterobject_h_
 #define _linecounterobject_h_
 
 #include <QtCore/QObject>
-#include <QtCore/QFile>
 
 class LineCounterObject : public QObject
 {
