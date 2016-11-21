@@ -14,6 +14,11 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 ## Version 6.3 ##
 
 
+### Version 6.3.xx ###
+
++ BUG: Fixed issue when reading .ang file the last row of data would not be parsed from file
++ FEATURE: Allow user to re-edit the ASCI Import Wizard settings after clicking the "Done" button. (Issue 599)
+
 ### Version 6.3.29 ###
 
 + BUG: Fixed issues when DREAM.3D is run on a system with a European locale. Entering decimal numbers will not work due to a different between the use of "," and ".".
