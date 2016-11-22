@@ -37,8 +37,10 @@
 
 #include <QtCore/QFile>
 
+#include "IO/IOFilters/util/ASCIIWizardData.hpp"
+
+
 #include "ASCIIDataModel.h"
-#include "ASCIIWizardData.hpp"
 #include "DataFormatPage.h"
 #include "DelimitedPage.h"
 
@@ -97,6 +99,8 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataCo
   setPage(DataFormat, dfPage);
   dfPage->getTupleTable()->clearTupleDimensions();
   dfPage->getTupleTable()->addTupleDimensions(wizardData->tupleDims);
+  dfPage->setAutomaticAttrMatrixName(wizardData->selectedPath);
+  dfPage->setAutomaticAM(wizardData->automaticAM);
 
   setField("consecutiveDelimiters", wizardData->consecutiveDelimiters);
 
@@ -124,6 +128,9 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataCo
 
   m_InputFilePath = wizardData->inputFilePath;
 
+  setField("startRow", wizardData->beginIndex);
+  m_NumLines = wizardData->numberOfLines;
+
   QStringList dataHeaders = wizardData->dataHeaders;
 
   ASCIIDataModel* model = ASCIIDataModel::Instance();
@@ -136,9 +143,6 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataCo
   {
     model->setHeaderData(col, Qt::Horizontal, dataHeaders.at(col), Qt::DisplayRole);
   }
-
-  setField("startRow", wizardData->beginIndex);
-  m_NumLines = wizardData->numberOfLines;
 
   QStringList dataTypes = wizardData->dataTypes;
   for(int i = 0; i < dataTypes.size(); i++)
@@ -207,7 +211,10 @@ QString ImportASCIIDataWizard::ReadLine(const QString& inputFilePath, int line)
 QStringList ImportASCIIDataWizard::ReadLines(const QString& inputFilePath, int beginLine, int numOfLines)
 {
   QStringList result;
-
+  if(inputFilePath.isEmpty())
+  {
+    return result;
+  }
   QFile inputFile(inputFilePath);
   if(inputFile.open(QIODevice::ReadOnly))
   {
@@ -492,7 +499,7 @@ DataArrayPath ImportASCIIDataWizard::getSelectedPath()
     DataArrayPath dap = dfPage->getSelectedPath();
     if (dfPage->getAutomaticAM() == true)
     {
-      dap.setAttributeMatrixName(dfPage->getAMName());
+      dap.setAttributeMatrixName(dfPage->getAutomaticAttrMatrixName());
     }
 
     return dap;

@@ -51,7 +51,7 @@
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "IO/IOFilters/ReadASCIIData.h"
-#include "IO/Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
+#include "IO/IOFilters/util/ASCIIWizardData.hpp"
 
 #include "IOTestFileLocations.h"
 

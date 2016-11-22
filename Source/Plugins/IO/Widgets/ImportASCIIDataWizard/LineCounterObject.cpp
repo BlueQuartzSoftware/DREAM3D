@@ -36,6 +36,7 @@
 #include "LineCounterObject.h"
 
 #include <QtCore/QTextStream>
+#include <QtCore/QFile>
 
 #include "SIMPLib/SIMPLibTypes.h"
 
@@ -77,6 +78,12 @@ void LineCounterObject::run()
   int64_t result;
 
   // Obtain the file size
+  if(m_FilePath.isEmpty())
+  {
+    m_NumOfLines = -1;
+    emit finished();
+    return;
+  }
   QFile qFile(m_FilePath);
   int64_t fileSize = qFile.size();
 

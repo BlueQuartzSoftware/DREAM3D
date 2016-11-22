@@ -434,7 +434,7 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   latticeConstants->setComponent(0, 4, 0.0f);
   latticeConstants->setComponent(0, 5, 0.0f);
 
-  for(size_t i = 0; i < phases.size(); i++)
+  for(int i = 0; i < phases.size(); i++)
   {
     int32_t phaseID = phases[i]->getPhaseIndex();
     crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure());
@@ -567,6 +567,20 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
+  }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::XPosition));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::XPosition);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::XPosition, fArray);
+  }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::YPosition));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::YPosition);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::YPosition, fArray);
   }
 }
 

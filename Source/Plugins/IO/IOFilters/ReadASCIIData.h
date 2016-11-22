@@ -9,7 +9,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
+#include "IO/IOFilters/util/ASCIIWizardData.hpp"
 
 /**
  * @brief The ReadASCIIData class. See [Filter documentation](@ref ReadASCIIData) for details.
@@ -26,7 +26,7 @@ class ReadASCIIData : public AbstractFilter
     virtual ~ReadASCIIData();
 
     SIMPL_FILTER_PARAMETER(ASCIIWizardData, WizardData)
-      Q_PROPERTY(ASCIIWizardData WizardData READ getWizardData WRITE setWizardData)
+    Q_PROPERTY(ASCIIWizardData WizardData READ getWizardData WRITE setWizardData)
 
     enum ErrorCodes
     {

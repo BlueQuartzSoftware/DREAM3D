@@ -247,7 +247,6 @@ void WriteStatsGenOdfAngleFile::execute()
 
   for(std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
   {
-    /* Let the GUI know we are done with this filter */
     QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
 
     notifyStatusMessage(getHumanLabel(), ss);

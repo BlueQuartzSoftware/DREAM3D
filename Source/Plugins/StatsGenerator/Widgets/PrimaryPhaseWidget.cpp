@@ -672,12 +672,12 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
-  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
-  StringDataArray::Pointer strArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
-
   crystalStructures[getPhaseIndex()] = getCrystalStructure();
   phaseTypes[getPhaseIndex()] = getPhaseType();
-  strArray->setValue(getPhaseIndex(), getPhaseName());
+
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
+  StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
+  phaseNameArray->setValue(getPhaseIndex(), getPhaseName());
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if(nullptr != statsDataArray)
@@ -748,8 +748,13 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   PrimaryStatsData* primaryStatsData = PrimaryStatsData::SafePointerDownCast(statsData.get());
 
   setPhaseFraction(primaryStatsData->getPhaseFraction());
-  setPhaseName(statsData->getName());
 
+  QString phaseName = statsData->getName();
+  if(phaseName.isEmpty())
+  {
+    phaseName = QString("Primary Phase (%1)").arg(index);
+  }
+  setPhaseName(phaseName);
   m_FeatureSizeDistWidget->setCrystalStructure(getCrystalStructure());
   foreach(StatsGenPlotWidget* w, m_SGPlotWidgets)
   {

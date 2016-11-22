@@ -580,6 +580,20 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVe
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     ebsdAttrMat->addAttributeArray(Ebsd::Ctf::BS, iArray);
   }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::X));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::X);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ctf::X, fArray);
+  }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Y));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Y);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ctf::Y, fArray);
+  }
 }
 
 // -----------------------------------------------------------------------------

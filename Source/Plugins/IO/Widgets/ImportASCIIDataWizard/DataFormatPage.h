@@ -114,6 +114,12 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     TupleTableWidget* getTupleTable();
 
     /**
+     * @brief setAutomaticAM
+     * @param automatic
+     */
+    void setAutomaticAM(bool automatic);
+
+    /**
      * @brief getAutomaticAM
      * @return
      */
@@ -126,10 +132,23 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     DataArrayPath getSelectedPath();
 
     /**
+     * @brief setAutomaticAttrMatrixName
+     * @param name
+     */
+    void setAutomaticAttrMatrixName(const QString &name);
+
+    /**
+     * @brief setAutomaticAttrMatrixName
+     * @param path
+     */
+    void setAutomaticAttrMatrixName(const DataArrayPath &path);
+
+
+    /**
      * @brief getAMName
      * @return
      */
-    QString getAMName();
+    QString getAutomaticAttrMatrixName();
 
     /**
      * @brief eventFilter

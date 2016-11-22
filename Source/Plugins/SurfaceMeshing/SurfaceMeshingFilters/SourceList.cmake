@@ -22,6 +22,7 @@ set(_PublicFilters
   FindGBCDMetricBased
   FindGBPDMetricBased
   FindDistsToCharactGBs
+  FindTriangleGeomSizes
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
   GenerateGeometryConnectivity

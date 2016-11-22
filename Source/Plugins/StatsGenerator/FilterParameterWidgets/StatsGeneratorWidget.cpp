@@ -130,6 +130,7 @@ void StatsGeneratorWidget::setupGui()
     ppw->setPhaseIndex(1);
     ppw->setPhaseType(SIMPL::PhaseType::PrimaryPhase);
     ppw->setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
+    ppw->setPhaseName("Primary (1)");
     ppw->setPhaseFraction(1.0);
     ppw->setTotalPhaseFraction(1.0);
     phaseTabs->addTab(ppw, "Primary");
@@ -166,6 +167,7 @@ void StatsGeneratorWidget::setupGui()
         BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       else if(phaseTypes->getValue(phase) == SIMPL::PhaseType::MatrixPhase)
       {
@@ -173,6 +175,7 @@ void StatsGeneratorWidget::setupGui()
         MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       if(phaseTypes->getValue(phase) == SIMPL::PhaseType::PrecipitatePhase)
       {
@@ -180,6 +183,7 @@ void StatsGeneratorWidget::setupGui()
         PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       if(phaseTypes->getValue(phase) == SIMPL::PhaseType::PrimaryPhase)
       {
@@ -187,6 +191,7 @@ void StatsGeneratorWidget::setupGui()
         PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       if(phaseTypes->getValue(phase) == SIMPL::PhaseType::TransformationPhase)
       {
@@ -194,6 +199,7 @@ void StatsGeneratorWidget::setupGui()
         TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
       else
       {
