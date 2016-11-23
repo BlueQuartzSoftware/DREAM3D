@@ -122,6 +122,7 @@ void EMMPMFilter::setupFilterParameters()
   {
     EMMPMFilterParameter::Pointer parameter = EMMPMFilterParameter::New();
     parameter->setHumanLabel("EMMPM Widget");
+    parameter->setPropertyName("NumClasses");
     parameter->setCategory(FilterParameter::Parameter);
     parameter->setFilter(this);
     parameters.push_back(parameter);
