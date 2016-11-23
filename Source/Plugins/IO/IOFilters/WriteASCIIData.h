@@ -60,8 +60,8 @@ class WriteASCIIData : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-    SIMPL_FILTER_PARAMETER(int, Delimeter)
-    Q_PROPERTY(int Delimeter READ getDelimeter WRITE setDelimeter)
+    SIMPL_FILTER_PARAMETER(int, Delimiter)
+    Q_PROPERTY(int Delimiter READ getDelimiter WRITE setDelimiter)
 
     SIMPL_FILTER_PARAMETER(QString, FileExtension)
     Q_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
@@ -69,7 +69,7 @@ class WriteASCIIData : public AbstractFilter
     SIMPL_FILTER_PARAMETER(int, MaxValPerLine)
     Q_PROPERTY(int MaxValPerLine READ getMaxValPerLine WRITE setMaxValPerLine)
 
-    enum DelimeterType
+    enum DelimiterType
     {
       Comma = 0,
       Semicolon = 1,
@@ -175,11 +175,11 @@ class WriteASCIIData : public AbstractFilter
 
   private:
     /**
-     * @brief lookupDelimeter Returns the char representation for the
+     * @brief lookupDelimiter Returns the char representation for the
      * selected delimiter
      * @return Char for delimiter
      */
-    char lookupDelimeter();
+    char lookupDelimiter();
 
     QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
 

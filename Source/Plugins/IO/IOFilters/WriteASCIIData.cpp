@@ -76,7 +76,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void static Execute(WriteASCIIData* filter, IDataArray::Pointer inputData, char delimeter, QString outputFile, int32_t MaxValPerLine)
+  void static Execute(WriteASCIIData* filter, IDataArray::Pointer inputData, char delimiter, QString outputFile, int32_t MaxValPerLine)
   {
     typename DataArrayType::Pointer inputArray = std::dynamic_pointer_cast<DataArrayType>(inputData);
 
@@ -104,7 +104,7 @@ public:
         out << inputArrayPtr[i * nComp + j];
         if(j < nComp - 1)
         {
-          out << delimeter;
+          out << delimiter;
         }
       }
       recCount++;
@@ -116,7 +116,7 @@ public:
       }
       else
       {
-        out << delimeter;
+        out << delimiter;
       }
     }
   }
@@ -132,7 +132,7 @@ WriteASCIIData::WriteASCIIData()
 : AbstractFilter()
 , m_SelectedDataArrayPaths(QVector<DataArrayPath>())
 , m_OutputPath("")
-, m_Delimeter(0)
+, m_Delimiter(0)
 , m_FileExtension(".txt")
 , m_MaxValPerLine(-1)
 {
@@ -158,9 +158,9 @@ void WriteASCIIData::setupFilterParameters()
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New(); // Delimiter choice
     parameter->setHumanLabel("Delimiter");
-    parameter->setPropertyName("Delimeter");
-    parameter->setSetterCallback(SIMPL_BIND_SETTER(WriteASCIIData, this, Delimeter));
-    parameter->setGetterCallback(SIMPL_BIND_GETTER(WriteASCIIData, this, Delimeter));
+    parameter->setPropertyName("Delimiter");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(WriteASCIIData, this, Delimiter));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(WriteASCIIData, this, Delimiter));
 
     QVector<QString> choices;
     choices.push_back(", (comma)");
@@ -187,7 +187,7 @@ void WriteASCIIData::readFilterParameters(AbstractFilterParametersReader* reader
   reader->openFilterGroup(this, index);
   setSelectedDataArrayPaths(reader->readDataArrayPathVector("SelectedDataArrayPaths", getSelectedDataArrayPaths()));
   setOutputPath(reader->readString("OutputPath", getOutputPath()));
-  setDelimeter(reader->readValue("Delimeter", getDelimeter()));
+  setDelimiter(reader->readValue("Delimiter", getDelimiter()));
   setFileExtension(reader->readString("FileExtension", getFileExtension()));
   setMaxValPerLine(reader->readValue("MaxValPerLine", getMaxValPerLine()));
   reader->closeFilterGroup();
@@ -311,9 +311,9 @@ void WriteASCIIData::execute()
 
     QString exportArrayFile = m_OutputPath + QDir::separator() + selectedArrayPtr.lock()->getName() + m_FileExtension; // the complete output file path, name and extension
 
-    char delimeter = lookupDelimeter();
+    char delimiter = lookupDelimiter();
 
-    EXECUTE_TEMPLATE(this, WriteASCIIDataPrivate, selectedArrayPtr.lock(), this, selectedArrayPtr.lock(), delimeter, exportArrayFile, m_MaxValPerLine)
+    EXECUTE_TEMPLATE(this, WriteASCIIDataPrivate, selectedArrayPtr.lock(), this, selectedArrayPtr.lock(), delimiter, exportArrayFile, m_MaxValPerLine)
 
     if(getErrorCondition() < 0)
     {
@@ -327,10 +327,10 @@ void WriteASCIIData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char WriteASCIIData::lookupDelimeter()
+char WriteASCIIData::lookupDelimiter()
 {
   char del = ' ';
-  switch(m_Delimeter)
+  switch(m_Delimiter)
   {
   case Comma:
     del = ',';

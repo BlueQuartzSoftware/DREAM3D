@@ -157,6 +157,7 @@ class ImportASCIIDataWizard : public QWizard
 
   protected slots:
     void refreshModel();
+    void cleanupPage(int id);
 
   private:
     QString                                             m_InputFilePath;

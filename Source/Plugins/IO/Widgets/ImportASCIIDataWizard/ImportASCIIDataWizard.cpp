@@ -212,6 +212,14 @@ ImportASCIIDataWizard::~ImportASCIIDataWizard()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImportASCIIDataWizard::cleanupPage(int id)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QList<char> ImportASCIIDataWizard::ConvertToDelimiters(bool tabAsDelimiter, bool semicolonAsDelimiter, bool commaAsDelimiter, bool spaceAsDelimiter)
 {
   QList<char> delimiters;
