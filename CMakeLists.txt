@@ -456,7 +456,7 @@ endif()
 
 
 message(STATUS "BrandedSIMPLView_DIR: ${BrandedSIMPLView_DIR}")
-include_directories(${BrandedSIMPLView_DIR})
+#include_directories(${BrandedSIMPLView_DIR})
 
 # -----------------------------------------------------------------------
 # -- Build the EbsdLib Library
