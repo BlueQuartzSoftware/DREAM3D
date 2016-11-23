@@ -115,8 +115,6 @@ public:
   // -----------------------------------------------------------------------------
   DataContainerArray::Pointer initializeDataContainerArray()
   {
-    int err = 0;
-
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
     // Create a DataContainer for each geometry
