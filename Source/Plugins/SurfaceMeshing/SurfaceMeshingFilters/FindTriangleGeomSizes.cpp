@@ -87,7 +87,7 @@ void FindTriangleGeomSizes::initialize()
 void FindTriangleGeomSizes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  DataArraySelectionFilterParameter::RequirementType dasReq = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, SIMPL::GeometryType::TriangleGeometry);
+  DataArraySelectionFilterParameter::RequirementType dasReq = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomSizes, dasReq));
   parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomSizes));
   parameters.push_back(SIMPL_NEW_STRING_FP("Volumes", VolumesArrayName, FilterParameter::CreatedArray, FindTriangleGeomSizes));

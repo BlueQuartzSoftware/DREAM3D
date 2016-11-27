@@ -85,15 +85,15 @@ void QuickSurfaceMesh::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes = { SIMPL::GeometryType::ImageGeometry, SIMPL::GeometryType::RectGridGeometry };
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
+    IGeometry::Types geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-                                                                                                                            AttributeMatrix::Type::Cell, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes = { SIMPL::GeometryType::ImageGeometry, SIMPL::GeometryType::RectGridGeometry };
+                                                                                                                            AttributeMatrix::Type::Cell, IGeometry::Type::Any);
+    IGeometry::Types geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Transfer", SelectedDataArrayPaths, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
   }

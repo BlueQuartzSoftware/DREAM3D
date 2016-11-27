@@ -86,7 +86,7 @@ void FindSizes::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, SIMPL::Defaults::AnyGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     AttributeMatrix::Types amTypes = { AttributeMatrix::Type::Vertex, AttributeMatrix::Type::Edge,
                                   AttributeMatrix::Type::Face, AttributeMatrix::Type::Cell };
     req.amTypes = amTypes;
@@ -95,7 +95,7 @@ void FindSizes::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req =
-        AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Any, SIMPL::Defaults::AnyGeometry);
+        AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Any, IGeometry::Type::Any);
      AttributeMatrix::Types amTypes = { AttributeMatrix::Type::VertexFeature, AttributeMatrix::Type::EdgeFeature,
                                   AttributeMatrix::Type::FaceFeature, AttributeMatrix::Type::CellFeature };
     req.amTypes = amTypes;

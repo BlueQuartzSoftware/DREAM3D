@@ -121,7 +121,7 @@ void ReverseTriangleWinding::setupFilterParameters()
   FilterParameterVector parameters;
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
+    req.dcGeometryTypes = IGeometry::Types(1, IGeometry::Type::Triangle);
     parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", SurfaceDataContainerName, FilterParameter::RequiredArray, ReverseTriangleWinding, req));
   }
   setFilterParameters(parameters);
