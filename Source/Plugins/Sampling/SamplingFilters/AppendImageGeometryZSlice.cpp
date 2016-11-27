@@ -73,11 +73,11 @@ void AppendImageGeometryZSlice::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Input Cell Data", InputAttributeMatrix, FilterParameter::RequiredArray, AppendImageGeometryZSlice, req));
   }
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Destination Cell Data", DestinationAttributeMatrix, FilterParameter::RequiredArray, AppendImageGeometryZSlice, req));
   }
 

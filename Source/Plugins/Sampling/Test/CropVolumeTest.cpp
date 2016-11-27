@@ -189,8 +189,8 @@ public:
     amDims.push_back(X.getMax());
     amDims.push_back(Y.getMax());
     amDims.push_back(Z.getMax());
-    AttributeMatrix::Pointer am1 = AttributeMatrix::New(amDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
-    AttributeMatrix::Pointer am2 = AttributeMatrix::New(amDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::AttributeMatrixType::CellFeature);
+    AttributeMatrix::Pointer am1 = AttributeMatrix::New(amDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
+    AttributeMatrix::Pointer am2 = AttributeMatrix::New(amDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
 
     QVector<size_t> tDims;
     tDims.push_back(X.getMax());

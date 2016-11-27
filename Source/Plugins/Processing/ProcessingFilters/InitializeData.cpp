@@ -104,7 +104,7 @@ void InitializeData::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-                                                                                                                            SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+                                                                                                                            AttributeMatrix::Type::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Cell Arrays", CellAttributeMatrixPaths, FilterParameter::RequiredArray, InitializeData, req));
   }
   parameters.push_back(SIMPL_NEW_INTEGER_FP("X Min (Column)", XMin, FilterParameter::Parameter, InitializeData));

@@ -217,7 +217,7 @@ void ReadStlFile::dataCheck()
   sm->setGeometry(triangleGeom);
 
   QVector<size_t> tDims(1, 0);
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Face);
+  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
 
   QVector<size_t> cDims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName());

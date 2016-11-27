@@ -198,7 +198,7 @@ void EnsembleInfoReader::dataCheck()
   }
 
   QVector<size_t> tDims(1, numphases + 1);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0)
   {
     return;

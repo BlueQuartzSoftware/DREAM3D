@@ -98,7 +98,7 @@ public:
     cDims[0] = 1;
     float fnum = 0.0f;
     int inum = 0;
-    AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+    AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     DataArray<float>::Pointer data = DataArray<float>::CreateArray(tDims, cDims, "TestArrayFloat");
     DataArray<int32_t>::Pointer data1 = DataArray<int32_t>::CreateArray(tDims, cDims, "TestArrayInt");
 

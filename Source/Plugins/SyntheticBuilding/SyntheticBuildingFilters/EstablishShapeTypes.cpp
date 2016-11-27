@@ -77,7 +77,7 @@ void EstablishShapeTypes::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, SIMPL::Defaults::AnyGeometry);
     QVector<uint32_t> geomTypes;
     geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
     geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
@@ -212,7 +212,7 @@ int EstablishShapeTypes::getPhaseCount()
     qDebug() << "Name" << inputAttrMat->getName();
   }
 
-  if(inputAttrMat->getType() < SIMPL::AttributeMatrixType::VertexEnsemble || inputAttrMat->getType() > SIMPL::AttributeMatrixType::CellEnsemble)
+  if(inputAttrMat->getType() < AttributeMatrix::Type::VertexEnsemble || inputAttrMat->getType() > AttributeMatrix::Type::CellEnsemble)
   {
     return 0;
   }

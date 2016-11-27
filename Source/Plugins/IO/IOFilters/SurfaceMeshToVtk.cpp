@@ -100,14 +100,14 @@ void SurfaceMeshToVtk::setupFilterParameters()
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
-    req.amTypes = QVector<unsigned int>(1, SIMPL::AttributeMatrixType::Vertex);
+    req.amTypes = AttributeMatrix::Types(1, AttributeMatrix::Type::Vertex);
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Vertex Arrays", SelectedVertexArrays, FilterParameter::RequiredArray, SurfaceMeshToVtk, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
-    req.amTypes = QVector<unsigned int>(1, SIMPL::AttributeMatrixType::Face);
+    req.amTypes = AttributeMatrix::Types(1, AttributeMatrix::Type::Face);
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Face Arrays", SelectedFaceArrays, FilterParameter::RequiredArray, SurfaceMeshToVtk, req));
   }
 

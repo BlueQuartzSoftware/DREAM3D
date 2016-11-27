@@ -96,7 +96,7 @@ void CalculateArrayHistogram::setupFilterParameters()
   linkedProps << "NewDataContainerName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("New Data Container", NewDataContainer, FilterParameter::Parameter, CalculateArrayHistogram, linkedProps));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Histogram", SelectedArrayPath, FilterParameter::RequiredArray, CalculateArrayHistogram, req));
   }
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container ", NewDataContainerName, FilterParameter::CreatedArray, CalculateArrayHistogram));
@@ -201,7 +201,7 @@ void CalculateArrayHistogram::dataCheck()
     {
       return;
     }
-    AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
+    AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
     if(getErrorCondition() < 0 || nullptr == attrMat.get())
     {
       return;
@@ -211,7 +211,7 @@ void CalculateArrayHistogram::dataCheck()
   else // use existing data container
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
-    AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
+    AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
     if(getErrorCondition() < 0 || nullptr == attrMat.get())
     {
       return;
