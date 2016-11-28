@@ -40,15 +40,15 @@ function(AddItkCopyInstallRules)
     list(REMOVE_AT STACK 0)
     list(LENGTH STACK STACK_LENGTH)
 
-    # See if we have found a Qt5 or System library. All Itk libs start with "itk"
-    string(FIND ${itk_LIBNAME} "Qt5::" IsQt5Lib)
-    string(REGEX MATCH "^ITK" IsItkLib ${itk_LIBNAME})
-
     # If we have not seen this library before then find its dependencies
     if(NOT FOUND_${itk_LIBNAME})
       set(FOUND_${itk_LIBNAME} TRUE PARENT_SCOPE)
-      if(${IsQt5Lib} EQUAL -1 AND "${IsItkLib}" STREQUAL "ITK")
-        # message(STATUS "    ${itk_LIBNAME}: ${FOUND_${itk_LIBNAME}}  IsItkLib: ${IsItkLib}")
+
+      string(REGEX MATCH "^ITK" IsItkLib ${itk_LIBNAME})
+      string(REGEX MATCH "^SCIFIO" IsItkLib2 ${itk_LIBNAME})
+   
+      if("${IsItkLib}" STREQUAL "ITK" OR "${IsItkLib2}" STREQUAL "SCIFIO")
+        #message(STATUS "    ${itk_LIBNAME}: ${FOUND_${itk_LIBNAME}}  IsItkLib: ${IsItkLib}")
         set(itk_LIBVAR ${itk_LIBNAME})
         foreach(BTYPE ${itk_TYPES} )
           #message(STATUS "  BTYPE: ${BTYPE}")
@@ -189,6 +189,7 @@ list(APPEND DREAM3D_ITK_MODULES
     ${DREAM3D_CORE_ITK_MODULES}
     ${DREAM3D_ADDITIONAL_ITK_MODULES}
   )
+list(REMOVE_DUPLICATES DREAM3D_ITK_MODULES)
 
 # --------------------------------------------------------------------
 # find ITK libararies
