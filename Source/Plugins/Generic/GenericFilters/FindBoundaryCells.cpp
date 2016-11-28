@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Generic/GenericConstants.h"
@@ -58,10 +59,10 @@ FindBoundaryCells::FindBoundaryCells()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells)
 , m_IgnoreFeatureZero(true)
+, m_IncludeVolumeBoundary(false)
 , m_FeatureIds(nullptr)
 , m_BoundaryCells(nullptr)
 {
-
   setupFilterParameters();
 }
 
@@ -80,6 +81,7 @@ void FindBoundaryCells::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Ignore Feature 0", IgnoreFeatureZero, FilterParameter::Parameter, FindBoundaryCells));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Include Volume Boundary", IncludeVolumeBoundary, FilterParameter::Parameter, FindBoundaryCells));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
@@ -89,6 +91,7 @@ void FindBoundaryCells::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Boundary Cells", BoundaryCellsArrayName, FilterParameter::CreatedArray, FindBoundaryCells));
+
   setFilterParameters(parameters);
 }
 
@@ -127,15 +130,15 @@ void FindBoundaryCells::dataCheck()
   if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getBoundaryCellsArrayName());
   m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(
-      this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_BoundaryCellsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      this, tempPath, 0, cDims);
+  if(nullptr != m_BoundaryCellsPtr.lock().get())
   {
     m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -170,8 +173,8 @@ void FindBoundaryCells::execute()
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
   int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
-  neighpoints[0] = -xPoints * yPoints;
-  neighpoints[1] = -xPoints;
+  neighpoints[0] = -1 * (xPoints * yPoints);
+  neighpoints[1] = -1 * (xPoints);
   neighpoints[2] = -1;
   neighpoints[3] = 1;
   neighpoints[4] = xPoints;
@@ -199,8 +202,17 @@ void FindBoundaryCells::execute()
       {
         onsurf = 0;
         feature = m_FeatureIds[zStride + yStride + k];
-        if(feature > 0)
+        if(feature >= 0)
         {
+          if(m_IncludeVolumeBoundary == true)
+          {
+            if (xPoints > 2 && (k == 0 || k == xPoints - 1)) { onsurf++; }
+            if (yPoints > 2 && (j == 0 || j == yPoints - 1)) { onsurf++; }
+            if (zPoints > 2 && (i == 0 || i == zPoints - 1)) { onsurf++; }
+
+            if(onsurf > 0 && feature == 0) { onsurf = 0; }
+          }
+
           for(int64_t l = 0; l < 6; l++)
           {
             good = 1;

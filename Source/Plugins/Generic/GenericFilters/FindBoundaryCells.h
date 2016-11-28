@@ -63,6 +63,9 @@ class FindBoundaryCells : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, IgnoreFeatureZero)
     Q_PROPERTY(bool IgnoreFeatureZero READ getIgnoreFeatureZero WRITE setIgnoreFeatureZero)
 
+    SIMPL_FILTER_PARAMETER(bool, IncludeVolumeBoundary)
+    Q_PROPERTY(bool IncludeVolumeBoundary READ getIncludeVolumeBoundary WRITE setIncludeVolumeBoundary)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
