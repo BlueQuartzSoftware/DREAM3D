@@ -1,3 +1,4 @@
+
 /* ============================================================================
  * Copyright (c) 2015 BlueQuartz Softwae, LLC
  * All rights reserved.
@@ -32,6 +33,10 @@
 
 #ifndef _statsgeneratorfilter_h_
 #define _statsgeneratorfilter_h_
+
+#ifdef __GNUC__
+#pragma GCC diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -202,5 +207,9 @@ class StatsGeneratorFilter : public AbstractFilter
     StatsGeneratorFilter(const StatsGeneratorFilter&); // Copy Constructor Not Implemented
     void operator=(const StatsGeneratorFilter&); // Operator '=' Not Implemented
 };
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 #endif /* _statsGeneratorFilter_H_ */
