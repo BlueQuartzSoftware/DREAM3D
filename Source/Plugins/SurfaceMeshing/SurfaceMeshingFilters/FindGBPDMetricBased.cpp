@@ -72,6 +72,9 @@
 // Include the MOC generated file for this class
 #include "moc_FindGBPDMetricBased.cpp"
 
+namespace GBPDMetricBased
+{
+
 /**
  * @brief The TriAreaAndNormals class defines a container that stores the area of a given triangle
  * and the two normals for grains on either side of the triangle
@@ -359,6 +362,8 @@ public:
   }
 #endif
 };
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1024,9 +1029,9 @@ void FindGBPDMetricBased::execute()
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
-  tbb::concurrent_vector<TriAreaAndNormals> selectedTris(0);
+  tbb::concurrent_vector<GBPDMetricBased::TriAreaAndNormals> selectedTris(0);
 #else
-  QVector<TriAreaAndNormals> selectedTris(0);
+  QVector<GBPDMetricBased::TriAreaAndNormals> selectedTris(0);
 #endif
 
   size_t trisChunkSize = 50000;
@@ -1051,14 +1056,14 @@ void FindGBPDMetricBased::execute()
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize), TrisSelector(m_ExcludeTripleLines, m_Triangles, m_NodeTypes, &selectedTris, m_PhaseOfInterest, m_CrystalStructures, m_Eulers,
+      tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize), GBPDMetricBased::TrisSelector(m_ExcludeTripleLines, m_Triangles, m_NodeTypes, &selectedTris, m_PhaseOfInterest, m_CrystalStructures, m_Eulers,
                                                                                        m_Phases, m_FaceLabels, m_FaceNormals, m_FaceAreas),
                         tbb::auto_partitioner());
     }
     else
 #endif
     {
-      TrisSelector serial(m_ExcludeTripleLines, m_Triangles, m_NodeTypes, &selectedTris, m_PhaseOfInterest, m_CrystalStructures, m_Eulers, m_Phases, m_FaceLabels, m_FaceNormals, m_FaceAreas);
+      GBPDMetricBased::TrisSelector serial(m_ExcludeTripleLines, m_Triangles, m_NodeTypes, &selectedTris, m_PhaseOfInterest, m_CrystalStructures, m_Eulers, m_Phases, m_FaceLabels, m_FaceNormals, m_FaceAreas);
       serial.select(i, i + trisChunkSize);
     }
   }
@@ -1121,13 +1126,13 @@ void FindGBPDMetricBased::execute()
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + pointsChunkSize),
-                        ProbeDistrib(&distribValues, &errorValues, &samplPtsX, &samplPtsY, &samplPtsZ, selectedTris, m_LimitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst),
+                        GBPDMetricBased::ProbeDistrib(&distribValues, &errorValues, &samplPtsX, &samplPtsY, &samplPtsZ, selectedTris, m_LimitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst),
                         tbb::auto_partitioner());
     }
     else
 #endif
     {
-      ProbeDistrib serial(&distribValues, &errorValues, &samplPtsX, &samplPtsY, &samplPtsZ, selectedTris, m_LimitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst);
+      GBPDMetricBased::ProbeDistrib serial(&distribValues, &errorValues, &samplPtsX, &samplPtsY, &samplPtsZ, selectedTris, m_LimitDist, totalFaceArea, numDistinctGBs, ballVolume, cryst);
       serial.probe(i, i + pointsChunkSize);
     }
   }
