@@ -144,7 +144,7 @@ void StatsGeneratorWidget::setupGui()
     progress.setWindowModality(Qt::WindowModal);
 
     QVector<size_t> tDims(1, ensembles);
-    AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::AttributeMatrixType::CellEnsemble);
+    AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
     cellEnsembleAttrMat->addAttributeArray(sda->getName(), sda);
     UInt32ArrayType::Pointer phaseTypes = m_Filter->getPhaseTypes();
     cellEnsembleAttrMat->addAttributeArray(phaseTypes->getName(), phaseTypes);
@@ -653,7 +653,7 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   dca->addDataContainer(m);
 
   QVector<size_t> tDims(1, nPhases);
-  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
   m->addAttributeMatrix(SIMPL::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
 
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
@@ -839,7 +839,7 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
   DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::StatsGenerator);
   dca->addDataContainer(m);
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
   m->addAttributeMatrix(SIMPL::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
 
   hid_t fileId = QH5Utilities::openFile(h5file, true); // Open the file Read Only

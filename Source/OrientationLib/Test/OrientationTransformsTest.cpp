@@ -376,7 +376,7 @@ class OrientationTransformsTest
         size_t nStepsCubed = (nSteps + 1) * (nSteps + 1) * (nSteps + 1);
 
         QVector<size_t> tDims(1, nStepsCubed);
-        AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, AMName, 3);
+        AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, AMName, AttributeMatrix::Type::Cell);
         m->addAttributeMatrix(AMName, attrMat);
         dca->addDataContainer(m);
 

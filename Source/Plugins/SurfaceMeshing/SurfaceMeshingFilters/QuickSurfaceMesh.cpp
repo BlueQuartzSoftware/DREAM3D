@@ -85,15 +85,15 @@ void QuickSurfaceMesh::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes = { SIMPL::GeometryType::ImageGeometry, SIMPL::GeometryType::RectGridGeometry };
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
+    IGeometry::Types geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-                                                                                                                            SIMPL::AttributeMatrixType::Cell, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes = { SIMPL::GeometryType::ImageGeometry, SIMPL::GeometryType::RectGridGeometry };
+                                                                                                                            AttributeMatrix::Type::Cell, IGeometry::Type::Any);
+    IGeometry::Types geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Transfer", SelectedDataArrayPaths, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
   }
@@ -237,8 +237,8 @@ void QuickSurfaceMesh::dataCheck()
   }
 
   QVector<size_t> tDims(1, 0);
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Vertex);
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Face);
+  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
 
   // Create a Triangle Geometry
   SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);

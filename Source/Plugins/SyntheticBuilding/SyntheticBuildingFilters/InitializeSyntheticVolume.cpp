@@ -131,28 +131,28 @@ void InitializeSyntheticVolume::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
   //  {
-  //    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble,
-  //    SIMPL::Defaults::AnyGeometry);
-  //    QVector<uint32_t> geomTypes;
-  //    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-  //    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+  //    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble,
+  //    IGeometry::Type::Any);
+  //    IGeometry::Types geomTypes;
+  //    geomTypes.push_back(IGeometry::Type::Image);
+  //    geomTypes.push_back(IGeometry::Type::Unknown);
   //    req.dcGeometryTypes = geomTypes;
   //    req.daTypes = QVector<QString>(1, SIMPL::TypeNames::StringArray);
   //    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Names", InputPhaseNamesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
@@ -229,7 +229,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[0] = m_Dimensions.x;
   tDims[1] = m_Dimensions.y;
   tDims[2] = m_Dimensions.z;
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0 && cellAttrMat.get() == nullptr)
   {
     return;
@@ -242,7 +242,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[0] = ensembleAM->getNumberOfTuples();
 
   // Create our own Ensemble Attribute Matrix
-  AttributeMatrix::Pointer ensembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer ensembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0 && cellAttrMat.get() == nullptr) { return; }
 
   QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
