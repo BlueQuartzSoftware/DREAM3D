@@ -49,6 +49,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -1792,7 +1793,7 @@ void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if(shapeclass == SIMPL::ShapeType::EllipsoidShape)
+  if (shapeclass == static_cast<ShapeType::EnumType>(ShapeType::Type::EllipsoidShape))
   {
     omega3f = 1;
   }
@@ -2433,7 +2434,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
 
   // Bail if the shapeclass is not one of our enumerated types
-  if(shapeclass >= SIMPL::ShapeType::ShapeTypeEnd)
+  if (shapeclass >= static_cast<ShapeType::EnumType>(ShapeType::Type::ShapeTypeEnd))
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     setErrorCondition(-666);
