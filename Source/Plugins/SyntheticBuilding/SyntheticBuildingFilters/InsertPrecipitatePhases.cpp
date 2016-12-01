@@ -1506,7 +1506,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if (shapeclass == ShapeType::Type::EllipsoidShape)
+  if (shapeclass == ShapeType::Type::Ellipsoid)
   {
     omega3f = 1;
   }
@@ -2167,7 +2167,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   }
 
   // init any values for each of the Shape Ops
-  for(size_t iter = 0; iter < m_ShapeOps.size(); iter++)
+  for(int iter = 0; iter < m_ShapeOps.size(); iter++)
   {
     m_ShapeOps[iter]->init();
   }

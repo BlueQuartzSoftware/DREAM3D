@@ -1793,7 +1793,7 @@ void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if (shapeclass == static_cast<ShapeType::EnumType>(ShapeType::Type::EllipsoidShape))
+  if (shapeclass == static_cast<ShapeType::EnumType>(ShapeType::Type::Ellipsoid))
   {
     omega3f = 1;
   }
