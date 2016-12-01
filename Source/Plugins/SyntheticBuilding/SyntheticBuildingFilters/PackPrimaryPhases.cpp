@@ -1070,7 +1070,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   // find which phases are primary phases
   for(size_t i = 1; i < totalEnsembles; ++i)
   {
-    if(m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
+    if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::PrimaryPhase))
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       if(nullptr == pp)
@@ -3222,7 +3222,7 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
   size_t numPhases = phaseType->getNumberOfTuples();
   for(size_t i = 1; i < numPhases; ++i)
   {
-    if(phaseType->getValue(i) == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType->getValue(i) == static_cast<PhaseType::EnumType>(PhaseType::Type::PrimaryPhase))
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryPhasesLocal.push_back(i);

@@ -338,7 +338,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
     DEFINE_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
     DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 

@@ -408,7 +408,7 @@ class PackPrimaryPhases : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
 
     // Ensemble Data - make sure these are all initialized to nullptr in the constructor
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
     DEFINE_STRINGARRAY_VARIABLE(PhaseNames)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)

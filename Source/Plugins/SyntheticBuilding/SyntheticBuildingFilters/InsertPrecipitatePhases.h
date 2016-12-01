@@ -441,7 +441,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     NeighborList<float>::WeakPointer m_ClusteringList;
 
     // Ensemble Data - make sure these are all initialized to nullptr in the constructor
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
     DEFINE_DATAARRAY_VARIABLE(ShapeType::EnumType, ShapeTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 

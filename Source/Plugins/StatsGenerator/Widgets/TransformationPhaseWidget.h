@@ -65,7 +65,7 @@ class TransformationPhaseWidget : public StatsGenWidget, private Ui::Transformat
 
     void updatePlots();
 
-    SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
+    SIMPL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
     void setCrystalStructure(unsigned int xtal);
     unsigned int getCrystalStructure() const;
     void setPhaseIndex(int index);

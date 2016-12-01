@@ -761,7 +761,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   for(size_t i = 1; i < numensembles; ++i)
   {
-    if(m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
+    if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::PrecipitatePhase))
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       if(nullptr == pp)
@@ -888,7 +888,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   {
     for(size_t i = 1; i < numensembles; ++i)
     {
-      if(m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
+      if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::PrecipitatePhase))
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
         RdfData::Pointer rdfTarget = pp->getRadialDistFunction();
