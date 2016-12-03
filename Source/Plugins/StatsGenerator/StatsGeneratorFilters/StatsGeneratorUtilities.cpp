@@ -87,17 +87,17 @@ void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, PhaseType
   if(odf.size() > 0)
   {
     FloatArrayType::Pointer p = FloatArrayType::FromQVector(odf, SIMPL::StringConstants::ODF);
-    if(phaseType == PhaseType::Type::PrimaryPhase)
+    if(phaseType == PhaseType::Type::Primary)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
       pp->setODF(p);
     }
-    if(phaseType == PhaseType::Type::PrecipitatePhase)
+    if(phaseType == PhaseType::Type::Precipitate)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
       pp->setODF(p);
     }
-    if(phaseType == PhaseType::Type::TransformationPhase)
+    if(phaseType == PhaseType::Type::Transformation)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
       tp->setODF(p);
@@ -116,17 +116,17 @@ void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData, PhaseType
       odfWeights.push_back(euler3);
       odfWeights.push_back(sigma);
       odfWeights.push_back(weight);
-      if(phaseType == PhaseType::Type::PrimaryPhase)
+      if(phaseType == PhaseType::Type::Primary)
       {
         PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
         pp->setODF_Weights(odfWeights);
       }
-      if(phaseType == PhaseType::Type::PrecipitatePhase)
+      if(phaseType == PhaseType::Type::Precipitate)
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
         pp->setODF_Weights(odfWeights);
       }
-      if(phaseType == PhaseType::Type::TransformationPhase)
+      if(phaseType == PhaseType::Type::Transformation)
       {
         TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
         tp->setODF_Weights(odfWeights);
@@ -153,17 +153,17 @@ void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, Phase
   if(aodf.size() > 0)
   {
     FloatArrayType::Pointer aodfData = FloatArrayType::FromQVector(aodf, SIMPL::StringConstants::AxisOrientation);
-    if(phaseType == PhaseType::Type::PrimaryPhase)
+    if(phaseType == PhaseType::Type::Primary)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
       pp->setAxisOrientation(aodfData);
     }
-    if(phaseType == PhaseType::Type::PrecipitatePhase)
+    if(phaseType == PhaseType::Type::Precipitate)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
       pp->setAxisOrientation(aodfData);
     }
-    if(phaseType == PhaseType::Type::TransformationPhase)
+    if(phaseType == PhaseType::Type::Transformation)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
       tp->setAxisOrientation(aodfData);
@@ -182,17 +182,17 @@ void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, Phase
       aodfWeights.push_back(euler3);
       aodfWeights.push_back(sigma);
       aodfWeights.push_back(weight);
-      if(phaseType == PhaseType::Type::PrimaryPhase)
+      if(phaseType == PhaseType::Type::Primary)
       {
         PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
         pp->setAxisODF_Weights(aodfWeights);
       }
-      if(phaseType == PhaseType::Type::PrecipitatePhase)
+      if(phaseType == PhaseType::Type::Precipitate)
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
         pp->setAxisODF_Weights(aodfWeights);
       }
-      if(phaseType == PhaseType::Type::TransformationPhase)
+      if(phaseType == PhaseType::Type::Transformation)
       {
         TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
         tp->setAxisODF_Weights(aodfWeights);
@@ -262,17 +262,17 @@ void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData
   if(mdf.size() > 0)
   {
     FloatArrayType::Pointer p = FloatArrayType::FromPointer(mdf.data(), mdf.size(), SIMPL::StringConstants::MisorientationBins);
-    if(phaseType == PhaseType::Type::PrimaryPhase)
+    if(phaseType == PhaseType::Type::Primary)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
       pp->setMisorientationBins(p);
     }
-    if(phaseType == PhaseType::Type::PrecipitatePhase)
+    if(phaseType == PhaseType::Type::Precipitate)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
       pp->setMisorientationBins(p);
     }
-    if(phaseType == PhaseType::Type::TransformationPhase)
+    if(phaseType == PhaseType::Type::Transformation)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
       tp->setMisorientationBins(p);
@@ -288,17 +288,17 @@ void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData
       mdfWeights.push_back(anglesArray);
       mdfWeights.push_back(axisArray);
       mdfWeights.push_back(weightArray);
-      if(phaseType == PhaseType::Type::PrimaryPhase)
+      if(phaseType == PhaseType::Type::Primary)
       {
         PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
         pp->setMDF_Weights(mdfWeights);
       }
-      if(phaseType == PhaseType::Type::PrecipitatePhase)
+      if(phaseType == PhaseType::Type::Precipitate)
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
         pp->setMDF_Weights(mdfWeights);
       }
-      if(phaseType == PhaseType::Type::TransformationPhase)
+      if(phaseType == PhaseType::Type::Transformation)
       {
         TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
         tp->setMDF_Weights(mdfWeights);

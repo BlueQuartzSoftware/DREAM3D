@@ -432,9 +432,9 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
       precipitateStatsData->setRadialDistFunction(data);
     }
 
-    getODFWidgetWidget()->getOrientationData(precipitateStatsData, PhaseType::Type::PrecipitatePhase, preflight);
+    getODFWidgetWidget()->getOrientationData(precipitateStatsData, PhaseType::Type::Precipitate, preflight);
 
-    err = getAxisODFWidget()->getOrientationData(precipitateStatsData, PhaseType::Type::PrecipitatePhase, preflight);
+    err = getAxisODFWidget()->getOrientationData(precipitateStatsData, PhaseType::Type::Precipitate, preflight);
   }
   return retErr;
 }
@@ -509,13 +509,13 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   getCOverAPlotWidget()->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_COverA());
   getCOverAPlotWidget()->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_RdfPlot->extractStatsData(index, precipitateStatsData, PhaseType::Type::PrecipitatePhase);
+  m_RdfPlot->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
 
   // Set the ODF Data
-  getODFWidgetWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::PrecipitatePhase);
+  getODFWidgetWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
 
   // Set the Axis ODF Data
-  getAxisODFWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::PrecipitatePhase);
+  getAxisODFWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

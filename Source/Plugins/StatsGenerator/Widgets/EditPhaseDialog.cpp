@@ -137,7 +137,7 @@ PhaseType::Type EditPhaseDialog::getPhaseType()
 
   if(index == 2)
   {
-    return PhaseType::Type::MatrixPhase;
+    return PhaseType::Type::Matrix;
   }
   return static_cast<PhaseType::Type>(index);
 }
@@ -236,7 +236,7 @@ void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
 {
   Q_UNUSED(index);
   bool b = false;
-  if(static_cast<PhaseType::Type>(phaseTypeCombo->currentIndex()) == PhaseType::Type::PrecipitatePhase)
+  if(static_cast<PhaseType::Type>(phaseTypeCombo->currentIndex()) == PhaseType::Type::Precipitate)
   {
     b = true;
   }
@@ -244,7 +244,7 @@ void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
   pptFractionLabel->setEnabled(b);
 
   b = false;
-  if(static_cast<PhaseType::Type>(phaseTypeCombo->currentIndex()) == PhaseType::Type::TransformationPhase)
+  if(static_cast<PhaseType::Type>(phaseTypeCombo->currentIndex()) == PhaseType::Type::Transformation)
   {
     b = true;
   }

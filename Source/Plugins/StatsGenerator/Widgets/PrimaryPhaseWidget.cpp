@@ -660,9 +660,9 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
       primaryStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
     }
 
-    m_ODFWidget->getOrientationData(primaryStatsData, PhaseType::Type::PrimaryPhase, preflight);
+    m_ODFWidget->getOrientationData(primaryStatsData, PhaseType::Type::Primary, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(primaryStatsData, PhaseType::Type::PrimaryPhase, preflight);
+    err = m_AxisODFWidget->getOrientationData(primaryStatsData, PhaseType::Type::Primary, preflight);
   }
   return retErr;
 }
@@ -783,10 +783,10 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
     m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
   }
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::PrimaryPhase);
+  m_ODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::PrimaryPhase);
+  m_AxisODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

@@ -83,7 +83,7 @@ TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent)
 , m_grid(nullptr)
 {
   setTabTitle("Transformation");
-  setPhaseType(PhaseType::Type::PrimaryPhase);
+  setPhaseType(PhaseType::Type::Primary);
   setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();
@@ -741,9 +741,9 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
       transformationStatsData->setFeatureSize_COverA(data);
       transformationStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
-    m_ODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::TransformationPhase, preflight);
+    m_ODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::Transformation, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::TransformationPhase, preflight);
+    err = m_AxisODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::Transformation, preflight);
   }
   return retErr;
 }
@@ -856,10 +856,10 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::TransformationPhase);
+  m_ODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::Transformation);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::TransformationPhase);
+  m_AxisODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::Transformation);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

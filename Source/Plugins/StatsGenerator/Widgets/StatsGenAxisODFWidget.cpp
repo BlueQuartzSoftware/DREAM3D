@@ -116,17 +116,17 @@ void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, Ph
 {
 
   VectorOfFloatArray arrays(0);
-  if(phaseType == PhaseType::Type::PrimaryPhase)
+  if(phaseType == PhaseType::Type::Primary)
   {
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
     arrays = pp->getAxisODF_Weights();
   }
-  else if(phaseType == PhaseType::Type::PrecipitatePhase)
+  else if(phaseType == PhaseType::Type::Precipitate)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
     arrays = pp->getAxisODF_Weights();
   }
-  else if(phaseType == PhaseType::Type::TransformationPhase)
+  else if(phaseType == PhaseType::Type::Transformation)
   {
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getAxisODF_Weights();

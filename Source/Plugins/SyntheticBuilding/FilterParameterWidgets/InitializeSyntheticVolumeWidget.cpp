@@ -486,7 +486,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
-    if(phaseType->GetValue(i) == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType->GetValue(i) == SIMPL::PhaseType::Primary)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryphases.push_back(i);

@@ -69,7 +69,7 @@ BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget* parent)
 , m_grid(nullptr)
 {
   setTabTitle("Boundary");
-  setPhaseType(PhaseType::Type::PrimaryPhase);
+  setPhaseType(PhaseType::Type::Primary);
   setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();

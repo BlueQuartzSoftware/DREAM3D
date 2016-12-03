@@ -323,7 +323,7 @@ void StatsGenRDFWidget::updatePlots()
 void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType)
 {
   Q_UNUSED(index)
-  if(phaseType == PhaseType::Type::PrecipitatePhase)
+  if(phaseType == PhaseType::Type::Precipitate)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
     //    arrays = pp->getMDF_Weights();

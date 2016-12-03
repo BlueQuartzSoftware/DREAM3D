@@ -400,7 +400,7 @@ void MatchCrystallography::execute()
   m_SyntheticCrystalStructures[0] = m_CrystalStructures[0];
   for(size_t i = 1; i < totalEnsembles; ++i)
   {
-    if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::PrimaryPhase) || m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::PrecipitatePhase))
+    if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary) || m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
       ss = QObject::tr("Initializing Arrays of Phase %1").arg(i);
       notifyStatusMessage(getHumanLabel(), "Initializing Arrays");
@@ -457,7 +457,7 @@ void MatchCrystallography::initializeArrays(size_t ensem)
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
-  if(m_PhaseTypes[ensem] == static_cast<PhaseType::EnumType>(PhaseType::Type::PrecipitatePhase))
+  if(m_PhaseTypes[ensem] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[ensem].get());
     if(nullptr == pp)
@@ -475,7 +475,7 @@ void MatchCrystallography::initializeArrays(size_t ensem)
     m_ActualOdf = pp->getODF();
     m_ActualMdf = pp->getMisorientationBins();
   }
-  else if(m_PhaseTypes[ensem] == static_cast<PhaseType::EnumType>(PhaseType::Type::PrimaryPhase))
+  else if(m_PhaseTypes[ensem] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
   {
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[ensem].get());
     if(nullptr == pp)

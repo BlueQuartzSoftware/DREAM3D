@@ -394,17 +394,17 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
 {
   Q_UNUSED(index)
   VectorOfFloatArray arrays;
-  if(phaseType == PhaseType::Type::PrimaryPhase)
+  if(phaseType == PhaseType::Type::Primary)
   {
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
     arrays = pp->getMDF_Weights();
   }
-  if(phaseType == PhaseType::Type::PrecipitatePhase)
+  if(phaseType == PhaseType::Type::Precipitate)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
     arrays = pp->getMDF_Weights();
   }
-  if(phaseType == PhaseType::Type::TransformationPhase)
+  if(phaseType == PhaseType::Type::Transformation)
   {
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getMDF_Weights();

@@ -192,7 +192,7 @@ void StatsGeneratorFilter::readArray(const QJsonObject& jsonRoot, size_t numTupl
   m_CrystalStructures->initializeWithValue(Ebsd::CrystalStructure::UnknownCrystalStructure);
 
   m_PhaseTypes = UInt32ArrayType::CreateArray(numTuples, SIMPL::EnsembleData::PhaseTypes, true);
-  m_PhaseTypes->initializeWithValue(static_cast<PhaseType::EnumType>(PhaseType::Type::UnknownPhaseType));
+  m_PhaseTypes->initializeWithValue(static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
 
   m_PhaseNames = StringDataArray::CreateArray(numTuples, SIMPL::EnsembleData::PhaseName, true);
   m_PhaseNames->initializeWithValue(QString("Unknown Phase"));
@@ -313,7 +313,7 @@ void StatsGeneratorFilter::execute()
       VectorOfFloatArray odfWeights;
       VectorOfFloatArray mdfWeights;
       VectorOfFloatArray aodfWeights;
-      if(phaseType == PhaseType::Type::PrimaryPhase)
+      if(phaseType == PhaseType::Type::Primary)
       {
         PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsData);
         pp->generateBinNumbers();
@@ -321,7 +321,7 @@ void StatsGeneratorFilter::execute()
         mdfWeights = pp->getMDF_Weights();
         aodfWeights = pp->getAxisODF_Weights();
       }
-      else if(phaseType == PhaseType::Type::PrecipitatePhase)
+      else if(phaseType == PhaseType::Type::Precipitate)
       {
         PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
         pp->generateBinNumbers();
@@ -347,7 +347,7 @@ void StatsGeneratorFilter::execute()
         cleanRDF->setBoxResolution(boxRes);
         pp->setRadialDistFunction(cleanRDF);
       }
-      else if(phaseType == PhaseType::Type::TransformationPhase)
+      else if(phaseType == PhaseType::Type::Transformation)
       {
         TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsData);
         tp->generateBinNumbers();
