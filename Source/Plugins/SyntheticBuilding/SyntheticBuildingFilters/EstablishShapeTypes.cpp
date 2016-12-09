@@ -102,11 +102,14 @@ void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* r
   reader->openFilterGroup(this, index);
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath()));
   setShapeTypesArrayName(reader->readString("ShapeTypesArrayName", getShapeTypesArrayName()));
-  QVector<uint32_t> data = getShapeTypeData().d;
-  data = reader->readArray("ShapeTypeData", data);
-  UInt32Vector_t vec;
-  vec.d = data;
-  setShapeTypeData(vec);
+  ShapeType::Types data = getShapeTypeData();
+  // Convert to QVector<unsigned int>
+  QVector<ShapeType::EnumType> vec = ShapeType::ToQVector(data);
+  // Read from the source
+  vec = reader->readArray("ShapeTypeData", vec);
+  // convert back to enum type
+  data = ShapeType::FromQVector(vec);
+  setShapeTypeData(data);
   reader->closeFilterGroup();
 }
 
@@ -149,8 +152,7 @@ void EstablishShapeTypes::dataCheck()
   }
   // Now create the output Shape Types Array
   tempPath.update(getInputPhaseTypesArrayPath().getDataContainerName(), getInputPhaseTypesArrayPath().getAttributeMatrixName(), getShapeTypesArrayName());
-  m_ShapeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(
-      this, tempPath, true, cDims);           /* Assigns the shared_ptr<>(this, tempPath, true, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ShapeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath, true, cDims);           /* Assigns the shared_ptr<>(this, tempPath, true, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_ShapeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);
@@ -183,9 +185,9 @@ void EstablishShapeTypes::execute()
   }
 
   // Copy the data from the internal QVector into the actual ShapeTypes array from the data container
-  for(int32_t i = 0; i < m_ShapeTypeData.d.size(); i++)
+  for(int32_t i = 0; i < m_ShapeTypeData.size(); i++)
   {
-    m_ShapeTypesPtr.lock()->setValue(i, m_ShapeTypeData.d[i]);
+    m_ShapeTypesPtr.lock()->setValue(i, static_cast<ShapeType::EnumType>(m_ShapeTypeData[i]));
   }
 
   // If there is an error set this to something negative and also set a message
@@ -206,10 +208,10 @@ int EstablishShapeTypes::getPhaseCount()
     return 0;
   }
 
-  if(__SHOW_DEBUG_MSG__)
+  if(0)
   {
-    qDebug() << "  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
-    qDebug() << "Name" << inputAttrMat->getName();
+    qDebug() << "EstablishShapeTypes::getPhaseCount()  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
+    qDebug() << "EstablishShapeTypes::getPhaseCount()  Name" << inputAttrMat->getName();
   }
 
   if(inputAttrMat->getType() < AttributeMatrix::Type::VertexEnsemble || inputAttrMat->getType() > AttributeMatrix::Type::CellEnsemble)

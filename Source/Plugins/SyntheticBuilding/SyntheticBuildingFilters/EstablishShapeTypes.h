@@ -40,6 +40,8 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/ShapeType.h"
+
 
 /**
  * @brief The EstablishShapeTypes class. See [Filter documentation](@ref establishshapetypes) for details.
@@ -60,8 +62,8 @@ class EstablishShapeTypes : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, ShapeTypesArrayName)
     Q_PROPERTY(QString ShapeTypesArrayName READ getShapeTypesArrayName WRITE setShapeTypesArrayName)
 
-    SIMPL_FILTER_PARAMETER(UInt32Vector_t, ShapeTypeData)
-    Q_PROPERTY(UInt32Vector_t ShapeTypeData READ getShapeTypeData WRITE setShapeTypeData)
+    SIMPL_FILTER_PARAMETER(ShapeType::Types, ShapeTypeData)
+    Q_PROPERTY(ShapeType::Types ShapeTypeData READ getShapeTypeData WRITE setShapeTypeData)
 
     int getPhaseCount();
     Q_PROPERTY(int PhaseCount READ getPhaseCount)
@@ -163,7 +165,7 @@ class EstablishShapeTypes : public AbstractFilter
 
   private:
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
+    DEFINE_DATAARRAY_VARIABLE(ShapeType::EnumType, ShapeTypes)
 
     EstablishShapeTypes(const EstablishShapeTypes&); // Copy Constructor Not Implemented
     void operator=(const EstablishShapeTypes&); // Operator '=' Not Implemented
