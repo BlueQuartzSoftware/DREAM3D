@@ -62,6 +62,7 @@ QuickSurfaceMesh::QuickSurfaceMesh()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_NodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
+, m_FeatureAttributeMatrixName(SIMPL::Defaults::FaceFeatureAttributeMatrixName)
 , m_FeatureIds(nullptr)
 , m_FaceLabels(nullptr)
 , m_NodeTypes(nullptr)
@@ -104,6 +105,8 @@ void QuickSurfaceMesh::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Face Attribute Matrix", FaceAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   parameters.push_back(SIMPL_NEW_STRING_FP("Face Labels", FaceLabelsArrayName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   setFilterParameters(parameters);
 }
 
@@ -120,6 +123,7 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
   setNodeTypesArrayName(reader->readString("NodeTypesArrayName", getNodeTypesArrayName()));
   setFaceLabelsArrayName(reader->readString("FaceLabelsArrayName", getFaceLabelsArrayName()));
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setFeatureAttributeMatrixName(reader->readString("FeatureAttributeMatrixName", getFeatureAttributeMatrixName()));
   reader->closeFilterGroup();
 }
 
@@ -291,6 +295,8 @@ void QuickSurfaceMesh::dataCheck()
     QString ss = QObject::tr("The number of selected Cell Attribute Arrays available does not match the number of Face Attribute Arrays created");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
+  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
 }
 
 // -----------------------------------------------------------------------------
@@ -332,6 +338,17 @@ void QuickSurfaceMesh::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
+
+  AttributeMatrix::Pointer featAttrMat = sm->getAttributeMatrix(m_FeatureAttributeMatrixName);
+  size_t numFeatures = 0;
+  size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  for(size_t i = 0; i < numTuples; i++)
+  {
+    if(m_FeatureIds[i] > numFeatures) { numFeatures = m_FeatureIds[i]; }
+  }
+
+  QVector<size_t> featDims(1, numFeatures + 1);
+  featAttrMat->setTupleDimensions(featDims);
 
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
 

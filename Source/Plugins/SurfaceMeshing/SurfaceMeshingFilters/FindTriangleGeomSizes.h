@@ -57,8 +57,8 @@ class FindTriangleGeomSizes : public AbstractFilter
     SIMPL_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
-    Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
     SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
     Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
