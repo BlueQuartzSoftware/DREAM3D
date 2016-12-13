@@ -13,14 +13,14 @@ if /i %1 == amd64_arm goto amd64_arm
 goto usage
 
 :x86
-if not exist "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\vcvars32.bat" goto missing
-call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\vcvars32.bat"
+if not exist "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\vcvars32.bat" goto missing
+call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\vcvars32.bat"
 @set ARCH_TYPE=i386
 goto :SetVisualStudioVersion
 
 :amd64
-if not exist "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\amd64\vcvars64.bat" goto missing
-call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\amd64\vcvars64.bat"
+if not exist "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat" goto missing
+call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat"
 @set ARCH_TYPE=x64
 goto :SetVisualStudioVersion
 
@@ -30,8 +30,8 @@ call "%~dp0bin\arm\vcvarsarm.bat"
 goto :SetVisualStudioVersion
 
 :x86_amd64
-if not exist "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat" goto missing
-call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
+if not exist "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat" goto missing
+call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
 @set ARCH_TYPE=x64
 goto :SetVisualStudioVersion
 
@@ -75,9 +75,9 @@ goto :eof
 @set DREAM3D_SDK=C:/DREAM3D_SDK
 @set PARALLEL_BUILD=8
 @set HDF_VERSION=1.8.16
-@set ITK_VERSION=4.9.0
+@set ITK_VERSION=4.9.1
 
-@set CMAKE_INSTALL=%DREAM3D_SDK%\cmake-3.5.1-win32-x86
+@set CMAKE_INSTALL=%DREAM3D_SDK%\cmake-3.6.2-win64-x64
 @set PATH=%PATH%;%CMAKE_INSTALL%\bin
 
 @set CMAKE_MODULE_PATH=%DREAM3D_SDK%\hdf5-%HDF_VERSION%\cmake
