@@ -33,53 +33,38 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-#ifndef _quicksurfacemesh_h_
-#define _quicksurfacemesh_h_
+#ifndef _findtrianglegeomneighbors_h_
+#define _findtrianglegeomneighbors_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Geometry/IGeometryGrid.h"
-
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
 
 /**
- * @brief The QuickSurfaceMesh class. See [Filter documentation](@ref quicksurfacemesh) for details.
+ * @brief The FindTriangleGeomNeighbors class. See [Filter documentation](@ref findtrianglegeomneighbors) for details.
  */
-class QuickSurfaceMesh : public AbstractFilter
+class FindTriangleGeomNeighbors : public AbstractFilter
 {
     Q_OBJECT
   public:
-    SIMPL_SHARED_POINTERS(QuickSurfaceMesh)
-    SIMPL_STATIC_NEW_MACRO(QuickSurfaceMesh)
-    SIMPL_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindTriangleGeomNeighbors)
+    SIMPL_STATIC_NEW_MACRO(FindTriangleGeomNeighbors)
+    SIMPL_TYPE_MACRO_SUPER(FindTriangleGeomNeighbors, AbstractFilter)
 
-    virtual ~QuickSurfaceMesh();
-  
-    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
-    Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+    virtual ~FindTriangleGeomNeighbors();
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath FeatureAttributeMatrixPath READ getFeatureAttributeMatrixPath WRITE setFeatureAttributeMatrixPath)
 
-    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
-    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, NeighborListArrayName)
+    Q_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
-    Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
+    Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-
-    SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
-    Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
-
-    SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
-    Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
-
-    SIMPL_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
-    Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, NumNeighborsArrayName)
+    Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -126,11 +111,6 @@ class QuickSurfaceMesh : public AbstractFilter
     virtual void setupFilterParameters();
 
     /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-
-    /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
@@ -164,7 +144,7 @@ class QuickSurfaceMesh : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    QuickSurfaceMesh();
+    FindTriangleGeomNeighbors();
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -175,36 +155,15 @@ class QuickSurfaceMesh : public AbstractFilter
      */
     void initialize();
 
+
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-    DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
-  
-    std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
-    std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
 
-    /**
-     * @brief getGridCoordinates
-     * @param grid
-     * @param x
-     * @param y
-     * @param z
-     * @param coords
-     */
-    void getGridCoordinates(IGeometryGrid::Pointer grid, size_t x, size_t y, size_t z, float* coords);
+    NeighborList<int32_t>::WeakPointer m_NeighborList;
 
-    /**
-     * @brief updateFaceInstancePointers Updates raw Face pointers
-     */
-    void updateFaceInstancePointers();
-
-    /**
-     * @brief updateVertexInstancePointers Updates raw Vertex pointers
-     */
-    void updateVertexInstancePointers();
-
-    QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const QuickSurfaceMesh&); // Operator '=' Not Implemented
+    FindTriangleGeomNeighbors(const FindTriangleGeomNeighbors&); // Copy Constructor Not Implemented
+    void operator=(const FindTriangleGeomNeighbors&); // Operator '=' Not Implemented
 };
 
-#endif /* QuickSurfaceMesh_H_ */
+#endif /* _findtrianglegeomneighbors_h_ */

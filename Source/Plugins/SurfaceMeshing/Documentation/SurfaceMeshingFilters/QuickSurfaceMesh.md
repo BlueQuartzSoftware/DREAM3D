@@ -38,6 +38,7 @@ Image/RectGrid
 | **Vertex Attribute Array** | NodeTypes | int8_t | (1) | Specifies the type of node in the **Geometry** |
 | **Attribute Matrix** | FaceData | Face | N/A | Created **Face Attribute Matrix** name  |
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
+| **Attribute Matrix** | FaceFeatureData | Face Feature | N/A | **Feature Attribute Matrix** of the created _Face Labels_ |
 | Any **Face Attribute Array** | None | Any | Any | The set of transferred **Cell Attribute Arrays** |
 
 ## License & Copyright ##

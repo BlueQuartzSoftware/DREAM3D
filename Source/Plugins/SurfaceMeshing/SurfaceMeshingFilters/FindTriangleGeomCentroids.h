@@ -33,53 +33,35 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-#ifndef _quicksurfacemesh_h_
-#define _quicksurfacemesh_h_
+#ifndef _findtrianglegeomcentroids_h_
+#define _findtrianglegeomcentroids_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Geometry/IGeometryGrid.h"
-
-#include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
- * @brief The QuickSurfaceMesh class. See [Filter documentation](@ref quicksurfacemesh) for details.
+ * @brief The FindTriangleGeomCentroids class. See [Filter documentation](@ref findtrianglegeomcentroids) for details.
  */
-class QuickSurfaceMesh : public AbstractFilter
+class FindTriangleGeomCentroids : public AbstractFilter
 {
-    Q_OBJECT
+  Q_OBJECT
+
   public:
-    SIMPL_SHARED_POINTERS(QuickSurfaceMesh)
-    SIMPL_STATIC_NEW_MACRO(QuickSurfaceMesh)
-    SIMPL_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindTriangleGeomCentroids)
+    SIMPL_STATIC_NEW_MACRO(FindTriangleGeomCentroids)
+    SIMPL_TYPE_MACRO_SUPER(FindTriangleGeomCentroids, AbstractFilter)
 
-    virtual ~QuickSurfaceMesh();
-  
-    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
-    Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+    virtual ~FindTriangleGeomCentroids();
+	
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
+    Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
-    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
-
-    SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
-    Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
-
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-
-    SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
-    Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
-
-    SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
-    Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
-
-    SIMPL_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
-    Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CentroidsArrayName)
+    Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -126,11 +108,6 @@ class QuickSurfaceMesh : public AbstractFilter
     virtual void setupFilterParameters();
 
     /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-
-    /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
@@ -144,7 +121,7 @@ class QuickSurfaceMesh : public AbstractFilter
     /**
      * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
      * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
+     * @param filter Filter instance pointer 
      */
     void updateFilterParameters(AbstractFilter* filter);
 
@@ -164,47 +141,24 @@ class QuickSurfaceMesh : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    QuickSurfaceMesh();
+    FindTriangleGeomCentroids();
+
     /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
+    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+    */
     void dataCheck();
 
     /**
-     * @brief Initializes all the private instance variables.
-     */
+    * @brief Initializes all the private instance variables.
+    */
     void initialize();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-    DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
-  
-    std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
-    std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;
+    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
 
-    /**
-     * @brief getGridCoordinates
-     * @param grid
-     * @param x
-     * @param y
-     * @param z
-     * @param coords
-     */
-    void getGridCoordinates(IGeometryGrid::Pointer grid, size_t x, size_t y, size_t z, float* coords);
-
-    /**
-     * @brief updateFaceInstancePointers Updates raw Face pointers
-     */
-    void updateFaceInstancePointers();
-
-    /**
-     * @brief updateVertexInstancePointers Updates raw Vertex pointers
-     */
-    void updateVertexInstancePointers();
-
-    QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const QuickSurfaceMesh&); // Operator '=' Not Implemented
+    FindTriangleGeomCentroids(const FindTriangleGeomCentroids&); // Copy Constructor Not Implemented
+    void operator=(const FindTriangleGeomCentroids&); // Operator '=' Not Implemented
 };
 
-#endif /* QuickSurfaceMesh_H_ */
+#endif /* _findtrianglegeomcentroids_h_ */

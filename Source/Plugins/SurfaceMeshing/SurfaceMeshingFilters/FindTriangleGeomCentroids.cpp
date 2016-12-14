@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindTriangleGeomSizes.h"
+#include "FindTriangleGeomCentroids.h"
 
 #include <set>
 
@@ -50,18 +50,17 @@
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
 // Include the MOC generated file for this class
-#include "moc_FindTriangleGeomSizes.cpp"
+#include "moc_FindTriangleGeomCentroids.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTriangleGeomSizes::FindTriangleGeomSizes() :
-  AbstractFilter(),
-  m_FaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
+FindTriangleGeomCentroids::FindTriangleGeomCentroids() :
+  AbstractFilter()
 , m_FeatureAttributeMatrixName(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "")
-, m_VolumesArrayName(SIMPL::FeatureData::Volumes)
-, m_FaceLabels(nullptr)
-, m_Volumes(nullptr)
+, m_FaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
+, m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
+, m_Centroids(nullptr)
 {
   initialize();
   setupFilterParameters();
@@ -70,14 +69,14 @@ FindTriangleGeomSizes::FindTriangleGeomSizes() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTriangleGeomSizes::~FindTriangleGeomSizes()
+FindTriangleGeomCentroids::~FindTriangleGeomCentroids()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindTriangleGeomSizes::initialize()
+void FindTriangleGeomCentroids::initialize()
 {
   setErrorCondition(0);
   setCancel(false);
@@ -86,24 +85,28 @@ void FindTriangleGeomSizes::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindTriangleGeomSizes::setupFilterParameters()
+void FindTriangleGeomCentroids::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  DataArraySelectionFilterParameter::RequirementType dasReq = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
-  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomSizes, dasReq));
+  {
+    DataArraySelectionFilterParameter::RequirementType dasReq = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
+	  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomCentroids, dasReq));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
-  AttributeMatrixSelectionFilterParameter::RequirementType amsReq = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
-  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindTriangleGeomSizes, amsReq));
+  {
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindTriangleGeomCentroids, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Volumes", VolumesArrayName, FilterParameter::CreatedArray, FindTriangleGeomSizes));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Centroids", CentroidsArrayName, FilterParameter::CreatedArray, FindTriangleGeomCentroids));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindTriangleGeomSizes::dataCheck()
+void FindTriangleGeomCentroids::dataCheck()
 {
   setErrorCondition(0);
 
@@ -125,24 +128,23 @@ void FindTriangleGeomSizes::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_FaceLabelsPtr.lock()); }
 
-  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getFeatureAttributeMatrixName(), -301);
+  DataContainer::Pointer tdc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceLabelsArrayPath().getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
 
-  DataArrayPath path(getFaceLabelsArrayPath().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName());
-
-  cDims[0] = 1;
-
-  m_VolumesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, path, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_VolumesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  DataArrayPath path(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getCentroidsArrayName());
+  cDims[0] = 3;
+  m_CentroidsPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, path, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (nullptr != m_CentroidsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
-    m_Volumes = m_VolumesPtr.lock()->getPointer(0);
+	  m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindTriangleGeomSizes::preflight()
+void FindTriangleGeomCentroids::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -156,26 +158,7 @@ void FindTriangleGeomSizes::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float FindTriangleGeomSizes::findTetrahedronVolume(int64_t vertIds[3], float* vertPtr)
-{
-  float vertMatrix[3][3] = { { vertPtr[3 * vertIds[1] + 0] - vertPtr[3 * vertIds[0] + 0],
-                               vertPtr[3 * vertIds[2] + 0] - vertPtr[3 * vertIds[0] + 0],
-                                                      0.0f - vertPtr[3 * vertIds[0] + 0] },
-                             { vertPtr[3 * vertIds[1] + 1] - vertPtr[3 * vertIds[0] + 1],
-                               vertPtr[3 * vertIds[2] + 1] - vertPtr[3 * vertIds[0] + 1],
-                                                      0.0f - vertPtr[3 * vertIds[0] + 1] },
-                             { vertPtr[3 * vertIds[1] + 2] - vertPtr[3 * vertIds[0] + 2],
-                               vertPtr[3 * vertIds[2] + 2] - vertPtr[3 * vertIds[0] + 2],
-                                                      0.0f - vertPtr[3 * vertIds[0] + 2] }
-                           };
-
-  return (MatrixMath::Determinant3x3(vertMatrix) / 6.0f);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindTriangleGeomSizes::execute()
+void FindTriangleGeomCentroids::execute()
 {
   initialize();
   dataCheck();
@@ -184,40 +167,45 @@ void FindTriangleGeomSizes::execute()
   TriangleGeom::Pointer triangles = getDataContainerArray()->getDataContainer(m_FaceLabelsArrayPath.getDataContainerName())->getGeometryAs<TriangleGeom>();
   float* vertPtr = triangles->getVertexPointer(0);
 
-  std::set<int32_t> featureSet;
   int64_t numTriangles = triangles->getNumberOfTris();
+  int64_t* tris = triangles->getTriPointer(0);
+
+  int64_t numFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
+  std::vector<std::set<int64_t> > vertexSets(numFeatures);
 
   for(int64_t i = 0; i < numTriangles; i++)
   {
-    if(m_FaceLabels[2 * i + 0] > 0) { featureSet.insert(m_FaceLabels[2 * i + 0]); }
-    if(m_FaceLabels[2 * i + 1] > 0) { featureSet.insert(m_FaceLabels[2 * i + 1]); }
+    if(m_FaceLabels[2 * i + 0] > 0)
+	  { 
+		  vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 0]);
+		  vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 1]);
+		  vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 2]);
+	  }
+    if(m_FaceLabels[2 * i + 1] > 0)
+	  {
+		  vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 0]);
+		  vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 1]);
+		  vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 2]);
+	  }
   }
 
-  QVector<size_t> tDims(1, featureSet.size() + 1);
-  AttributeMatrix::Pointer featAttrMat = getDataContainerArray()->getDataContainer(m_FaceLabelsArrayPath.getDataContainerName())->getAttributeMatrix(m_FeatureAttributeMatrixName);
-  featAttrMat->resizeAttributeArrays(tDims);
-  m_Volumes = m_VolumesPtr.lock()->getPointer(0);
-
-  int64_t vertsAtTri[3] = {0, 0, 0};
-
-  for(int64_t i = 0; i < numTriangles; i++)
+  std::set<int64_t>::iterator it;
+  for(int64_t i = 0; i < numFeatures; i++)
   {
-    triangles->getVertsAtTri(i, vertsAtTri);
-    if(m_FaceLabels[2 * i + 0] == -1)
-    {
-      std::swap(vertsAtTri[2], vertsAtTri[1]);
-      m_Volumes[m_FaceLabels[2 * i + 1]] += findTetrahedronVolume(vertsAtTri, vertPtr);
+    for(it = vertexSets[i].begin(); it != vertexSets[i].end(); ++it)
+	  {
+      int32_t vert = *it;
+      m_Centroids[3 * i + 0] += vertPtr[3 * vert + 0];
+      m_Centroids[3 * i + 1] += vertPtr[3 * vert + 1];
+      m_Centroids[3 * i + 2] += vertPtr[3 * vert + 2];
     }
-    else if(m_FaceLabels[2 * i + 1] == -1)
+    if(!vertexSets[i].empty())
     {
-      m_Volumes[m_FaceLabels[2 * i + 0]] += findTetrahedronVolume(vertsAtTri, vertPtr);
+      m_Centroids[3 * i + 0] /= vertexSets[i].size();
+      m_Centroids[3 * i + 1] /= vertexSets[i].size();
+      m_Centroids[3 * i + 2] /= vertexSets[i].size();
     }
-    else
-    {
-      m_Volumes[m_FaceLabels[2 * i + 0]] += findTetrahedronVolume(vertsAtTri, vertPtr);
-      std::swap(vertsAtTri[2], vertsAtTri[1]);
-      m_Volumes[m_FaceLabels[2 * i + 1]] += findTetrahedronVolume(vertsAtTri, vertPtr);
-    }
+	  vertexSets[i].clear();
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -226,9 +214,9 @@ void FindTriangleGeomSizes::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindTriangleGeomSizes::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindTriangleGeomCentroids::newFilterInstance(bool copyFilterParameters)
 {
-  FindTriangleGeomSizes::Pointer filter = FindTriangleGeomSizes::New();
+  FindTriangleGeomCentroids::Pointer filter = FindTriangleGeomCentroids::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -239,19 +227,19 @@ AbstractFilter::Pointer FindTriangleGeomSizes::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getCompiledLibraryName()
+const QString FindTriangleGeomCentroids::getCompiledLibraryName()
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getBrandingString()
+const QString FindTriangleGeomCentroids::getBrandingString()
 { return "SurfaceMeshing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getFilterVersion()
+const QString FindTriangleGeomCentroids::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
@@ -262,18 +250,18 @@ const QString FindTriangleGeomSizes::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getGroupName()
-{ return SIMPL::FilterGroups::StatisticsFilters; }
+const QString FindTriangleGeomCentroids::getGroupName()
+{ return SIMPL::FilterGroups::GenericFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
+const QString FindTriangleGeomCentroids::getSubGroupName()
+{ return SIMPL::FilterSubGroups::MiscFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getHumanLabel()
-{ return "Find Feature Volumes from Triangle Geometry"; }
+const QString FindTriangleGeomCentroids::getHumanLabel()
+{ return "Find Feature Centroids from Triangle Geometry"; }
 
