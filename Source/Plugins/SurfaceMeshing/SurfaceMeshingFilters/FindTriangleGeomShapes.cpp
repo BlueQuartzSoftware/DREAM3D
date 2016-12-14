@@ -364,8 +364,7 @@ void FindTriangleGeomShapes::find_moments()
   double xdist = 0.0f;
   double ydist = 0.0f;
   double zdist = 0.0f;
-  double area = 0.0f;
-  size_t zStride = 0, yStride = 0;
+
   for (size_t i = 0; i < numFaces; i++)
   {
 	  triangles->getVertsAtTri(i, vertIds);
