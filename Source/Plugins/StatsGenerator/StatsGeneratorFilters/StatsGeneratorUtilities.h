@@ -37,6 +37,8 @@
 
 #include <QtCore/QVector>
 
+#include "SIMPLib/Common/PhaseType.h"
+
 class StatsData;
 
 
@@ -56,12 +58,12 @@ class StatsGeneratorUtilities
      * @param weights
      * @param sigmas
      */
-    static void GenerateODFBinData(StatsData* statsData, unsigned int phaseType, unsigned int crystalStructure,
+    static void GenerateODFBinData(StatsData* statsData, PhaseType::Type phaseType, unsigned int crystalStructure,
                                    QVector<float> &e1s, QVector<float> &e2s,
                                    QVector<float> &e3s, QVector<float> &weights,
                                    QVector<float> &sigmas, bool computeODF = true);
 
-    static void GenerateAxisODFBinData(StatsData* statsData, unsigned int phaseType,
+    static void GenerateAxisODFBinData(StatsData* statsData, PhaseType::Type phaseType,
                                        QVector<float> &e1s, QVector<float> &e2s,
                                        QVector<float> &e3s, QVector<float> &weights,
                                        QVector<float> &sigmas, bool computeAxisODF = true);
@@ -72,7 +74,7 @@ class StatsGeneratorUtilities
                                                  QVector<float> &sigmas, bool computeODF = true);
 
     static void GenerateMisorientationBinData(StatsData* statsData,
-                                              unsigned int phaseType, unsigned int crystalStruct,
+                                              PhaseType::Type phaseType, unsigned int crystalStruct,
                                               QVector<float>& odf,
                                               QVector<float>& angles, QVector<float>& axes,
                                               QVector<float>& weights, bool computeMDF = true);

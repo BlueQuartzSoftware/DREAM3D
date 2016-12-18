@@ -46,7 +46,7 @@
 // -----------------------------------------------------------------------------
 StatsGenWidget::StatsGenWidget(QWidget* parent)
 : QWidget(parent)
-, m_PhaseType(SIMPL::PhaseType::PrimaryPhase)
+, m_PhaseType(PhaseType::Type::Primary)
 , m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 , m_PhaseIndex(0)
 , m_PhaseFraction(1.0)

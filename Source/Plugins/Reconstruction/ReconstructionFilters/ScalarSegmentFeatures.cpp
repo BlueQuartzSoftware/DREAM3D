@@ -209,12 +209,16 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
+    QVector<IGeometry::Type> geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
+    req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Scalar Array to Segment", ScalarArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    QVector<IGeometry::Type> geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
+    req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -557,7 +561,7 @@ void ScalarSegmentFeatures::execute()
   // By default we randomize grains
   if(true == m_RandomizeFeatureIds)
   {
-    totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
+    totalPoints = static_cast<int64_t>(m->getGeometry()->getNumberOfElements());
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
 

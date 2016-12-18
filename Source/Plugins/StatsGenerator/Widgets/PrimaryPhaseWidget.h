@@ -46,7 +46,7 @@ public:
 
   void updatePlots();
 
-  SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
+  SIMPL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
 
   virtual void setCrystalStructure(unsigned int xtal);
   virtual void setPhaseIndex(int index);

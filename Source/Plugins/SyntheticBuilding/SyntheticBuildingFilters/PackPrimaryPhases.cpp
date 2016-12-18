@@ -49,6 +49,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -1069,7 +1070,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   // find which phases are primary phases
   for(size_t i = 1; i < totalEnsembles; ++i)
   {
-    if(m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
+    if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       if(nullptr == pp)
@@ -1792,7 +1793,7 @@ void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if(shapeclass == SIMPL::ShapeType::EllipsoidShape)
+  if (shapeclass == static_cast<ShapeType::EnumType>(ShapeType::Type::Ellipsoid))
   {
     omega3f = 1;
   }
@@ -2433,7 +2434,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
 
   // Bail if the shapeclass is not one of our enumerated types
-  if(shapeclass >= SIMPL::ShapeType::ShapeTypeEnd)
+  if (shapeclass >= static_cast<ShapeType::EnumType>(ShapeType::Type::ShapeTypeEnd))
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     setErrorCondition(-666);
@@ -3221,7 +3222,7 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
   size_t numPhases = phaseType->getNumberOfTuples();
   for(size_t i = 1; i < numPhases; ++i)
   {
-    if(phaseType->getValue(i) == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType->getValue(i) == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryPhasesLocal.push_back(i);

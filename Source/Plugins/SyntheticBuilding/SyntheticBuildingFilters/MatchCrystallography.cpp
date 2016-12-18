@@ -400,7 +400,7 @@ void MatchCrystallography::execute()
   m_SyntheticCrystalStructures[0] = m_CrystalStructures[0];
   for(size_t i = 1; i < totalEnsembles; ++i)
   {
-    if(m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase || m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
+    if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary) || m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
       ss = QObject::tr("Initializing Arrays of Phase %1").arg(i);
       notifyStatusMessage(getHumanLabel(), "Initializing Arrays");
@@ -457,7 +457,7 @@ void MatchCrystallography::initializeArrays(size_t ensem)
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
-  if(m_PhaseTypes[ensem] == SIMPL::PhaseType::PrecipitatePhase)
+  if(m_PhaseTypes[ensem] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[ensem].get());
     if(nullptr == pp)
@@ -467,7 +467,7 @@ void MatchCrystallography::initializeArrays(size_t ensem)
                                "with the type of pointer stored in the StatsDataArray (PrecipitateStatsData)\n")
                        .arg(ensem)
                        .arg(ensem)
-                       .arg(m_PhaseTypes[ensem]);
+                       .arg(static_cast<PhaseType::EnumType>(m_PhaseTypes[ensem]));
       setErrorCondition(-666);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -475,7 +475,7 @@ void MatchCrystallography::initializeArrays(size_t ensem)
     m_ActualOdf = pp->getODF();
     m_ActualMdf = pp->getMisorientationBins();
   }
-  else if(m_PhaseTypes[ensem] == SIMPL::PhaseType::PrimaryPhase)
+  else if(m_PhaseTypes[ensem] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
   {
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[ensem].get());
     if(nullptr == pp)
@@ -485,7 +485,7 @@ void MatchCrystallography::initializeArrays(size_t ensem)
                                "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
                        .arg(ensem)
                        .arg(ensem)
-                       .arg(m_PhaseTypes[ensem]);
+                       .arg(static_cast<PhaseType::EnumType>(m_PhaseTypes[ensem]));
       setErrorCondition(-666);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -497,7 +497,7 @@ void MatchCrystallography::initializeArrays(size_t ensem)
   {
     setErrorCondition(-55000);
     QString ss;
-    ss = QObject::tr("Improper phase type (%1) for matching crystallography").arg(m_PhaseTypes[ensem]);
+    ss = QObject::tr("Improper phase type (%1) for matching crystallography").arg(static_cast<PhaseType::EnumType>(m_PhaseTypes[ensem]));
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }

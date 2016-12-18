@@ -44,6 +44,7 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/PhaseType.h"
 
 /**
  * @class EditPhaseDialog EditPhaseDialog.h StatsGenerator/EditPhaseDialog.h
@@ -66,8 +67,8 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     float getPhaseFraction();
     void setPhaseFraction(float d);
 
-    void setPhaseType(unsigned int pt);
-    unsigned int getPhaseType();
+    void setPhaseType(PhaseType::Type pt);
+    PhaseType::Type getPhaseType();
 
     void setOtherPhaseFractionTotal(float t);
 

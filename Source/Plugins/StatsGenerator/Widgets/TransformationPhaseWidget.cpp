@@ -83,7 +83,7 @@ TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent)
 , m_grid(nullptr)
 {
   setTabTitle("Transformation");
-  setPhaseType(SIMPL::PhaseType::PrimaryPhase);
+  setPhaseType(PhaseType::Type::Primary);
   setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();
@@ -690,10 +690,10 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
+  PhaseType::EnumType* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
-  phaseTypes[m_PhaseIndex] = m_PhaseType;
+  phaseTypes[m_PhaseIndex] = static_cast<PhaseType::EnumType>(m_PhaseType);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
   StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
@@ -741,9 +741,9 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
       transformationStatsData->setFeatureSize_COverA(data);
       transformationStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
-    m_ODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase, preflight);
+    m_ODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::Transformation, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase, preflight);
+    err = m_AxisODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::Transformation, preflight);
   }
   return retErr;
 }
@@ -763,12 +763,12 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
+  PhaseType::EnumType* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
-  m_PhaseType = attributeArray[index];
+  m_PhaseType = static_cast<PhaseType::Type>(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
@@ -856,10 +856,10 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, transformationStatsData, SIMPL::PhaseType::TransformationPhase);
+  m_ODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::Transformation);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, transformationStatsData, SIMPL::PhaseType::TransformationPhase);
+  m_AxisODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::Transformation);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

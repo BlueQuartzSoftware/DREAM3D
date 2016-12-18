@@ -615,10 +615,10 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
+  PhaseType::EnumType* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   crystalStructures[getPhaseIndex()] = getCrystalStructure();
-  phaseTypes[getPhaseIndex()] = getPhaseType();
+  phaseTypes[getPhaseIndex()] = static_cast<PhaseType::EnumType>(getPhaseType());
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
   StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
@@ -660,9 +660,9 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
       primaryStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
     }
 
-    m_ODFWidget->getOrientationData(primaryStatsData, SIMPL::PhaseType::PrimaryPhase, preflight);
+    m_ODFWidget->getOrientationData(primaryStatsData, PhaseType::Type::Primary, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(primaryStatsData, SIMPL::PhaseType::PrimaryPhase, preflight);
+    err = m_AxisODFWidget->getOrientationData(primaryStatsData, PhaseType::Type::Primary, preflight);
   }
   return retErr;
 }
@@ -676,12 +676,12 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
+  PhaseType::EnumType* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   setCrystalStructure(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
-  setPhaseType(attributeArray[index]);
+  setPhaseType(static_cast<PhaseType::Type>(attributeArray[index]));
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
@@ -783,10 +783,10 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
     m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
   }
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
+  m_ODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
+  m_AxisODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

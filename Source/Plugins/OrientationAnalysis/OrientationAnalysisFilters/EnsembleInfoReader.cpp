@@ -65,7 +65,7 @@ EnsembleInfoReader::EnsembleInfoReader()
 , m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
 , m_CrystalStructures(nullptr)
 , m_PhaseTypes(nullptr)
-, m_ptype(SIMPL::PhaseType::UnknownPhaseType)
+, m_ptype(PhaseType::Type::Unknown)
 , m_crystruct(999)
 {
   setupFilterParameters();
@@ -126,7 +126,7 @@ void EnsembleInfoReader::updateEnsembleInstancePointers()
   if(nullptr != m_PhaseTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
-    m_PhaseTypesPtr.lock()->initializeWithValue(SIMPL::PhaseType::UnknownPhaseType);
+    m_PhaseTypesPtr.lock()->initializeWithValue(static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -135,7 +135,7 @@ void EnsembleInfoReader::updateEnsembleInstancePointers()
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::initialize()
 {
-  m_ptype = SIMPL::PhaseType::UnknownPhaseType;
+  m_ptype = PhaseType::Type::Unknown;
   m_crystruct = 999;
 }
 
@@ -215,7 +215,7 @@ void EnsembleInfoReader::dataCheck()
 
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName());
   m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(
-      this, tempPath, SIMPL::PhaseType::UnknownPhaseType, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_PhaseTypesPtr.lock().get())                     /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
@@ -324,7 +324,7 @@ int32_t EnsembleInfoReader::readFile()
     }
 
     // now check to see if the Phase type string was valid.
-    if(m_ptype == SIMPL::PhaseType::UnknownPhaseType)
+    if(m_ptype == PhaseType::Type::Unknown)
     {
       QString ss = QObject::tr("Incorrect phase type name '%1'").arg(phaseTypeString); // The phase type name read from the file was not found in the lookup table
       setErrorCondition(-10007);
@@ -333,7 +333,7 @@ int32_t EnsembleInfoReader::readFile()
     }
     else
     {
-      m_PhaseTypes[index] = m_ptype;
+      m_PhaseTypes[index] = static_cast<PhaseType::EnumType>(m_ptype);
     }
 
     visited[index] = true;
@@ -416,31 +416,31 @@ void EnsembleInfoReader::ensembleLookup(QStringList list)
   // assign the corresponding number to the phase type string read from the input file
   if(QString::compare(list.at(1), "PrimaryPhase", Qt::CaseInsensitive) == 0)
   {
-    m_ptype = SIMPL::PhaseType::PrimaryPhase;
+    m_ptype = PhaseType::Type::Primary;
   }
   else if(QString::compare(list.at(1), "PrecipitatePhase", Qt::CaseInsensitive) == 0)
   {
-    m_ptype = SIMPL::PhaseType::PrecipitatePhase;
+    m_ptype = PhaseType::Type::Precipitate;
   }
   else if(QString::compare(list.at(1), "TransformationPhase", Qt::CaseInsensitive) == 0)
   {
-    m_ptype = SIMPL::PhaseType::TransformationPhase;
+    m_ptype = PhaseType::Type::Transformation;
   }
   else if(QString::compare(list.at(1), "MatrixPhase", Qt::CaseInsensitive) == 0)
   {
-    m_ptype = SIMPL::PhaseType::MatrixPhase;
+    m_ptype = PhaseType::Type::Matrix;
   }
   else if(QString::compare(list.at(1), "BoundaryPhase", Qt::CaseInsensitive) == 0)
   {
-    m_ptype = SIMPL::PhaseType::BoundaryPhase;
+    m_ptype = PhaseType::Type::Boundary;
   }
-  else if(QString::compare(list.at(1), "UnknownPhaseType", Qt::CaseInsensitive) == 0)
+  else if(QString::compare(list.at(1), "Unknown", Qt::CaseInsensitive) == 0)
   {
-    m_ptype = SIMPL::PhaseType::UnknownPhaseType;
+    m_ptype = PhaseType::Type::Unknown;
   }
   else
   {
-    m_ptype = SIMPL::PhaseType::UnknownPhaseType; // no match for phase type name read from file
+    m_ptype = PhaseType::Type::Unknown; // no match for phase type name read from file
   }
 }
 

@@ -34,8 +34,9 @@
 #ifndef _statsgeneratorfilter_h_
 #define _statsgeneratorfilter_h_
 
-#ifdef __GNUC__
-#pragma GCC diagnostic ignored "-Winconsistent-missing-override"
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
 #include "SIMPLib/SIMPLib.h"

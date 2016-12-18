@@ -40,6 +40,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Geometry/ShapeOps/ShapeOps.h"
@@ -254,7 +255,7 @@ class InsertPrecipitatePhases : public AbstractFilter
      * @param shapeclass Type of precipitate shape to be generated
      * @param OrthoOps Pointer to SpaceGroupOps object
      */
-    void generate_precipitate(int32_t phase, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps);
+    void generate_precipitate(int32_t phase, Precip_t* precip, ShapeType::Type shapeclass, SpaceGroupOps::Pointer OrthoOps);
 
     /**
      * @brief load_precipitates Reads a list of precipitates from a file to be used as the packed volume
@@ -440,8 +441,8 @@ class InsertPrecipitatePhases : public AbstractFilter
     NeighborList<float>::WeakPointer m_ClusteringList;
 
     // Ensemble Data - make sure these are all initialized to nullptr in the constructor
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
+    DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(ShapeType::EnumType, ShapeTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
     // All other private variables

@@ -379,7 +379,7 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
   unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   crystalStructures[getPhaseIndex()] = getCrystalStructure();
-  phaseTypes[getPhaseIndex()] = getPhaseType();
+  phaseTypes[getPhaseIndex()] = static_cast<PhaseType::EnumType>(getPhaseType());
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
   StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
@@ -432,9 +432,9 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
       precipitateStatsData->setRadialDistFunction(data);
     }
 
-    getODFWidgetWidget()->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase, preflight);
+    getODFWidgetWidget()->getOrientationData(precipitateStatsData, PhaseType::Type::Precipitate, preflight);
 
-    err = getAxisODFWidget()->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase, preflight);
+    err = getAxisODFWidget()->getOrientationData(precipitateStatsData, PhaseType::Type::Precipitate, preflight);
   }
   return retErr;
 }
@@ -453,7 +453,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
-  setPhaseType(attributeArray[index]);
+  setPhaseType(static_cast<PhaseType::Type>(attributeArray[index]));
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
@@ -509,13 +509,13 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   getCOverAPlotWidget()->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_COverA());
   getCOverAPlotWidget()->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_RdfPlot->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
+  m_RdfPlot->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
 
   // Set the ODF Data
-  getODFWidgetWidget()->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
+  getODFWidgetWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
 
   // Set the Axis ODF Data
-  getAxisODFWidget()->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
+  getAxisODFWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

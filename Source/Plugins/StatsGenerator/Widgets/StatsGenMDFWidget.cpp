@@ -390,21 +390,21 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
+void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType)
 {
   Q_UNUSED(index)
   VectorOfFloatArray arrays;
-  if(phaseType == SIMPL::PhaseType::PrimaryPhase)
+  if(phaseType == PhaseType::Type::Primary)
   {
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
     arrays = pp->getMDF_Weights();
   }
-  if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
+  if(phaseType == PhaseType::Type::Precipitate)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
     arrays = pp->getMDF_Weights();
   }
-  if(phaseType == SIMPL::PhaseType::TransformationPhase)
+  if(phaseType == PhaseType::Type::Transformation)
   {
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getMDF_Weights();
@@ -446,7 +446,7 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsign
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int phaseType, bool preflight)
+int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Type phaseType, bool preflight)
 {
   int retErr = 0;
 

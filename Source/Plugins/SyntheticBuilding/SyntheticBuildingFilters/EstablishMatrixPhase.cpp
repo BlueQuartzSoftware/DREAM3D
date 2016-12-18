@@ -386,7 +386,7 @@ void EstablishMatrixPhase::establish_matrix()
 
   for(size_t i = 1; i < numensembles; ++i)
   {
-    if(m_PhaseTypes[i] == SIMPL::PhaseType::MatrixPhase)
+    if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix))
     {
       MatrixStatsData* mp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
       if(nullptr == mp)

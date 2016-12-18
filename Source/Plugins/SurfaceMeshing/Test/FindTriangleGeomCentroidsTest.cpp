@@ -50,12 +50,12 @@
 
 #include "SurfaceMeshingTestFileLocations.h"
 
-class FindTriangleGeomSizesTest
+class FindTriangleGeomCentroidsTest
 {
 
   public:
-    FindTriangleGeomSizesTest() {}
-    virtual ~FindTriangleGeomSizesTest() {}
+    FindTriangleGeomCentroidsTest() {}
+    virtual ~FindTriangleGeomCentroidsTest() {}
 
 
   // -----------------------------------------------------------------------------
@@ -64,8 +64,8 @@ class FindTriangleGeomSizesTest
   void RemoveTestFiles()
   {
   #if REMOVE_TEST_FILES
-    QFile::remove(UnitTest::FindTriangleGeomSizesTest::TestFile1);
-    QFile::remove(UnitTest::FindTriangleGeomSizesTest::TestFile2);
+    QFile::remove(UnitTest::FindTriangleGeomCentroidsTest::TestFile1);
+    QFile::remove(UnitTest::FindTriangleGeomCentroidsTest::TestFile2);
   #endif
   }
 
@@ -74,8 +74,8 @@ class FindTriangleGeomSizesTest
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the FindTriangleGeomSizesTest Filter from the FilterManager
-    QString filtName = "FindTriangleGeomSizes";
+    // Now instantiate the FindTriangleGeomCentroidsTest Filter from the FilterManager
+    QString filtName = "FindTriangleGeomCentroids";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if (nullptr == filterFactory.get())
@@ -90,17 +90,15 @@ class FindTriangleGeomSizesTest
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  int TestFindTriangleGeomSizesTest()
+  int TestFindTriangleGeomCentroidsTest()
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
     DataContainer::Pointer tdc = DataContainer::New(SIMPL::Defaults::TriangleDataContainerName);
     dca->addDataContainer(tdc);
 
-    // Basic idea is to create a surface mesh of a rectangular prism with edge lengths of 3x1x1 for a
-    // total volume of 3, where the entire enclosed volume represents one feature;
-    // triangle windings are mixed to make sure the filter is properly flipping
-    // windings where necessary to ensure consistency
+    // Basic idea is to create a surface mesh of a rectangular prism with edge lengths of 3x1x1; the
+    // centroid should just be the average locations from its 8 vertices
     SharedVertexList::Pointer vertex = TriangleGeom::CreateSharedVertexList(8);
     TriangleGeom::Pointer triangle = TriangleGeom::CreateGeometry(12, vertex, SIMPL::Geometry::TriangleGeometry);
     tdc->setGeometry(triangle);
@@ -188,6 +186,7 @@ class FindTriangleGeomSizesTest
     tris[3 * 11 + 2] = 0;
 
     QVector<size_t> tDims(1, 12);
+
     AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceAttributeMatrixName, AttributeMatrix::Type::Face);
     tdc->addAttributeMatrix(SIMPL::Defaults::FaceAttributeMatrixName, faceAttrMat);
     tDims[0] = 2;
@@ -234,22 +233,22 @@ class FindTriangleGeomSizesTest
     faceLabelsPtr[2 * 11 + 0] =  1;
     faceLabelsPtr[2 * 11 + 1] = -1;
 
-    QString filtName = "FindTriangleGeomSizes";
+    QString filtName = "FindTriangleGeomCentroids";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(filtName);
     DREAM3D_REQUIRE(factory.get() != nullptr)
 
-    AbstractFilter::Pointer sizeFilter = factory->create();
-    DREAM3D_REQUIRE(sizeFilter.get() != nullptr)
+    AbstractFilter::Pointer centroidsFilter = factory->create();
+    DREAM3D_REQUIRE(centroidsFilter.get() != nullptr)
 
-    sizeFilter->setDataContainerArray(dca);
+    centroidsFilter->setDataContainerArray(dca);
 
     bool propWasSet = true;
     QVariant var;
 
     DataArrayPath path(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels);
     var.setValue(path);
-    propWasSet = sizeFilter->setProperty("FaceLabelsArrayPath", var);
+    propWasSet = centroidsFilter->setProperty("FaceLabelsArrayPath", var);
     if(!propWasSet)
     {
       qDebug() << "Unable to set property FaceLabelsArrayPath";
@@ -257,21 +256,23 @@ class FindTriangleGeomSizesTest
 
     path.update(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "");
     var.setValue(path);
-    propWasSet = sizeFilter->setProperty("FeatureAttributeMatrixName", var);
+    propWasSet = centroidsFilter->setProperty("FeatureAttributeMatrixName", var);
     if(!propWasSet)
     {
       qDebug() << "Unable to set property FeatureAttributeMatrixName";
     }
 
-    sizeFilter->execute();
-    int32_t err = sizeFilter->getErrorCondition();
+    centroidsFilter->execute();
+    int32_t err = centroidsFilter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     AttributeMatrix::Pointer faceFeatAttrMat = tdc->getAttributeMatrix(SIMPL::Defaults::FaceFeatureAttributeMatrixName);
-    FloatArrayType::Pointer volumes = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::Volumes);
+    FloatArrayType::Pointer centroids = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::Centroids);
 
-    DREAM3D_REQUIRE_EQUAL(volumes->getNumberOfTuples(), 2);
-    DREAM3D_REQUIRE_EQUAL(volumes->getValue(1), 3.0f);
+    DREAM3D_REQUIRE_EQUAL(centroids->getNumberOfTuples(), 2);
+    DREAM3D_REQUIRE_EQUAL(centroids->getValue(3), 0.5f);
+    DREAM3D_REQUIRE_EQUAL(centroids->getValue(4), 0.5f);
+    DREAM3D_REQUIRE_EQUAL(centroids->getValue(5), 0.5f);
 
     return EXIT_SUCCESS;
   }
@@ -285,14 +286,14 @@ class FindTriangleGeomSizesTest
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    DREAM3D_REGISTER_TEST( TestFindTriangleGeomSizesTest() )
+    DREAM3D_REGISTER_TEST( TestFindTriangleGeomCentroidsTest() )
 
     DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   }
 
   private:
-    FindTriangleGeomSizesTest(const FindTriangleGeomSizesTest&); // Copy Constructor Not Implemented
-    void operator=(const FindTriangleGeomSizesTest&); // Operator '=' Not Implemented
+    FindTriangleGeomCentroidsTest(const FindTriangleGeomCentroidsTest&); // Copy Constructor Not Implemented
+    void operator=(const FindTriangleGeomCentroidsTest&); // Operator '=' Not Implemented
 
 
 };

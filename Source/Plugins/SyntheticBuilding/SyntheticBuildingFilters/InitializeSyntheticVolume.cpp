@@ -405,7 +405,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
 
   for(size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
-    if(phaseType->getValue(i) == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType->getValue(i) == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryphases.push_back(i);
