@@ -147,6 +147,9 @@ void LineCounterObject::run()
     }
   }
 
+  // Count the last line
+  m_NumOfLines++;
+
   // Close the file and free the memory from the buffer
   qFile.close();
   free(buffer);
