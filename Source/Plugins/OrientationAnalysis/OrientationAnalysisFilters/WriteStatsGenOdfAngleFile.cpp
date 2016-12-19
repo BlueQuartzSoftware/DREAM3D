@@ -313,8 +313,8 @@ int WriteStatsGenOdfAngleFile::determineOutputLineCount(int64_t totalPoints, int
 int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase)
 {
   bool writeLine = false;
-  out << "# All lines starting with '#' are comments and should come before the header.\n";
-  out << "# DREAM.3D StatsGenerator Angles Input File\n";
+  out << "# All lines starting with '#' are comments and should come before the data.\n";
+  out << "# DREAM.3D StatsGenerator ODF Angles Input File\n";
   out << "# DREAM.3D Version " << OrientationAnalysis::Version::Complete() << "\n";
   out << "# Angle Data is space delimited.\n";
   out << "# Euler0 Euler1 Euler2 Weight Sigma\n";

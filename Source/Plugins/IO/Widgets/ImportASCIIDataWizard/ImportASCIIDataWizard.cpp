@@ -82,15 +82,13 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, int n
 void ImportASCIIDataWizard::setEditSettings(bool value)
 {
   m_EditSettings = value;
-  QWizardPage* page = this->page(Delimited);
-  DelimitedPage* delimitedPage = qobject_cast<DelimitedPage*>(page);
+  DelimitedPage* delimitedPage = qobject_cast<DelimitedPage*>(this->page(Delimited));
   if(delimitedPage)
   {
     delimitedPage->setEditSettings(value);
   }
 
-  page = this->page(DataFormat);
-  DataFormatPage* dataFormatPage = qobject_cast<DataFormatPage*>(page);
+  DataFormatPage* dataFormatPage = qobject_cast<DataFormatPage*>(this->page(DataFormat));
   if(dataFormatPage)
   {
     dataFormatPage->setEditSettings(value);
@@ -128,16 +126,22 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataCo
   dPage->setEditSettings(m_EditSettings);
   dfPage->getTupleTable()->clearTupleDimensions();
   dfPage->getTupleTable()->addTupleDimensions(wizardData->tupleDims);
+  dfPage->setUseDefaultHeaders(false);
+  dfPage->setHeaderLine(0);
+  dfPage->setUseCustomHeaders(false);
+
 
   if(wizardData->headerUsesDefaults)
   {
     dfPage->setUseDefaultHeaders(true);
   }
-  else if(wizardData->headerLine >= 0)
+
+  if(wizardData->headerLine >= 0)
   {
     dfPage->setHeaderLine(wizardData->headerLine);
   }
-  else if(wizardData->headerIsCustom)
+
+  if(wizardData->headerIsCustom)
   {
     dfPage->setUseCustomHeaders(true);
   }

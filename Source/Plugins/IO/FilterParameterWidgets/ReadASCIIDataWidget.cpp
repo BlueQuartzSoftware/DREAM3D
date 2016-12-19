@@ -175,7 +175,7 @@ void ReadASCIIDataWidget::on_editImportSettings_clicked()
       }
 
       tupleDims->setText(tupleDimsStr);
-
+      m_FilePath = m_ImportWizard->getInputFilePath();
       fileImportedLabel->setText(m_FilePath);
       fileImportedLabel->show();
       warningLabel->show();
@@ -440,8 +440,11 @@ void ReadASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     data.delimiters = m_ImportWizard->getDelimiters();
     data.inputFilePath = m_ImportWizard->getInputFilePath();
     data.dataHeaders = m_ImportWizard->getHeaders();
-    data.beginIndex = m_ImportWizard->getBeginningLineNum();
+    data.headerIsCustom = data.dataHeaders.size() > 0 ? true : false;
+    data.headerLine = data.headerIsCustom ? -1 : m_ImportWizard->getBeginningLineNum() - 1;
+//        data.headerUsesDefaults =
     data.numberOfLines = numOfLines;
+    data.beginIndex = m_ImportWizard->getBeginningLineNum();
     data.dataTypes = m_ImportWizard->getDataTypes();
     data.tupleDims = m_ImportWizard->getTupleDims();
     data.automaticAM = m_ImportWizard->getAutomaticAM();

@@ -82,7 +82,6 @@ void DataFormatPage::setupGui()
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   dataView->setModel(model);
-  //  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
   connect(tupleDimsTable, SIGNAL(tupleDimsChanged(QVector<size_t>)), this, SLOT(checkTupleDimensions(QVector<size_t>)));
