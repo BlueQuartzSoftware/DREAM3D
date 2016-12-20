@@ -199,6 +199,8 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataCo
     dfPage->dcItemSelected(wizardData->selectedPath.getDataContainerName());
   }
 
+  dfPage->checkHeaders();
+
 #ifndef Q_OS_MAC
   setWizardStyle(ModernStyle);
 #else
