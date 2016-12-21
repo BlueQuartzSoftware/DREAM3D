@@ -143,12 +143,35 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
      */
     void setAutomaticAttrMatrixName(const DataArrayPath &path);
 
-
     /**
      * @brief getAMName
      * @return
      */
     QString getAutomaticAttrMatrixName();
+
+    /**
+     * @brief setUseDefaultHeaders
+     * @param ok
+     */
+    void setUseDefaultHeaders(bool ok);
+
+    /**
+     * @brief setUseCustomHeaders
+     * @param value
+     */
+    void setUseCustomHeaders(bool value);
+
+    /**
+     * @brief setHeaderLine
+     * @param line
+     */
+    void setHeaderLine(int line);
+
+    /**
+     * @brief setEditSettings
+     * @param value
+     */
+    void setEditSettings(bool value);
 
     /**
      * @brief eventFilter
@@ -206,7 +229,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
      */
     QPoint adjustedMenuPosition(QPushButton* pushButton);
 
-  protected slots:
+  private slots:
     void on_startRowSpin_valueChanged(int i);
     void on_hasHeadersRadio_toggled(bool checked);
     void on_doesNotHaveHeadersRadio_toggled(bool checked);
@@ -232,6 +255,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     QSignalMapper*                                  m_DCMenuMapper;
 
     QPointer<QtSFaderWidget>                        m_FaderWidget;
+    bool                                            m_EditSettings = false;
 
     bool validateHeaders(QVector<QString> headers);
     bool validateTupleDimensions(QVector<size_t> tupleDims);

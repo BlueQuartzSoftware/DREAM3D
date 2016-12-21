@@ -38,6 +38,7 @@
 #define _asciiwizarddata_h_
 
 #include <QtCore/QDebug>
+#include <QtCore/QList>
 #include <QtCore/QVector>
 #include <QtCore/QStringList>
 #include <QtCore/QMetaType>
@@ -57,14 +58,19 @@ public:
 
   QString inputFilePath;
   QStringList dataHeaders;
-  int beginIndex;
-  int numberOfLines;
+  int beginIndex = -1;
+  int numberOfLines = -1;
   QStringList dataTypes;
   QList<char> delimiters;
-  bool consecutiveDelimiters;
+  bool consecutiveDelimiters = false;
   QVector<size_t> tupleDims;
-  bool automaticAM;
+  bool automaticAM = false;
   DataArrayPath selectedPath;
+
+  int headerLine = 0; // -1 means this selection is not used
+  bool headerIsCustom = false; // The user has set their own header names
+  bool headerUsesDefaults = false; // The user just wants to use the automatically generated headers
+
 
   bool isEmpty()
   {
@@ -86,6 +92,9 @@ public:
       qDebug() << "consecutiveDelimiters: " << consecutiveDelimiters;
       qDebug() << "tupleDims:" << tupleDims;
       qDebug() << "automaticAM:" << automaticAM;
+      qDebug() << "headerLine:" << headerLine;
+      qDebug() << "headerIsCustom:" << headerIsCustom;
+      qDebug() << "headerUsesDefaults:" << headerUsesDefaults;
 
   }
 };

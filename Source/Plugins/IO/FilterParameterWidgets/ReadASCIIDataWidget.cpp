@@ -135,8 +135,7 @@ void ReadASCIIDataWidget::setupGui()
   {
     fileImportedLabel->hide();
     warningLabel->hide();
-    removeFileBtn->hide();
-    editHeadersBtn->hide();
+    resetWizardBtn->hide();
     tupleCountLabel->hide();
     tupleCount->hide();
     tupleDimsLabel->hide();
@@ -149,15 +148,54 @@ void ReadASCIIDataWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ReadASCIIDataWidget::on_editImportSettings_clicked()
+{
+  if(m_ImportWizard != nullptr)
+  {
+    int numOfLines = -1;
+    if(m_LineCounter)
+    {
+      numOfLines = m_LineCounter->getNumberOfLines();
+    }
+    m_ImportWizard->setEditSettings(true);
+
+    int result = m_ImportWizard->exec();
+
+    if(result == QDialog::Accepted)
+    {
+      int beginIndex = m_ImportWizard->getBeginningLineNum();
+      int numOfDataLines = numOfLines - beginIndex + 1;
+      tupleCount->setText(QString::number(numOfDataLines));
+      QVector<size_t> dims = m_ImportWizard->getTupleDims();
+
+      QString tupleDimsStr = "";
+      for(int i = 0; i < dims.size(); i++)
+      {
+        tupleDimsStr.append("[" + QString::number(dims[i]) + "]");
+      }
+
+      tupleDims->setText(tupleDimsStr);
+      m_FilePath = m_ImportWizard->getInputFilePath();
+      fileImportedLabel->setText(m_FilePath);
+      fileImportedLabel->show();
+      warningLabel->show();
+      resetWizardBtn->show();
+      tupleCountLabel->show();
+      tupleCount->show();
+      tupleDimsLabel->show();
+      tupleDims->show();
+
+      emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+    }
+    m_ImportWizard->setEditSettings(false);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReadASCIIDataWidget::on_importFileBtn_pressed()
 {
-  // Clean up previous wizard and settings
-  if(nullptr != m_ImportWizard)
-  {
-    delete m_ImportWizard;
-    m_ImportWizard = nullptr;
-  }
-
   QStringList filterList;
   filterList.push_back("All Files(*.*)");
   QFileDialog* dialog = new QFileDialog(this);
@@ -168,6 +206,13 @@ void ReadASCIIDataWidget::on_importFileBtn_pressed()
 
   if(dialog->exec())
   {
+    // Clean up previous wizard and settings
+    if(nullptr != m_ImportWizard)
+    {
+      delete m_ImportWizard;
+      m_ImportWizard = nullptr;
+    }
+
     m_FilePath = dialog->selectedFiles()[0];
     QFileInfo fi(m_FilePath);
 
@@ -350,8 +395,7 @@ void ReadASCIIDataWidget::lineCountDidFinish()
     fileImportedLabel->setText(m_FilePath);
     fileImportedLabel->show();
     warningLabel->show();
-    removeFileBtn->show();
-    editHeadersBtn->show();
+    resetWizardBtn->show();
     tupleCountLabel->show();
     tupleCount->show();
     tupleDimsLabel->show();
@@ -364,31 +408,14 @@ void ReadASCIIDataWidget::lineCountDidFinish()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadASCIIDataWidget::on_editHeadersBtn_pressed()
-{
-  if(nullptr != m_ImportWizard)
-  {
-    DataFormatPage* dataFrmtPg = dynamic_cast<DataFormatPage*>(m_ImportWizard->page(ImportASCIIDataWizard::DataFormat));
-    if(nullptr != dataFrmtPg)
-    {
-      dataFrmtPg->launchEditHeadersDialog();
-      emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadASCIIDataWidget::on_removeFileBtn_pressed()
+void ReadASCIIDataWidget::on_resetWizardBtn_pressed()
 {
   delete m_ImportWizard;
   m_ImportWizard = nullptr;
 
   fileImportedLabel->hide();
   warningLabel->hide();
-  removeFileBtn->hide();
-  editHeadersBtn->hide();
+  resetWizardBtn->hide();
   tupleCount->hide();
   tupleCountLabel->hide();
   tupleDims->hide();
@@ -413,8 +440,11 @@ void ReadASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     data.delimiters = m_ImportWizard->getDelimiters();
     data.inputFilePath = m_ImportWizard->getInputFilePath();
     data.dataHeaders = m_ImportWizard->getHeaders();
-    data.beginIndex = m_ImportWizard->getBeginningLineNum();
+    data.headerIsCustom = data.dataHeaders.size() > 0 ? true : false;
+    data.headerLine = data.headerIsCustom ? -1 : m_ImportWizard->getBeginningLineNum() - 1;
+//        data.headerUsesDefaults =
     data.numberOfLines = numOfLines;
+    data.beginIndex = m_ImportWizard->getBeginningLineNum();
     data.dataTypes = m_ImportWizard->getDataTypes();
     data.tupleDims = m_ImportWizard->getTupleDims();
     data.automaticAM = m_ImportWizard->getAutomaticAM();

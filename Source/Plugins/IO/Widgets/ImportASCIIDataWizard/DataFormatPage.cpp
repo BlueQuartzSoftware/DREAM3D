@@ -82,7 +82,6 @@ void DataFormatPage::setupGui()
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   dataView->setModel(model);
-  //  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
   connect(tupleDimsTable, SIGNAL(tupleDimsChanged(QVector<size_t>)), this, SLOT(checkTupleDimensions(QVector<size_t>)));
@@ -142,6 +141,42 @@ void DataFormatPage::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataFormatPage::setEditSettings(bool value)
+{
+  m_EditSettings = value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::setUseDefaultHeaders(bool ok)
+{
+  useDefaultHeaders->setChecked(ok);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::setUseCustomHeaders(bool value)
+{
+  doesNotHaveHeadersRadio->setChecked(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::setHeaderLine(int line)
+{
+  if(line >= 0) {
+    hasHeadersRadio->setChecked(true);
+    headersIndexLineEdit->setText(QString::number(line));
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataFormatPage::showEvent(QShowEvent* event)
 {
   bool tabAsDelimiter = field("tabAsDelimiter").toBool();
@@ -151,13 +186,16 @@ void DataFormatPage::showEvent(QShowEvent* event)
   bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
 
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-  QStringList lines = model->originalStrings();
 
-  QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
+  if(!m_EditSettings)
+  {
+    QStringList lines = model->originalStrings();
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
-  ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
+    QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
 
+    QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
+    ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
+  }
   for(int i = 0; i < model->columnCount(); i++)
   {
     if(model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString().isEmpty() == true)
@@ -678,6 +716,12 @@ void DataFormatPage::on_useDefaultHeaders_toggled(bool checked)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString& text)
 {
+
+
+  if(text.isEmpty()) // No test then bail out now.
+  {
+    return;
+  }
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   bool ok = false;
   int lineNum = text.toInt(&ok);
@@ -949,12 +993,12 @@ void DataFormatPage::launchEditHeadersDialog()
       currentHeaders.push_back(model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString());
       model->setHeaderData(i, Qt::Horizontal, QString::number(i + 1), Qt::DisplayRole);
     }
+    m_EditHeadersDialog->setHeaders(currentHeaders);
 
     int result = m_EditHeadersDialog->exec();
     if(result == QDialog::Accepted)
     {
       QVector<QString> headers = m_EditHeadersDialog->getHeaders();
-
       checkHeaders(headers);
     }
     else
@@ -1106,7 +1150,7 @@ TupleTableWidget* DataFormatPage::getTupleTable()
 void DataFormatPage::setAutomaticAM(bool automatic)
 {
   amAutomatically->setChecked(automatic);
-  on_amAutomatically_stateChanged(automatic);
+  //on_amAutomatically_stateChanged(automatic);
 }
 
 // -----------------------------------------------------------------------------
