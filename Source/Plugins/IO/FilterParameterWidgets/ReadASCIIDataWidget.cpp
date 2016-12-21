@@ -196,13 +196,6 @@ void ReadASCIIDataWidget::on_editImportSettings_clicked()
 // -----------------------------------------------------------------------------
 void ReadASCIIDataWidget::on_importFileBtn_pressed()
 {
-  // Clean up previous wizard and settings
-  if(nullptr != m_ImportWizard)
-  {
-    delete m_ImportWizard;
-    m_ImportWizard = nullptr;
-  }
-
   QStringList filterList;
   filterList.push_back("All Files(*.*)");
   QFileDialog* dialog = new QFileDialog(this);
@@ -213,6 +206,13 @@ void ReadASCIIDataWidget::on_importFileBtn_pressed()
 
   if(dialog->exec())
   {
+    // Clean up previous wizard and settings
+    if(nullptr != m_ImportWizard)
+    {
+      delete m_ImportWizard;
+      m_ImportWizard = nullptr;
+    }
+
     m_FilePath = dialog->selectedFiles()[0];
     QFileInfo fi(m_FilePath);
 
