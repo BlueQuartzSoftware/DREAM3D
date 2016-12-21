@@ -76,15 +76,7 @@ ImportVectorImageStack::ImportVectorImageStack()
 , m_VectorDataArrayName(SIMPL::CellData::VectorData)
 , m_VectorData(nullptr)
 {
-
-  m_Origin.x = 0.0;
-  m_Origin.y = 0.0;
-  m_Origin.z = 0.0;
-
-  m_Resolution.x = 1.0;
-  m_Resolution.y = 1.0;
-  m_Resolution.z = 1.0;
-
+  initialize();
   setupFilterParameters();
 }
 
@@ -141,6 +133,20 @@ void ImportVectorImageStack::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 void ImportVectorImageStack::initialize()
 {
+  m_Origin.x = 0.0;
+  m_Origin.y = 0.0;
+  m_Origin.z = 0.0;
+
+  m_Resolution.x = 1.0;
+  m_Resolution.y = 1.0;
+  m_Resolution.z = 1.0;
+
+  m_FileExtension = QString("tif");
+  m_StartIndex = 0;
+  m_EndIndex = 0;
+  m_StartComp = 0;
+  m_EndComp = 0;
+  m_PaddingDigits = 0;
 }
 
 // -----------------------------------------------------------------------------
