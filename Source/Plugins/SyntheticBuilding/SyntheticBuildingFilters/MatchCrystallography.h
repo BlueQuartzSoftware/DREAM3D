@@ -286,7 +286,7 @@ class MatchCrystallography : public AbstractFilter
 
     //Ensemble Data
     DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     StatsDataArray::WeakPointer m_StatsDataArray;
 

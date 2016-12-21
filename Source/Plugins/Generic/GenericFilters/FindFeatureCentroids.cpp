@@ -77,12 +77,12 @@ void FindFeatureCentroids::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindFeatureCentroids, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Centroids", CentroidsArrayPath, FilterParameter::CreatedArray, FindFeatureCentroids, req));
   }
   setFilterParameters(parameters);
@@ -154,7 +154,7 @@ void FindFeatureCentroids::find_centroids()
 
   size_t totalFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
-  QVector<size_t> dims(1, 5);
+  QVector<size_t> dims(1, 4);
   FloatArrayType::Pointer m_FeatureCentersPtr = FloatArrayType::CreateArray(totalFeatures, dims, "_INTERNAL_USE_ONLY_Centroids");
   m_FeatureCentersPtr->initializeWithZeros();
   float* featurecenters = m_FeatureCentersPtr->getPointer(0);
@@ -192,14 +192,17 @@ void FindFeatureCentroids::find_centroids()
       }
     }
   }
-  for(size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 0; i < totalFeatures; i++)
   {
-    featurecenters[i * 5 + 1] = featurecenters[i * 5 + 1] / featurecenters[i * 5 + 0];
-    featurecenters[i * 5 + 2] = featurecenters[i * 5 + 2] / featurecenters[i * 5 + 0];
-    featurecenters[i * 5 + 3] = featurecenters[i * 5 + 3] / featurecenters[i * 5 + 0];
-    m_Centroids[3 * i] = featurecenters[i * 5 + 1];
-    m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2];
-    m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3];
+    if(featurecenters[i * 5 + 0] > 0.0f)
+    {
+      featurecenters[i * 5 + 1] = featurecenters[i * 5 + 1] / featurecenters[i * 5 + 0];
+      featurecenters[i * 5 + 2] = featurecenters[i * 5 + 2] / featurecenters[i * 5 + 0];
+      featurecenters[i * 5 + 3] = featurecenters[i * 5 + 3] / featurecenters[i * 5 + 0];
+      m_Centroids[3 * i] = featurecenters[i * 5 + 1];
+      m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2];
+      m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3];
+    }
   }
 }
 

@@ -78,6 +78,9 @@ class QuickSurfaceMesh : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
     Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
 
+    SIMPL_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
+    Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */

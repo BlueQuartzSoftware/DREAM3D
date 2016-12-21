@@ -124,7 +124,7 @@ public:
     QVector<size_t> cDims(1);
     cDims[0] = comp;
 
-    AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+    AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     DataArray<uint8_t>::Pointer data = DataArray<uint8_t>::CreateArray(tDims, cDims, "Uint8 Array");
     am->addAttributeArray(data->getName(), data);
     vdc->addAttributeMatrix(am->getName(), am);

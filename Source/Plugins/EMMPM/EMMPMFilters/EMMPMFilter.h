@@ -62,6 +62,9 @@ class EMMPMFilter : public AbstractFilter
     SIMPL_FILTER_PARAMETER(DataArrayPath, InputDataArrayPath)
     Q_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
 
+    SIMPL_FILTER_PARAMETER(bool, UseOneBasedValues)
+    Q_PROPERTY(bool UseOneBasedValues READ getUseOneBasedValues WRITE setUseOneBasedValues)
+
     SIMPL_FILTER_PARAMETER(int, NumClasses)
     Q_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
 

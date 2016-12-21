@@ -76,8 +76,8 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
     SIMPL_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel)
 
-    int getMisorientationData(StatsData* statsData, unsigned int phaseType, bool preflight = false);
-    void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
+    int getMisorientationData(StatsData* statsData, PhaseType::Type phaseType, bool preflight = false);
+    void extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType);
 
     void updateMDFPlot(QVector<float>& odf);
 

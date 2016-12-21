@@ -140,7 +140,7 @@ public:
     tDims[0] = Faithful_Rows;
     QVector<size_t> cDims(1);
     cDims[0] = 1;
-    AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, Data_AMName, SIMPL::AttributeMatrixType::Cell);
+    AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, Data_AMName, AttributeMatrix::Type::Cell);
 
     DoubleArrayType::Pointer duration = DoubleArrayType::CreateArray(tDims, cDims, Duration_Name);
     DoubleArrayType::Pointer wait = DoubleArrayType::CreateArray(tDims, cDims, WaitTime_Name);

@@ -79,7 +79,7 @@ public:
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
     QVector<size_t> tDims(1, k_AngleCount);
-    AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+    AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     m->addAttributeMatrix(attrMat1->getName(), attrMat1);
 
     QVector<size_t> cDims(1, 3);

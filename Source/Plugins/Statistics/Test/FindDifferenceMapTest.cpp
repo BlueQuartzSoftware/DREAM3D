@@ -171,13 +171,13 @@ public:
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
     QVector<size_t> tDims(1, 100);
-    AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat1", 3);
-    AttributeMatrix::Pointer attrMat2 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat2", 3);
-    AttributeMatrix::Pointer attrMat11 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat11", 3);
-    AttributeMatrix::Pointer attrMat22 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat22", 3);
+    AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat1", AttributeMatrix::Type::Cell);
+    AttributeMatrix::Pointer attrMat2 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat2", AttributeMatrix::Type::Cell);
+    AttributeMatrix::Pointer attrMat11 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat11", AttributeMatrix::Type::Cell);
+    AttributeMatrix::Pointer attrMat22 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat22", AttributeMatrix::Type::Cell);
 
     tDims[0] = 10;
-    AttributeMatrix::Pointer attrMat3 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat3", 3);
+    AttributeMatrix::Pointer attrMat3 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat3", AttributeMatrix::Type::Cell);
 
     m->addAttributeMatrix("DiffMapTestAttrMat1", attrMat1);
     m->addAttributeMatrix("DiffMapTestAttrMat2", attrMat2);

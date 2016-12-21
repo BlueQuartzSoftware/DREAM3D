@@ -70,6 +70,7 @@
 EMMPMFilter::EMMPMFilter()
 : AbstractFilter(),
   m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData),
+  m_UseOneBasedValues(true),
   m_NumClasses(2),
   m_ExchangeEnergy(0.5f),
   m_HistogramLoops(5),
@@ -122,10 +123,13 @@ void EMMPMFilter::setupFilterParameters()
   {
     EMMPMFilterParameter::Pointer parameter = EMMPMFilterParameter::New();
     parameter->setHumanLabel("EMMPM Widget");
+    parameter->setPropertyName("NumClasses");
     parameter->setCategory(FilterParameter::Parameter);
     parameter->setFilter(this);
     parameters.push_back(parameter);
   }
+
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Use 1-Based Values", UseOneBasedValues, FilterParameter::Parameter, EMMPMFilter));
 
   {
     QStringList linkedProps;
@@ -145,12 +149,12 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Attribute Array", InputDataArrayPath, FilterParameter::RequiredArray, EMMPMFilter, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Attribute Array", OutputDataArrayPath, FilterParameter::CreatedArray, EMMPMFilter, req));
   }
   setFilterParameters(parameters);
@@ -269,6 +273,17 @@ void EMMPMFilter::execute()
 
   // This is the routine that sets up the EM/MPM to segment the image
   segment(getEmmpmInitType());
+
+  if (m_UseOneBasedValues == true && m_OutputImagePtr.lock().get() != nullptr)
+  {
+    UInt8ArrayType::Pointer outputArray =  m_OutputImagePtr.lock();
+    for (int i=0; i<outputArray->getNumberOfTuples(); i++)
+    {
+      uint8_t curVal = outputArray->getValue(i);
+      uint8_t newVal = curVal + 1;
+      outputArray->setValue(i, newVal);
+    }
+  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

@@ -49,6 +49,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -359,48 +360,48 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", OutputCellAttributeMatrixPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Names", InputPhaseNamesArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Shape Types", InputShapeTypesArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
@@ -617,7 +618,7 @@ void PackPrimaryPhases::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
 
   AttributeMatrix::Pointer outEnsembleAttrMat = AttributeMatrix::NullPointer();
   if(m->doesAttributeMatrixExist(getOutputCellEnsembleAttributeMatrixName()))
@@ -627,7 +628,7 @@ void PackPrimaryPhases::dataCheck()
   else
   {
     tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   }
 
   tempPath = getOutputCellAttributeMatrixPath();
@@ -1069,7 +1070,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   // find which phases are primary phases
   for(size_t i = 1; i < totalEnsembles; ++i)
   {
-    if(m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
+    if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       if(nullptr == pp)
@@ -1792,7 +1793,7 @@ void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint3
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if(shapeclass == SIMPL::ShapeType::EllipsoidShape)
+  if (shapeclass == static_cast<ShapeType::EnumType>(ShapeType::Type::Ellipsoid))
   {
     omega3f = 1;
   }
@@ -2433,7 +2434,7 @@ void PackPrimaryPhases::insertFeature(size_t gnum)
   uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
 
   // Bail if the shapeclass is not one of our enumerated types
-  if(shapeclass >= SIMPL::ShapeType::ShapeTypeEnd)
+  if (shapeclass >= static_cast<ShapeType::EnumType>(ShapeType::Type::ShapeTypeEnd))
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     setErrorCondition(-666);
@@ -3221,7 +3222,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
   size_t numPhases = phaseType->getNumberOfTuples();
   for(size_t i = 1; i < numPhases; ++i)
   {
-    if(phaseType->getValue(i) == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType->getValue(i) == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryPhasesLocal.push_back(i);

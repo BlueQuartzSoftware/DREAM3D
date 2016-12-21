@@ -95,7 +95,7 @@ void VisualizeGBCDGMT::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize,
-                                                                                                                  SIMPL::AttributeMatrixType::FaceEnsemble, SIMPL::GeometryType::TriangleGeometry);
+                                                                                                                  AttributeMatrix::Type::FaceEnsemble, IGeometry::Type::Triangle);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("GBCD", GBCDArrayPath, FilterParameter::RequiredArray, VisualizeGBCDGMT, req));
   }
   {

@@ -188,9 +188,11 @@ class FindTriangleGeomSizesTest
     tris[3 * 11 + 2] = 0;
 
     QVector<size_t> tDims(1, 12);
-
-    AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::AttributeMatrixType::Face);
+    AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceAttributeMatrixName, AttributeMatrix::Type::Face);
     tdc->addAttributeMatrix(SIMPL::Defaults::FaceAttributeMatrixName, faceAttrMat);
+    tDims[0] = 2;
+    AttributeMatrix::Pointer featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceFeatureAttributeMatrixName, AttributeMatrix::Type::FaceFeature);
+    tdc->addAttributeMatrix(SIMPL::Defaults::FaceFeatureAttributeMatrixName, featAttrMat);
     QVector<size_t> cDims(1, 2);
     Int32ArrayType::Pointer faceLabels = Int32ArrayType::CreateArray(12, cDims, SIMPL::FaceData::SurfaceMeshFaceLabels);
     faceAttrMat->addAttributeArray(SIMPL::FaceData::SurfaceMeshFaceLabels, faceLabels);
@@ -251,6 +253,14 @@ class FindTriangleGeomSizesTest
     if(!propWasSet)
     {
       qDebug() << "Unable to set property FaceLabelsArrayPath";
+    }
+
+    path.update(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "");
+    var.setValue(path);
+    propWasSet = sizeFilter->setProperty("FeatureAttributeMatrixName", var);
+    if(!propWasSet)
+    {
+      qDebug() << "Unable to set property FeatureAttributeMatrixName";
     }
 
     sizeFilter->execute();

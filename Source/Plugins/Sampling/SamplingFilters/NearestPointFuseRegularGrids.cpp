@@ -74,11 +74,11 @@ void NearestPointFuseRegularGrids::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Reference Cell Attribute Matrix", ReferenceCellAttributeMatrixPath, FilterParameter::RequiredArray, NearestPointFuseRegularGrids, req));
   }
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Sampling Cell Attribute Matrix", SamplingCellAttributeMatrixPath, FilterParameter::RequiredArray, NearestPointFuseRegularGrids, req));
   }
   setFilterParameters(parameters);
@@ -147,7 +147,7 @@ void NearestPointFuseRegularGrids::dataCheck()
   DataContainer::Pointer mR = getDataContainerArray()->getDataContainer(getReferenceCellAttributeMatrixPath().getDataContainerName());
   DataContainer::Pointer mS = getDataContainerArray()->getDataContainer(getSamplingCellAttributeMatrixPath().getDataContainerName());
   QList<QString> m_AttrMatList = mS->getAttributeMatrixNames();
-  uint32_t tempAttrMatType = 0;
+  AttributeMatrix::Type tempAttrMatType = AttributeMatrix::Type::Vertex;
 
   QList<QString> refAttrMatNames = mR->getAttributeMatrixNames();
 
@@ -159,7 +159,7 @@ void NearestPointFuseRegularGrids::dataCheck()
     if(getErrorCondition() >= 0)
     {
       tempAttrMatType = tmpAttrMat->getType();
-      if(tempAttrMatType > SIMPL::AttributeMatrixType::Cell)
+      if(tempAttrMatType > AttributeMatrix::Type::Cell)
       {
         if(refAttrMatNames.contains(tmpAttrMat->getName()) == true)
         {

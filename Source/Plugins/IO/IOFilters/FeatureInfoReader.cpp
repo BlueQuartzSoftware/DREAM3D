@@ -101,15 +101,15 @@ void FeatureInfoReader::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
-    QVector<unsigned int> amTypes;
-    amTypes.push_back(SIMPL::AttributeMatrixType::Cell);
-    amTypes.push_back(SIMPL::AttributeMatrixType::Edge);
-    amTypes.push_back(SIMPL::AttributeMatrixType::Face);
-    amTypes.push_back(SIMPL::AttributeMatrixType::Vertex);
+    AttributeMatrix::Types amTypes;
+    amTypes.push_back(AttributeMatrix::Type::Cell);
+    amTypes.push_back(AttributeMatrix::Type::Edge);
+    amTypes.push_back(AttributeMatrix::Type::Face);
+    amTypes.push_back(AttributeMatrix::Type::Vertex);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Element Attribute Matrix", CellAttributeMatrixName, FilterParameter::RequiredArray, FeatureInfoReader, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Element);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FeatureInfoReader, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
@@ -180,7 +180,7 @@ void FeatureInfoReader::dataCheck()
   }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
 
   QFileInfo fi(getInputFile());
   if(getInputFile().isEmpty() == true)

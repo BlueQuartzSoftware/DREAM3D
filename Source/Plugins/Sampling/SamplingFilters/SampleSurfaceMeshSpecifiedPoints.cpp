@@ -143,7 +143,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
-  v->createNonPrereqAttributeMatrix<AbstractFilter>(this, "SpecifiedPointsData", tDims, SIMPL::AttributeMatrixType::Vertex);
+  v->createNonPrereqAttributeMatrix<AbstractFilter>(this, "SpecifiedPointsData", tDims, AttributeMatrix::Type::Vertex);
 
   QVector<size_t> cDims(1, 1);
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");

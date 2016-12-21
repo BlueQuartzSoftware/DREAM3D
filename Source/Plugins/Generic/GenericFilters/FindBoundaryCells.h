@@ -60,6 +60,9 @@ class FindBoundaryCells : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
     Q_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
 
+    SIMPL_FILTER_PARAMETER(bool, IgnoreFeatureZero)
+    Q_PROPERTY(bool IgnoreFeatureZero READ getIgnoreFeatureZero WRITE setIgnoreFeatureZero)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */

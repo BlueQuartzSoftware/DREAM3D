@@ -131,60 +131,60 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Boundary Cells", BoundaryCellsArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Category::Element);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Shape Types", InputShapeTypesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
   linkedProps.clear();
@@ -761,7 +761,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   for(size_t i = 1; i < numensembles; ++i)
   {
-    if(m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
+    if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       if(nullptr == pp)
@@ -855,7 +855,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       iter++;
       m_Seed++;
       phase = m_PrecipitatePhases[j];
-      generate_precipitate(phase, &precip, m_ShapeTypes[phase], m_OrthoOps);
+      generate_precipitate(phase, &precip, static_cast<ShapeType::Type>(m_ShapeTypes[phase]), m_OrthoOps);
       m_CurrentSizeDistError = check_sizedisterror(&precip);
       change = (m_CurrentSizeDistError) - (m_OldSizeDistError);
       if(change > 0.0f || m_CurrentSizeDistError > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
@@ -888,7 +888,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   {
     for(size_t i = 1; i < numensembles; ++i)
     {
-      if(m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
+      if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
         RdfData::Pointer rdfTarget = pp->getRadialDistFunction();
@@ -1412,7 +1412,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps)
+void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* precip, ShapeType::Type shapeclass, SpaceGroupOps::Pointer OrthoOps)
 {
   SIMPL_RANDOMNG_NEW_SEEDED(m_Seed)
 
@@ -1506,7 +1506,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if(shapeclass == SIMPL::ShapeType::EllipsoidShape)
+  if (shapeclass == ShapeType::Type::Ellipsoid)
   {
     omega3f = 1;
   }
@@ -2155,10 +2155,10 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   float covera = m_AxisLengths[3 * gnum + 2];
   float omega3 = m_Omega3s[gnum];
   float radcur1 = 1.0f;
-  uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
+  ShapeType::Type shapeclass = static_cast<ShapeType::Type>(m_ShapeTypes[m_FeaturePhases[gnum]]);
 
   // Bail if the shapeclass is not one of our enumerated types
-  if(shapeclass >= SIMPL::ShapeType::ShapeTypeEnd)
+  if (shapeclass >= ShapeType::Type::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     setErrorCondition(-666);
@@ -2167,7 +2167,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   }
 
   // init any values for each of the Shape Ops
-  for(size_t iter = 0; iter < m_ShapeOps.size(); iter++)
+  for(int iter = 0; iter < m_ShapeOps.size(); iter++)
   {
     m_ShapeOps[iter]->init();
   }
@@ -2178,7 +2178,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   shapeArgMap[ShapeOps::B_OverA] = bovera;
   shapeArgMap[ShapeOps::C_OverA] = covera;
 
-  radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+  radcur1 = m_ShapeOps[static_cast<ShapeType::EnumType>(shapeclass)]->radcur1(shapeArgMap);
 
   // adjust radcur1 to make larger exclusion zone to prevent precipitate overlap
   radcur1 = radcur1 * 2.0f;
@@ -2246,7 +2246,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
         float axis1comp = coordsRotated[0] / radcur1;
         float axis2comp = coordsRotated[1] / radcur2;
         float axis3comp = coordsRotated[2] / radcur3;
-        inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+        inside = m_ShapeOps[static_cast<ShapeType::EnumType>(shapeclass)]->inside(axis1comp, axis2comp, axis3comp);
         if(inside >= 0)
         {
           m_ColumnList[gnum].push_back(column);
@@ -2304,7 +2304,7 @@ void InsertPrecipitatePhases::assign_voxels()
     zc = m_Centroids[3 * i + 2];
     float radcur1 = 0.0f;
     // Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase ; this has been checked in insert_precipitate
-    uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[i]];
+    ShapeType::Type shapeclass = static_cast<ShapeType::Type>(m_ShapeTypes[m_FeaturePhases[i]]);
 
     // init any values for each of the Shape Ops
     for(size_t iter = 0; iter < m_ShapeOps.size(); iter++)
@@ -2318,7 +2318,7 @@ void InsertPrecipitatePhases::assign_voxels()
     shapeArgMap[ShapeOps::B_OverA] = bovera;
     shapeArgMap[ShapeOps::C_OverA] = covera;
 
-    radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+    radcur1 = m_ShapeOps[static_cast<ShapeType::EnumType>(shapeclass)]->radcur1(shapeArgMap);
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
@@ -2459,7 +2459,7 @@ void InsertPrecipitatePhases::assign_voxels()
           float axis1comp = coordsRotated[0] / radcur1;
           float axis2comp = coordsRotated[1] / radcur2;
           float axis3comp = coordsRotated[2] / radcur3;
-          inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+          inside = m_ShapeOps[static_cast<ShapeType::EnumType>(shapeclass)]->inside(axis1comp, axis2comp, axis3comp);
           if(inside >= 0)
           {
             int64_t currentpoint = index;

@@ -70,8 +70,8 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
     void setupGui();
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
-    int getMisorientationData(StatsData* statsData, unsigned int phaseType);
-    void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
+    int getMisorientationData(StatsData* statsData, PhaseType::Type phaseType);
+    void extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType);
 
     QVector<float> generateODFData();
 

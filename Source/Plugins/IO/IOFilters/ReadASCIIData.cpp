@@ -44,7 +44,7 @@ void ReadASCIIData::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(ReadASCIIDataFilterParameter::New("ASCII Wizard Data", "WizardData", "", FilterParameter::Parameter));
+  parameters.push_back(ReadASCIIDataFilterParameter::New("ASCII Wizard Data", "WizardData", "WizardData", FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 }
@@ -307,7 +307,7 @@ void ReadASCIIData::dataCheck()
     {
       DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, selectedPath.getDataContainerName());
       if(nullptr != dc.get()) {
-        dc->createNonPrereqAttributeMatrix(this, selectedPath.getAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
+        dc->createNonPrereqAttributeMatrix(this, selectedPath.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
       }
     }
   }
@@ -565,7 +565,8 @@ AbstractFilter::Pointer ReadASCIIData::newFilterInstance(bool copyFilterParamete
   ReadASCIIData::Pointer filter = ReadASCIIData::New();
   if(true == copyFilterParameters)
   {
-    copyFilterParameterInstanceVariables(filter.get());
+    // copyFilterParameterInstanceVariables(filter.get());
+    filter->setWizardData(getWizardData());
   }
   return filter;
 }

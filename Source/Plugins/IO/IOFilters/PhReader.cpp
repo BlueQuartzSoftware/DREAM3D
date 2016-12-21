@@ -197,19 +197,12 @@ void PhReader::dataCheck()
   setErrorCondition(0);
   DataArrayPath tempPath;
 
+
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0)
   {
     return;
   }
-
-  QVector<size_t> tDims(3, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
@@ -227,18 +220,6 @@ void PhReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  QVector<size_t> cDims(1, 1);
-  tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  {
-    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-
   if(getInputFile().isEmpty() == false && fi.exists() == true)
   {
     QDateTime lastModified(fi.lastModified());
@@ -249,7 +230,11 @@ void PhReader::dataCheck()
       m_FileWasRead = false;
 
       QVector<size_t> v = getDims();
-      m->getGeometryAs<ImageGeom>()->setDimensions(v[0], v[1], v[2]);
+      ImageGeom::Pointer imageGeom =  m->getGeometryAs<ImageGeom>();
+      if(nullptr != imageGeom.get())
+      {
+        imageGeom->setDimensions(v[0], v[1], v[2]);
+      }
     }
     else
     {
@@ -280,6 +265,24 @@ void PhReader::dataCheck()
       setInputFile_Cache(getInputFile());
     }
   }
+
+  QVector<size_t> tDims = getDims();
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+
+  QVector<size_t> cDims(1, 1);
+  tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims);
+  if(nullptr != m_FeatureIdsPtr.lock().get())
+  {
+    m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
+  }
+
+  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 }
 
 // -----------------------------------------------------------------------------
@@ -354,7 +357,14 @@ int32_t PhReader::readHeader()
   v.push_back(nz);
   setDims(v);
 
-  m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
+  if(nullptr != m.get())
+  {
+    ImageGeom::Pointer imageGeom =  m->getGeometryAs<ImageGeom>();
+    if(nullptr != imageGeom.get())
+    {
+      imageGeom->setDimensions(nx, ny, nz);
+    }
+  }
 
   char buf[BUF_SIZE];
   // Read Line #2 and dump it

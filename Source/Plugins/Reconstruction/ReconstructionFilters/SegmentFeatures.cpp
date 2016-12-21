@@ -84,7 +84,7 @@ void SegmentFeatures::dataCheck()
 {
   setErrorCondition(0);
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometryGrid, AbstractFilter>(this, getDataContainerName());
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ void SegmentFeatures::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  m->getGeometryAs<IGeometryGrid>()->getDimensions(udims);
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),

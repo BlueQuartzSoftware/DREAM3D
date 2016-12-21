@@ -25,7 +25,9 @@ if (NOT EXISTS "${SDK_INSTALL}/${itkArchiveName}.tar.gz")
   message(STATUS  "-------------------------------------------")
   message(STATUS  " Downloading ITK Version ${version}")
   message(STATUS  "-------------------------------------------")
-  file(DOWNLOAD "http://superb-dca2.dl.sourceforge.net/project/itk/itk/4.7/${itkArchiveName}.tar.gz" ${SDK_INSTALL}/${itkArchiveName}.tar.gz)
+  set(ITK_URL "http://dream3d.bluequartz.net/binaries/SDK/Sources/ITK/InsightToolkit-${ITK_VERSION}.tar.gz")
+  file(DOWNLOAD "${ITK_URL}" ${SDK_INSTALL}/${itkArchiveName}.tar.gz)
+
 endif()
 
 #------------------------------------------------------------------------------
@@ -111,7 +113,7 @@ InitializeCacheFile (HDF_INSTALL hdf5-${HDFVERSION})
 
 #------------------------------------------------------------------------------
 # Have CMake generate our Visual Studio Project
-execute_process(COMMAND ${CMAKE_COMMAND} -G "Visual Studio 12 2013 Win64" "${SDK_INSTALL}/${itkArchiveName}" 
+execute_process(COMMAND ${CMAKE_COMMAND} -G "Visual Studio 14 2015 Win64" "${SDK_INSTALL}/${itkArchiveName}" 
                   WORKING_DIRECTORY "${SDK_INSTALL}/ITK-${ITK_VERSION}")
 
 #------------------------------------------------------------------------------

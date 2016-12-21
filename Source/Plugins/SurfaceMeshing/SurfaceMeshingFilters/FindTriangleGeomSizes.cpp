@@ -39,7 +39,9 @@
 
 #include "SIMPLib/Common/Constants.h"
 
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
@@ -56,7 +58,7 @@
 FindTriangleGeomSizes::FindTriangleGeomSizes() :
   AbstractFilter(),
   m_FaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_FeatureAttributeMatrixName(SIMPL::Defaults::FaceFeatureAttributeMatrixName)
+, m_FeatureAttributeMatrixName(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "")
 , m_VolumesArrayName(SIMPL::FeatureData::Volumes)
 , m_FaceLabels(nullptr)
 , m_Volumes(nullptr)
@@ -87,9 +89,13 @@ void FindTriangleGeomSizes::initialize()
 void FindTriangleGeomSizes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  DataArraySelectionFilterParameter::RequirementType dasReq = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+  DataArraySelectionFilterParameter::RequirementType dasReq = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
+  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomSizes, dasReq));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomSizes));
+  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
+  AttributeMatrixSelectionFilterParameter::RequirementType amsReq = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
+  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindTriangleGeomSizes, amsReq));
+  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Volumes", VolumesArrayName, FilterParameter::CreatedArray, FindTriangleGeomSizes));
   setFilterParameters(parameters);
 }
@@ -119,15 +125,9 @@ void FindTriangleGeomSizes::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { dataArrays.push_back(m_FaceLabelsPtr.lock()); }
 
-  DataContainer::Pointer tdc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceLabelsArrayPath().getDataContainerName());
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getFeatureAttributeMatrixName(), -301);
 
-  if(getErrorCondition() < 0) { return; }
-
-  QVector<size_t> tDims(1, 0);
-
-  tdc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::FaceFeature);
-
-  DataArrayPath path(getFaceLabelsArrayPath().getDataContainerName(), getFeatureAttributeMatrixName(), getVolumesArrayName());
+  DataArrayPath path(getFaceLabelsArrayPath().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName());
 
   cDims[0] = 1;
 

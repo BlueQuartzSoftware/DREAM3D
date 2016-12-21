@@ -115,8 +115,6 @@ public:
   // -----------------------------------------------------------------------------
   DataContainerArray::Pointer initializeDataContainerArray()
   {
-    int err = 0;
-
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
     // Create a DataContainer for each geometry
@@ -152,7 +150,7 @@ public:
     // Create an element AttributeMatrix and FeatureIds array for each geometry
     QVector<size_t> tDims(1, 4);
 
-    AttributeMatrix::Pointer image3D_AttrMat = AttributeMatrix::New(tDims, "Image3DData", SIMPL::AttributeMatrixType::Cell);
+    AttributeMatrix::Pointer image3D_AttrMat = AttributeMatrix::New(tDims, "Image3DData", AttributeMatrix::Type::Cell);
     Int32ArrayType::Pointer image3D_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);
     image3D_fIDs->initializeWithValue(1);
     image3D_fIDs->setValue(2, 2);
@@ -160,7 +158,7 @@ public:
     image3D_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, image3D_fIDs);
     image3D_DC->addAttributeMatrix("Image3DData", image3D_AttrMat);
 
-    AttributeMatrix::Pointer rectGrid_AttrMat = AttributeMatrix::New(tDims, "RectGridData", SIMPL::AttributeMatrixType::Cell);
+    AttributeMatrix::Pointer rectGrid_AttrMat = AttributeMatrix::New(tDims, "RectGridData", AttributeMatrix::Type::Cell);
     Int32ArrayType::Pointer rectGrid_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);
     rectGrid_fIDs->initializeWithValue(1);
     rectGrid_fIDs->setValue(2, 2);
@@ -171,10 +169,10 @@ public:
     // Create a feature AttributeMatrix for each geometry, which all have 2 features
     tDims[0] = 3;
 
-    AttributeMatrix::Pointer image3D_featureAttrMat = AttributeMatrix::New(tDims, "Image3DFeatureData", SIMPL::AttributeMatrixType::CellFeature);
+    AttributeMatrix::Pointer image3D_featureAttrMat = AttributeMatrix::New(tDims, "Image3DFeatureData", AttributeMatrix::Type::CellFeature);
     image3D_DC->addAttributeMatrix("Image3DFeatureData", image3D_featureAttrMat);
 
-    AttributeMatrix::Pointer rectGrid_featureAttrMat = AttributeMatrix::New(tDims, "RectGridFeatureData", SIMPL::AttributeMatrixType::CellFeature);
+    AttributeMatrix::Pointer rectGrid_featureAttrMat = AttributeMatrix::New(tDims, "RectGridFeatureData", AttributeMatrix::Type::CellFeature);
     rectGrid_DC->addAttributeMatrix("RectGridFeatureData", rectGrid_featureAttrMat);
 
     return dca;

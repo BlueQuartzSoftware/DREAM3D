@@ -230,7 +230,7 @@ void YSChoiAbaqusReader::dataCheck()
   m->setGeometry(image);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0 || nullptr == cellAttrMat.get())
   {
     return;
@@ -238,13 +238,13 @@ void YSChoiAbaqusReader::dataCheck()
   tDims.resize(1);
   tDims[0] = 0;
 
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
   if(getErrorCondition() < 0 || nullptr == cellFeatureAttrMat.get())
   {
     return;
   }
 
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0 || nullptr == cellEnsembleAttrMat.get())
   {
     return;

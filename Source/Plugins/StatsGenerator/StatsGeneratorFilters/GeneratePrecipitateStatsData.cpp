@@ -260,7 +260,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     }
 
     QVector<size_t> tDims(1, 2); // we need 2 slots in the array. ZERO=Junk, 1 = our new primary stats data
-    AttributeMatrix::Pointer cellEnsembleAttrMat = dc->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+    AttributeMatrix::Pointer cellEnsembleAttrMat = dc->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
     if(getErrorCondition() < 0)
     {
       return;
@@ -281,12 +281,12 @@ void GeneratePrecipitateStatsData::dataCheck()
     m_CrystalStructures = crystalStructures.get();
 
     UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
-    phaseTypes->setValue(0, SIMPL::PhaseType::UnknownPhaseType);
+    phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
     cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
     m_PhaseTypes = phaseTypes.get();
 
     StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
-    phaseNames->setValue(0, SIMPL::PhaseType::UnknownPhase);
+    phaseNames->setValue(0, PhaseType::getPhaseTypeString(PhaseType::Type::Unknown));
     cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
     m_PhaseNames = phaseNames.get();
 
@@ -337,7 +337,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     if(nullptr == phaseTypes.get())
     {
       phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
-      phaseTypes->setValue(0, SIMPL::PhaseType::UnknownPhaseType);
+      phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
       cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
     }
     m_PhaseTypes = phaseTypes.get();
@@ -346,7 +346,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     if(nullptr == phaseNames.get())
     {
       phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
-      phaseNames->setValue(0, SIMPL::PhaseType::UnknownPhase);
+      phaseNames->setValue(0, PhaseType::getPhaseTypeString(PhaseType::Type::Unknown));
       cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
     }
     m_PhaseNames = phaseNames.get();
@@ -457,7 +457,7 @@ void GeneratePrecipitateStatsData::execute()
 
   m_CrystalStructures->setComponent(m_PhaseIndex, 0, m_CrystalSymmetry);
   m_PhaseNames->setValue(m_PhaseIndex, m_PhaseName);
-  m_PhaseTypes->setValue(m_PhaseIndex, SIMPL::PhaseType::PrimaryPhase);
+  m_PhaseTypes->setValue(m_PhaseIndex, static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate));
   m_PrimaryStatsData->setName(m_PhaseName);
   m_PrimaryStatsData->setPhaseFraction(m_PhaseFraction);
 
@@ -551,7 +551,7 @@ void GeneratePrecipitateStatsData::execute()
       sigmas.push_back(odfData[i][4]);
     }
     // Convert angles to Radians when this is implemented
-    StatsGeneratorUtilities::GenerateODFBinData(m_PrimaryStatsData, SIMPL::PhaseType::PrimaryPhase, m_CrystalSymmetry, e1s, e2s, e3s, weights, sigmas, true);
+    StatsGeneratorUtilities::GenerateODFBinData(m_PrimaryStatsData, PhaseType::Type::Primary, m_CrystalSymmetry, e1s, e2s, e3s, weights, sigmas, true);
   }
 
   msg.clear();
@@ -589,7 +589,7 @@ void GeneratePrecipitateStatsData::execute()
       weights.push_back(mdfData[i][4]);
     }
 
-    StatsGeneratorUtilities::GenerateMisorientationBinData(m_PrimaryStatsData, SIMPL::PhaseType::PrimaryPhase, m_CrystalSymmetry, odf, angles, axes, weights, true);
+    StatsGeneratorUtilities::GenerateMisorientationBinData(m_PrimaryStatsData, PhaseType::Type::Primary, m_CrystalSymmetry, odf, angles, axes, weights, true);
   }
 
   msg.clear();
@@ -611,7 +611,7 @@ void GeneratePrecipitateStatsData::execute()
       weights.push_back(axisOdfData[i][3]);
       sigmas.push_back(axisOdfData[i][4]);
     }
-    StatsGeneratorUtilities::GenerateAxisODFBinData(m_PrimaryStatsData, SIMPL::PhaseType::PrimaryPhase, e1s, e2s, e3s, weights, sigmas, true);
+    StatsGeneratorUtilities::GenerateAxisODFBinData(m_PrimaryStatsData, PhaseType::Type::Primary, e1s, e2s, e3s, weights, sigmas, true);
   }
 
   msg.clear();

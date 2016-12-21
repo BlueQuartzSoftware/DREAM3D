@@ -40,6 +40,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/PhaseType.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 
 /**
@@ -160,9 +161,9 @@ class EnsembleInfoReader : public FileReader
 
   private:
     DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
 
-    uint32_t m_ptype;
+    PhaseType::Type m_ptype;
     uint32_t m_crystruct;
 
     EnsembleInfoReader(const EnsembleInfoReader&); //Not Implemented

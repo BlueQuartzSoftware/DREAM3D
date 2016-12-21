@@ -86,18 +86,18 @@ void FindSizes::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::Defaults::AnyAttributeMatrix, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> amTypes = { SIMPL::AttributeMatrixType::Vertex, SIMPL::AttributeMatrixType::Edge,
-                                  SIMPL::AttributeMatrixType::Face, SIMPL::AttributeMatrixType::Cell };
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
+    AttributeMatrix::Types amTypes = { AttributeMatrix::Type::Vertex, AttributeMatrix::Type::Edge,
+                                  AttributeMatrix::Type::Face, AttributeMatrix::Type::Cell };
     req.amTypes = amTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindSizes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req =
-        AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyAttributeMatrix, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> amTypes = { SIMPL::AttributeMatrixType::VertexFeature, SIMPL::AttributeMatrixType::EdgeFeature,
-                                  SIMPL::AttributeMatrixType::FaceFeature, SIMPL::AttributeMatrixType::CellFeature };
+        AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Any, IGeometry::Type::Any);
+     AttributeMatrix::Types amTypes = { AttributeMatrix::Type::VertexFeature, AttributeMatrix::Type::EdgeFeature,
+                                  AttributeMatrix::Type::FaceFeature, AttributeMatrix::Type::CellFeature };
     req.amTypes = amTypes;
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindSizes, req));
   }

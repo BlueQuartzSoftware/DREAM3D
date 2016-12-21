@@ -69,7 +69,7 @@ BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget* parent)
 , m_grid(nullptr)
 {
   setTabTitle("Boundary");
-  setPhaseType(SIMPL::PhaseType::PrimaryPhase);
+  setPhaseType(PhaseType::Type::Primary);
   setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();
@@ -110,10 +110,10 @@ int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
+  PhaseType::EnumType* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   crystalStructures[getPhaseIndex()] = getCrystalStructure();
-  phaseTypes[getPhaseIndex()] = getPhaseType();
+  phaseTypes[getPhaseIndex()] = static_cast<PhaseType::EnumType>(getPhaseType());
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
   StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
@@ -145,7 +145,7 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
-  setPhaseType(attributeArray[index]);
+  setPhaseType(static_cast<PhaseType::Type>(attributeArray[index]));
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());

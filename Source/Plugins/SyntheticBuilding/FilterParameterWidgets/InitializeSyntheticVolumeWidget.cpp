@@ -275,7 +275,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   int size = static_cast<int>(phases->getNumberOfTuples());
   QVector<QString> shapeTypeStrings;
   ShapeType::getShapeTypeStrings(shapeTypeStrings);
-  QVector<unsigned int> shapeTypeEnums;
+  ShapeType::Types shapeTypeEnums;
   ShapeType::getShapeTypeEnums(shapeTypeEnums);
 
   // Remove all the items from the GUI and from the internal tracking Lists
@@ -316,8 +316,8 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
     cb->setObjectName(str);
     for(size_t s = 0; s < shapeTypeStrings.size(); ++s)
     {
-      cb->addItem((shapeTypeStrings[s]), shapeTypeEnums[s]);
-      cb->setItemData(static_cast<int>(s), shapeTypeEnums[s], Qt::UserRole);
+      cb->addItem((shapeTypeStrings[s]), static_cast<ShapeType::EnumType>(shapeTypeEnums[s]));
+      cb->setItemData(static_cast<int>(s), static_cast<ShapeType::EnumType>(shapeTypeEnums[s]), Qt::UserRole);
     }
     m_ShapeTypeCombos << cb;
     formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
@@ -486,7 +486,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
-    if(phaseType->GetValue(i) == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType->GetValue(i) == SIMPL::PhaseType::Primary)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryphases.push_back(i);
