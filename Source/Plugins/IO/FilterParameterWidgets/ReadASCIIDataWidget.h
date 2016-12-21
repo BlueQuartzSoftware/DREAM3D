@@ -78,8 +78,8 @@ class ReadASCIIDataWidget : public FilterParameterWidget, private Ui::ReadASCIID
 
   protected slots:
     void on_importFileBtn_pressed();
-    void on_editHeadersBtn_pressed();
-    void on_removeFileBtn_pressed();
+    void on_resetWizardBtn_pressed();
+    void on_editImportSettings_clicked();
 
     void lineCountDidFinish();
     void updateProgress(double percentage);

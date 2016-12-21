@@ -24,8 +24,7 @@ After clicking the **Import Data...** button and selecting a file, a wizard appe
 On the last page, the user can set the following information:
 
 + Row index to start the import
-+ Header names, either from a line number in the file or manually
-+ Tuple dimensions
++ Header names, either from a line number in the file or manually through a dialog box or select the generated header values
 + Column data format (choosing the data type or deciding to skip the column)
 
 

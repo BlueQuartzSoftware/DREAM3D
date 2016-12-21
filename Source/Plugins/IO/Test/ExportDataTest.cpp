@@ -193,7 +193,7 @@ public:
       filter->setDataContainerArray(dca);
 
       var.setValue(2);
-      propWasSet = filter->setProperty("Delimeter", var); // delimeter is a space
+      propWasSet = filter->setProperty("Delimiter", var); // delimiter is a space
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       var.setValue(10);

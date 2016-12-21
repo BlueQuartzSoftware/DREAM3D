@@ -104,6 +104,9 @@ void ReadASCIIData::readFilterParameters(QJsonObject& obj)
   m_WizardData.inputFilePath = obj[prefix + "InputFilePath"].toString();
   m_WizardData.numberOfLines = obj[prefix + "NumberOfLines"].toInt();
   m_WizardData.automaticAM = obj[prefix + "AutomaticAM"].toBool();
+  m_WizardData.headerLine = obj[prefix + "HeaderLine"].toInt();
+  m_WizardData.headerIsCustom = obj[prefix + "HeaderIsCustom"].toBool();
+  m_WizardData.headerUsesDefaults = obj[prefix + "HeaderUseDefaults"].toBool();
 
   DataArrayPath dap;
   QJsonObject dapObj = obj[prefix + "SelectedPath"].toObject();
@@ -168,6 +171,11 @@ void ReadASCIIData::writeFilterParameters(QJsonObject& obj)
   obj[prefix + "InputFilePath"] = m_WizardData.inputFilePath;
   obj[prefix + "NumberOfLines"] = m_WizardData.numberOfLines;
   obj[prefix + "AutomaticAM"] = m_WizardData.automaticAM;
+
+  obj[prefix + "HeaderLine"] =   m_WizardData.headerLine;
+  obj[prefix + "HeaderIsCustom"] =  m_WizardData.headerIsCustom;
+  obj[prefix + "HeaderUseDefaults"] = m_WizardData.headerUsesDefaults;
+
 
   QJsonObject dapObj;
   m_WizardData.selectedPath.writeJson(dapObj);

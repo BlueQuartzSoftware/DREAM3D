@@ -153,16 +153,19 @@ class ImportASCIIDataWizard : public QWizard
 
     void setInputFilePath(const QString &inputFilePath);
 
+    void setEditSettings(bool value);
+
   protected slots:
     void refreshModel();
+    void cleanupPage(int id);
 
   private:
     QString                                             m_InputFilePath;
-    int                                                 m_NumLines;
+    int                                                 m_NumLines = -1;
+    bool                                                m_EditSettings = false;
+    DataContainerArray::Pointer                         m_Dca = DataContainerArray::NullPointer();
 
-    DataContainerArray::Pointer                         m_Dca;
-
-    QPushButton*                                        m_RefreshBtn;
+    QPushButton*                                        m_RefreshBtn = nullptr;
 
     ImportASCIIDataWizard(const ImportASCIIDataWizard&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIDataWizard&); // Operator '=' Not Implemented

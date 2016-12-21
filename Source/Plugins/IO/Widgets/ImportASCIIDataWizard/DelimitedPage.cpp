@@ -60,6 +60,14 @@ DelimitedPage::~DelimitedPage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DelimitedPage::setEditSettings(bool value)
+{
+    m_EditSettings = value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DelimitedPage::setupGui()
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
@@ -136,23 +144,26 @@ void DelimitedPage::refreshModel()
 void DelimitedPage::showEvent(QShowEvent* event)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clearContents();
-
-  if(model->columnCount() > 0)
+  if( !m_EditSettings)
   {
-    model->removeColumns(0, model->columnCount());
-  }
+    model->clearContents();
 
-  // This is the first screen, so everything automatically goes into one column for now
-  model->insertColumn(0);
+    if(model->columnCount() > 0)
+    {
+      model->removeColumns(0, model->columnCount());
+    }
 
-  for(int row = 0; row < model->rowCount(); row++)
-  {
-    QString line = model->originalString(row);
+    // This is the first screen, so everything automatically goes into one column for now
+    model->insertColumn(0);
 
-    QModelIndex index = model->index(row, 0);
+    for(int row = 0; row < model->rowCount(); row++)
+    {
+      QString line = model->originalString(row);
 
-    model->setData(index, line, Qt::DisplayRole);
+      QModelIndex index = model->index(row, 0);
+
+      model->setData(index, line, Qt::DisplayRole);
+    }
   }
 }
 
