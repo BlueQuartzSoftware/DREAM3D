@@ -271,6 +271,7 @@ void GeneratePrimaryStatsData::dataCheck()
     m_PhaseNames = phaseNames.get();
 
     setPhaseIndex(1); // If we are creating the StatsDataArray then we are the first phase
+    phaseNames->setValue(m_PhaseIndex, m_PhaseName);
   }
 
   // User wants to Append to existing AttributeMatrix
@@ -332,6 +333,7 @@ void GeneratePrimaryStatsData::dataCheck()
     m_PhaseNames = phaseNames.get();
 
     setPhaseIndex(tDims[0] - 1); // If we are creating the StatsDataArray then we are the first phase
+    phaseNames->setValue(m_PhaseIndex, m_PhaseName);
   }
 
   // If all goes well, then calculate the number of bins to display back on the user interface.
