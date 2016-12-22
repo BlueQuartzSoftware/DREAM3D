@@ -66,19 +66,7 @@ ImportImageStack::ImportImageStack()
 , m_GeometryType(0)
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)
 {
-  m_Origin.x = 0.0f;
-  m_Origin.y = 0.0f;
-  m_Origin.z = 0.0f;
-
-  m_Resolution.x = 1.0f;
-  m_Resolution.y = 1.0f;
-  m_Resolution.z = 1.0f;
-
-  m_InputFileListInfo.FileExtension = QString("tif");
-  m_InputFileListInfo.StartIndex = 0;
-  m_InputFileListInfo.EndIndex = 0;
-  m_InputFileListInfo.PaddingDigits = 0;
-
+  initialize();
   setupFilterParameters();
 }
 
@@ -148,6 +136,18 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 void ImportImageStack::initialize()
 {
+  m_Origin.x = 0.0f;
+  m_Origin.y = 0.0f;
+  m_Origin.z = 0.0f;
+
+  m_Resolution.x = 1.0f;
+  m_Resolution.y = 1.0f;
+  m_Resolution.z = 1.0f;
+
+  m_InputFileListInfo.FileExtension = QString("tif");
+  m_InputFileListInfo.StartIndex = 0;
+  m_InputFileListInfo.EndIndex = 0;
+  m_InputFileListInfo.PaddingDigits = 0;
 }
 
 // -----------------------------------------------------------------------------
