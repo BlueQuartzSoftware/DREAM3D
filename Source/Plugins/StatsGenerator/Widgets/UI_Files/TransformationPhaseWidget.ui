@@ -458,6 +458,29 @@ font-size: 12px;
            </property>
           </widget>
          </item>
+         <item>
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_ResetDataBtn">
+           <property name="text">
+            <string>Reset...</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -511,8 +534,8 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>769</width>
-            <height>568</height>
+            <width>98</width>
+            <height>38</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -556,15 +579,15 @@ font-size: 12px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>StatsGenWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">StatsGenWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>QwtPlot</class>
    <extends>QFrame</extends>
    <header>qwt_plot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>StatsGenWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">StatsGenWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

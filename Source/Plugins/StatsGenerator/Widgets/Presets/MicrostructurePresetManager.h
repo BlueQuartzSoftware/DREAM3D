@@ -43,6 +43,7 @@
 #include "AbstractMicrostructurePreset.h"
 
 
+
 /**
  * @class AbstractMicrostructurePresetFactory AbstractMicrostructurePresetFactory.h StatsGenerator/Presets/AbstractMicrostructurePresetFactory.h
  * @brief This class controls the creation of MicrostructurePreset instances through
@@ -54,7 +55,7 @@
  * @date Apr 27, 2011
  * @version 1.0
  */
-class MicrostructurePresetManager
+class  MicrostructurePresetManager
 {
   public:
     SIMPL_SHARED_POINTERS(MicrostructurePresetManager)

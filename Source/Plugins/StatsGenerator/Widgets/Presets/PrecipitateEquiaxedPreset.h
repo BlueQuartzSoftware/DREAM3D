@@ -48,6 +48,7 @@
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
 
+
 /**
  * @class PrecipitateEquiaxedPreset PrecipitateEquiaxedPreset.h StatsGenerator/Presets/PrecipitateEquiaxedPreset.h
  * @brief This class will populate the various tables with the necessary values
@@ -56,20 +57,28 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class PrecipitateEquiaxedPreset : public AbstractMicrostructurePreset
+class  PrecipitateEquiaxedPreset : public AbstractMicrostructurePreset
 {
   public:
     SIMPL_SHARED_POINTERS(PrecipitateEquiaxedPreset)
     SIMPL_STATIC_NEW_MACRO(PrecipitateEquiaxedPreset)
     SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrecipitateEquiaxedPreset)
+
     virtual ~PrecipitateEquiaxedPreset();
 
-    void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    virtual QString getName();
 
+    void initializeOmega3TableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
+    void initializeBOverATableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
+    void initializeCOverATableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
+    void initializeNeighborTableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
+    void initializeClusteringTableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
+
+    /**
+     * @brief getDistributionType
+     * @return
+     */
+    unsigned int getDistributionType(const QString & distType);
 
   protected:
     PrecipitateEquiaxedPreset();

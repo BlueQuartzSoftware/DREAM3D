@@ -35,16 +35,7 @@
 
 #include "PrimaryEquiaxedPreset.h"
 
-#include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h"
-#include "StatsGenerator/Widgets/StatsGenAxisODFWidget.h"
-#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
-#include "StatsGenerator/Widgets/StatsGenODFWidget.h"
-#include "StatsGenerator/Widgets/StatsGenPlotWidget.h"
-#include "StatsGenerator/Widgets/TableModels/SGBetaTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
-
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 
@@ -65,27 +56,26 @@ PrimaryEquiaxedPreset::~PrimaryEquiaxedPreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+QString PrimaryEquiaxedPreset::getName()
 {
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(SIMPL::DistributionType::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
-  qint32 count = binNumbers.count();
+  return QString::fromLatin1("Primary Equiaxed");
+}
 
-  // Remove all the current rows in the table model
-  //  model->removeRows(0, model->rowCount());
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryEquiaxedPreset::initializeOmega3TableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
+{
+  QVector<float>& binNumbers = data[kBinNumbers];
+  qint32 count = binNumbers.count();
 
   float alpha, beta;
   SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
-  QVector<QColor> colors = GenerateColors(count, 160, 255);
+  colors.clear();
+  colors.append(GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -94,37 +84,25 @@ void PrimaryEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot,
     alphas.push_back(alpha);
     betas.push_back(beta);
   }
-
-  QVector<QVector<float>> data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
+  data[kAlpha] = alphas;
+  data[kBeta] = betas;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryEquiaxedPreset::initializeBOverATableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
 {
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(SIMPL::DistributionType::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
+  QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
   SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
-  QVector<QColor> colors = GenerateColors(count, 160, 255);
+  colors.clear();
+  colors.append(GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -134,36 +112,25 @@ void PrimaryEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot,
     betas.push_back(beta);
   }
 
-  QVector<QVector<float>> data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
+  data[kAlpha] = alphas;
+  data[kBeta] = betas;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryEquiaxedPreset::initializeCOverATableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
 {
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(SIMPL::DistributionType::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
+  QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
   SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
-  QVector<QColor> colors = GenerateColors(count, 160, 255);
+  colors.clear();
+  colors.append(GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -173,37 +140,25 @@ void PrimaryEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot,
     betas.push_back(beta);
   }
 
-  QVector<QVector<float>> data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
+  data[kAlpha] = alphas;
+  data[kBeta] = betas;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryEquiaxedPreset::initializeNeighborTableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
 {
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(SIMPL::DistributionType::LogNormal, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*>(plot->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
-
+  QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
 
   float mu, sigma;
   SIMPL_RANDOMNG_NEW()
 
   QVector<float> mus;
   QVector<float> sigmas;
-  QVector<QColor> colors = GenerateColors(count, 160, 255);
+  colors.clear();
+  colors.append(GenerateColors(count, 160, 255));
 
   int middlebin = count / 2;
   for(qint32 i = 0; i < count; ++i)
@@ -214,16 +169,42 @@ void PrimaryEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plo
     sigmas.push_back(sigma);
   }
 
-  QVector<QVector<float>> data;
-  data.push_back(mus);
-  data.push_back(sigmas);
-  model->setTableData(binNumbers, data, colors);
+  data[kMu] = mus;
+  data[kSigma] = sigmas;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryEquiaxedPreset::initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrimaryEquiaxedPreset::initializeClusteringTableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
 {
   Q_ASSERT(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+unsigned int PrimaryEquiaxedPreset::getDistributionType(const QString& distType)
+{
+  if(distType == AbstractMicrostructurePreset::kOmega3Distribution)
+  {
+    return SIMPL::DistributionType::Beta;
+  }
+  else if(distType == AbstractMicrostructurePreset::kBOverADistribution)
+  {
+    return SIMPL::DistributionType::Beta;
+  }
+  else if(distType == AbstractMicrostructurePreset::kCOverADistribution)
+  {
+    return SIMPL::DistributionType::Beta;
+  }
+  else if(distType == AbstractMicrostructurePreset::kClusterDistribution)
+  {
+    return SIMPL::DistributionType::UnknownDistributionType;
+  }
+  else if(distType == AbstractMicrostructurePreset::kNeighborDistribution)
+  {
+    return SIMPL::DistributionType::LogNormal;
+  }
+  return SIMPL::DistributionType::UnknownDistributionType;
 }

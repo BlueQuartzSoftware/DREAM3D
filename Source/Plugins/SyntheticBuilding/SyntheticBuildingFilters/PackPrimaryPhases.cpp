@@ -779,13 +779,13 @@ void PackPrimaryPhases::execute()
   {
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Initializing Volume");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
-    Int32ArrayType::Pointer featureOwnersPtr = initialize_packinggrid();
+    Int32ArrayType::Pointer featureOwnersPtr = initializePackingGrid();
     if(getErrorCondition() < 0)
     {
       return;
     }
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Placing Features");
-    place_features(featureOwnersPtr);
+    placeFeatures(featureOwnersPtr);
     if(getErrorCondition() < 0)
     {
       return;
@@ -799,7 +799,7 @@ void PackPrimaryPhases::execute()
   if(m_HaveFeatures == true)
   {
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Loading Features");
-    load_features();
+    loadFeatures();
     if(getCancel() == true)
     {
       return;
@@ -807,7 +807,7 @@ void PackPrimaryPhases::execute()
   }
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Assigning Voxels");
-  assign_voxels();
+  assignVoxels();
   if(getErrorCondition() < 0)
   {
     return;
@@ -818,7 +818,7 @@ void PackPrimaryPhases::execute()
   }
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Assigning Gaps");
-  assign_gaps_only();
+  assignGapsOnly();
   if(getCancel() == true)
   {
     return;
@@ -830,7 +830,7 @@ void PackPrimaryPhases::execute()
 
   if(m_WriteGoalAttributes == true)
   {
-    write_goal_attributes();
+    writeGoalAttributes();
   }
   if(getErrorCondition() < 0)
   {
@@ -946,7 +946,7 @@ int32_t PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::load_features()
+void PackPrimaryPhases::loadFeatures()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
@@ -1005,7 +1005,7 @@ void PackPrimaryPhases::load_features()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
+void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
 {
   bool writeErrorFile = false;
   std::ofstream outFile;
@@ -1168,7 +1168,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   Feature_t feature;
 
   // Estimate the total Number of features here
-  int32_t estNumFeatures = estimate_numfeatures(udims[0], udims[1], udims[2], xRes, yRes, zRes);
+  int32_t estNumFeatures = estimateNumFeatures(udims[0], udims[1], udims[2], xRes, yRes, zRes);
   QVector<size_t> tDims(1, estNumFeatures);
   m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   // need to update pointers after resize, buut do not need to run full data check because pointers are still valid
@@ -1189,8 +1189,8 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       iter++;
       m_Seed++;
       phase = m_PrimaryPhases[j];
-      generate_feature(phase, &feature, m_ShapeTypes[phase]);
-      m_CurrentSizeDistError = check_sizedisterror(&feature);
+      generateFeature(phase, &feature, m_ShapeTypes[phase]);
+      m_CurrentSizeDistError = checkSizeDistError(&feature);
       change = (m_CurrentSizeDistError) - (m_OldSizeDistError);
       if(change > 0.0f || m_CurrentSizeDistError > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
       {
@@ -1207,7 +1207,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
           updateFeatureInstancePointers();
         }
 
-        transfer_attributes(gid, &feature);
+        transferAttributes(gid, &feature);
         m_OldSizeDistError = m_CurrentSizeDistError;
         curphasevol[j] = curphasevol[j] + m_Volumes[gid];
         iter = 0;
@@ -1236,8 +1236,8 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         iter++;
         m_Seed++;
         phase = m_PrimaryPhases[j];
-        generate_feature(phase, &feature, m_ShapeTypes[phase]);
-        m_CurrentSizeDistError = check_sizedisterror(&feature);
+        generateFeature(phase, &feature, m_ShapeTypes[phase]);
+        m_CurrentSizeDistError = checkSizeDistError(&feature);
         change = (m_CurrentSizeDistError) - (m_OldSizeDistError);
         if(change > 0 || m_CurrentSizeDistError > (1.0f - (iter * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
         {
@@ -1250,7 +1250,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
             // need to update pointers after resize, buut do not need to run full data check because pointers are still valid
             updateFeatureInstancePointers();
           }
-          transfer_attributes(gid, &feature);
+          transferAttributes(gid, &feature);
           m_OldSizeDistError = m_CurrentSizeDistError;
           curphasevol[j] = curphasevol[j] + m_Volumes[gid];
           iter = 0;
@@ -1370,7 +1370,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     m_Centroids[3 * i] = xc;
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
-    insert_feature(i);
+    insertFeature(i);
     if(getErrorCondition() < 0)
     {
       return;
@@ -1400,8 +1400,8 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     xc = static_cast<float>((column * m_PackingRes[0]) + (m_PackingRes[0] * 0.5));
     yc = static_cast<float>((row * m_PackingRes[1]) + (m_PackingRes[1] * 0.5));
     zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
-    move_feature(i, xc, yc, zc);
-    m_FillingError = check_fillingerror(i, -1000, featureOwnersPtr, exclusionOwnersPtr);
+    moveFeature(i, xc, yc, zc);
+    m_FillingError = checkFillingError(i, -1000, featureOwnersPtr, exclusionOwnersPtr);
   }
 
   progFeature = 0;
@@ -1426,9 +1426,9 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
       millis = QDateTime::currentMSecsSinceEpoch();
     }
-    determine_neighbors(i, true);
+    determineNeighbors(i, true);
   }
-  m_OldNeighborhoodError = check_neighborhooderror(-1000, -1000);
+  m_OldNeighborhoodError = checkNeighborhoodError(-1000, -1000);
 
   // begin swaping/moving/adding/removing features to try to improve packing
   int32_t totalAdjustments = static_cast<int32_t>(100 * (totalFeatures - 1));
@@ -1535,21 +1535,21 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       oldyc = m_Centroids[3 * randomfeature + 1];
       oldzc = m_Centroids[3 * randomfeature + 2];
       m_OldFillingError = m_FillingError;
-      m_FillingError = check_fillingerror(-1000, static_cast<int32_t>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
-      move_feature(randomfeature, xc, yc, zc);
-      m_FillingError = check_fillingerror(static_cast<int32_t>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
-      m_CurrentNeighborhoodError = check_neighborhooderror(-1000, randomfeature);
+      m_FillingError = checkFillingError(-1000, static_cast<int32_t>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
+      moveFeature(randomfeature, xc, yc, zc);
+      m_FillingError = checkFillingError(static_cast<int32_t>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
+      m_CurrentNeighborhoodError = checkNeighborhoodError(-1000, randomfeature);
       if(m_FillingError <= m_OldFillingError)
       {
         m_OldNeighborhoodError = m_CurrentNeighborhoodError;
-        update_availablepoints(availablePoints, availablePointsInv);
+        updateAvailablePoints(availablePoints, availablePointsInv);
         acceptedmoves++;
       }
       else if(m_FillingError > m_OldFillingError)
       {
-        m_FillingError = check_fillingerror(-1000, static_cast<int32_t>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
-        move_feature(randomfeature, oldxc, oldyc, oldzc);
-        m_FillingError = check_fillingerror(static_cast<int32_t>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
+        m_FillingError = checkFillingError(-1000, static_cast<int32_t>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
+        moveFeature(randomfeature, oldxc, oldyc, oldzc);
+        m_FillingError = checkFillingError(static_cast<int32_t>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
         m_PointsToRemove.clear();
         m_PointsToAdd.clear();
       }
@@ -1616,24 +1616,24 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         zc = oldzc;
       }
       m_OldFillingError = m_FillingError;
-      m_FillingError = check_fillingerror(-1000, static_cast<int32_t>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
-      move_feature(randomfeature, xc, yc, zc);
-      m_FillingError = check_fillingerror(static_cast<int32_t>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
-      m_CurrentNeighborhoodError = check_neighborhooderror(-1000, randomfeature);
+      m_FillingError = checkFillingError(-1000, static_cast<int32_t>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
+      moveFeature(randomfeature, xc, yc, zc);
+      m_FillingError = checkFillingError(static_cast<int32_t>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
+      m_CurrentNeighborhoodError = checkNeighborhoodError(-1000, randomfeature);
       //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       //      if(fillingerror <= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
       if(m_FillingError <= m_OldFillingError)
       {
         m_OldNeighborhoodError = m_CurrentNeighborhoodError;
-        update_availablepoints(availablePoints, availablePointsInv);
+        updateAvailablePoints(availablePoints, availablePointsInv);
         acceptedmoves++;
       }
       //      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
       else if(m_FillingError > m_OldFillingError)
       {
-        m_FillingError = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
-        move_feature(randomfeature, oldxc, oldyc, oldzc);
-        m_FillingError = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
+        m_FillingError = checkFillingError(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
+        moveFeature(randomfeature, oldxc, oldyc, oldzc);
+        m_FillingError = checkFillingError(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
         m_PointsToRemove.clear();
         m_PointsToAdd.clear();
       }
@@ -1656,7 +1656,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
+Int32ArrayType::Pointer PackPrimaryPhases::initializePackingGrid()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
@@ -1699,7 +1699,7 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint32_t shapeclass)
+void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint32_t shapeclass)
 {
   SIMPL_RANDOMNG_NEW_SEEDED(m_Seed)
 
@@ -1814,7 +1814,7 @@ void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::transfer_attributes(int32_t gnum, Feature_t* feature)
+void PackPrimaryPhases::transferAttributes(int32_t gnum, Feature_t* feature)
 {
   m_Volumes[gnum] = feature->m_Volumes;
   m_EquivalentDiameters[gnum] = feature->m_EquivalentDiameters;
@@ -1832,7 +1832,7 @@ void PackPrimaryPhases::transfer_attributes(int32_t gnum, Feature_t* feature)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::move_feature(size_t gnum, float xc, float yc, float zc)
+void PackPrimaryPhases::moveFeature(size_t gnum, float xc, float yc, float zc)
 {
   int64_t occolumn = 0, ocrow = 0, ocplane = 0;
   int64_t nccolumn = 0, ncrow = 0, ncplane = 0;
@@ -1868,7 +1868,7 @@ void PackPrimaryPhases::move_feature(size_t gnum, float xc, float yc, float zc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::determine_neighbors(size_t gnum, bool add)
+void PackPrimaryPhases::determineNeighbors(size_t gnum, bool add)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
@@ -1913,7 +1913,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, bool add)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PackPrimaryPhases::check_neighborhooderror(int32_t gadd, int32_t gremove)
+float PackPrimaryPhases::checkNeighborhoodError(int32_t gadd, int32_t gremove)
 {
   // Optimized Code
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
@@ -1950,11 +1950,11 @@ float PackPrimaryPhases::check_neighborhooderror(int32_t gadd, int32_t gremove)
     }
     if(gadd > 0 && m_FeaturePhases[gadd] == phase)
     {
-      determine_neighbors(gadd, true);
+      determineNeighbors(gadd, true);
     }
     if(gremove > 0 && m_FeaturePhases[gremove] == phase)
     {
-      determine_neighbors(gremove, false);
+      determineNeighbors(gremove, false);
     }
 
     float maxFeatureDia = pp->getMaxFeatureDiameter();
@@ -2050,15 +2050,15 @@ float PackPrimaryPhases::check_neighborhooderror(int32_t gadd, int32_t gremove)
 
     if(gadd > 0 && m_FeaturePhases[gadd] == phase)
     {
-      determine_neighbors(gadd, false);
+      determineNeighbors(gadd, false);
     }
 
     if(gremove > 0 && m_FeaturePhases[gremove] == phase)
     {
-      determine_neighbors(gremove, true);
+      determineNeighbors(gremove, true);
     }
   }
-  compare_3Ddistributions(m_SimNeighborDist, m_NeighborDist, bhattdist);
+  compare3dDistributions(m_SimNeighborDist, m_NeighborDist, bhattdist);
   neighborerror = bhattdist;
   return neighborerror;
 }
@@ -2066,7 +2066,7 @@ float PackPrimaryPhases::check_neighborhooderror(int32_t gadd, int32_t gremove)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
+void PackPrimaryPhases::compare1dDistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
 {
   bhattdist = 0.0f;
   size_t array1Size = array1.size();
@@ -2079,7 +2079,7 @@ void PackPrimaryPhases::compare_1Ddistributions(std::vector<float> array1, std::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float>> array1, std::vector<std::vector<float>> array2, float& bhattdist)
+void PackPrimaryPhases::compare2dDistributions(std::vector<std::vector<float>> array1, std::vector<std::vector<float>> array2, float& bhattdist)
 {
   bhattdist = 0.0f;
   size_t array1Size = array1.size();
@@ -2096,7 +2096,7 @@ void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float>> 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float>>> array1, std::vector<std::vector<std::vector<float>>> array2, float& bhattdist)
+void PackPrimaryPhases::compare3dDistributions(std::vector<std::vector<std::vector<float>>> array1, std::vector<std::vector<std::vector<float>>> array2, float& bhattdist)
 {
   bhattdist = 0.0f;
   size_t array1Size = array1.size();
@@ -2117,7 +2117,7 @@ void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PackPrimaryPhases::check_sizedisterror(Feature_t* feature)
+float PackPrimaryPhases::checkSizeDistError(Feature_t* feature)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
@@ -2198,7 +2198,7 @@ float PackPrimaryPhases::check_sizedisterror(Feature_t* feature)
       }
     }
   }
-  compare_2Ddistributions(m_SimFeatureSizeDist, m_FeatureSizeDist, bhattdist);
+  compare2dDistributions(m_SimFeatureSizeDist, m_FeatureSizeDist, bhattdist);
   sizedisterror = bhattdist;
   return sizedisterror;
 }
@@ -2206,7 +2206,7 @@ float PackPrimaryPhases::check_sizedisterror(Feature_t* feature)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PackPrimaryPhases::check_fillingerror(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr)
+float PackPrimaryPhases::checkFillingError(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr)
 {
   size_t featureOwnersIdx = 0;
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
@@ -2381,7 +2381,7 @@ float PackPrimaryPhases::check_fillingerror(int32_t gadd, int32_t gremove, Int32
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::update_availablepoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv)
+void PackPrimaryPhases::updateAvailablePoints(std::map<size_t, size_t>& availablePoints, std::map<size_t, size_t>& availablePointsInv)
 {
   size_t removeSize = m_PointsToRemove.size();
   size_t addSize = m_PointsToAdd.size();
@@ -2415,7 +2415,7 @@ void PackPrimaryPhases::update_availablepoints(std::map<size_t, size_t>& availab
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::insert_feature(size_t gnum)
+void PackPrimaryPhases::insertFeature(size_t gnum)
 {
   SIMPL_RANDOMNG_NEW();
 
@@ -2543,7 +2543,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::assign_voxels()
+void PackPrimaryPhases::assignVoxels()
 {
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
@@ -2782,7 +2782,7 @@ void PackPrimaryPhases::assign_voxels()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::assign_gaps_only()
+void PackPrimaryPhases::assignGapsOnly()
 {
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
@@ -2956,7 +2956,7 @@ void PackPrimaryPhases::assign_gaps_only()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::cleanup_features()
+void PackPrimaryPhases::cleanupFeatures()
 {
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
@@ -3132,7 +3132,7 @@ void PackPrimaryPhases::cleanup_features()
       currentvlist.clear();
     }
   }
-  assign_gaps_only();
+  assignGapsOnly();
   if(getCancel() == true)
   {
     return;
@@ -3168,7 +3168,7 @@ void PackPrimaryPhases::cleanup_features()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, size_t zpoints, float xres, float yres, float zres)
+int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, size_t zpoints, float xres, float yres, float zres)
 {
   float ptotalvol = 0.0f;
   int32_t phase = 0;
@@ -3284,7 +3284,7 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::write_goal_attributes()
+void PackPrimaryPhases::writeGoalAttributes()
 {
   setErrorCondition(0);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());

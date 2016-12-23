@@ -58,11 +58,15 @@
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
+#include "StatsGenerator/StatsGeneratorConstants.h"
+#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
-
+#include "StatsGenerator/Widgets/TableModels/SGAbstractTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot_curve.h>
 #include <qwt_plot_grid.h>
@@ -606,12 +610,12 @@ void TransformationPhaseWidget::plotSizeDistribution()
 
   QwtArray<float> xCo;
   QwtArray<float> yCo;
-  QwtArray<float> binsizes;
+  QwtArray<float> binSizes;
   float xMax = std::numeric_limits<float>::min();
   float yMax = std::numeric_limits<float>::min();
   QwtArray<float> x;
   QwtArray<float> y;
-  err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
+  err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binSizes, xCo, yCo, xMax, yMax, x, y);
   if(err < 0)
   {
     return;
@@ -620,19 +624,67 @@ void TransformationPhaseWidget::plotSizeDistribution()
   // Now that we have bins and feature sizes, push those to the other plot widgets
   // Setup Each Plot Widget
   // The MicroPreset class will set the distribution for each of the plots
-  m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeOmega3TableModel(m_Omega3Plot, binsizes);
+  QMap<QString, QVector<float>> data;
+  data[AbstractMicrostructurePreset::kBinNumbers] = binSizes;
+  QVector<QColor> colors;
 
-  m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeBOverATableModel(m_BOverAPlot, binsizes);
+  m_MicroPreset->initializeOmega3TableModel(data, colors);
+  m_Omega3Plot->setDistributionType(m_MicroPreset->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
+  SGAbstractTableModel* tmodel = m_Omega3Plot->tableModel();
+  if(tmodel)
+  {
+    QVector<QVector<float>> colData;
+    colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+    colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+    tmodel->setTableData(binSizes, colData, colors);
+  }
 
-  m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
+  m_MicroPreset->initializeBOverATableModel(data, colors);
+  m_BOverAPlot->setDistributionType(m_MicroPreset->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
+  tmodel = m_BOverAPlot->tableModel();
+  if(tmodel)
+  {
+    QVector<QVector<float>> colData;
+    colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+    colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+    tmodel->setTableData(binSizes, colData, colors);
+  }
+
+  m_MicroPreset->initializeCOverATableModel(data, colors);
+  m_COverAPlot->setDistributionType(m_MicroPreset->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
+  tmodel = m_COverAPlot->tableModel();
+  if(tmodel)
+  {
+    QVector<QVector<float>> colData;
+    colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+    colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+    tmodel->setTableData(binSizes, colData, colors);
+  }
 
   // Get any presets for the ODF/AxisODF/MDF also
-  m_MicroPreset->initializeODFTableModel(m_ODFWidget);
-  m_MicroPreset->initializeAxisODFTableModel(m_AxisODFWidget);
-  m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
+  m_MicroPreset->initializeODFTableModel(data);
+  SGODFTableModel* model = m_ODFWidget->tableModel();
+  if(model)
+  {
+    model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                        data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+  }
+
+  m_MicroPreset->initializeAxisODFTableModel(data);
+  model = m_AxisODFWidget->tableModel();
+  if(model)
+  {
+    model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                        data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+  }
+
+  // m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
+  m_MicroPreset->initializeMDFTableModel(data);
+  SGMDFTableModel* mdfModel = (m_ODFWidget->getMDFWidget()->tableModel());
+  if(mdfModel)
+  {
+    mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
+  }
 }
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)                                                                                                                                                                 \

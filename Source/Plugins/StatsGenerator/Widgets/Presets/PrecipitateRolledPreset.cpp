@@ -34,17 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "PrecipitateRolledPreset.h"
 
-#include <QtWidgets/QMessageBox>
-
-#include "StatsGenerator/Widgets/Presets/Dialogs/PrecipitateRolledPresetDialog.h"
-#include "StatsGenerator/Widgets/StatsGenAxisODFWidget.h"
-#include "StatsGenerator/Widgets/StatsGenODFWidget.h"
-#include "StatsGenerator/Widgets/StatsGenPlotWidget.h"
-#include "StatsGenerator/Widgets/TableModels/SGBetaTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
-#include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
-
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 
@@ -67,61 +57,26 @@ PrecipitateRolledPreset::~PrecipitateRolledPreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::displayUserInputDialog()
+QString PrecipitateRolledPreset::getName()
 {
-  PrecipitateRolledPresetDialog d(nullptr);
-  bool keepGoing = true;
-  while(keepGoing)
-  {
-    int ret = d.exec();
-    if(ret == QDialog::Accepted)
-    {
-      float a = d.getA();
-      float b = d.getB();
-      float c = d.getC();
-      if(a >= b && b >= c)
-      {
-        // The user clicked the OK button so transfer the values from the dialog into this class
-        m_AspectRatio1 = d.getA() / d.getB();
-        m_AspectRatio2 = d.getA() / d.getC();
-        keepGoing = false;
-      }
-      else
-      {
-        QMessageBox::critical(&d, "Rolled Preset Error", "The ratios have been entenered incorrectly. The following MUST be true: A >= B >= C", QMessageBox::Default);
-      }
-    }
-    else
-    {
-      keepGoing = false; // user clicked the Cancel button
-    }
-  }
+  return QString::fromLatin1("Precipitate Rolled");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrecipitateRolledPreset::initializeOmega3TableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
 {
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(SIMPL::DistributionType::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
+  QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  //  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
   SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
-  QVector<QColor> colors = GenerateColors(count, 160, 255);
+  colors.clear();
+  colors.append(GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -130,37 +85,25 @@ void PrecipitateRolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plo
     alphas.push_back(alpha);
     betas.push_back(beta);
   }
-
-  QVector<QVector<float>> data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
+  data[kAlpha] = alphas;
+  data[kBeta] = betas;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrecipitateRolledPreset::initializeBOverATableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
 {
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(SIMPL::DistributionType::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
+  QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
   SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
-  QVector<QColor> colors = GenerateColors(count, 160, 255);
+  colors.clear();
+  colors.append(GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -170,36 +113,25 @@ void PrecipitateRolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plo
     betas.push_back(beta);
   }
 
-  QVector<QVector<float>> data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
+  data[kAlpha] = alphas;
+  data[kBeta] = betas;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrecipitateRolledPreset::initializeCOverATableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
 {
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(SIMPL::DistributionType::Beta, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
+  QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
   SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
-  QVector<QColor> colors = GenerateColors(count, 160, 255);
+  colors.clear();
+  colors.append(GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -209,37 +141,25 @@ void PrecipitateRolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plo
     betas.push_back(beta);
   }
 
-  QVector<QVector<float>> data;
-  data.push_back(alphas);
-  data.push_back(betas);
-  model->setTableData(binNumbers, data, colors);
+  data[kAlpha] = alphas;
+  data[kBeta] = betas;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrecipitateRolledPreset::initializeClusteringTableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
 {
-  // Make sure the distribution is set correctly
-  plot->setDistributionType(SIMPL::DistributionType::LogNormal, false);
-  // This line basically makes sure we have the distribution type we are looking for
-  SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*>(plot->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
-
+  QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
-
-  // Remove all the current rows in the table model
-  model->removeRows(0, model->rowCount());
 
   float mu, sigma;
   SIMPL_RANDOMNG_NEW()
 
   QVector<float> mus;
   QVector<float> sigmas;
-  QVector<QColor> colors = GenerateColors(count, 160, 255);
+  colors.clear();
+  colors.append(GenerateColors(count, 160, 255));
 
   int middlebin = count / 2;
   for(qint32 i = 0; i < count; ++i)
@@ -250,16 +170,14 @@ void PrecipitateRolledPreset::initializeClusteringTableModel(StatsGenPlotWidget*
     sigmas.push_back(sigma);
   }
 
-  QVector<QVector<float>> data;
-  data.push_back(mus);
-  data.push_back(sigmas);
-  model->setTableData(binNumbers, data, colors);
+  data[kMu] = mus;
+  data[kSigma] = sigmas;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
+void PrecipitateRolledPreset::initializeNeighborTableModel(QMap<QString, QVector<float>>& data, QVector<QColor>& colors)
 {
   Q_ASSERT(false);
 }
@@ -267,14 +185,8 @@ void PrecipitateRolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* p
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeAxisODFTableModel(StatsGenAxisODFWidget* widget)
+void PrecipitateRolledPreset::initializeAxisODFTableModel(QMap<QString, QVector<float>>& data)
 {
-  // This line basically makes sure we have the distribution type we are looking for
-  SGODFTableModel* model = (widget->tableModel());
-  if(nullptr == model)
-  {
-    return;
-  }
   QVector<float> e1;
   QVector<float> e2;
   QVector<float> e3;
@@ -298,5 +210,37 @@ void PrecipitateRolledPreset::initializeAxisODFTableModel(StatsGenAxisODFWidget*
   weights.push_back(weight / scaler);
   sigmas.push_back(spread);
 
-  model->setTableData(e1, e2, e3, weights, sigmas);
+  data[kEuler1] = e1;
+  data[kEuler2] = e2;
+  data[kEuler3] = e3;
+  data[kWeight] = weights;
+  data[kSigma] = sigmas;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+unsigned int PrecipitateRolledPreset::getDistributionType(const QString& distType)
+{
+  if(distType == AbstractMicrostructurePreset::kOmega3Distribution)
+  {
+    return SIMPL::DistributionType::Beta;
+  }
+  else if(distType == AbstractMicrostructurePreset::kBOverADistribution)
+  {
+    return SIMPL::DistributionType::Beta;
+  }
+  else if(distType == AbstractMicrostructurePreset::kCOverADistribution)
+  {
+    return SIMPL::DistributionType::Beta;
+  }
+  else if(distType == AbstractMicrostructurePreset::kClusterDistribution)
+  {
+    return SIMPL::DistributionType::LogNormal;
+  }
+  else if(distType == AbstractMicrostructurePreset::kNeighborDistribution)
+  {
+    return SIMPL::DistributionType::UnknownDistributionType;
+  }
+  return SIMPL::DistributionType::UnknownDistributionType;
 }

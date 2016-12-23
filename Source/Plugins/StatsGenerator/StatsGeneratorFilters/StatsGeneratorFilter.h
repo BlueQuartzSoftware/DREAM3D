@@ -55,7 +55,7 @@ class StatsGeneratorFilter : public AbstractFilter
   public:
     SIMPL_SHARED_POINTERS(StatsGeneratorFilter)
     SIMPL_STATIC_NEW_MACRO(StatsGeneratorFilter)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(StatsGeneratorFilter, AbstractFilter)
+    SIMPL_TYPE_MACRO_SUPER(StatsGeneratorFilter, AbstractFilter)
 
     virtual ~StatsGeneratorFilter();
 
@@ -92,73 +92,73 @@ class StatsGeneratorFilter : public AbstractFilter
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getCompiledLibraryName() override;
+    virtual const QString getCompiledLibraryName();
 
     /**
      * @brief getBrandingString Returns the branding string for the filter, which is a tag
      * used to denote the filter's association with specific plugins
      * @return Branding string
     */
-    virtual const QString getBrandingString() override;
+    virtual const QString getBrandingString();
 
     /**
      * @brief getFilterVersion Returns a version string for this filter. Default
      * value is an empty string.
      * @return
      */
-    virtual const QString getFilterVersion() override;
+    virtual const QString getFilterVersion();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
     /**
      * @brief getGroupName Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getGroupName() override;
+    virtual const QString getGroupName();
 
     /**
      * @brief getSubGroupName Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getSubGroupName() override;
+    virtual const QString getSubGroupName();
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getHumanLabel() override;
+    virtual const QString getHumanLabel();
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters() override;
+    virtual void setupFilterParameters();
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
      * @brief readFilterParameters
      * @param obj
      */
-    virtual void readFilterParameters(QJsonObject &obj) override;
+    virtual void readFilterParameters(QJsonObject &obj);
 
     /**
     * @brief writeFilterParametersToJson Writes the filter parameters to a file
     * @param root The root json object
     */
-    virtual void writeFilterParameters(QJsonObject &obj) override;
+    virtual void writeFilterParameters(QJsonObject &obj);
 
     /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
-    virtual void execute() override;
+    virtual void execute();
 
     /**
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
-    virtual void preflight() override;
+    virtual void preflight();
 
   signals:
     /**

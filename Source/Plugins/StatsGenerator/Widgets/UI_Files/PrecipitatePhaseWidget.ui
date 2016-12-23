@@ -117,6 +117,29 @@ font-size: 150%;
            </property>
           </widget>
          </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_ResetDataBtn">
+           <property name="text">
+            <string>Reset...</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -171,7 +194,7 @@ font-size: 150%;
             <x>0</x>
             <y>0</y>
             <width>879</width>
-            <height>600</height>
+            <height>560</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -260,15 +283,15 @@ font-size: 150%;
    <header location="global">StatsGenAxisODFWidget.h</header>
   </customwidget>
   <customwidget>
-   <class>StatsGenRDFWidget</class>
+   <class>StatsGenFeatureSizeWidget</class>
    <extends>QWidget</extends>
-   <header location="global">StatsGenRDFWidget.h</header>
+   <header location="global">StatsGenFeatureSizeWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>StatsGenFeatureSizeWidget</class>
+   <class>StatsGenRDFWidget</class>
    <extends>QWidget</extends>
-   <header>StatsGenFeatureSizeWidget.h</header>
+   <header location="global">StatsGenRDFWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

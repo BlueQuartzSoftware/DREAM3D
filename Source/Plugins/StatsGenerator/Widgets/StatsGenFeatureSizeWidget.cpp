@@ -204,6 +204,44 @@ void StatsGenFeatureSizeWidget::plotPointSelected(const QPointF& point)
   emit binSelected(selectedBin);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenFeatureSizeWidget::userEditedPlotData()
+{
+  m_Mu_SizeDistribution->setEnabled(false);
+  m_Sigma_SizeDistribution->setEnabled(false);
+  m_MinSigmaCutOff->setEnabled(false);
+  m_MaxSigmaCutOff->setEnabled(false);
+  m_BinStepSize->setEnabled(false);
+  m_FeatureESD->setEnabled(false);
+  distributionTypeCombo->setEnabled(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenFeatureSizeWidget::resetUI()
+{
+  m_Mu_SizeDistribution->setEnabled(true);
+  m_Sigma_SizeDistribution->setEnabled(true);
+  m_MinSigmaCutOff->setEnabled(true);
+  m_MaxSigmaCutOff->setEnabled(true);
+  m_BinStepSize->setEnabled(true);
+  m_FeatureESD->setEnabled(true);
+  distributionTypeCombo->setEnabled(true);
+
+  this->blockSignals(true);
+  m_Mu_SizeDistribution->setText("1.0");
+  m_Sigma_SizeDistribution->setText("0.1");
+  m_MinSigmaCutOff->setText("5.0");
+  m_MaxSigmaCutOff->setText("5.0");
+  distributionTypeCombo->setCurrentIndex(0);
+  this->blockSignals(false);
+  m_BinStepSize->setValue(0.5f);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

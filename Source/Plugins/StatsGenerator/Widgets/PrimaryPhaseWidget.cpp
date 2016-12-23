@@ -60,12 +60,15 @@
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
+#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
 #include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h"
 #include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h"
-
+#include "StatsGenerator/Widgets/TableModels/SGAbstractTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot_curve.h>
@@ -111,7 +114,6 @@ void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int in
 
   // Factory Method to get an instantiated object of the correct type?
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-
   setMicroPreset(manager->createNewPreset(presetName));
 
   AbstractMicrostructurePreset::Pointer absPreset = getMicroPreset();
@@ -135,7 +137,6 @@ void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int in
           presetPtr->setAspectRatio1(d.getA() / d.getB());
           presetPtr->setAspectRatio2(d.getA() / d.getC());
           keepGoing = false;
-          emit dataChanged();
         }
         else
         {
@@ -163,6 +164,7 @@ void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int in
       // Perform any cancellation actions if the user canceled the dialog box
     }
   }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -216,7 +218,7 @@ StatsGenPlotWidget* PrimaryPhaseWidget::getCOverAPlotWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setODFWidgetWidget(StatsGenODFWidget* w)
+void PrimaryPhaseWidget::setODFWidget(StatsGenODFWidget* w)
 {
   m_ODFWidget = w;
 }
@@ -224,7 +226,7 @@ void PrimaryPhaseWidget::setODFWidgetWidget(StatsGenODFWidget* w)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenODFWidget* PrimaryPhaseWidget::getODFWidgetWidget()
+StatsGenODFWidget* PrimaryPhaseWidget::getODFWidget()
 {
   return m_ODFWidget;
 }
@@ -331,7 +333,7 @@ void PrimaryPhaseWidget::setupGui()
 
   plotWidgets.push_back(m_Omega3Plot);
   StatsGenPlotWidget* w = m_Omega3Plot;
-  w->setPlotTitle(QString("Omega 3 Probabiity Density Functions"));
+  w->setPlotTitle(QString("Omega 3 Probability Density Functions"));
   w->setXAxisName(QString("Omega 3"));
   w->setYAxisName(QString("Frequency"));
   w->setDataTitle(QString("Edit Distribution Values"));
@@ -345,6 +347,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), m_FeatureSizeDistWidget, SLOT(userEditedPlotData()));
   connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
@@ -364,6 +367,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), m_FeatureSizeDistWidget, SLOT(userEditedPlotData()));
   connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
@@ -383,6 +387,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), m_FeatureSizeDistWidget, SLOT(userEditedPlotData()));
   connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
@@ -402,6 +407,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), m_FeatureSizeDistWidget, SLOT(userEditedPlotData()));
   connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
@@ -499,7 +505,8 @@ void PrimaryPhaseWidget::setTabsPlotTabsEnabled(bool b)
 void PrimaryPhaseWidget::dataWasEdited()
 {
   setTabsPlotTabsEnabled(true);
-  this->tabWidget->setTabEnabled(0, false);
+  m_GenerateDefaultData->setEnabled(false);
+  //this->tabWidget->setTabEnabled(0, false);
 }
 
 // -----------------------------------------------------------------------------
@@ -526,37 +533,90 @@ void PrimaryPhaseWidget::updatePlots()
 
     progress.setValue(1);
     progress.setLabelText("[1/3] Calculating Size Distributions ...");
+    // Force Emit the signal at the controller to get the plots to update...
     m_FeatureSizeDistWidget->plotSizeDistribution();
 
     // Now that we have bins and feature sizes, push those to the other plot widgets
     // Setup Each Plot Widget
     // The MicroPreset class will set the distribution for each of the plots
-
-    float mu = m_FeatureSizeDistWidget->getMu();
-    float sigma = m_FeatureSizeDistWidget->getSigma();
-    float minCutOff = m_FeatureSizeDistWidget->getMinCutOff();
-    float maxCutOff = m_FeatureSizeDistWidget->getMaxCutOff();
-    float binStepSize = m_FeatureSizeDistWidget->getBinStep();
     QwtArray<float> binSizes = m_FeatureSizeDistWidget->getBinSizes();
+    QMap<QString, QVector<float>> data;
+    data[AbstractMicrostructurePreset::kBinNumbers] = binSizes;
+    QVector<QColor> colors;
 
-    m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-    getMicroPreset()->initializeOmega3TableModel(m_Omega3Plot, binSizes);
 
-    m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-    getMicroPreset()->initializeBOverATableModel(m_BOverAPlot, binSizes);
+    getMicroPreset()->initializeOmega3TableModel(data, colors);
+    m_Omega3Plot->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
 
-    m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-    getMicroPreset()->initializeCOverATableModel(m_COverAPlot, binSizes);
+    SGAbstractTableModel* tmodel = m_Omega3Plot->tableModel();
+    if(tmodel)
+    {
+      QVector<QVector<float>> colData;
+      colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+      colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+      tmodel->setTableData(binSizes, colData, colors);
+    }
+
+    getMicroPreset()->initializeBOverATableModel(data, colors);
+    m_BOverAPlot->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
+    tmodel = m_BOverAPlot->tableModel();
+    if(tmodel)
+    {
+      QVector<QVector<float>> colData;
+      colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+      colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+      tmodel->setTableData(binSizes, colData, colors);
+    }
+
+    getMicroPreset()->initializeCOverATableModel(data, colors);
+    m_COverAPlot->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
+    tmodel = m_COverAPlot->tableModel();
+    if(tmodel)
+    {
+      QVector<QVector<float>> colData;
+      colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+      colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+      tmodel->setTableData(binSizes, colData, colors);
+    }
+
     if(m_NeighborPlot)
     {
-      m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-      getMicroPreset()->initializeNeighborTableModel(m_NeighborPlot, binSizes);
+      getMicroPreset()->initializeNeighborTableModel(data, colors);
+      m_NeighborPlot->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kNeighborDistribution), false);
+      tmodel = m_NeighborPlot->tableModel();
+      if(tmodel)
+      {
+        QVector<QVector<float>> colData;
+        colData.push_back(data[AbstractMicrostructurePreset::kMu]);
+        colData.push_back(data[AbstractMicrostructurePreset::kSigma]);
+        tmodel->setTableData(binSizes, colData, colors);
+      }
     }
 
     // Get any presets for the ODF/AxisODF/MDF also
-    getMicroPreset()->initializeODFTableModel(m_ODFWidget);
-    getMicroPreset()->initializeAxisODFTableModel(m_AxisODFWidget);
-    getMicroPreset()->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
+    getMicroPreset()->initializeODFTableModel(data);
+    SGODFTableModel* model = m_ODFWidget->tableModel();
+    if(model)
+    {
+      model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                          data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+    }
+
+    getMicroPreset()->initializeAxisODFTableModel(data);
+    model = m_AxisODFWidget->tableModel();
+    if(model)
+    {
+      model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                          data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+    }
+
+    // m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
+    getMicroPreset()->initializeMDFTableModel(data);
+    SGMDFTableModel* mdfModel = (m_ODFWidget->getMDFWidget()->tableModel());
+    if(mdfModel)
+    {
+      mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
+    }
 
     progress.setValue(2);
     progress.setLabelText("[2/3] Calculating ODF Data ...");
@@ -587,6 +647,20 @@ void PrimaryPhaseWidget::on_m_GenerateDefaultData_clicked()
 {
   setDataHasBeenGenerated(true);
   updatePlots();
+  emit dataChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_ResetDataBtn_clicked()
+{
+
+  m_FeatureSizeDistWidget->resetUI();
+  setupGui();
+
+  setDataHasBeenGenerated(true); // Set this boolean to true so that data generation is triggered
+  updatePlots();  // Regenerate all the default data
   emit dataChanged();
 }
 

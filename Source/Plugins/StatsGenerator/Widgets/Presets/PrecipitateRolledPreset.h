@@ -47,6 +47,7 @@
 #include "AbstractMicrostructurePreset.h"
 
 
+
 /**
  * @class PrecipitateRolledPreset PrecipitateRolledPreset.h StatsGenerator/Presets/PrecipitateRolledPreset.h
  * @brief This class will populate the various tables with the necessary values
@@ -55,7 +56,7 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class PrecipitateRolledPreset : public AbstractMicrostructurePreset
+class  PrecipitateRolledPreset : public AbstractMicrostructurePreset
 {
   public:
     SIMPL_SHARED_POINTERS(PrecipitateRolledPreset)
@@ -63,15 +64,17 @@ class PrecipitateRolledPreset : public AbstractMicrostructurePreset
     SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrecipitateRolledPreset)
     virtual ~PrecipitateRolledPreset();
 
-    void displayUserInputDialog();
-    void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
-    void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
+    virtual QString getName();
 
-    void initializeAxisODFTableModel(StatsGenAxisODFWidget* widget);
+    void initializeOmega3TableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
+    void initializeBOverATableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
+    void initializeCOverATableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
+    void initializeNeighborTableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
+    void initializeClusteringTableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors);
 
+    void initializeAxisODFTableModel(QMap<QString, QVector<float>> &data);
+
+    unsigned int getDistributionType(const QString & distType);
 
     SIMPL_INSTANCE_PROPERTY(float, AspectRatio1)
     SIMPL_INSTANCE_PROPERTY(float, AspectRatio2)
