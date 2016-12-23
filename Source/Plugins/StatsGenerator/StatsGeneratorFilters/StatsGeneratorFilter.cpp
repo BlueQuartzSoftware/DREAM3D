@@ -226,7 +226,6 @@ void StatsGeneratorFilter::initialize()
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::dataCheck()
 {
-  qDebug() << getNameOfClass() << "::dataCheck()";
   if(nullptr != m_StatsDataArray)
   {
     getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getStatsGeneratorDataContainerName());

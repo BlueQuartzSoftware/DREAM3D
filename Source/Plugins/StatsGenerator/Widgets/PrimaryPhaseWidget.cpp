@@ -333,7 +333,7 @@ void PrimaryPhaseWidget::setupGui()
 
   plotWidgets.push_back(m_Omega3Plot);
   StatsGenPlotWidget* w = m_Omega3Plot;
-  w->setPlotTitle(QString("Omega 3 Probabiity Density Functions"));
+  w->setPlotTitle(QString("Omega 3 Probability Density Functions"));
   w->setXAxisName(QString("Omega 3"));
   w->setYAxisName(QString("Frequency"));
   w->setDataTitle(QString("Edit Distribution Values"));
@@ -347,6 +347,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), m_FeatureSizeDistWidget, SLOT(userEditedPlotData()));
   connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
@@ -366,6 +367,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), m_FeatureSizeDistWidget, SLOT(userEditedPlotData()));
   connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
@@ -385,6 +387,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), m_FeatureSizeDistWidget, SLOT(userEditedPlotData()));
   connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
@@ -404,6 +407,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(w, SIGNAL(dataChanged()), this, SLOT(dataWasEdited()));
+  connect(w, SIGNAL(dataChanged()), m_FeatureSizeDistWidget, SLOT(userEditedPlotData()));
   connect(w, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   connect(m_FeatureSizeDistWidget, SIGNAL(binSelected(int)), w, SLOT(highlightCurve(int)));
 
@@ -501,7 +505,8 @@ void PrimaryPhaseWidget::setTabsPlotTabsEnabled(bool b)
 void PrimaryPhaseWidget::dataWasEdited()
 {
   setTabsPlotTabsEnabled(true);
-  this->tabWidget->setTabEnabled(0, false);
+  m_GenerateDefaultData->setEnabled(false);
+  //this->tabWidget->setTabEnabled(0, false);
 }
 
 // -----------------------------------------------------------------------------
@@ -642,6 +647,20 @@ void PrimaryPhaseWidget::on_m_GenerateDefaultData_clicked()
 {
   setDataHasBeenGenerated(true);
   updatePlots();
+  emit dataChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_ResetDataBtn_clicked()
+{
+
+  m_FeatureSizeDistWidget->resetUI();
+  setupGui();
+
+  setDataHasBeenGenerated(true); // Set this boolean to true so that data generation is triggered
+  updatePlots();  // Regenerate all the default data
   emit dataChanged();
 }
 

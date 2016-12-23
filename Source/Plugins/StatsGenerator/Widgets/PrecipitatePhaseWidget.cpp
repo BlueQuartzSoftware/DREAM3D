@@ -120,112 +120,26 @@ void PrecipitatePhaseWidget::setupGui()
   getMicrostructurePresetCombo()->setCurrentIndex(0);
   getMicrostructurePresetCombo()->blockSignals(false);
 
-#if 0
-  float mu = 1.0f;
-  float sigma = 0.1f;
-  float minCutOff = 5.0f;
-  float maxCutOff = 5.0f;
-  float binStepSize = 0.5f;
-
-  StatsGenPlotWidget* w = getOmega3PlotWidget();
-  w->setPlotTitle(QString("Omega 3 Probabiity Density Functions"));
-  w->setXAxisName(QString("Omega 3"));
-  w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
-  w->setDistributionType(SIMPL::DistributionType::Beta);
-  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVOmega3);
-  w->blockDistributionTypeChanges(true);
-  w->setRowOperationEnabled(false);
-  w->setMu(mu);
-  w->setSigma(sigma);
-  w->setMinCutOff(minCutOff);
-  w->setMaxCutOff(maxCutOff);
-  w->setBinStep(binStepSize);
-  connect(w, SIGNAL(userEditedData()),
-          this, SLOT(dataWasEdited()));
-  connect(w, SIGNAL(userEditedData()),
-          this, SIGNAL(phaseParametersChanged()));
-  connect(getFeatureSizeWidget(), SIGNAL(binSelected(int)),
-          w, SLOT(highlightCurve(int)));
-
-  w = getBOverAPlotPlotWidget();
-  w->setPlotTitle(QString("B/A Shape Distribution"));
-  w->setXAxisName(QString("B/A"));
-  w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
-  w->setDistributionType(SIMPL::DistributionType::Beta);
-  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVBoverA);
-  w->blockDistributionTypeChanges(true);
-  w->setRowOperationEnabled(false);
-  w->setMu(mu);
-  w->setSigma(sigma);
-  w->setMinCutOff(minCutOff);
-  w->setMaxCutOff(maxCutOff);
-  w->setBinStep(binStepSize);
-  connect(w, SIGNAL(userEditedData()),
-          this, SLOT(dataWasEdited()));
-  connect(w, SIGNAL(userEditedData()),
-          this, SIGNAL(phaseParametersChanged()));
-  connect(getFeatureSizeWidget(), SIGNAL(binSelected(int)),
-          w, SLOT(highlightCurve(int)));
-
-  w = getCOverAPlotWidget();
-  w->setPlotTitle(QString("C/A Shape Distribution"));
-  w->setXAxisName(QString("C/A"));
-  w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
-  w->setDistributionType(SIMPL::DistributionType::Beta);
-  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVCoverA);
-  w->blockDistributionTypeChanges(true);
-  w->setRowOperationEnabled(false);
-  w->setMu(mu);
-  w->setSigma(sigma);
-  w->setMinCutOff(minCutOff);
-  w->setMaxCutOff(maxCutOff);
-  w->setBinStep(binStepSize);
-  connect(w, SIGNAL(userEditedData()),
-          this, SLOT(dataWasEdited()));
-  connect(w, SIGNAL(userEditedData()),
-          this, SIGNAL(phaseParametersChanged()));
-  connect(getFeatureSizeWidget(), SIGNAL(binSelected(int)),
-          w, SLOT(highlightCurve(int)));
-
-
-  // For the ODF Tab we want the MDF functionality
-  getODFWidget()->enableMDFTab(true);
-
-  // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
-  getODFWidget()->setEnableAxisDecorations(false);
-
-  // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
-  getAxisODFWidget()->setEnableAxisDecorations(false);
-
-  connect(getODFWidget(), SIGNAL(odfParametersChanged()),
-          this, SIGNAL(phaseParametersChanged()));
-  connect(getODFWidget(), SIGNAL(bulkLoadEvent(bool)),
-          this, SLOT(bulkLoadEvent(bool)));
-  connect(getAxisODFWidget(), SIGNAL(axisODFParametersChanged()),
-          this, SIGNAL(phaseParametersChanged()));
-
-#endif
 
   removeNeighborsPlotWidget();
 
-  QWidget* rdfTab;
-  QHBoxLayout* horizontalLayout_2;
+  if (!m_RdfPlot)
+  {
+    QWidget* rdfTab;
+    QHBoxLayout* horizontalLayout_2;
 
-  rdfTab = new QWidget();
-  rdfTab->setObjectName(QStringLiteral("rdfTab"));
-  horizontalLayout_2 = new QHBoxLayout(rdfTab);
-  horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-  horizontalLayout_2->setContentsMargins(4, 4, 4, 4);
-  m_RdfPlot = new StatsGenRDFWidget(rdfTab);
-  m_RdfPlot->setObjectName(QStringLiteral("m_RdfPlot"));
-  horizontalLayout_2->addWidget(m_RdfPlot);
-  getTabWidget()->addTab(rdfTab, m_RdfPlot->getTabTitle());
+    rdfTab = new QWidget();
+    rdfTab->setObjectName(QStringLiteral("rdfTab"));
+    horizontalLayout_2 = new QHBoxLayout(rdfTab);
+    horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+    horizontalLayout_2->setContentsMargins(4, 4, 4, 4);
+    m_RdfPlot = new StatsGenRDFWidget(rdfTab);
+    m_RdfPlot->setObjectName(QStringLiteral("m_RdfPlot"));
+    horizontalLayout_2->addWidget(m_RdfPlot);
+    getTabWidget()->addTab(rdfTab, m_RdfPlot->getTabTitle());
 
-  connect(m_RdfPlot, SIGNAL(rdfParametersChanged()), this, SIGNAL(dataChanged()));
-
+    connect(m_RdfPlot, SIGNAL(rdfParametersChanged()), this, SIGNAL(dataChanged()));
+  }
   connect(getFeatureSizeWidget(), SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 
   connect(getFeatureSizeWidget(), SIGNAL(userEnteredValidData(bool)), getGenerateDefaultDataBtn(), SLOT(setEnabled(bool)));
