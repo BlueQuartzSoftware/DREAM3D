@@ -423,7 +423,7 @@ void AngReader::readData(QFile& in, QByteArray& buf)
     ss.string()->clear();
     ss << "Internal pointers were nullptr at " << __FILE__ << "(" << __LINE__ << ")\n";
     setErrorMessage(*(ss.string()));
-    setErrorCode(-500);
+    setErrorCode(-2500);
     return;
   }
 
@@ -674,7 +674,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     p1 = tokens[0].toFloat(&ok);
     if(!ok)
     {
-      setErrorCode(-501);
+      setErrorCode(-2501);
     }
     m_Phi1[offset] = p1;
   }
@@ -683,7 +683,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     p = tokens[1].toFloat(&ok);
     if(!ok)
     {
-      setErrorCode(-502);
+      setErrorCode(-2502);
     }
     m_Phi[offset] = p;
   }
@@ -692,7 +692,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     p2 = tokens[2].toFloat(&ok);
     if(!ok)
     {
-      setErrorCode(-503);
+      setErrorCode(-2503);
     }
     m_Phi2[offset] = p2;
   }
@@ -701,7 +701,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     x = tokens[3].toFloat(&ok);
     if(!ok)
     {
-      setErrorCode(-504);
+      setErrorCode(-2504);
     }
     m_X[offset] = x;
   }
@@ -710,7 +710,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     y = tokens[4].toFloat(&ok);
     if(!ok)
     {
-      setErrorCode(-505);
+      setErrorCode(-2505);
     }
     m_Y[offset] = y;
   }
@@ -719,7 +719,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     iqual = tokens[5].toFloat(&ok);
     if(!ok)
     {
-      setErrorCode(-506);
+      setErrorCode(-2506);
     }
     m_Iq[offset] = iqual;
   }
@@ -728,7 +728,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     conf = tokens[6].toFloat(&ok);
     if(!ok)
     {
-      setErrorCode(-507);
+      setErrorCode(-2507);
     }
     m_Ci[offset] = conf;
   }
@@ -737,7 +737,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     ph = tokens[7].toInt(&ok);
     if(!ok)
     {
-      setErrorCode(-508);
+      setErrorCode(-2508);
     }
     m_PhaseData[offset] = ph;
   }
