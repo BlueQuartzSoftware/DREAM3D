@@ -13,7 +13,9 @@ This **Filter** determines, for each **Cell**, the number of neighboring **Cells
 4. Repeat 1-3 for all **Cells**
 
 ## Parameters ##
-None
+| Name             | Type | Description |
+|------------------|------|-------------|
+| Ignore Feature 0 | bool | Do not use feature 0 |
 
 ## Required Geometry ##
 Image 

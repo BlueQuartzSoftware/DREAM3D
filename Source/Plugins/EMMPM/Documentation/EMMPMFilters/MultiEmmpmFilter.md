@@ -23,6 +23,7 @@ This **Filter** contains an additional option to use the last mu (mean) and sigm
 | Curvature Penalty | float | The penalty to use for curvatures. Only needed if _Use Curvature Penalty_ is checked |
 | R Max | float | The max radius for the curvature penalty. Only needed if _Use Curvature Penalty_ is checked |
 | EM Loop Delay | int32_t | The number of EM Loops to delay before applying the curvature penalty. Only needed if _Use Curvature Penalty_ is checked |
+| Use 1-Based Values | bool | Use 1-based values instead of 0-based values |
 | Use Mu/Sigma from Previous Image as Initialization for Current Image | bool | Whether to use the calculated mu/sigma from the previous segmented image as the starting point for the next image segmentation. May help reduce computation time |
 | Output Array Name Prefix | String | Prefix to apply to the output segmented arrays |
 
