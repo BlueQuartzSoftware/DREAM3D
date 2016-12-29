@@ -15,19 +15,24 @@ set(HDFVERSION $ENV{HDF_VERSION})
 
 set(ITK_VERSION $ENV{ITK_VERSION})
 
+set(CMAKE_COMMAND $ENV{CMAKE_INSTALL}/bin/cmake.exe)
+
 set(DEBUG_PREFIX "_D")
 
 set(itkArchiveName "InsightToolkit-${ITK_VERSION}")
 
 #------------------------------------------------------------------------------
 # Check first to see if the ITK Source archive is available in the SDK directory
-if (NOT EXISTS "${SDK_INSTALL}/${itkArchiveName}.tar.gz")
-  message(STATUS  "-------------------------------------------")
-  message(STATUS  " Downloading ITK Version ${version}")
-  message(STATUS  "-------------------------------------------")
-  set(ITK_URL "http://dream3d.bluequartz.net/binaries/SDK/Sources/ITK/InsightToolkit-${ITK_VERSION}.tar.gz")
-  file(DOWNLOAD "${ITK_URL}" ${SDK_INSTALL}/${itkArchiveName}.tar.gz)
+# if (NOT EXISTS "${SDK_INSTALL}/${itkArchiveName}.tar.gz")
+#   message(STATUS  "-------------------------------------------")
+#   message(STATUS  " Downloading ITK Version ${version}")
+#   message(STATUS  "-------------------------------------------")
+#   file(DOWNLOAD "http://superb-dca2.dl.sourceforge.net/project/itk/itk/4.7/${itkArchiveName}.tar.gz" ${SDK_INSTALL}/${itkArchiveName}.tar.gz)
+# endif()
+if(NOT EXISTS "${SDK_INSTALL}/${itkArchiveName}")
 
+  execute_process(COMMAND "C:/Program Files/Git/cmd/git.exe" clone -b master git://github.com/InsightSoftwareConsortium/ITK  ${itkArchiveName}
+                WORKING_DIRECTORY ${SDK_INSTALL})
 endif()
 
 #------------------------------------------------------------------------------
