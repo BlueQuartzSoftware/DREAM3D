@@ -343,18 +343,18 @@ int32_t PhReader::readHeader()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
 
-  size_t nx = 0;
-  size_t ny = 0;
-  size_t nz = 0;
+  int nx = 0;
+  int ny = 0;
+  int nz = 0;
 
   // Read Line #1 which has the dimensions
-  fscanf(m_InStream, "%ld %ld %ld\n", &nx, &ny, &nz);
+  fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
 
   // Set the values into the cache, so that they can be used later
   QVector<size_t> v;
-  v.push_back(nx);
-  v.push_back(ny);
-  v.push_back(nz);
+  v.push_back(static_cast<size_t>(nx));
+  v.push_back(static_cast<size_t>(ny));
+  v.push_back(static_cast<size_t>(nz));
   setDims(v);
 
   if(nullptr != m.get())
@@ -362,7 +362,7 @@ int32_t PhReader::readHeader()
     ImageGeom::Pointer imageGeom =  m->getGeometryAs<ImageGeom>();
     if(nullptr != imageGeom.get())
     {
-      imageGeom->setDimensions(nx, ny, nz);
+      imageGeom->setDimensions(static_cast<size_t>(nx), static_cast<size_t>(ny), static_cast<size_t>(nz));
     }
   }
 

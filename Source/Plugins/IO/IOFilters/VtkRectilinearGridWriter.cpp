@@ -52,6 +52,7 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
+#define LD_CAST(arg) static_cast<long int>(arg)
 namespace Detail
 {
 
@@ -77,7 +78,7 @@ template <class Geometry> void WriteVTKHeader(FILE* f, DataContainer::Pointer m,
   }
   fprintf(f, "\n");
   fprintf(f, "DATASET RECTILINEAR_GRID\n");
-  fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);
+  fprintf(f, "DIMENSIONS %ld %ld %ld\n", LD_CAST(xpoints), LD_CAST(ypoints), LD_CAST(zpoints) );
 }
 
 /**

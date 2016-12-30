@@ -51,6 +51,8 @@
 // Include the MOC generated file for this class
 #include "moc_LosAlamosFFTWriter.cpp"
 
+#define LLU_CAST(arg) static_cast<unsigned long long int>(arg)
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -264,7 +266,7 @@ int32_t LosAlamosFFTWriter::writeFile()
         phi2 = m_CellEulerAngles[index * 3 + 2] * 180.0 * SIMPLib::Constants::k_1OverPi;
         featureId = m_FeatureIds[index];
         phaseId = m_CellPhases[index];
-        fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n", phi1, phi, phi2, x + 1, y + 1, z + 1, featureId, phaseId);
+        fprintf(f, "%.3f %.3f %.3f %llu %llu %llu %d %d\n", phi1, phi, phi2, LLU_CAST(x + 1), LLU_CAST(y + 1), LLU_CAST(z + 1), featureId, phaseId);
       }
     }
   }
