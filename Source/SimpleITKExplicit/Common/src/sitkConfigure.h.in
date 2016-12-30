@@ -61,4 +61,18 @@
 #define SITK_ITK_VERSION_MINOR @ITK_VERSION_MINOR@
 #define SITK_ITK_VERSION_PATCH @ITK_VERSION_PATCH@
 
+#cmakedefine SIMPL_DISABLE_MSVC_WARNINGS
+
+#if (_MSC_VER >= 1)
+
+  #pragma warning (error: 4715) /* Not all control points return a value */
+  #pragma warning (error: 4258) /* Nested Variable Definitions are ignored */
+    #ifdef SIMPL_DISABLE_MSVC_WARNINGS
+      #pragma warning(disable:4244)
+      #pragma warning(disable:4267)
+      #pragma warning(disable:4305)
+    #endif
+
+#endif
+
 #endif // __sitkConfigure_h

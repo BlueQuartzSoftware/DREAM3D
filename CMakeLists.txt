@@ -225,6 +225,16 @@ if("${SIMPLibSearchDirs}" STREQUAL "")
   file(WRITE "${SIMPLibSearchDirs}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY};")
 endif()
 
+# -----------------------------------------------------------------------
+# Set a global value to NOT install headers
+# -----------------------------------------------------------------------
+set_property(GLOBAL PROPERTY CMP_PROJECT_INSTALL_HEADERS "0")
+
+# -----------------------------------------------------------------------
+# Bring in the SIMPLView Project, which will bring in SIMPLib
+# -----------------------------------------------------------------------
+add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
+
 # --------------------------------------------------------------------
 # Build the SimpleITKExplicit Library.
 option(DREAM3D_USE_ITK "Use ITK For Image Processing" ON)
@@ -235,17 +245,6 @@ if(DREAM3D_USE_ITK)
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
   get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
 endif()
-
-# -----------------------------------------------------------------------
-# Set a global value to NOT install headers
-# -----------------------------------------------------------------------
-set_property(GLOBAL PROPERTY CMP_PROJECT_INSTALL_HEADERS "0")
-
-
-# -----------------------------------------------------------------------
-# Bring in the SIMPLView Project, which will bring in SIMPLib
-# -----------------------------------------------------------------------
-add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
 
 
 #Enable use of Solution Folders

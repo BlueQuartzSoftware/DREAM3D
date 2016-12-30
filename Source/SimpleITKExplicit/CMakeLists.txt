@@ -95,7 +95,9 @@ set(SimpleITKExplicit_INSTALL_RUNTIME_DIR "${install_dir}")
 set(SimpleITKExplicit_INSTALL_LIBRARY_DIR "${lib_install_dir}")
 set(SimpleITKExplicit_INSTALL_ARCHIVE_DIR "${lib_install_dir}")
 
-
+if(SIMPL_DISABLE_MSVC_WARNINGS)
+    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+endif()
 include_directories( ${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
 include_directories( ${SimpleITKExplicit_BINARY_DIR}/Common/include)
 
