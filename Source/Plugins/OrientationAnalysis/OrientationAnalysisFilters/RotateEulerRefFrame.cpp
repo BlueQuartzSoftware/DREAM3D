@@ -145,8 +145,8 @@ RotateEulerRefFrame::~RotateEulerRefFrame()
 void RotateEulerRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Rotation Axis (ijk)", RotationAxis, FilterParameter::Parameter, RotateEulerRefFrame));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Rotation Angle (Degrees)", RotationAngle, FilterParameter::Parameter, RotateEulerRefFrame));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Rotation Axis (ijk)", RotationAxis, FilterParameter::Parameter, RotateEulerRefFrame));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, RotateEulerRefFrame, req));
