@@ -232,13 +232,13 @@ void EMMPMFilter::dataCheck()
 
   if(getNumClasses() > 15)
   {
-    setErrorCondition(-62000);
+    setErrorCondition(-89100);
     QString ss = QObject::tr("The maximum number of classes is 15");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if(getNumClasses() < 2)
   {
-    setErrorCondition(-62001);
+    setErrorCondition(-89101);
     QString ss = QObject::tr("The minimum number of classes is 2");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }

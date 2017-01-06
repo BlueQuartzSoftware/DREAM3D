@@ -153,7 +153,7 @@ void MultiEmmpmFilter::dataCheck()
 
   if(DataArrayPath::ValidateVector(getInputDataArrayVector()) == false)
   {
-    setErrorCondition(-62000);
+    setErrorCondition(-89004);
     QString ss = QObject::tr("All Attribute Arrays must belong to the same Data Container and Attribute Matrix");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -181,14 +181,14 @@ void MultiEmmpmFilter::dataCheck()
 
   if(getOutputArrayPrefix().isEmpty())
   {
-    setErrorCondition(-62002);
+    setErrorCondition(-89002);
     QString message = QObject::tr("Using a prefix (even a single alphanumeric value) is required so that the output Xdmf files can be written correctly");
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
   }
 
   if(getInputDataArrayVector().isEmpty())
   {
-    setErrorCondition(-62003);
+    setErrorCondition(-89003);
     QString message = QObject::tr("At least one Attribute Array must be selected");
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
     return;
@@ -233,14 +233,14 @@ void MultiEmmpmFilter::dataCheck()
   // The EM/MPM Library has a hard coded MAX Classes of 16
   if(getNumClasses() > 15)
   {
-    setErrorCondition(-62000);
+    setErrorCondition(-89000);
     QString ss = QObject::tr("The maximum number of classes is 15");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   // It does not make any sense if we want anything less than 2 classes
   if(getNumClasses() < 2)
   {
-    setErrorCondition(-62001);
+    setErrorCondition(-89001);
     QString ss = QObject::tr("The minimum number of classes is 2");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
