@@ -93,12 +93,17 @@ endif()
 Find_package(Git)
 
 get_filename_component(DREAM3D_PARENT ${DREAM3DProj_SOURCE_DIR} DIRECTORY CACHE)
+set(DREAM3D_ExternalProject_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects")
 
 #------------------------------------------------------------------------------
 # If the developer has set another CMP directory then use that, otherwise look
 # for the CMP directory at the same level as the SIMPL directory
 if("${CMP_SOURCE_DIR}" STREQUAL "")
-  set(CMP_SOURCE_DIR ${DREAM3D_PARENT}/CMP)
+  if(EXISTS "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/CMP")
+    set(CMP_SOURCE_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/CMP")
+  elseif(EXISTS "${DREAM3D_PARENT}/CMP")
+    set(CMP_SOURCE_DIR ${DREAM3D_PARENT}/CMP)
+  endif()
   message(STATUS "CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
 endif()
 
@@ -120,11 +125,29 @@ if(NOT EXISTS "${CMP_SOURCE_DIR}")
   endif()
 endif()
 
+
 #------------------------------------------------------------------------------
 # If the developer has set another SIMPL directory then use that, otherwise look
 # for the SIMPLView directory at the same level as the SIMPL directory
+if("${SIMPLProj_SOURCE_DIR}" STREQUAL "")
+  if(EXISTS "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/SIMPL")
+    set(SIMPLProj_SOURCE_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/SIMPL")
+  elseif(EXISTS "${DREAM3D_PARENT}/SIMPL")
+    set(SIMPLProj_SOURCE_DIR ${DREAM3D_PARENT}/SIMPL)
+  endif()
+  message(STATUS "SIMPLProj_SOURCE_DIR: ${SIMPLProj_SOURCE_DIR}")
+endif()
+
+
+#------------------------------------------------------------------------------
+# If the developer has set another SIMPLView directory then use that, otherwise look
+# for the SIMPLView directory at the same level as the SIMPL directory
 if("${SIMPLViewProj_SOURCE_DIR}" STREQUAL "")
-  set(SIMPLViewProj_SOURCE_DIR ${DREAM3D_PARENT}/SIMPLView)
+  if(EXISTS "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/SIMPLView")
+    set(SIMPLViewProj_SOURCE_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects/SIMPLView")
+  elseif(EXISTS "${DREAM3D_PARENT}/SIMPLView")
+    set(SIMPLViewProj_SOURCE_DIR "${DREAM3D_PARENT}/SIMPLView")
+  endif()
   message(STATUS "SIMPLViewProj_SOURCE_DIR: ${SIMPLViewProj_SOURCE_DIR}")
 endif()
 

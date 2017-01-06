@@ -65,7 +65,7 @@ function(DREAM3D_ADD_PLUGINS)
             message(STATUS "Plugin: Defining ${d3dPlugin}_SOURCE_DIR to ${${d3dPlugin}_SOURCE_DIR}")
           else()
 
-            set(pluginSearchDir ${DREAM3D_PARENT_DIR}/${d3dPlugin})
+            set(pluginSearchDir ${DREAM3DProj_SOURCE_DIR}/ExternalProjects/Plugins/${d3dPlugin})
             if(EXISTS ${pluginSearchDir})
                 set(${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
                 include_directories( ${pluginSearchDir} )
