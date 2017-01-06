@@ -291,7 +291,7 @@ class ReadH5Ebsd : public AbstractFilter
       {
         int32_t phaseID = phases[i]->getPhaseIndex();
         crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure() );
-        materialNames->setValue(phaseID, phases[i]->getMaterialName());
+        materialNames->setValue(phaseID, phases[i]->getPhaseName());
         QVector<float> lc = phases[i]->getLatticeConstants();
 
         latticeConstants->setComponent(phaseID, 0, lc[0]);
@@ -309,7 +309,7 @@ class ReadH5Ebsd : public AbstractFilter
       attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
       m_LatticeConstantsPtr = latticeConstants;
       m_LatticeConstants = latticeConstants->getPointer(0);
-      attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+      attrMatrix->addAttributeArray(SIMPL::EnsembleData::PhaseName, materialNames);
       m_MaterialNamesPtr = materialNames;
       return 0;
     }

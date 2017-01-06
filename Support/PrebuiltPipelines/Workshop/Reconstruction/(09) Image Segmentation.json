@@ -3,7 +3,7 @@
         "BoundsFile": "",
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Import Images (3D Stack)",
         "Filter_Name": "ImportImageStack",
         "GeometryType": 0,
@@ -31,7 +31,7 @@
     },
     "1": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -48,7 +48,7 @@
         "ActiveArrayName": "Active",
         "CellFeatureAttributeMatrixName": "CellFeatureData",
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Segment Features (Scalar)",
         "Filter_Name": "ScalarSegmentFeatures",
         "GoodVoxelsArrayPath": {
@@ -65,21 +65,22 @@
         "UseGoodVoxels": 1
     },
     "3": {
-        "CellFeatureAttributeMatrixName": {
+        "EquivalentDiametersArrayName": "EquivalentDiameters",
+        "FeatureAttributeMatrixName": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
-        "EquivalentDiametersArrayName": "EquivalentDiameters",
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
-        "NumCellsArrayName": "NumCells",
+        "NumElementsArrayName": "NumElements",
+        "SaveElementSizes": 0,
         "VolumesArrayName": "Volumes"
     },
     "4": {
@@ -89,7 +90,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "1.0.592",
         "Filter_Human_Label": "Create Element Array from Feature Array",
         "Filter_Name": "CopyFeatureArrayToElementArray",
         "SelectedFeatureArrayPath": {
@@ -99,7 +100,7 @@
         }
     },
     "5": {
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "1.0.592",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/Images.dream3d",
@@ -108,6 +109,6 @@
     "PipelineBuilder": {
         "Name": "(09) Image Segmentation",
         "Number_Filters": 6,
-        "Version": "1.0"
+        "Version": 6
     }
 }

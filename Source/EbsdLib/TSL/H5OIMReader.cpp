@@ -509,7 +509,7 @@ int H5OIMReader::readHeader(hid_t parId)
     hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
     AngPhase::Pointer m_CurrentPhase = AngPhase::New();
     m_CurrentPhase->setPhaseIndex(phaseGroupName.toInt());
-    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::MaterialName, MaterialName, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::PhaseName, PhaseName, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
     READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)

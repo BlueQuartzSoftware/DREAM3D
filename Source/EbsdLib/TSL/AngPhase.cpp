@@ -78,10 +78,10 @@ AngPhase::~AngPhase()
 // -----------------------------------------------------------------------------
 void AngPhase::parseMaterialName(QList<QByteArray>& tokens)
 {
-  m_MaterialName.clear();
+  m_PhaseName.clear();
   for(int i = 1; i < tokens.size(); ++i)
   {
-    m_MaterialName.append(tokens.at(i)).append(" ");
+    m_PhaseName.append(tokens.at(i)).append(" ");
   }
 }
 
@@ -200,7 +200,7 @@ void AngPhase::parseCategories(QList<QByteArray>& tokens)
 void AngPhase::printSelf(QTextStream& stream)
 {
   stream << Ebsd::Ang::Phase << ": " << m_PhaseIndex << QString("\n");
-  stream << Ebsd::Ang::MaterialName << ": " << m_MaterialName << QString("\n");
+  stream << Ebsd::Ang::PhaseName << ": " << m_PhaseName << QString("\n");
   stream << Ebsd::Ang::Formula << ": " << m_Formula << QString("\n");
   stream << Ebsd::Ang::Info << ": " << m_Info << QString("\n");
   stream << Ebsd::Ang::Symmetry << ": " << m_Symmetry << QString("\n");

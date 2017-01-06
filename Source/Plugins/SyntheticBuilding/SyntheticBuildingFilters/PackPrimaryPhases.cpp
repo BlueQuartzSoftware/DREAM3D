@@ -389,7 +389,7 @@ void PackPrimaryPhases::setupFilterParameters()
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StringArray, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
     IGeometry::Types geomTypes;
     geomTypes.push_back(IGeometry::Type::Image);
     geomTypes.push_back(IGeometry::Type::Unknown);
@@ -461,28 +461,6 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
   //  setVtkOutputFile( reader->readString( "VtkOutputFile", getVtkOutputFile() ) );
   //  setErrorOutputFile( reader->readString( "ErrorOutputFile", getErrorOutputFile() ) );
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PackPrimaryPhases::readFilterParameters(QJsonObject& obj)
-{
-  AbstractFilter::readFilterParameters(obj);
-  // setErrorOutputFile(obj["ErrorOutputFile"].toString());
-  // setVtkOutputFile(obj["VtkOutputFile"].toString());
-}
-
-// FP: Check why these values are not connected to a filter parameter!
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PackPrimaryPhases::writeFilterParameters(QJsonObject& obj)
-{
-  AbstractFilter::writeFilterParameters(obj);
-  // obj["ErrorOutputFile"] = getErrorOutputFile();
-  // obj["VtkOutputFile"] = getVtkOutputFile();
 }
 
 // -----------------------------------------------------------------------------

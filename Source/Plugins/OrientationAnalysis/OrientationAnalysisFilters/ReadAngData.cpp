@@ -87,7 +87,7 @@ ReadAngData::ReadAngData()
 , m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_FileWasRead(false)
-, m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
+, m_MaterialNameArrayName(SIMPL::EnsembleData::PhaseName)
 , m_InputFile("")
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
 , m_Manufacturer(Ebsd::UnknownManufacturer)
@@ -274,8 +274,8 @@ void ReadAngData::dataCheck()
       m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::PhaseName);
+    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, materialNames);
   }
 }
 
@@ -419,14 +419,14 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures);
-  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, Ebsd::AngFile::MaterialName);
+  StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(phases.size() + 1, Ebsd::AngFile::MaterialName);
   QVector<size_t> cDims(1, 6);
   FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, Ebsd::AngFile::LatticeConstants);
 
   // Initialize the zero'th element to unknowns. The other elements will
   // be filled in based on values from the data file
   crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  materialNames->setValue(0, "Invalid Phase");
+  phaseNames->setValue(0, "Invalid Phase");
   latticeConstants->setComponent(0, 0, 0.0f);
   latticeConstants->setComponent(0, 1, 0.0f);
   latticeConstants->setComponent(0, 2, 0.0f);
@@ -438,7 +438,7 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   {
     int32_t phaseID = phases[i]->getPhaseIndex();
     crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure());
-    materialNames->setValue(phaseID, phases[i]->getMaterialName());
+    phaseNames->setValue(phaseID, phases[i]->getPhaseName());
     QVector<float> lc = phases[i]->getLatticeConstants();
 
     latticeConstants->setComponent(phaseID, 0, lc[0]);
@@ -464,7 +464,7 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
   attrMatrix->addAttributeArray(Ebsd::AngFile::CrystalStructures, crystalStructures);
-  attrMatrix->addAttributeArray(Ebsd::AngFile::MaterialName, materialNames);
+  attrMatrix->addAttributeArray(Ebsd::AngFile::MaterialName, phaseNames);
   attrMatrix->addAttributeArray(Ebsd::AngFile::LatticeConstants, latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays

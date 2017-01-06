@@ -184,7 +184,7 @@ namespace Ebsd
     const QString Phases("Phases");
     const QString EulerAngles("EulerAngles");
     const QString CrystalStructures("CrystalStructures");
-    const QString MaterialName("MaterialName");
+    const QString PhaseName("PhaseName");
     const QString LatticeConstants("LatticeConstants");
     const QString BravaisLattice("BravaisLattice");
   }

@@ -1,5 +1,6 @@
 {
     "0": {
+        "FilterVersion": "1.0.592",
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
         "InputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -177,11 +178,11 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "MaterialName",
+                                    "Name": "PhaseName",
                                     "Object Type": "StringDataArray",
                                     "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [
-                                        1
+                                        2
                                     ],
                                     "Version": 2
                                 }
@@ -235,7 +236,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Find Feature Phases",
         "Filter_Name": "FindFeaturePhases"
     },
@@ -265,7 +266,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
         "QuatsArrayPath": {
@@ -286,7 +287,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList2",
@@ -327,7 +328,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Merge Twins",
         "Filter_Name": "MergeTwins",
         "NewCellFeatureAttributeMatrixName": "NewCellFeatureData",
@@ -339,21 +340,22 @@
         "UseNonContiguousNeighbors": 0
     },
     "5": {
-        "CellFeatureAttributeMatrixName": {
+        "EquivalentDiametersArrayName": "EquivalentDiameters",
+        "FeatureAttributeMatrixName": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
-        "EquivalentDiametersArrayName": "EquivalentDiameters",
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
-        "NumCellsArrayName": "NumCells",
+        "NumElementsArrayName": "NumElements",
+        "SaveElementSizes": 0,
         "VolumesArrayName": "Volumes"
     },
     "6": {
@@ -368,13 +370,13 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Minimum Size",
         "Filter_Name": "MinSize",
         "MinAllowedFeatureSize": 16,
         "NumCellsArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
-            "Data Array Name": "NumCells",
+            "Data Array Name": "NumElements",
             "Data Container Name": "ImageDataContainer"
         },
         "PhaseNumber": 0
@@ -391,7 +393,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -413,7 +415,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.265",
         "Filter_Human_Label": "Minimum Number of Neighbors",
         "Filter_Name": "MinNeighbors",
         "MinNumNeighbors": 2,
@@ -425,7 +427,7 @@
         "PhaseNumber": 0
     },
     "9": {
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "1.0.592",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -434,6 +436,6 @@
     "PipelineBuilder": {
         "Name": "(06) SmallIN100 Postsegmentation Processing",
         "Number_Filters": 10,
-        "Version": "1.0"
+        "Version": 6
     }
 }
