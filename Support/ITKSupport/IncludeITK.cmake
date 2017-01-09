@@ -5,7 +5,7 @@
 function(AddItkCopyInstallRules)
   set(options )
   set(oneValueArgs )
-  set(multiValueArgs LIBS TYPES)
+  set(multiValueArgs LIBS TYPES FOLDERS)
   cmake_parse_arguments(itk "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
   set(INTER_DIR ".")
 
@@ -24,6 +24,17 @@ function(AddItkCopyInstallRules)
     set(itk_INSTALL_DIR ".")
   endif()
 
+  # Set ITK_LIB_DIRECTORY
+  # If using ITK build directory:
+  set(ITK_LIB_DIRECTORY ${ITK_DIR}/lib)
+  # If using ITK install directory:
+  if(ITK_INSTALL_PREFIX)
+    set(ITK_LIB_DIRECTORY ${ITK_INSTALL_PREFIX}/lib)
+  endif()
+
+  foreach(ITK_FOLDER ${itk_FOLDERS})
+    install(DIRECTORY ${ITK_LIB_DIRECTORY}/${ITK_FOLDER} DESTINATION lib COMPONENT Applications)
+  endforeach()
 
   set(STACK "")
   list(APPEND STACK ${itk_LIBS})
@@ -233,7 +244,7 @@ endif()
 # will iterate over all the ITK Modules, figure out if each is shared
 # (DLL), then create a copy rule and an install rule.
 if(NOT APPLE)
-  AddItkCopyInstallRules(LIBS ${DREAM3D_ITK_MODULES} TYPES ${BUILD_TYPES})
+  AddItkCopyInstallRules(LIBS ${DREAM3D_ITK_MODULES} TYPES ${BUILD_TYPES} FOLDERS ${DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
