@@ -182,26 +182,26 @@ void FindFeatureCentroids::find_centroids()
       for(size_t k = 0; k < xPoints; k++)
       {
         int32_t gnum = m_FeatureIds[zStride + yStride + k];
-        featurecenters[gnum * 5 + 0]++;
+        featurecenters[gnum * 4 + 0]++;
         x = float(k) * xRes;
         y = float(j) * yRes;
         z = float(i) * zRes;
-        featurecenters[gnum * 5 + 1] = featurecenters[gnum * 5 + 1] + x;
-        featurecenters[gnum * 5 + 2] = featurecenters[gnum * 5 + 2] + y;
-        featurecenters[gnum * 5 + 3] = featurecenters[gnum * 5 + 3] + z;
+        featurecenters[gnum * 4 + 1] = featurecenters[gnum * 4 + 1] + x;
+        featurecenters[gnum * 4 + 2] = featurecenters[gnum * 4 + 2] + y;
+        featurecenters[gnum * 4 + 3] = featurecenters[gnum * 4 + 3] + z;
       }
     }
   }
   for(size_t i = 0; i < totalFeatures; i++)
   {
-    if(featurecenters[i * 5 + 0] > 0.0f)
+    if(featurecenters[i * 4 + 0] > 0.0f)
     {
-      featurecenters[i * 5 + 1] = featurecenters[i * 5 + 1] / featurecenters[i * 5 + 0];
-      featurecenters[i * 5 + 2] = featurecenters[i * 5 + 2] / featurecenters[i * 5 + 0];
-      featurecenters[i * 5 + 3] = featurecenters[i * 5 + 3] / featurecenters[i * 5 + 0];
-      m_Centroids[3 * i] = featurecenters[i * 5 + 1];
-      m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2];
-      m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3];
+      featurecenters[i * 4 + 1] = featurecenters[i * 4 + 1] / featurecenters[i * 4 + 0];
+      featurecenters[i * 4 + 2] = featurecenters[i * 4 + 2] / featurecenters[i * 4 + 0];
+      featurecenters[i * 4 + 3] = featurecenters[i * 4 + 3] / featurecenters[i * 4 + 0];
+      m_Centroids[3 * i] = featurecenters[i * 4 + 1];
+      m_Centroids[3 * i + 1] = featurecenters[i * 4 + 2];
+      m_Centroids[3 * i + 2] = featurecenters[i * 4 + 3];
     }
   }
 }
