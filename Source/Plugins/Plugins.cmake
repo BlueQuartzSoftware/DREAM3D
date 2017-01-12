@@ -17,11 +17,11 @@ endif()
 function(DREAM3D_COMPILE_PLUGIN)
     set(options)
     set(oneValueArgs PLUGIN_NAME PLUGIN_SOURCE_DIR)
-    cmake_parse_arguments(PLUG  "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    cmake_parse_arguments(PLUG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
     if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
-        message(STATUS "Plugin  [ENABLED]: ${PLUG_PLUGIN_NAME}")
+        message(STATUS "Plugin [ENABLED]: ${PLUG_PLUGIN_NAME}")
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})
         #- Now set up the dependency between the main application and each of the plugins so that
         #- things like Visual Studio are forced to rebuild the plugins when launching
@@ -42,7 +42,7 @@ endfunction()
 function(DREAM3D_ADD_PLUGINS)
     set(options)
     set(multiValueArgs PLUGIN_NAMES)
-    cmake_parse_arguments(PLUG  "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    cmake_parse_arguments(PLUG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)
     #message(STATUS "DREAM3D_PARENT_DIR: ${DREAM3D_PARENT_DIR}")
 
