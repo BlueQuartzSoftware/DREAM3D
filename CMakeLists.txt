@@ -58,7 +58,7 @@ cmake_minimum_required(VERSION 3.1.0)
 # Create the Top level Project
 # 
 project(DREAM3DProj VERSION 6.3.0.0)
-
+set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 
 # ---------- Setup output Directories -------------------------
 if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
@@ -260,7 +260,6 @@ add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
 
 #Enable use of Solution Folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 set(PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
 set(EXE_DEBUG_EXTENSION "_debug")
 set(PROJECT_INSTALL_HEADERS "0")
