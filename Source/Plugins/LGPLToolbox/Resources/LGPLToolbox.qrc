@@ -1,0 +1,7 @@
+ <!DOCTYPE RCC>
+ <RCC version="1.0">
+ <qresource>
+ <file>LGPLToolbox/LGPLToolboxLicense.txt</file>
+ <file>LGPLToolbox/LGPLToolboxDescription.txt</file>
+ </qresource>
+ </RCC>
