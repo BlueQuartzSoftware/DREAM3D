@@ -212,6 +212,7 @@ endif()
 # will iterate over all the ITK Modules, figure out if each is shared
 # (DLL), then create a copy rule and an install rule.
 if(WIN32)
+  set(DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES "jre" "jars")
   AddItkCopyInstallRules(LIBS ${DREAM3D_ITK_MODULES} TYPES ${BUILD_TYPES} FOLDERS ${DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES})
 endif()
 
