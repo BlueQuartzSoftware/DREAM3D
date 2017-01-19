@@ -16,14 +16,13 @@ SIMPL_START_FILTER_GROUP(
 # List your public filters here
 
 set(_PublicFilters
-  
+  ConvertColorToGrayScale
   ErodeDilateBadData
   ErodeDilateCoordinationNumber
   ErodeDilateMask
   FillBadData
   FindProjectedImageStatistics
   FindRelativeMotionBetweenSlices
-  FlattenImage
   IdentifySample
   InitializeData
   MinNeighbors

@@ -34,34 +34,59 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _flattenimage_h_
-#define _flattenimage_h_
+#ifndef _ConvertColorToGrayScale_h_
+#define _ConvertColorToGrayScale_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
- * @brief The FlattenImage class. See [Filter documentation](@ref flattenimage) for details.
+ * @brief The ConvertColorToGrayScale class. See [Filter documentation](@ref ConvertColorToGrayScale) for details.
  */
-class FlattenImage : public AbstractFilter
+class ConvertColorToGrayScale : public AbstractFilter
 {
     Q_OBJECT
   public:
-    SIMPL_SHARED_POINTERS(FlattenImage)
-    SIMPL_STATIC_NEW_MACRO(FlattenImage)
-    SIMPL_TYPE_MACRO_SUPER(FlattenImage, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ConvertColorToGrayScale)
+    SIMPL_STATIC_NEW_MACRO(ConvertColorToGrayScale)
+    SIMPL_TYPE_MACRO_SUPER(ConvertColorToGrayScale, AbstractFilter)
 
-    virtual ~FlattenImage();
+    virtual ~ConvertColorToGrayScale();
 
-    SIMPL_FILTER_PARAMETER(unsigned int, FlattenMethod)
-    Q_PROPERTY(unsigned int FlattenMethod READ getFlattenMethod WRITE setFlattenMethod)
+    using EnumType = unsigned int;
+    enum class ConversionType : EnumType
+    {
+        Luminosity = 0,
+        Average = 1,
+        Lightness = 2,
+        SingleChannel = 3
+    };
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
-    Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
+    SIMPL_FILTER_PARAMETER(int, ConversionAlgorithm)
+    Q_PROPERTY(int ConversionAlgorithm READ getConversionAlgorithm WRITE setConversionAlgorithm)
 
-    SIMPL_FILTER_PARAMETER(QString, FlatImageDataArrayName)
-    Q_PROPERTY(QString FlatImageDataArrayName READ getFlatImageDataArrayName WRITE setFlatImageDataArrayName)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
+    Q_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
+
+    SIMPL_FILTER_PARAMETER(int, ColorChannel)
+    Q_PROPERTY(int ColorChannel READ getColorChannel WRITE setColorChannel)
+
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
+    Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
+
+
+    SIMPL_FILTER_PARAMETER(bool, CreateNewAttributeMatrix)
+    Q_PROPERTY(bool CreateNewAttributeMatrix READ getCreateNewAttributeMatrix WRITE setCreateNewAttributeMatrix)
+
+    SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
+    Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
+
+
+    SIMPL_FILTER_PARAMETER(QString, OutputArrayPrefix)
+    Q_PROPERTY(QString OutputArrayPrefix READ getOutputArrayPrefix WRITE setOutputArrayPrefix)
+
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -108,11 +133,6 @@ class FlattenImage : public AbstractFilter
     virtual void setupFilterParameters();
 
     /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-
-    /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
@@ -146,7 +166,7 @@ class FlattenImage : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    FlattenImage();
+    ConvertColorToGrayScale();
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -159,11 +179,10 @@ class FlattenImage : public AbstractFilter
 
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
-    DEFINE_DATAARRAY_VARIABLE(uint8_t, FlatImageData)
+    QVector<DataArrayPath> m_OutputArrayPaths;
 
-    FlattenImage(const FlattenImage&); // Copy Constructor Not Implemented
-    void operator=(const FlattenImage&); // Operator '=' Not Implemented
+    ConvertColorToGrayScale(const ConvertColorToGrayScale&); // Copy Constructor Not Implemented
+    void operator=(const ConvertColorToGrayScale&); // Operator '=' Not Implemented
 };
 
-#endif /* FlattenImage_H_ */
+#endif /* ConvertColorToGrayScale_H_ */
