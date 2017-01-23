@@ -5,7 +5,7 @@
 function(AddItkCopyInstallRules)
   set(options )
   set(oneValueArgs )
-  set(multiValueArgs LIBS TYPES FOLDERS)
+  set(multiValueArgs LIBS TYPES)
   cmake_parse_arguments(itk "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
   set(INTER_DIR ".")
 
@@ -20,18 +20,6 @@ function(AddItkCopyInstallRules)
   endif()
 
   set(itk_INSTALL_DIR ".")
-
-  # Set ITK_LIB_DIRECTORY
-  # If using ITK build directory:
-  set(ITK_LIB_DIRECTORY ${ITK_DIR}/lib)
-  # If using ITK install directory:
-  if(ITK_INSTALL_PREFIX)
-    set(ITK_LIB_DIRECTORY ${ITK_INSTALL_PREFIX}/lib)
-  endif()
-
-  foreach(ITK_FOLDER ${itk_FOLDERS})
-    install(DIRECTORY ${ITK_LIB_DIRECTORY}/${ITK_FOLDER} DESTINATION lib COMPONENT Applications)
-  endforeach()
 
   set(STACK "")
   list(APPEND STACK ${itk_LIBS})
@@ -207,13 +195,31 @@ else()
   endif()
 endif()
 
+# On Mac and Windows, SCIFIO directories need to be installed
+if(WIN32 OR APPLE)
+  set(DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES "jars")
+  if(WIN32)
+    list(APPEND DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES "jre")
+  endif()
+  # Set ITK_LIB_DIRECTORY
+  # If using ITK build directory:
+  set(ITK_LIB_DIRECTORY ${ITK_DIR}/lib)
+  # If using ITK install directory:
+  if(ITK_INSTALL_PREFIX)
+    set(ITK_LIB_DIRECTORY ${ITK_INSTALL_PREFIX}/lib)
+  endif()
+
+  foreach(ITK_FOLDER ${DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES})
+    install(DIRECTORY ${ITK_LIB_DIRECTORY}/${ITK_FOLDER} DESTINATION lib COMPONENT Applications)
+  endforeach()
+endif()
+
 # On Apple Systems since we can use the embedded install_name we do not need
 # any of this copy stuff and the install will take care of itself. This loop
 # will iterate over all the ITK Modules, figure out if each is shared
 # (DLL), then create a copy rule and an install rule.
 if(WIN32)
-  set(DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES "jre" "jars")
-  AddItkCopyInstallRules(LIBS ${DREAM3D_ITK_MODULES} TYPES ${BUILD_TYPES} FOLDERS ${DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES})
+  AddItkCopyInstallRules(LIBS ${DREAM3D_ITK_MODULES} TYPES ${BUILD_TYPES} FOLDERS)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
