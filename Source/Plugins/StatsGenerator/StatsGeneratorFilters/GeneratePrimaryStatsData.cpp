@@ -132,10 +132,22 @@ void GeneratePrimaryStatsData::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Phase Fraction", PhaseFraction, FilterParameter::Parameter, GeneratePrimaryStatsData));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Mu", Mu, FilterParameter::Parameter, GeneratePrimaryStatsData));
+
+
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, GeneratePrimaryStatsData));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Min.Cut Off", MinCutOff, FilterParameter::Parameter, GeneratePrimaryStatsData));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Cut Off", MaxCutOff, FilterParameter::Parameter, GeneratePrimaryStatsData));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Bin Step Size", BinStepSize, FilterParameter::Parameter, GeneratePrimaryStatsData));
+
+  //---------------------------
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrimaryStatsData);
+  param->setReadOnly(true);
+  parameters.push_back(param);
+
+  PreflightUpdatedValueFilterParameter::Pointer param2 = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrimaryStatsData);
+  param2->setReadOnly(true);
+  parameters.push_back(param2);
+  //---------------------------
 
   // Table 3 - Dynamic rows and fixed columns
   {
@@ -177,15 +189,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
     m_AxisOdfData.setDynamicRows(true);
     parameters.push_back(SIMPL_NEW_DYN_TABLE_FP("Axis ODF", AxisOdfData, FilterParameter::Parameter, GeneratePrimaryStatsData, false));
   }
-  //---------------------------
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrimaryStatsData);
-  param->setReadOnly(true);
-  parameters.push_back(param);
 
-  PreflightUpdatedValueFilterParameter::Pointer param2 = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrimaryStatsData);
-  param2->setReadOnly(true);
-  parameters.push_back(param2);
-  //---------------------------
 
   QStringList linkedProps("DataContainerName");
   linkedProps << "CellEnsembleAttributeMatrixName";

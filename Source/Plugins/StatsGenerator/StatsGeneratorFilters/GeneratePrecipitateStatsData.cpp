@@ -146,6 +146,16 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Max Cut Off", MaxCutOff, FilterParameter::Parameter, GeneratePrecipitateStatsData));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Bin Step Size", BinStepSize, FilterParameter::Parameter, GeneratePrecipitateStatsData));
 
+  //---------------------------
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrecipitateStatsData);
+  param->setReadOnly(true);
+  parameters.push_back(param);
+
+  PreflightUpdatedValueFilterParameter::Pointer param2 = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrecipitateStatsData);
+  param2->setReadOnly(true);
+  parameters.push_back(param2);
+  //---------------------------
+
   // Table 3 - Dynamic rows and fixed columns
   {
     QStringList cHeaders;
@@ -192,19 +202,6 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("[RDF] Number of Bins", RdfNumBins, FilterParameter::Parameter, GeneratePrecipitateStatsData));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("[RDF] Box Size (X, Y, Z)", RdfBoxSize, FilterParameter::Parameter, GeneratePrecipitateStatsData));
 
-
-
-  //---------------------------
-
-  //---------------------------
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Bins Created:", NumberOfBins, FilterParameter::Parameter, GeneratePrecipitateStatsData);
-  param->setReadOnly(true);
-  parameters.push_back(param);
-
-  PreflightUpdatedValueFilterParameter::Pointer param2 = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Feature ESD:", FeatureESD, FilterParameter::Parameter, GeneratePrecipitateStatsData);
-  param2->setReadOnly(true);
-  parameters.push_back(param2);
-  //---------------------------
 
   QStringList linkedProps("DataContainerName");
   linkedProps << "CellEnsembleAttributeMatrixName";
