@@ -90,7 +90,7 @@ configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
 add_executable(PipelineRunnerTest ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib SIMPLib)
 set_target_properties(PipelineRunnerTest PROPERTIES FOLDER "SIMPLibProj/Test")
-#add_test(PipelineRunnerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest)
+add_test(PipelineRunnerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest)
 
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
 

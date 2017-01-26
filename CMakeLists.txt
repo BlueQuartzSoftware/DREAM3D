@@ -616,7 +616,7 @@ file(APPEND "${SIMPLibSearchDirs}" "${CMP_LIB_SEARCH_DIRS};")
 #----------------------------------------------------------------------------------------
 # Print out a Summary Section:
 
-message("**********************************************************************************")
+message("*******************************************************************************")
 message("* DREAM.3D Configuration Summary")
 message("* BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message("* System: ${CMAKE_SYSTEM_NAME}")
@@ -635,10 +635,10 @@ message("* ITK (${ITK_VERSION}) ${ITK_DIR}")
 message("* Qt5 (${Qt5_VERSION}) ${Qt5_DIR}")
 message("* Qwt (${QWT_VERSION}) ${QWT_INSTALL}")
 message("* TBB (${TBB_VERSION}) ${TBB_INSTALL_DIR}")
-message("* -------------- Plugins ---------------------------------------------------------")
+message("* -------------- Plugins ------------------------------------------------------")
 foreach(d3dPlugin ${DREAM3D_ALL_PLUGINS})
 message("*   ${d3dPlugin}: [${DREAM3D_BUILD_PLUGIN_${d3dPlugin}}]")
 endforeach()
-message("**********************************************************************************")
+message("*******************************************************************************")
 
 
