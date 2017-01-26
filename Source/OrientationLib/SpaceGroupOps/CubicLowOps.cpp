@@ -212,6 +212,46 @@ CubicLowOps::~CubicLowOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool CubicLowOps::getHasInversion()
+{
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicLowOps::getODFSize()
+{
+  return k_OdfSize;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicLowOps::getMDFSize()
+{
+  return k_MdfSize;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicLowOps::getNumSymOps()
+{
+  return k_NumSymQuats;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString CubicLowOps::getSymmetryName()
+{
+  return "Cubic m3 (Tetrahedral)";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float CubicLowOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
 {
 
@@ -768,6 +808,127 @@ void CubicLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatAr
 
 }
 
+
+/**
+ * @brief Sorts the 3 values from low to high
+ * @param a
+ * @param b
+ * @param c
+ * @param sorted The array to store the sorted values.
+ */
+template<typename T>
+void _TripletSort(T a, T b, T c, T* sorted)
+{
+  if ( a > b && a > c)
+  {
+    sorted[2] = a;
+    if (b > c)
+    {
+      sorted[1] = b;
+      sorted[0] = c;
+    }
+    else
+    {
+      sorted[1] = c;
+      sorted[0] = b;
+    }
+  }
+  else if ( b > a && b > c)
+  {
+    sorted[2] = b;
+    if (a > c)
+    {
+      sorted[1] = a;
+      sorted[0] = c;
+    }
+    else
+    {
+      sorted[1] = c;
+      sorted[0] = a;
+    }
+  }
+  else if ( a > b )
+  {
+    sorted[1] = a;
+    sorted[0] = b;
+    sorted[2] = c;
+  }
+  else if (a >= c && b >= c)
+  {
+    sorted[0] = c;
+    sorted[1] = a;
+    sorted[2] = b;
+  }
+  else
+  {
+    sorted[0] = a;
+    sorted[1] = b;
+    sorted[2] = c;
+  }
+}
+
+/**
+ * @brief Sorts the 3 values from low to high
+ * @param a Input
+ * @param b Input
+ * @param c Input
+ * @param x Output
+ * @param y Output
+ * @param z Output
+ */
+template<typename T>
+void _TripletSort(T a, T b, T c, T& x, T& y, T& z)
+{
+  if ( a > b && a > c)
+  {
+    z = a;
+    if (b > c)
+    {
+      y = b;
+      x = c;
+    }
+    else
+    {
+      y = c;
+      x = b;
+    }
+  }
+  else if ( b > a && b > c)
+  {
+    z = b;
+    if (a > c)
+    {
+      y = a;
+      x = c;
+    }
+    else
+    {
+      y = c;
+      x = a;
+    }
+  }
+  else if ( a > b )
+  {
+    y = a;
+    x = b;
+    z = c;
+  }
+  else if (a >= c && b >= c)
+  {
+    x = c;
+    y = a;
+    z = b;
+  }
+  else
+  {
+    x = a;
+    y = b;
+    z = c;
+  }
+}
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1065,6 +1226,18 @@ QVector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureConfi
   }
 
   return poleFigures;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+UInt8ArrayType::Pointer CubicLowOps::generateIPFTriangleLegend(int imageDim)
+{
+
+  QVector<size_t> dims(1, 4);
+  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend");
+  image->initializeWithValue(255);
+  return image;
 }
 
 // -----------------------------------------------------------------------------

@@ -118,8 +118,6 @@ using namespace Detail;
 // -----------------------------------------------------------------------------
 TetragonalLowOps::TetragonalLowOps()
 {
-  
-
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +125,46 @@ TetragonalLowOps::TetragonalLowOps()
 // -----------------------------------------------------------------------------
 TetragonalLowOps::~TetragonalLowOps()
 {
-  
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool TetragonalLowOps::getHasInversion()
+{
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TetragonalLowOps::getODFSize()
+{
+  return k_OdfSize;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TetragonalLowOps::getMDFSize()
+{
+  return k_MdfSize;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TetragonalLowOps::getNumSymOps()
+{
+  return k_NumSymQuats;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString TetragonalLowOps::getSymmetryName()
+{
+  return "Tetragonal 4/m";;
 }
 
 // -----------------------------------------------------------------------------
@@ -893,12 +930,12 @@ UInt8ArrayType::Pointer TetragonalLowOps::generateIPFTriangleLegend(int imageDim
 {
 
   QVector<size_t> dims(1, 4);
-  UInt8ArrayType::Pointer image =  UInt8ArrayType::CreateArray( static_cast<size_t>(imageDim * imageDim), dims, "Orthorhombic Triangle Legend");
+  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend");
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
-  static const float xInc = 1.0 / (imageDim);
-  static const float yInc = 1.0 / (imageDim);
-  static const float rad = 1.0f;
+  float xInc = 1.0f / static_cast<float>(imageDim);
+  float yInc = 1.0f / static_cast<float>(imageDim);
+  float rad = 1.0f;
 
   float x = 0.0f;
   float y = 0.0f;

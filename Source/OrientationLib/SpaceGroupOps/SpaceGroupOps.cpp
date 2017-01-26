@@ -418,6 +418,19 @@ std::vector<SpaceGroupOps::Pointer> SpaceGroupOps::getOrientationOpsVector()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+std::vector<QString> SpaceGroupOps::GetLaueNames()
+{
+  std::vector<QString> names;
+
+  std::vector<SpaceGroupOps::Pointer> ops = getOrientationOpsVector();
+  std::for_each(ops.begin(), ops.end(), [&](SpaceGroupOps::Pointer op){ names.push_back(op->getSymmetryName()); });
+
+  return names;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 size_t SpaceGroupOps::getRandomSymmetryOperatorIndex(int numSymOps)
 {
   const int rangeMin = 0;

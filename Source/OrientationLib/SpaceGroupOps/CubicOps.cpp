@@ -296,6 +296,46 @@ CubicOps::~CubicOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool CubicOps::getHasInversion()
+{
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicOps::getODFSize()
+{
+  return k_OdfSize;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicOps::getMDFSize()
+{
+  return k_MdfSize;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CubicOps::getNumSymOps()
+{
+  return k_NumSymQuats;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString CubicOps::getSymmetryName()
+{
+  return "Cubic m3m";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float CubicOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
 {
   int numsym = 24;
@@ -1900,11 +1940,11 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 {
 
   QVector<size_t> dims(1, 4);
-  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, "Cubic High IPF Triangle Legend");
+  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend");
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
-  float indexConst1 = 0.414 / imageDim;
-  float indexConst2 = 0.207 / imageDim;
+  float indexConst1 = 0.414f / static_cast<float>(imageDim);
+  float indexConst2 = 0.207f / static_cast<float>(imageDim);
   float red1 = 0.0f;
 
   float x = 0.0f;
@@ -1921,7 +1961,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   float phi = 0.0f;
   float x1alt = 0.0f;
   float theta = 0.0f;
-  float k_RootOfHalf = sqrt(0.5);
+  float k_RootOfHalf = sqrtf(0.5f);
   float cd[3];
 
 

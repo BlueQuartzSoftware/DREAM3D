@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _spacegroupops_h_
 #define _spacegroupops_h_
 
@@ -55,8 +53,8 @@
 
 
 /*
- * @class SpaceGroupOps SpaceGroupOps.h DREAM3DLib/Common/SpaceGroupOps.h
- * @brief This class performs Crystallographic Misorientation Calculations
+ * @class SpaceGroupOps SpaceGroupOps.h OrientationLib/SpaceGroupOps/SpaceGroupOps.h
+ * @brief
  */
 class OrientationLib_EXPORT SpaceGroupOps
 {
@@ -80,6 +78,13 @@ class OrientationLib_EXPORT SpaceGroupOps
      * @return Vector of SpaceGroupOps subclasses.
      */
     static std::vector<SpaceGroupOps::Pointer> getOrientationOpsVector();
+
+
+    /**
+     * @brief GetLaueNames Returns the names of the Laue Classes
+     * @return
+     */
+    static std::vector<QString> GetLaueNames();
 
     /**
      * @brief getODFSize Returns the number of elements in the ODF array

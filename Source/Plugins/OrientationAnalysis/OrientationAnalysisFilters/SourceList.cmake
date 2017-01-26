@@ -70,7 +70,7 @@ endforeach()
 set(_PrivateFilters
 
   FindBasalLoadingFactor
-  
+
   FindLocalAverageCAxisMisalignments
   FindMicroTextureRegions
   FindOrientationFieldCurl
@@ -88,6 +88,26 @@ foreach(f ${_PrivateFilters} )
                         ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
 
+
+ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/IPFLegendPainter.h)
+ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/IPFLegendPainter.cpp)
+
+macro(addIpfHelper ClassName)
+  ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/${ClassName}IPFLegendPainter.h)
+  ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/${ClassName}IPFLegendPainter.cpp)
+endmacro()
+
+addIpfHelper(Hexagonal)
+addIpfHelper(Cubic)
+addIpfHelper(HexagonalLow)
+addIpfHelper(CubicLow)
+addIpfHelper(Triclinic)
+addIpfHelper(Monoclinic)
+addIpfHelper(Orthorhombic)
+addIpfHelper(TetragonalLow)
+addIpfHelper(Tetragonal)
+addIpfHelper(TrigonalLow)
+addIpfHelper(Trigonal)
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.

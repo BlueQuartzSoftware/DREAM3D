@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _cubiclowops_h_
 #define _cubiclowops_h_
 
@@ -70,12 +68,35 @@ class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
     static const int k_MdfSize = 46656;
     static const int k_NumSymQuats = 12;
 
-    virtual bool getHasInversion() { return true; }
-    virtual int getODFSize() { return k_OdfSize; }
-    virtual int getMDFSize() { return k_MdfSize; }
-    virtual int getNumSymOps() { return k_NumSymQuats; }
+    /**
+     * @brief getHasInversion Returns if this Laue class has inversion
+     * @return
+     */
+    virtual bool getHasInversion();
 
-    QString getSymmetryName() { return "Cubic-Low m3 (Tetrahedral)"; }
+    /**
+     * @brief getODFSize Returns the number of ODF bins
+     * @return
+     */
+    virtual int getODFSize();
+
+    /**
+     * @brief getMDFSize Returns the number of MDF bins
+     * @return
+     */
+    virtual int getMDFSize();
+
+    /**
+     * @brief getNumSymOps Returns the number of symmetry operators
+     * @return
+     */
+    virtual int getNumSymOps();
+
+    /**
+     * @brief getSymmetryName Returns the name of the Laue class
+     * @return
+     */
+    QString getSymmetryName();
 
     virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);
     virtual void getQuatSymOp(int i, QuatF& q);
@@ -138,6 +159,12 @@ class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
      * @return Returns the ARGB Quadruplet SIMPL::Rgb
      */
     virtual SIMPL::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame);
+
+    /**
+     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
+     * @return
+     */
+    virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
 
     /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler

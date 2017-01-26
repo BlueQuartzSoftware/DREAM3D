@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _orthorhombicops_h_
 #define _orthorhombicops_h_
 
@@ -69,11 +67,36 @@ class OrientationLib_EXPORT OrthoRhombicOps : public SpaceGroupOps
     static const int k_MdfSize = 46656;
     static const int k_NumSymQuats = 4;
 
-    virtual bool getHasInversion() { return true; }
-    virtual int getODFSize() { return k_OdfSize; }
-    virtual int getMDFSize() { return k_MdfSize; }
-    virtual int getNumSymOps() { return k_NumSymQuats; }
-    QString getSymmetryName() { return "OrthoRhombic mmm"; }
+    /**
+     * @brief getHasInversion Returns if this Laue class has inversion
+     * @return
+     */
+    virtual bool getHasInversion();
+
+    /**
+     * @brief getODFSize Returns the number of ODF bins
+     * @return
+     */
+    virtual int getODFSize();
+
+    /**
+     * @brief getMDFSize Returns the number of MDF bins
+     * @return
+     */
+    virtual int getMDFSize();
+
+    /**
+     * @brief getNumSymOps Returns the number of symmetry operators
+     * @return
+     */
+    virtual int getNumSymOps();
+
+    /**
+     * @brief getSymmetryName Returns the name of the Laue class
+     * @return
+     */
+    QString getSymmetryName();
+
 
 
     virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);

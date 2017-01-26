@@ -134,19 +134,19 @@ class IPFLegendTest
 
       //DREAM3D_REGISTER_TEST( TestIPFLegend<CubicLowOps>(UnitTest::IPFLegendTest::CubicLowFile ) )
       DREAM3D_REGISTER_TEST( TestIPFLegend<CubicOps>(UnitTest::IPFLegendTest::CubicHighFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalLowOps>(UnitTest::IPFLegendTest::HexagonalLowFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalOps>(UnitTest::IPFLegendTest::HexagonalHighFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<MonoclinicOps>(UnitTest::IPFLegendTest::MonoclinicFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<OrthoRhombicOps>(UnitTest::IPFLegendTest::OrthorhombicFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalLowOps>(UnitTest::IPFLegendTest::TetragonalLowFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalOps>(UnitTest::IPFLegendTest::TetragonalHighFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TriclinicOps>(UnitTest::IPFLegendTest::TriclinicFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalLowOps>(UnitTest::IPFLegendTest::TrignonalLowFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalOps>(UnitTest::IPFLegendTest::TrignonalHighFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalLowOps>(UnitTest::IPFLegendTest::HexagonalLowFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalOps>(UnitTest::IPFLegendTest::HexagonalHighFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<MonoclinicOps>(UnitTest::IPFLegendTest::MonoclinicFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<OrthoRhombicOps>(UnitTest::IPFLegendTest::OrthorhombicFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalLowOps>(UnitTest::IPFLegendTest::TetragonalLowFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalOps>(UnitTest::IPFLegendTest::TetragonalHighFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TriclinicOps>(UnitTest::IPFLegendTest::TriclinicFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalLowOps>(UnitTest::IPFLegendTest::TrignonalLowFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalOps>(UnitTest::IPFLegendTest::TrignonalHighFile ) )
 
 
 
-          DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     }
 
   private:
