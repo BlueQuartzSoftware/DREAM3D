@@ -507,9 +507,10 @@ int H5OIMReader::readHeader(hid_t parId)
   foreach(QString phaseGroupName, names)
   {
     hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
+
     AngPhase::Pointer currentPhase = AngPhase::New();
     currentPhase->setPhaseIndex(phaseGroupName.toInt());
-    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::MaterialName, PhaseName, currentPhase)
+    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::MaterialName, MaterialName, currentPhase)
     READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Formula, Formula, currentPhase)
     READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, currentPhase)
     READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::Symmetry, Symmetry, currentPhase)
@@ -684,7 +685,7 @@ int H5OIMReader::readData(hid_t parId)
     setErrorMessage("The Grid Type was not set in the file.");
     return -300;
   }
-  
+
   if(totalDataRows == 0)
   {
     setErrorCode(-90301);

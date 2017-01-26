@@ -98,7 +98,7 @@ ReadEdaxH5Data::ReadEdaxH5Data()
 , m_ReadPatternData(false)
 , m_FileWasRead(false)
 , m_PhaseNameArrayName(SIMPL::CellData::Phases)
-, m_MaterialNameArrayName(SIMPL::EnsembleData::PhaseName)
+, m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
 , m_Manufacturer(Ebsd::UnknownManufacturer)
 , m_CellPhases(nullptr)
@@ -372,9 +372,9 @@ void ReadEdaxH5Data::dataCheck()
       }
     }
 
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::PhaseName);
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, materialNames);
-    m_EbsdArrayMap.insert(SIMPL::EnsembleData::PhaseName, materialNames);
+    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
+    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+    m_EbsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
   }
 }
 
@@ -513,14 +513,14 @@ int32_t ReadEdaxH5Data::loadMaterialInfo(H5OIMReader* reader)
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures);
-  StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(phases.size() + 1, Ebsd::AngFile::MaterialName);
+  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, Ebsd::AngFile::MaterialName);
   QVector<size_t> dims(1, 6);
   FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, Ebsd::AngFile::LatticeConstants);
 
   // Initialize the zero'th element to unknowns. The other elements will
   // be filled in based on values from the data file
   crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  phaseNames->setValue(0, "Invalid Phase");
+  materialNames->setValue(0, "Invalid Phase");
   latticeConstants->setComponent(0, 0, 0.0f);
   latticeConstants->setComponent(0, 1, 0.0f);
   latticeConstants->setComponent(0, 2, 0.0f);
@@ -532,7 +532,7 @@ int32_t ReadEdaxH5Data::loadMaterialInfo(H5OIMReader* reader)
   {
     int32_t phaseID = phases[i]->getPhaseIndex();
     crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure());
-    phaseNames->setValue(phaseID, phases[i]->getPhaseName());
+    materialNames->setValue(phaseID, phases[i]->getMaterialName());
     QVector<float> lc = phases[i]->getLatticeConstants();
 
     latticeConstants->setComponent(phaseID, 0, lc[0]);
@@ -558,7 +558,7 @@ int32_t ReadEdaxH5Data::loadMaterialInfo(H5OIMReader* reader)
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
   attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
+  attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
   attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays

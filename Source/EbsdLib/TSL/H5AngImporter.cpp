@@ -385,7 +385,7 @@ int H5AngImporter::writePhaseData(AngReader& reader, hid_t phasesGid)
     AngPhase* p = (*phase).get();
     hid_t pid = QH5Utilities::createGroup(phasesGid, QString::number(p->getPhaseIndex()));
     WRITE_PHASE_HEADER_DATA((*phase), int, PhaseIndex, Ebsd::Ang::Phase)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, PhaseName, Ebsd::Ang::PhaseName)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, MaterialName, Ebsd::Ang::MaterialName)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, Formula, Ebsd::Ang::Formula)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, Info, Ebsd::Ang::Info)
     WRITE_PHASE_HEADER_DATA((*phase), int, Symmetry, Ebsd::Ang::Symmetry)

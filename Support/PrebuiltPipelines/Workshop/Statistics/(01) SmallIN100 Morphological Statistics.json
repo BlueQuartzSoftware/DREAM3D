@@ -1,6 +1,6 @@
 {
     "0": {
-        "FilterVersion": "1.0.592",
+        "FilterVersion": "1.0.600",
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
         "InputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -188,14 +188,14 @@
                                 },
                                 {
                                     "Component Dimensions": [
-                                        1
+                                        14
                                     ],
                                     "Flag": 2,
-                                    "Name": "PhaseName",
-                                    "Object Type": "StringDataArray",
+                                    "Name": "MaterialName",
+                                    "Object Type": "DataArray<int8_t>",
                                     "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [
-                                        2
+                                        14
                                     ],
                                     "Version": 2
                                 }
@@ -224,11 +224,11 @@
                                         3
                                     ],
                                     "Flag": 2,
-                                    "Name": "AvgEulerAngles",
+                                    "Name": "AvgEuler",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
-                                        3
+                                        2353
                                     ],
                                     "Version": 2
                                 },
@@ -242,6 +242,32 @@
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         4
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "EquivalentDiameters",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "NumElements",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        2353
                                     ],
                                     "Version": 2
                                 },
@@ -296,6 +322,19 @@
                                         1
                                     ],
                                     "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Volumes",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
                                 }
                             ],
                             "Flag": 2,
@@ -342,7 +381,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.265",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Centroids",
         "Filter_Name": "FindFeatureCentroids"
     },
@@ -358,7 +397,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.265",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
         "NumElementsArrayName": "NumElements",
@@ -384,7 +423,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.265",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Shapes",
         "Filter_Name": "FindShapes",
         "Omega3sArrayName": "Omega3s",
@@ -402,7 +441,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.265",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -428,7 +467,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.265",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighborhoods",
         "Filter_Name": "FindNeighborhoods",
         "MultiplesOfAverage": 1,
@@ -445,7 +484,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.265",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Euclidean Distance Map",
         "Filter_Name": "FindEuclideanDistMap",
         "GBEuclideanDistancesArrayName": "GBEuclideanDistances",
@@ -455,7 +494,7 @@
         "TJEuclideanDistancesArrayName": "TJEuclideanDistances"
     },
     "7": {
-        "FilterVersion": "1.0.592",
+        "FilterVersion": "1.0.600",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",

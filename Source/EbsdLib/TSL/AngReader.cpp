@@ -553,7 +553,7 @@ void AngReader::parseHeaderLine(QByteArray& buf)
     // Parsing the phase is complete, now add it to the vector of Phases
     m_PhaseVector.push_back(m_CurrentPhase);
   }
-  else if(word.compare(Ebsd::Ang::PhaseName) == 0 && m_CurrentPhase.get() != nullptr)
+  else if(word.compare(Ebsd::Ang::MaterialName) == 0 && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {

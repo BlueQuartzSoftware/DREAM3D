@@ -25,6 +25,36 @@
                                 },
                                 {
                                     "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "CriticalField",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        117
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "EquivalentDiameters",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        117
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
                                         3
                                     ],
                                     "Flag": 2,
@@ -256,11 +286,11 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "PhaseName",
+                                    "Name": "MaterialName",
                                     "Object Type": "StringDataArray",
                                     "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [
-                                        2
+                                        1
                                     ],
                                     "Version": 2
                                 }
@@ -294,6 +324,19 @@
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         2
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "AvgEuler",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        2353
                                     ],
                                     "Version": 2
                                 },
@@ -359,6 +402,19 @@
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         3
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "CriticalFields",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        2353
                                     ],
                                     "Version": 2
                                 },
@@ -449,7 +505,7 @@
                                     "Object Type": "DataArray<int32_t>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
-                                        4225
+                                        2353
                                     ],
                                     "Version": 2
                                 },
@@ -642,7 +698,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -663,7 +719,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Centroids",
         "Filter_Name": "FindFeatureCentroids"
     },
@@ -673,7 +729,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Surface Features",
         "Filter_Name": "FindSurfaceFeatures",
         "SurfaceFeaturesArrayPath": {
@@ -690,7 +746,7 @@
             "Data Array Name": "Centroids",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Biased Features (Bounding Box)",
         "Filter_Name": "FindBoundingBoxFeatures",
         "PhasesArrayPath": {
@@ -716,7 +772,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
         "NumElementsArrayName": "NumElements",
@@ -742,7 +798,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Shapes",
         "Filter_Name": "FindShapes",
         "Omega3sArrayName": "Omega3s",
@@ -764,7 +820,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighborhoods",
         "Filter_Name": "FindNeighborhoods",
         "MultiplesOfAverage": 1,
@@ -797,7 +853,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
         "QuatsArrayPath": {
@@ -862,7 +918,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Generate Ensemble Statistics",
         "Filter_Name": "GenerateEnsembleStatistics",
         "IncludeRadialDistFunc": 0,
@@ -928,7 +984,7 @@
         "EnsembleAttributeMatrixName": "CellEnsembleData",
         "EstimateNumberOfFeatures": 0,
         "EstimatedPrimaryFeatures": "",
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
         "InputPhaseTypesArrayPath": {
@@ -954,7 +1010,7 @@
         }
     },
     "11": {
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
         "InputPhaseTypesArrayPath": {
@@ -974,13 +1030,13 @@
         "FeatureIdsArrayName": "FeatureIds",
         "FeatureInputFile": "",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Pack Primary Phases",
         "Filter_Name": "PackPrimaryPhases",
         "HaveFeatures": 0,
         "InputPhaseNamesArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
-            "Data Array Name": "PhaseName",
+            "Data Array Name": "MaterialName",
             "Data Container Name": "ImageDataContainer"
         },
         "InputPhaseTypesArrayPath": {
@@ -1027,7 +1083,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -1056,7 +1112,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Match Crystallography",
         "Filter_Name": "MatchCrystallography",
         "InputStatsArrayPath": {
@@ -1109,7 +1165,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.285",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {

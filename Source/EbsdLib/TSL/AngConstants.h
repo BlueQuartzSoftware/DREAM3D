@@ -234,7 +234,7 @@ namespace Ebsd
 #define ANG_WORKINGDISTANCE_LOWER "workingdistance"
 
 #define ANG_PHASE_LOWER "phase"
-#define ANG_PHASE_NAME_LOWER "materialname"
+#define ANG_MATERIAL_NAME_LOWER "materialname"
 #define ANG_FORMULA_LOWER "formula"
 #define ANG_INFO_LOWER "info"
 #define ANG_SYMMETRY_LOWER "symmetry"
@@ -286,7 +286,7 @@ namespace Ebsd
     const QString ZStarLower(ANG_Z_STAR_LOWER);
     const QString WorkingDistanceLower(ANG_WORKINGDISTANCE_LOWER);
     const QString PhaseLower(ANG_PHASE_LOWER);
-    const QString MaterialNameLower(ANG_PHASE_NAME_LOWER);
+    const QString MaterialNameLower(ANG_MATERIAL_NAME_LOWER);
     const QString FormulaLower(ANG_FORMULA_LOWER);
     const QString InfoLower(ANG_INFO_LOWER);
     const QString SymmetryLower(ANG_SYMMETRY_LOWER);

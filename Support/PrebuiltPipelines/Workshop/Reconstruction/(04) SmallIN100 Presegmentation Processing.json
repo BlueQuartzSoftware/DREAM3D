@@ -380,7 +380,7 @@
                                     "Component Dimensions": [
                                     ],
                                     "Flag": 0,
-                                    "Name": "PhaseName",
+                                    "Name": "MaterialName",
                                     "Object Type": "StringDataArray",
                                     "Path": "ImageDataContainer/CellEnsembleData/",
                                     "Tuple Dimensions": [

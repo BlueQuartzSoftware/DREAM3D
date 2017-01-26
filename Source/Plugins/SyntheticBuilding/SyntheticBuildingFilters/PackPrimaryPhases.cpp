@@ -466,6 +466,28 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PackPrimaryPhases::readFilterParameters(QJsonObject& obj)
+{
+  AbstractFilter::readFilterParameters(obj);
+  // setErrorOutputFile(obj["ErrorOutputFile"].toString());
+  // setVtkOutputFile(obj["VtkOutputFile"].toString());
+}
+
+// FP: Check why these values are not connected to a filter parameter!
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::writeFilterParameters(QJsonObject& obj)
+{
+  AbstractFilter::writeFilterParameters(obj);
+  // obj["ErrorOutputFile"] = getErrorOutputFile();
+  // obj["VtkOutputFile"] = getVtkOutputFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
