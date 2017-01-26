@@ -33,7 +33,7 @@
 
 #include <QtGui/QPainter>
 
-#include "OrientationLib/SpaceGroupOps/MonoClinicOps.h"
+#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 // -----------------------------------------------------------------------------
