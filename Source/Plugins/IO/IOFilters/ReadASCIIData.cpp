@@ -107,6 +107,7 @@ void ReadASCIIData::readFilterParameters(QJsonObject& obj)
   m_WizardData.headerLine = obj[prefix + "HeaderLine"].toInt();
   m_WizardData.headerIsCustom = obj[prefix + "HeaderIsCustom"].toBool();
   m_WizardData.headerUsesDefaults = obj[prefix + "HeaderUseDefaults"].toBool();
+  m_WizardData.attrMatType = obj[prefix + "AttributeMatrixType"].toInt(-1);
 
   DataArrayPath dap;
   QJsonObject dapObj = obj[prefix + "SelectedPath"].toObject();
@@ -175,7 +176,7 @@ void ReadASCIIData::writeFilterParameters(QJsonObject& obj)
   obj[prefix + "HeaderLine"] =   m_WizardData.headerLine;
   obj[prefix + "HeaderIsCustom"] =  m_WizardData.headerIsCustom;
   obj[prefix + "HeaderUseDefaults"] = m_WizardData.headerUsesDefaults;
-
+  obj[prefix + "AttributeMatrixType"] = m_WizardData.attrMatType;
 
   QJsonObject dapObj;
   m_WizardData.selectedPath.writeJson(dapObj);
@@ -276,16 +277,7 @@ void ReadASCIIData::dataCheck()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    if (am->getTupleDimensions() != tDims)
-    {
-      QString ss = "The attribute matrix '" + selectedPath.getAttributeMatrixName() + "' does not have the same tuple dimensions as the data in the file '" + fi.fileName() + "'.";
-      QTextStream out(&ss);
-      out << selectedPath.getAttributeMatrixName() << " tuple dims: " << am->getTupleDimensions().at(0) << "\n";
-      out << fi.fileName() << "tuple dims: " << tDims[0] << "\n";
-      setErrorCondition(INCONSISTENT_TUPLES);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
+
 
     QStringList amArrays = am->getAttributeArrayNames();
     for (int i = 0; i < amArrays.size(); i++)
@@ -307,6 +299,18 @@ void ReadASCIIData::dataCheck()
   else
   {
     AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(selectedPath);
+
+//    if (am->getTupleDimensions() != tDims)
+//    {
+//      QString ss = "The attribute matrix '" + selectedPath.getAttributeMatrixName() + "' does not have the same tuple dimensions as the data in the file '" + fi.fileName() + "'.";
+//      QTextStream out(&ss);
+//      out << selectedPath.getAttributeMatrixName() << " tuple dims: " << am->getTupleDimensions().at(0) << "\n";
+//      out << fi.fileName() << "tuple dims: " << tDims[0] << "\n";
+//      setErrorCondition(INCONSISTENT_TUPLES);
+//      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+//      return;
+//    }
+
     if (am != nullptr)
     {
       // Attribute Matrix already exists, so you need to pick a different attribute matrix name
@@ -314,8 +318,10 @@ void ReadASCIIData::dataCheck()
     else
     {
       DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, selectedPath.getDataContainerName());
-      if(nullptr != dc.get()) {
-        dc->createNonPrereqAttributeMatrix(this, selectedPath.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
+      if(nullptr != dc.get())
+      {
+        AttributeMatrix::Type amType = static_cast<AttributeMatrix::Type>(wizardData.attrMatType);
+        dc->createNonPrereqAttributeMatrix(this, selectedPath.getAttributeMatrixName(), tDims, amType);
       }
     }
   }

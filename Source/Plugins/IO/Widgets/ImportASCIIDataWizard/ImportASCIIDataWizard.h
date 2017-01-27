@@ -150,6 +150,7 @@ class ImportASCIIDataWizard : public QWizard
     QVector<size_t> getTupleDims();
     bool getAutomaticAM();
     DataArrayPath getSelectedPath();
+    int getAttributeMatrixType();
 
     void setInputFilePath(const QString &inputFilePath);
 

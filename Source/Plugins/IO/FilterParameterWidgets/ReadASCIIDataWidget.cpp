@@ -400,6 +400,7 @@ void ReadASCIIDataWidget::lineCountDidFinish()
     tupleCount->show();
     tupleDimsLabel->show();
     tupleDims->show();
+    editImportSettings->show();
 
     emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
   }
@@ -420,6 +421,7 @@ void ReadASCIIDataWidget::on_resetWizardBtn_pressed()
   tupleCountLabel->hide();
   tupleDims->hide();
   tupleDimsLabel->hide();
+  editImportSettings->hide();
 
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
@@ -449,6 +451,7 @@ void ReadASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     data.tupleDims = m_ImportWizard->getTupleDims();
     data.automaticAM = m_ImportWizard->getAutomaticAM();
     data.selectedPath = m_ImportWizard->getSelectedPath();
+    data.attrMatType = m_ImportWizard->getAttributeMatrixType();
   }
 
   // Now set the value into the filter.

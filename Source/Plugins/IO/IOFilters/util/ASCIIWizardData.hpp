@@ -65,6 +65,7 @@ public:
   bool consecutiveDelimiters = false;
   QVector<size_t> tupleDims;
   bool automaticAM = false;
+  int attrMatType = 999;
   DataArrayPath selectedPath;
 
   int headerLine = 0; // -1 means this selection is not used

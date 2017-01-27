@@ -110,11 +110,11 @@ void DataFormatPage::setupGui()
 
   int beginIndex = startRowSpin->value();
   int numOfDataLines = m_NumLines - beginIndex + 1;
+  lineCountLabel->setText(QString::number(numOfDataLines));
 
   tupleDimsTable->blockSignals(true);
   tupleDimsTable->addTupleDimensions(QVector<size_t>(1, numOfDataLines));
   tupleDimsTable->blockSignals(false);
-  tupleCountLabel->setText(QString::number(numOfDataLines));
 
   selectedDCBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
   selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
@@ -132,10 +132,25 @@ void DataFormatPage::setupGui()
 
   lineNumErrLabel->hide();
   tupleTableErrLabel->hide();
-  dcSelectionFrame->hide();
   amSelectionError->hide();
   amCreationError->hide();
   applyChangesBtn->hide();
+
+  selectedAMLabel->hide();
+  selectedAMBtn->hide();
+
+  QVector<QString> amTypes = AttributeMatrix::GetTypesAsStrings();
+
+  foreach(const QString amType, amTypes)
+  {
+    attributeMatrixType->addItem(amType);
+  }
+  attributeMatrixType->setCurrentIndex(3);
+  amName->setText("CellData");
+
+  createDCSelectionMenu();
+  createAMSelectionMenu();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -211,14 +226,14 @@ void DataFormatPage::showEvent(QShowEvent* event)
     }
   }
 
-  if (amAutomatically->isChecked())
-  {
-    tupleDimsGB->hide();
-  }
-  else
-  {
-    tupleDimsGB->show();
-  }
+//  if (amAutomatically->isChecked())
+//  {
+//    tupleDimsGB->hide();
+//  }
+//  else
+//  {
+//    tupleDimsGB->show();
+//  }
 
   if (isComplete() == true)
   {
@@ -240,16 +255,16 @@ void DataFormatPage::amItemSelected(QString path)
   DataArrayPath dap = DataArrayPath::Deserialize(path, Detail::Delimiter);
 
   AttributeMatrix::Pointer am = m_Dca->getAttributeMatrix(dap);   // This will always be valid, because we create the selection options
-  if (am->getTupleDimensions() != getTupleTable()->getData())
+
+  if(nullptr == am.get())
   {
-    QString ss = "The attribute matrix '" + dap.getAttributeMatrixName() + "' does not have the same tuple dimensions as the data in the file.";
-    amSelectionError->setText(ss);
-    amSelectionError->show();
+    amSelectionError->setText("An error occured retrieving the Attribute Matrix at " + path);
     selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
   }
   else
   {
-    amSelectionError->hide();
+    //amSelectionError->hide();
+    amSelectionError->setText("The tuple dimensions of the selected Attribute Matrix will be used for the Attribute Arrays.");
     selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(true));
   }
 
@@ -302,7 +317,7 @@ void DataFormatPage::dcItemSelected(QString path)
 
   if (m_Dca->doesAttributeMatrixExist(dap) == true)
   {
-    QString ss = "An attribute matrix with that name already exists in the selected data container.  Choose a different attribute matrix name.";
+    QString ss = "An AttributeMatrix at the path '" + dap.serialize("/") + "' already exists. Choose a different attribute matrix name.";
     amCreationError->setText(ss);
     amCreationError->show();
     QtSStyles::LineEditErrorStyle(amName);
@@ -312,7 +327,42 @@ void DataFormatPage::dcItemSelected(QString path)
   amCreationError->hide();
   selectedDCBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(true));
   QtSStyles::LineEditClearStyle(amName);
+  checkTupleDimensions(getTupleTable()->getData());
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_createAMRadio_toggled(bool b)
+{
+  if(b)
+  {
+    checkTupleDimensions(getTupleTable()->getData());
+    emit completeChanged();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_useAMRadio_toggled(bool b)
+{
+  if(b)
+  {
+    DataArrayPath amPath = DataArrayPath::Deserialize(selectedAMBtn->text(), "/");
+    AttributeMatrix::Pointer attrMat = m_Dca->getAttributeMatrix(amPath);
+    if(attrMat.get())
+    {
+      checkTupleDimensions(attrMat->getTupleDimensions());
+    }
+    else
+    {
+      emit completeChanged();
+    }
+
+  }
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -328,16 +378,6 @@ void DataFormatPage::widgetChanged(const QString& text)
     applyChangesBtn->setVisible(true);
   }
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataFormatPage::on_amName_returnPressed()
-{
-  on_applyChangesBtn_clicked();
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -383,48 +423,88 @@ void DataFormatPage::hideButton()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::on_selectedAMBtn_pressed()
+void DataFormatPage::createAMSelectionMenu()
 {
-  // Get the menu and clear it out
-  QMenu* menu = selectedAMBtn->menu();
-  if(!menu)
+  // Now get the DataContainerArray from the Filter instance
+  // We are going to use this to get all the current DataContainers
+  DataContainerArray::Pointer dca = m_Dca;
+  if(nullptr == dca.get())
   {
-    menu = new QMenu();
-    selectedAMBtn->setMenu(menu);
-    menu->installEventFilter(this);
+    return;
   }
-  if(menu) {
-    menu->clear();
+
+  // Get the menu and clear it out
+  QMenu* btnMenu = selectedAMBtn->menu();
+  if(btnMenu)
+  {
+    btnMenu->clear();
+  }
+  else
+  {
+    m_OwnsAttrMatMenuPtr = true;
+    m_AttrMatMenuPtr = new QMenu;
+    btnMenu = m_AttrMatMenuPtr;
+    selectedAMBtn->setMenu(btnMenu);
+    btnMenu->installEventFilter(this);
   }
 
   // Get the DataContainerArray object
   // Loop over the data containers until we find the proper data container
-  QList<DataContainer::Pointer> containers = m_Dca->getDataContainers();
+  QList<DataContainer::Pointer> containers = dca->getDataContainers();
+  QVector<QString> daTypes;// = m_FilterParameter->getDefaultAttributeArrayTypes();
+  QVector<QVector<size_t>> cDims;// = m_FilterParameter->getDefaultComponentDimensions();
+  QVector<AttributeMatrix::Type> amTypes;// = m_FilterParameter->getDefaultAttributeMatrixTypes();
+  IGeometry::Types geomTypes;// = m_FilterParameter->getDefaultGeometryTypes();
 
   QListIterator<DataContainer::Pointer> containerIter(containers);
   while(containerIter.hasNext())
   {
     DataContainer::Pointer dc = containerIter.next();
 
-    QMenu* dcMenu = new QMenu(dc->getName());
-    menu->addMenu(dcMenu);
+    IGeometry::Pointer geom = IGeometry::NullPointer();
+    IGeometry::Type geomType = IGeometry::Type::Unknown;
+    if(nullptr != dc.get())
+    {
+      geom = dc->getGeometry();
+    }
+    if(nullptr != geom.get())
+    {
+      geomType = geom->getGeometryType();
+    }
+
+    QMenu* dcMenu = btnMenu->addMenu(dc->getName()); // BtnMenu owns the new QMenu
+    dcMenu->setDisabled(false);
+
+    if(geomTypes.isEmpty() == false && geomTypes.contains(geomType) == false)
+    {
+      dcMenu->setDisabled(true);
+    }
 
     // We found the proper Data Container, now populate the AttributeMatrix List
     DataContainer::AttributeMatrixMap_t attrMats = dc->getAttributeMatrices();
     QMapIterator<QString, AttributeMatrix::Pointer> attrMatsIter(attrMats);
-    while(attrMatsIter.hasNext() )
+    while(attrMatsIter.hasNext())
     {
       attrMatsIter.next();
       QString amName = attrMatsIter.key();
+      AttributeMatrix::Pointer am = attrMatsIter.value();
 
-      QAction* action = new QAction(amName, dcMenu);
+      QAction* amAction = dcMenu->addAction(amName); // dcMenu owns the created action
+      // QAction* action = new QAction(amName, dcMenu);
       DataArrayPath daPath(dc->getName(), amName, "");
       QString path = daPath.serialize(Detail::Delimiter);
-      action->setData(path);
+      amAction->setData(path);
 
-      connect(action, SIGNAL(triggered(bool)), m_AMMenuMapper, SLOT(map()));
-      m_AMMenuMapper->setMapping(action, path);
-      dcMenu->addAction(action);
+      connect(amAction, SIGNAL(triggered(bool)), m_AMMenuMapper, SLOT(map()));
+      m_AMMenuMapper->setMapping(amAction, path);
+
+      bool amIsNotNull = (nullptr != am.get()) ? true : false;
+      bool amValidType = (amTypes.isEmpty() == false && amTypes.contains(am->getType()) == false) ? true : false;
+
+      if(amIsNotNull && amValidType)
+      {
+        amAction->setDisabled(true);
+      }
     }
   }
 }
@@ -432,38 +512,67 @@ void DataFormatPage::on_selectedAMBtn_pressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::on_selectedDCBtn_pressed()
+void DataFormatPage::createDCSelectionMenu()
 {
-  // Get the menu and clear it out
-  QMenu* menu = selectedDCBtn->menu();
-  if(!menu)
+   // Now get the DataContainerArray from the Filter instance
+  // We are going to use this to get all the current DataContainers
+  DataContainerArray::Pointer dca = m_Dca;
+  if(nullptr == dca.get())
   {
-    menu = new QMenu();
-    selectedDCBtn->setMenu(menu);
-    menu->installEventFilter(this);
+    return;
   }
-  if(menu) {
-    menu->clear();
+
+  // Get the menu and clear it out
+  QMenu* btnMenu = selectedDCBtn->menu();
+  if(btnMenu)
+  {
+    btnMenu->clear();
+  }
+  else
+  {
+    m_OwnsDCMenuPtr = true;
+    m_DCMenuPtr = new QMenu;
+    btnMenu = m_DCMenuPtr;
+    selectedDCBtn->setMenu(btnMenu);
+    btnMenu->installEventFilter(this);
   }
 
   // Get the DataContainerArray object
   // Loop over the data containers until we find the proper data container
-  QList<DataContainer::Pointer> containers = m_Dca->getDataContainers();
+  QList<DataContainer::Pointer> containers = dca->getDataContainers();
+  IGeometry::Types geomTypes;
 
   QListIterator<DataContainer::Pointer> containerIter(containers);
   while(containerIter.hasNext())
   {
     DataContainer::Pointer dc = containerIter.next();
 
+    IGeometry::Pointer geom = IGeometry::NullPointer();
+    IGeometry::Type geomType = IGeometry::Type::Unknown;
+    if(nullptr != dc.get())
+    {
+      geom = dc->getGeometry();
+    }
+    if(nullptr != geom.get())
+    {
+      geomType = geom->getGeometryType();
+    }
+
     QString dcName = dc->getName();
-    QAction* action = new QAction(dcName, menu);
+
+    QAction* dcAction = btnMenu->addAction(dcName); // btnMenu owns the created QAction
+
     DataArrayPath dcPath(dcName, "", "");
     QString path = dcPath.serialize(Detail::Delimiter);
-    action->setData(path);
+    dcAction->setData(path);
 
-    connect(action, SIGNAL(triggered(bool)), m_DCMenuMapper, SLOT(map()));
-    m_DCMenuMapper->setMapping(action, path);
-    menu->addAction(action);
+    connect(dcAction, SIGNAL(triggered(bool)), m_DCMenuMapper, SLOT(map()));
+    m_DCMenuMapper->setMapping(dcAction, path);
+
+    if(geomTypes.isEmpty() == false && geomTypes.contains(geomType) == false)
+    {
+      dcAction->setDisabled(true);
+    }
   }
 }
 
@@ -495,30 +604,73 @@ bool DataFormatPage::eventFilter(QObject* obj, QEvent* event)
 // -----------------------------------------------------------------------------
 QPoint DataFormatPage::adjustedMenuPosition(QPushButton* pushButton)
 {
-  QSize menuSize = pushButton->menu()->sizeHint();
-  QPoint point = QCursor::pos();
-  point.setX(QCursor::pos().x() - menuSize.width() / 2);
-
-  int desktopWidth = QApplication::desktop()->availableGeometry(pushButton).width();
-  int desktopHeight = QApplication::desktop()->availableGeometry(pushButton).height();
-
-  // If the menu is going to go off the screen in the X-axis, reposition it until it's completely on the screen
-  while(point.x() + menuSize.width() > desktopWidth)
+  // Calculate the actual virtual desktop QRect.
+  int screenCount = QApplication::desktop()->screenCount();
+  int xMin = std::numeric_limits<int>::max();
+  int yMin = std::numeric_limits<int>::max();
+  int xMax = std::numeric_limits<int>::min();
+  int yMax = std::numeric_limits<int>::min();
+  QRect virtDesktopRect;
+  for(int i = 0; i < screenCount; i++)
   {
-    point.setX(point.x() - 1);
+    QRect rect = QApplication::desktop()->availableGeometry(i);
+    // qDebug() << i << "\t" << rect;
+
+    if(rect.x() < xMin)
+    {
+      xMin = rect.x();
+    }
+    if(rect.y() < yMin)
+    {
+      yMin = rect.y();
+    }
+    if(rect.x() + rect.width() > xMax)
+    {
+      xMax = rect.x() + rect.width();
+    }
+    if(rect.y() + rect.height() > yMax)
+    {
+      yMax = rect.y() + rect.height();
+    }
   }
 
-  QPoint localButtonCoords = pushButton->geometry().bottomLeft();
-  QPoint globalButtonCoords = pushButton->mapToGlobal(localButtonCoords);
-  //  qDebug() << "QApplication::desktop()->geometry().width(): " << desktopWidth << "," << desktopHeight;
-  //  qDebug() << "localButtonCoords: " << localButtonCoords << "\tglobalButtonCoords: " << globalButtonCoords;
+  virtDesktopRect.setTopLeft(QPoint(xMin, yMin));
+  virtDesktopRect.setBottomRight(QPoint(xMax, yMax));
+  QSize menuSize = pushButton->menu()->sizeHint();
 
-  point.setY(globalButtonCoords.y());
+  QPoint point = QCursor::pos();
 
-  // If the menu is going to go off the screen in the Y-axis, reposition it until it's completely on the screen
-  while(point.y() + menuSize.height() > desktopHeight)
+  // Move the x position to the left by half the width of the menu so the menu
+  // is centered up under the mouse
+  point.setX(point.x() - menuSize.width() / 2);
+
+  // If the menu is going to go off the screen in the X-axis, reposition it until it's completely on the screen
+  if(point.x() + menuSize.width() > virtDesktopRect.right())
   {
-    point.setY(point.y() - 1);
+    //  int diffX = point.x() + menuSize.width() - virtDesktopRect.right();
+    point.setX(virtDesktopRect.right() - menuSize.width());
+  }
+
+  // Make sure the menu will not get positioned off the left side of the desktop
+  if(point.x() - 0.5 * menuSize.width() < virtDesktopRect.left())
+  {
+    point.setX(virtDesktopRect.left() + 2); //
+  }
+  // Find the "Y" Position that the menu should be displayed at. We want the menu
+  // to appear just below the button so the button and it's text are not obscurred.
+  QPoint localButtonCoords = pushButton->geometry().bottomLeft();
+  QPoint globalButtonCoords = mapToGlobal(localButtonCoords);
+
+  //point.setY(globalButtonCoords.y());
+
+  int screenNum = QApplication::desktop()->screenNumber(pushButton);
+  int desktopHeight = QApplication::desktop()->availableGeometry(screenNum).height();
+
+  if(point.y() > desktopHeight)
+  {
+    localButtonCoords = pushButton->geometry().topLeft();
+    globalButtonCoords = mapToGlobal(localButtonCoords);
+    point.setY(globalButtonCoords.y() - menuSize.height());
   }
 
   return point;
@@ -561,7 +713,8 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   on_useDefaultHeaders_toggled(useDefaultHeaders->isChecked());
 
   // Update Tuple Dimensions
-  tupleCountLabel->setText(QString::number(m_NumLines - value + 1));
+  //tupleCountLabel->setText(QString::number(m_NumLines - value + 1));
+  lineCountLabel->setText(QString::number(m_NumLines - value + 1));
   checkTupleDimensions(getTupleTable()->getData());
 
   if (isComplete() == true)
@@ -581,60 +734,39 @@ bool DataFormatPage::isComplete() const
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  if (amSelectionError->isVisible() || amCreationError->isVisible() || tupleTableErrLabel->isVisible())
-  {
-    return false;
-  }
-
-  if (amAutomatically->isChecked() == false)
-  {
-    if (selectedAMBtn->text().isEmpty())
-    {
-      return false;
-    }
-  }
-  else if (selectedDCBtn->text().isEmpty() || amName->text().isEmpty())
-  {
-    return false;
-  }
-
+  bool stage1 = true;
   for (int i=0; i<model->columnCount(); i++)
   {
     if (model->columnHasErrors(i) == true)
     {
-      return false;
+      stage1 = false;
     }
   }
 
-  return true;
+  bool stage2 = true;
+
+  if (useAMRadio->isChecked()
+      && selectedAMBtn->text().isEmpty())
+  {
+    stage2 = false;
+  }
+
+  bool stage3 = true;
+  if (createAMRadio->isChecked()
+      && ( selectedDCBtn->text().isEmpty() || amName->text().isEmpty() ) )
+  {
+    stage3 = false;
+  }
+
+  return (stage1 && stage2 && stage3);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::on_amAutomatically_stateChanged(int state)
+void DataFormatPage::on_amName_returnPressed()
 {
-  if (state == Qt::Checked)
-  {
-    tupleDimsGB->hide();
-    amSelectionFrame->hide();
-    dcSelectionFrame->show();
-  }
-  else
-  {
-    tupleDimsGB->show();
-    amSelectionFrame->show();
-    dcSelectionFrame->hide();
-  }
-
-  if (isComplete() == true)
-  {
-    wizard()->button(QWizard::FinishButton)->setEnabled(true);
-  }
-  else
-  {
-    wizard()->button(QWizard::FinishButton)->setDisabled(true);
-  }
+  applyChangesBtn->click();
 }
 
 // -----------------------------------------------------------------------------
@@ -643,7 +775,7 @@ void DataFormatPage::on_amAutomatically_stateChanged(int state)
 void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
 {
   if(checked == true)
-  {    
+  {
     editHeadersBtn->setDisabled(true);
     lineNumberLabel->setEnabled(true);
     headersIndexLineEdit->setEnabled(true);
@@ -866,15 +998,15 @@ bool DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims)
 // -----------------------------------------------------------------------------
 bool DataFormatPage::validateTupleDimensions(QVector<size_t> tupleDims)
 {
-  int tupleTotal = 1;
+  size_t tupleTotal = 1;
 
   for(int i = 0; i < tupleDims.size(); i++)
   {
     tupleTotal = tupleTotal * tupleDims[i];
   }
-
-  int beginIndex = startRowSpin->value();
-  int numOfDataLines = m_NumLines - beginIndex + 1;
+  tupleCountLabel->setText(QString::number(tupleTotal));
+  size_t beginIndex = static_cast<size_t>(startRowSpin->value());
+  size_t numOfDataLines = m_NumLines - beginIndex + 1;
   if(tupleTotal != numOfDataLines)
   {
     return false;
@@ -1149,8 +1281,7 @@ TupleTableWidget* DataFormatPage::getTupleTable()
 // -----------------------------------------------------------------------------
 void DataFormatPage::setAutomaticAM(bool automatic)
 {
-  amAutomatically->setChecked(automatic);
-  //on_amAutomatically_stateChanged(automatic);
+  createAMRadio->setChecked(automatic);
 }
 
 // -----------------------------------------------------------------------------
@@ -1158,7 +1289,7 @@ void DataFormatPage::setAutomaticAM(bool automatic)
 // -----------------------------------------------------------------------------
 bool DataFormatPage::getAutomaticAM()
 {
-  return amAutomatically->isChecked();
+  return createAMRadio->isChecked();
 }
 
 // -----------------------------------------------------------------------------
@@ -1166,7 +1297,7 @@ bool DataFormatPage::getAutomaticAM()
 // -----------------------------------------------------------------------------
 DataArrayPath DataFormatPage::getSelectedPath()
 {
-  if (amAutomatically->isChecked())
+  if (createAMRadio->isChecked())
   {
     return DataArrayPath::Deserialize(selectedDCBtn->text(), Detail::Delimiter);
   }
@@ -1199,6 +1330,22 @@ void DataFormatPage::setAutomaticAttrMatrixName(const DataArrayPath &path)
 QString DataFormatPage::getAutomaticAttrMatrixName()
 {
   return amName->text();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::setAttributeMatrixType(int t)
+{
+  attributeMatrixType->setCurrentIndex(t);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataFormatPage::getAttributeMatrixType()
+{
+  return attributeMatrixType->currentIndex();
 }
 
 // -----------------------------------------------------------------------------

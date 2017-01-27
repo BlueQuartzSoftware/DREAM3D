@@ -113,7 +113,7 @@ void LineCounterObject::run()
     fputs(errorStr.toStdString().c_str(), stderr);
     return;
   }
-
+  m_NumOfLines = 0;
   int64_t currentByte = 0;
   while(qFile.atEnd() == false)
   {
@@ -146,9 +146,6 @@ void LineCounterObject::run()
       }
     }
   }
-
-  // Count the last line
-  m_NumOfLines++;
 
   // Close the file and free the memory from the buffer
   qFile.close();

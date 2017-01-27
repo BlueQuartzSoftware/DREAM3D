@@ -37,8 +37,8 @@
 
 #include <QtCore/QFile>
 
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "IO/IOFilters/util/ASCIIWizardData.hpp"
-
 
 #include "ASCIIDataModel.h"
 #include "DataFormatPage.h"
@@ -565,4 +565,20 @@ DataArrayPath ImportASCIIDataWizard::getSelectedPath()
   }
 
   return DataArrayPath();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ImportASCIIDataWizard::getAttributeMatrixType()
+{
+  DataFormatPage* dfPage = dynamic_cast<DataFormatPage*>(page(DataFormat));
+  if (nullptr != dfPage)
+  {
+    int dap = dfPage->getAttributeMatrixType();
+    return dap;
+  }
+
+  return static_cast<int>(AttributeMatrix::Type::Generic);
 }
