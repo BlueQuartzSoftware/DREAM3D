@@ -292,6 +292,8 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
 
     misorientsPtr->initializeWithValue(false); // Initialize everything to false
 
+    float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
+
     while(newxshift != oldxshift || newyshift != oldyshift)
     {
       oldxshift = newxshift;
@@ -330,7 +332,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
                         w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }
                     }
-                    if(w > m_MisorientationTolerance)
+                    if(w > misorientationTolerance)
                     {
                       disorientation++;
                     }
@@ -392,9 +394,6 @@ void AlignSectionsMisorientation::execute()
   {
     return;
   }
-
-  // Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   AlignSections::execute();
 

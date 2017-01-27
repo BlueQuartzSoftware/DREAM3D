@@ -468,6 +468,8 @@ void AlignSectionsMutualInformation::form_features_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
+  float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
+
   m_FeatureCounts->resize(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
 
@@ -570,7 +572,7 @@ void AlignSectionsMutualInformation::form_features_sections()
               {
                 w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
               }
-              if(w < m_MisorientationTolerance)
+              if(w < misorientationTolerance)
               {
                 miFeatureIds[neighbor] = featurecount;
                 voxelslist[size] = neighbor;
@@ -608,9 +610,6 @@ void AlignSectionsMutualInformation::execute()
   {
     return;
   }
-
-  // Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   AlignSections::execute();
 

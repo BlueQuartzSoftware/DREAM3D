@@ -89,6 +89,12 @@ set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PL
 set(RegisterKnownFiltersFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/RegisterKnownFilters.cpp)
 
 #--------------------------
+include_directories(${SIMPLProj_SOURCE_DIR}/Source)
+include_directories(${SIMPLProj_BINARY_DIR})
+
+message(STATUS "${SIMPLProj_SOURCE_DIR}/Source")
+message(STATUS "${SIMPLProj_BINARY_DIR}")
+
 include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${QtSupportLib_BINARY_DIR} )

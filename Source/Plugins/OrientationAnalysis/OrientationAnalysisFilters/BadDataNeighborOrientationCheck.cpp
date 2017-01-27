@@ -212,10 +212,11 @@ void BadDataNeighborOrientationCheck::execute()
     return;
   }
 
+  float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
+
+
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_GoodVoxelsArrayPath.getDataContainerName());
   size_t totalPoints = m_GoodVoxelsPtr.lock()->getNumberOfTuples();
-
-  m_MisorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0;
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
@@ -292,7 +293,7 @@ void BadDataNeighborOrientationCheck::execute()
           {
             w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
           }
-          if(w < m_MisorientationTolerance)
+          if(w < misorientationTolerance)
           {
             neighborCount[i]++;
           }
@@ -359,7 +360,7 @@ void BadDataNeighborOrientationCheck::execute()
               {
                 w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
               }
-              if(w < m_MisorientationTolerance)
+              if(w < misorientationTolerance)
               {
                 neighborCount[neighbor]++;
               }
