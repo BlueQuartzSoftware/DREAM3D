@@ -85,6 +85,7 @@ PrecipitatePhaseWidget::PrecipitatePhaseWidget(QWidget* parent)
 : PrimaryPhaseWidget(parent)
 , m_PptFraction(-1.0f)
 {
+  setPhaseType(PhaseType::Type::Precipitate);
   setTabTitle("Precipitate");
   setupGui();
 }

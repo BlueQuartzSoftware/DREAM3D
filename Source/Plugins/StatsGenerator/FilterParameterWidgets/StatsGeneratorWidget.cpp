@@ -230,12 +230,23 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
   if(nullptr != statsGenFilter)
   {
     DataContainerArray::Pointer dca = generateDataContainerArray();
+    if(nullptr == dca.get())
+    {
+      return;
+    }
     DataContainer::Pointer dc = dca->getDataContainer(SIMPL::Defaults::StatsGenerator);
     AttributeMatrix::Pointer cellEnsembleAttrMat = dc->getAttributeMatrix(SIMPL::Defaults::CellEnsembleAttributeMatrixName);
+    if(nullptr == cellEnsembleAttrMat.get())
+    {
+      return;
+    }
     IDataArray::Pointer iDataArray = cellEnsembleAttrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
 
     StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(iDataArray);
-
+    if(nullptr == statsDataArray.get())
+    {
+      return;
+    }
     iDataArray = cellEnsembleAttrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
     UInt32ArrayType::Pointer crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray);
 
@@ -250,16 +261,6 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
     statsGenFilter->setPhaseTypes(phaseTypes);
     statsGenFilter->setPhaseNames(phaseNames);
 
-    //    QString str;
-    //    QTextStream out(&str);
-    //    for(size_t i = 0; i < phaseNames->getNumberOfTuples(); i++)
-    //    {
-    //      phaseNames->printTuple(out, i);
-    //      out << ", ";
-    //      phaseNames->printTuple(out, i);
-    //      qDebug() << str;
-    //      str.clear();
-    //    }
   }
 }
 
@@ -693,26 +694,31 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
     if(sgwidget->getPhaseType() == PhaseType::Type::Primary)
     {
       PrimaryStatsData::Pointer data = PrimaryStatsData::New();
+      data->setName("PrimaryStatsData");
       statsDataArray->setStatsData(i + 1, data);
     }
     if(sgwidget->getPhaseType() == PhaseType::Type::Precipitate)
     {
       PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
+      data->setName("PrecipitateStatsData");
       statsDataArray->setStatsData(i + 1, data);
     }
     if(sgwidget->getPhaseType() == PhaseType::Type::Transformation)
     {
       TransformationStatsData::Pointer data = TransformationStatsData::New();
+      data->setName("TransformationStatsData");
       statsDataArray->setStatsData(i + 1, data);
     }
     if(sgwidget->getPhaseType() == PhaseType::Type::Matrix)
     {
       MatrixStatsData::Pointer data = MatrixStatsData::New();
+      data->setName("MatrixStatsData");
       statsDataArray->setStatsData(i + 1, data);
     }
     if(sgwidget->getPhaseType() == PhaseType::Type::Boundary)
     {
       BoundaryStatsData::Pointer data = BoundaryStatsData::New();
+      data->setName("BoundaryStatsData");
       statsDataArray->setStatsData(i + 1, data);
     }
     err = sgwidget->gatherStatsData(cellEnsembleAttrMat);

@@ -68,6 +68,7 @@ MatrixPhaseWidget::MatrixPhaseWidget(QWidget* parent)
 , m_grid(nullptr)
 {
   setTabTitle("Matrix");
+  setPhaseType(PhaseType::Type::Matrix);
 
   setupUi(this);
   setupGui();
@@ -102,8 +103,6 @@ int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool pr
   int retErr = 0;
   float calcPhaseFraction = getPhaseFraction() / getTotalPhaseFraction();
 
-  // size_t ensembles = attrMat->getNumberOfTuples();
-
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
@@ -130,6 +129,9 @@ int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool pr
     else
     {
       retErr = -1000;
+      QString msg = QString("MatrixPhaseWidget tried to cast a StatsData pointer with name %1 to a MatrixStatsData but failed in the process.\nError code %2")
+      .arg(statsData->getName()).arg(retErr);
+      QMessageBox::critical(this, QString("MatrixPhaseWidget: Gather StatsData Error"), msg, QMessageBox::Ok);
     }
   }
   return retErr;
