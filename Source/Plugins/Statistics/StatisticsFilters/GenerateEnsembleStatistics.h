@@ -66,6 +66,9 @@ class GenerateEnsembleStatistics : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
     Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
+    SIMPL_FILTER_PARAMETER(UInt32Vector_t, PhaseTypeArray)
+    Q_PROPERTY(UInt32Vector_t PhaseTypeArray READ getPhaseTypeArray WRITE setPhaseTypeArray)
+
     SIMPL_INSTANCE_PROPERTY(UInt32Vector_t, PhaseTypeData)
 
     Q_PROPERTY(UInt32Vector_t PhaseTypeData READ getPhaseTypeData WRITE setPhaseTypeData)
