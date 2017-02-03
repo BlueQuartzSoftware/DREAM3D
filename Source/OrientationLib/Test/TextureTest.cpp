@@ -40,7 +40,7 @@
 #include <string>
 
 #include "OrientationLib/Texture/Texture.hpp"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
 
 
 /**

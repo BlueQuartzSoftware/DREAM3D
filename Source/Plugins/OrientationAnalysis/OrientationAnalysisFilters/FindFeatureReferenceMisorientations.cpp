@@ -73,7 +73,7 @@ FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations()
 , m_FeatureReferenceMisorientations(nullptr)
 , m_FeatureAvgMisorientations(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

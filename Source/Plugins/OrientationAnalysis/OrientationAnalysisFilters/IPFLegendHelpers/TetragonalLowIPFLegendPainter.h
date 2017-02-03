@@ -36,7 +36,7 @@
 
 #include "IPFLegendPainter.h"
 
-class SpaceGroupOps;
+class LaueOps;
 
 /**
  * @brief The TetragonalLowIPFLegendPainter class
@@ -50,7 +50,7 @@ public:
   QImage createLegend(int pixelWidth, int pixelHeight);
 
 protected:
-  QImage overlayText(int pixelWidth, int pixelHeight, QImage image, SpaceGroupOps* ops);
+  QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
 private:
   TetragonalLowIPFLegendPainter(const TetragonalLowIPFLegendPainter&); // Copy Constructor Not Implemented

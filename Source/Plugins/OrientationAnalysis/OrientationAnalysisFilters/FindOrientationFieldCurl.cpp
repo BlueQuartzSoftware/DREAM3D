@@ -65,7 +65,7 @@ public:
   , m_Neighbors(neighbors)
   , m_FaceIds(faceIds)
   {
-    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
   virtual ~FindMisorientationVectorsImpl()
   {
@@ -108,7 +108,7 @@ private:
   float* m_MisoVecs;
   int64_t* m_Neighbors;
   int64_t* m_FaceIds;
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
 };
 
 // Include the MOC generated file for this class
@@ -128,7 +128,7 @@ FindOrientationFieldCurl::FindOrientationFieldCurl()
 , m_Quats(nullptr)
 , m_CrystalStructures(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_CurlSize.x = 1;
   m_CurlSize.y = 1;

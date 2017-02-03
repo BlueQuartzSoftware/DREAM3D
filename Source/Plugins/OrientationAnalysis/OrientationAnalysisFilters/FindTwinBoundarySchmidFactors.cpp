@@ -73,7 +73,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
   bool* m_TwinBoundary;
   float* m_TwinBoundarySchmidFactors;
   float* m_LoadDir;
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   CalculateTwinBoundarySchmidFactorsImpl(float* LoadingDir, int32_t* Labels, double* Normals, float* Quats, bool* TwinBoundary, float* TwinBoundarySchmidFactors)
@@ -84,7 +84,7 @@ public:
   , m_TwinBoundarySchmidFactors(TwinBoundarySchmidFactors)
   , m_LoadDir(LoadingDir)
   {
-    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
   virtual ~CalculateTwinBoundarySchmidFactorsImpl()
   {
@@ -251,7 +251,7 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()
   m_LoadingDir.y = 1.0f;
   m_LoadingDir.z = 1.0f;
 
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

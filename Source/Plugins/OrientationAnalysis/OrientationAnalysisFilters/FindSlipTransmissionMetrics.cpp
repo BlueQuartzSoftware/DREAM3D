@@ -64,7 +64,7 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics()
 , m_AvgQuats(nullptr)
 , m_CrystalStructures(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_F1List = NeighborList<float>::NullPointer();
   m_F1sptList = NeighborList<float>::NullPointer();

@@ -62,7 +62,7 @@ FindAvgCAxes::FindAvgCAxes()
 , m_Quats(nullptr)
 , m_AvgCAxes(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

@@ -42,7 +42,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-class SpaceGroupOps;
+class LaueOps;
 
 /**
  * @brief The WriteIPFStandardTriangle class. See [Filter documentation](@ref writeipfstandardtriangle) for details.
@@ -186,7 +186,7 @@ class WriteIPFStandardTriangle : public AbstractFilter
      * @param image QImage of cubic IPF triangle
      * @return
      */
-    QImage overlayText(QImage image, SpaceGroupOps* ops);
+    QImage overlayText(QImage image, LaueOps* ops);
 
   private:
     WriteIPFStandardTriangle(const WriteIPFStandardTriangle&); // Copy Constructor Not Implemented

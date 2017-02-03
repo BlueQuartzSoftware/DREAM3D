@@ -33,8 +33,8 @@
 
 #include <QtGui/QPainter>
 
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -82,7 +82,7 @@ QImage HexagonalIPFLegendPainter::createLegend(int pixelWidth, int pixelHeight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage HexagonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, SpaceGroupOps* ops)
+QImage HexagonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops)
 {
   QSize imageSize(pixelWidth, pixelHeight);
   int32_t fontHeight = 0;

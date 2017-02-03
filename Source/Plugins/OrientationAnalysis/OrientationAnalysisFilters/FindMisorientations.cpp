@@ -65,7 +65,7 @@ FindMisorientations::FindMisorientations()
 , m_CrystalStructures(nullptr)
 , m_AvgMisorientations(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_MisorientationList = NeighborList<float>::NullPointer();

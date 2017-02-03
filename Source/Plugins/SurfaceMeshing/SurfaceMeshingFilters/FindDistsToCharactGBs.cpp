@@ -51,7 +51,7 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -80,7 +80,7 @@ class TrisProcessor
   int32_t* m_Phases;
   int32_t* m_FaceLabels;
   double* m_FaceNormals;
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   TrisProcessor(double* __m_DistToTilt, double* __m_DistToTwist, double* __m_DistToSymmetric, double* __m_DistTo180Tilt, uint32_t* __m_CrystalStructures, float* __m_Eulers, int32_t* __m_Phases,
@@ -95,7 +95,7 @@ public:
   , m_FaceLabels(__m_FaceLabels)
   , m_FaceNormals(__m_FaceNormals)
   {
-    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
 
   virtual ~TrisProcessor()

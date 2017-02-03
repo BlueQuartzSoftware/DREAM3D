@@ -35,7 +35,7 @@
 #include <QtGui/QImage>
 #include "IPFLegendPainter.h"
 
-class SpaceGroupOps;
+class LaueOps;
 
 /**
  * @brief The CubicIPFLegendPainter class
@@ -49,7 +49,7 @@ public:
   QImage createLegend(int pixelWidth, int pixelHeight);
 
 protected:
-  QImage overlayText(int pixelWidth, int pixelHeight, QImage image, SpaceGroupOps* ops);
+  QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
 private:
   CubicIPFLegendPainter(const CubicIPFLegendPainter&); // Copy Constructor Not Implemented

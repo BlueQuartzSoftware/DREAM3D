@@ -45,7 +45,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -91,7 +91,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 {
     FilterParameterVector parameters;
 
-    QVector<QString> choices = QVector<QString>::fromStdVector(SpaceGroupOps::GetLaueNames());
+    QVector<QString> choices = QVector<QString>::fromStdVector(LaueOps::GetLaueNames());
     choices.pop_back(); // Remove the last name because we don't need it.
 
     parameters.push_back(SIMPL_NEW_CHOICE_FP("Select Laue Class", LaueClass, FilterParameter::Parameter, WriteIPFStandardTriangle, choices, false));

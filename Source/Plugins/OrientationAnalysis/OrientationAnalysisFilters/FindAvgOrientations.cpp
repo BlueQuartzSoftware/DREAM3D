@@ -67,7 +67,7 @@ FindAvgOrientations::FindAvgOrientations()
 , m_FeatureEulerAngles(nullptr)
 , m_AvgQuats(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

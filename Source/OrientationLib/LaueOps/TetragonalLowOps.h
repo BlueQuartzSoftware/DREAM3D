@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _hexagonallowops_h_
-#define _hexagonallowops_h_
+#ifndef _tetragonallowops_h_
+#define _tetragonallowops_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -41,30 +41,31 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 
 /**
- * @class HexagonalLowOps HexagonalLowOps.h DREAM3DLib/Common/SpaceGroupOps/HexagonalLowOps.h
+ * @class TetragonalLowOps TetragonalLowOps.h DREAM3DLib/Common/LaueOps/TetragonalLowOps.h
  * @brief
  *
- * @author Michael A. Groeber for USAF Research Laboratory, Materials Lab
+*
  * @date May 5, 2011
  * @version 1.0
  */
-class OrientationLib_EXPORT HexagonalLowOps : public SpaceGroupOps
+class OrientationLib_EXPORT TetragonalLowOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(HexagonalLowOps)
-    SIMPL_TYPE_MACRO_SUPER(HexagonalLowOps, SpaceGroupOps)
-    SIMPL_STATIC_NEW_MACRO(HexagonalLowOps)
+    SIMPL_SHARED_POINTERS(TetragonalLowOps)
+    SIMPL_TYPE_MACRO_SUPER(TetragonalLowOps, LaueOps)
+    SIMPL_STATIC_NEW_MACRO(TetragonalLowOps)
 
-    HexagonalLowOps();
-    virtual ~HexagonalLowOps();
 
-    static const int k_OdfSize;// = 62208;
-    static const int k_MdfSize;// = 62208;
-    static const int k_NumSymQuats;// = 6;
+    TetragonalLowOps();
+    virtual ~TetragonalLowOps();
+
+    static const int k_OdfSize = 93312;
+    static const int k_MdfSize = 93312;
+    static const int k_NumSymQuats = 4;
 
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
@@ -104,7 +105,6 @@ class OrientationLib_EXPORT HexagonalLowOps : public SpaceGroupOps
     virtual FOrientArrayType getODFFZRod(FOrientArrayType rod);
     virtual FOrientArrayType getMDFFZRod(FOrientArrayType rod);
     virtual void getNearestQuat(QuatF& q1, QuatF& q2);
-    virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(FOrientArrayType rod);
     virtual bool inUnitTriangle(float eta, float chi);
     virtual FOrientArrayType determineEulerAngles(uint64_t seed, int choose);
@@ -117,7 +117,6 @@ class OrientationLib_EXPORT HexagonalLowOps : public SpaceGroupOps
     virtual void getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1);
     virtual void getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt);
     virtual void getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7);
-
 
     virtual void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3);
 
@@ -179,14 +178,14 @@ class OrientationLib_EXPORT HexagonalLowOps : public SpaceGroupOps
     virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
 
   protected:
-    float _calcMisoQuat(const QuatF quatsym[12], int numsym,
+    float _calcMisoQuat(const QuatF quatsym[8], int numsym,
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
 
   private:
-    HexagonalLowOps(const HexagonalLowOps&); // Copy Constructor Not Implemented
-    void operator=(const HexagonalLowOps&); // Operator '=' Not Implemented
+    TetragonalLowOps(const TetragonalLowOps&); // Copy Constructor Not Implemented
+    void operator=(const TetragonalLowOps&); // Operator '=' Not Implemented
 };
 
-#endif /* HexagonalLowOPS_H_ */
+#endif /* TetragonalLowOPS_H_ */
 

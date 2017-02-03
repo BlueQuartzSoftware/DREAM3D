@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _trigonallowops_h_
-#define _trigonallowops_h_
+#ifndef _monoclinicops_h_
+#define _monoclinicops_h_
 
 
 #include "SIMPLib/SIMPLib.h"
@@ -42,31 +42,29 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 /**
- * @class TrigonalLowOps TrigonalLowOps.h DREAM3DLib/Common/SpaceGroupOps/TrigonalLowOps.h
+ * @class MonoclinicOps MonoclinicOps.h DREAM3DLib/Common/LaueOps/MonoclinicOps.h
  * @brief
  *
 *
  * @date May 5, 2011
  * @version 1.0
  */
-class OrientationLib_EXPORT TrigonalLowOps : public SpaceGroupOps
+class OrientationLib_EXPORT MonoclinicOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(TrigonalLowOps)
-    SIMPL_TYPE_MACRO_SUPER(TrigonalLowOps, SpaceGroupOps)
-    SIMPL_STATIC_NEW_MACRO(TrigonalLowOps)
+    SIMPL_SHARED_POINTERS(MonoclinicOps)
+    SIMPL_TYPE_MACRO_SUPER(MonoclinicOps, LaueOps)
+    SIMPL_STATIC_NEW_MACRO(MonoclinicOps)
 
-    TrigonalLowOps();
-    virtual ~TrigonalLowOps();
+    MonoclinicOps();
+    virtual ~MonoclinicOps();
 
-    static const int k_OdfSize = 124416;
-    static const int k_MdfSize = 124416;
-    static const int k_NumSymQuats = 3;
+    static const int k_OdfSize = 186624;
+    static const int k_MdfSize = 186624;
+    static const int k_NumSymQuats = 2;
 
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
@@ -180,14 +178,13 @@ class OrientationLib_EXPORT TrigonalLowOps : public SpaceGroupOps
     virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
 
   protected:
-    float _calcMisoQuat(const QuatF quatsym[6], int numsym,
+    float _calcMisoQuat(const QuatF quatsym[24], int numsym,
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
-
   private:
-    TrigonalLowOps(const TrigonalLowOps&); // Copy Constructor Not Implemented
-    void operator=(const TrigonalLowOps&); // Operator '=' Not Implemented
+    MonoclinicOps(const MonoclinicOps&); // Copy Constructor Not Implemented
+    void operator=(const MonoclinicOps&); // Operator '=' Not Implemented
 };
 
-#endif /* TrigonalLowOPS_H_ */
+#endif /* MonoclinicOPS_H_ */
 

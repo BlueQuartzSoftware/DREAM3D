@@ -33,8 +33,8 @@
 
 #include <QtGui/QPainter>
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -82,7 +82,7 @@ QImage TrigonalIPFLegendPainter::createLegend(int pixelWidth, int pixelHeight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage TrigonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, SpaceGroupOps* ops)
+QImage TrigonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops)
 {
   QSize imageSize(pixelWidth, pixelHeight);
   int32_t fontHeight = 0;

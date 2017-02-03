@@ -120,7 +120,7 @@ MergeColonies::MergeColonies()
 , m_GlobAlpha(nullptr)
 , m_Active(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_AxisToleranceRad = 0.0f;
 

@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _spacegroupops_h_
-#define _spacegroupops_h_
+#ifndef _laueOps_h_
+#define _laueOps_h_
 
 #include <vector>
 
@@ -53,31 +53,31 @@
 
 
 /*
- * @class SpaceGroupOps SpaceGroupOps.h OrientationLib/SpaceGroupOps/SpaceGroupOps.h
+ * @class LaueOps LaueOps.h OrientationLib/LaueOps/LaueOps.h
  * @brief
  */
-class OrientationLib_EXPORT SpaceGroupOps
+class OrientationLib_EXPORT LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(SpaceGroupOps)
-    SIMPL_TYPE_MACRO(SpaceGroupOps)
+    SIMPL_SHARED_POINTERS(LaueOps)
+    SIMPL_TYPE_MACRO(LaueOps)
 
-    virtual ~SpaceGroupOps();
+    virtual ~LaueOps();
 
-
-    /**
-     * @brief getOrientationOpsVector This method returns a vector of each type of SpaceGroupOps placed such that the
-     * index into the vector is the value of the constant at EBSD::CrystalStructure::***
-     * @return Vector of SpaceGroupOps subclasses.
-     */
-    static QVector<SpaceGroupOps::Pointer> getOrientationOpsQVector();
 
     /**
-     * @brief getOrientationOpsVector This method returns a vector of each type of SpaceGroupOps placed such that the
+     * @brief getOrientationOpsVector This method returns a vector of each type of LaueOps placed such that the
      * index into the vector is the value of the constant at EBSD::CrystalStructure::***
-     * @return Vector of SpaceGroupOps subclasses.
+     * @return Vector of LaueOps subclasses.
      */
-    static std::vector<SpaceGroupOps::Pointer> getOrientationOpsVector();
+    static QVector<LaueOps::Pointer> getOrientationOpsQVector();
+
+    /**
+     * @brief getOrientationOpsVector This method returns a vector of each type of LaueOps placed such that the
+     * index into the vector is the value of the constant at EBSD::CrystalStructure::***
+     * @return Vector of LaueOps subclasses.
+     */
+    static std::vector<LaueOps::Pointer> getOrientationOpsVector();
 
 
     /**
@@ -208,7 +208,7 @@ class OrientationLib_EXPORT SpaceGroupOps
     virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config) = 0;
 
   protected:
-    SpaceGroupOps();
+    LaueOps();
 
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,
                         QuatF& q1, QuatF& q2,
@@ -223,9 +223,9 @@ class OrientationLib_EXPORT SpaceGroupOps
     int _calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType homochoric);
 
   private:
-    SpaceGroupOps(const SpaceGroupOps&); // Copy Constructor Not Implemented
-    void operator=(const SpaceGroupOps&); // Operator '=' Not Implemented
+    LaueOps(const LaueOps&); // Copy Constructor Not Implemented
+    void operator=(const LaueOps&); // Operator '=' Not Implemented
 };
 
-#endif /* _SpaceGroupOps_H_ */
+#endif /* _laueOps_H_ */
 

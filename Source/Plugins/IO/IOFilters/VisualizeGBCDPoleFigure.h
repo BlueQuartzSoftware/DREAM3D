@@ -45,7 +45,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 /**
  * @brief The VisualizeGBCDPoleFigure class. See [Filter documentation](@ref visualizegbcdpolefigure) for details.
@@ -182,7 +182,7 @@ class VisualizeGBCDPoleFigure : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(double, GBCD)
     DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<LaueOps::Pointer> m_OrientationOps;
 
     /**
      * @brief writeCoords Writes a set of Axis coordinates to that are needed

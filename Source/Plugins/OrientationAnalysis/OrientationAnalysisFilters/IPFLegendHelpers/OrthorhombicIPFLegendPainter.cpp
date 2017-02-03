@@ -33,8 +33,8 @@
 
 #include <QtGui/QPainter>
 
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -82,7 +82,7 @@ QImage OrthorhombicIPFLegendPainter::createLegend(int pixelWidth, int pixelHeigh
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage OrthorhombicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, SpaceGroupOps* ops)
+QImage OrthorhombicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops)
 {
   QSize imageSize(pixelWidth, pixelHeight);
   int32_t fontHeight = 0;

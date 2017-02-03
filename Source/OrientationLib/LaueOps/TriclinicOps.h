@@ -32,9 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _monoclinicops_h_
-#define _monoclinicops_h_
-
+#ifndef _triclinicops_h_
+#define _triclinicops_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -42,29 +41,30 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
+
 
 /**
- * @class MonoclinicOps MonoclinicOps.h DREAM3DLib/Common/SpaceGroupOps/MonoclinicOps.h
+ * @class TriclinicOps TriclinicOps.h DREAM3DLib/Common/LaueOps/TriclinicOps.h
  * @brief
  *
 *
  * @date May 5, 2011
  * @version 1.0
  */
-class OrientationLib_EXPORT MonoclinicOps : public SpaceGroupOps
+class OrientationLib_EXPORT TriclinicOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(MonoclinicOps)
-    SIMPL_TYPE_MACRO_SUPER(MonoclinicOps, SpaceGroupOps)
-    SIMPL_STATIC_NEW_MACRO(MonoclinicOps)
+    SIMPL_SHARED_POINTERS(TriclinicOps)
+    SIMPL_TYPE_MACRO_SUPER(TriclinicOps, LaueOps)
+    SIMPL_STATIC_NEW_MACRO(TriclinicOps)
 
-    MonoclinicOps();
-    virtual ~MonoclinicOps();
+    TriclinicOps();
+    virtual ~TriclinicOps();
 
-    static const int k_OdfSize = 186624;
-    static const int k_MdfSize = 186624;
-    static const int k_NumSymQuats = 2;
+    static const int k_OdfSize = 373248;
+    static const int k_MdfSize = 373248;
+    static const int k_NumSymQuats = 1;
 
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
@@ -182,9 +182,9 @@ class OrientationLib_EXPORT MonoclinicOps : public SpaceGroupOps
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
   private:
-    MonoclinicOps(const MonoclinicOps&); // Copy Constructor Not Implemented
-    void operator=(const MonoclinicOps&); // Operator '=' Not Implemented
+    TriclinicOps(const TriclinicOps&); // Copy Constructor Not Implemented
+    void operator=(const TriclinicOps&); // Operator '=' Not Implemented
 };
 
-#endif /* MonoclinicOPS_H_ */
+#endif /* TriclinicOPS_H_ */
 

@@ -44,10 +44,10 @@
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Geometry/ShapeOps/ShapeOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
 
 typedef struct
 {
@@ -253,9 +253,9 @@ class InsertPrecipitatePhases : public AbstractFilter
      * @param phase Index of the Ensemble type for the Feature to be generated
      * @param precip Precip_t struct pointer to be intialized
      * @param shapeclass Type of precipitate shape to be generated
-     * @param OrthoOps Pointer to SpaceGroupOps object
+     * @param OrthoOps Pointer to LaueOps object
      */
-    void generate_precipitate(int32_t phase, Precip_t* precip, ShapeType::Type shapeclass, SpaceGroupOps::Pointer OrthoOps);
+    void generate_precipitate(int32_t phase, Precip_t* precip, ShapeType::Type shapeclass, LaueOps::Pointer OrthoOps);
 
     /**
      * @brief load_precipitates Reads a list of precipitates from a file to be used as the packed volume

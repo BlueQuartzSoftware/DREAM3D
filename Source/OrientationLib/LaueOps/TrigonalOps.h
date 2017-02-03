@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _tetragonallowops_h_
-#define _tetragonallowops_h_
+#ifndef _trigonalops_h_
+#define _trigonalops_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -41,31 +41,32 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
+
 
 
 /**
- * @class TetragonalLowOps TetragonalLowOps.h DREAM3DLib/Common/SpaceGroupOps/TetragonalLowOps.h
+ * @class TrigonalOps TrigonalOps.h DREAM3DLib/Common/LaueOps/TrigonalOps.h
  * @brief
  *
 *
  * @date May 5, 2011
  * @version 1.0
  */
-class OrientationLib_EXPORT TetragonalLowOps : public SpaceGroupOps
+class OrientationLib_EXPORT TrigonalOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(TetragonalLowOps)
-    SIMPL_TYPE_MACRO_SUPER(TetragonalLowOps, SpaceGroupOps)
-    SIMPL_STATIC_NEW_MACRO(TetragonalLowOps)
+    SIMPL_SHARED_POINTERS(TrigonalOps)
+    SIMPL_TYPE_MACRO_SUPER(TrigonalOps, LaueOps)
+    SIMPL_STATIC_NEW_MACRO(TrigonalOps)
 
+    TrigonalOps();
+    virtual ~TrigonalOps();
 
-    TetragonalLowOps();
-    virtual ~TetragonalLowOps();
+    static const int k_OdfSize = 31104;
+    static const int k_MdfSize = 31104;
+    static const int k_NumSymQuats = 6;
 
-    static const int k_OdfSize = 93312;
-    static const int k_MdfSize = 93312;
-    static const int k_NumSymQuats = 4;
 
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
@@ -178,14 +179,14 @@ class OrientationLib_EXPORT TetragonalLowOps : public SpaceGroupOps
     virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
 
   protected:
-    float _calcMisoQuat(const QuatF quatsym[8], int numsym,
+    float _calcMisoQuat(const QuatF quatsym[6], int numsym,
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
 
   private:
-    TetragonalLowOps(const TetragonalLowOps&); // Copy Constructor Not Implemented
-    void operator=(const TetragonalLowOps&); // Operator '=' Not Implemented
+    TrigonalOps(const TrigonalOps&); // Copy Constructor Not Implemented
+    void operator=(const TrigonalOps&); // Operator '=' Not Implemented
 };
 
-#endif /* TetragonalLowOPS_H_ */
+#endif /* TrigonalOPS_H_ */
 

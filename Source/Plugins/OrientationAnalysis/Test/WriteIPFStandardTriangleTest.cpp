@@ -19,7 +19,7 @@
 
 #include "OrientationAnalysisTestFileLocations.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 class WriteIPFStandardTriangleTest
 {
@@ -74,7 +74,7 @@ public:
     AbstractFilter::Pointer filter = filterFactory->create();
     DREAM3D_REQUIRE_VALID_POINTER(filter.get())
 
-    std::vector<QString> names = SpaceGroupOps::GetLaueNames();
+    std::vector<QString> names = LaueOps::GetLaueNames();
     for(std::vector<QString>::size_type i = 0; i < names.size(); i++)
     {
 

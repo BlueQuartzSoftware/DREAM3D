@@ -59,7 +59,7 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include "tbb/concurrent_vector.h"
@@ -132,7 +132,7 @@ class TrisSelector
   int32_t m_PhaseOfInterest;
   float (&gFixedT)[3][3];
 
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
   uint32_t cryst;
   int32_t nsym;
 
@@ -168,7 +168,7 @@ public:
   , m_FaceNormals(__m_FaceNormals)
   , m_FaceAreas(__m_FaceAreas)
   {
-    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::getOrientationOpsQVector();
     cryst = __m_CrystalStructures[__m_PhaseOfInterest];
     nsym = m_OrientationOps[cryst]->getNumSymOps();
   }
@@ -874,7 +874,7 @@ void FindGBCDMetricBased::execute()
   // ------------------- before computing the distribution, we must find normalization factors -----
   double ballVolume = FindGBCDMetricBased::k_BallVolumesM3M[getChosenLimitDists()];
   {
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
     int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
     int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
 

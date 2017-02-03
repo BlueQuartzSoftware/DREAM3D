@@ -47,10 +47,10 @@
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 #include "OrientationLib/Texture/Texture.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
@@ -105,7 +105,7 @@ MatchCrystallography::MatchCrystallography()
   m_ActualMdf = FloatArrayType::NullPointer();
   m_SimMdf = FloatArrayType::NullPointer();
 
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }
@@ -236,7 +236,7 @@ void MatchCrystallography::initialize()
   m_SimMdf = FloatArrayType::NullPointer();
   m_MisorientationLists.clear();
 
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 }
 
 // -----------------------------------------------------------------------------

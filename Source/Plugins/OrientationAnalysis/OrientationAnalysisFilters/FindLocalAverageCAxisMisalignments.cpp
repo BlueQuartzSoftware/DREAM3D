@@ -35,7 +35,7 @@
 
 #include "FindLocalAverageCAxisMisalignments.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -86,7 +86,7 @@ FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments()
 , m_UnbiasedLocalCAxisMisalignments(nullptr)
 , m_CrystalStructures(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

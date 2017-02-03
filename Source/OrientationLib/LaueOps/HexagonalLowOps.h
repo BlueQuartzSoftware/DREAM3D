@@ -32,9 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _cubicops_h_
-#define _cubicops_h_
-
+#ifndef _hexagonallowops_h_
+#define _hexagonallowops_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -42,30 +41,30 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
+
 
 /**
- * @class CubicOps CubicOps.h DREAM3DLib/Common/SpaceGroupOps/CubicOps.h
+ * @class HexagonalLowOps HexagonalLowOps.h DREAM3DLib/Common/LaueOps/HexagonalLowOps.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
-*
+ *
+ * @author Michael A. Groeber for USAF Research Laboratory, Materials Lab
  * @date May 5, 2011
  * @version 1.0
  */
-class OrientationLib_EXPORT CubicOps : public SpaceGroupOps
+class OrientationLib_EXPORT HexagonalLowOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(CubicOps)
-    SIMPL_TYPE_MACRO_SUPER(CubicOps, SpaceGroupOps)
-    SIMPL_STATIC_NEW_MACRO(CubicOps)
+    SIMPL_SHARED_POINTERS(HexagonalLowOps)
+    SIMPL_TYPE_MACRO_SUPER(HexagonalLowOps, LaueOps)
+    SIMPL_STATIC_NEW_MACRO(HexagonalLowOps)
 
-    CubicOps();
-    virtual ~CubicOps();
+    HexagonalLowOps();
+    virtual ~HexagonalLowOps();
 
-    static const int k_OdfSize = 5832;
-    static const int k_MdfSize = 5832;
-    static const int k_NumSymQuats = 24;
-
+    static const int k_OdfSize;// = 62208;
+    static const int k_MdfSize;// = 62208;
+    static const int k_NumSymQuats;// = 6;
 
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
@@ -179,34 +178,15 @@ class OrientationLib_EXPORT CubicOps : public SpaceGroupOps
      */
     virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
 
-    /**
-     * @brief generates a misorientation coloring legend
-     * @param angle
-     * @param n1 (~radial mesh points)
-     * @param n2 (~angular mesh points)
-     * @param width of produced image (in pixels)
-     * @return
-     */
-    virtual UInt8ArrayType::Pointer generateMisorientationTriangleLegend(float, int, int, int);
-
-
   protected:
-    float _calcMisoQuat(const QuatF quatsym[24], int numsym,
+    float _calcMisoQuat(const QuatF quatsym[12], int numsym,
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
-    /**
-     * @brief area preserving projection of volume preserving transformation (for C. Shuch and S. Patala coloring legend generation)
-     * @param x
-     * @param y
-     * @param z
-     * @return
-     */
-    std::vector< std::pair<double, double> > rodri2pair(std::vector<double>, std::vector<double>, std::vector<double>);
 
   private:
-    CubicOps(const CubicOps&); // Copy Constructor Not Implemented
-    void operator=(const CubicOps&); // Operator '=' Not Implemented
+    HexagonalLowOps(const HexagonalLowOps&); // Copy Constructor Not Implemented
+    void operator=(const HexagonalLowOps&); // Operator '=' Not Implemented
 };
 
-#endif /* CUBICOPS_H_ */
+#endif /* HexagonalLowOPS_H_ */
 

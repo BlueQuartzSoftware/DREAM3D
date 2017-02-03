@@ -70,7 +70,7 @@ FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()
 , m_CrystalStructures(nullptr)
 , m_AvgCAxisMisalignments(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_CAxisMisalignmentList = NeighborList<float>::NullPointer();

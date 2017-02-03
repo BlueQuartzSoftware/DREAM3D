@@ -33,8 +33,8 @@
 
 #include <QtGui/QPainter>
 
-#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/MonoclinicOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -82,7 +82,7 @@ QImage MonoclinicIPFLegendPainter::createLegend(int pixelWidth, int pixelHeight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage MonoclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, SpaceGroupOps* ops)
+QImage MonoclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops)
 {
   QSize imageSize(pixelWidth, pixelHeight);
   int32_t fontHeight = 0;

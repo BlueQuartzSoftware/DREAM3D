@@ -36,7 +36,7 @@
 #ifndef _packprimaryphases_h_
 #define _packprimaryphases_h_
 
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"

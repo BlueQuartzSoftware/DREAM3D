@@ -45,7 +45,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 #include "OrientationLib/Texture/Texture.hpp"
 
 /**

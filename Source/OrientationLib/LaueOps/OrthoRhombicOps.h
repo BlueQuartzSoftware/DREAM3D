@@ -41,22 +41,22 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 
 /**
- * @class OrthoRhombicOps OrthoRhombicOps.h DREAM3DLib/Common/SpaceGroupOps/OrthoRhombicOps.h
+ * @class OrthoRhombicOps OrthoRhombicOps.h DREAM3DLib/Common/LaueOps/OrthoRhombicOps.h
  * @brief
  *
 *
  * @date May 5, 2011
  * @version 1.0
  */
-class OrientationLib_EXPORT OrthoRhombicOps : public SpaceGroupOps
+class OrientationLib_EXPORT OrthoRhombicOps : public LaueOps
 {
   public:
     SIMPL_SHARED_POINTERS(OrthoRhombicOps)
-    SIMPL_TYPE_MACRO_SUPER(OrthoRhombicOps, SpaceGroupOps)
+    SIMPL_TYPE_MACRO_SUPER(OrthoRhombicOps, LaueOps)
     SIMPL_STATIC_NEW_MACRO(OrthoRhombicOps)
 
 

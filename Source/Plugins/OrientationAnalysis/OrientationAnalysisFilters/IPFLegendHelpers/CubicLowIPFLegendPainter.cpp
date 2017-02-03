@@ -33,8 +33,8 @@
 
 #include <QtGui/QPainter>
 
-#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/CubicLowOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -83,7 +83,7 @@ QImage CubicLowIPFLegendPainter::createLegend(int pixelWidth, int pixelHeight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage CubicLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, SpaceGroupOps* ops)
+QImage CubicLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops)
 {
   QSize imageSize(pixelWidth, pixelHeight);
   int32_t fontHeight = 0;

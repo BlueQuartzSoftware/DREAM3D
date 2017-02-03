@@ -71,7 +71,7 @@ VisualizeGBCDGMT::VisualizeGBCDGMT()
   m_MisorientationRotation.k = 0.0f;
   m_MisorientationRotation.l = 0.0f;
 
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }
@@ -327,8 +327,8 @@ void VisualizeGBCDGMT::execute()
   // take inverse of misorientation variable to use for switching symmetry
   MatrixMath::Transpose3x3(dg, dgt);
 
-  // Get our SpaceGroupOps pointer for the selected crystal structure
-  SpaceGroupOps::Pointer orientOps = m_OrientationOps[m_CrystalStructures[m_PhaseOfInterest]];
+  // Get our LaueOps pointer for the selected crystal structure
+  LaueOps::Pointer orientOps = m_OrientationOps[m_CrystalStructures[m_PhaseOfInterest]];
 
   // get number of symmetry operators
   int32_t n_sym = orientOps->getNumSymOps();

@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SpaceGroupOps.h"
+#include "LaueOps.h"
 
 #include <limits>
 
@@ -48,17 +48,17 @@
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/CubicLowOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/HexagonalLowOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
+#include "OrientationLib/LaueOps/TetragonalOps.h"
+#include "OrientationLib/LaueOps/TrigonalLowOps.h"
+#include "OrientationLib/LaueOps/TetragonalLowOps.h"
+#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/MonoclinicOps.h"
 
 
 namespace Detail
@@ -83,18 +83,18 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SpaceGroupOps::SpaceGroupOps()
+LaueOps::LaueOps()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SpaceGroupOps::~SpaceGroupOps()
+LaueOps::~LaueOps()
 {
 }
 
-void SpaceGroupOps::getFZQuat(QuatF& qr)
+void LaueOps::getFZQuat(QuatF& qr)
 {
   Q_ASSERT(false);
 }
@@ -102,7 +102,7 @@ void SpaceGroupOps::getFZQuat(QuatF& qr)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float SpaceGroupOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
+float LaueOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
                                    QuatF& q1, QuatF& q2,
                                    float& n1, float& n2, float& n3)
 {
@@ -166,7 +166,7 @@ float SpaceGroupOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3], int numsym, FOrientArrayType rod)
+FOrientArrayType LaueOps::_calcRodNearestOrigin(const float rodsym[24][3], int numsym, FOrientArrayType rod)
 {
   float denom = 0.0f, dist = 0.0f;
   float smallestdist = 100000000.0f;
@@ -209,7 +209,7 @@ FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3],
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SpaceGroupOps::_calcNearestQuat(const QuatF quatsym[24], int numsym,
+void LaueOps::_calcNearestQuat(const QuatF quatsym[24], int numsym,
                                      QuatF& q1,
                                      QuatF& q2)
 {
@@ -244,7 +244,7 @@ void SpaceGroupOps::_calcNearestQuat(const QuatF quatsym[24], int numsym,
   }
 }
 
-void SpaceGroupOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF& qr)
+void LaueOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF& qr)
 {
   float dist = 0;
   float smallestdist = 1000000.0f;
@@ -272,7 +272,7 @@ void SpaceGroupOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, 
 }
 
 
-int SpaceGroupOps::_calcMisoBin(float dim[3], float bins[3], float step[3], const FOrientArrayType& ho)
+int LaueOps::_calcMisoBin(float dim[3], float bins[3], float step[3], const FOrientArrayType& ho)
 {
   int miso1bin = int((ho[0] + dim[0]) / step[0]);
   int miso2bin = int((ho[1] + dim[1]) / step[1]);
@@ -304,7 +304,7 @@ int SpaceGroupOps::_calcMisoBin(float dim[3], float bins[3], float step[3], cons
   return (static_cast<int>( (bins[0] * bins[1] * miso3bin) + (bins[0] * miso2bin) + miso1bin ));
 }
 
-void SpaceGroupOps::_calcDetermineHomochoricValues(uint64_t seed, float init[3], float step[3], int32_t phi[3], int choose, float& r1, float& r2, float& r3)
+void LaueOps::_calcDetermineHomochoricValues(uint64_t seed, float init[3], float step[3], int32_t phi[3], int choose, float& r1, float& r2, float& r3)
 {
   float random;
 
@@ -320,7 +320,7 @@ void SpaceGroupOps::_calcDetermineHomochoricValues(uint64_t seed, float init[3],
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SpaceGroupOps::_calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType ho)
+int LaueOps::_calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType ho)
 {
   int g1euler1bin;
   int g1euler2bin;
@@ -360,9 +360,9 @@ int SpaceGroupOps::_calcODFBin(float dim[3], float bins[3], float step[3], FOrie
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<SpaceGroupOps::Pointer> SpaceGroupOps::getOrientationOpsQVector()
+QVector<LaueOps::Pointer> LaueOps::getOrientationOpsQVector()
 {
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
   m_OrientationOps.push_back(HexagonalOps::New());
 
   m_OrientationOps.push_back(CubicOps::New());
@@ -389,9 +389,9 @@ QVector<SpaceGroupOps::Pointer> SpaceGroupOps::getOrientationOpsQVector()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<SpaceGroupOps::Pointer> SpaceGroupOps::getOrientationOpsVector()
+std::vector<LaueOps::Pointer> LaueOps::getOrientationOpsVector()
 {
-  std::vector<SpaceGroupOps::Pointer> m_OrientationOps;
+  std::vector<LaueOps::Pointer> m_OrientationOps;
   m_OrientationOps.push_back(HexagonalOps::New());
 
   m_OrientationOps.push_back(CubicOps::New());
@@ -418,12 +418,12 @@ std::vector<SpaceGroupOps::Pointer> SpaceGroupOps::getOrientationOpsVector()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<QString> SpaceGroupOps::GetLaueNames()
+std::vector<QString> LaueOps::GetLaueNames()
 {
   std::vector<QString> names;
 
-  std::vector<SpaceGroupOps::Pointer> ops = getOrientationOpsVector();
-  std::for_each(ops.begin(), ops.end(), [&](SpaceGroupOps::Pointer op){ names.push_back(op->getSymmetryName()); });
+  std::vector<LaueOps::Pointer> ops = getOrientationOpsVector();
+  std::for_each(ops.begin(), ops.end(), [&](LaueOps::Pointer op){ names.push_back(op->getSymmetryName()); });
 
   return names;
 }
@@ -431,7 +431,7 @@ std::vector<QString> SpaceGroupOps::GetLaueNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t SpaceGroupOps::getRandomSymmetryOperatorIndex(int numSymOps)
+size_t LaueOps::getRandomSymmetryOperatorIndex(int numSymOps)
 {
   const int rangeMin = 0;
   const int rangeMax = numSymOps-1;

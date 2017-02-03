@@ -66,7 +66,7 @@ NeighborOrientationCorrelation::NeighborOrientationCorrelation()
 , m_CellPhases(nullptr)
 , m_CrystalStructures(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

@@ -35,39 +35,39 @@
 
 
 
-set(OrientationLib_SpaceGroupOps_HDRS
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SpaceGroupOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/CubicOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/CubicLowOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/HexagonalOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/HexagonalLowOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/OrthoRhombicOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TrigonalOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TrigonalLowOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TetragonalOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TetragonalLowOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TriclinicOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/MonoclinicOps.h
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SO3Sampler.h
+set(OrientationLib_LaueOps_HDRS
+  ${OrientationLib_SOURCE_DIR}/LaueOps/LaueOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/CubicOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/CubicLowOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/HexagonalOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/HexagonalLowOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/OrthoRhombicOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TrigonalOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TrigonalLowOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TetragonalOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TetragonalLowOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TriclinicOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/MonoclinicOps.h
+  ${OrientationLib_SOURCE_DIR}/LaueOps/SO3Sampler.h
 )
-set(OrientationLib_SpaceGroupOps_SRCS
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SpaceGroupOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/CubicOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/CubicLowOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/HexagonalOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/HexagonalLowOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/OrthoRhombicOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TrigonalOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TrigonalLowOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TetragonalOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TetragonalLowOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TriclinicOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/MonoclinicOps.cpp
-  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SO3Sampler.cpp
+set(OrientationLib_LaueOps_SRCS
+  ${OrientationLib_SOURCE_DIR}/LaueOps/LaueOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/CubicOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/CubicLowOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/HexagonalOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/HexagonalLowOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/OrthoRhombicOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TrigonalOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TrigonalLowOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TetragonalOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TetragonalLowOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/TriclinicOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/MonoclinicOps.cpp
+  ${OrientationLib_SOURCE_DIR}/LaueOps/SO3Sampler.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "SpaceGroupOps" "${OrientationLib_SpaceGroupOps_HDRS}" "${OrientationLib_SpaceGroupOps_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "LaueOps" "${OrientationLib_LaueOps_HDRS}" "${OrientationLib_LaueOps_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${OrientationLib_SpaceGroupOps_HDRS}
-            DESTINATION include/OrientationLib/SpaceGroupOps
+    INSTALL (FILES ${OrientationLib_LaueOps_HDRS}
+            DESTINATION include/OrientationLib/LaueOps
             COMPONENT Headers   )
 endif()

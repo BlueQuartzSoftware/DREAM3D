@@ -51,7 +51,7 @@
  * of <001>, <100>, <010>. If the developer would like the Pole Figures to appear
  * in the order of <100>, <010>, <100> then the oder needs to be set as [2, 0, 1].
  *
- * The other interesting item is the Labels. Each SpaceGroupOps subclass uses a default
+ * The other interesting item is the Labels. Each LaueOps subclass uses a default
  * label for each Pole Figure. If the developer would like to over ride those labels
  * then this member can be set with a 3 Element QVector<QString> with the new labels.
  * Note that the new lables will REPLACE the default labels.

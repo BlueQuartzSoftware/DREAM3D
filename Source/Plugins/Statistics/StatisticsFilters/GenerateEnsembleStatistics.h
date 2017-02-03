@@ -43,7 +43,7 @@
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
@@ -343,7 +343,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
     DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
 
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<LaueOps::Pointer> m_OrientationOps;
 
     NeighborList<int32_t>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;

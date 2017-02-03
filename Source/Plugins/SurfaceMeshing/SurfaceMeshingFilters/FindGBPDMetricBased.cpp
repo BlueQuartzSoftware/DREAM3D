@@ -59,7 +59,7 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include "tbb/concurrent_vector.h"
@@ -128,7 +128,7 @@ class TrisSelector
   QVector<TriAreaAndNormals>* selectedTris;
 #endif
   int32_t m_PhaseOfInterest;
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
   uint32_t cryst;
   int32_t nsym;
   uint32_t* m_CrystalStructures;
@@ -159,7 +159,7 @@ public:
   , m_FaceNormals(__m_FaceNormals)
   , m_FaceAreas(__m_FaceAreas)
   {
-    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::getOrientationOpsQVector();
     cryst = __m_CrystalStructures[__m_PhaseOfInterest];
     nsym = m_OrientationOps[cryst]->getNumSymOps();
   }
@@ -261,7 +261,7 @@ class ProbeDistrib
   double totalFaceArea;
   int numDistinctGBs;
   double ballVolume;
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
   uint32_t cryst;
   int32_t nsym;
 
@@ -285,7 +285,7 @@ public:
   , ballVolume(__ballVolume)
   , cryst(__cryst)
   {
-    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::getOrientationOpsQVector();
     nsym = m_OrientationOps[__cryst]->getNumSymOps();
   }
 
@@ -821,7 +821,7 @@ void FindGBPDMetricBased::execute()
   }
 
   // ------------------- before computing the distribution, we must find normalization factors -----
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
   int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
   int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
   double ballVolume = double(nsym) * 2.0 * (1.0 - cos(m_LimitDist));

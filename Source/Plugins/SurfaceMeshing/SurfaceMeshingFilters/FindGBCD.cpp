@@ -55,7 +55,7 @@
 
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -80,7 +80,7 @@ class CalculateGBCDImpl
   BoolArrayType::Pointer m_GbcdHemiCheckArray;
 
   UInt32ArrayType::Pointer m_CrystalStructuresArray;
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   CalculateGBCDImpl(size_t i, size_t numMisoReps, Int32ArrayType::Pointer Labels, DoubleArrayType::Pointer Normals, FloatArrayType::Pointer Eulers, Int32ArrayType::Pointer Phases,
@@ -99,7 +99,7 @@ public:
   , m_GbcdHemiCheckArray(HemiCheck)
   , m_CrystalStructuresArray(CrystalStructures)
   {
-    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
   virtual ~CalculateGBCDImpl()
   {

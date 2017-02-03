@@ -72,7 +72,7 @@ FindBoundaryStrengths::FindBoundaryStrengths()
 , m_SurfaceMeshF7s(nullptr)
 , m_SurfaceMeshmPrimes(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_Loading.x = 1.0f;
   m_Loading.y = 1.0f;

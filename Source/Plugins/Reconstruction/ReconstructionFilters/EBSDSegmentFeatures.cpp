@@ -74,7 +74,7 @@ EBSDSegmentFeatures::EBSDSegmentFeatures()
 , m_Active(nullptr)
 , m_FeatureIds(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_MisoTolerance = 0.0f;
 

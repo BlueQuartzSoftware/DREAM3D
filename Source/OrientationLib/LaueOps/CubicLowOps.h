@@ -32,8 +32,9 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _hexagonalops_h_
-#define _hexagonalops_h_
+#ifndef _cubiclowops_h_
+#define _cubiclowops_h_
+
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -41,29 +42,30 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 
 /**
- * @class HexagonalOps HexagonalOps.h DREAM3DLib/Common/SpaceGroupOps/HexagonalOps.h
+ * @class CubicLowOps CubicLowOps.h DREAM3DLib/Common/LaueOps/CubicLowOps.h
  * @brief
  *
 *
  * @date May 5, 2011
  * @version 1.0
  */
-class OrientationLib_EXPORT HexagonalOps : public SpaceGroupOps
+
+class OrientationLib_EXPORT CubicLowOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(HexagonalOps)
-    SIMPL_TYPE_MACRO_SUPER(HexagonalOps, SpaceGroupOps)
-    SIMPL_STATIC_NEW_MACRO(HexagonalOps)
+    SIMPL_SHARED_POINTERS(CubicLowOps)
+    SIMPL_TYPE_MACRO_SUPER(CubicLowOps, LaueOps)
+    SIMPL_STATIC_NEW_MACRO(CubicLowOps)
 
-    HexagonalOps();
-    virtual ~HexagonalOps();
+    CubicLowOps();
+    virtual ~CubicLowOps();
 
-    static const int k_OdfSize = 15552;
-    static const int k_MdfSize = 15552;
+    static const int k_OdfSize = 46656;
+    static const int k_MdfSize = 46656;
     static const int k_NumSymQuats = 12;
 
     /**
@@ -96,11 +98,6 @@ class OrientationLib_EXPORT HexagonalOps : public SpaceGroupOps
      */
     QString getSymmetryName();
 
-
-    virtual void getInitializedODFBinDimensions(float dims[3]);
-    virtual void getOdfBinStepSize(float step[3]);
-
-
     virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);
     virtual void getQuatSymOp(int i, QuatF& q);
     virtual void getRodSymOp(int i, float* r);
@@ -108,7 +105,6 @@ class OrientationLib_EXPORT HexagonalOps : public SpaceGroupOps
     virtual FOrientArrayType getODFFZRod(FOrientArrayType rod);
     virtual FOrientArrayType getMDFFZRod(FOrientArrayType rod);
     virtual void getNearestQuat(QuatF& q1, QuatF& q2);
-    virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(FOrientArrayType rod);
     virtual bool inUnitTriangle(float eta, float chi);
     virtual FOrientArrayType determineEulerAngles(uint64_t seed, int choose);
@@ -124,7 +120,6 @@ class OrientationLib_EXPORT HexagonalOps : public SpaceGroupOps
 
 
     virtual void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3);
-
 
     /**
      * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
@@ -166,6 +161,12 @@ class OrientationLib_EXPORT HexagonalOps : public SpaceGroupOps
     virtual SIMPL::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame);
 
     /**
+     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
+     * @return
+     */
+    virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
+
+    /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
      * angles that are passed in.
      * @param eulers The Euler Angles to generate the pole figure from.
@@ -176,21 +177,15 @@ class OrientationLib_EXPORT HexagonalOps : public SpaceGroupOps
      */
     virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config);
 
-    /**
-     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
-     * @return
-     */
-    virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
 
   protected:
-    float _calcMisoQuat(const QuatF quatsym[12], int numsym,
+    float _calcMisoQuat(const QuatF quatsym[24], int numsym,
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
-
   private:
-    HexagonalOps(const HexagonalOps&); // Copy Constructor Not Implemented
-    void operator=(const HexagonalOps&); // Operator '=' Not Implemented
+    CubicLowOps(const CubicLowOps&); // Copy Constructor Not Implemented
+    void operator=(const CubicLowOps&); // Operator '=' Not Implemented
 };
 
-#endif /* HEXAGONALOPS_H_ */
+#endif /* CubicLowOPS_H_ */
 

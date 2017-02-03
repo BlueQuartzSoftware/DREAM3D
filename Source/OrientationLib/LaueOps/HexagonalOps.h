@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _triclinicops_h_
-#define _triclinicops_h_
+#ifndef _hexagonalops_h_
+#define _hexagonalops_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -41,30 +41,30 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 
 /**
- * @class TriclinicOps TriclinicOps.h DREAM3DLib/Common/SpaceGroupOps/TriclinicOps.h
+ * @class HexagonalOps HexagonalOps.h DREAM3DLib/Common/LaueOps/HexagonalOps.h
  * @brief
  *
 *
  * @date May 5, 2011
  * @version 1.0
  */
-class OrientationLib_EXPORT TriclinicOps : public SpaceGroupOps
+class OrientationLib_EXPORT HexagonalOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(TriclinicOps)
-    SIMPL_TYPE_MACRO_SUPER(TriclinicOps, SpaceGroupOps)
-    SIMPL_STATIC_NEW_MACRO(TriclinicOps)
+    SIMPL_SHARED_POINTERS(HexagonalOps)
+    SIMPL_TYPE_MACRO_SUPER(HexagonalOps, LaueOps)
+    SIMPL_STATIC_NEW_MACRO(HexagonalOps)
 
-    TriclinicOps();
-    virtual ~TriclinicOps();
+    HexagonalOps();
+    virtual ~HexagonalOps();
 
-    static const int k_OdfSize = 373248;
-    static const int k_MdfSize = 373248;
-    static const int k_NumSymQuats = 1;
+    static const int k_OdfSize = 15552;
+    static const int k_MdfSize = 15552;
+    static const int k_NumSymQuats = 12;
 
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
@@ -97,6 +97,10 @@ class OrientationLib_EXPORT TriclinicOps : public SpaceGroupOps
     QString getSymmetryName();
 
 
+    virtual void getInitializedODFBinDimensions(float dims[3]);
+    virtual void getOdfBinStepSize(float step[3]);
+
+
     virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);
     virtual void getQuatSymOp(int i, QuatF& q);
     virtual void getRodSymOp(int i, float* r);
@@ -104,6 +108,7 @@ class OrientationLib_EXPORT TriclinicOps : public SpaceGroupOps
     virtual FOrientArrayType getODFFZRod(FOrientArrayType rod);
     virtual FOrientArrayType getMDFFZRod(FOrientArrayType rod);
     virtual void getNearestQuat(QuatF& q1, QuatF& q2);
+    virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(FOrientArrayType rod);
     virtual bool inUnitTriangle(float eta, float chi);
     virtual FOrientArrayType determineEulerAngles(uint64_t seed, int choose);
@@ -178,13 +183,14 @@ class OrientationLib_EXPORT TriclinicOps : public SpaceGroupOps
     virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
 
   protected:
-    float _calcMisoQuat(const QuatF quatsym[24], int numsym,
+    float _calcMisoQuat(const QuatF quatsym[12], int numsym,
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
+
   private:
-    TriclinicOps(const TriclinicOps&); // Copy Constructor Not Implemented
-    void operator=(const TriclinicOps&); // Operator '=' Not Implemented
+    HexagonalOps(const HexagonalOps&); // Copy Constructor Not Implemented
+    void operator=(const HexagonalOps&); // Operator '=' Not Implemented
 };
 
-#endif /* TriclinicOPS_H_ */
+#endif /* HEXAGONALOPS_H_ */
 

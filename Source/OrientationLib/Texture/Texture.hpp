@@ -51,10 +51,10 @@
 
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
@@ -436,12 +436,12 @@ class Texture
      * @param mdf [output] The MDF array to store the data which has been preallocated already
      * @param numEntries The number of elemnts in teh Angles/Axes/Weights arrays which should all the be same size or at least
      * the value passed here is the minium size of all the arrays. The sizes of the ODF and MDF arrays are
-     * determined by calling the getODFSize and getMDFSize functions of the parameterized SpaceGroupOps class.
+     * determined by calling the getODFSize and getMDFSize functions of the parameterized LaueOps class.
      */
-    template<typename T, class SpaceGroupOps>
+    template<typename T, class LaueOps>
     static void CalculateMDFData(T* angles, T* axes, T* weights, T* odf, T* mdf, size_t numEntries)
     {
-      SpaceGroupOps orientationOps;
+      LaueOps orientationOps;
       const int odfsize = orientationOps.getODFSize();
       const int mdfsize = orientationOps.getMDFSize();
 

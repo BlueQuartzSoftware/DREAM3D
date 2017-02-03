@@ -77,7 +77,7 @@ MergeTwins::MergeTwins()
 , m_CellParentIds(nullptr)
 , m_FeatureParentIds(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_AxisToleranceRad = 0.0f;
 

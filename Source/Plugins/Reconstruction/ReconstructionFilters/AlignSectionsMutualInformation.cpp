@@ -67,7 +67,7 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation()
 {
   m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
 
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   featurecounts = nullptr;
 

@@ -51,7 +51,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -80,7 +80,7 @@ public:
 
   void convert(size_t start, size_t end) const
   {
-    QVector<SpaceGroupOps::Pointer> ops = SpaceGroupOps::getOrientationOpsQVector();
+    QVector<LaueOps::Pointer> ops = LaueOps::getOrientationOpsQVector();
     double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
     double dEuler[3] = {0.0, 0.0, 0.0};
     SIMPL::Rgb argb = 0x00000000;

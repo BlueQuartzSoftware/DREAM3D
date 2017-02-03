@@ -67,7 +67,7 @@ FindKernelAvgMisorientations::FindKernelAvgMisorientations()
 , m_CrystalStructures(nullptr)
 , m_KernelAverageMisorientations(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_KernelSize.x = 1;
   m_KernelSize.y = 1;

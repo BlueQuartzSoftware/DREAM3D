@@ -83,7 +83,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions()
 , m_CellParentIds(nullptr)
 , m_FeatureParentIds(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_AvgCAxes[0] = 0.0f;
   m_AvgCAxes[1] = 0.0f;

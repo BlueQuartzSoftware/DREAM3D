@@ -59,7 +59,7 @@ FindCAxisLocations::FindCAxisLocations()
 , m_Quats(nullptr)
 , m_CAxisLocations(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

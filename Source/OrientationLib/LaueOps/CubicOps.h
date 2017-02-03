@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _cubiclowops_h_
-#define _cubiclowops_h_
+#ifndef _cubicops_h_
+#define _cubicops_h_
 
 
 #include "SIMPLib/SIMPLib.h"
@@ -42,31 +42,30 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 /**
- * @class CubicLowOps CubicLowOps.h DREAM3DLib/Common/SpaceGroupOps/CubicLowOps.h
+ * @class CubicOps CubicOps.h DREAM3DLib/Common/LaueOps/CubicOps.h
  * @brief
- *
+ * @author Michael A. Jackson for BlueQuartz Software
 *
  * @date May 5, 2011
  * @version 1.0
  */
-
-class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
+class OrientationLib_EXPORT CubicOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(CubicLowOps)
-    SIMPL_TYPE_MACRO_SUPER(CubicLowOps, SpaceGroupOps)
-    SIMPL_STATIC_NEW_MACRO(CubicLowOps)
+    SIMPL_SHARED_POINTERS(CubicOps)
+    SIMPL_TYPE_MACRO_SUPER(CubicOps, LaueOps)
+    SIMPL_STATIC_NEW_MACRO(CubicOps)
 
-    CubicLowOps();
-    virtual ~CubicLowOps();
+    CubicOps();
+    virtual ~CubicOps();
 
-    static const int k_OdfSize = 46656;
-    static const int k_MdfSize = 46656;
-    static const int k_NumSymQuats = 12;
+    static const int k_OdfSize = 5832;
+    static const int k_MdfSize = 5832;
+    static const int k_NumSymQuats = 24;
+
 
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
@@ -98,6 +97,7 @@ class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
      */
     QString getSymmetryName();
 
+
     virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);
     virtual void getQuatSymOp(int i, QuatF& q);
     virtual void getRodSymOp(int i, float* r);
@@ -105,6 +105,7 @@ class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
     virtual FOrientArrayType getODFFZRod(FOrientArrayType rod);
     virtual FOrientArrayType getMDFFZRod(FOrientArrayType rod);
     virtual void getNearestQuat(QuatF& q1, QuatF& q2);
+    virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(FOrientArrayType rod);
     virtual bool inUnitTriangle(float eta, float chi);
     virtual FOrientArrayType determineEulerAngles(uint64_t seed, int choose);
@@ -120,6 +121,7 @@ class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
 
 
     virtual void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3);
+
 
     /**
      * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
@@ -161,12 +163,6 @@ class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
     virtual SIMPL::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame);
 
     /**
-     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
-     * @return
-     */
-    virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
-
-    /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
      * angles that are passed in.
      * @param eulers The Euler Angles to generate the pole figure from.
@@ -177,15 +173,40 @@ class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
      */
     virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config);
 
+    /**
+     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
+     * @return
+     */
+    virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
+
+    /**
+     * @brief generates a misorientation coloring legend
+     * @param angle
+     * @param n1 (~radial mesh points)
+     * @param n2 (~angular mesh points)
+     * @param width of produced image (in pixels)
+     * @return
+     */
+    virtual UInt8ArrayType::Pointer generateMisorientationTriangleLegend(float, int, int, int);
+
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
+    /**
+     * @brief area preserving projection of volume preserving transformation (for C. Shuch and S. Patala coloring legend generation)
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    std::vector< std::pair<double, double> > rodri2pair(std::vector<double>, std::vector<double>, std::vector<double>);
+
   private:
-    CubicLowOps(const CubicLowOps&); // Copy Constructor Not Implemented
-    void operator=(const CubicLowOps&); // Operator '=' Not Implemented
+    CubicOps(const CubicOps&); // Copy Constructor Not Implemented
+    void operator=(const CubicOps&); // Operator '=' Not Implemented
 };
 
-#endif /* CubicLowOPS_H_ */
+#endif /* CUBICOPS_H_ */
 
