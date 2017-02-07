@@ -65,38 +65,37 @@
 class LuminosityImpl
 {
 public:
-    LuminosityImpl(uint8_t* data, uint8_t* newdata, FloatVec3_t colorWeights, size_t comp)
-        : m_ImageData(data)
-        , m_FlatImageData(newdata)
-        , m_ColorWeights(colorWeights)
-        , m_NumComp(comp)
-    {
-    }
-    virtual ~LuminosityImpl()
-    {
-    }
+  LuminosityImpl(uint8_t* data, uint8_t* newdata, FloatVec3_t colorWeights, size_t comp)
+  : m_ImageData(data)
+  , m_FlatImageData(newdata)
+  , m_ColorWeights(colorWeights)
+  , m_NumComp(comp)
+  {
+  }
+  virtual ~LuminosityImpl()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    for(size_t i = start; i < end; i++)
     {
-        for(size_t i = start; i < end; i++)
-        {
-            m_FlatImageData[i] =  static_cast<uint8_t>((m_ImageData[m_NumComp * i] * m_ColorWeights.x)
-                    + (m_ImageData[m_NumComp * i + 1] * m_ColorWeights.y)
-                    + (m_ImageData[m_NumComp * i + 2] * m_ColorWeights.z) );
-        }
+      m_FlatImageData[i] =
+          static_cast<uint8_t>((m_ImageData[m_NumComp * i] * m_ColorWeights.x) + (m_ImageData[m_NumComp * i + 1] * m_ColorWeights.y) + (m_ImageData[m_NumComp * i + 2] * m_ColorWeights.z));
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-        convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
 private:
-    uint8_t* m_ImageData;
-    uint8_t* m_FlatImageData;
-    FloatVec3_t m_ColorWeights;
-    size_t m_NumComp;
+  uint8_t* m_ImageData;
+  uint8_t* m_FlatImageData;
+  FloatVec3_t m_ColorWeights;
+  size_t m_NumComp;
 };
 
 /**
@@ -106,41 +105,41 @@ private:
 class AverageImpl
 {
 public:
-    AverageImpl(uint8_t* data, uint8_t* newdata, size_t comp)
-        : m_ImageData(data)
-        , m_FlatImageData(newdata)
-        , m_NumComp(comp)
-    {
-    }
-    virtual ~AverageImpl()
-    {
-    }
+  AverageImpl(uint8_t* data, uint8_t* newdata, size_t comp)
+  : m_ImageData(data)
+  , m_FlatImageData(newdata)
+  , m_NumComp(comp)
+  {
+  }
+  virtual ~AverageImpl()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    for(size_t i = start; i < end; i++)
     {
-        for(size_t i = start; i < end; i++)
-        {
-            uint16_t sum = 0;
-            for(size_t j = 0; j < 3; j++)
-            {
-                sum += static_cast<uint16_t>(m_ImageData[m_NumComp * i + j]);
-            }
+      uint16_t sum = 0;
+      for(size_t j = 0; j < 3; j++)
+      {
+        sum += static_cast<uint16_t>(m_ImageData[m_NumComp * i + j]);
+      }
 
-            sum = sum / 3;
-            m_FlatImageData[i] =  static_cast<uint8_t>(sum);
-        }
+      sum = sum / 3;
+      m_FlatImageData[i] = static_cast<uint8_t>(sum);
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-        convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
 private:
-    uint8_t* m_ImageData;
-    uint8_t* m_FlatImageData;
-    size_t m_NumComp;
+  uint8_t* m_ImageData;
+  uint8_t* m_FlatImageData;
+  size_t m_NumComp;
 };
 
 /**
@@ -150,44 +149,49 @@ private:
 class LightnessImpl
 {
 public:
-    LightnessImpl(uint8_t* data, uint8_t* newdata, size_t comp)
-        : m_ImageData(data)
-        , m_FlatImageData(newdata)
-        , m_NumComp(comp)
-    {
-    }
-    virtual ~LightnessImpl()
-    {
-    }
+  LightnessImpl(uint8_t* data, uint8_t* newdata, size_t comp)
+  : m_ImageData(data)
+  , m_FlatImageData(newdata)
+  , m_NumComp(comp)
+  {
+  }
+  virtual ~LightnessImpl()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    for(size_t i = start; i < end; i++)
     {
-        for(size_t i = start; i < end; i++)
+      uint8_t maxRGB = 0;
+      uint8_t minRGB = 255;
+
+      for(size_t j = 0; j < 3; j++)
+      {
+        if(m_ImageData[m_NumComp * i + j] > maxRGB)
         {
-            uint8_t maxRGB = 0;
-            uint8_t minRGB = 255;
-
-            for(size_t j = 0; j < 3; j++)
-            {
-                if(m_ImageData[m_NumComp * i + j] > maxRGB) { maxRGB = m_ImageData[m_NumComp * i + j]; }
-                if(m_ImageData[m_NumComp * i + j] < minRGB) { minRGB = m_ImageData[m_NumComp * i + j]; }
-            }
-            m_FlatImageData[i] =  static_cast<uint8_t>((maxRGB + minRGB) / 2.0);
+          maxRGB = m_ImageData[m_NumComp * i + j];
         }
+        if(m_ImageData[m_NumComp * i + j] < minRGB)
+        {
+          minRGB = m_ImageData[m_NumComp * i + j];
+        }
+      }
+      m_FlatImageData[i] = static_cast<uint8_t>((maxRGB + minRGB) / 2.0);
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-        convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
 private:
-    uint8_t* m_ImageData;
-    uint8_t* m_FlatImageData;
-    size_t m_NumComp;
+  uint8_t* m_ImageData;
+  uint8_t* m_FlatImageData;
+  size_t m_NumComp;
 };
-
 
 /**
  * @brief The ConvertColorToGrayScaleImpl class implements a threaded algorithm
@@ -196,38 +200,37 @@ private:
 class SingleChannelImpl
 {
 public:
-    SingleChannelImpl(uint8_t* data, uint8_t* newdata, size_t comp, int32_t channel)
-        : m_ImageData(data)
-        , m_FlatImageData(newdata)
-        , numComp(comp)
-        , m_Channel(channel)
-    {
-    }
-    virtual ~SingleChannelImpl()
-    {
-    }
+  SingleChannelImpl(uint8_t* data, uint8_t* newdata, size_t comp, int32_t channel)
+  : m_ImageData(data)
+  , m_FlatImageData(newdata)
+  , numComp(comp)
+  , m_Channel(channel)
+  {
+  }
+  virtual ~SingleChannelImpl()
+  {
+  }
 
-    void convert(size_t start, size_t end) const
+  void convert(size_t start, size_t end) const
+  {
+    for(size_t i = start; i < end; i++)
     {
-        for(size_t i = start; i < end; i++)
-        {
-            m_FlatImageData[i] =  static_cast<uint8_t>((m_ImageData[numComp * i + static_cast<size_t>(m_Channel)]));
-        }
+      m_FlatImageData[i] = static_cast<uint8_t>((m_ImageData[numComp * i + static_cast<size_t>(m_Channel)]));
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-        convert(r.begin(), r.end());
-    }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
 private:
-    uint8_t* m_ImageData;
-    uint8_t* m_FlatImageData;
-    size_t numComp;
-    int32_t m_Channel;
+  uint8_t* m_ImageData;
+  uint8_t* m_FlatImageData;
+  size_t numComp;
+  int32_t m_Channel;
 };
-
 
 // Include the MOC generated file for this class
 #include "moc_ConvertColorToGrayScale.cpp"
@@ -236,19 +239,19 @@ private:
 //
 // -----------------------------------------------------------------------------
 ConvertColorToGrayScale::ConvertColorToGrayScale()
-    : AbstractFilter()
-    , m_ConversionAlgorithm(0)
-    , m_ColorChannel(0)
-    , m_CreateNewAttributeMatrix(false)
-    , m_OutputAttributeMatrixName("GrayScaleData")
-    , m_OutputArrayPrefix("")
+: AbstractFilter()
+, m_ConversionAlgorithm(0)
+, m_ColorChannel(0)
+, m_CreateNewAttributeMatrix(false)
+, m_OutputAttributeMatrixName("GrayScaleData")
+, m_OutputArrayPrefix("")
 
 {
-    m_ColorWeights.x = 0.2125f;
-    m_ColorWeights.y = 0.7154f;
-    m_ColorWeights.z = 0.0721f;
+  m_ColorWeights.x = 0.2125f;
+  m_ColorWeights.y = 0.7154f;
+  m_ColorWeights.z = 0.0721f;
 
-    setupFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -264,44 +267,44 @@ ConvertColorToGrayScale::~ConvertColorToGrayScale()
 void ConvertColorToGrayScale::setupFilterParameters()
 {
 
-    FilterParameterVector parameters;
-    {
-        QVector<QString> choices;
-        choices.push_back("Luminosity");
-        choices.push_back("Average");
-        choices.push_back("Lightness");
-        choices.push_back("SingleChannel");
+  FilterParameterVector parameters;
+  {
+    QVector<QString> choices;
+    choices.push_back("Luminosity");
+    choices.push_back("Average");
+    choices.push_back("Lightness");
+    choices.push_back("SingleChannel");
 
-        QStringList linkedProps;
-        linkedProps << "ColorWeights"
-                    << "ColorChannel";
+    QStringList linkedProps;
+    linkedProps << "ColorWeights"
+                << "ColorChannel";
 
-        LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-        parameter->setHumanLabel("Conversion Algorithm");
-        parameter->setPropertyName("ConversionAlgorithm");
-        parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertColorToGrayScale, this, ConversionAlgorithm));
-        parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertColorToGrayScale, this, ConversionAlgorithm));
-        parameter->setChoices(choices);
-        parameter->setLinkedProperties(linkedProps);
-        parameter->setCategory(FilterParameter::Parameter);
-        parameters.push_back(parameter);
-    }
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Conversion Algorithm");
+    parameter->setPropertyName("ConversionAlgorithm");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ConvertColorToGrayScale, this, ConversionAlgorithm));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ConvertColorToGrayScale, this, ConversionAlgorithm));
+    parameter->setChoices(choices);
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
 
-    parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ConvertColorToGrayScale, 0));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ConvertColorToGrayScale, 0));
 
-    parameters.push_back(SIMPL_NEW_INTEGER_FP("Color Channel", ColorChannel, FilterParameter::Parameter, ConvertColorToGrayScale, 3));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Color Channel", ColorChannel, FilterParameter::Parameter, ConvertColorToGrayScale, 3));
 
-    MultiDataArraySelectionFilterParameter::RequirementType req;
-    req.dcGeometryTypes = IGeometry::Types(1, IGeometry::Type::Image);
-    req.amTypes = AttributeMatrix::Types(1, AttributeMatrix::Type::Cell);
-    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Input Attribute Arrays", InputDataArrayVector, FilterParameter::RequiredArray, ConvertColorToGrayScale, req));
+  MultiDataArraySelectionFilterParameter::RequirementType req;
+  req.dcGeometryTypes = IGeometry::Types(1, IGeometry::Type::Image);
+  req.amTypes = AttributeMatrix::Types(1, AttributeMatrix::Type::Cell);
+  parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Input Attribute Arrays", InputDataArrayVector, FilterParameter::RequiredArray, ConvertColorToGrayScale, req));
 
-    QStringList linkedProps("OutputAttributeMatrixName");
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Attribute Matrix", CreateNewAttributeMatrix, FilterParameter::Parameter, ConvertColorToGrayScale, linkedProps));
-    parameters.push_back(SIMPL_NEW_STRING_FP("Output Cell Attribute Matrix", OutputAttributeMatrixName, FilterParameter::CreatedArray, ConvertColorToGrayScale));
+  QStringList linkedProps("OutputAttributeMatrixName");
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Attribute Matrix", CreateNewAttributeMatrix, FilterParameter::Parameter, ConvertColorToGrayScale, linkedProps));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output Cell Attribute Matrix", OutputAttributeMatrixName, FilterParameter::CreatedArray, ConvertColorToGrayScale));
 
-    parameters.push_back(SIMPL_NEW_STRING_FP("Output Array Prefix", OutputArrayPrefix, FilterParameter::CreatedArray, ConvertColorToGrayScale));
-    setFilterParameters(parameters);
+  parameters.push_back(SIMPL_NEW_STRING_FP("Output Array Prefix", OutputArrayPrefix, FilterParameter::CreatedArray, ConvertColorToGrayScale));
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -316,91 +319,89 @@ void ConvertColorToGrayScale::initialize()
 // -----------------------------------------------------------------------------
 void ConvertColorToGrayScale::dataCheck()
 {
-    setErrorCondition(0);
-    if(DataArrayPath::ValidateVector(getInputDataArrayVector()) == false)
+  setErrorCondition(0);
+  if(DataArrayPath::ValidateVector(getInputDataArrayVector()) == false)
+  {
+    setErrorCondition(-62100);
+    QString ss = QObject::tr("All Attribute Arrays must belong to the same Data Container and Attribute Matrix");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if(getOutputArrayPrefix().isEmpty())
+  {
+    setErrorCondition(-62102);
+    QString message = QObject::tr("Using a prefix (even a single alphanumeric value) is required so that the output Xdmf files can be written correctly");
+    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+  }
+
+  if(getInputDataArrayVector().isEmpty())
+  {
+    setErrorCondition(-62103);
+    QString message = QObject::tr("At least one Attribute Array must be selected");
+    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+    return;
+  }
+
+  DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
+
+  AttributeMatrix::Pointer inAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, inputAMPath, -301);
+  if(getErrorCondition() < 0 || nullptr == inAM.get())
+  {
+    return;
+  }
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+  DataContainer::Pointer dc = dca->getDataContainer(inputAMPath.getDataContainerName());
+
+  // Now create our output attributeMatrix which will contain all of our segmented images
+  AttributeMatrix::Pointer outAM;
+  if(m_CreateNewAttributeMatrix)
+  {
+    QVector<size_t> tDims = inAM->getTupleDimensions();
+
+    outAM = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+    if(getErrorCondition() < 0 || nullptr == outAM.get())
     {
-        setErrorCondition(-62100);
-        QString ss = QObject::tr("All Attribute Arrays must belong to the same Data Container and Attribute Matrix");
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
     }
+  }
 
-    if(getOutputArrayPrefix().isEmpty())
+  // Get the list of checked array names from the input m_Data arrays list
+  QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
+  m_OutputArrayPaths.clear();
+  m_OutputArrayPaths.resize(arrayNames.size());
+  for(int32_t i = 0; i < arrayNames.size(); i++)
+  {
+    QString daName = arrayNames.at(i);
+    QString newName = getOutputArrayPrefix() + arrayNames.at(i);
+    inputAMPath.setDataArrayName(daName);
+
+    // getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, inputAMPath, cDims);
+    IDataArray::Pointer iDatArray = dca->getPrereqIDataArrayFromPath<IDataArray, ConvertColorToGrayScale>(this, inputAMPath);
+    if(getErrorCondition() < 0)
     {
-        setErrorCondition(-62102);
-        QString message = QObject::tr("Using a prefix (even a single alphanumeric value) is required so that the output Xdmf files can be written correctly");
-        notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+      return;
     }
-
-    if(getInputDataArrayVector().isEmpty())
+    QVector<size_t> outCDims(1, 1);
+    if(outAM.get() == nullptr)
     {
-        setErrorCondition(-62103);
-        QString message = QObject::tr("At least one Attribute Array must be selected");
-        notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
-        return;
+      outAM = dc->getPrereqAttributeMatrix<ConvertColorToGrayScale>(this, inputAMPath.getAttributeMatrixName(), -62105);
     }
+    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, outCDims);
+    DataArrayPath newPath(dc->getName(), outAM->getName(), newName);
+    m_OutputArrayPaths[i] = newPath;
+  }
 
-    DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
-
-    AttributeMatrix::Pointer inAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, inputAMPath, -301);
-    if(getErrorCondition() < 0 || nullptr == inAM.get())
+  if(static_cast<ConversionType>(m_ConversionAlgorithm) == ConversionType::SingleChannel)
+  {
+    if(m_ColorChannel > 2)
     {
-        return;
+      setErrorCondition(-62104);
+      QString message = QObject::tr("The color channel should be 0, 1 or 2");
+      notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+      return;
     }
-
-    DataContainerArray::Pointer dca = getDataContainerArray();
-    DataContainer::Pointer dc = dca->getDataContainer(inputAMPath.getDataContainerName());
-
-    // Now create our output attributeMatrix which will contain all of our segmented images
-    AttributeMatrix::Pointer outAM;
-    if(m_CreateNewAttributeMatrix)
-    {
-        QVector<size_t> tDims = inAM->getTupleDimensions();
-
-        outAM = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-        if(getErrorCondition() < 0 || nullptr == outAM.get())
-        {
-            return;
-        }
-    }
-
-    // Get the list of checked array names from the input m_Data arrays list
-    QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
-    m_OutputArrayPaths.clear();
-    m_OutputArrayPaths.resize(arrayNames.size());
-    for(int32_t i = 0; i < arrayNames.size(); i++)
-    {
-        QString daName = arrayNames.at(i);
-        QString newName = getOutputArrayPrefix() + arrayNames.at(i);
-        inputAMPath.setDataArrayName(daName);
-
-        // getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, inputAMPath, cDims);
-        IDataArray::Pointer iDatArray = dca->getPrereqIDataArrayFromPath<IDataArray, ConvertColorToGrayScale>(this, inputAMPath);
-        if(getErrorCondition() < 0)
-        {
-            return;
-        }
-        QVector<size_t> outCDims(1, 1);
-        if(outAM.get() == nullptr)
-        {
-            outAM = dc->getPrereqAttributeMatrix<ConvertColorToGrayScale>(this, inputAMPath.getAttributeMatrixName(), -62105);
-        }
-        outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, outCDims);
-        DataArrayPath newPath(dc->getName(), outAM->getName(), newName);
-        m_OutputArrayPaths[i] = newPath;
-    }
-
-
-
-    if(static_cast<ConversionType>(m_ConversionAlgorithm) == ConversionType::SingleChannel)
-    {
-        if(m_ColorChannel > 2)
-        {
-            setErrorCondition(-62104);
-            QString message = QObject::tr("The color channel should be 0, 1 or 2");
-            notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
-            return;
-        }
-    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -408,12 +409,12 @@ void ConvertColorToGrayScale::dataCheck()
 // -----------------------------------------------------------------------------
 void ConvertColorToGrayScale::preflight()
 {
-    setInPreflight(true);
-    emit preflightAboutToExecute();
-    emit updateFilterParameters(this);
-    dataCheck();
-    emit preflightExecuted();
-    setInPreflight(false);
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -421,134 +422,133 @@ void ConvertColorToGrayScale::preflight()
 // -----------------------------------------------------------------------------
 void ConvertColorToGrayScale::execute()
 {
-    initialize();
-    setErrorCondition(0);
-    QString ss;
-    dataCheck();
-    if(getErrorCondition() < 0)
+  initialize();
+  setErrorCondition(0);
+  QString ss;
+  dataCheck();
+  if(getErrorCondition() < 0)
+  {
+    setErrorCondition(-62106);
+    ss = QObject::tr("DataCheck did not pass during execute");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  QVector<DataArrayPath> inputArrayPaths = getInputDataArrayVector();
+  qint32 size = inputArrayPaths.size();
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+
+  for(qint32 i = 0; i < size; i++)
+  {
+    DataArrayPath arrayPath = inputArrayPaths[i];
+
+    // get volume container
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(arrayPath.getDataContainerName());
+    QString attrMatName = arrayPath.getAttributeMatrixName();
+    AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(arrayPath);
+
+    // get input and output data
+    IDataArray::Pointer inputData = attrMat->getAttributeArray(arrayPath.getDataArrayName());
+    UInt8ArrayType::Pointer inputColorData = std::dynamic_pointer_cast<UInt8ArrayType>(inputData);
+
+    if(nullptr == inputColorData.get())
     {
-        setErrorCondition(-62106);
-        ss = QObject::tr("DataCheck did not pass during execute");
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
+      setErrorCondition(-62107);
+      ss = QObject::tr("Input Color Data at ArrayPath '%1' was not available. This array will be skipped.").arg(arrayPath.serialize("/"));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      continue;
     }
 
-    QVector<DataArrayPath> inputArrayPaths = getInputDataArrayVector();
-    qint32 size = inputArrayPaths.size();
+    DataArrayPath newPath = m_OutputArrayPaths[i];
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    tbb::task_scheduler_init init;
-    bool doParallel = true;
-#endif
+    AttributeMatrix::Pointer outAttrMat = getDataContainerArray()->getAttributeMatrix(newPath);
 
-    //while(iter.hasNext())
-    for(qint32 i = 0; i < size; i++)
+    IDataArray::Pointer outputData = outAttrMat->getAttributeArray(newPath.getDataArrayName());
+    UInt8ArrayType::Pointer outputGrayData = std::dynamic_pointer_cast<UInt8ArrayType>(outputData);
+
+    if(nullptr == outputGrayData.get())
     {
-        DataArrayPath arrayPath = inputArrayPaths[i];
-
-        // get volume container
-        DataContainer::Pointer m = getDataContainerArray()->getDataContainer(arrayPath.getDataContainerName());
-        QString attrMatName = arrayPath.getAttributeMatrixName();
-        AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(arrayPath);
-
-        // get input and output data
-        IDataArray::Pointer inputData = attrMat->getAttributeArray(arrayPath.getDataArrayName());
-        UInt8ArrayType::Pointer inputColorData = std::dynamic_pointer_cast<UInt8ArrayType>(inputData);
-
-        if(nullptr == inputColorData.get())
-        {
-
-        }
-        qDebug() << "---------------------";
-        qDebug() << arrayPath.serialize("/");
-
-        DataArrayPath newPath = m_OutputArrayPaths[i];
-        qDebug() << newPath.serialize("/");
-
-        AttributeMatrix::Pointer outAttrMat = getDataContainerArray()->getAttributeMatrix(newPath);
-
-        IDataArray::Pointer outputData = outAttrMat->getAttributeArray(newPath.getDataArrayName());
-        UInt8ArrayType::Pointer outputGrayData = std::dynamic_pointer_cast<UInt8ArrayType>(outputData);
-
-        if(nullptr == outputGrayData.get())
-        {
-
-        }
-
-        ConversionType convType = static_cast<ConversionType>(getConversionAlgorithm());
-
-        size_t comp = inputColorData->getNumberOfComponents();
-        size_t totalPoints = inputColorData->getNumberOfTuples();
-
-        if(ConversionType::Luminosity == convType)
-        {
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-            if(doParallel == true)
-            {
-                tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), LuminosityImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), m_ColorWeights, comp), tbb::auto_partitioner());
-            }
-            else
-#endif
-            {
-                LuminosityImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), m_ColorWeights, comp);
-                serial.convert(0, totalPoints);
-            }
-
-        }
-        else if(ConversionType::Average == convType)
-        {
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-            if(doParallel == true)
-            {
-                tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), AverageImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp), tbb::auto_partitioner());
-            }
-            else
-#endif
-            {
-                AverageImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp);
-                serial.convert(0, totalPoints);
-            }
-        }
-        else if(ConversionType::Lightness == convType)
-        {
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-            if(doParallel == true)
-            {
-                tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), LightnessImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp), tbb::auto_partitioner());
-            }
-            else
-#endif
-            {
-                LightnessImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp);
-                serial.convert(0, totalPoints);
-            }
-        }
-        else if(ConversionType::SingleChannel == convType)
-        {
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-            if(doParallel == true)
-            {
-                tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), SingleChannelImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp, getColorChannel()), tbb::auto_partitioner());
-            }
-            else
-#endif
-            {
-                SingleChannelImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp, getColorChannel());
-                serial.convert(0, totalPoints);
-            }
-        }
-        else
-        {
-
-            setErrorCondition(-62107);
-            ss = QObject::tr("Conversion Algorithm did not match any available type. The type given was %1.").arg(getConversionAlgorithm());
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-            return;
-
-        }
+      setErrorCondition(-62108);
+      ss = QObject::tr("Output Data at ArrayPath '%1' was not available. This array will be skipped.").arg(newPath.serialize("/"));
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      continue;
     }
 
+    ConversionType convType = static_cast<ConversionType>(getConversionAlgorithm());
 
+    size_t comp = inputColorData->getNumberOfComponents();
+    size_t totalPoints = inputColorData->getNumberOfTuples();
+
+    if(ConversionType::Luminosity == convType)
+    {
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+      if(doParallel == true)
+      {
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), LuminosityImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), m_ColorWeights, comp), tbb::auto_partitioner());
+      }
+      else
+#endif
+      {
+        LuminosityImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), m_ColorWeights, comp);
+        serial.convert(0, totalPoints);
+      }
+    }
+    else if(ConversionType::Average == convType)
+    {
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+      if(doParallel == true)
+      {
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), AverageImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp), tbb::auto_partitioner());
+      }
+      else
+#endif
+      {
+        AverageImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp);
+        serial.convert(0, totalPoints);
+      }
+    }
+    else if(ConversionType::Lightness == convType)
+    {
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+      if(doParallel == true)
+      {
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), LightnessImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp), tbb::auto_partitioner());
+      }
+      else
+#endif
+      {
+        LightnessImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp);
+        serial.convert(0, totalPoints);
+      }
+    }
+    else if(ConversionType::SingleChannel == convType)
+    {
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+      if(doParallel == true)
+      {
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), SingleChannelImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp, getColorChannel()),
+                          tbb::auto_partitioner());
+      }
+      else
+#endif
+      {
+        SingleChannelImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp, getColorChannel());
+        serial.convert(0, totalPoints);
+      }
+    }
+    else
+    {
+
+      setErrorCondition(-62107);
+      ss = QObject::tr("Conversion Algorithm did not match any available type. The type given was %1.").arg(getConversionAlgorithm());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
 
 #if 0
     size_t totalPoints = m_ImageDataPtr.lock()->getNumberOfTuples();
@@ -589,9 +589,8 @@ void ConvertColorToGrayScale::execute()
         serial.convert(0, totalPoints);
     }
 
-
 #endif
-    notifyStatusMessage(getHumanLabel(), "Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -599,12 +598,12 @@ void ConvertColorToGrayScale::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ConvertColorToGrayScale::newFilterInstance(bool copyFilterParameters)
 {
-    ConvertColorToGrayScale::Pointer filter = ConvertColorToGrayScale::New();
-    if(true == copyFilterParameters)
-    {
-        copyFilterParameterInstanceVariables(filter.get());
-    }
-    return filter;
+  ConvertColorToGrayScale::Pointer filter = ConvertColorToGrayScale::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
 }
 
 // -----------------------------------------------------------------------------
@@ -612,7 +611,7 @@ AbstractFilter::Pointer ConvertColorToGrayScale::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 const QString ConvertColorToGrayScale::getCompiledLibraryName()
 {
-    return ProcessingConstants::ProcessingBaseName;
+  return ProcessingConstants::ProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------
@@ -620,7 +619,7 @@ const QString ConvertColorToGrayScale::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString ConvertColorToGrayScale::getBrandingString()
 {
-    return "Processing";
+  return "Processing";
 }
 
 // -----------------------------------------------------------------------------
@@ -628,17 +627,17 @@ const QString ConvertColorToGrayScale::getBrandingString()
 // -----------------------------------------------------------------------------
 const QString ConvertColorToGrayScale::getFilterVersion()
 {
-    QString version;
-    QTextStream vStream(&version);
-    vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
-    return version;
+  QString version;
+  QTextStream vStream(&version);
+  vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
+  return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertColorToGrayScale::getGroupName()
 {
-    return SIMPL::FilterGroups::ProcessingFilters;
+  return SIMPL::FilterGroups::ProcessingFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -646,7 +645,7 @@ const QString ConvertColorToGrayScale::getGroupName()
 // -----------------------------------------------------------------------------
 const QString ConvertColorToGrayScale::getSubGroupName()
 {
-    return SIMPL::FilterSubGroups::ImageFilters;
+  return SIMPL::FilterSubGroups::ImageFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -654,5 +653,5 @@ const QString ConvertColorToGrayScale::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ConvertColorToGrayScale::getHumanLabel()
 {
-    return "Color to GrayScale";
+  return "Color to GrayScale";
 }
