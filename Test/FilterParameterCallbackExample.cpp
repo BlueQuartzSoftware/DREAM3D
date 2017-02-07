@@ -326,6 +326,33 @@ private:
   std::vector<IFilterParameter::Pointer> m_FilterParameters;
 };
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SimulateWidget(Filter* filter)
+{
+
+  //Lets assume that we have a Widget that has a text box that holds an integer
+  // we would need to convert that to an actual integer value:
+  bool ok = false;
+  QString intTextField("999");
+  int value = intTextField.toInt(&ok, 10);
+  if(!ok) {
+    qDebug() << "Error converting text to integer";
+  }
+
+  // If this simulated widgets knows the "type" of data, i.e., we are collecting
+  // an integer from the user, then we know what we should be casting the FilterParameter.
+  IntParameter::Pointer filtParam = std::dynamic_pointer_cast<IntParameter>(filter->getFilterParameters().at(0));
+  if(nullptr != filtParam.get())
+  {
+    filtParam->getSetterCallback()(value);
+  }
+
+
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -356,21 +383,8 @@ int main(int argc, char* argv[])
 
     filter.printValues(std::cout);
 
-
-    IntParameter::SetterCallbackType intSetter = intParam->getSetterCallback();
-    DoubleParameter::SetterCallbackType dblSetter = dblParam->getSetterCallback();
-
-
-    // Connect the callback.  Like with the C-style function pointer and
-    // static function, we use a lambda to get back into the object.
-//    fp.connectCallback([&filter](int i) { return filter.setIndex(i); });
-
-//    // Test the callback
-//    fp.test();
-
-//    FilterSetterType setter = fp.getSetterType();
-//    setter(234234);
-//    printf("Result: %d\n", filter.getIndex());
+  SimulateWidget(&filter);
+  filter.printValues(std::cout);
 
 
   return 0;
