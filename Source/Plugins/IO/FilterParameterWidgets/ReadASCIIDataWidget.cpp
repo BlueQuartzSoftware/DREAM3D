@@ -140,6 +140,7 @@ void ReadASCIIDataWidget::setupGui()
     tupleCount->hide();
     tupleDimsLabel->hide();
     tupleDims->hide();
+    editImportSettings->hide();
   }
 
   loadingProgress->hide();

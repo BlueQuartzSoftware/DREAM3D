@@ -110,7 +110,9 @@ void DataFormatPage::setupGui()
 
   int beginIndex = startRowSpin->value();
   int numOfDataLines = m_NumLines - beginIndex + 1;
-  lineCountLabel->setText(QString::number(numOfDataLines));
+  linesImportedLabel->setText(QString::number(numOfDataLines));
+  linesInFileLabel->setText(QString::number(m_NumLines));
+  amTuplesLabel->setText(QString::number(numOfDataLines));
 
   tupleDimsTable->blockSignals(true);
   tupleDimsTable->addTupleDimensions(QVector<size_t>(1, numOfDataLines));
@@ -684,7 +686,7 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   if(value > m_NumLines)
   {
     wizard()->button(QWizard::FinishButton)->setDisabled(true);
-    tupleCountLabel->setText("ERR");
+    amTuplesLabel->setText("ERR");
     return;
   }
 
@@ -713,8 +715,8 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   on_useDefaultHeaders_toggled(useDefaultHeaders->isChecked());
 
   // Update Tuple Dimensions
-  //tupleCountLabel->setText(QString::number(m_NumLines - value + 1));
-  lineCountLabel->setText(QString::number(m_NumLines - value + 1));
+  linesInFileLabel->setText(QString::number(m_NumLines));
+  linesImportedLabel->setText(QString::number(m_NumLines - value + 1));
   checkTupleDimensions(getTupleTable()->getData());
 
   if (isComplete() == true)
@@ -979,7 +981,7 @@ bool DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims)
 {
   if (validateTupleDimensions(tupleDims) == false)
   {
-    tupleTableErrLabel->setText("The current tuple dimensions do not match the total number of tuples.");
+    tupleTableErrLabel->setText("The current number of tuples in the attribute matrix do not match the total number of lines imported.");
     tupleTableErrLabel->show();
     return false;
   }
@@ -1004,7 +1006,7 @@ bool DataFormatPage::validateTupleDimensions(QVector<size_t> tupleDims)
   {
     tupleTotal = tupleTotal * tupleDims[i];
   }
-  tupleCountLabel->setText(QString::number(tupleTotal));
+  amTuplesLabel->setText(QString::number(tupleTotal));
   size_t beginIndex = static_cast<size_t>(startRowSpin->value());
   size_t numOfDataLines = m_NumLines - beginIndex + 1;
   if(tupleTotal != numOfDataLines)

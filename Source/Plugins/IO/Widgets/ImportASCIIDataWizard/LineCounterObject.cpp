@@ -113,7 +113,7 @@ void LineCounterObject::run()
     fputs(errorStr.toStdString().c_str(), stderr);
     return;
   }
-  m_NumOfLines = 0;
+  m_NumOfLines = 1;
   int64_t currentByte = 0;
   while(qFile.atEnd() == false)
   {
