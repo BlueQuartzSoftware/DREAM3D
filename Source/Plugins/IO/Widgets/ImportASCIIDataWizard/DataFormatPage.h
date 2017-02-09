@@ -283,6 +283,9 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     QMenu*                                          m_AttrMatMenuPtr = nullptr;
     bool                                            m_OwnsAttrMatMenuPtr = false;
 
+    bool                                            m_TupleDimsHasErrors = false;
+    bool                                            m_HeadersHasErrors = false;
+
     bool validateHeaders(QVector<QString> headers);
     bool validateTupleDimensions(QVector<size_t> tupleDims);
 

@@ -719,14 +719,7 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   linesImportedLabel->setText(QString::number(m_NumLines - value + 1));
   checkTupleDimensions(getTupleTable()->getData());
 
-  if (isComplete() == true)
-  {
-    wizard()->button(QWizard::FinishButton)->setEnabled(true);
-  }
-  else
-  {
-    wizard()->button(QWizard::FinishButton)->setDisabled(true);
-  }
+  emit completeChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -760,7 +753,7 @@ bool DataFormatPage::isComplete() const
     stage3 = false;
   }
 
-  return (stage1 && stage2 && stage3);
+  return (stage1 && stage2 && stage3 && !m_TupleDimsHasErrors && !m_HeadersHasErrors);
 }
 
 // -----------------------------------------------------------------------------
@@ -850,13 +843,16 @@ void DataFormatPage::on_useDefaultHeaders_toggled(bool checked)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString& text)
 {
-
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   if(text.isEmpty()) // No test then bail out now.
   {
+    model->clearHeaders(Qt::Horizontal);
+    checkHeaders(QVector<QString>());
+    emit completeChanged();
     return;
   }
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
+
   bool ok = false;
   int lineNum = text.toInt(&ok);
 
@@ -864,17 +860,18 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString& text)
   {
     model->clearHeaders(Qt::Horizontal);
     checkHeaders(QVector<QString>());
+    emit completeChanged();
     return;
   }
 
   headersIndexLineEdit->setStyleSheet("");
   lineNumErrLabel->hide();
-  wizard()->button(QWizard::FinishButton)->setEnabled(true);
 
   if(text.isEmpty() == true)
   {
     model->clearHeaders(Qt::Horizontal);
     checkHeaders(QVector<QString>());
+    emit completeChanged();
     return;
   }
 
@@ -912,14 +909,7 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString& text)
 
   checkHeaders(headers);
 
-  if (isComplete() == true)
-  {
-    wizard()->button(QWizard::FinishButton)->setEnabled(true);
-  }
-  else
-  {
-    wizard()->button(QWizard::FinishButton)->setDisabled(true);
-  }
+  emit completeChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -983,16 +973,18 @@ bool DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims)
   {
     tupleTableErrLabel->setText("The current number of tuples in the attribute matrix do not match the total number of lines imported.");
     tupleTableErrLabel->show();
+    m_TupleDimsHasErrors = true;
+    emit completeChanged();
     return false;
   }
   else
   {
     tupleTableErrLabel->setText("");
     tupleTableErrLabel->hide();
+    m_TupleDimsHasErrors = false;
+    emit completeChanged();
     return true;
   }
-
-  emit completeChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -1178,11 +1170,11 @@ void DataFormatPage::checkHeaders(QVector<QString> headers)
 {
   if (validateHeaders(headers) == true)
   {
-    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+    m_HeadersHasErrors = false;
   }
   else
   {
-    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    m_HeadersHasErrors = true;
   }
 }
 
