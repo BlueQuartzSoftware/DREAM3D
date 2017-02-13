@@ -32,6 +32,7 @@ set(_PublicFilters
   FindVolFractions
   FitFeatureData
   GenerateEnsembleStatistics
+  ComputeMoments2D
 )
 
 #--------------
@@ -64,7 +65,8 @@ foreach(f ${_PrivateFilters} )
                         ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
 
-
+ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/MomentInvariants2D.h)
+ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/MomentInvariants2D.cpp)
 
 
 SIMPL_END_FILTER_GROUP(${Statistics_BINARY_DIR} "${_filterGroupName}" "Statistics Filters")
