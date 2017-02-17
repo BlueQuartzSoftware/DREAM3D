@@ -51,6 +51,26 @@ MomentInvariants2D::~MomentInvariants2D()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+MomentInvariants2D::DoubleMatrixType MomentInvariants2D::binomial(size_t max_order)
+{
+  size_t dim = max_order + 1;
+  DoubleMatrixType bn(dim, dim);
+  bn.setZero();
+
+  for(size_t i = 0; i < dim; i++)
+  {
+    for(size_t j = 0; j <= i; j++)
+    {
+      bn(i, j) = (factorial(i)) / (factorial(j)) / (factorial(i - j));
+      bn(j, i) = bn(i,j);
+    }
+  }
+  return bn;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MomentInvariants2D::binomial(int p, std::vector<double>& bn)
 {
   size_t dim = p + 1;
@@ -72,14 +92,92 @@ void MomentInvariants2D::binomial(int p, std::vector<double>& bn)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+MomentInvariants2D::DoubleMatrixType MomentInvariants2D::getBigX(size_t max_order, size_t dim)
+{
+
+
+  size_t dRows = dim;
+  size_t dCols = dim+1;
+
+  DoubleMatrixType xx(1, dCols);
+  for(int c = 0; c < dCols; c++)
+  {
+    xx(0, c) = c - static_cast<double>(dim) / 2.0 - 0.5;
+  }
+
+  double fnorm = xx.maxCoeff();
+  xx = xx / fnorm;
+//  std::cout << "xx=" << std::endl;
+//  std::cout << xx << std::endl;
+
+  DoubleMatrixType D(dRows, dCols);
+  D.setZero();
+
+  IntMatrixType j(1, dim);
+  for(size_t c = 0; c < dim; c++) { j(0, c) = c; }
+//  std::cout << "j=" << std::endl;
+//  std::cout << j << std::endl;
+
+
+  for(size_t r = 0; r < dim; r++)
+  {
+    D(r,r) = -1.0;
+    D(r, r+1) = 1.0;
+  }
+//  std::cout << "D=" << std::endl;
+//  std::cout << D << std::endl;
+
+  // Set the Scale Factors
+  DoubleMatrixType sc(1, max_order + 1);
+  for(int c = 0; c < max_order + 1; c++)
+  {
+    sc(0, c) = 1.0 / (c + 1.0);
+  }
+//  std::cout << "#----------- sc" << std::endl;
+//  std::cout << sc << std::endl;
+
+
+  DoubleMatrixType bigx(dim, max_order + 1);
+  bigx.setZero();
+
+  DoubleMatrixType yy;
+  for(int i = 0; i < max_order + 1; i++)
+  {
+    if(i == 0)
+    {
+      yy = xx;
+    }
+    else
+    {
+      yy = yy.cwiseProduct(xx);
+    }
+//    std::cout << "----------------------" << std::endl;
+//    std::cout << "i=" << i << "  ";
+//    std::cout << "yy=" << std::endl << yy << std::endl;
+
+    DoubleMatrixType mm = yy * D.transpose();
+//    std::cout << "mm=\n" << mm << std::endl;
+
+    mm = mm * sc(0, i);
+//    std::cout << "mm*sc[i]=\n" << mm << std::endl;
+
+    bigx.col(i) = mm.row(0);
+  }
+
+  return bigx;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MomentInvariants2D::getBigX(size_t max_order, size_t dim, std::vector<double>& bigx)
 {
   std::vector<double> xx = dindgen(dim + 1); // COLS=dims+1 ROWS=1
   std::transform(std::begin(xx), std::end(xx), std::begin(xx), [dim](double n) { return n - static_cast<double>(dim) / 2.0 - 0.5; });
   double fnorm = *(std::max_element(xx.begin(), xx.end()));
   std::transform(std::begin(xx), std::end(xx), std::begin(xx), [fnorm](double n) { return n / fnorm; });
-  std::cout << "xx" << std::endl;
-  print2D(xx, dim + 1, 1);
+  //  std::cout << "xx" << std::endl;
+  //  print2D(xx, dim + 1, 1);
 
   size_t dRows = dim + 1;
   size_t dCols = dim;
@@ -95,19 +193,16 @@ void MomentInvariants2D::getBigX(size_t max_order, size_t dim, std::vector<doubl
     idx = (r + 1) * dCols + r;
     D[idx] = 1.0;
   }
-  //    idx = dim * (dim + 1) + dim - 1;
-  //    D[idx] = 1.0;
-  //    D[0] = -1.0;
 
-  std::cout << "#----------- D" << std::endl;
-  print2D(D, dCols, dRows);
+  //  std::cout << "#----------- D" << std::endl;
+  //  print2D(D, dCols, dRows);
 
   // Set the Scale Factors
   idx = 0;
   std::vector<double> sc = dindgen(max_order + 1); // COLS=max_order+1 ROWS=1
   std::transform(std::begin(sc), std::end(sc), std::begin(sc), [](double n) { return 1.0 / (n + 1.0); });
-  std::cout << "#----------- sc" << std::endl;
-  print2D(sc, 1, max_order + 1);
+  //  std::cout << "#----------- sc" << std::endl;
+  //  print2D(sc, 1, max_order + 1);
 
   bigx.resize((max_order + 1) * dim, 0.0); // COLS=max_order+1  ROWS=dim
   std::vector<double> yy;                  // COLS=1 ROWS=dims+1
@@ -125,7 +220,7 @@ void MomentInvariants2D::getBigX(size_t max_order, size_t dim, std::vector<doubl
     std::cout << "i=" << i << "  ";
     std::cout << "yy=" << std::endl;
     print2D(yy, dRows, 1);
-    //                                                   C   R      C     R
+    //                                                 C  R   C     R
     std::vector<double> mm = MatrixMultiply(yy, dRows, 1, D, dCols, dRows);
     std::cout << "mm=" << std::endl;
     print2D(mm, 1, dCols);
@@ -140,6 +235,79 @@ void MomentInvariants2D::getBigX(size_t max_order, size_t dim, std::vector<doubl
   std::cout << "#----------- bigx" << std::endl;
   print2D(bigx, max_order + 1, dim);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MomentInvariants2D::DoubleMatrixType MomentInvariants2D::computeMoments2D(DoubleMatrixType &input, size_t* inputDims, size_t max_order)
+{
+  assert(inputDims[0] == inputDims[1]);
+
+  std::cout << "input = \n" << input << std::endl;
+
+  size_t dim = inputDims[0];
+  DoubleMatrixType bigX = getBigX(max_order, inputDims[0]);
+  std::cout << "bigX=\n" << bigX << std::endl;
+
+  size_t mDim = max_order + 1;
+  //size_t sz[2] = {mDim, dim};
+  double fnorm = static_cast<double>(dim-1) / 2.0;
+
+    // precompute the binomial coefficients for central moment conversion;  (could be hard-coded for max_order = 2)
+  DoubleMatrixType bn = binomial(max_order);
+  std::cout << "bn=\n" << bn << std::endl;
+
+  DoubleMatrixType mnk(mDim, mDim);
+  mnk.setZero();
+
+  DoubleMatrixType inter = input * bigX;
+  std::cout << "inter=\n" << inter << std::endl;
+
+
+  mnk = bigX.transpose() * inter;
+  std::cout << "mnk=" << std::endl;
+  std::cout << mnk << std::endl;
+
+  for (size_t c=0; c < mDim; c++)
+  {
+    for (size_t r=0; r < mDim; r++)
+    {
+      mnk(r,c) *= std::pow(fnorm,(2+c+r));
+    }
+  }
+  std::cout << "mnk (normalized)=\n" << mnk << std::endl;
+
+  //transform the moments to central moments using the binomial theorem
+  //first get the center of mass coordinates (xc, yc)
+  double xc = mnk(1,0)/mnk(0,0);    // mnk[0,0] is the area of the object in units of pixels
+  double yc = mnk(0,1)/mnk(0,0);
+
+  //declare an intermediate array to hold the transformed moment values
+  DoubleMatrixType mnknew (mDim,mDim);
+  mnknew.setZero();
+
+  // apply the binomial theorem
+  for(size_t p = 0; p < mDim; p++)
+  {
+    for(size_t q = 0; q < mDim; q++)
+    {
+      for(size_t k = 0; k < p + 1; k++)
+      {
+        for(size_t l = 0; l < q + 1; l++)
+        {
+          mnknew(p, q) += std::pow(-1.0, (p + q - k - l)) * std::pow(xc, (p - k)) * std::pow(yc, (q - l))
+              * bn(p, k) * bn(q, l) * mnk(k, l);
+        }
+      }
+    }
+  }
+
+  std::cout << "mnknew=\n" << mnknew << std::endl;
+
+
+  return mnknew;
+}
+
 
 #define MI_IDX(X,Y,W)\
   (Y*W+X)
@@ -179,30 +347,12 @@ std::vector<double> MomentInvariants2D::computeMoments2D(std::vector<double> &in
   std::cout << "mnk=" << std::endl;
   print2D(mnk, mDim, mDim);
 
-
-//  for(size_t i = 0; i < max_order; i++)
-//  {
-//    for(size_t j = 0; j < max_order; j++)
-//    {
-//      for(size_t p = 0; p < dim - 1; p++)
-//      {
-//        for(size_t q = 0; q < dim - 1; q++)
-//        {
-//          mnk[MI_IDX(i, j,max_order)] += bigX[MI_IDX(i,p,dim)] * input[MI_IDX(p, q,dim)] * bigX[MI_IDX(j, q,dim)];
-//        }
-//      }
-//    }
-//  }
-
-//  std::cout << "mnk=" << std::endl;
-//  print2D(mnk, mDim, mDim);
-
   //then we normalize the mnk array by appropriate powers of fnorm
   for (size_t i=0; i < mDim; i++)
   {
     for (size_t j=0; j < mDim; j++)
     {
-     //mnk[i,j] *= fnorm^(2+i+j);
+      //mnk[i,j] *= fnorm^(2+i+j);
 
       mnk[j*mDim + i] *= std::pow(fnorm,(2+i+j));
     }
@@ -228,7 +378,7 @@ std::vector<double> MomentInvariants2D::computeMoments2D(std::vector<double> &in
         for(size_t l = 0; l < q + 1; l++)
         {
           mnknew[MI_IDX(p, q, mDim)] += std::pow(-1.0, (p + q - k - l)) * std::pow(xc, (p - k)) * std::pow(yc, (q - l))
-            * bn[MI_IDX(p, k, mDim)] * bn[MI_IDX(q, l, mDim)] * mnk[MI_IDX(k, l, mDim)];
+              * bn[MI_IDX(p, k, mDim)] * bn[MI_IDX(q, l, mDim)] * mnk[MI_IDX(k, l, mDim)];
         }
       }
     }

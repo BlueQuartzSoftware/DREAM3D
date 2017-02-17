@@ -5,6 +5,8 @@
 #include <iostream>
 #include <cmath>
 
+#include <Eigen/Dense>
+
 #include "Statistics/StatisticsFilters/util/MomentInvariants2D.h"
 
 // -----------------------------------------------------------------------------
@@ -56,12 +58,23 @@ void TestCopyRow()
 // -----------------------------------------------------------------------------
 void TestBinomial()
 {
+
   MomentInvariants2D moments;
-  std::vector<double> bn;
-  size_t p = 2;
-  moments.binomial(p, bn);
-  std::cout << "Binomial Test" << std::endl;
-  MomentInvariants2D::print2D(bn, p+1, p+1);
+  size_t max_order = 2;
+  {
+    std::vector<double> bn;
+
+    moments.binomial(max_order, bn);
+    std::cout << "Binomial Test" << std::endl;
+    MomentInvariants2D::print2D(bn, max_order+1, max_order+1);
+  }
+  {
+    MomentInvariants2D::DoubleMatrixType binomial = moments.binomial(max_order);
+    std::cout << "binomial" << std::endl;
+    std::cout << binomial << std::endl;
+  }
+
+
 }
 
 
@@ -73,8 +86,20 @@ void TestBigX()
   MomentInvariants2D moments;
   size_t max_order = 2;
   size_t dim = 16;
-  std::vector<double> bigx;
-  moments.getBigX(max_order, dim, bigx);
+  {
+    std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+    MomentInvariants2D::DoubleMatrixType bigX = moments.getBigX(max_order, dim);
+    std::cout << "bigX=" << std::endl;
+    std::cout << bigX << std::endl;
+  }
+
+  {
+    std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+    std::vector<double> bigx;
+    moments.getBigX(max_order, dim, bigx);
+  }
+
+
 
 }
 
@@ -90,10 +115,34 @@ void TestComputeMoments2D()
   size_t max_order = 2;
   size_t mDim = max_order + 1;
   size_t imageDim = 5; // The algorithm takes a square image
-//  std::vector<double> bigx;
-//  moments.getBigX(max_order, imageDim, bigx);
+  //  std::vector<double> bigx;
+  //  moments.getBigX(max_order, imageDim, bigx);
 
   size_t inputDims[2] = {imageDim, imageDim};
+
+{
+  std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+
+  MomentInvariants2D::DoubleMatrixType input2D(5, 5);
+  input2D << 0,0,0,0,0, /*Row*/0,1,1,1,0, /*Row*/0,1,1,1,0, /*Row*/0,1,1,1,0, /*Row*/0,0,0,0,0;
+  MomentInvariants2D::DoubleMatrixType m2D = moments.computeMoments2D(input2D, inputDims, max_order);
+  std::cout << "centralMoments=\n" << m2D << std::endl;
+  // compute the second order moment invariants
+  double omega1 = 2.0 * (m2D(0,0)* m2D(0,0)) / (m2D(0,2) + m2D(2,0));
+  double omega2 = std::pow(m2D(0,0), 4) / ( m2D(2,0)*m2D(0,2) - std::pow(m2D(1,1), 2) );
+  std::cout << ",'2D moment invariants : " << omega1 << "\t" << omega2 << " (should be 12 and 144)" << std::endl;
+
+
+  // normalize the invariants by those of the circle
+  double circle_omega[2] = { 4.0*M_PI, 16.0 * M_PI*M_PI };
+  omega1 /= circle_omega[0];
+  omega2 /= circle_omega[1];
+  std::cout << "normalized moment invariants: " << omega1 << "\t" << omega2 << std::endl;
+}
+{
+
+  std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+
   std::vector<double> input = {0,0,0,0,0, /*Row*/0,1,1,1,0, /*Row*/0,1,1,1,0, /*Row*/0,1,1,1,0, /*Row*/0,0,0,0,0};
 
   std::vector<double> m = moments.computeMoments2D(input, inputDims, max_order);
@@ -102,17 +151,17 @@ void TestComputeMoments2D()
   moments.print2D(m, max_order + 1, max_order + 1);
 
   // compute the second order moment invariants
-double omega1 = 2.0 * (m[MI_IDX(0,0,mDim)]* m[MI_IDX(0,0,mDim)]) / (m[MI_IDX(2,0,mDim)] + m[MI_IDX(0,2,mDim)]);
-double omega2 = std::pow(m[MI_IDX(0,0,mDim)], 4) / ( m[MI_IDX(2,0,mDim)]*m[MI_IDX(0,2,mDim)] - std::pow(m[MI_IDX(1,1,mDim)], 2) );
-std::cout << ",'2D moment invariants : " << omega1 << "\t" << omega2 << " (should be 12 and 144)" << std::endl;
+  double omega1 = 2.0 * (m[MI_IDX(0,0,mDim)]* m[MI_IDX(0,0,mDim)]) / (m[MI_IDX(2,0,mDim)] + m[MI_IDX(0,2,mDim)]);
+  double omega2 = std::pow(m[MI_IDX(0,0,mDim)], 4) / ( m[MI_IDX(2,0,mDim)]*m[MI_IDX(0,2,mDim)] - std::pow(m[MI_IDX(1,1,mDim)], 2) );
+  std::cout << ",'2D moment invariants : " << omega1 << "\t" << omega2 << " (should be 12 and 144)" << std::endl;
 
 
-// normalize the invariants by those of the circle
-double circle_omega[2] = { 4.0*M_PI, 16.0 * M_PI*M_PI };
-omega1 /= circle_omega[0];
-omega2 /= circle_omega[1];
-std::cout << "normalized moment invariants: " << omega1 << "\t" << omega2 << std::endl;
-
+  // normalize the invariants by those of the circle
+  double circle_omega[2] = { 4.0*M_PI, 16.0 * M_PI*M_PI };
+  omega1 /= circle_omega[0];
+  omega2 /= circle_omega[1];
+  std::cout << "normalized moment invariants: " << omega1 << "\t" << omega2 << std::endl;
+}
 
 
 }
@@ -122,11 +171,12 @@ std::cout << "normalized moment invariants: " << omega1 << "\t" << omega2 << std
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-//  TestMatrixMultiply();
-//  TestCopyRow();
+  //  TestMatrixMultiply();
+  //  TestCopyRow();
 
 //  TestBinomial();
 //  TestBigX();
+
   TestComputeMoments2D();
   return EXIT_SUCCESS;
 }

@@ -38,14 +38,38 @@
 #include <iostream>
 
 
+#include <Eigen/Dense>
+
 class MomentInvariants2D
 {
   public:
     MomentInvariants2D();
     virtual ~MomentInvariants2D();
 
+
+    using DoubleMatrixType = Eigen::Matrix<double,Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+    using IntMatrixType = Eigen::Matrix<int,Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+
+//--------------------
+// These variations use Eigen for the matrix computations
+    DoubleMatrixType binomial(size_t max_order);
+    MomentInvariants2D::DoubleMatrixType getBigX(size_t max_order, size_t dim);
+    DoubleMatrixType computeMoments2D(DoubleMatrixType &input, size_t* inputDims, size_t max_order);
+
+    /**
+     * @brief binomial
+     * @param p
+     * @param bn
+     */
     void binomial(int p, std::vector<double> &bn);
 
+
+    /**
+     * @brief getBigX
+     * @param max_order
+     * @param dim
+     * @param bigx
+     */
     void getBigX(size_t max_order, size_t dim, std::vector<double> &bigx);
 
     /**
