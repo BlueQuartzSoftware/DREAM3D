@@ -25,6 +25,7 @@ set(_PublicFilters
   MergeColonies
   MergeTwins
   ScalarSegmentFeatures
+  ComputeFeatureRect
 )
 
 #--------------
