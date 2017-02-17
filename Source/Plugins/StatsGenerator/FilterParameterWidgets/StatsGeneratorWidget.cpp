@@ -63,12 +63,6 @@
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 
-#include "SVWidgetsLib/QtSupport/QtSApplicationAboutBoxDialog.h"
-#include "SVWidgetsLib/QtSupport/QtSHelpDialog.h"
-#include "SVWidgetsLib/QtSupport/QtSRecentFileList.h"
-
-#include "Applications/SIMPLView/SIMPLViewApplication.h"
-
 #include "StatsGenerator/FilterParameters/StatsGeneratorFilterParameter.h"
 #include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorFilter.h"
 #include "StatsGenerator/Widgets/EditPhaseDialog.h"
