@@ -42,7 +42,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -103,7 +103,7 @@ CAxisSegmentFeatures::~CAxisSegmentFeatures()
 void CAxisSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("C-Axis Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Parameter, CAxisSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("C-Axis Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Parameter, CAxisSegmentFeatures));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, CAxisSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));

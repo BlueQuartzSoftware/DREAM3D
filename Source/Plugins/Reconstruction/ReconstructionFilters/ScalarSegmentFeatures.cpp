@@ -40,7 +40,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -204,7 +204,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Parameter, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Parameter, ScalarSegmentFeatures));
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, ScalarSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

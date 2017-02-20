@@ -39,7 +39,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -108,7 +108,7 @@ void GroupMicroTextureRegions::setupFilterParameters()
   FilterParameterVector parameters = getFilterParameters();
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Group C-Axes With Running Average", UseRunningAverage, FilterParameter::Parameter, GroupMicroTextureRegions));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("C-Axis Alignment Tolerance (Degrees)", CAxisTolerance, FilterParameter::Parameter, GroupMicroTextureRegions));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("C-Axis Alignment Tolerance (Degrees)", CAxisTolerance, FilterParameter::Parameter, GroupMicroTextureRegions));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;

@@ -40,7 +40,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -91,7 +91,7 @@ void VectorSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Angle Tolerance", AngleTolerance, FilterParameter::Parameter, VectorSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Angle Tolerance", AngleTolerance, FilterParameter::Parameter, VectorSegmentFeatures));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, VectorSegmentFeatures, linkedProps));
 

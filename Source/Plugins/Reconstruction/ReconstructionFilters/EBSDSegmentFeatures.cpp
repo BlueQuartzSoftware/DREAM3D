@@ -40,7 +40,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -94,7 +94,7 @@ EBSDSegmentFeatures::~EBSDSegmentFeatures()
 void EBSDSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Parameter, EBSDSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Parameter, EBSDSegmentFeatures));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, EBSDSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
