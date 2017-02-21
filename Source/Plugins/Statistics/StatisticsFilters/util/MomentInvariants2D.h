@@ -52,10 +52,32 @@ class MomentInvariants2D
 
 //--------------------
 // These variations use Eigen for the matrix computations
-    DoubleMatrixType binomial(size_t max_order);
-    MomentInvariants2D::DoubleMatrixType getBigX(size_t max_order, size_t dim);
-    DoubleMatrixType computeMoments2D(DoubleMatrixType &input, size_t* inputDims, size_t max_order);
 
+    /**
+     * @brief binomial
+     * @param max_order
+     * @return
+     */
+    DoubleMatrixType binomial(size_t max_order);
+
+    /**
+     * @brief getBigX
+     * @param max_order
+     * @param dim
+     * @return
+     */
+    MomentInvariants2D::DoubleMatrixType getBigX(size_t max_order, size_t dim);
+
+    /**
+     * @brief computeMomentInvariants
+     * @param input
+     * @param inputDims
+     * @param max_order
+     * @return
+     */
+    DoubleMatrixType computeMomentInvariants(DoubleMatrixType &input, size_t* inputDims, size_t max_order);
+
+#if 0
     /**
      * @brief binomial
      * @param p
@@ -81,15 +103,6 @@ class MomentInvariants2D
      * @param dim
      */
     std::vector<double> computeMoments2D(std::vector<double> &input, size_t* inputDims, size_t max_order);
-
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    static int factorial(int n)
-    {
-      return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
-    }
 
     // -----------------------------------------------------------------------------
     //
@@ -181,11 +194,11 @@ class MomentInvariants2D
     }
 
     /**
-* @brief Transpose a ROW MAJOR 2D Matrix.
-* @param
-* @param
-* @param
-*/
+    * @brief Transpose a ROW MAJOR 2D Matrix.
+    * @param
+    * @param
+    * @param
+    */
     template<typename T>
     static std::vector<T> Transpose(std::vector<T> &mat, size_t cols, size_t rows)
     {
@@ -228,8 +241,15 @@ class MomentInvariants2D
         target[tIndex] = src[sIndex];
       }
     }
-
+#endif
   protected:
+
+    /**
+     * @brief factorial
+     * @param n
+     * @return
+     */
+    int factorial(int n) const;
 
 
   private:

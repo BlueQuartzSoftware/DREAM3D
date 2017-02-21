@@ -6,9 +6,9 @@
 
 #include "SIMPLib/Common/Constants.h"
 
-#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -21,9 +21,8 @@
 // -----------------------------------------------------------------------------
 ComputeFeatureRect::ComputeFeatureRect()
   : AbstractFilter()
-  , m_FeatureIdsArrayPath(DataArrayPath())
-  //, m_FeatureAttributeMatrix(DataArrayPath())
-  , m_FeatureRectArrayPath(DataArrayPath(""))
+  , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+  , m_FeatureRectArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "FeatureRect")
 {
   initialize();
   setupFilterParameters();
@@ -51,6 +50,7 @@ void ComputeFeatureRect::initialize()
 void ComputeFeatureRect::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     AttributeMatrix::Types amTypes = {AttributeMatrix::Type::Cell};
@@ -58,14 +58,11 @@ void ComputeFeatureRect::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, ComputeFeatureRect, req));
   }
 
-  //  AttributeMatrixSelectionFilterParameter::RequirementType amReq;
-  //  amReq.amTypes = { AttributeMatrix::Type::CellFeature };
-  //  //AttributeMatrix::Types amTypes = { AttributeMatrix::Type::Cell };
-  //  parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature AttributeMatrix", FeatureAttributeMatrix, FilterParameter::Parameter, ComputeFeatureRect, amReq));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
 
   DataArrayCreationFilterParameter::RequirementType dacReq;
   dacReq.amTypes = {AttributeMatrix::Type::CellFeature};
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Feature Rect Array Path", FeatureRectArrayPath, FilterParameter::Parameter, ComputeFeatureRect, dacReq));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Feature Rect", FeatureRectArrayPath, FilterParameter::CreatedArray, ComputeFeatureRect, dacReq));
   setFilterParameters(parameters);
 }
 
@@ -132,7 +129,7 @@ void ComputeFeatureRect::execute()
 
   // Create corners array, which stores pixel coordinates for the top-left and bottom-right coordinates of each feature object
   UInt32ArrayType::Pointer corners = m_FeatureRectPtr.lock();
-  for(int i = 0; i < corners->getNumberOfTuples(); i++)
+  for(size_t i = 0; i < corners->getNumberOfTuples(); i++)
   {
     corners->setComponent(i, 0, std::numeric_limits<uint32_t>::max());
     corners->setComponent(i, 1, std::numeric_limits<uint32_t>::max());

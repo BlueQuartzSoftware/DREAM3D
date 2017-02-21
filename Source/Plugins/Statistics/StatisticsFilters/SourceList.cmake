@@ -17,6 +17,7 @@ SIMPL_START_FILTER_GROUP(
 
 set(_PublicFilters
   CalculateArrayHistogram
+  ComputeMomentInvariants2D
   FindAvgScalarValueForFeatures
   FindBoundaryElementFractions
   FindDifferenceMap
@@ -32,7 +33,6 @@ set(_PublicFilters
   FindVolFractions
   FitFeatureData
   GenerateEnsembleStatistics
-  ComputeMoments2D
 )
 
 #--------------

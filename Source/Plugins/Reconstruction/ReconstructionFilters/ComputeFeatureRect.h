@@ -26,9 +26,6 @@ class ComputeFeatureRect : public AbstractFilter
     SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-//    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrix)
-//    Q_PROPERTY(DataArrayPath FeatureAttributeMatrix READ getFeatureAttributeMatrix WRITE setFeatureAttributeMatrix)
-
     SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureRectArrayPath)
     Q_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
 

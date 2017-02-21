@@ -33,7 +33,6 @@
 #include "MomentInvariants2D.h"
 #include <cmath>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -51,23 +50,153 @@ MomentInvariants2D::~MomentInvariants2D()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int MomentInvariants2D::factorial(int n) const
+{
+  return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 MomentInvariants2D::DoubleMatrixType MomentInvariants2D::binomial(size_t max_order)
 {
-  size_t dim = max_order + 1;
+  int dim = static_cast<int>(max_order + 1);
   DoubleMatrixType bn(dim, dim);
   bn.setZero();
 
-  for(size_t i = 0; i < dim; i++)
+  for(int i = 0; i < dim; i++)
   {
-    for(size_t j = 0; j <= i; j++)
+    for(int j = 0; j <= i; j++)
     {
       bn(i, j) = (factorial(i)) / (factorial(j)) / (factorial(i - j));
-      bn(j, i) = bn(i,j);
+      bn(j, i) = bn(i, j);
     }
   }
   return bn;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MomentInvariants2D::DoubleMatrixType MomentInvariants2D::getBigX(size_t max_order, size_t dim)
+{
+
+  int dRows = static_cast<int>(dim);
+  int dCols = static_cast<int>(dim + 1);
+
+  DoubleMatrixType xx(1, dCols);
+  for(int c = 0; c < dCols; c++)
+  {
+    xx(0, c) = c - static_cast<double>(dim) / 2.0 - 0.5;
+  }
+
+  double fnorm = xx.maxCoeff();
+  xx = xx / fnorm;
+
+  DoubleMatrixType D(dRows, dCols);
+  D.setZero();
+
+  IntMatrixType j(1, dRows);
+  for(int c = 0; c < dRows; c++)
+  {
+    j(0, c) = c;
+  }
+
+  for(int r = 0; r < dRows; r++)
+  {
+    D(r, r) = -1.0;
+    D(r, r + 1) = 1.0;
+  }
+
+  // Set the Scale Factors
+  DoubleMatrixType sc(1, max_order + 1);
+  int mop1 = static_cast<int>(max_order + 1);
+  for(int c = 0; c < mop1; c++)
+  {
+    sc(0, c) = 1.0 / (c + 1.0);
+  }
+
+  DoubleMatrixType bigx(dim, max_order + 1);
+  bigx.setZero();
+
+  DoubleMatrixType yy;
+  for(int i = 0; i < mop1; i++)
+  {
+    if(i == 0)
+    {
+      yy = xx;
+    }
+    else
+    {
+      yy = yy.cwiseProduct(xx);
+    }
+
+    DoubleMatrixType mm = yy * D.transpose();
+    mm = mm * sc(0, i);
+    bigx.col(i) = mm.row(0);
+  }
+
+  return bigx;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MomentInvariants2D::DoubleMatrixType MomentInvariants2D::computeMomentInvariants(DoubleMatrixType& input, size_t* inputDims, size_t max_order)
+{
+  assert(inputDims[0] == inputDims[1]);
+  size_t dim = inputDims[0];
+  DoubleMatrixType bigX = getBigX(max_order, inputDims[0]);
+
+  int mDim = static_cast<int>(max_order + 1);
+  double fnorm = static_cast<double>(dim - 1) / 2.0;
+
+  // precompute the binomial coefficients for central moment conversion;  (could be hard-coded for max_order = 2)
+  DoubleMatrixType bn = binomial(max_order);
+
+  DoubleMatrixType mnk(mDim, mDim);
+  mnk.setZero();
+
+  DoubleMatrixType inter = input * bigX;
+
+  mnk = bigX.transpose() * inter;
+
+  for(int c = 0; c < mDim; c++)
+  {
+    for(int r = 0; r < mDim; r++)
+    {
+      mnk(r, c) *= std::pow(fnorm, (2 + c + r));
+    }
+  }
+
+  // transform the moments to central moments using the binomial theorem
+  // first get the center of mass coordinates (xc, yc)
+  double xc = mnk(1, 0) / mnk(0, 0); // mnk[0,0] is the area of the object in units of pixels
+  double yc = mnk(0, 1) / mnk(0, 0);
+
+  // declare an intermediate array to hold the transformed moment values
+  DoubleMatrixType mnknew(mDim, mDim);
+  mnknew.setZero();
+
+  // apply the binomial theorem
+  for(int p = 0; p < mDim; p++)
+  {
+    for(int q = 0; q < mDim; q++)
+    {
+      for(int k = 0; k < p + 1; k++)
+      {
+        for(int l = 0; l < q + 1; l++)
+        {
+          mnknew(p, q) += std::pow(-1.0, (p + q - k - l)) * std::pow(xc, (p - k)) * std::pow(yc, (q - l)) * bn(p, k) * bn(q, l) * mnk(k, l);
+        }
+      }
+    }
+  }
+
+  return mnknew;
+}
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -89,83 +218,6 @@ void MomentInvariants2D::binomial(int p, std::vector<double>& bn)
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-MomentInvariants2D::DoubleMatrixType MomentInvariants2D::getBigX(size_t max_order, size_t dim)
-{
-
-
-  size_t dRows = dim;
-  size_t dCols = dim+1;
-
-  DoubleMatrixType xx(1, dCols);
-  for(int c = 0; c < dCols; c++)
-  {
-    xx(0, c) = c - static_cast<double>(dim) / 2.0 - 0.5;
-  }
-
-  double fnorm = xx.maxCoeff();
-  xx = xx / fnorm;
-//  std::cout << "xx=" << std::endl;
-//  std::cout << xx << std::endl;
-
-  DoubleMatrixType D(dRows, dCols);
-  D.setZero();
-
-  IntMatrixType j(1, dim);
-  for(size_t c = 0; c < dim; c++) { j(0, c) = c; }
-//  std::cout << "j=" << std::endl;
-//  std::cout << j << std::endl;
-
-
-  for(size_t r = 0; r < dim; r++)
-  {
-    D(r,r) = -1.0;
-    D(r, r+1) = 1.0;
-  }
-//  std::cout << "D=" << std::endl;
-//  std::cout << D << std::endl;
-
-  // Set the Scale Factors
-  DoubleMatrixType sc(1, max_order + 1);
-  for(int c = 0; c < max_order + 1; c++)
-  {
-    sc(0, c) = 1.0 / (c + 1.0);
-  }
-//  std::cout << "#----------- sc" << std::endl;
-//  std::cout << sc << std::endl;
-
-
-  DoubleMatrixType bigx(dim, max_order + 1);
-  bigx.setZero();
-
-  DoubleMatrixType yy;
-  for(int i = 0; i < max_order + 1; i++)
-  {
-    if(i == 0)
-    {
-      yy = xx;
-    }
-    else
-    {
-      yy = yy.cwiseProduct(xx);
-    }
-//    std::cout << "----------------------" << std::endl;
-//    std::cout << "i=" << i << "  ";
-//    std::cout << "yy=" << std::endl << yy << std::endl;
-
-    DoubleMatrixType mm = yy * D.transpose();
-//    std::cout << "mm=\n" << mm << std::endl;
-
-    mm = mm * sc(0, i);
-//    std::cout << "mm*sc[i]=\n" << mm << std::endl;
-
-    bigx.col(i) = mm.row(0);
-  }
-
-  return bigx;
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -236,81 +288,7 @@ void MomentInvariants2D::getBigX(size_t max_order, size_t dim, std::vector<doubl
   print2D(bigx, max_order + 1, dim);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-MomentInvariants2D::DoubleMatrixType MomentInvariants2D::computeMoments2D(DoubleMatrixType &input, size_t* inputDims, size_t max_order)
-{
-  assert(inputDims[0] == inputDims[1]);
-
-  std::cout << "input = \n" << input << std::endl;
-
-  size_t dim = inputDims[0];
-  DoubleMatrixType bigX = getBigX(max_order, inputDims[0]);
-  std::cout << "bigX=\n" << bigX << std::endl;
-
-  size_t mDim = max_order + 1;
-  //size_t sz[2] = {mDim, dim};
-  double fnorm = static_cast<double>(dim-1) / 2.0;
-
-    // precompute the binomial coefficients for central moment conversion;  (could be hard-coded for max_order = 2)
-  DoubleMatrixType bn = binomial(max_order);
-  std::cout << "bn=\n" << bn << std::endl;
-
-  DoubleMatrixType mnk(mDim, mDim);
-  mnk.setZero();
-
-  DoubleMatrixType inter = input * bigX;
-  std::cout << "inter=\n" << inter << std::endl;
-
-
-  mnk = bigX.transpose() * inter;
-  std::cout << "mnk=" << std::endl;
-  std::cout << mnk << std::endl;
-
-  for (size_t c=0; c < mDim; c++)
-  {
-    for (size_t r=0; r < mDim; r++)
-    {
-      mnk(r,c) *= std::pow(fnorm,(2+c+r));
-    }
-  }
-  std::cout << "mnk (normalized)=\n" << mnk << std::endl;
-
-  //transform the moments to central moments using the binomial theorem
-  //first get the center of mass coordinates (xc, yc)
-  double xc = mnk(1,0)/mnk(0,0);    // mnk[0,0] is the area of the object in units of pixels
-  double yc = mnk(0,1)/mnk(0,0);
-
-  //declare an intermediate array to hold the transformed moment values
-  DoubleMatrixType mnknew (mDim,mDim);
-  mnknew.setZero();
-
-  // apply the binomial theorem
-  for(size_t p = 0; p < mDim; p++)
-  {
-    for(size_t q = 0; q < mDim; q++)
-    {
-      for(size_t k = 0; k < p + 1; k++)
-      {
-        for(size_t l = 0; l < q + 1; l++)
-        {
-          mnknew(p, q) += std::pow(-1.0, (p + q - k - l)) * std::pow(xc, (p - k)) * std::pow(yc, (q - l))
-              * bn(p, k) * bn(q, l) * mnk(k, l);
-        }
-      }
-    }
-  }
-
-  std::cout << "mnknew=\n" << mnknew << std::endl;
-
-
-  return mnknew;
-}
-
-
-#define MI_IDX(X,Y,W)\
-  (Y*W+X)
+#define MI_IDX(X, Y, W) (Y * W + X)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -391,3 +369,4 @@ std::vector<double> MomentInvariants2D::computeMoments2D(std::vector<double> &in
 
 
 }
+#endif
