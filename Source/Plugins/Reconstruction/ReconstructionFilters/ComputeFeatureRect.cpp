@@ -281,5 +281,5 @@ const QString ComputeFeatureRect::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ComputeFeatureRect::getHumanLabel()
 {
-  return "Compute Feature Rect";
+  return "Compute Feature Corners";
 }
