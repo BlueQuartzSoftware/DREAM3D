@@ -105,7 +105,10 @@ class ComputeMomentInvariants2DTest
       ImageGeom::Pointer igeom = ImageGeom::New();
       igeom->setDimensions(5, 5, 1);
       dc->setGeometry(igeom);
-      QVector<size_t> dims(2, 5);
+      QVector<size_t> dims(3, 0);
+      dims[0] = 5;
+      dims[1] = 5;
+      dims[2] = 1;
       AttributeMatrix::Pointer cellAM = AttributeMatrix::New(dims, "CellData", AttributeMatrix::Type::Cell);
       dc->addAttributeMatrix(cellAM->getName(), cellAM);
 
