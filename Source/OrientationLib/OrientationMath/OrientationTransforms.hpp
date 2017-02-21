@@ -47,21 +47,13 @@
 #include <Accelerate/Accelerate.h>
 #endif
 
-
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/Eigen>
 
-
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/Math/MatrixMath.h"
-#include "SIMPLib/Math/QuaternionMath.hpp"
-#include "SIMPLib/Math/ArrayHelpers.hpp"
-
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationLibConstants.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection3D.hpp"
 
