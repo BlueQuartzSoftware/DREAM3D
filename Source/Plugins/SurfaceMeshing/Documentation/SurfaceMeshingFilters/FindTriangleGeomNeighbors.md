@@ -19,14 +19,16 @@ None
 Triangle
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 | **Attribute Matrix** | FaceFeatureData | Face Feature | N/A | **Feature Attribute Matrix** of the selected _Face Labels_ |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | NumNeighbors | int32_t | (1) | Number of contiguous neighboring **Features** for a given **Feature** |
 | **Feature Attribute Array**  | NeighborList | List of int32_t | (1) | List of the contiguous neighboring **Features** for a given **Feature** |
 

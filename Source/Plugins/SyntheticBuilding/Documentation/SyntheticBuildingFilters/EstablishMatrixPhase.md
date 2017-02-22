@@ -25,15 +25,17 @@ None
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Attribute Matrix** | CellData | Cell | N/A | **Cell Attribute Matrix** in which to establish the matrix phase |
 | **Ensemble Attribute Array** | Statistics | Statistics Object | (1) | Statistics objects (depending on *Phase Type*) that store fits to descriptors such as size distribution, shape distribution, neighbor distribution, ODF, MDF, etc. |
 | **Ensemble Attribute Array** | PhaseTypes | uint32_t | (1) | Enumeration specifying the phase type of each **Ensemble** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeaturesIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 | **Cell Attribute Array**  | Phases | int32_t | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
 | **Attribute Matrix** | CellFeatureData | Cell Feature | N/A | **Feature Attribute Matrix** for the created _Feature Ids_ |

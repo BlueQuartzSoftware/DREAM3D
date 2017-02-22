@@ -21,8 +21,9 @@ This **Filter** calculates the *Schmid factors* for the 3 slip systems in the pl
 Image + Triangle
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | AvgQuats | float | (4) | Specifies the average orienation of each **Feature** in quaternion representation |
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
@@ -31,8 +32,9 @@ Image + Triangle
 | **Face Attribute Array** | TwinBoundary | bool | (1) | Specifies whether a given **Face** belongs to a twin boundary |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array** | TwinBoundarySchmidFactors | float | (3) | The three Schmid factors for each **Triangle** corresponding to the three slip systems. This array will have a _0_ value if the **Triangle** is not a twin boundary |
 
 

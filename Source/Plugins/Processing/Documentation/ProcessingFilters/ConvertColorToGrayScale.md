@@ -40,7 +40,7 @@ Not Applicable
 ## Required Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array(s)** | ImageData | uint8_t | (3) or (4) | RGB or RGBA values |
 
 ## Created Objects ##

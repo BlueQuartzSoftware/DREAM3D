@@ -16,15 +16,17 @@ None
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 | **Cell Attribute Array** | Mask | bool | (1) | Specifies if the **Cell** is to be counted in the algorithm |
 
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
 | **Attribute Matrix** | CellEnsembleData | Cell Ensemble | N/A | Created **Cell Ensemble Attribute Matrix** name |
 

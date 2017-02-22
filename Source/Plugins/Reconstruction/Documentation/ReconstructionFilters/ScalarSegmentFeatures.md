@@ -27,14 +27,16 @@ After all the **Features** have been identified, an **Attribute Matrix** is crea
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | Any | (1) | Scalar array used during segmentation |
 | **Cell Attribute Array** | Mask | bool | (1) | Specifies if the **Cell** is to be counted in the algorithm. Only required if *Use Mask Array* is checked |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs. |
 | **Attribute Matrix** | CellFeatureData | Cell Feature | N/A | Created **Feature Attribute Matrix** name |
 | **Feature Attribute Array** | Active | bool | (1) | Specifies if the **Feature** is still in the sample (*true* if the **Feature** is in the sample and *false* if it is not). At the end of the **Filter**, all **Features** will be _Active_ |

@@ -8,8 +8,9 @@ Processing (Cleanup)
 This **Filter** allows the user to define a subvolume of the data set in which the **Filter** will reset all data by writing *zeros (0)* into every array for every **Cell** within the subvolume.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | X Min | int32_t | Minimum X bound in **Cells** |
 | Y Min | int32_t | Minimum Y bound in **Cells** |
 | Z Min | int32_t | Minimum Z bound in **Cells** |
@@ -21,8 +22,9 @@ This **Filter** allows the user to define a subvolume of the data set in which t
 Image 
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Attribute Matrix** | CellData | Cell | N/A | **Cell** data in which to initialize a subvolume to zeros |
 
 ## Created Objects ##

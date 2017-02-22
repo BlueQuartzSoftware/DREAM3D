@@ -23,6 +23,7 @@ Not Applicable
 
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
@@ -30,6 +31,7 @@ Not Applicable
 | **Feature Attribute Array** | Phases | int32_t | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |

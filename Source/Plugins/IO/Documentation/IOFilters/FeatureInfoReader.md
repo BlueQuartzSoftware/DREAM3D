@@ -32,8 +32,9 @@ For example, if you have a file with 123 **Features** and 2 **Ensembles** then t
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
 
 ## Created Objects ##

@@ -31,11 +31,13 @@ This **Filter** contains an additional option to use the last mu (mean) and sigm
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Arrays** | None | uint8_t | (1)  | 8 bit grayscale images to segment. The user may select any number of arrays to segment |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Arrays** | None | uint8_t | (1) | Unsigned 8 bit array representing the value of the class that the **Cell** was segmented into. An output array is created for each segmented input array and placed in a new **Cell Attribute Matrix** that the user may name |

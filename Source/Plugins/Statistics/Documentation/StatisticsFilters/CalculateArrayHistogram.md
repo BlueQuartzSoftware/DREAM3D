@@ -53,13 +53,15 @@ Also see Histogram Quick Reference at https://plot.ly/histogram/.
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | Any **Attribute Array**  | None         | Any | (1) | Array to calculate histogram of (must be a scalar array) |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | NewDataContainer | N/A | N/A | Created **Data Container** name. Only created if _Use Min & Max Range_ is checked |
 | **Attribute Matrix** | NewAttributeMatrixName | Generic | N/A | Created **Attribute Matrix** name |
 | Any **Attribute Array** | Histogram | double | (2) | Two component array with [Bin cutoff {right side}, Frequency] values for each bin |

@@ -16,8 +16,9 @@ This **Filter** "samples" a triangulated surface mesh on a rectilinear grid, but
 **Note that the unperturbed grid is where the _Feature Ids_ actually live, but the perturbed locations are where the Cells are sampled from.  Essentially, the _Feature Ids_ are stored where the user _thinks_ the sampling took place, not where it actually took place!**
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | X Points (Column) | int32_t | Number of **Cells** along X axis |
 | Y Points (Row) | int32_t | Number of **Cells** along Y axis |
 | Z Points (Plane) | int32_t | Number of **Cells** along Z axis |
@@ -34,8 +35,9 @@ Triangle
 | **Face Attribute Array** | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face**. |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | ImageDataContainer | N/A | N/A | Created **Data Container** name with an **Image Geometry** |
 | **Attribute Matrix** | CellData | Cell | N/A | Created **Cell Attribute Matrix** name |
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |

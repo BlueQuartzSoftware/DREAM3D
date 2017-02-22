@@ -46,8 +46,9 @@ More information can be found at the [SPParks web site.](http://spparks.sandia.g
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Objects ##

@@ -33,8 +33,9 @@ The pole figure algorithm uses a _modified Lambert square_ to perform the interp
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | EulerAngles | float | (3)  | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
 | **Cell Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs |
 | **Cell Attribute Array** | Mask | bool | (1) | Used to define **Cells** as *good* or *bad* |

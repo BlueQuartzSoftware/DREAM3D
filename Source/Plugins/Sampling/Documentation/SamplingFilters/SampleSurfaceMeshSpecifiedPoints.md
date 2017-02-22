@@ -26,8 +26,9 @@ The **Filter** will write out a file with the list of **Feature** Ids for the **
 	X, Y, Z
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Specified Points File | File Path | The input specified points file path |
 | Sampled Values File | File Path | The output sampled values file path |
 
@@ -35,13 +36,15 @@ The **Filter** will write out a file with the list of **Feature** Ids for the **
 Triangle
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | SpecifiedPoints | N/A | N/A  | Created **Data Container** to hold sampled points **Geometry** |
 | **Attribute Matrix** | SpecifiedPointsData | Vertex | N/A  | Created **Vertex Attribute Matrix** to hold sampled points data |
 | **Vertex Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Vertex** belongs |

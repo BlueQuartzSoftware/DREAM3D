@@ -25,15 +25,17 @@ This Filter determines the radial distribution function (RDF), as a histogram, o
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | EquivalentDiameters | float | (1) | Diameter of a sphere with the same volume as the **Feature** |
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
 | **Feature Attribute Array** | Centroids | float | (3) | X, Y, Z coordinates of **Feature** center of mass |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | ClusteringList | float | (1) | Distance of each **Features**'s centroid to ever other **Features**'s centroid |
 | **Ensemble Attribute Array** | RDF | float | (Number of Bins) | A histogram of the normalized frequency at each bin | 
 | **Ensemble Attribute Array** | RDFMaxMinDistances | float | (2) | The max and min distance found between **Features** |

@@ -15,8 +15,9 @@ Goals a user might be trying to accomplish with this **Filter** include:
 Running the _erode-dilate_ operations in pairs can often change the size of some objects without affecting others. For example, if there were a number of big pores and a number of single *bad* **Cells**, running a single _erode_ operation would remove the single **Cells** and reduce the pores by one **Cell**. If this is followed immediately by  a _dilate_ operation, then the pores would grow by one **Cell** and return to near their original size, while the single **Cells** would remain removed and not "grow back".
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Operation | Enumeration | Whether to dilate or erode |
 | Number of Iterations | int32_t | The number of iterations to use for erosion/dilation |
 | X Direction | bool | Whether to erode/dilate in the X direction |
@@ -28,8 +29,9 @@ Running the _erode-dilate_ operations in pairs can often change the size of some
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Objects ##

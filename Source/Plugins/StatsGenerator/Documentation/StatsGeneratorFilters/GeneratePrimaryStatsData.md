@@ -30,8 +30,9 @@ If the use wishes to have a more interactive environment in which to explore the
 
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | PhaseName | String | Name of the Phase |
 | PhaseIndex | int | Index of the Phase (One based) |
 | CrystalSymmetry | int | 1 ~ 11 that represents the Crystal Symmetry |
@@ -56,13 +57,15 @@ If the use wishes to have a more interactive environment in which to explore the
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | StatsData |  | N/A | N/A | A StatsData object that contains the generated statistics for the phase |
 
 

@@ -39,16 +39,18 @@ This **Filter** will generate _inverse pole figure_ (IPF) colors for cubic, hexa
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | EulerAngles | float | (3)  | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
 | **Element Attribute Array** | Phases | int32_t | (1) | Phase Id specifying the phase of the **Element** |
 | **Element Attribute Array** | Mask | bool | (1) | Used to define **Elements** as *good* or *bad*. Only required if _Apply to Good Elements Only (Bad Elements Will Be Black)_ is checked |
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | IPFColor |  uint8_t | (3) | The RGB colors encoded as unsigned chars for each **Element** |
 
 ## License & Copyright ##

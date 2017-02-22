@@ -44,8 +44,9 @@ Not Applicable
 None
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | ImageDataContainer_PointData | N/A | N/A | Created **Data Container** name with an **Image Geometry** storing POINT_DATA. Only created if _Read Point Data_ is checked |
 | **Data Container** | ImageDataContainer_CellData | N/A | N/A | Created **Data Container** name with an **Image Geometry** storing CELL_DATA. Only created if _Read Cell Data_ is checked |
 | **Attribute Matrix** | CellData | Cell | N/A | Created **Cell Attribute Matrix** storing POINT_DATA. Only created if _Read Point Data_ is checked |

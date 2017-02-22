@@ -17,16 +17,18 @@ If _Fill Holes_ is set to *true*:
 *Note:* if there are in fact "holes" in the sample, then this **Filter** will "close" them (if _Fill Holes_ is set to true) by calling all the **Cells** "inside" the sample *good*.  If the user wants to reidentify those holes, then reuse the threshold **Filter** with the criteria of *GoodVoxels = 1* and whatever original criteria identified the "holes", as this will limit applying those original criteria to within the sample and not the outer border region.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Fill Holes in Largest Feature | bool | Whether to fill holes within sample after it is identified |
 
 ## Required Geometry ##
 Image 
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | Mask | bool | (1) | *Mask* array defining what is sample and what is not |
 
 ## Created Objects ##

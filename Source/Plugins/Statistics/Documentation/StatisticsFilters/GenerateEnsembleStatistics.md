@@ -28,8 +28,9 @@ For more information on using this **Filter** to feed into synthetic building, v
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
 | **Feature Attribute Array** | NeighborList | List of int32_t | (1) | List of the contiguous neighboring **Features** for a given **Feature**|
 | **Feature Attribute Array** | BiasedFeatures | bool | (1) | Flag of 1 if **Feature** is biased or of 0 if it is not. Only required if *Calculate Morphological Stats* is checked |
@@ -46,8 +47,9 @@ Not Applicable
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Ensemble Attribute Array** | PhaseTypes | uint32_t | (1) | Enumeration specifying the phase type of each **Ensemble** |
 | **Ensemble Attribute Array** | Statistics | Statistics Object | (1) | Statistics objects (depending on *phase type*) that store fits to descriptors like: size distribution, shape distribution, neighbor distribution, ODF, MDF, etc) |
 

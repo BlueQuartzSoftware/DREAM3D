@@ -26,8 +26,9 @@ The **Filter** determines the Schmid factor for each **Feature** by using the ab
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
 | **Feature Attribute Array** | AvgQuats | float | (4) | Specifies the average orienation of each **Feature** in quaternion representation |
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
@@ -35,7 +36,7 @@ Not Applicable
 ## Created Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | Schmids | Float | (1) | Value of the Schmid factor for the most favorably oriented slip system (i.e., the one with the highest Schmid factor) |
 | **Feature Attribute Array** | SlipSystems | Int | (1) | Enumeration of the slip system that has the highest Schmid factor |
 | **Feature Attribute Array** | Poles | Ints | (3) | Specifies the crystallographic pole that points along the user defined loading direction |

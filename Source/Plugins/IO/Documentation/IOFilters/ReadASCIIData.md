@@ -36,21 +36,24 @@ If the data does not have any headers, the user can set a string value for each 
 ![Setting Names of each Column which will be used as the name of each **Attribute Array** ](Read_ASCII_4.png)
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Wizard Data Object | ASCIIWizardData | The object that holds all relevant data collected from the wizard |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Attribute Matrix** | None | Any | 1 | The path to the attribute matrix to store the arrays that will be imported |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | One or more **Element/Feature/Ensemble/etc. Attribute Array** | None | Any | 1 | One or more arrays that are created due to importing ASCII data via the wizard |
 
 ## License & Copyright ##

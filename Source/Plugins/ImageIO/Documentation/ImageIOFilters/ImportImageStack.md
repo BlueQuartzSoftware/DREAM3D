@@ -72,6 +72,7 @@ Not Applicable
 None
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Data Container** | ImageDataContainer | N/A | N/A | Created **Data Container** name with an **Image Geometry** or **Rectilinear Grid Geometry** |

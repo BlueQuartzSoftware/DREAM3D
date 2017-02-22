@@ -24,14 +24,16 @@ While performing the above steps, the number of neighboring **Cells** with a dif
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 | **Feature Attribute Matrix** | CellFeatureData | Cell Feature | N/A | **Feature Attribute Matrix** of the selected _Feature Ids_ |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | BoundaryCells | int8_t | (1) | The number of neighboring **Cells** of a given **Cell** that belong to a different **Feature** than itself. Values will range from *0* to *6*. Only created if *Store Boundary Cells Array* is checked|
 | **Feature Attribute Array** | NumNeighbors | int32_t | (1) | Number of contiguous neighboring **Features** for a given **Feature** |
 | **Feature Attribute Array**  | NeighborList | List of int32_t | (1) | List of the contiguous neighboring **Features** for a given **Feature** |

@@ -18,8 +18,9 @@ Note: the average orientation of the **Feature** is a typical choice, but if the
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 | **Cell Attribute Array**     | Phases            | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs |
 | **Cell Attribute Array** | Quats | float | (4) | Specifies the orientation of the **Cell** in quaternion representation |
@@ -28,8 +29,9 @@ Image
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureReferenceMisorientations | float | (1) | Misorientation angle (in degrees) between **Cell's** orientation and the reference orientation of the **Feature** that owns that **Cell** |
 | **Feature Attribute Array** | FeatureAvgMisorientations | float | (1) | Average of the *FeatureReferenceMisorientation* values for all of the **Cells** that belong to the **Feature** |
 

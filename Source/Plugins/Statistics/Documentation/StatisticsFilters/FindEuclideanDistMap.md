@@ -34,13 +34,15 @@ This **Filter** calculates the distance of each **Cell** from the nearest **Feat
 Image 
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | GBEuclideanDistances | float | (1) | Distance the **Cells** are from the *boundary* of the **Feature** they belong to. Only created if _Calculate Distance to Boundaries_ is checked |
 | **Cell Attribute Array** | TJEuclideanDistances | float | (1) | Distance the **Cells** are from a *triple junction* of **Features**. Only created if _Calculate Distance to Triple Lines_ is checked |
 | **Cell Attribute Array** | QPEuclideanDistances | float | (1) | Distance the **Cells** are from a *quadruple point* of **Features**. Only created if _Calculate Distance to Quadruple Points_ is checked |

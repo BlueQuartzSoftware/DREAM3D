@@ -17,8 +17,9 @@ Triangle
 None
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array**  | FaceNormals | double | (3) | Specifies the normal of each **Face** |
 
 

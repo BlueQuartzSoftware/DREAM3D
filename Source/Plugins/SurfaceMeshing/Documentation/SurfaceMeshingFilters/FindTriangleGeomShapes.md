@@ -25,16 +25,18 @@ None
 Triangle
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 | **Feature Attribute Array**  | Centroids | float | (3) | Coordinates of the center of mass for a given enclosed **Feature** |
 | **Feature Attribute Array** | Volumes |  float | (1) | Volume of the enclosed **Feature** |
 | **Attribute Matrix** | FaceFeatureData | Face Feature | N/A | **Feature Attribute Matrix** of the selected _Face Labels |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | AspectRatios | float | (2) | Ratio of axis lengths (b/a and c/a) for best-fit ellipsoid to enclosed **Feature** |
 | **Feature Attribute Array** | AxisEulerAngles | float | (3) | Euler angles (in radians) necessary to rotate the sample reference frame to the reference frame of the enclosed **Feature**, where the prinicpal axes of the best-fit ellipsoid are (X, Y, Z) |
 | **Feature Attribute Array** | AxisLengths | float | (3) | Axis lengths (a, b, c) for best-fit ellipsoid to enclosed **Feature** |

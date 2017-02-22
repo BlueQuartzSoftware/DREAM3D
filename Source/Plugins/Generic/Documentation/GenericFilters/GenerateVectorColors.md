@@ -16,15 +16,17 @@ This **Filter** generates a color for each **Element** based on the vector assig
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | VectorData | float | (3) | Vectors the colors will represent |
 | **Element Attribute Array** | Mask | bool | (1) | Used to define **Elements** as *good* or *bad*  |
 
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | Colors | uint8_t | (3) | RGB colors |
 
 

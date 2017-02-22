@@ -18,8 +18,9 @@ This **Filter** identifies all **Triangles** between neighboring **Features** th
 Image + Triangle
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | AvgQuats | float | (4) | Specifies the average orienation of each **Feature** in quaternion representation |
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
@@ -27,8 +28,9 @@ Image + Triangle
 | **Face Attribute Array** | FaceNormals | double | (3) | Specifies the normal of each triangle. Only required if _Compute Coherence_ is checked |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array** | TwinBoundary | bool | (1) | Specifies whether a given **Face** belongs to a twin boundary |
 | **Face Attribute Array** | TwinBoundaryIncoherence |  float | (1) | Angle in degrees between crystal direction parallel to **Face** normal and misorientation axis | 
 

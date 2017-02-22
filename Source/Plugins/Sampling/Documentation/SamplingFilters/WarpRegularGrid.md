@@ -16,8 +16,9 @@ It should be noted that because the duplicate grid that is "inverse" warped is i
 The user has the option to overwrite the original grid with the *warped* grid or save the *warped* grid as a new **Data Container**.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Polynomial Order | Enumeration | Specifies the order of the polynomial function that will warp the **Cells** (2, 3 or 4) |
 | nth-Order A Coefficients | float | A (x) Coefficients of the nth-order polynomial that will warp the **Cells** (2nd order = 6, 3rd order = 10, 4th order = 15) |
 | nth-Order B Coefficients | float | B (y) Coefficients of the nth-order polynomial that will warp the **Cells** (2nd order = 6, 3rd order = 10, 4th order = 15) |
@@ -30,8 +31,9 @@ Image
 None
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | NewImageDataContainer | N/A | N/A | Created **Data Container** name with an **Image Geometry**. Only created if _Save as New Data Container_ is checked |
 
 ## License & Copyright ##

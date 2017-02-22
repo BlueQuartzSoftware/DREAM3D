@@ -54,8 +54,9 @@ Choice of delimiter is as follows:
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | Any **Attribute Array** | None | Any | Any | Output arrays to be written as ASCII representations |
 
 ## Created Objects ##

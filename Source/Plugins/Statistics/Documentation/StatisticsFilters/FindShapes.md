@@ -23,15 +23,17 @@ None
 Image 
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 | **Feature Attribute Array** | Centroids | float | (3) | X, Y, Z coordinates of **Feature** center of mass |
 | **Attribute Matrix** | CellFeatureData | Cell Feature | N/A | **Feature Attribute Matrix** of the selected _Feature Ids_ |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | AspectRatios | float | (2) | Ratio of axis lengths (b/a and c/a) for best-fit ellipsoid to **Feature** |
 | **Feature Attribute Array** | AxisEulerAngles | float | (3) | Euler angles (in radians) necessary to rotate the sample reference frame to the reference frame of the **Feature**, where the prinicpal axes of the best-fit ellipsoid are (X, Y, Z) |
 | **Feature Attribute Array** | AxisLengths | float | (3) | Axis lengths (a, b, c) for best-fit ellipsoid to **Feature** |

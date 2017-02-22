@@ -26,7 +26,7 @@ For example, if the user has an already existing **Image Geometry** that is 100 
 ## Required Arrays ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Attribute Matrix** | Input Cell Data | Cell | N/A | The incoming cell data that is to be appended. |
 | **Attribute Matrix** | Destination Cell Data | Cell | N/A | The destination cell data that is the final location for the appended data. |
 
