@@ -17,6 +17,7 @@ SIMPL_START_FILTER_GROUP(
 
 set(_PublicFilters
   CalculateArrayHistogram
+  ComputeMomentInvariants2D
   FindAvgScalarValueForFeatures
   FindBoundaryElementFractions
   FindDifferenceMap
@@ -64,7 +65,8 @@ foreach(f ${_PrivateFilters} )
                         ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
 
-
+ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/MomentInvariants2D.h)
+ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/MomentInvariants2D.cpp)
 
 
 SIMPL_END_FILTER_GROUP(${Statistics_BINARY_DIR} "${_filterGroupName}" "Statistics Filters")
