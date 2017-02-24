@@ -253,6 +253,11 @@ void FindShapes::find_moments()
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
+  float xOrigin = 0.0f;
+  float yOrigin = 0.0f;
+  float zOrigin = 0.0f;
+  m->getGeometryAs<ImageGeom>()->getOrigin(xOrigin, yOrigin, zOrigin);
+
   // using a modified resolution to keept he moment calculations "small" and prevent exceeding numerical bounds.
   // scaleFactor is applied later to rescale the calculated axis lengths
   float modXRes = xRes * float(m_ScaleFactor);
@@ -261,12 +266,12 @@ void FindShapes::find_moments()
 
   for(size_t i = 0; i < numfeatures; i++)
   {
-    featuremoments[6 * i + 0] = 0.0f;
-    featuremoments[6 * i + 1] = 0.0f;
-    featuremoments[6 * i + 2] = 0.0f;
-    featuremoments[6 * i + 3] = 0.0f;
-    featuremoments[6 * i + 4] = 0.0f;
-    featuremoments[6 * i + 5] = 0.0f;
+    featuremoments[6 * i + 0] = 0.0;
+    featuremoments[6 * i + 1] = 0.0;
+    featuremoments[6 * i + 2] = 0.0;
+    featuremoments[6 * i + 3] = 0.0;
+    featuremoments[6 * i + 4] = 0.0;
+    featuremoments[6 * i + 5] = 0.0;
   }
 
   float x = 0.0f, y = 0.0f, z = 0.0f, x1 = 0.0f, x2 = 0.0f, y1 = 0.0f, y2 = 0.0f, z1 = 0.0f, z2 = 0.0f;
@@ -283,9 +288,9 @@ void FindShapes::find_moments()
       for(size_t k = 0; k < xPoints; k++)
       {
         int32_t gnum = m_FeatureIds[zStride + yStride + k];
-        x = float(k * modXRes);
-        y = float(j * modYRes);
-        z = float(i * modZRes);
+        x = float(k * modXRes) + xOrigin;
+        y = float(j * modYRes) + yOrigin;
+        z = float(i * modZRes) + zOrigin;
         x1 = x + (modXRes / 4.0f);
         x2 = x - (modXRes / 4.0f);
         y1 = y + (modYRes / 4.0f);
@@ -423,6 +428,11 @@ void FindShapes::find_moments2D()
   float modXRes = xRes * m_ScaleFactor;
   float modYRes = yRes * m_ScaleFactor;
 
+  float xOrigin = 0.0f;
+  float yOrigin = 0.0f;
+  float zOrigin = 0.0f;
+  m->getGeometryAs<ImageGeom>()->getOrigin(xOrigin, yOrigin, zOrigin);
+
   for(size_t i = 0; i < 6 * numfeatures; i++)
   {
     featuremoments[i] = 0.0;
@@ -465,10 +475,14 @@ void FindShapes::find_moments2D()
   double konst2 = static_cast<double>(xRes * yRes);
   for(size_t i = 1; i < numfeatures; i++)
   {
-    m_Volumes[i] = m_Volumes[i] * konst2;
-    featuremoments[i * 6 + 0] = featuremoments[i * 6 + 0] * konst1;
-    featuremoments[i * 6 + 1] = featuremoments[i * 6 + 1] * konst1;
-    featuremoments[i * 6 + 2] = -featuremoments[i * 6 + 2] * konst1;
+   // Eq. 12 Moment matrix. Omega 2
+   // Eq. 11 Omega 2
+   // E1. 13 Omega 1
+   // xx = u20 =
+    m_Volumes[i] = m_Volumes[i] * konst2; // Area
+    featuremoments[i * 6 + 0] = featuremoments[i * 6 + 0] * konst1; // u20
+    featuremoments[i * 6 + 1] = featuremoments[i * 6 + 1] * konst1; // u02
+    featuremoments[i * 6 + 2] = -featuremoments[i * 6 + 2] * konst1; // u11
   }
 }
 
