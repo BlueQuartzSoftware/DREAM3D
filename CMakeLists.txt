@@ -185,7 +185,6 @@ endif()
 
 include(CMakeParseArguments)
 
-
 #------------------------------------------------------------------------------
 # If we have not defined a "BrandedSIMPLView_DIR" then define it to the default
 # generic set of ICONs. Needs to be defined BEFORE we setup the SIMPLView project
@@ -197,6 +196,7 @@ endif()
 set(SIMPLView_APPLICATION_NAME "DREAM3D")
 set(SIMPLView_VERSION_HDR_FILE "SIMPLViewVersion.h")
 set(SIMPLView_VERSION_SRC_FILE "SIMPLViewVersion.cpp")
+set(EXE_DEBUG_EXTENSION "_debug")
 
 # -----------------------------------------------------------------------
 # Set these CMP variables because the Version Files need them set
@@ -254,6 +254,22 @@ endif()
 set_property(GLOBAL PROPERTY CMP_PROJECT_INSTALL_HEADERS "0")
 
 # -----------------------------------------------------------------------
+# Set a Global Prefix where everthing is going to get intalled. For OS X we are
+# going to try to install everything into the .app package
+# -----------------------------------------------------------------------
+set_property(GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX "")
+if(APPLE)
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set_property(GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX "${SIMPLView_APPLICATION_NAME}${EXE_DEBUG_EXTENSION}.app/Contents/")
+  else()
+    set_property(GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX "${SIMPLView_APPLICATION_NAME}.app/Contents/")
+  endif()
+endif()
+get_property(DREAM3D_PACKAGE_DEST_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX)
+
+
+
+# -----------------------------------------------------------------------
 # Bring in the SIMPLView Project, which will bring in SIMPLib
 # -----------------------------------------------------------------------
 add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
@@ -261,7 +277,6 @@ add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
 #Enable use of Solution Folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
-set(EXE_DEBUG_EXTENSION "_debug")
 set(PROJECT_INSTALL_HEADERS "0")
 set(PROJECT_INSTALL_EXECUTABLES "1")
 
@@ -405,14 +420,11 @@ set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 # Generate our ReadMe and License Files
 configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
                 ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt )
-configure_file(${PROJECT_SOURCE_DIR}/ReadMe.md
-                ${PROJECT_BINARY_DIR}/ReadMe-DREAM3D.md )
 
 # --------------------------------------------------------------------
 # Generate install rules for the text files
-install(FILES ${PROJECT_BINARY_DIR}/ReadMe-DREAM3D.md
-              ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
-        DESTINATION .
+install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
+        DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}
         COMPONENT Applications)
 
 # Include some directories for the compiler
@@ -463,9 +475,6 @@ if(SIMPL_BUILD_TESTING)
     include( CTest )
 endif()
 
-
-#include_directories(${BrandedSIMPLView_DIR})
-
 # -----------------------------------------------------------------------
 # -- Build the EbsdLib Library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
@@ -474,12 +483,10 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}
 # -- Build the OrientationLib Library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib ${PROJECT_BINARY_DIR}/OrientationLib)
 
-
 # -----------------------------------------------------------------------
 # This needs to be set here as we are going to look for files in this directory
 # -----------------------------------------------------------------------
 set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
-
 
 #- Add in the Main DREAM.3D Application
 #add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
@@ -561,7 +568,7 @@ set_target_properties(PrebuiltPipelinesCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 #- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
 #- folder and NOT in any subfolders beyond that.
 install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-        DESTINATION .
+        DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}
         COMPONENT Applications )
 
 #-------------------------------------------------------------------------------
@@ -591,7 +598,7 @@ set(SYNTHETIC_STATS_FILES
 list(GET SYNTHETIC_STATS_FILES 0 data_file)
 if(EXISTS ${data_file})
   install(FILES ${SYNTHETIC_STATS_FILES}
-          DESTINATION ./Data/
+          DESTINATION Data/
           COMPONENT Applications )
 endif()
 
@@ -616,29 +623,29 @@ file(APPEND "${SIMPLibSearchDirs}" "${CMP_LIB_SEARCH_DIRS};")
 #----------------------------------------------------------------------------------------
 # Print out a Summary Section:
 
-message("*******************************************************************************")
-message("* DREAM.3D Configuration Summary")
-message("* BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
-message("* System: ${CMAKE_SYSTEM_NAME}")
-message("* Version: ${CMAKE_SYSTEM_VERSION}")
-message("* Processor: ${CMAKE_SYSTEM_PROCESSOR}")
-message("* DREAM3_SDK: ${DREAM3D_SDK}")
-message("* DREAM3D_DATA_DIR: ${DREAM3D_DATA_DIR}")
-message("* CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
-message("* SIMPLProj_SOURCE_DIR: ${SIMPLProj_SOURCE_DIR}")
-message("* SIMPLViewProj_SOURCE_DIR: ${SIMPLViewProj_SOURCE_DIR}")
-message("* BrandedSIMPLView_DIR: ${BrandedSIMPLView_DIR}")
-message("* Boost (${Boost_VERSION}) ${BOOST_ROOT}")
-message("* Eigen (${EIGEN_VERSION}) ${EIGEN_INSTALL}")
-message("* HDF5 (${HDF5_VERSION}) ${HDF5_INSTALL}")
-message("* ITK (${ITK_VERSION}) ${ITK_DIR}")
-message("* Qt5 (${Qt5_VERSION}) ${Qt5_DIR}")
-message("* Qwt (${QWT_VERSION}) ${QWT_INSTALL}")
-message("* TBB (${TBB_VERSION}) ${TBB_INSTALL_DIR}")
-message("* -------------- Plugins ------------------------------------------------------")
+message(STATUS "*******************************************************************************")
+message(STATUS "* DREAM.3D Configuration Summary")
+message(STATUS "* BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+message(STATUS "* System: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "* Version: ${CMAKE_SYSTEM_VERSION}")
+message(STATUS "* Processor: ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "* DREAM3_SDK: ${DREAM3D_SDK}")
+message(STATUS "* DREAM3D_DATA_DIR: ${DREAM3D_DATA_DIR}")
+message(STATUS "* CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
+message(STATUS "* SIMPLProj_SOURCE_DIR: ${SIMPLProj_SOURCE_DIR}")
+message(STATUS "* SIMPLViewProj_SOURCE_DIR: ${SIMPLViewProj_SOURCE_DIR}")
+message(STATUS "* BrandedSIMPLView_DIR: ${BrandedSIMPLView_DIR}")
+message(STATUS "* Boost (${Boost_VERSION}) ${BOOST_ROOT}")
+message(STATUS "* Eigen (${EIGEN_VERSION}) ${EIGEN_INSTALL}")
+message(STATUS "* HDF5 (${HDF5_VERSION}) ${HDF5_INSTALL}")
+message(STATUS "* ITK (${ITK_VERSION}) ${ITK_DIR}")
+message(STATUS "* Qt5 (${Qt5_VERSION}) ${Qt5_DIR}")
+message(STATUS "* Qwt (${QWT_VERSION}) ${QWT_INSTALL}")
+message(STATUS "* TBB (${TBB_VERSION}) ${TBB_INSTALL_DIR}")
+message(STATUS "* -------------- Plugins ------------------------------------------------------")
 foreach(d3dPlugin ${DREAM3D_ALL_PLUGINS})
-message("*   ${d3dPlugin}: [${DREAM3D_BUILD_PLUGIN_${d3dPlugin}}]")
+message(STATUS "*   ${d3dPlugin}: [${DREAM3D_BUILD_PLUGIN_${d3dPlugin}}]")
 endforeach()
-message("*******************************************************************************")
+message(STATUS "*******************************************************************************")
 
 

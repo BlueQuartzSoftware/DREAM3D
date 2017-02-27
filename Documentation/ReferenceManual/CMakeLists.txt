@@ -205,7 +205,9 @@ endif()
 #- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
 #- folder and NOT in any subfolders beyond that.
 file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D)
-install(DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D
-        DESTINATION Help/
+if(NOT APPLE)
+  install(DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D
+        DESTINATION ${INSTALL_DIR_PREFIX}Help/
         COMPONENT Applications )
+endif()
 

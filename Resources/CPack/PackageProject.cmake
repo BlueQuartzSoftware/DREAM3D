@@ -39,11 +39,6 @@ if(UNIX AND NOT APPLE)
     endif(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 endif()
 
-# Add a short ReadMe file for OS X that warns of moving the applications
-if(APPLE)
-    install(FILES ${PROJECT_RESOURCES_DIR}/CPack/OS_X_ReadMe.txt DESTINATION .)
-endif()
-
 message(STATUS "DREAM3DProj_RELEASE_TYPE: ${DREAM3DProj_RELEASE_TYPE}")
 if("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "Official")
   set(DREAM3D_VERSION_SHORT "${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH}")

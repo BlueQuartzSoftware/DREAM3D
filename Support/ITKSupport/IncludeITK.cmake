@@ -210,7 +210,11 @@ if(WIN32 OR APPLE)
   endif()
 
   foreach(ITK_FOLDER ${DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES})
-    install(DIRECTORY ${ITK_LIB_DIRECTORY}/${ITK_FOLDER} DESTINATION lib COMPONENT Applications)
+    get_property(INSTALL_DIR_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX)
+    install(DIRECTORY ${ITK_LIB_DIRECTORY}/${ITK_FOLDER} 
+            DESTINATION ${INSTALL_DIR_PREFIX}lib
+            COMPONENT Applications)
+  
   endforeach()
 endif()
 
@@ -229,7 +233,3 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 include_directories(${ITK_INCLUDE_DIRS})
-
-
-
-
