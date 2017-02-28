@@ -257,7 +257,7 @@ set_property(GLOBAL PROPERTY CMP_PROJECT_INSTALL_HEADERS "0")
 # Set a Global Prefix where everthing is going to get intalled. For OS X we are
 # going to try to install everything into the .app package
 # -----------------------------------------------------------------------
-set_property(GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX "")
+set_property(GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX ".")
 if(APPLE)
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set_property(GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX "${SIMPLView_APPLICATION_NAME}${EXE_DEBUG_EXTENSION}.app/Contents/")
