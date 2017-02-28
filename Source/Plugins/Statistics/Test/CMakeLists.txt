@@ -41,6 +41,7 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # Include this file from the SIMPL Project
 include(${SIMPLProj_SOURCE_DIR}/Test/SIMPLTestFunctions.cmake)
 
+include_directories(${${PLUGIN_NAME}_SOURCE_DIR})
 include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Test)
 include_directories(${EbsdLibTest_BINARY_DIR})
