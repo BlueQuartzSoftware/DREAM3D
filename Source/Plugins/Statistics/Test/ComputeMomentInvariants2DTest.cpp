@@ -51,7 +51,7 @@
 
 // Directly include the .cpp file instead of the header because of the way the unit
 // tests are compiled.
-#include "Statistics/StatisticsFilters/util/MomentInvariants2D.cpp"
+#include "StatisticsFilters/util/MomentInvariants2D.cpp"
 
 class ComputeMomentInvariants2DTest
 {
