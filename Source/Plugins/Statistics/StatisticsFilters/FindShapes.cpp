@@ -288,9 +288,9 @@ void FindShapes::find_moments()
       for(size_t k = 0; k < xPoints; k++)
       {
         int32_t gnum = m_FeatureIds[zStride + yStride + k];
-        x = float(k * modXRes) + xOrigin;
-        y = float(j * modYRes) + yOrigin;
-        z = float(i * modZRes) + zOrigin;
+        x = float(k * modXRes);
+        y = float(j * modYRes);
+        z = float(i * modZRes);
         x1 = x + (modXRes / 4.0f);
         x2 = x - (modXRes / 4.0f);
         y1 = y + (modYRes / 4.0f);
