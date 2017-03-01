@@ -448,7 +448,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
   int gid = 1;
 
   totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
-  if(totalvol == 0.0)
+  if(totalvol == 0.0f)
   {
     return -1;
   }

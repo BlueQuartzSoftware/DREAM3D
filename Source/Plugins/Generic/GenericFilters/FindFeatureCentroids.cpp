@@ -151,6 +151,7 @@ void FindFeatureCentroids::preflight()
 void FindFeatureCentroids::find_centroids()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
 
   size_t totalFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
@@ -163,18 +164,18 @@ void FindFeatureCentroids::find_centroids()
   float y = 0.0f;
   float z = 0.0f;
 
-  size_t xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
-  size_t yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
-  size_t zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+  size_t xPoints = imageGeom->getXPoints();
+  size_t yPoints = imageGeom->getYPoints();
+  size_t zPoints = imageGeom->getZPoints();
 
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = imageGeom->getXRes();
+  float yRes = imageGeom->getYRes();
+  float zRes = imageGeom->getZRes();
 
   float xOrigin = 0.0f;
   float yOrigin = 0.0f;
   float zOrigin = 0.0f;
-  m->getGeometryAs<ImageGeom>()->getOrigin(xOrigin, yOrigin, zOrigin);
+  imageGeom->getOrigin(xOrigin, yOrigin, zOrigin);
 
   size_t zStride = 0;
   size_t yStride = 0;
@@ -204,9 +205,9 @@ void FindFeatureCentroids::find_centroids()
       featurecenters[i * 4 + 1] = featurecenters[i * 4 + 1] / featurecenters[i * 4 + 0];
       featurecenters[i * 4 + 2] = featurecenters[i * 4 + 2] / featurecenters[i * 4 + 0];
       featurecenters[i * 4 + 3] = featurecenters[i * 4 + 3] / featurecenters[i * 4 + 0];
-      m_Centroids[3 * i] = featurecenters[i * 4 + 1];
-      m_Centroids[3 * i + 1] = featurecenters[i * 4 + 2];
-      m_Centroids[3 * i + 2] = featurecenters[i * 4 + 3];
+      m_Centroids[3 * i] = featurecenters[i * 4 + 1] + xOrigin;
+      m_Centroids[3 * i + 1] = featurecenters[i * 4 + 2] + yOrigin;
+      m_Centroids[3 * i + 2] = featurecenters[i * 4 + 3] + zOrigin;
     }
   }
 }

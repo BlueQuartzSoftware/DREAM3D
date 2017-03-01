@@ -206,14 +206,11 @@ void FindBoundingBoxFeatures::preflight()
 void FindBoundingBoxFeatures::find_boundingboxfeatures()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName());
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
 
   size_t size = m_CentroidsPtr.lock()->getNumberOfTuples();
-  float boundbox[7] = {
-      0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  };
-  float coords[7] = {
-      0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-  };
+  float boundbox[6] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  float coords[6] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
   float x = 0.0f;
   float y = 0.0f;
   float z = 0.0f;
@@ -244,55 +241,53 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
     // reset boundbox for each phase
-    boundbox[1] = 0;
-    boundbox[2] = m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getXRes();
-    boundbox[3] = 0;
-    boundbox[4] = m->getGeometryAs<ImageGeom>()->getYPoints() * m->getGeometryAs<ImageGeom>()->getYRes();
-    boundbox[5] = 0;
-    boundbox[6] = m->getGeometryAs<ImageGeom>()->getZPoints() * m->getGeometryAs<ImageGeom>()->getZRes();
+    imageGeom->getBoundingBox(boundbox);
+
     for(size_t i = 1; i < size; i++)
     {
       if(m_SurfaceFeatures[i] == true && (m_CalcByPhase == false || m_Phases[i] == iter))
       {
+        sidetomove = 0;
         move = 1;
         mindist = std::numeric_limits<float>::max();
         x = m_Centroids[3 * i];
         y = m_Centroids[3 * i + 1];
         z = m_Centroids[3 * i + 2];
+        coords[0] = x;
         coords[1] = x;
-        coords[2] = x;
+        coords[2] = y;
         coords[3] = y;
-        coords[4] = y;
+        coords[4] = z;
         coords[5] = z;
-        coords[6] = z;
         for(int32_t j = 1; j < 7; j++)
         {
           dist[j] = std::numeric_limits<float>::max();
           if(j % 2 == 1)
           {
-            if(coords[j] > boundbox[j])
+            if(coords[j-1] > boundbox[j-1])
             {
-              dist[j] = (coords[j] - boundbox[j]);
+              dist[j] = (coords[j-1] - boundbox[j-1]);
             }
-            if(coords[j] <= boundbox[j])
+            if(coords[j-1] <= boundbox[j-1])
             {
               move = 0;
             }
           }
           if(j % 2 == 0)
           {
-            if(coords[j] < boundbox[j])
+            if(coords[j-1] < boundbox[j-1])
             {
-              dist[j] = (boundbox[j] - coords[j]);
+              dist[j] = (boundbox[j-1] - coords[j-1]);
             }
-            if(coords[j] >= boundbox[j])
+            if(coords[j-1] >= boundbox[j-1])
             {
               move = 0;
             }
           }
           if(dist[j] < mindist)
           {
-            mindist = dist[j], sidetomove = j;
+            mindist = dist[j];
+            sidetomove = j-1;
           }
         }
         if(move == 1)
@@ -305,27 +300,27 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
     {
       if(m_CalcByPhase == false || m_Phases[j] == iter)
       {
-        if(m_Centroids[3 * j] <= boundbox[1])
+        if(m_Centroids[3 * j] <= boundbox[0])
         {
           m_BiasedFeatures[j] = true;
         }
-        if(m_Centroids[3 * j] >= boundbox[2])
+        if(m_Centroids[3 * j] >= boundbox[1])
         {
           m_BiasedFeatures[j] = true;
         }
-        if(m_Centroids[3 * j + 1] <= boundbox[3])
+        if(m_Centroids[3 * j + 1] <= boundbox[2])
         {
           m_BiasedFeatures[j] = true;
         }
-        if(m_Centroids[3 * j + 1] >= boundbox[4])
+        if(m_Centroids[3 * j + 1] >= boundbox[3])
         {
           m_BiasedFeatures[j] = true;
         }
-        if(m_Centroids[3 * j + 2] <= boundbox[5])
+        if(m_Centroids[3 * j + 2] <= boundbox[4])
         {
           m_BiasedFeatures[j] = true;
         }
-        if(m_Centroids[3 * j + 2] >= boundbox[6])
+        if(m_Centroids[3 * j + 2] >= boundbox[5])
         {
           m_BiasedFeatures[j] = true;
         }
@@ -340,10 +335,15 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
 void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName());
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
 
   size_t size = m_CentroidsPtr.lock()->getNumberOfTuples();
-  float boundbox[5] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-  float coords[5] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  float xOrigin = 0.0f;
+  float yOrigin = 0.0f;
+  //float zOrigin = 0.0f;
+
+  float boundbox[6] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  float coords[4] = {0.0f, 0.0f, 0.0f, 0.0f};
   float x = 0.0f;
   float y = 0.0f;
   float dist[5] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
@@ -354,72 +354,78 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   int32_t xPoints = 0, yPoints = 0;
   float xRes = 0.0f, yRes = 0.0f;
 
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
+
+
+  if(imageGeom->getXPoints() == 1)
   {
-    xPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
-    xRes = m->getGeometryAs<ImageGeom>()->getYRes();
-    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
-    yRes = m->getGeometryAs<ImageGeom>()->getZRes();
+    xPoints = imageGeom->getYPoints();
+    xRes = imageGeom->getYRes();
+    yPoints = imageGeom->getZPoints();
+    yRes = imageGeom->getZRes();
   }
-  if(m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
+  if(imageGeom->getYPoints() == 1)
   {
-    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
-    xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
-    yRes = m->getGeometryAs<ImageGeom>()->getZRes();
+    xPoints = imageGeom->getXPoints();
+    xRes = imageGeom->getXRes();
+    yPoints = imageGeom->getZPoints();
+    yRes = imageGeom->getZRes();
   }
-  if(m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  if(imageGeom->getZPoints() == 1)
   {
-    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
-    xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-    yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
-    yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+    xPoints = imageGeom->getXPoints();
+    xRes = imageGeom->getXRes();
+    yPoints = imageGeom->getYPoints();
+    yRes = imageGeom->getYRes();
   }
 
-  boundbox[1] = 0;
-  boundbox[2] = xPoints * xRes;
-  boundbox[3] = 0;
-  boundbox[4] = yPoints * yRes;
+  boundbox[0] = xOrigin;
+  boundbox[1] = xOrigin + xPoints * xRes;
+  boundbox[2] = yOrigin;
+  boundbox[3] = yOrigin + yPoints * yRes;
+
+
   for(size_t i = 1; i < size; i++)
   {
     if(m_SurfaceFeatures[i] == true)
     {
+      sidetomove = 0;
       move = 1;
       mindist = std::numeric_limits<float>::max();
       x = m_Centroids[3 * i];
       y = m_Centroids[3 * i + 1];
+      coords[0] = x;
       coords[1] = x;
-      coords[2] = x;
+      coords[2] = y;
       coords[3] = y;
-      coords[4] = y;
       for(int32_t j = 1; j < 5; j++)
       {
         dist[j] = std::numeric_limits<float>::max();
         if(j % 2 == 1)
         {
-          if(coords[j] > boundbox[j])
+          if(coords[j-1] > boundbox[j-1])
           {
-            dist[j] = (coords[j] - boundbox[j]);
+            dist[j] = (coords[j-1] - boundbox[j-1]);
           }
-          if(coords[j] <= boundbox[j])
+          if(coords[j-1] <= boundbox[j-1])
           {
             move = 0;
           }
         }
         if(j % 2 == 0)
         {
-          if(coords[j] < boundbox[j])
+          if(coords[j-1] < boundbox[j-1])
           {
-            dist[j] = (boundbox[j] - coords[j]);
+            dist[j] = (boundbox[j-1] - coords[j-1]);
           }
-          if(coords[j] >= boundbox[j])
+          if(coords[j-1] >= boundbox[j-1])
           {
             move = 0;
           }
         }
         if(dist[j] < mindist)
         {
-          mindist = dist[j], sidetomove = j;
+          mindist = dist[j];
+          sidetomove = j-1;
         }
       }
       if(move == 1)
@@ -430,19 +436,19 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   }
   for(size_t j = 1; j < size; j++)
   {
-    if(m_Centroids[3 * j] <= boundbox[1])
+    if(m_Centroids[3 * j] <= boundbox[0])
     {
       m_BiasedFeatures[j] = true;
     }
-    if(m_Centroids[3 * j] >= boundbox[2])
+    if(m_Centroids[3 * j] >= boundbox[1])
     {
       m_BiasedFeatures[j] = true;
     }
-    if(m_Centroids[3 * j + 1] <= boundbox[3])
+    if(m_Centroids[3 * j + 1] <= boundbox[2])
     {
       m_BiasedFeatures[j] = true;
     }
-    if(m_Centroids[3 * j + 1] >= boundbox[4])
+    if(m_Centroids[3 * j + 1] >= boundbox[3])
     {
       m_BiasedFeatures[j] = true;
     }
@@ -462,12 +468,13 @@ void FindBoundingBoxFeatures::execute()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCentroidsArrayPath().getDataContainerName());
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
 
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1)
+  if(imageGeom->getXPoints() > 1 && imageGeom->getYPoints() > 1 && imageGeom->getZPoints() > 1)
   {
     find_boundingboxfeatures();
   }
-  if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  if(imageGeom->getXPoints() == 1 || imageGeom->getYPoints() == 1 || imageGeom->getZPoints() == 1)
   {
     find_boundingboxfeatures2D();
   }
