@@ -180,7 +180,7 @@ public:
     WriteHeader(f, binary, dims, origin, scaling);
 
     // Start the POINT_DATA Section
-    fprintf(f, "POINT_DATA %lu\n", total);
+    fprintf(f, "POINT_DATA %lu\n", static_cast<unsigned long>(total));
     WriteScalars<quint8>(f, "unsigned_char", "Data_uint8", dims, binary);
     WriteScalars<qint8>(f, "char", "Data_int8", dims, binary);
     WriteScalars<quint16>(f, "unsigned_short", "Data_uint16", dims, binary);
@@ -197,7 +197,7 @@ public:
     dims[2] -= 1;
     total = dims[0] * dims[1] * dims[2];
     fprintf(f, "\n");
-    fprintf(f, "CELL_DATA %lu\n", total);
+    fprintf(f, "CELL_DATA %lu\n",  static_cast<unsigned long>(total));
     WriteScalars<quint8>(f, "unsigned_char", "Data_uint8", dims, binary);
     WriteScalars<qint8>(f, "char", "Data_int8", dims, binary);
     WriteScalars<quint16>(f, "unsigned_short", "Data_uint16", dims, binary);

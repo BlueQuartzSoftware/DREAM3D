@@ -21,13 +21,15 @@ None
 Triangle
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array** | FeatureFaceId | int32_t | (1) | Specifies to which **Feature** each **Face** belongs |
 | **Attribute Matrix** | FaceFeatureData | Face Feature | N/A | Created **Feature Attribute Matrix** name  |
 | **Feature Attribute Array** | FaceLabels | int32_t | (2) | Specifies which _original_ **Features** are on either side of each _new_ **Feature** |

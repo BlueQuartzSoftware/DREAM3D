@@ -88,8 +88,8 @@ public:
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the ExportData Filter from the FilterManager
-    QString filtName = "ExportData";
+    // Now instantiate the WriteASCIIData Filter from the FilterManager
+    QString filtName = "WriteASCIIData";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if(nullptr == filterFactory.get())
@@ -112,10 +112,10 @@ public:
     DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addDataContainer(m);
 
-    AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, SIMPL::AttributeMatrixType::Generic);
+    AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, AttributeMatrix::Type::Generic);
     m->addAttributeMatrix(SIMPL::Defaults::AttributeMatrixName, attrMatrix);
 
-    AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+    AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     m->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMatrix2);
     int size = 20;
 
@@ -178,7 +178,7 @@ public:
     DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
     // Now instantiate the EnsembleInfoReader Filter from the FilterManager
-    QString filtName = "ExportData";
+    QString filtName = "WriteASCIIData";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if(nullptr != filterFactory.get())
@@ -193,7 +193,7 @@ public:
       filter->setDataContainerArray(dca);
 
       var.setValue(2);
-      propWasSet = filter->setProperty("Delimeter", var); // delimeter is a space
+      propWasSet = filter->setProperty("Delimiter", var); // delimiter is a space
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       var.setValue(10);

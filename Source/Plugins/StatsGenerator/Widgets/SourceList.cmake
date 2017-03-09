@@ -164,10 +164,10 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${${PLUGIN_NAME}_Widgets_Generate
 # QT5_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS ""  )
 # cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRCS}" "" "0")
 
-include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Widgets/Presets)
-include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Widgets/Presets/Dialogs)
-include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Widgets/Delegates)
-include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Widgets/TableModels)
+# include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Widgets/Presets)
+# include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Widgets/Presets/Dialogs)
+# include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Widgets/Delegates)
+# include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Widgets/TableModels)
 
 
 

@@ -112,21 +112,21 @@ StatsGenAxisODFWidget::~StatsGenAxisODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
+void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType)
 {
 
   VectorOfFloatArray arrays(0);
-  if(phaseType == SIMPL::PhaseType::PrimaryPhase)
+  if(phaseType == PhaseType::Type::Primary)
   {
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
     arrays = pp->getAxisODF_Weights();
   }
-  else if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
+  else if(phaseType == PhaseType::Type::Precipitate)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
     arrays = pp->getAxisODF_Weights();
   }
-  else if(phaseType == SIMPL::PhaseType::TransformationPhase)
+  else if(phaseType == PhaseType::Type::Transformation)
   {
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getAxisODF_Weights();
@@ -160,7 +160,7 @@ void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, un
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phaseType, bool preflight)
+int StatsGenAxisODFWidget::getOrientationData(StatsData* statsData, PhaseType::Type phaseType, bool preflight)
 {
   int retErr = 0;
 

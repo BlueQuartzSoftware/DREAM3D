@@ -2,28 +2,34 @@ Name of Filter {#name_of_file_in_lower_case}
 =============
 
 ## Group (Subgroup) ##
+
 Filter Group (Filter Subgroup)
 
 ## Description ##
+
 This filter does the following...
 
 ## Parameters ##
+
 | Name             | Type | Description |
 |------------------|------| ------------|
 | Parameter Name | Parameter Type | Description of Parameter |
 
 ## Required Geometry ##
+
 geometry
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-------|
+|------|--------------|------|----------------------|-------------|
 | SomeObject  | SomeName | Data Type | dimensions | description |
 
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-------|
+|------|--------------|------|----------------------|-------------|
 | SomeObject  | SomeName | Data Type | dimensions | description |
 
 

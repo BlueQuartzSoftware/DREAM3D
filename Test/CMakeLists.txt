@@ -31,7 +31,7 @@ include_directories(${SIMPLProj_BINARY_DIR})
 
 AddSIMPLUnitTest(TESTNAME FilterParameterCallbackExample
                    SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterParameterCallbackExample.cpp
-                   FOLDER "SIMPLibProj/Test"
+                   FOLDER "DREAM3D/Test"
                    LINK_LIBRARIES Qt5::Core H5Support SIMPLib  )
 
 
@@ -45,7 +45,7 @@ set(PreFlightTest_SOURCES ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp
                           )
 AddSIMPLUnitTest(TESTNAME PreFlightTest
                    SOURCES ${PreFlightTest_SOURCES}
-                   FOLDER "SIMPLibProj/Test"
+                   FOLDER "DREAM3D/Test"
                    LINK_LIBRARIES Qt5::Core H5Support SIMPLib  )
 
 #----------------------------------------------------------------------------
@@ -87,10 +87,13 @@ set(PREBUILT_PIPELINE_NAMES
 configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
                ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 
-add_executable(PipelineRunnerTest ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
+add_executable(PipelineRunnerTest 
+                ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib SIMPLib)
 set_target_properties(PipelineRunnerTest PROPERTIES FOLDER "SIMPLibProj/Test")
-#add_test(PipelineRunnerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest)
+add_test(NAME PipelineRunnerTest 
+          COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest
+          WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
 

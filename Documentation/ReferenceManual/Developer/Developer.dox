@@ -6,7 +6,7 @@ This section of the user manual discusses the various aspects and steps needed t
 with your own plugins, custome filters or allow the developer to fix or extend existing filters. The tasks
 can be broken down to the following items:
 
-@subpage compiler_suite
+@subpage compiler_suite Compiler Suite
 
 @subpage source_download
 

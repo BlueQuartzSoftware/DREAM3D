@@ -128,6 +128,11 @@ public:
   virtual int getStatisticsData(PrimaryStatsData* primaryStatsData);
 
   /**
+   * @brief resetUI This method will reset the UI back to its default state.
+   */
+  virtual void resetUI();
+
+  /**
    * @brief StatsGenFeatureSizeWidget::extractStatsData
    * @param statsData
    * @param index
@@ -183,6 +188,12 @@ public:
     // because we are NOT blocking signals
     m_Mu_SizeDistribution->setText(loc.toString(mu));
 
+    int err = calculateNumberOfBins();
+    if(err < 0)
+    {
+
+    }
+
   }
 
 signals:
@@ -233,6 +244,11 @@ protected slots:
    * @param point
    */
   void plotPointSelected(const QPointF& point);
+
+  /**
+   * @brief userEditedPlotData
+   */
+  void userEditedPlotData();
 
 private:
   QwtPlotCurve* m_SizeDistributionCurve = nullptr;

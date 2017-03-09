@@ -212,7 +212,7 @@ class EstablishMatrixPhase : public AbstractFilter
 
     // Ensemble Data - make sure these are all initialized to nullptr in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
     DEFINE_STRINGARRAY_VARIABLE(PhaseNames)
     StatsDataArray::WeakPointer m_StatsDataArray;
 

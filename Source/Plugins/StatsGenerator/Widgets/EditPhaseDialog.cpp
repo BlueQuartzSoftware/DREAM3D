@@ -123,23 +123,23 @@ void EditPhaseDialog::setPptFraction(float d)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::setPhaseType(unsigned int pt)
+void EditPhaseDialog::setPhaseType(PhaseType::Type pt)
 {
-  phaseTypeCombo->setCurrentIndex(pt);
+  phaseTypeCombo->setCurrentIndex(static_cast<PhaseType::EnumType>(pt));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int EditPhaseDialog::getPhaseType()
+PhaseType::Type EditPhaseDialog::getPhaseType()
 {
   int index = phaseTypeCombo->currentIndex();
 
   if(index == 2)
   {
-    return SIMPL::PhaseType::MatrixPhase;
+    return PhaseType::Type::Matrix;
   }
-  return static_cast<unsigned int>(index);
+  return static_cast<PhaseType::Type>(index);
 }
 
 // -----------------------------------------------------------------------------
@@ -236,7 +236,7 @@ void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
 {
   Q_UNUSED(index);
   bool b = false;
-  if(static_cast<unsigned int>(phaseTypeCombo->currentIndex()) == SIMPL::PhaseType::PrecipitatePhase)
+  if(static_cast<PhaseType::Type>(phaseTypeCombo->currentIndex()) == PhaseType::Type::Precipitate)
   {
     b = true;
   }
@@ -244,7 +244,7 @@ void EditPhaseDialog::on_phaseTypeCombo_currentIndexChanged(int index)
   pptFractionLabel->setEnabled(b);
 
   b = false;
-  if(static_cast<unsigned int>(phaseTypeCombo->currentIndex()) == SIMPL::PhaseType::TransformationPhase)
+  if(static_cast<PhaseType::Type>(phaseTypeCombo->currentIndex()) == PhaseType::Type::Transformation)
   {
     b = true;
   }

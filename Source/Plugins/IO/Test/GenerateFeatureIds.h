@@ -203,7 +203,7 @@ class CreateDataContainer : public AbstractFilter
       tDims[0] = nx;
       tDims[1] = ny;
       tDims[2] = nz;
-      AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+      AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
       m->addAttributeMatrix(attrMat->getName(), attrMat);
     }
 

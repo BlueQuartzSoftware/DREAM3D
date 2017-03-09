@@ -31,6 +31,7 @@
 #ifndef _ParserFunctors_hpp_
 #define _ParserFunctors_hpp_
 
+#include <QtCore/QString>
 #include <QtCore/QByteArray>
 
 #include "SIMPLib/SIMPLib.h"

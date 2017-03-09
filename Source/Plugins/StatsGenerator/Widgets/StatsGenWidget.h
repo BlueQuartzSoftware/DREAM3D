@@ -44,6 +44,7 @@
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "StatsGenerator/Widgets/Presets/AbstractMicrostructurePreset.h"
 #include "StatsGenerator/Widgets/Presets/MicrostructurePresetManager.h"
+#include "SIMPLib/Common/PhaseType.h"
 
 class QwtPlotZoomer;
 class QwtPlotPicker;
@@ -64,7 +65,7 @@ class StatsGenWidget : public QWidget
     StatsGenWidget(QWidget* parent = 0);
     virtual ~StatsGenWidget();
 
-    SIMPL_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(int, PhaseIndex)
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction)

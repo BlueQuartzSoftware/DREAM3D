@@ -84,25 +84,18 @@ cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_N
 set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h)
 set(RegisterKnownFiltersFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/RegisterKnownFilters.cpp)
 
-#--------------------------
-include_directories( ${HDF5_INCLUDE_DIR} )
-include_directories( ${PROJECT_CODE_DIR} )
-include_directories( ${QtSupportLib_BINARY_DIR} )
-include_directories( ${QtSupportLib_SOURCE_DIR} )
+#-- Compute some directories
 get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
 get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)
-
-include_directories( ${${PLUGIN_NAME}_BINARY_DIR} )
-include_directories( ${${PLUGIN_NAME}_SOURCE_DIR})
-include_directories( ${PLUGINS_SOURCE_DIR} )
-include_directories( ${PLUGINS_BINARY_DIR})
-include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME})
-include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters)
-include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets)
-include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test)
+#--------------------------
 include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
 include_directories( ${SIMPLProj_BINARY_DIR})
+include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SVWidgetsLib/Widgets)
+include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SVWidgetsLib/QtSupport)
+include_directories( ${HDF5_INCLUDE_DIR} )
+include_directories( ${PROJECT_CODE_DIR} )
+
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
 include_directories( ${SIMPLViewProj_BINARY_DIR})
 
 # Remove the temp files that we no longer need
@@ -222,7 +215,18 @@ target_link_libraries(${PLUGIN_NAME}
                     Qt5::Widgets
                     SVWidgetsLib
                     )
+
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
+target_include_directories(${PLUGIN_NAME}
+                      PUBLIC ${${PLUGIN_NAME}_BINARY_DIR} 
+                      PUBLIC ${${PLUGIN_NAME}_SOURCE_DIR}
+                      PUBLIC ${PLUGINS_SOURCE_DIR} 
+                      PUBLIC ${PLUGINS_BINARY_DIR}
+                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}
+                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters
+                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets
+                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test
+)
 qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)
 
 # --------------------------------------------------------------------

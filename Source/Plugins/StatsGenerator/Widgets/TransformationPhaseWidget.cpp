@@ -49,19 +49,24 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 #include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
+#include "StatsGenerator/StatsGeneratorConstants.h"
+#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
-
+#include "StatsGenerator/Widgets/TableModels/SGAbstractTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
+#include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot_curve.h>
 #include <qwt_plot_grid.h>
@@ -82,7 +87,7 @@ TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent)
 , m_grid(nullptr)
 {
   setTabTitle("Transformation");
-  setPhaseType(SIMPL::PhaseType::PrimaryPhase);
+  setPhaseType(PhaseType::Type::Primary);
   setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   setupUi(this);
   setupGui();
@@ -145,7 +150,7 @@ void TransformationPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(m_Omega3Plot, SIGNAL(userEditedData()), this, SLOT(dataWasEdited()));
-  connect(m_Omega3Plot, SIGNAL(userEditedData()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_Omega3Plot, SIGNAL(userEditedData()), this, SIGNAL(dataChanged()));
 
   w = m_BOverAPlot;
   w->setPlotTitle(QString("B/A Shape Distribution"));
@@ -161,7 +166,7 @@ void TransformationPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(m_BOverAPlot, SIGNAL(userEditedData()), this, SLOT(dataWasEdited()));
-  connect(m_BOverAPlot, SIGNAL(userEditedData()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_BOverAPlot, SIGNAL(userEditedData()), this, SIGNAL(dataChanged()));
 
   w = m_COverAPlot;
   w->setPlotTitle(QString("C/A Shape Distribution"));
@@ -177,7 +182,7 @@ void TransformationPhaseWidget::setupGui()
   w->setMaxCutOff(maxCutOff);
   w->setBinStep(binStepSize);
   connect(m_COverAPlot, SIGNAL(userEditedData()), this, SLOT(dataWasEdited()));
-  connect(m_COverAPlot, SIGNAL(userEditedData()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_COverAPlot, SIGNAL(userEditedData()), this, SIGNAL(dataChanged()));
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
   m_SizeDistributionPlot->setTitle("Size Distribution");
@@ -203,9 +208,9 @@ void TransformationPhaseWidget::setupGui()
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
   m_AxisODFWidget->setEnableAxisDecorations(false);
 
-  connect(m_ODFWidget, SIGNAL(odfParametersChanged()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_ODFWidget, SIGNAL(odfParametersChanged()), this, SIGNAL(dataChanged()));
   connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)), this, SLOT(bulkLoadEvent(bool)));
-  connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()), this, SIGNAL(phaseParametersChanged()));
+  connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()), this, SIGNAL(dataChanged()));
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
@@ -365,7 +370,7 @@ void TransformationPhaseWidget::on_m_GenerateDefaultData_clicked()
 {
   m_DataHasBeenGenerated = true;
   updatePlots();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -384,7 +389,7 @@ void TransformationPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
   updateSizeDistributionPlot();
   m_Mu_SizeDistribution->setFocus();
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -395,7 +400,7 @@ void TransformationPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QS
   updateSizeDistributionPlot();
   m_Sigma_SizeDistribution->setFocus();
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -406,7 +411,7 @@ void TransformationPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& t
   updateSizeDistributionPlot();
   m_MinSigmaCutOff->setFocus();
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -417,7 +422,7 @@ void TransformationPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& t
   updateSizeDistributionPlot();
   m_MaxSigmaCutOff->setFocus();
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -426,7 +431,7 @@ void TransformationPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& t
 void TransformationPhaseWidget::on_m_BinStepSize_valueChanged(double v)
 {
   calculateNumberOfBins();
-  emit phaseParametersChanged();
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -605,12 +610,12 @@ void TransformationPhaseWidget::plotSizeDistribution()
 
   QwtArray<float> xCo;
   QwtArray<float> yCo;
-  QwtArray<float> binsizes;
+  QwtArray<float> binSizes;
   float xMax = std::numeric_limits<float>::min();
   float yMax = std::numeric_limits<float>::min();
   QwtArray<float> x;
   QwtArray<float> y;
-  err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
+  err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binSizes, xCo, yCo, xMax, yMax, x, y);
   if(err < 0)
   {
     return;
@@ -619,19 +624,67 @@ void TransformationPhaseWidget::plotSizeDistribution()
   // Now that we have bins and feature sizes, push those to the other plot widgets
   // Setup Each Plot Widget
   // The MicroPreset class will set the distribution for each of the plots
-  m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeOmega3TableModel(m_Omega3Plot, binsizes);
+  QMap<QString, QVector<float>> data;
+  data[AbstractMicrostructurePreset::kBinNumbers] = binSizes;
+  QVector<QColor> colors;
 
-  m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeBOverATableModel(m_BOverAPlot, binsizes);
+  m_MicroPreset->initializeOmega3TableModel(data, colors);
+  m_Omega3Plot->setDistributionType(m_MicroPreset->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
+  SGAbstractTableModel* tmodel = m_Omega3Plot->tableModel();
+  if(tmodel)
+  {
+    QVector<QVector<float>> colData;
+    colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+    colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+    tmodel->setTableData(binSizes, colData, colors);
+  }
 
-  m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
+  m_MicroPreset->initializeBOverATableModel(data, colors);
+  m_BOverAPlot->setDistributionType(m_MicroPreset->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
+  tmodel = m_BOverAPlot->tableModel();
+  if(tmodel)
+  {
+    QVector<QVector<float>> colData;
+    colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+    colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+    tmodel->setTableData(binSizes, colData, colors);
+  }
+
+  m_MicroPreset->initializeCOverATableModel(data, colors);
+  m_COverAPlot->setDistributionType(m_MicroPreset->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
+  tmodel = m_COverAPlot->tableModel();
+  if(tmodel)
+  {
+    QVector<QVector<float>> colData;
+    colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+    colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+    tmodel->setTableData(binSizes, colData, colors);
+  }
 
   // Get any presets for the ODF/AxisODF/MDF also
-  m_MicroPreset->initializeODFTableModel(m_ODFWidget);
-  m_MicroPreset->initializeAxisODFTableModel(m_AxisODFWidget);
-  m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
+  m_MicroPreset->initializeODFTableModel(data);
+  SGODFTableModel* model = m_ODFWidget->tableModel();
+  if(model)
+  {
+    model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                        data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+  }
+
+  m_MicroPreset->initializeAxisODFTableModel(data);
+  model = m_AxisODFWidget->tableModel();
+  if(model)
+  {
+    model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                        data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+  }
+
+  // m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
+  m_MicroPreset->initializeMDFTableModel(data);
+  SGMDFTableModel* mdfModel = (m_ODFWidget->getMDFWidget()->tableModel());
+  if(mdfModel)
+  {
+    mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
+  }
 }
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)                                                                                                                                                                 \
@@ -689,10 +742,14 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* crystalStructures = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
+  PhaseType::EnumType* phaseTypes = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
-  phaseTypes[m_PhaseIndex] = m_PhaseType;
+  phaseTypes[m_PhaseIndex] = static_cast<PhaseType::EnumType>(m_PhaseType);
+
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseName);
+  StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
+  phaseNameArray->setValue(getPhaseIndex(), getPhaseName());
 
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if(nullptr != statsDataArray)
@@ -736,9 +793,9 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
       transformationStatsData->setFeatureSize_COverA(data);
       transformationStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
-    m_ODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase, preflight);
+    m_ODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::Transformation, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase, preflight);
+    err = m_AxisODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::Transformation, preflight);
   }
   return retErr;
 }
@@ -758,12 +815,12 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
+  PhaseType::EnumType* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);
-  m_PhaseType = attributeArray[index];
+  m_PhaseType = static_cast<PhaseType::Type>(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
@@ -774,8 +831,13 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   }
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
   TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
-  setPhaseName(statsData->getName());
 
+  QString phaseName = statsData->getName();
+  if(phaseName.isEmpty())
+  {
+    phaseName = QString("Transformation Phase (%1)").arg(index);
+  }
+  setPhaseName(phaseName);
   m_PhaseFraction = transformationStatsData->getPhaseFraction();
 
   m_ParentPhase = transformationStatsData->getParentPhase();
@@ -846,10 +908,10 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, transformationStatsData, SIMPL::PhaseType::TransformationPhase);
+  m_ODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::Transformation);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, transformationStatsData, SIMPL::PhaseType::TransformationPhase);
+  m_AxisODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::Transformation);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

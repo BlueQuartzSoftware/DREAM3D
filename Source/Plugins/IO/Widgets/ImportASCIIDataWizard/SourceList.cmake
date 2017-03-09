@@ -39,7 +39,6 @@ set(${PLUGIN_NAME}_Widgets_UIS ${${PLUGIN_NAME}_Widgets_UIS}
 # Add in the remaining sources that are actually widgets but are completely Custom and do NOT use private
 # inheritance through a .ui file
 set(${PLUGIN_NAME}_Widgets_HDRS ${${PLUGIN_NAME}_Widgets_HDRS}
-      ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp
       ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp
       ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ASCIIDataItem.h
       ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ParserFunctors.hpp

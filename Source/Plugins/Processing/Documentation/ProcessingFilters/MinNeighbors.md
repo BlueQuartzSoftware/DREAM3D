@@ -11,8 +11,9 @@ The **Filter** can be run in a mode where the minimum number of neighbors is app
 
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Minimum Number Neighbors | int32_t | Number of neighbors a **Feature** must have to remain as a **Feature** |
 | Apply to Single Phase | bool | Whether to apply minimum to single ensemble or all ensembles |
 | Phase Index | int32_t | Which **Ensemble** to apply minimum to. Only needed if _Apply to Single Phase Only_ is checked |
@@ -21,8 +22,9 @@ The **Filter** can be run in a mode where the minimum number of neighbors is app
 Image 
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs. Only required if _Apply to Single Phase Only_ is checked  |
 | **Feature Attribute Array** | NumNeighbors | int32_t | (1) | Number of contiguous neighboring **Features** for each **Feature** |

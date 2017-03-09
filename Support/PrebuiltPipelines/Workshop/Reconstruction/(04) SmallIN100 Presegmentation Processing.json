@@ -164,7 +164,7 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "MaterialName",
+                                    "Name": "PhaseName",
                                     "Object Type": "StringDataArray",
                                     "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [

@@ -42,8 +42,9 @@ and the user wanted a uniform resolution of *3*, then the following mapping woul
 *Note:* No interpolation of the data is performed and the nearest "old slice" is copied to a given "new slice". 
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Current Z Positions File | File Path | The input file path of the Z positions file |
 | New Z Resolution | float | Uniform resolution desired in the Z direction of the new grid |
 
@@ -54,8 +55,9 @@ Image
 None
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Attribute Matrix** | CellData | Cell | N/A | Regularized **Cell Attribute Matrix** name |
 
 ## License & Copyright ##

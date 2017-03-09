@@ -40,14 +40,16 @@ voxels on a side and either 0.5 or 0.25 resolution. The units are arbitrary leng
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Ensemble Attribute Array** | Statistics | Statistics Object | (1) | Statistics objects (depending on *Phase Type*) that store fits to descriptors such as size distribution, shape distribution, neighbor distribution, ODF, MDF, etc. |
 | **Ensemble Attribute Array** | PhaseTypes | uint32_t | (1) | Enumeration specifying the phase type of each **Ensemble** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | SyntheticVolumeDataContainer | N/A | N/A | Created synthetic volume **Data Container** name with an **Image Geometry** |
 | **Attribute Matrix** | CellData | Cell | N/A | Created **Cell Attribute Matrix** name |
 

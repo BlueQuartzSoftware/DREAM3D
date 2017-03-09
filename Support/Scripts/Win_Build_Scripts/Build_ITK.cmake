@@ -15,17 +15,24 @@ set(HDFVERSION $ENV{HDF_VERSION})
 
 set(ITK_VERSION $ENV{ITK_VERSION})
 
+set(CMAKE_COMMAND $ENV{CMAKE_INSTALL}/bin/cmake.exe)
+
 set(DEBUG_PREFIX "_D")
 
 set(itkArchiveName "InsightToolkit-${ITK_VERSION}")
 
 #------------------------------------------------------------------------------
 # Check first to see if the ITK Source archive is available in the SDK directory
-if (NOT EXISTS "${SDK_INSTALL}/${itkArchiveName}.tar.gz")
-  message(STATUS  "-------------------------------------------")
-  message(STATUS  " Downloading ITK Version ${version}")
-  message(STATUS  "-------------------------------------------")
-  file(DOWNLOAD "http://superb-dca2.dl.sourceforge.net/project/itk/itk/4.7/${itkArchiveName}.tar.gz" ${SDK_INSTALL}/${itkArchiveName}.tar.gz)
+# if (NOT EXISTS "${SDK_INSTALL}/${itkArchiveName}.tar.gz")
+#   message(STATUS  "-------------------------------------------")
+#   message(STATUS  " Downloading ITK Version ${version}")
+#   message(STATUS  "-------------------------------------------")
+#   file(DOWNLOAD "http://superb-dca2.dl.sourceforge.net/project/itk/itk/4.7/${itkArchiveName}.tar.gz" ${SDK_INSTALL}/${itkArchiveName}.tar.gz)
+# endif()
+if(NOT EXISTS "${SDK_INSTALL}/${itkArchiveName}")
+
+  execute_process(COMMAND "C:/Program Files/Git/cmd/git.exe" clone -b master git://github.com/InsightSoftwareConsortium/ITK  ${itkArchiveName}
+                WORKING_DIRECTORY ${SDK_INSTALL})
 endif()
 
 #------------------------------------------------------------------------------
@@ -71,6 +78,7 @@ function(InitializeCacheFile)
   FILE(APPEND ${cacheFile} "ITKGroup_Registration:BOOL=ON\n")
   FILE(APPEND ${cacheFile} "ITKGroup_Segmentation:BOOL=ON\n")
   FILE(APPEND ${cacheFile} "Module_SCIFIO:BOOL=ON\n")
+  FILE(APPEND ${cacheFile} "Module_MRCIO:BOOL=ON\n")
   FILE(APPEND ${cacheFile} "ITK_USE_SYSTEM_HDF5:BOOL=ON\n")
   if(NOT WIN32)
     FILE(APPEND ${cacheFile} "CMAKE_SKIP_INSTALL_RPATH=ON\n")
@@ -111,7 +119,7 @@ InitializeCacheFile (HDF_INSTALL hdf5-${HDFVERSION})
 
 #------------------------------------------------------------------------------
 # Have CMake generate our Visual Studio Project
-execute_process(COMMAND ${CMAKE_COMMAND} -G "Visual Studio 12 2013 Win64" "${SDK_INSTALL}/${itkArchiveName}" 
+execute_process(COMMAND ${CMAKE_COMMAND} -G "Visual Studio 14 2015 Win64" "${SDK_INSTALL}/${itkArchiveName}" 
                   WORKING_DIRECTORY "${SDK_INSTALL}/ITK-${ITK_VERSION}")
 
 #------------------------------------------------------------------------------

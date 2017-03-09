@@ -47,17 +47,17 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
-#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
+#include "OrientationLib/LaueOps/CubicLowOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalLowOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/MonoclinicOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/TetragonalLowOps.h"
+#include "OrientationLib/LaueOps/TetragonalOps.h"
+#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/TrigonalLowOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
 
 #include "OrientationLib/Utilities/PoleFigureImageUtilities.h"
 
@@ -145,23 +145,23 @@ void WritePoleFigure::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   setFilterParameters(parameters);

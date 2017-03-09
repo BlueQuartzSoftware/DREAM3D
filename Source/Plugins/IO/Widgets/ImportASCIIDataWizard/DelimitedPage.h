@@ -75,12 +75,15 @@ class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
     */
     int nextId() const;
 
+    void setEditSettings(bool value);
+
   protected slots:
     void showEvent(QShowEvent* event);
     void checkBox_Toggled(int state);
 
   private:
-    int                                             m_NumLines;
+    int         m_NumLines = -1;
+    bool        m_EditSettings = false;
 
     DelimitedPage(const DelimitedPage&); // Copy Constructor Not Implemented
     void operator=(const DelimitedPage&); // Operator '=' Not Implemented

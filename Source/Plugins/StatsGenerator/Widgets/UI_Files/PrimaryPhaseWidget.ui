@@ -112,8 +112,37 @@ font-size: 150%;
          </item>
          <item>
           <widget class="QPushButton" name="m_GenerateDefaultData">
+           <property name="toolTip">
+            <string>Clicking this button will generate a default set of statistics data, over writing any custom data that has been entered into any of the sub tabs.</string>
+           </property>
            <property name="text">
             <string>Create Data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_ResetDataBtn">
+           <property name="toolTip">
+            <string>Clicking this button will reset all the user settable values to their default values when the phase was first instantiated.</string>
+           </property>
+           <property name="text">
+            <string>Reset...</string>
            </property>
           </widget>
          </item>
@@ -183,8 +212,8 @@ font-size: 150%;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>30</height>
+            <width>793</width>
+            <height>609</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">

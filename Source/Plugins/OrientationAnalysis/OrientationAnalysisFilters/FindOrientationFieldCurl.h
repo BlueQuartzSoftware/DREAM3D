@@ -46,7 +46,7 @@
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 /**
  * @class FindOrientationFieldCurl FindOrientationFieldCurl.h DREAM3DLib/GenericFilters/FindOrientationFieldCurl.h
@@ -176,7 +176,7 @@ class FindOrientationFieldCurl : public AbstractFilter
 
 
   private:
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<LaueOps::Pointer> m_OrientationOps;
 
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_DATAARRAY_VARIABLE(float, DislocationTensors)

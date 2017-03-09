@@ -68,7 +68,7 @@ AlignSectionsMisorientation::AlignSectionsMisorientation()
 {
   m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
 
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   // only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();
@@ -94,23 +94,23 @@ void AlignSectionsMisorientation::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, AlignSectionsMisorientation, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, AlignSectionsMisorientation, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, AlignSectionsMisorientation, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, AlignSectionsMisorientation, req));
   }
@@ -292,6 +292,8 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
 
     misorientsPtr->initializeWithValue(false); // Initialize everything to false
 
+    float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
+
     while(newxshift != oldxshift || newyshift != oldyshift)
     {
       oldxshift = newxshift;
@@ -330,7 +332,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
                         w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }
                     }
-                    if(w > m_MisorientationTolerance)
+                    if(w > misorientationTolerance)
                     {
                       disorientation++;
                     }
@@ -392,9 +394,6 @@ void AlignSectionsMisorientation::execute()
   {
     return;
   }
-
-  // Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   AlignSections::execute();
 

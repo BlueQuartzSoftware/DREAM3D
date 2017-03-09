@@ -116,8 +116,8 @@ public:
       om.toGMatrix(g);
 
       // find bounding box for current feature
-      GeometryMath::FindBoundingBoxOfFaces(m_Faces, faceIds, ll, ur);
-      GeometryMath::FindBoundingBoxOfRotatedFaces(m_Faces, faceIds, g, ll_rot, ur_rot);
+      GeometryMath::FindBoundingBoxOfFaces(m_Faces.get(), faceIds, ll, ur);
+      GeometryMath::FindBoundingBoxOfRotatedFaces(m_Faces.get(), faceIds, g, ll_rot, ur_rot);
       GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
 
       generatePoints(iter, m_Points, m_InFeature, m_AvgQuats, m_LatticeConstants, m_Basis, ll_rot, ur_rot);
@@ -131,7 +131,7 @@ public:
         point = vertArray->getVertexPointer(i);
         if(boolArray->getValue(i) == false)
         {
-          code = GeometryMath::PointInPolyhedron(m_Faces, faceIds, m_FaceBBs, point, ll, ur, radius);
+          code = GeometryMath::PointInPolyhedron(m_Faces.get(), faceIds, m_FaceBBs.get(), point, ll, ur, radius);
           if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
           {
             m_InFeature[start]->setValue(i, true);
@@ -300,13 +300,13 @@ void InsertAtoms::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, InsertAtoms, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, InsertAtoms, req));
   }
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
@@ -378,7 +378,7 @@ void InsertAtoms::dataCheck()
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
   if(getErrorCondition() < 0 || nullptr == vertexAttrMat.get())
   {
     return;
@@ -623,7 +623,7 @@ void InsertAtoms::execute()
       faceLists->insertCellReference(g2, (linkLoc[g2])++, i);
     }
     // find bounding box for each face
-    GeometryMath::FindBoundingBoxOfFace(triangleGeom, i, ll, ur);
+    GeometryMath::FindBoundingBoxOfFace(triangleGeom.get(), i, ll, ur);
     faceBBs->setCoords(2 * i, ll);
     faceBBs->setCoords(2 * i + 1, ur);
   }

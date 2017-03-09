@@ -48,4 +48,22 @@ namespace UnitTest
   }
 }
 
+namespace UnitTest
+{
+  namespace FindSizesTest
+  {
+   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+  }
+}
+
+namespace UnitTest
+{
+  namespace ComputeMomentInvariants2DTest
+  {
+   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+  }
+}
+
 #endif

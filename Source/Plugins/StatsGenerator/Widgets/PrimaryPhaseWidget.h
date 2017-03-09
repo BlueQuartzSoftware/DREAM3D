@@ -46,7 +46,7 @@ public:
 
   void updatePlots();
 
-  SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
+  SIMPL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
 
   virtual void setCrystalStructure(unsigned int xtal);
   virtual void setPhaseIndex(int index);
@@ -62,8 +62,8 @@ public:
   void setCOverAPlotWidget(StatsGenPlotWidget* w);
   StatsGenPlotWidget* getCOverAPlotWidget();
 
-  void setODFWidgetWidget(StatsGenODFWidget* w);
-  StatsGenODFWidget* getODFWidgetWidget();
+  void setODFWidget(StatsGenODFWidget* w);
+  StatsGenODFWidget* getODFWidget();
 
   void setAxisODFWidget(StatsGenAxisODFWidget* w);
   StatsGenAxisODFWidget* getAxisODFWidget();
@@ -92,6 +92,8 @@ public:
 protected slots:
 
   virtual void on_m_GenerateDefaultData_clicked();
+
+  virtual void on_m_ResetDataBtn_clicked();
 
   void on_microstructurePresetCombo_currentIndexChanged(int index);
 

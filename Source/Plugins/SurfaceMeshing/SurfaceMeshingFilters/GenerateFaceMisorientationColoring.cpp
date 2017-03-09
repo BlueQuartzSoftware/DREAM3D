@@ -48,14 +48,14 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
-#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
+#include "OrientationLib/LaueOps/CubicLowOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/MonoclinicOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
+#include "OrientationLib/LaueOps/TetragonalOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -73,7 +73,7 @@ class CalculateFaceMisorientationColorsImpl
   float* m_Quats;
   float* m_Colors;
   unsigned int* m_CrystalStructures;
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   CalculateFaceMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, float* colors, unsigned int* crystalStructures)
@@ -83,7 +83,7 @@ public:
   , m_Colors(colors)
   , m_CrystalStructures(crystalStructures)
   {
-    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
   virtual ~CalculateFaceMisorientationColorsImpl()
   {
@@ -200,26 +200,26 @@ void GenerateFaceMisorientationColoring::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, GenerateFaceMisorientationColoring, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, GenerateFaceMisorientationColoring, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, GenerateFaceMisorientationColoring, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateFaceMisorientationColoring, req));
   }

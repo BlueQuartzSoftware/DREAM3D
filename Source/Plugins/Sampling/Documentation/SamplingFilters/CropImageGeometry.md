@@ -25,8 +25,9 @@ The user has the option to save the cropped volume as a new **Data Container** o
 Normally this **Filter** will leave the origin of the volume set at (0, 0, 0), which means output files like the Xdmf file will have the same (0, 0, 0) origin. When viewing both the original larger volume and the new cropped volume simultaneously the cropped volume and the original volume will have the same origin which makes the cropped volume look like it was shifted in space. In order to keep the cropped volume at the same absolute position in space the user should turn **ON** the _Update Origin_ check box.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | X Min (Column) | int32_t | Lower X (column) bound of the volume to crop out |
 | Y Min (Row)| int32_t | Lower Y (row) bound of the volume to crop out |
 | Z Min (Plane)| int32_t | Lower Z (plane) bound of the volume to crop out |
@@ -41,15 +42,17 @@ Normally this **Filter** will leave the origin of the volume set at (0, 0, 0), w
 Image 
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Attribute Matrix** | CellData | Cell | N/A | **Cell Attribute Matrix** that holds data for resolution change |
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs. Only required if _Renumber Features_ is checked |
 | **Attribute Matrix** | CellFeatureData | Cell Feature | N/A | **Feature Attribute Matrix** that corresponds to the **Feature** data for the selected _Feature Ids_. Only required if _Renumber Features_ is checked |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | NewImageDataContainer | N/A | N/A | Created **Data Container** name with an **Image Geometry**. Only created if _Save as New Data Container_ is checked |
 
 ## License & Copyright ##

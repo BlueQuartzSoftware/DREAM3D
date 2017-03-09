@@ -80,7 +80,7 @@ void RegularizeZSpacing::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("New Z Resolution", NewZRes, FilterParameter::Parameter, RegularizeZSpacing));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", CellAttributeMatrixPath, FilterParameter::RequiredArray, RegularizeZSpacing, req));
   }
   setFilterParameters(parameters);

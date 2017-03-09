@@ -1,7 +1,7 @@
 # -------------------------------------------------------------
 # This function adds the necessary cmake code to find the Itk
 # shared libraries and setup custom copy commands and/or install
-# rules for Linux and Windows to use
+# rules for Windows to use
 function(AddItkCopyInstallRules)
   set(options )
   set(oneValueArgs )
@@ -19,11 +19,7 @@ function(AddItkCopyInstallRules)
     endif()
   endif()
 
-  set(itk_INSTALL_DIR "lib")
-  if(WIN32)
-    set(itk_INSTALL_DIR ".")
-  endif()
-
+  set(itk_INSTALL_DIR ".")
 
   set(STACK "")
   list(APPEND STACK ${itk_LIBS})
@@ -40,15 +36,14 @@ function(AddItkCopyInstallRules)
     list(REMOVE_AT STACK 0)
     list(LENGTH STACK STACK_LENGTH)
 
-    # See if we have found a Qt5 or System library. All Itk libs start with "itk"
-    string(FIND ${itk_LIBNAME} "Qt5::" IsQt5Lib)
-    string(REGEX MATCH "^ITK" IsItkLib ${itk_LIBNAME})
-
     # If we have not seen this library before then find its dependencies
     if(NOT FOUND_${itk_LIBNAME})
       set(FOUND_${itk_LIBNAME} TRUE PARENT_SCOPE)
-      if(${IsQt5Lib} EQUAL -1 AND "${IsItkLib}" STREQUAL "ITK")
-        # message(STATUS "    ${itk_LIBNAME}: ${FOUND_${itk_LIBNAME}}  IsItkLib: ${IsItkLib}")
+
+      string(REGEX MATCH "^(ITK|itk|SCIFIO)" IsItkLib ${itk_LIBNAME})
+   
+      if(NOT "${IsItkLib}" STREQUAL "")
+        #message(STATUS "    ${itk_LIBNAME}: ${FOUND_${itk_LIBNAME}}  IsItkLib: ${IsItkLib}")
         set(itk_LIBVAR ${itk_LIBNAME})
         foreach(BTYPE ${itk_TYPES} )
           #message(STATUS "  BTYPE: ${BTYPE}")
@@ -58,7 +53,6 @@ function(AddItkCopyInstallRules)
           endif()
 
           if(TARGET ${itk_LIBNAME})
-
             # Find the current library's dependent Itk libraries
             get_target_property(itkLibDeps ${itk_LIBNAME} IMPORTED_LINK_INTERFACE_LIBRARIES_${UpperBType})
             if(NOT "${itkLibDeps}" STREQUAL "itkLibDeps-NOTFOUND" )
@@ -76,11 +70,7 @@ function(AddItkCopyInstallRules)
 
             # Get the Actual Library Path and create Install and copy rules
             get_target_property(DllLibPath ${itk_LIBNAME} IMPORTED_LOCATION_${UpperBType})
-            if(WIN32)
-              string(REGEX MATCH "\.dll$" IsDLL ${DllLibPath})
-            else()
-              string(REGEX MATCH "\.so$" IsDLL ${DllLibPath})
-            endif()
+            string(REGEX MATCH "\.dll$" IsDLL ${DllLibPath})
             # message(STATUS "  DllLibPath:(${IsDLL}) ${DllLibPath}")
             if(NOT "${DllLibPath}" STREQUAL "LibPath-NOTFOUND" AND NOT "${IsDLL}" STREQUAL "")
               # message(STATUS "  Creating Install Rule for ${DllLibPath}")
@@ -90,7 +80,7 @@ function(AddItkCopyInstallRules)
                                     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
                                     # COMMENT "  Copy: ${DllLibPath} To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/"
                                     )
-                set_target_properties(ZZ_${itk_LIBVAR}_DLL_${UpperBType}-Copy PROPERTIES FOLDER ZZ_Itk_COPY_FILES)
+                set_target_properties(ZZ_${itk_LIBVAR}_DLL_${UpperBType}-Copy PROPERTIES FOLDER ZZ_COPY_FILES/${BTYPE}/Itk)
                 install(FILES ${DllLibPath} DESTINATION "${itk_INSTALL_DIR}" CONFIGURATIONS ${BTYPE} COMPONENT Applications)
               endif()
             endif()
@@ -99,30 +89,7 @@ function(AddItkCopyInstallRules)
             get_filename_component(${itk_LIBVAR}_DIR ${DllLibPath} PATH)
             # message(STATUS " ${itk_LIBVAR}_DIR: ${${itk_LIBVAR}_DIR}")
 
-            # Now piece together a complete path for the symlink that Linux Needs to have
-            if(WIN32)
-              get_target_property(${itk_LIBVAR}_${UpperBType} ${itk_LIBNAME} IMPORTED_IMPLIB_${UpperBType})
-            else()
-              get_target_property(${itk_LIBVAR}_${UpperBType} ${itk_LIBNAME} IMPORTED_SONAME_${UpperBType})
-            endif()
-
-            #----------------------------------------------------------------------
-            # This section for Linux only
-            #message(STATUS "  ${itk_LIBVAR}_${UpperBType}: ${${itk_LIBVAR}_${UpperBType}}")
-            if(NOT "${${itk_LIBVAR}_${UpperBType}}" STREQUAL "${itk_LIBVAR}_${UpperBType}-NOTFOUND" AND NOT WIN32)
-              set(SYMLINK_PATH "${${itk_LIBVAR}_DIR}/${${itk_LIBVAR}_${UpperBType}}")
-              #message(STATUS "  Creating Install Rule for ${SYMLINK_PATH}")
-              if(NOT TARGET ZZ_${itk_LIBVAR}_SYMLINK_${UpperBType}-Copy)
-                add_custom_target(ZZ_${itk_LIBVAR}_SYMLINK_${UpperBType}-Copy ALL
-                                    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SYMLINK_PATH}
-                                    ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
-                                    # COMMENT "  Copy: ${SYMLINK_PATH} To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/"
-                                    )
-                set_target_properties(ZZ_${itk_LIBVAR}_SYMLINK_${UpperBType}-Copy PROPERTIES FOLDER ZZ_Itk_COPY_FILES)
-                install(FILES ${SYMLINK_PATH} DESTINATION "${itk_INSTALL_DIR}" CONFIGURATIONS ${BTYPE} COMPONENT Applications)
-              endif()
-            endif()
-            # End Linux Only Section
+            get_target_property(${itk_LIBVAR}_${UpperBType} ${itk_LIBNAME} IMPORTED_IMPLIB_${UpperBType})
             #------------------------------------------------------------------------
           endif(TARGET ${itk_LIBNAME})
         endforeach()
@@ -189,6 +156,7 @@ list(APPEND DREAM3D_ITK_MODULES
     ${DREAM3D_CORE_ITK_MODULES}
     ${DREAM3D_ADDITIONAL_ITK_MODULES}
   )
+list(REMOVE_DUPLICATES DREAM3D_ITK_MODULES)
 
 # --------------------------------------------------------------------
 # find ITK libararies
@@ -227,12 +195,39 @@ else()
   endif()
 endif()
 
+# On Mac and Windows, SCIFIO directories need to be installed
+if(WIN32 OR APPLE)
+  set(DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES "jars")
+  if(WIN32)
+    list(APPEND DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES "jre")
+  endif()
+  # Set ITK_LIB_DIRECTORY
+  # If using ITK build directory:
+  set(ITK_LIB_DIRECTORY ${ITK_DIR}/lib)
+  # If using ITK install directory:
+  if(ITK_INSTALL_PREFIX)
+    set(ITK_LIB_DIRECTORY ${ITK_INSTALL_PREFIX}/lib)
+  endif()
+
+  foreach(ITK_FOLDER ${DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES})
+    get_property(DREAM3D_PACKAGE_DEST_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX)
+    set(INSTALL_DIR_PREFIX "lib")
+    if(APPLE)
+      set(INSTALL_DIR_PREFIX "${DREAM3D_PACKAGE_DEST_PREFIX}lib")
+    endif()
+    install(DIRECTORY ${ITK_LIB_DIRECTORY}/${ITK_FOLDER} 
+            DESTINATION ${INSTALL_DIR_PREFIX}
+            COMPONENT Applications)
+  
+  endforeach()
+endif()
+
 # On Apple Systems since we can use the embedded install_name we do not need
 # any of this copy stuff and the install will take care of itself. This loop
 # will iterate over all the ITK Modules, figure out if each is shared
 # (DLL), then create a copy rule and an install rule.
-if(NOT APPLE)
-  AddItkCopyInstallRules(LIBS ${DREAM3D_ITK_MODULES} TYPES ${BUILD_TYPES})
+if(WIN32)
+  AddItkCopyInstallRules(LIBS ${DREAM3D_ITK_MODULES} TYPES ${BUILD_TYPES} FOLDERS)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -242,7 +237,3 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 include_directories(${ITK_INCLUDE_DIRS})
-
-
-
-

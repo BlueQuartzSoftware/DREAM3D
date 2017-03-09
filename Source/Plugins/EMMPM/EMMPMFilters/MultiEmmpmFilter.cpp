@@ -92,7 +92,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     {
       {
         MultiDataArraySelectionFilterParameter::RequirementType req =
-            MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+            MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
         parameters[i] = SIMPL_NEW_MDA_SELECTION_FP("Input Attribute Arrays", InputDataArrayVector, FilterParameter::RequiredArray, MultiEmmpmFilter, req);
       }
     }
@@ -125,11 +125,11 @@ void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* read
   setSegmentationLoops(reader->readValue("SegmentationLoops", getSegmentationLoops()));
   setUseSimulatedAnnealing(reader->readValue("UseSimulatedAnnealing", getUseSimulatedAnnealing()));
   setUseGradientPenalty(reader->readValue("UseGradientPenalty", getUseGradientPenalty()));
-  setGradientPenalty(reader->readValue("GradientPenalty", getGradientPenalty()));
+  setGradientBetaE(reader->readValue("GradientPenalty", getGradientBetaE()));
   setUseCurvaturePenalty(reader->readValue("UseCurvaturePenalty", getUseCurvaturePenalty()));
-  setCurvaturePenalty(reader->readValue("CurvaturePenalty", getCurvaturePenalty()));
-  setRMax(reader->readValue("RMax", getRMax()));
-  setEMLoopDelay(reader->readValue("EMLoopDelay", getEMLoopDelay()));
+  setCurvatureBetaC(reader->readValue("CurvaturePenalty", getCurvatureBetaC()));
+  setCurvatureRMax(reader->readValue("RMax", getCurvatureRMax()));
+  setCurvatureEMLoopDelay(reader->readValue("EMLoopDelay", getCurvatureEMLoopDelay()));
   setOutputAttributeMatrixName(reader->readString("OutputAttributeMatrixName", getOutputAttributeMatrixName()));
   setUsePreviousMuSigma(reader->readValue("UsePreviousMuSigma", getUsePreviousMuSigma()));
   setOutputArrayPrefix(reader->readString("OutputArrayPrefix", getOutputArrayPrefix()));
@@ -141,8 +141,7 @@ void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::initialize()
 {
-  m_PreviousMu.clear();
-  m_PreviousSigma.clear();
+  EMMPMFilter::initialize();
 }
 
 // -----------------------------------------------------------------------------
@@ -154,7 +153,7 @@ void MultiEmmpmFilter::dataCheck()
 
   if(DataArrayPath::ValidateVector(getInputDataArrayVector()) == false)
   {
-    setErrorCondition(-62000);
+    setErrorCondition(-89004);
     QString ss = QObject::tr("All Attribute Arrays must belong to the same Data Container and Attribute Matrix");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -166,7 +165,7 @@ void MultiEmmpmFilter::dataCheck()
   if (nullptr != m_InputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to m_Data from the DataArray<T> object */
   if (getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getInputDataArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
@@ -176,20 +175,20 @@ void MultiEmmpmFilter::dataCheck()
   if (nullptr != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  } /* Now assign the raw pointer to m_Data from the DataArray<T> object */
 
 #endif
 
   if(getOutputArrayPrefix().isEmpty())
   {
-    setErrorCondition(-62002);
+    setErrorCondition(-89002);
     QString message = QObject::tr("Using a prefix (even a single alphanumeric value) is required so that the output Xdmf files can be written correctly");
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
   }
 
   if(getInputDataArrayVector().isEmpty())
   {
-    setErrorCondition(-62003);
+    setErrorCondition(-89003);
     QString message = QObject::tr("At least one Attribute Array must be selected");
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
     return;
@@ -207,13 +206,13 @@ void MultiEmmpmFilter::dataCheck()
   QVector<size_t> tDims = inAM->getTupleDimensions();
   AttributeMatrix::Pointer outAM = getDataContainerArray()
                                        ->getDataContainer(inputAMPath.getDataContainerName())
-                                       ->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
+                                       ->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0 || nullptr == outAM.get())
   {
     return;
   }
 
-  // Get the list of checked array names from the input data arrays list
+  // Get the list of checked array names from the input m_Data arrays list
   QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
 
   for(int32_t i = 0; i < arrayNames.size(); i++)
@@ -234,14 +233,14 @@ void MultiEmmpmFilter::dataCheck()
   // The EM/MPM Library has a hard coded MAX Classes of 16
   if(getNumClasses() > 15)
   {
-    setErrorCondition(-62000);
+    setErrorCondition(-89000);
     QString ss = QObject::tr("The maximum number of classes is 15");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   // It does not make any sense if we want anything less than 2 classes
   if(getNumClasses() < 2)
   {
-    setErrorCondition(-62001);
+    setErrorCondition(-89001);
     QString ss = QObject::tr("The minimum number of classes is 2");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -349,11 +348,11 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
     SIMPL_COPY_INSTANCEVAR(SegmentationLoops)
     SIMPL_COPY_INSTANCEVAR(UseSimulatedAnnealing)
     SIMPL_COPY_INSTANCEVAR(UseGradientPenalty)
-    SIMPL_COPY_INSTANCEVAR(GradientPenalty)
+    SIMPL_COPY_INSTANCEVAR(GradientBetaE)
     SIMPL_COPY_INSTANCEVAR(UseCurvaturePenalty)
-    SIMPL_COPY_INSTANCEVAR(CurvaturePenalty)
-    SIMPL_COPY_INSTANCEVAR(RMax)
-    SIMPL_COPY_INSTANCEVAR(EMLoopDelay)
+    SIMPL_COPY_INSTANCEVAR(CurvatureBetaC)
+    SIMPL_COPY_INSTANCEVAR(CurvatureRMax)
+    SIMPL_COPY_INSTANCEVAR(CurvatureEMLoopDelay)
     SIMPL_COPY_INSTANCEVAR(OutputAttributeMatrixName)
   }
   return filter;

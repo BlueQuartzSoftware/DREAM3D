@@ -40,6 +40,8 @@
 #ifndef _angconstants_h_
 #define _angconstants_h_
 
+#include <QtCore/QString>
+
 /**
  * @file AngConstants.h
  * @brief This file contains both c style macro definitions and C++ style const
@@ -58,6 +60,7 @@
 #define ANG_WORKINGDISTANCE   "WorkingDistance"
 #define ANG_WORKING_DISTANCe  "Working Distance"
 #define ANG_PHASE             "Phase"
+#define ANG_PHASE_NAME        "PhaseName"
 #define ANG_MATERIAL_NAME     "MaterialName"
 #define ANG_FORMULA           "Formula"
 #define ANG_INFO              "Info"
@@ -167,6 +170,7 @@ namespace Ebsd
     const QString WorkingDistance(ANG_WORKINGDISTANCE);
     const QString Working_Distance(ANG_WORKING_DISTANCe);
     const QString Phase(ANG_PHASE);
+    const QString PhaseName(ANG_PHASE_NAME);
     const QString MaterialName(ANG_MATERIAL_NAME);
     const QString Formula(ANG_FORMULA);
     const QString Info(ANG_INFO);

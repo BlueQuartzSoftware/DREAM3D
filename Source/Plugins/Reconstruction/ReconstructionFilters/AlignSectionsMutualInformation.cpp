@@ -67,7 +67,7 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation()
 {
   m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
 
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   featurecounts = nullptr;
 
@@ -95,23 +95,23 @@ void AlignSectionsMutualInformation::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, AlignSectionsMutualInformation, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, AlignSectionsMutualInformation, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, AlignSectionsMutualInformation, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
 
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, AlignSectionsMutualInformation, req));
   }
@@ -468,6 +468,8 @@ void AlignSectionsMutualInformation::form_features_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
+  float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
+
   m_FeatureCounts->resize(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
 
@@ -570,7 +572,7 @@ void AlignSectionsMutualInformation::form_features_sections()
               {
                 w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
               }
-              if(w < m_MisorientationTolerance)
+              if(w < misorientationTolerance)
               {
                 miFeatureIds[neighbor] = featurecount;
                 voxelslist[size] = neighbor;
@@ -608,9 +610,6 @@ void AlignSectionsMutualInformation::execute()
   {
     return;
   }
-
-  // Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   AlignSections::execute();
 

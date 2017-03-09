@@ -65,7 +65,7 @@ public:
   , m_Neighbors(neighbors)
   , m_FaceIds(faceIds)
   {
-    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
   virtual ~FindMisorientationVectorsImpl()
   {
@@ -108,7 +108,7 @@ private:
   float* m_MisoVecs;
   int64_t* m_Neighbors;
   int64_t* m_FaceIds;
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  QVector<LaueOps::Pointer> m_OrientationOps;
 };
 
 // Include the MOC generated file for this class
@@ -128,7 +128,7 @@ FindOrientationFieldCurl::FindOrientationFieldCurl()
 , m_Quats(nullptr)
 , m_CrystalStructures(nullptr)
 {
-  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_CurlSize.x = 1;
   m_CurlSize.y = 1;
@@ -154,15 +154,15 @@ void FindOrientationFieldCurl::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Curl Radius (Pixels)", CurlSize, FilterParameter::Parameter, FindOrientationFieldCurl));
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 4, SIMPL::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 4, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quats", QuatsArrayPath, FilterParameter::RequiredArray, FindOrientationFieldCurl, req));
   }
 

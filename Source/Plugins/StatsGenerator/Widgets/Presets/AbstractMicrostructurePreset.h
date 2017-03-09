@@ -42,11 +42,6 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-class StatsGenPlotWidget;
-class StatsGenODFWidget;
-class StatsGenAxisODFWidget;
-class StatsGenMDFWidget;
-
 /**
  * @class AbstractMicrostructurePreset AbstractMicrostructurePreset.h StatsGenerator/Presets/AbstractMicrostructurePreset.h
  * @brief This class is the superclass for Microstructure Preset classes. It contains both
@@ -58,7 +53,7 @@ class StatsGenMDFWidget;
  * @date May 23, 2011
  * @version 1.0
  */
-class AbstractMicrostructurePreset
+class  AbstractMicrostructurePreset
 {
   public:
     SIMPL_SHARED_POINTERS(AbstractMicrostructurePreset)
@@ -66,70 +61,82 @@ class AbstractMicrostructurePreset
 
     virtual ~AbstractMicrostructurePreset();
 
+    static const QString kOmega3Distribution;
+    static const QString kBOverADistribution;
+    static const QString kCOverADistribution;
+    static const QString kClusterDistribution;
+    static const QString kNeighborDistribution;
+    static const QString kBinNumbers;
+    static const QString kAlpha;
+    static const QString kBeta;
+    static const QString kColor;
+    static const QString kMu;
+    static const QString kSigma;
+    static const QString kEuler1;
+    static const QString kEuler2;
+    static const QString kEuler3;
+    static const QString kWeight;
+    static const QString kAngles;
+    static const QString kAxis;
 
-    /**
-     * @brief Displays a Dialog Box which gives the user a chance to customize
-     * the preset with specific values. Although subclasses MUST implement the
-     * method, nothing actually has to happen, Ie, one can simply have an empty
-     * implementation if there are no customizations to be performed.
-     */
-    virtual void displayUserInputDialog() {}
+
+    virtual QString getName();
 
     /**
      * @brief Initializes the Omega3 preset table values
      * @param tableModel The TableModel that will receive the preset values
      * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeOmega3TableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors) = 0;
 
     /**
      * @brief Initializes the B Over A preset table values
      * @param tableModel The TableModel that will receive the preset values
      * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeBOverATableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors) = 0;
 
     /**
      * @brief Initializes the C Over A preset table values
      * @param tableModel The TableModel that will receive the preset values
      * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeCOverATableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors) = 0;
 
     /**
      * @brief Initializes the Neighbor preset table values
      * @param tableModel The TableModel that will receive the preset values
      * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeClusteringTableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors) = 0;
 
     /**
      * @brief Initializes the Clustering preset table values
      * @param tableModel The TableModel that will receive the preset values
      * @param binNumbers The array of Bin values which are needed for the table model
      */
-    virtual void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers) = 0;
+    virtual void initializeNeighborTableModel(QMap<QString, QVector<float>> &data, QVector<QColor> &colors) = 0;
 
     /**
      * @brief This method initializes the AxisODF Table with preset Euler angles,
      * Weights and Spreads.
      * @param widget Non Null StatsGenAxisODFWidget
      */
-    virtual void initializeAxisODFTableModel(StatsGenAxisODFWidget* widget);
+    virtual void initializeAxisODFTableModel(QMap<QString, QVector<float>> &data);
 
     /**
      * @brief This method initializes the ODF Table with preset Euler angles,
      * Weights and Spreads.
      * @param widget
      */
-    virtual void initializeODFTableModel(StatsGenODFWidget* widget);
+    virtual void initializeODFTableModel(QMap<QString, QVector<float>> &data);
 
     /**
      * @brief This method initializes the MDF Table with preset Euler angles,
      * Weights and Spreads.
      * @param widget
      */
-    virtual void initializeMDFTableModel(StatsGenMDFWidget* widget);
+    virtual void initializeMDFTableModel(QMap<QString, QVector<float>> &data);
 
     /**
      * @brief Generates a vector of colors based on the HSV color wheel. The colors
@@ -140,6 +147,12 @@ class AbstractMicrostructurePreset
      * @return
      */
     static QVector<QColor> GenerateColors(int count, int saturation = 255, int value = 255);
+
+    /**
+     * @brief getDistributionType
+     * @return
+     */
+    virtual unsigned int getDistributionType(const QString & distType) = 0;
 
   protected:
     AbstractMicrostructurePreset();

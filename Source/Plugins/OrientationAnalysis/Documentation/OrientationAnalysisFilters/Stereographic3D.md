@@ -27,11 +27,13 @@ None
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | Quats | float | (4) | Specifies the orientation of the **Element** in quaternion representation |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Attribute Array** | Coordinates | float | 3 | Converted quaternion |

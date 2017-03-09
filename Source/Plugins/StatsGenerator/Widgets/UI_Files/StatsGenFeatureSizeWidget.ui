@@ -314,7 +314,7 @@ font-size: 12px;
 }</string>
         </property>
         <property name="text">
-         <string>Feature ESD</string>
+         <string>Average Feature ESD</string>
         </property>
        </widget>
       </item>

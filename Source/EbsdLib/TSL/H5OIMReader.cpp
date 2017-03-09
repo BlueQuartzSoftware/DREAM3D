@@ -507,39 +507,40 @@ int H5OIMReader::readHeader(hid_t parId)
   foreach(QString phaseGroupName, names)
   {
     hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
-    AngPhase::Pointer m_CurrentPhase = AngPhase::New();
-    m_CurrentPhase->setPhaseIndex(phaseGroupName.toInt());
-    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::MaterialName, MaterialName, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
-    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
+
+    AngPhase::Pointer currentPhase = AngPhase::New();
+    currentPhase->setPhaseIndex(phaseGroupName.toInt());
+    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::MaterialName, MaterialName, currentPhase)
+    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Formula, Formula, currentPhase)
+    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, currentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::Symmetry, Symmetry, currentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::NumberFamilies, NumberFamilies, currentPhase)
 
     QVector<float> fillerValues(6, 0.0);
-    m_CurrentPhase->setLatticeConstants(fillerValues);
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantA, LatticeConstantA, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantB, LatticeConstantB, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantC, LatticeConstantC, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantAlpha, LatticeConstantAlpha, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantBeta, LatticeConstantBeta, m_CurrentPhase)
-    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantGamma, LatticeConstantGamma, m_CurrentPhase)
+    currentPhase->setLatticeConstants(fillerValues);
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantA, LatticeConstantA, currentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantB, LatticeConstantB, currentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantC, LatticeConstantC, currentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantAlpha, LatticeConstantAlpha, currentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantBeta, LatticeConstantBeta, currentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantGamma, LatticeConstantGamma, currentPhase)
 
 
-    if (m_CurrentPhase->getNumberFamilies() > 0)
+    if (currentPhase->getNumberFamilies() > 0)
     {
       // hid_t hklGid = H5Gopen(pid, Ebsd::Ang::HKLFamilies.toLatin1().data(), H5P_DEFAULT);
       // Only read the HKL Families if they are there. Trying to open the group will tell us if there
       // are any families to read
 
-      err = readHKLFamilies(pid, m_CurrentPhase);
+      err = readHKLFamilies(pid, currentPhase);
       if (getErrorCode() < 0) { err = H5Gclose(pid); return -1; }
     }
     /* The 'Categories' header may actually be missing from certain types of .ang files */
     if (QH5Lite::datasetExists(pid, Ebsd::Ang::Categories) == true)
     {
-      READ_PHASE_HEADER_ARRAY("H5OIMReader", pid, int, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
+      READ_PHASE_HEADER_ARRAY("H5OIMReader", pid, int, Ebsd::Ang::Categories, Categories, currentPhase)
     }
-    phaseVector.push_back(m_CurrentPhase);
+    phaseVector.push_back(currentPhase);
     err = H5Gclose(pid);
   }
 
@@ -684,7 +685,7 @@ int H5OIMReader::readData(hid_t parId)
     setErrorMessage("The Grid Type was not set in the file.");
     return -300;
   }
-  
+
   if(totalDataRows == 0)
   {
     setErrorCode(-90301);

@@ -34,6 +34,19 @@ set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
+GeneratePrimaryStatsDataTest
   StatsGeneratorFilter
 )
 
@@ -73,6 +86,13 @@ AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}Test
                     SOURCES ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
                     FOLDER "${PLUGIN_NAME}Proj/Test"
                     LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
+
+target_include_directories(${PLUGIN_NAME}UnitTest
+                          PUBLIC ${PLUGINS_SOURCE_DIR}
+                          PUBLIC ${PLUGINS_BINARY_DIR}
+                          PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test
+)
+
 if(MSVC)
   set_source_files_properties(${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp 
                               PROPERTIES COMPILE_FLAGS /bigobj)

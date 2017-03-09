@@ -71,6 +71,7 @@ Note the large areas of unindexed pixels in the original image (black pixels) an
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | N/A | Any | (1) | The DataArray to use as input into the filter. |

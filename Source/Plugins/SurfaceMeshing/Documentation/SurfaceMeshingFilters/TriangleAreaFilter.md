@@ -21,8 +21,9 @@ Triangle
 None
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array**  | FaceAreas | double | (1) | Specifies the area of each **Face** |
 
 

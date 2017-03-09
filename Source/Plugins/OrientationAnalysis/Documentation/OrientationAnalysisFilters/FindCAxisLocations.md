@@ -16,13 +16,15 @@ None
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | Quats | float | (4) | Specifies the orientation of the **Element** in quaternion representation |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | CAxisLocation | float | (3) | Direction <u,v,w> of the C-axis for each **Element** in the sample reference frame |
 
 

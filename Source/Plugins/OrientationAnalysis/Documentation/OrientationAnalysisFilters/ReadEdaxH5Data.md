@@ -50,7 +50,7 @@ None
 
 
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container**  | ImageDataContainer | N/A | N/A    | Created **Data Container** name with an **Image Geometry** |
 | **Attribute Matrix**  | CellData | Cell | N/A    | Created **Cell Attribute Matrix** name  |
 | **Attribute Matrix**  | CellEnsembleData | Cell Ensemble | N/A    | Created **Cell Ensemble Attribute Matrix** name  |
@@ -60,7 +60,7 @@ None
 These arrays will **most likely** be created but is not guaranteed. Additional arrays (unknown at the time of writing) may also be created.
 
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array**  | Confidence Index | float |(1)     | Confidence of indexing  |
 | **Cell Attribute Array**  | EulerAngles      | float |(3)     | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z)  |
 | **Cell Attribute Array**  | Fit              | float |(1)     |  Quality of fit for indexing  |
@@ -77,7 +77,7 @@ These arrays will **most likely** be created but is not guaranteed. Additional a
 These arrays will **most likely** be created but is not guaranteed. Additional arrays (unknown at the time of writing) may also be created.
 
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 | **Ensemble Attribute Array** | LatticeConstants | float | (6) | The 6 values that define the lattice constants for each **Ensemble**|
 | **Ensemble Attribute Array** | MaterialName | String | (1) | Name of each **Ensemble** |

@@ -43,13 +43,10 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
-
-#define QSM_GETCOORD(index, res, coord, origin) coord = float((float(index) * float(res)) + float(origin));
 
 #include "moc_QuickSurfaceMesh.cpp"
 
@@ -65,6 +62,7 @@ QuickSurfaceMesh::QuickSurfaceMesh()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_NodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
+, m_FeatureAttributeMatrixName(SIMPL::Defaults::FaceFeatureAttributeMatrixName)
 , m_FeatureIds(nullptr)
 , m_FaceLabels(nullptr)
 , m_NodeTypes(nullptr)
@@ -88,12 +86,16 @@ void QuickSurfaceMesh::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
+    IGeometry::Types geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
+    req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-                                                                                                                            SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+                                                                                                                            AttributeMatrix::Type::Cell, IGeometry::Type::Any);
+    IGeometry::Types geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
+    req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Transfer", SelectedDataArrayPaths, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
   }
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
@@ -103,6 +105,8 @@ void QuickSurfaceMesh::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Face Attribute Matrix", FaceAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   parameters.push_back(SIMPL_NEW_STRING_FP("Face Labels", FaceLabelsArrayName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   setFilterParameters(parameters);
 }
 
@@ -119,6 +123,7 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
   setNodeTypesArrayName(reader->readString("NodeTypesArrayName", getNodeTypesArrayName()));
   setFaceLabelsArrayName(reader->readString("FaceLabelsArrayName", getFaceLabelsArrayName()));
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setFeatureAttributeMatrixName(reader->readString("FeatureAttributeMatrixName", getFeatureAttributeMatrixName()));
   reader->closeFilterGroup();
 }
 
@@ -188,7 +193,7 @@ void QuickSurfaceMesh::dataCheck()
 
   DataArrayPath tempPath;
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometryGrid, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -236,8 +241,8 @@ void QuickSurfaceMesh::dataCheck()
   }
 
   QVector<size_t> tDims(1, 0);
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Vertex);
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Face);
+  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
 
   // Create a Triangle Geometry
   SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);
@@ -290,6 +295,8 @@ void QuickSurfaceMesh::dataCheck()
     QString ss = QObject::tr("The number of selected Cell Attribute Arrays available does not match the number of Face Attribute Arrays created");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
+  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
 }
 
 // -----------------------------------------------------------------------------
@@ -308,6 +315,18 @@ void QuickSurfaceMesh::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QuickSurfaceMesh::getGridCoordinates(IGeometryGrid::Pointer grid, size_t x, size_t y, size_t z, float *coords)
+{
+  float tmpCoords[3] = {0.0f, 0.0f, 0.0f};
+  grid->getPlaneCoords(x, y, z, tmpCoords);
+  coords[0] = tmpCoords[0];
+  coords[1] = tmpCoords[1];
+  coords[2] = tmpCoords[2];
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QuickSurfaceMesh::execute()
 {
   setErrorCondition(0);
@@ -320,11 +339,21 @@ void QuickSurfaceMesh::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
 
-  float m_OriginX = 0.0f, m_OriginY = 0.0f, m_OriginZ = 0.0f;
-  m->getGeometryAs<ImageGeom>()->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+  AttributeMatrix::Pointer featAttrMat = sm->getAttributeMatrix(m_FeatureAttributeMatrixName);
+  size_t numFeatures = 0;
+  size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  for(size_t i = 0; i < numTuples; i++)
+  {
+    if(m_FeatureIds[i] > numFeatures) { numFeatures = m_FeatureIds[i]; }
+  }
+
+  QVector<size_t> featDims(1, numFeatures + 1);
+  featAttrMat->setTupleDimensions(featDims);
+
+  IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
 
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  grid->getDimensions(udims);
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -333,9 +362,6 @@ void QuickSurfaceMesh::execute()
   int64_t xP = dims[0];
   int64_t yP = dims[1];
   int64_t zP = dims[2];
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
   std::vector<std::set<int32_t>> ownerLists;
 
@@ -661,24 +687,16 @@ void QuickSurfaceMesh::execute()
         if(i == 0)
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j, k, vertex + (m_NodeIds[nodeId1] * 3));
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j + 1, k, vertex + (m_NodeIds[nodeId2] * 3));
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j, k + 1, vertex + (m_NodeIds[nodeId3] * 3));
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
           triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
@@ -720,24 +738,16 @@ void QuickSurfaceMesh::execute()
         if(j == 0)
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j, k, vertex + (m_NodeIds[nodeId1] * 3));
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j, k, vertex + (m_NodeIds[nodeId2] * 3));
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j, k + 1, vertex + (m_NodeIds[nodeId3] * 3));
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId4] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
           triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
@@ -779,24 +789,16 @@ void QuickSurfaceMesh::execute()
         if(k == 0)
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j, k, vertex + (m_NodeIds[nodeId1] * 3));
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j, k, vertex + (m_NodeIds[nodeId2] * 3));
 
           nodeId3 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId3] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j + 1, k, vertex + (m_NodeIds[nodeId3] * 3));
 
           nodeId4 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
           triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
@@ -838,24 +840,16 @@ void QuickSurfaceMesh::execute()
         if(i == (xP - 1))
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j, k, vertex + (m_NodeIds[nodeId1] * 3));
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k, vertex + (m_NodeIds[nodeId2] * 3));
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j, k + 1, vertex + (m_NodeIds[nodeId3] * 3));
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId3];
           triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
@@ -897,24 +891,16 @@ void QuickSurfaceMesh::execute()
         else if(m_FeatureIds[point] != m_FeatureIds[neigh1])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j, k, vertex + (m_NodeIds[nodeId1] * 3));
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId2] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k, vertex + (m_NodeIds[nodeId2] * 3));
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j, k + 1, vertex + (m_NodeIds[nodeId3] * 3));
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId4] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
           triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
@@ -956,24 +942,16 @@ void QuickSurfaceMesh::execute()
         if(j == (yP - 1))
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId1] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k, vertex + (m_NodeIds[nodeId1] * 3));
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j + 1, k, vertex + (m_NodeIds[nodeId2] * 3));
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k + 1, vertex + (m_NodeIds[nodeId3] * 3));
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j + 1, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId3];
           triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
@@ -1015,24 +993,16 @@ void QuickSurfaceMesh::execute()
         else if(m_FeatureIds[point] != m_FeatureIds[neigh2])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId1] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k, vertex + (m_NodeIds[nodeId1] * 3));
 
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId2] * 3 + 1], m_OriginY);
-          QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j + 1, k, vertex + (m_NodeIds[nodeId2] * 3));
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k + 1, vertex + (m_NodeIds[nodeId3] * 3));
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j + 1, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
           triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
@@ -1074,24 +1044,16 @@ void QuickSurfaceMesh::execute()
         if(k == (zP - 1))
         {
           nodeId1 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId1] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j, k + 1, vertex + (m_NodeIds[nodeId1] * 3));
 
           nodeId2 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId2] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j, k + 1, vertex + (m_NodeIds[nodeId2] * 3));
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k + 1, vertex + (m_NodeIds[nodeId3] * 3));
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j + 1, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId2];
           triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
@@ -1133,24 +1095,16 @@ void QuickSurfaceMesh::execute()
         else if(m_FeatureIds[point] != m_FeatureIds[neigh3])
         {
           nodeId1 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId1] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId1] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j, k + 1, vertex + (m_NodeIds[nodeId1] * 3));
 
           nodeId2 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2] * 3 + 0], m_OriginX);
-          QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId2] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j, k + 1, vertex + (m_NodeIds[nodeId2] * 3));
 
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          QSM_GETCOORD((i + 1), xRes, vertex[m_NodeIds[nodeId3] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId3] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId3] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i + 1, j + 1, k + 1, vertex + (m_NodeIds[nodeId3] * 3));
 
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4] * 3 + 0], m_OriginX);
-          QSM_GETCOORD((j + 1), yRes, vertex[m_NodeIds[nodeId4] * 3 + 1], m_OriginY);
-          QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
+          getGridCoordinates(grid, i, j + 1, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
           triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];

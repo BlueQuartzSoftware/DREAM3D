@@ -44,18 +44,18 @@
 #include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
-#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
+#include "OrientationLib/LaueOps/CubicLowOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalLowOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/MonoclinicOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/TetragonalLowOps.h"
+#include "OrientationLib/LaueOps/TetragonalOps.h"
+#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/TrigonalLowOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -103,19 +103,19 @@ void GenerateRodriguesColors::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Good Voxels Only (Bad Voxels Will Be Black)", UseGoodVoxels, FilterParameter::Parameter, GenerateRodriguesColors, linkedProps));
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, GenerateRodriguesColors, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateRodriguesColors, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 3, SIMPL::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 3, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, GenerateRodriguesColors, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, GenerateRodriguesColors, req));
   }
 
@@ -238,7 +238,7 @@ void GenerateRodriguesColors::execute()
   }
 
   // Create 1 of every type of Ops class. This condenses the code below
-  QVector<SpaceGroupOps::Pointer> ops;
+  QVector<LaueOps::Pointer> ops;
   ops.push_back(HexagonalOps::New());
   ops.push_back(CubicOps::New());
   ops.push_back(HexagonalLowOps::New());

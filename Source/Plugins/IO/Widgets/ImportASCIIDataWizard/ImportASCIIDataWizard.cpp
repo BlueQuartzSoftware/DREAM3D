@@ -37,18 +37,21 @@
 
 #include <QtCore/QFile>
 
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
+#include "IO/IOFilters/util/ASCIIWizardData.hpp"
+
 #include "ASCIIDataModel.h"
-#include "ASCIIWizardData.hpp"
 #include "DataFormatPage.h"
 #include "DelimitedPage.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataWizard::ImportASCIIDataWizard(const QString& inputFilePath, int numLines, QWidget* parent)
-: QWizard(parent)
-, m_InputFilePath(inputFilePath)
-, m_NumLines(numLines)
+ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent) :
+  QWizard(parent),
+  m_InputFilePath(inputFilePath),
+  m_NumLines(numLines),
+  m_Dca(dca)
 {
   setWindowTitle("ASCII Data Import Wizard");
   setOptions(QWizard::NoBackButtonOnStartPage /*| QWizard::HaveHelpButton */);
@@ -63,7 +66,7 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString& inputFilePath, int n
   DelimitedPage* dPage = new DelimitedPage(inputFilePath, numLines, this);
   setPage(Delimited, dPage);
 
-  DataFormatPage* dfPage = new DataFormatPage(inputFilePath, numLines, this);
+  DataFormatPage* dfPage = new DataFormatPage(inputFilePath, numLines, dca, this);
   setPage(DataFormat, dfPage);
 
 #ifndef Q_OS_MAC
@@ -76,8 +79,31 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString& inputFilePath, int n
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidget* parent)
-: QWizard(parent)
+void ImportASCIIDataWizard::setEditSettings(bool value)
+{
+  m_EditSettings = value;
+  DelimitedPage* delimitedPage = qobject_cast<DelimitedPage*>(this->page(Delimited));
+  if(delimitedPage)
+  {
+    delimitedPage->setEditSettings(value);
+  }
+
+  DataFormatPage* dataFormatPage = qobject_cast<DataFormatPage*>(this->page(DataFormat));
+  if(dataFormatPage)
+  {
+    dataFormatPage->setEditSettings(value);
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataContainerArray::Pointer dca, QWidget* parent) :
+  QWizard(parent)
+, m_InputFilePath("")
+, m_NumLines(-1)
+, m_Dca(dca)
 {
   setWindowTitle("ASCII Data Import Wizard");
   setOptions(QWizard::NoBackButtonOnStartPage /*| QWizard::HaveHelpButton */);
@@ -88,14 +114,37 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidge
   // m_RefreshBtn = new QPushButton("Refresh", this);
   // connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
   // setButton(QWizard::HelpButton, m_RefreshBtn);
+  m_InputFilePath = wizardData->inputFilePath;
+  m_NumLines = wizardData->numberOfLines;
 
   DelimitedPage* dPage = new DelimitedPage(m_InputFilePath, m_NumLines, this);
   setPage(Delimited, dPage);
+  dPage->setEditSettings(m_EditSettings);
 
-  DataFormatPage* dfPage = new DataFormatPage(m_InputFilePath, m_NumLines, this);
+  DataFormatPage* dfPage = new DataFormatPage(m_InputFilePath, m_NumLines, dca, this);
   setPage(DataFormat, dfPage);
+  dPage->setEditSettings(m_EditSettings);
   dfPage->getTupleTable()->clearTupleDimensions();
   dfPage->getTupleTable()->addTupleDimensions(wizardData->tupleDims);
+  dfPage->setUseDefaultHeaders(false);
+  dfPage->setHeaderLine(0);
+  dfPage->setUseCustomHeaders(false);
+
+
+  if(wizardData->headerUsesDefaults)
+  {
+    dfPage->setUseDefaultHeaders(true);
+  }
+
+  if(wizardData->headerLine >= 0)
+  {
+    dfPage->setHeaderLine(wizardData->headerLine);
+  }
+
+  if(wizardData->headerIsCustom)
+  {
+    dfPage->setUseCustomHeaders(true);
+  }
 
   setField("consecutiveDelimiters", wizardData->consecutiveDelimiters);
 
@@ -121,7 +170,8 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidge
     setField("spaceAsDelimiter", true);
   }
 
-  m_InputFilePath = wizardData->inputFilePath;
+  setField("startRow", wizardData->beginIndex);
+
 
   QStringList dataHeaders = wizardData->dataHeaders;
 
@@ -136,14 +186,20 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidge
     model->setHeaderData(col, Qt::Horizontal, dataHeaders.at(col), Qt::DisplayRole);
   }
 
-  setField("startRow", wizardData->beginIndex);
-  m_NumLines = wizardData->numberOfLines;
-
   QStringList dataTypes = wizardData->dataTypes;
   for(int i = 0; i < dataTypes.size(); i++)
   {
     model->setColumnDataType(i, dataTypes.at(i));
   }
+
+  dfPage->setAutomaticAttrMatrixName(wizardData->selectedPath);
+  dfPage->setAutomaticAM(wizardData->automaticAM);
+  if(wizardData->automaticAM)
+  {
+    dfPage->dcItemSelected(wizardData->selectedPath.getDataContainerName());
+  }
+
+  dfPage->checkHeaders();
 
 #ifndef Q_OS_MAC
   setWizardStyle(ModernStyle);
@@ -157,6 +213,14 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidge
 // -----------------------------------------------------------------------------
 ImportASCIIDataWizard::~ImportASCIIDataWizard()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportASCIIDataWizard::cleanupPage(int id)
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -206,7 +270,10 @@ QString ImportASCIIDataWizard::ReadLine(const QString& inputFilePath, int line)
 QStringList ImportASCIIDataWizard::ReadLines(const QString& inputFilePath, int beginLine, int numOfLines)
 {
   QStringList result;
-
+  if(inputFilePath.isEmpty())
+  {
+    return result;
+  }
   QFile inputFile(inputFilePath);
   if(inputFile.open(QIODevice::ReadOnly))
   {
@@ -464,4 +531,54 @@ QVector<size_t> ImportASCIIDataWizard::getTupleDims()
   }
 
   return QVector<size_t>();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ImportASCIIDataWizard::getAutomaticAM()
+{
+  DataFormatPage* dfPage = dynamic_cast<DataFormatPage*>(page(DataFormat));
+  if (NULL != dfPage)
+  {
+    return dfPage->getAutomaticAM();
+  }
+
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath ImportASCIIDataWizard::getSelectedPath()
+{
+  DataFormatPage* dfPage = dynamic_cast<DataFormatPage*>(page(DataFormat));
+  if (NULL != dfPage)
+  {
+    DataArrayPath dap = dfPage->getSelectedPath();
+    if (dfPage->getAutomaticAM() == true)
+    {
+      dap.setAttributeMatrixName(dfPage->getAutomaticAttrMatrixName());
+    }
+
+    return dap;
+  }
+
+  return DataArrayPath();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ImportASCIIDataWizard::getAttributeMatrixType()
+{
+  DataFormatPage* dfPage = dynamic_cast<DataFormatPage*>(page(DataFormat));
+  if (nullptr != dfPage)
+  {
+    int dap = dfPage->getAttributeMatrixType();
+    return dap;
+  }
+
+  return static_cast<int>(AttributeMatrix::Type::Generic);
 }

@@ -77,12 +77,12 @@ void FindFeatureCentroids::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindFeatureCentroids, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Centroids", CentroidsArrayPath, FilterParameter::CreatedArray, FindFeatureCentroids, req));
   }
   setFilterParameters(parameters);
@@ -151,10 +151,11 @@ void FindFeatureCentroids::preflight()
 void FindFeatureCentroids::find_centroids()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
 
   size_t totalFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
-  QVector<size_t> dims(1, 5);
+  QVector<size_t> dims(1, 4);
   FloatArrayType::Pointer m_FeatureCentersPtr = FloatArrayType::CreateArray(totalFeatures, dims, "_INTERNAL_USE_ONLY_Centroids");
   m_FeatureCentersPtr->initializeWithZeros();
   float* featurecenters = m_FeatureCentersPtr->getPointer(0);
@@ -163,13 +164,18 @@ void FindFeatureCentroids::find_centroids()
   float y = 0.0f;
   float z = 0.0f;
 
-  size_t xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
-  size_t yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
-  size_t zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+  size_t xPoints = imageGeom->getXPoints();
+  size_t yPoints = imageGeom->getYPoints();
+  size_t zPoints = imageGeom->getZPoints();
 
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = imageGeom->getXRes();
+  float yRes = imageGeom->getYRes();
+  float zRes = imageGeom->getZRes();
+
+  float xOrigin = 0.0f;
+  float yOrigin = 0.0f;
+  float zOrigin = 0.0f;
+  imageGeom->getOrigin(xOrigin, yOrigin, zOrigin);
 
   size_t zStride = 0;
   size_t yStride = 0;
@@ -182,24 +188,27 @@ void FindFeatureCentroids::find_centroids()
       for(size_t k = 0; k < xPoints; k++)
       {
         int32_t gnum = m_FeatureIds[zStride + yStride + k];
-        featurecenters[gnum * 5 + 0]++;
+        featurecenters[gnum * 4 + 0]++;
         x = float(k) * xRes;
         y = float(j) * yRes;
         z = float(i) * zRes;
-        featurecenters[gnum * 5 + 1] = featurecenters[gnum * 5 + 1] + x;
-        featurecenters[gnum * 5 + 2] = featurecenters[gnum * 5 + 2] + y;
-        featurecenters[gnum * 5 + 3] = featurecenters[gnum * 5 + 3] + z;
+        featurecenters[gnum * 4 + 1] = featurecenters[gnum * 4 + 1] + x;
+        featurecenters[gnum * 4 + 2] = featurecenters[gnum * 4 + 2] + y;
+        featurecenters[gnum * 4 + 3] = featurecenters[gnum * 4 + 3] + z;
       }
     }
   }
-  for(size_t i = 1; i < totalFeatures; i++)
+  for(size_t i = 0; i < totalFeatures; i++)
   {
-    featurecenters[i * 5 + 1] = featurecenters[i * 5 + 1] / featurecenters[i * 5 + 0];
-    featurecenters[i * 5 + 2] = featurecenters[i * 5 + 2] / featurecenters[i * 5 + 0];
-    featurecenters[i * 5 + 3] = featurecenters[i * 5 + 3] / featurecenters[i * 5 + 0];
-    m_Centroids[3 * i] = featurecenters[i * 5 + 1];
-    m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2];
-    m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3];
+    if(featurecenters[i * 4 + 0] > 0.0f)
+    {
+      featurecenters[i * 4 + 1] = featurecenters[i * 4 + 1] / featurecenters[i * 4 + 0];
+      featurecenters[i * 4 + 2] = featurecenters[i * 4 + 2] / featurecenters[i * 4 + 0];
+      featurecenters[i * 4 + 3] = featurecenters[i * 4 + 3] / featurecenters[i * 4 + 0];
+      m_Centroids[3 * i] = featurecenters[i * 4 + 1] + xOrigin;
+      m_Centroids[3 * i + 1] = featurecenters[i * 4 + 2] + yOrigin;
+      m_Centroids[3 * i + 2] = featurecenters[i * 4 + 3] + zOrigin;
+    }
   }
 }
 

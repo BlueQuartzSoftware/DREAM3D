@@ -45,7 +45,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
@@ -185,7 +185,7 @@ class EBSDSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<LaueOps::Pointer> m_OrientationOps;
 
     std::shared_ptr<NumberDistribution> m_Distribution;
     std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;

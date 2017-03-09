@@ -46,6 +46,7 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Attribute Matrix** | CellData | Cell | N/A | **Cell Attribute Matrix** in which to pack **Features** |
@@ -54,6 +55,7 @@ Image
 | **Ensemble Attribute Array** | ShapeTypes | uint32_t | (1) | Enumeration specifying the type of shape to place for each **Ensemble** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |

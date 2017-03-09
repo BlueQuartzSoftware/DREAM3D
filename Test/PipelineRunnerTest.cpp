@@ -93,12 +93,12 @@ void ExecutePipeline(const QString& pipelineFile)
   std::cout << "\"Test Pipeline File\": \"" << fi.absoluteFilePath().toStdString() << "\"," << std::endl;
   if(fi.exists() == false)
   {
-    std::cout << "\"Error Message\":The input file '" << pipelineFile.toStdString() << "' does not exist\"," << std::endl;
+    std::cout << "\"Error Message\":The Test Pipeline file '" << pipelineFile.toStdString() << "' does not exist\"," << std::endl;
     err = EXIT_FAILURE;
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
-  QString ext = fi.completeSuffix();
+      QString ext = fi.completeSuffix();
 
   // Use the static method to read the Pipeline file and return a Filter Pipeline
   FilterPipeline::Pointer pipeline;
@@ -121,7 +121,7 @@ void ExecutePipeline(const QString& pipelineFile)
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
 
-  TestObserver obs; // Create an Observer to report errors/progress from the executing pipeline
+      TestObserver obs; // Create an Observer to report errors/progress from the executing pipeline
   pipeline->addMessageReceiver(&obs);
   // Preflight the pipeline
   err = pipeline->preflightPipeline();
@@ -131,8 +131,8 @@ void ExecutePipeline(const QString& pipelineFile)
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
-  // Now actually execute the pipeline
-  pipeline->execute();
+      // Now actually execute the pipeline
+      pipeline->execute();
   err = pipeline->getErrorCondition();
   if (err < 0)
   {
@@ -226,7 +226,7 @@ int main (int argc, char*  argv[])
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("PipelineRunnerTest");
 
-
+#if 0
   // We need to change our working directory into the "DREAM3D_Data" directory because all the pipelines use relative paths
   QDir dataDir = QDir(getDream3dDataDir());
 #ifdef _MSC_VER
@@ -234,7 +234,11 @@ int main (int argc, char*  argv[])
 #else
   chdir(dataDir.absolutePath().toLatin1().constData());
 #endif
+#endif
 
+
+  QDir dir;
+  dir.mkpath(getTestTempDirectory());
 
   // Register all the filters including trying to load those from Plugins
   FilterManager* fm = FilterManager::Instance();
@@ -272,7 +276,7 @@ int main (int argc, char*  argv[])
     {
       QFileInfo fi(pipelineFile);
 
-      pipelineFile = AdjustOutputDirectory(pipelineFile);
+      //pipelineFile = AdjustOutputDirectory(pipelineFile);
 
       SIMPL::unittest::CurrentMethod = fi.fileName().toStdString();
       SIMPL::unittest::numTests++;

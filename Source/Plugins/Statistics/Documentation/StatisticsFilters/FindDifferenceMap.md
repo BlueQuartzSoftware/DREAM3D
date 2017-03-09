@@ -24,14 +24,16 @@ None
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | Any **Attribute Array** | None | Any | Any | The first selected **Attribute Array**. This array's values will be the first argument for the subtraction operation |
 | Any **Attribute Array** | None | Any | Any | The second selected **Attribute Array**. This array's values will be subtracted from the first selected **Attribute Array** values |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | Any **Attribute Array** | DifferenceMap | Same as input arrays | Same as input arrays | The difference map **Attribute Array** |
 
 ## License & Copyright ##

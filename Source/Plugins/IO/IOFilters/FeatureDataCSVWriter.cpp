@@ -93,7 +93,7 @@ void FeatureDataCSVWriter::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Category::Feature);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, FeatureDataCSVWriter, req));
   }
 
@@ -265,14 +265,15 @@ void FeatureDataCSVWriter::execute()
   // Skip feature 0
   for(size_t i = 1; i < numTuples; ++i)
   {
-    if(((float)i / numTuples) * 100.0f > threshold)
+    float percentIncrement = static_cast<float>(i) / static_cast<float>(numTuples) * 100.0f;
+    if(percentIncrement > threshold)
     {
-      QString ss = QObject::tr("Writing Feature Data || %1% Complete").arg(((float)i / numTuples) * 100.0f);
+      QString ss = QObject::tr("Writing Feature Data || %1% Complete").arg(static_cast<double>(percentIncrement));
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       threshold = threshold + 5.0f;
-      if(threshold < ((float)i / numTuples) * 100.0f)
+      if(threshold < percentIncrement)
       {
-        threshold = ((float)i / numTuples) * 100.0f;
+        threshold = percentIncrement;
       }
     }
 

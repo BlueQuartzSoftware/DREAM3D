@@ -89,7 +89,8 @@ function ConfigureITK()
   echo "ITKGroup_Registration:BOOL=ON" >> $cacheFile
   echo "ITKGroup_Segmentation:BOOL=ON" >> $cacheFile
   echo "Module_SCIFIO:BOOL=ON" >> $cacheFile
-
+  echo "Module_ITKIOMRC:BOOL=ON" >> $cacheFile
+  
   echo "CMAKE_SKIP_INSTALL_RPATH:BOOL=OFF" >> $cacheFile
   echo "CMAKE_SKIP_RPATH:BOOL=OFF" >> $cacheFile
   echo "USE_COMPILER_HIDDEN_VISIBILITY:BOOL=OFF" >> $cacheFile

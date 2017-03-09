@@ -50,8 +50,8 @@
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
-#include "IO/IOFilters/ImportASCIIData.h"
-#include "IO/Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
+#include "IO/IOFilters/ReadASCIIData.h"
+#include "IO/IOFilters/util/ASCIIWizardData.hpp"
 
 #include "IOTestFileLocations.h"
 
@@ -96,8 +96,8 @@ public:
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the ImportASCIIData Filter from the FilterManager
-    QString filtName = "ImportASCIIData";
+    // Now instantiate the ReadASCIIData Filter from the FilterManager
+    QString filtName = "ReadASCIIData";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if(nullptr == filterFactory.get())
@@ -138,12 +138,12 @@ public:
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
     DataContainer::Pointer dc = DataContainer::New(DataContainerName);
-    AttributeMatrix::Pointer am = AttributeMatrix::New(QVector<size_t>(1, data.numberOfLines), AttributeMatrixName, 3);
+    AttributeMatrix::Pointer am = AttributeMatrix::New(QVector<size_t>(1, data.numberOfLines), AttributeMatrixName, AttributeMatrix::Type::Cell);
     dc->addAttributeMatrix(AttributeMatrixName, am);
     dca->addDataContainer(dc);
 
     // Now instantiate the DxWriter Filter from the FilterManager
-    QString filtName = "ImportASCIIData";
+    QString filtName = "ReadASCIIData";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if(nullptr != filterFactory.get())
@@ -154,7 +154,7 @@ public:
       importASCIIData->preflight();
 
       int err = importASCIIData->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::EMPTY_FILE)
+      DREAM3D_REQUIRE_EQUAL(err, ReadASCIIData::EMPTY_FILE)
 
       QVariant var;
       var.setValue(data);
@@ -163,11 +163,7 @@ public:
 
       importASCIIData->preflight();
       err = importASCIIData->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::EMPTY_ATTR_MATRIX)
-
-      var.setValue(DataArrayPath(dc->getName(), am->getName(), ""));
-      propWasSet = importASCIIData->setProperty("AttributeMatrixPath", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+      DREAM3D_REQUIRE_EQUAL(err, ReadASCIIData::EMPTY_ATTR_MATRIX)
 
       importASCIIData->setDataContainerArray(dca);
 
@@ -188,6 +184,7 @@ public:
     QString outputType = output->getTypeAsString();
 
     ASCIIWizardData data;
+    data.automaticAM = false;
     data.beginIndex = 1;
     data.consecutiveDelimiters = false;
     data.dataHeaders.push_back(DataArrayName);
@@ -195,6 +192,7 @@ public:
     data.delimiters.push_back(delimiter);
     data.inputFilePath = UnitTest::ImportASCIIDataTest::TestFile1;
     data.numberOfLines = 10;
+    data.selectedPath = DataArrayPath(DataContainerName, AttributeMatrixName, "");
     data.tupleDims = QVector<size_t>(1, 10);
 
     // Test Using Expected Input - Double/Float
@@ -271,7 +269,7 @@ public:
 
       importASCIIData->execute();
       int err = importASCIIData->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::CONVERSION_FAILURE)
+      DREAM3D_REQUIRE_EQUAL(err, ReadASCIIData::CONVERSION_FAILURE)
     }
 
     RemoveTestFiles();
@@ -376,7 +374,7 @@ public:
 
       importASCIIData->execute();
       int err = importASCIIData->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::CONVERSION_FAILURE)
+      DREAM3D_REQUIRE_EQUAL(err, ReadASCIIData::CONVERSION_FAILURE)
     }
 
     // Min Overflow Test
@@ -412,7 +410,7 @@ public:
 
       importASCIIData->execute();
       int err = importASCIIData->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::CONVERSION_FAILURE)
+      DREAM3D_REQUIRE_EQUAL(err, ReadASCIIData::CONVERSION_FAILURE)
     }
   }
 

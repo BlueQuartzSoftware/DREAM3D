@@ -23,16 +23,19 @@ This **Filter** performs the EM/MPM segmentation algorithm on an **Attribute Arr
 | Curvature Penalty | float | The penalty to use for curvatures. Only needed if _Use Curvature Penalty_ is checked |
 | R Max | float | The max radius for the curvature penalty. Only needed if _Use Curvature Penalty_ is checked |
 | EM Loop Delay | int32_t | The number of EM Loops to delay before applying the curvature penalty. Only needed if _Use Curvature Penalty_ is checked |
+| Use 1-Based Values | bool | Use 1-based values instead of 0-based values |
 
 ## Required Geometry ##
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | uint8_t | (1)  | 8 bit grayscale image to segment |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | uint8_t | (1) | Unsigned 8 bit array representing the value of the class that the **Cell** was segmented into |

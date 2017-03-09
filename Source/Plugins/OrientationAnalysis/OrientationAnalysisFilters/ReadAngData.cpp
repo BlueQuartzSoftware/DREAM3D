@@ -170,14 +170,14 @@ void ReadAngData::dataCheck()
   m->setGeometry(image);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0)
   {
     return;
   }
   tDims.resize(1);
   tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0)
   {
     return;
@@ -434,7 +434,7 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   latticeConstants->setComponent(0, 4, 0.0f);
   latticeConstants->setComponent(0, 5, 0.0f);
 
-  for(size_t i = 0; i < phases.size(); i++)
+  for(int i = 0; i < phases.size(); i++)
   {
     int32_t phaseID = phases[i]->getPhaseIndex();
     crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure());
@@ -568,6 +568,20 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
   }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::XPosition));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::XPosition);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::XPosition, fArray);
+  }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::YPosition));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::YPosition);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ang::YPosition, fArray);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -587,7 +601,7 @@ void ReadAngData::execute()
   QVector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-  ebsdAttrMat->setType(SIMPL::AttributeMatrixType::Cell);
+  ebsdAttrMat->setType(AttributeMatrix::Type::Cell);
 
   readDataFile(reader.get(), m, tDims, ANG_FULL_FILE);
   if(getErrorCondition() < 0)

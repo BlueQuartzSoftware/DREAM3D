@@ -38,6 +38,9 @@
 #define _dataformatpage_h_
 
 #include <QtWidgets/QWizardPage>
+#include <QtWidgets/QButtonGroup>
+
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "AbstractWizardPage.h"
 
@@ -45,6 +48,8 @@
 
 class ASCIIDataModel;
 class EditHeadersDialog;
+class QSignalMapper;
+class QtSFaderWidget;
 
 class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
 {
@@ -57,7 +62,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DataFormatPage(const QString &inputFilePath, int numLines, QWidget* parent = nullptr);
+    DataFormatPage(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent = nullptr);
 
     virtual ~DataFormatPage();
 
@@ -77,6 +82,17 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     void launchEditHeadersDialog();
 
     /**
+     * @brief checkHeaders
+     */
+    void checkHeaders();
+
+    /**
+     * @brief checkHeaders
+     * @param headers
+     */
+    void checkHeaders(QVector<QString> headers);
+
+    /**
     * @brief Controls which page to navigate to after the user clicks "Next" button
     */
     virtual int nextId() const;
@@ -86,28 +102,192 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     */
     virtual void cleanupPage();
 
+    /**
+     * @brief isComplete
+     * @return
+     */
+    bool isComplete() const;
+
+    /**
+     * @brief getTupleTable
+     * @return
+     */
     TupleTableWidget* getTupleTable();
 
+    /**
+     * @brief setAutomaticAM
+     * @param automatic
+     */
+    void setAutomaticAM(bool automatic);
+
+    /**
+     * @brief getAutomaticAM
+     * @return
+     */
+    bool getAutomaticAM();
+
+    /**
+     * @brief getSelectedPath
+     * @return
+     */
+    DataArrayPath getSelectedPath();
+
+    /**
+     * @brief setAutomaticAttrMatrixName
+     * @param name
+     */
+    void setAutomaticAttrMatrixName(const QString &name);
+
+    /**
+     * @brief setAutomaticAttrMatrixName
+     * @param path
+     */
+    void setAutomaticAttrMatrixName(const DataArrayPath &path);
+
+    /**
+     * @brief getAMName
+     * @return
+     */
+    QString getAutomaticAttrMatrixName();
+
+    /**
+     * @brief setAttributeMatrixType
+     * @param t
+     */
+    void setAttributeMatrixType(int t);
+
+    /**
+     * @brief getAttributeMatrixType
+     * @return
+     */
+    int getAttributeMatrixType();
+
+    /**
+     * @brief setUseDefaultHeaders
+     * @param ok
+     */
+    void setUseDefaultHeaders(bool ok);
+
+    /**
+     * @brief setUseCustomHeaders
+     * @param value
+     */
+    void setUseCustomHeaders(bool value);
+
+    /**
+     * @brief setHeaderLine
+     * @param line
+     */
+    void setHeaderLine(int line);
+
+    /**
+     * @brief setEditSettings
+     * @param value
+     */
+    void setEditSettings(bool value);
+
+    /**
+     * @brief eventFilter
+     * @param obj
+     * @param event
+     * @return
+     */
+    bool eventFilter(QObject* obj, QEvent* event);
+
+  public slots:
+    /**
+     * @brief dcaItemSelected
+     * @param path
+     */
+    void amItemSelected(QString path);
+
+    /**
+     * @brief dcaItemSelected
+     * @param path
+     */
+    void dcItemSelected(QString path);
+
+    /**
+     * @brief on_amName_returnPressed
+     */
+//    void on_amName_returnPressed();
+
+    /**
+     * @brief on_applyChangesBtn_clicked
+     */
+    void on_applyChangesBtn_clicked();
+
+    /**
+     * @brief hideButton
+     */
+    void hideButton();
+
+    /**
+     * @brief widgetChanged
+     * @param msg
+     */
+    void widgetChanged(const QString& msg);
+
   protected:
+    /**
+     * @brief showEvent
+     * @param event
+     */
     void showEvent(QShowEvent* event);
 
-  protected slots:
+    /**
+     * @brief adjustedMenuPosition
+     * @param pushButton
+     * @return
+     */
+    QPoint adjustedMenuPosition(QPushButton* pushButton);
+
+    void createDCSelectionMenu();
+    void createAMSelectionMenu();
+
+
+  private slots:
     void on_startRowSpin_valueChanged(int i);
     void on_hasHeadersRadio_toggled(bool checked);
+    void on_doesNotHaveHeadersRadio_toggled(bool checked);
+    void on_useDefaultHeaders_toggled(bool checked);
+
     void on_headersIndexLineEdit_textChanged(const QString &text);
     void on_editHeadersBtn_clicked();
     void on_dataTypeRadio_clicked();
     void on_skipRadio_clicked();
     void on_dataTypeCB_currentTextChanged(const QString &text);
 
+    void on_amName_returnPressed();
+
     void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
-    void checkTupleDimensions(QVector<size_t> tupleDims);
+    bool checkTupleDimensions(QVector<size_t> tupleDims);
+
+    void on_createAMRadio_toggled(bool b);
+    void on_useAMRadio_toggled(bool b);
 
   private:
-    int                                             m_NumLines;
-    EditHeadersDialog*                              m_EditHeadersDialog;
+    int                                             m_NumLines = -1;
+    EditHeadersDialog*                              m_EditHeadersDialog = nullptr;
+    DataContainerArray::Pointer                     m_Dca;
 
-    void validateHeaders(QVector<QString> headers);
+    QSignalMapper*                                  m_AMMenuMapper = nullptr;
+    QSignalMapper*                                  m_DCMenuMapper = nullptr;
+
+    QPointer<QtSFaderWidget>                        m_FaderWidget;
+    bool                                            m_EditSettings = false;
+
+    QMenu*                                          m_DCMenuPtr = nullptr;
+    bool                                            m_OwnsDCMenuPtr = false;
+
+    QMenu*                                          m_AttrMatMenuPtr = nullptr;
+    bool                                            m_OwnsAttrMatMenuPtr = false;
+
+    bool                                            m_TupleDimsHasErrors = false;
+    bool                                            m_HeadersHasErrors = false;
+
+    bool validateHeaders(QVector<QString> headers);
+    bool validateTupleDimensions(QVector<size_t> tupleDims);
 
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented

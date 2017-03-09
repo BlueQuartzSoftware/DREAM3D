@@ -9,7 +9,8 @@
             "1": {
                 "Crystal Symmetry": 1,
                 "PhaseFraction": 0.69999998807907104,
-                "PhaseType": "Matrix"
+                "PhaseType": "Matrix",
+                "Name": "Matrix"
             },
             "2": {
                 "AxisODF-Weights": {
@@ -73,6 +74,7 @@
                 ],
                 "MDF-Weights": {
                 },
+                "Name": "Fibers",
                 "ODF-Weights": {
                 },
                 "PhaseFraction": 0.30000001192092896,

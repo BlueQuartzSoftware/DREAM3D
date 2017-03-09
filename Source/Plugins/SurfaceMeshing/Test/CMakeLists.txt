@@ -57,7 +57,11 @@ configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-
+  FindTriangleGeomCentroidsTest
+  FindTriangleGeomNeighborsTest
+  FindTriangleGeomShapesTest
+  FindTriangleGeomSizesTest
+  QuickSurfaceMeshTest
 )
 
 
@@ -99,6 +103,12 @@ AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
   SOURCES ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
   FOLDER "${PLUGIN_NAME}Plugin/Test"
   LINK_LIBRARIES Qt5::Core Qt5::Gui H5Support SIMPLib)
+
+target_include_directories(${PLUGIN_NAME}UnitTest
+                          PUBLIC ${PLUGINS_SOURCE_DIR}
+                          PUBLIC ${PLUGINS_BINARY_DIR}
+                          PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test
+)
 
 if(MSVC)
   set_source_files_properties(${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)

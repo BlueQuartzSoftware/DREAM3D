@@ -18,8 +18,9 @@ This **Filter** groups neighboring **Features** that are in a twin relationship 
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | NonContiguousNeighbors | List of int32_t | (1) | List of non-contiguous neighbors for each **Feature**. Only needed if _Use Non-Contiguous Neighbors_ is checked |
 | **Feature Attribute Array** | NeighborList | List of int32_t | (1) | List of neighbors for each **Feature** |
 | **Element Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
@@ -28,8 +29,9 @@ Not Applicable
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | ParentIds | int32_t | (1) | Specifies to which _parent_ each **Element** belongs |
 | **Attribute Matrix** | NewFeatureData | Feature | N/A | Created **Feature Attribute Matrix** name |
 | **Feature Attribute Array** | ParentIds | int32_t | (1) | Specifies to which _parent_ each **Feature** belongs |

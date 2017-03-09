@@ -41,7 +41,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
@@ -211,7 +211,7 @@ class MergeColonies : public GroupFeatures
     DEFINE_DATAARRAY_VARIABLE(int32_t, GlobAlpha)
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<LaueOps::Pointer> m_OrientationOps;
 
     float m_AxisToleranceRad;
 

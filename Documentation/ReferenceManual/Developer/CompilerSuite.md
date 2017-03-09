@@ -11,7 +11,7 @@ The following table lists the compilers that DREAM.3D is commonly compiled again
 ## 32 Bit Support ##
 
 DREAM.3D is compiled as a 64 bit application and libraries on all operating systems. 32 Bit support
-has been removed and is no longer under active development.
+has been removed and is no longer under active development. In fact assumptions are made during the development process that the application is running as a 64 bit application.
 
 ## Windows 8/10 ##
 

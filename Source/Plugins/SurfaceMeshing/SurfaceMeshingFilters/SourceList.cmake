@@ -22,6 +22,10 @@ set(_PublicFilters
   FindGBCDMetricBased
   FindGBPDMetricBased
   FindDistsToCharactGBs
+  FindTriangleGeomCentroids
+  FindTriangleGeomNeighbors
+  FindTriangleGeomShapes
+  FindTriangleGeomSizes
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
   GenerateGeometryConnectivity

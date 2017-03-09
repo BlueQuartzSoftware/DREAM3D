@@ -19,15 +19,17 @@ This **Filter** will fit "common" statistical distributions (as chosen by the us
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | FitParameters | Any | (1) | Selected feature array to be fit |
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
 | **Feature Attribute Array** | BiasedFeatures | bool | (1) | Flag of 1 if **Feature** is biased or of 0 if it is not. Only required if *Remove Biased Features* is checked |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Ensemble Attribute Array** | Statistics | float | (2) or (3) | Parameters of the fit distribution | 
 
 ## License & Copyright ##

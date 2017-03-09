@@ -23,6 +23,7 @@ This **Filter** contains an additional option to use the last mu (mean) and sigm
 | Curvature Penalty | float | The penalty to use for curvatures. Only needed if _Use Curvature Penalty_ is checked |
 | R Max | float | The max radius for the curvature penalty. Only needed if _Use Curvature Penalty_ is checked |
 | EM Loop Delay | int32_t | The number of EM Loops to delay before applying the curvature penalty. Only needed if _Use Curvature Penalty_ is checked |
+| Use 1-Based Values | bool | Use 1-based values instead of 0-based values |
 | Use Mu/Sigma from Previous Image as Initialization for Current Image | bool | Whether to use the calculated mu/sigma from the previous segmented image as the starting point for the next image segmentation. May help reduce computation time |
 | Output Array Name Prefix | String | Prefix to apply to the output segmented arrays |
 
@@ -30,11 +31,13 @@ This **Filter** contains an additional option to use the last mu (mean) and sigm
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Arrays** | None | uint8_t | (1)  | 8 bit grayscale images to segment. The user may select any number of arrays to segment |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Arrays** | None | uint8_t | (1) | Unsigned 8 bit array representing the value of the class that the **Cell** was segmented into. An output array is created for each segmented input array and placed in a new **Cell Attribute Matrix** that the user may name |

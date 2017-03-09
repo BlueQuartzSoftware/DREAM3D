@@ -45,7 +45,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
@@ -211,7 +211,7 @@ class GroupMicroTextureRegions : public GroupFeatures
     float m_AvgCAxes[3];
     float m_CAxisToleranceRad;
 
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<LaueOps::Pointer> m_OrientationOps;
 
     /**
      * @brief updateFeatureInstancePointers Updates raw Feature pointers

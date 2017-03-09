@@ -41,7 +41,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 /**
  * @brief The ConvertOrientations class. See [Filter documentation](@ref convertorientations) for details.

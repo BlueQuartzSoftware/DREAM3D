@@ -46,7 +46,7 @@
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
 
 #include "TestPrintFunctions.h"
 

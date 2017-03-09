@@ -42,7 +42,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 /**
  * @brief The FindTwinBoundarySchmidFactors class. See [Filter documentation](@ref findtwinboundaryschmidfactors) for details.
@@ -173,7 +173,7 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
     FindTwinBoundarySchmidFactors();
 
   private:
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<LaueOps::Pointer> m_OrientationOps;
 
     DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)

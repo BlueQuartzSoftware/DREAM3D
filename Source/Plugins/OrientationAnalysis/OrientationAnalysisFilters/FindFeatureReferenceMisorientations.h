@@ -41,7 +41,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 /**
  * @brief The FindFeatureReferenceMisorientations class. See [Filter documentation](@ref findfeaturereferencemisorientations) for details.
@@ -179,7 +179,7 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
 
 
   private:
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<LaueOps::Pointer> m_OrientationOps;
 
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)

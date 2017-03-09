@@ -161,7 +161,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void createAndAddConvertRGBToGrayscaleFilter(FilterPipeline::Pointer pipeline, DataArrayPath path, QString name)
+  void createAndAddConvertRGBToGrayscaleFilter(FilterPipeline::Pointer pipeline, DataArrayPath path, const QString& name, const QString& outputAttributeMatrixName)
   {
     QString filtName = "ItkRGBToGray";
     FilterManager* fm = FilterManager::Instance();
@@ -173,16 +173,24 @@ public:
       // horribly gone wrong in which case the system is going to come down quickly after this.
       AbstractFilter::Pointer filter = filterFactory->create();
 
+
       QVariant var;
       bool propWasSet;
 
-      var.setValue(path);
-      propWasSet = filter->setProperty("SelectedCellArrayArrayPath", var);
+      QVector<DataArrayPath> paths(1, path);
+
+      var.setValue(paths);
+      propWasSet = filter->setProperty("InputDataArrayVector", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       var.setValue(name);
-      propWasSet = filter->setProperty("NewCellArrayName", var);
+      propWasSet = filter->setProperty("OutputArrayPrefix", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+      var.setValue(outputAttributeMatrixName);
+      propWasSet = filter->setProperty("OutputAttributeMatrixName", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
 
       pipeline->pushBack(filter);
     }
@@ -285,8 +293,8 @@ public:
     {
 
       createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-      createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
-      createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "Gray"), DataArrayPath("ImageDataContainer", "CellData", "Test"));
+      createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray", "GrayScaleCellData");
+      createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "GrayScaleCellData", "GrayImageData"), DataArrayPath("ImageDataContainer", "GrayScaleCellData", "Test"));
 
       pipeline->execute();
       DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
@@ -296,7 +304,7 @@ public:
 
     {
       createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-      // createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
+      //createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray", "GrayScaleCellData");
       createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), DataArrayPath("ImageDataContainer", "CellData", "Test"));
 
       pipeline->execute();
@@ -319,11 +327,11 @@ public:
 
     {
       createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-      createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
+      createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray", "GrayScaleCellData");
 
-      QVector<DataArrayPath> vector;
-      vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "Gray"));
-      createAndAddMultiEMMPMFilter(pipeline, vector);
+      QVector<DataArrayPath> inputPaths;
+      inputPaths.push_back(DataArrayPath("ImageDataContainer", "GrayScaleCellData", "GrayImageData"));
+      createAndAddMultiEMMPMFilter(pipeline, inputPaths);
       pipeline->execute();
       DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
     }
@@ -332,12 +340,12 @@ public:
 
     {
       createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-      createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
+      createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray", "GrayScaleCellData");
 
-      QVector<DataArrayPath> vector;
-      vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "Gray"));
-      vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "ImageData"));
-      createAndAddMultiEMMPMFilter(pipeline, vector);
+      QVector<DataArrayPath> inputPaths;
+      inputPaths.push_back(DataArrayPath("ImageDataContainer", "CellData", "ImageData")); // This is a 3 component RGB or 4 Comp RGBA array
+      inputPaths.push_back(DataArrayPath("ImageDataContainer", "CellData", "ImageData"));
+      createAndAddMultiEMMPMFilter(pipeline, inputPaths);
       pipeline->execute();
       DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)
     }

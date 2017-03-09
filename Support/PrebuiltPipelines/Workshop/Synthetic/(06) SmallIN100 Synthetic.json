@@ -1,5 +1,6 @@
 {
     "00": {
+        "FilterVersion": "1.0.600",
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
         "InputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -31,7 +32,9 @@
                                     "Object Type": "DataArray<bool>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
-                                        1
+                                        189,
+                                        201,
+                                        117
                                     ],
                                     "Version": 2
                                 },
@@ -44,7 +47,9 @@
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
-                                        1
+                                        189,
+                                        201,
+                                        117
                                     ],
                                     "Version": 2
                                 },
@@ -326,6 +331,19 @@
                                     "Component Dimensions": [
                                         3
                                     ],
+                                    "Flag": 2,
+                                    "Name": "AvgEuler",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
                                     "Flag": 0,
                                     "Name": "AvgEulerAngles",
                                     "Object Type": "DataArray<float>",
@@ -396,7 +414,7 @@
                                     "Object Type": "DataArray<bool>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
-                                        1
+                                        2353
                                     ],
                                     "Version": 2
                                 },
@@ -483,11 +501,11 @@
                                         1
                                     ],
                                     "Flag": 0,
-                                    "Name": "NumCells",
+                                    "Name": "NumElements",
                                     "Object Type": "DataArray<int32_t>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
-                                        1
+                                        2353
                                     ],
                                     "Version": 2
                                 },
@@ -680,7 +698,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -701,7 +719,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Centroids",
         "Filter_Name": "FindFeatureCentroids"
     },
@@ -711,7 +729,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Surface Features",
         "Filter_Name": "FindSurfaceFeatures",
         "SurfaceFeaturesArrayPath": {
@@ -728,7 +746,7 @@
             "Data Array Name": "Centroids",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Biased Features (Bounding Box)",
         "Filter_Name": "FindBoundingBoxFeatures",
         "PhasesArrayPath": {
@@ -743,21 +761,22 @@
         }
     },
     "05": {
-        "CellFeatureAttributeMatrixName": {
+        "EquivalentDiametersArrayName": "EquivalentDiameters",
+        "FeatureAttributeMatrixName": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
-        "EquivalentDiametersArrayName": "EquivalentDiameters",
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
-        "NumCellsArrayName": "NumCells",
+        "NumElementsArrayName": "NumElements",
+        "SaveElementSizes": 0,
         "VolumesArrayName": "SizeVolumes"
     },
     "06": {
@@ -779,7 +798,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Shapes",
         "Filter_Name": "FindShapes",
         "Omega3sArrayName": "Omega3s",
@@ -801,7 +820,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighborhoods",
         "Filter_Name": "FindNeighborhoods",
         "MultiplesOfAverage": 1,
@@ -834,7 +853,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
         "QuatsArrayPath": {
@@ -899,7 +918,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Generate Ensemble Statistics",
         "Filter_Name": "GenerateEnsembleStatistics",
         "IncludeRadialDistFunc": 0,
@@ -962,8 +981,10 @@
             "y": 128,
             "z": 128
         },
+        "EnsembleAttributeMatrixName": "CellEnsembleData",
         "EstimateNumberOfFeatures": 0,
-        "FilterVersion": "1.0.278",
+        "EstimatedPrimaryFeatures": "",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
         "InputPhaseTypesArrayPath": {
@@ -989,7 +1010,7 @@
         }
     },
     "11": {
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
         "InputPhaseTypesArrayPath": {
@@ -1006,14 +1027,18 @@
     "12": {
         "CellPhasesArrayName": "Phases",
         "CsvOutputFile": "",
-        "ErrorOutputFile": "",
         "FeatureIdsArrayName": "FeatureIds",
         "FeatureInputFile": "",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Pack Primary Phases",
         "Filter_Name": "PackPrimaryPhases",
         "HaveFeatures": 0,
+        "InputPhaseNamesArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "MaterialName",
+            "Data Container Name": "ImageDataContainer"
+        },
         "InputPhaseTypesArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "PhaseTypes",
@@ -1044,7 +1069,6 @@
         "OutputCellFeatureAttributeMatrixName": "CellFeatureData",
         "PeriodicBoundaries": 0,
         "UseMask": 0,
-        "VtkOutputFile": "",
         "WriteGoalAttributes": 0
     },
     "13": {
@@ -1059,7 +1083,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -1088,7 +1112,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Match Crystallography",
         "Filter_Name": "MatchCrystallography",
         "InputStatsArrayPath": {
@@ -1141,7 +1165,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -1157,7 +1181,7 @@
         "UseGoodVoxels": 0
     },
     "16": {
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "1.0.600",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Synthetic.dream3d",
@@ -1166,6 +1190,6 @@
     "PipelineBuilder": {
         "Name": "(06) SmallIN100 Synthetic",
         "Number_Filters": 17,
-        "Version": "1.0"
+        "Version": 6
     }
 }

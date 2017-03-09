@@ -12,8 +12,9 @@ This **Filter** compares the orientations of *bad* **Cells** with their neighbor
 *Note:* The **Filter** will iteratively reduce the required number of neighbors from 6 until it reaches the user defined number. So, if the user selects a required number of neighbors of 4, then the **Filter** will run with a required number of neighbors of 6, then 5, then 4 before finishing.  
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Misorientation Tolerance (Degrees) | float | Angular tolerance used to compare with neighboring **Cells** |
 | Required Number of Neighbors | int32_t | Minimum number of neighbor **Cells** that must have orientations within above tolerace to allow **Cell** to be changed |
 
@@ -21,8 +22,9 @@ This **Filter** compares the orientations of *bad* **Cells** with their neighbor
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | Quats | flaot | (4) | Specifies the orientation of the **Cell** in quaternion representation |
 | **Cell Attribute Array** | GoodVoxels | bool | (1) | Used to define **Cells** as *good* or *bad*  |
 | **Cell Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs |

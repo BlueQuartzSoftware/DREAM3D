@@ -97,7 +97,7 @@
  * @date Apr 27, 2011
  * @version 1.0
  */
-class AbstractMicrostructurePresetFactory
+class  AbstractMicrostructurePresetFactory
 {
   public:
     SIMPL_SHARED_POINTERS(AbstractMicrostructurePresetFactory)

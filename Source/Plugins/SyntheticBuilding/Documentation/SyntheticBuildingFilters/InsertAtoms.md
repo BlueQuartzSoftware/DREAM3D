@@ -27,14 +27,16 @@ After all **Features** have had atoms inserted, combine the point lists for all 
 Triangle
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 | **Feature Attribute Array** | AvgQuats | float | (4) | Specifies the average orientation of the **Feature** in quaternion representation |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | VertexDataContainer | N/A | N/A | Created synthetic volume **Data Container** name with **Vertex Geometry** |
 | **Attribute Matrix** | VertexData | Vertex | N/A | Created **Vertex Attribute Matrix** name |
 | **Vertex Attribute Array** | AtomFeatureLabels | int32_t | (1) | Specifies to which **Feature** each **Vertex** (or atom) belongs. |

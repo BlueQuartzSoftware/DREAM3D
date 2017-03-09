@@ -19,8 +19,9 @@ Image
 None
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Attribute Matrix** | CellData | Cell | N/A | *Reference* **Cell** data to use for fusion |
 | **Attribute Matrix** | CellData | Cell | N/A | *Sampling* **Cell** data to use for fusion |
 

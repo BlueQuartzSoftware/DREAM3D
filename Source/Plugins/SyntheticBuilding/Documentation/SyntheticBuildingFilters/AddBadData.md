@@ -23,8 +23,9 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | GBEuclideanDistances | int32_t | (1) | Manhattan distances of each **Cell** to the closest **Feature** boundary |
 
 ## Created Objects ##

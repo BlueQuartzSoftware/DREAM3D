@@ -69,4 +69,12 @@ namespace UnitTest
   }
 }
 
+namespace UnitTest
+{
+    namespace WriteIPFStandardTriangleTest
+    {
+
+    }
+}
+
 #endif

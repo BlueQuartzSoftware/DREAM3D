@@ -41,7 +41,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -168,7 +168,7 @@ class AlignSectionsMutualInformation : public AlignSections
     DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
   
   
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    QVector<LaueOps::Pointer> m_OrientationOps;
   
     Int32ArrayType::Pointer m_MIFeaturesPtr;
     uint64_t m_RandomSeed;

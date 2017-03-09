@@ -35,8 +35,6 @@
 
 #include "AbstractWizardPage.h"
 
-#include <QtCore/QFile>
-
 #include "ASCIIDataModel.h"
 #include "ImportASCIIDataWizard.h"
 

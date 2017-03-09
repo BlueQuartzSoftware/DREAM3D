@@ -174,14 +174,14 @@ void ReadCtfData::dataCheck()
   m->setGeometry(image);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0)
   {
     return;
   }
   tDims.resize(1);
   tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0)
   {
     return;
@@ -580,6 +580,20 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVe
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     ebsdAttrMat->addAttributeArray(Ebsd::Ctf::BS, iArray);
   }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::X));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::X);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ctf::X, fArray);
+  }
+
+  {
+    f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Y));
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Y);
+    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    ebsdAttrMat->addAttributeArray(Ebsd::Ctf::Y, fArray);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -599,7 +613,7 @@ void ReadCtfData::execute()
   QVector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-  ebsdAttrMat->setType(SIMPL::AttributeMatrixType::Cell);
+  ebsdAttrMat->setType(AttributeMatrix::Type::Cell);
 
   readDataFile(reader.get(), m, tDims, CTF_FULL_FILE);
   if(getErrorCondition() < 0)

@@ -37,7 +37,7 @@
 #include "OrientationLibTestFileLocations.h"
 
 
-#include "OrientationLib/SpaceGroupOps/SO3Sampler.h"
+#include "OrientationLib/LaueOps/SO3Sampler.h"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection3D.hpp"
 

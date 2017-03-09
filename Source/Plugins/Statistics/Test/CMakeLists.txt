@@ -41,6 +41,7 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # Include this file from the SIMPL Project
 include(${SIMPLProj_SOURCE_DIR}/Test/SIMPLTestFunctions.cmake)
 
+include_directories(${${PLUGIN_NAME}_SOURCE_DIR})
 include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Test)
 include_directories(${EbsdLibTest_BINARY_DIR})
@@ -57,8 +58,10 @@ configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
+  ComputeMomentInvariants2DTest
   CalculateArrayHistogramTest
   FindDifferenceMapTest
+  FindSizesTest
 )
 
 

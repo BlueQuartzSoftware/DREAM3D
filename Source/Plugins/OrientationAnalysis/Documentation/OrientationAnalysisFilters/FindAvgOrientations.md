@@ -23,16 +23,18 @@ None
 Not Applicable
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
 | **Element Attribute Array** | Phases | int32_t | (1) | Specifies the **Ensemble** of the **Element** |
 | **Element Attribute Array** | Quats | float | (4) | Specifies the orientation of the **Element** in quaternion representation |
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | AvgQuats | float | (4) | Specifies the average orientation of the **Feature** in quaternion representation |
 | **Feature Attribute Array** | AvgEulerAngles | float | (3) | Specifies the orientation of each **Feature** in Bunge convention (Z-X-Z) |
 

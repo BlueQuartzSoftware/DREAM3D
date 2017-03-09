@@ -109,15 +109,15 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, WriteStatsGenOdfAngleFile, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, WriteStatsGenOdfAngleFile, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, WriteStatsGenOdfAngleFile, req));
   }
 
@@ -247,7 +247,6 @@ void WriteStatsGenOdfAngleFile::execute()
 
   for(std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
   {
-    /* Let the GUI know we are done with this filter */
     QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
 
     notifyStatusMessage(getHumanLabel(), ss);
@@ -314,8 +313,8 @@ int WriteStatsGenOdfAngleFile::determineOutputLineCount(int64_t totalPoints, int
 int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase)
 {
   bool writeLine = false;
-  out << "# All lines starting with '#' are comments and should come before the header.\n";
-  out << "# DREAM.3D StatsGenerator Angles Input File\n";
+  out << "# All lines starting with '#' are comments and should come before the data.\n";
+  out << "# DREAM.3D StatsGenerator ODF Angles Input File\n";
   out << "# DREAM.3D Version " << OrientationAnalysis::Version::Complete() << "\n";
   out << "# Angle Data is space delimited.\n";
   out << "# Euler0 Euler1 Euler2 Weight Sigma\n";

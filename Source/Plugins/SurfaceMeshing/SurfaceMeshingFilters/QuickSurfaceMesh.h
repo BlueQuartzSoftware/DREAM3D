@@ -40,6 +40,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Geometry/IGeometryGrid.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -76,6 +77,9 @@ class QuickSurfaceMesh : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
     Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
+
+    SIMPL_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
+    Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -171,7 +175,6 @@ class QuickSurfaceMesh : public AbstractFilter
      */
     void initialize();
 
-
   private:
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
@@ -179,6 +182,16 @@ class QuickSurfaceMesh : public AbstractFilter
   
     std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
     std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;
+
+    /**
+     * @brief getGridCoordinates
+     * @param grid
+     * @param x
+     * @param y
+     * @param z
+     * @param coords
+     */
+    void getGridCoordinates(IGeometryGrid::Pointer grid, size_t x, size_t y, size_t z, float* coords);
 
     /**
      * @brief updateFaceInstancePointers Updates raw Face pointers

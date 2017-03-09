@@ -131,28 +131,28 @@ void InitializeSyntheticVolume::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
-    QVector<uint32_t> geomTypes;
-    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+    IGeometry::Types geomTypes;
+    geomTypes.push_back(IGeometry::Type::Image);
+    geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
   //  {
-  //    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble,
-  //    SIMPL::Defaults::AnyGeometry);
-  //    QVector<uint32_t> geomTypes;
-  //    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
-  //    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
+  //    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble,
+  //    IGeometry::Type::Any);
+  //    IGeometry::Types geomTypes;
+  //    geomTypes.push_back(IGeometry::Type::Image);
+  //    geomTypes.push_back(IGeometry::Type::Unknown);
   //    req.dcGeometryTypes = geomTypes;
   //    req.daTypes = QVector<QString>(1, SIMPL::TypeNames::StringArray);
   //    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Names", InputPhaseNamesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
@@ -229,7 +229,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[0] = m_Dimensions.x;
   tDims[1] = m_Dimensions.y;
   tDims[2] = m_Dimensions.z;
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0 && cellAttrMat.get() == nullptr)
   {
     return;
@@ -242,7 +242,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[0] = ensembleAM->getNumberOfTuples();
 
   // Create our own Ensemble Attribute Matrix
-  AttributeMatrix::Pointer ensembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer ensembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0 && cellAttrMat.get() == nullptr) { return; }
 
   QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
@@ -405,7 +405,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
 
   for(size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
-    if(phaseType->getValue(i) == SIMPL::PhaseType::PrimaryPhase)
+    if(phaseType->getValue(i) == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryphases.push_back(i);
@@ -451,8 +451,18 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
         volgood = true;
         if(pp->getFeatureSize_DistType() == SIMPL::DistributionType::LogNormal)
         {
-          float avgdiam = pp->getFeatureSizeDistribution().at(0)->getValue(0);
-          float sddiam = pp->getFeatureSizeDistribution().at(1)->getValue(0);
+          VectorOfFloatArray fsdist = pp->getFeatureSizeDistribution();
+          float avgdiam = 1.0f;
+          float sddiam = 0.1f;
+          if(fsdist.size() >= 2)
+          {
+            avgdiam = pp->getFeatureSizeDistribution().at(0)->getValue(0);
+            sddiam = pp->getFeatureSizeDistribution().at(1)->getValue(0);
+          }
+          else
+          {
+            return QString("-1");
+          }
           diam = rg.genrand_norm(avgdiam, sddiam);
           diam = expf(diam);
           if(diam >= pp->getMaxFeatureDiameter())

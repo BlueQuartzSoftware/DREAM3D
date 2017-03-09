@@ -15,8 +15,9 @@ Generally, all **Filters** within DREAM.3D use radians as a default unit, but **
 If the wrong conversion is selected (e.g., the user chooses *degrees to radians*, but their data is already in radians), the **Filter** will apply the conversion anyway and will result in erroneous data being used for the rest of the pipeline. If unsure about the units, check with the software supplier. 
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Conversion Type | Enumeration | Tells the **Filter** which conversion is being made |
 
 ## Required Geometry ##

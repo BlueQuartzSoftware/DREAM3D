@@ -25,8 +25,9 @@ Schematic layout of the neighboring cells. Only the In-Plane neighbors are shown
 In this example cell (1,1) has a confidence index < 0.1 and the surrounding cells all have a misorientation tolerance not greater than 5 degrees. Comparing cell (1,1) with its neighbor cells we can see that the misorientation is greater than 5 Degrees. In this case the central cell (1,1) would have all of its attributes replaced with the "best" neighbor based on the phase of a neighbor cell matching the central cell.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Minimum Confidence Index | float | Sets the minimum value of 'confidence' a **Cell** must have |
 | Misorientation Tolerance (Degrees) | Float | Angular tolerance used to compare with neighboring **Cells** |
 | Cleanup Level | int32_t | Minimum number of neighbor **Cells** that must have orientations within above tolerace to allow **Cell** to be changed | 
@@ -35,8 +36,9 @@ In this example cell (1,1) has a confidence index < 0.1 and the surrounding cell
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | Confidence Index | float | (1) | Specifies the confidence in the orientation of the **Cell** (TSL data) |
 | **Cell Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs |
 | **Cell Attribute Array** | Quats | float | (4) | Specifies the orientation of the **Cell** in quaternion representation |

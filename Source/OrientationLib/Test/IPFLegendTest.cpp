@@ -41,17 +41,17 @@
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib.h"
-#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
-#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
+#include "OrientationLib/LaueOps/CubicLowOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalLowOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/MonoclinicOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/TetragonalLowOps.h"
+#include "OrientationLib/LaueOps/TetragonalOps.h"
+#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/TrigonalLowOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
 
 #include "OrientationLibTestFileLocations.h"
 
@@ -118,10 +118,10 @@ class IPFLegendTest
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    template<class SpaceGroupOpsType>
+    template<class LaueOpsType>
     void TestIPFLegend(const QString outputFile)
     {
-      SpaceGroupOpsType ops;
+      LaueOpsType ops;
       UInt8ArrayType::Pointer image = ops.generateIPFTriangleLegend(IMAGE_WIDTH);
 
       SaveImage(image, outputFile);
@@ -134,19 +134,19 @@ class IPFLegendTest
 
       //DREAM3D_REGISTER_TEST( TestIPFLegend<CubicLowOps>(UnitTest::IPFLegendTest::CubicLowFile ) )
       DREAM3D_REGISTER_TEST( TestIPFLegend<CubicOps>(UnitTest::IPFLegendTest::CubicHighFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalLowOps>(UnitTest::IPFLegendTest::HexagonalLowFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalOps>(UnitTest::IPFLegendTest::HexagonalHighFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<MonoclinicOps>(UnitTest::IPFLegendTest::MonoclinicFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<OrthoRhombicOps>(UnitTest::IPFLegendTest::OrthorhombicFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalLowOps>(UnitTest::IPFLegendTest::TetragonalLowFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalOps>(UnitTest::IPFLegendTest::TetragonalHighFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TriclinicOps>(UnitTest::IPFLegendTest::TriclinicFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalLowOps>(UnitTest::IPFLegendTest::TrignonalLowFile ) )
-          DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalOps>(UnitTest::IPFLegendTest::TrignonalHighFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalLowOps>(UnitTest::IPFLegendTest::HexagonalLowFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalOps>(UnitTest::IPFLegendTest::HexagonalHighFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<MonoclinicOps>(UnitTest::IPFLegendTest::MonoclinicFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<OrthoRhombicOps>(UnitTest::IPFLegendTest::OrthorhombicFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalLowOps>(UnitTest::IPFLegendTest::TetragonalLowFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalOps>(UnitTest::IPFLegendTest::TetragonalHighFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TriclinicOps>(UnitTest::IPFLegendTest::TriclinicFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalLowOps>(UnitTest::IPFLegendTest::TrignonalLowFile ) )
+      DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalOps>(UnitTest::IPFLegendTest::TrignonalHighFile ) )
 
 
 
-          DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     }
 
   private:

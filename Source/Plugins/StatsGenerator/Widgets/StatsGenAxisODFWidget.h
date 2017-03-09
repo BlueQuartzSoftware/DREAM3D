@@ -42,6 +42,8 @@
 #include <QtWidgets/QWidget>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/PhaseType.h"
 
 #include "ui_StatsGenAxisODFWidget.h"
 
@@ -79,8 +81,8 @@ class StatsGenAxisODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
 
     unsigned int getCrystalStructure();
 
-    int getOrientationData(StatsData* statsData, unsigned int phaseType, bool preflight = false);
-    void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
+    int getOrientationData(StatsData* statsData, PhaseType::Type phaseType, bool preflight = false);
+    void extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType);
 
     void setPlotTabTitles(QString t1, QString t2, QString t3);
 

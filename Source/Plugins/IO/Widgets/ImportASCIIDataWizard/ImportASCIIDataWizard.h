@@ -39,6 +39,8 @@
 
 #include <QtWidgets/QWizard>
 
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 struct ImportASCIIDataBundle
 {
   QVector<QString>                            m_ColumnTypes;
@@ -70,13 +72,13 @@ class ImportASCIIDataWizard : public QWizard
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    ImportASCIIDataWizard(const QString &inputFilePath, int numLines, QWidget* parent = nullptr);
+    ImportASCIIDataWizard(const QString &inputFilePath, int numLines, DataContainerArray::Pointer dca, QWidget* parent = nullptr);
 
     /**
      * @brief ImportASCIIDataWizard
      * @param wizardData
      */
-    ImportASCIIDataWizard(ASCIIWizardData* wizardData, QWidget* parent = nullptr);
+    ImportASCIIDataWizard(ASCIIWizardData* wizardData, DataContainerArray::Pointer dca, QWidget* parent = nullptr);
 
     virtual ~ImportASCIIDataWizard();
 
@@ -146,17 +148,25 @@ class ImportASCIIDataWizard : public QWizard
     int getBeginningLineNum();
     QString getInputFilePath();
     QVector<size_t> getTupleDims();
+    bool getAutomaticAM();
+    DataArrayPath getSelectedPath();
+    int getAttributeMatrixType();
 
     void setInputFilePath(const QString &inputFilePath);
 
+    void setEditSettings(bool value);
+
   protected slots:
     void refreshModel();
+    void cleanupPage(int id);
 
   private:
     QString                                             m_InputFilePath;
-    int                                                 m_NumLines;
+    int                                                 m_NumLines = -1;
+    bool                                                m_EditSettings = false;
+    DataContainerArray::Pointer                         m_Dca = DataContainerArray::NullPointer();
 
-    QPushButton*                                        m_RefreshBtn;
+    QPushButton*                                        m_RefreshBtn = nullptr;
 
     ImportASCIIDataWizard(const ImportASCIIDataWizard&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIDataWizard&); // Operator '=' Not Implemented

@@ -32,7 +32,7 @@ The user will need to download 4 zip archives directly from each of the project 
 
 The following images shows what the user interface should look like:
 
-![images/download_source_image1.png](images/download_source_image1.png)
+![Images/download_source_image1.png](Images/download_source_image1.png)
 
 
 ## Directory Layout ##

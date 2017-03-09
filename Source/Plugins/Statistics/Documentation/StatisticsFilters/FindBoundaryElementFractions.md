@@ -16,13 +16,14 @@ Not Applicable
 ## Required Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
 | **Element Attribute Array** | BoundaryCells | int32_t | (1) | The number of neighboring **Elements** of a given **Element** that belong to a different **Feature** than itself |
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | SurfaceElementFractions | float | (1) | Fraction of **Elements** belonging to the **Feature** that are "surface" **Elements** |
 
 ## License & Copyright ##

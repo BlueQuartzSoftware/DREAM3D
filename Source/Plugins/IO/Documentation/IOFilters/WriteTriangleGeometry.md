@@ -57,7 +57,7 @@ Triangle
 ## Required Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | None | N/A | N/A | **Data Container** in which to place the created **Triangle Geometry** |
 
 ## Created Objects ##

@@ -56,9 +56,9 @@ class FindShapes : public AbstractFilter
     SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    SIMPL_DECLARE_ARRAY(double, featuremoments, FeatureMoments) // N x 6 Array
+    SIMPL_DECLARE_ARRAY(double, m_FeatureMoments, FeatureMomentsPtr) // N x 6 Array
 
-    SIMPL_DECLARE_ARRAY(double, featureeigenvals, FeatureEigenVals) // N x 3 Array
+    SIMPL_DECLARE_ARRAY(double, m_FeatureEigenVals, FeatureEigenValsPtr) // N x 3 Array
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
