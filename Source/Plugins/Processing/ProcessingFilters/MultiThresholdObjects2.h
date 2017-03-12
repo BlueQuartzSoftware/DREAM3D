@@ -41,7 +41,8 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/ComparisonInputsAdvanced.h"
-
+#include "SIMPLib/Common/ComparisonSet.h"
+#include "SIMPLib/Common/ComparisonValue.h"
 
 /**
  * @brief The MultiThresholdObjects class. See [Filter documentation](@ref multithresholdobjects) for details.
@@ -155,6 +156,9 @@ class MultiThresholdObjects2 : public AbstractFilter
      * @brief Initializes all the private instance variables.
      */
     void initialize();
+
+    void thresholdSet(ComparisonSet::Pointer comparisonSet, int32_t &err, bool inverse = false);
+    void thresholdValue(ComparisonValue::Pointer comparisonValue, int32_t &err, bool inverse = false);
 
 
   private:
