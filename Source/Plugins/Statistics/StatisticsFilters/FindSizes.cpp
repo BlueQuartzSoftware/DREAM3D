@@ -114,12 +114,14 @@ void FindSizes::setupFilterParameters()
 void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFeatureAttributeMatrixName(reader->readDataArrayPath("FeatureAttributeMatrixName", getFeatureAttributeMatrixName()));
-  setNumElementsArrayName(reader->readString("NumElementsArrayName", getNumElementsArrayName()));
+  setFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getFeatureAttributeMatrixName())); // Note the String name differs, this is for historical reasons
+  setNumElementsArrayName(reader->readString("NumCellsArrayName", getNumElementsArrayName())); // Note the String name differs, this is for historical reasons
   setEquivalentDiametersArrayName(reader->readString("EquivalentDiametersArrayName", getEquivalentDiametersArrayName()));
   setVolumesArrayName(reader->readString("VolumesArrayName", getVolumesArrayName()));
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setSaveElementSizes(reader->readValue("SaveElementSizes", getSaveElementSizes()));
+  // SaveElementSizes was introduced AFTER 6.3.29 and would ONLY show up in the JSON based pipelines. This
+  // method should only be reading from an HDF5 based pipeline.
+  //setSaveElementSizes(reader->readValue("SaveElementSizes", getSaveElementSizes()));
   reader->closeFilterGroup();
 }
 
