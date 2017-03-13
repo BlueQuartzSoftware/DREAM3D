@@ -188,9 +188,8 @@ void FindMisorientations::dataCheck()
   }
 
   // Ensemble Data
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
-                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims);
+  if(nullptr != m_CrystalStructuresPtr.lock().get())
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -250,25 +249,25 @@ void FindMisorientations::execute()
   QuatF q2 = QuaternionMathF::New();
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  uint32_t phase1 = 0, phase2 = 0;
+  uint32_t xtalType1 = 0, xtalType2 = 0;
   int32_t nname = 0;
 
   misorientationlists.resize(totalFeatures);
   for(size_t i = 1; i < totalFeatures; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
-    phase1 = m_CrystalStructures[m_FeaturePhases[i]];
+    xtalType1 = m_CrystalStructures[m_FeaturePhases[i]];
     misorientationlists[i].assign(neighborlist[i].size(), -1.0);
     for(size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = std::numeric_limits<float>::max();
       nname = neighborlist[i][j];
       QuaternionMathF::Copy(avgQuats[nname], q2);
-      phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
+      xtalType2 = m_CrystalStructures[m_FeaturePhases[nname]];
       tempMisoList = neighborlist[i].size();
-      if(phase1 == phase2)
+      if(xtalType1 == xtalType2 && xtalType1 < m_OrientationOps.size())
       {
-        w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+        w = m_OrientationOps[xtalType1]->getMisoQuat(q1, q2, n1, n2, n3);
         misorientationlists[i][j] = w * SIMPLib::Constants::k_180OverPi;
         if(m_FindAvgMisors == true)
         {
