@@ -7,12 +7,18 @@ Statistics (Crystallographic)
 ## Description ##
 This **Filter** determines, for each **Feature**, the C-axis misalignments with the **Features** that are in contact with it.  The C-axis misalignments are stored as a list (for each **Feature**) of angles (in degrees).
 
+### Notes ###
+
+__NOTE:__ Only features with identical phase values and a crystal structure of **Hexagonal_High** will be calculated. If two features have differentphase values or a crystal structure that is *not* Hexagonal_High then a value of NaN is set for the misorientation.
+
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 |Find Average Misalignment Per Feature | bool | Whether the *average* of the C-axis misalignments with the neighboring **Features** should be stored for each **Feature** |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

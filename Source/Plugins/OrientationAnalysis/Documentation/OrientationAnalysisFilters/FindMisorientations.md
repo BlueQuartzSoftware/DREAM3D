@@ -7,6 +7,12 @@ Statistics (Crystallographic)
 ## Description ##
 This **Filter** determines, for each **Feature**, the misorientations with each of the **Features** that are in contact with it.  The misorientations are stored as a list (for each **Feature**) of angles (in degrees).  The axis of the misorientation is not stored by this **Filter**.
 
+The user can also calculate the average misorientation between the feature and all contacting features.
+
+### Notes ###
+
+__NOTE:__ Only features with identical crystal structures will be calculated. If two features have different crystal structures then a value of NaN is set for the misorientation.
+
 ## Parameters ##
 
 | Name | Type | Description |

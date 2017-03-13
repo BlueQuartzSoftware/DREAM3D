@@ -35,6 +35,8 @@
 
 #include "FindFeatureNeighborCAxisMisalignments.h"
 
+#include <cmath>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -318,7 +320,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
         {
           hexneighborlistsize--;
         }
-        misalignmentlists[i][j] = -100.0f;
+        misalignmentlists[i][j] = NAN;
       }
     }
     if(m_FindAvgMisals == true)
@@ -329,7 +331,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
       }
       else
       {
-        m_AvgCAxisMisalignments[i] = -100.0f;
+        m_AvgCAxisMisalignments[i] = NAN;
       }
       hexneighborlistsize = 0;
     }

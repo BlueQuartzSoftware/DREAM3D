@@ -35,6 +35,8 @@
 
 #include "FindMisorientations.h"
 
+#include <cmath>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -280,7 +282,7 @@ void FindMisorientations::execute()
         {
           tempMisoList--;
         }
-        misorientationlists[i][j] = -100.0f;
+        misorientationlists[i][j] = NAN;
       }
     }
     if(m_FindAvgMisors == true)
@@ -291,7 +293,7 @@ void FindMisorientations::execute()
       }
       else
       {
-        m_AvgMisorientations[i] = -100.0f;
+        m_AvgMisorientations[i] = NAN;
       }
       tempMisoList = 0;
     }
