@@ -38,7 +38,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/ThresholdFilterHelper.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/ComparisonSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/ComparisonSelectionAdvancedFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -46,7 +46,7 @@
 #include "Processing/ProcessingVersion.h"
 
 // Include the MOC generated file for this class
-//#include "moc_MultiThresholdObjects2.cpp"
+#include "moc_MultiThresholdObjects2.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -74,7 +74,7 @@ void MultiThresholdObjects2::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
+    ComparisonSelectionAdvancedFilterParameter::Pointer parameter = ComparisonSelectionAdvancedFilterParameter::New();
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("SelectedThresholds");
 
@@ -113,37 +113,36 @@ void MultiThresholdObjects2::dataCheck()
 {
   setErrorCondition(0);
 
-  if(m_SelectedThresholds.size() == 0)
+  QVector<AbstractComparison::Pointer> comparisonValues = m_SelectedThresholds.getComparisonValues();
+
+  if(comparisonValues.size() == 0)
   {
     setErrorCondition(-12000);
     notifyErrorMessage(getHumanLabel(), "You must add at least 1 threshold value.", getErrorCondition());
   }
   else
   {
-    int32_t count = m_SelectedThresholds.size();
-    QSet<QString> dcSet;
-    QSet<QString> amSet;
-
-    dcSet.insert(m_SelectedThresholds.getDataContainerName());
-    amSet.insert(m_SelectedThresholds.getAttributeMatrixName());
+    int32_t count = comparisonValues.size();
+    QString dcName = m_SelectedThresholds.getDataContainerName();
+    QString amName = m_SelectedThresholds.getAttributeMatrixName();
 
     // Enforce that right now all the arrays MUST come from the same data container and attribute matrix
-    if(dcSet.size() != 1)
+    if(dcName.isEmpty())
     {
       setErrorCondition(-13090);
-      QString ss = QObject::tr("Threshold selections must come from the same DataContainer. %1 were selected").arg(dcSet.size());
+      QString ss = QObject::tr("Threshold must have a DataContainer. None were selected");
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
-    if(amSet.size() != 1)
+    if(amName.isEmpty())
     {
       setErrorCondition(-13091);
-      QString ss = QObject::tr("Threshold selections must come from the same AttributeMatrix. %1 were selected").arg(amSet.size());
+      QString ss = QObject::tr("Threshold must have an AttributeMatrix. None were selected");
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
 
-    AbstractComparison::Pointer comp = m_SelectedThresholds[0];
+    //AbstractComparison::Pointer comp = m_SelectedThresholds[0];
     QVector<size_t> cDims(1, 1);
-    DataArrayPath tempPath(m_SelectedThresholds.getDataContainerName(), m_SelectedThresholds.getAttributeMatrixName(), getDestinationArrayName());
+    DataArrayPath tempPath(dcName, amName, getDestinationArrayName());
     m_DestinationPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true,
                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_DestinationPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -152,24 +151,28 @@ void MultiThresholdObjects2::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     // Do not allow non-scalar arrays
-    for(size_t i = 0; i < m_SelectedThresholds.size(); ++i)
+    for(size_t i = 0; i < comparisonValues.size(); ++i)
     {
-      AbstractComparison::Pointer comp = m_SelectedThresholds[i];
-      tempPath.update(m_SelectedThresholds.getDataContainerName(), m_SelectedThresholds.getAttributeMatrixName(), comp->getAttributeArrayName);
-      IDataArray::Pointer inputData = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, tempPath);
-      if(getErrorCondition() >= 0)
+      ComparisonValue::Pointer comp = std::dynamic_pointer_cast<ComparisonValue>(comparisonValues[i]);
+
+      if (nullptr != comp)
       {
-        cDims = inputData->getComponentDimensions();
-        int32_t numComp = static_cast<int32_t>(cDims[0]);
-        for(int32_t d = 1; d < cDims.size(); d++)
+        tempPath.update(dcName, amName, comp->getAttributeArrayName());
+        IDataArray::Pointer inputData = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, tempPath);
+        if (getErrorCondition() >= 0)
         {
-          numComp *= cDims[d];
-        }
-        if(numComp > 1)
-        {
-          QString ss = QObject::tr("Selected array '%1' is not a scalar array").arg(m_SelectedThresholds[i].attributeArrayName);
-          setErrorCondition(-11003);
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          cDims = inputData->getComponentDimensions();
+          int32_t numComp = static_cast<int32_t>(cDims[0]);
+          for (int32_t d = 1; d < cDims.size(); d++)
+          {
+            numComp *= cDims[d];
+          }
+          if (numComp > 1)
+          {
+            QString ss = QObject::tr("Selected array '%1' is not a scalar array").arg(comp->getAttributeArrayName());
+            setErrorCondition(-11003);
+            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          }
         }
       }
     }
@@ -221,20 +224,42 @@ void MultiThresholdObjects2::execute()
   }
   else
   {
+    bool invert = m_SelectedThresholds.shouldInvert();
+
+    int64_t thresholdSize;
+    BoolArrayType::Pointer thresholdArray;
+
+    createBoolArray(thresholdSize, thresholdArray);
+    bool firstValueFound = false;
+
     // Loop on the remaining Comparison objects updating our final result array as we go
     for(int32_t i = 0; i < m_SelectedThresholds.size() && err >= 0; ++i)
     {
       if (std::dynamic_pointer_cast<ComparisonSet>(m_SelectedThresholds[i]))
       {
         ComparisonSet::Pointer comparisonSet = std::dynamic_pointer_cast<ComparisonSet>(m_SelectedThresholds[i]);
-        thresholdSet(comparisonSet, err, false);
+        thresholdSet(comparisonSet, thresholdArray, err, !firstValueFound, false);
+        firstValueFound = true;
       }
       else if(std::dynamic_pointer_cast<ComparisonValue>(m_SelectedThresholds[i]))
       {
         ComparisonValue::Pointer comparisonValue = std::dynamic_pointer_cast<ComparisonValue>(m_SelectedThresholds[i]);
-        thresholdValue(comparisonValue, err, false);
+        thresholdValue(comparisonValue, thresholdArray, err, !firstValueFound, false);
+        firstValueFound = true;
       }
     }
+
+    if (invert)
+    {
+      invertThreshold(thresholdSize, thresholdArray);
+    }
+
+    bool* threshold = thresholdArray->getPointer(0);
+    for (int64_t p = 0; p < thresholdSize; p++)
+    {
+      m_Destination[p] = threshold[p];
+    }
+    
   }
   
   /* Let the GUI know we are done with this filter */
@@ -244,12 +269,87 @@ void MultiThresholdObjects2::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdObjects2::thresholdSet(ComparisonSet::Pointer comparisonSet, int32_t &err, bool inverse)
+void MultiThresholdObjects2::createBoolArray(int64_t& totalTuples, BoolArrayType::Pointer& thresholdArrayPtr)
+{
+  // Get the names of the Data Container and AttributeMatrix for later
+  QString dcName = m_SelectedThresholds.getDataContainerName();
+  QString amName = m_SelectedThresholds.getAttributeMatrixName();
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+  DataContainer::Pointer m = dca->getDataContainer(dcName);
+
+  // Get the total number of tuples, create and initialize an array to use for these results
+  totalTuples = static_cast<int64_t>(m->getAttributeMatrix(amName)->getNumberOfTuples());
+  thresholdArrayPtr = BoolArrayType::CreateArray(totalTuples, "_INTERNAL_USE_ONLY_TEMP");
+
+  // Initialize the array to false
+  thresholdArrayPtr->initializeWithZeros();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MultiThresholdObjects2::insertThreshold(int64_t numItems, BoolArrayType::Pointer currentArrayPtr, int unionOperator, const BoolArrayType::Pointer newArrayPtr, bool inverse)
+{
+  bool* newArray = newArrayPtr->getPointer(0);
+  bool* currentArray = currentArrayPtr->getPointer(0);
+
+  for (int64_t i = 0; i < numItems; i++)
+  {
+    // invert the current comparison if necessary
+    if (inverse)
+    {
+      newArray[i] = !newArray[i];
+    }
+
+    if (SIMPL::Union::Operator_Or == unionOperator)
+    {
+      currentArray[i] = currentArray[i] || newArray[i];
+    }
+    else if (currentArray[i] == false || newArray[i] == false)
+    {
+      currentArray[i] = false;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MultiThresholdObjects2::invertThreshold(int64_t numItems, BoolArrayType::Pointer thresholdArray)
+{
+  bool* threshold = thresholdArray->getPointer(0);
+
+  for (int64_t i = 0; i < numItems; i++)
+  {
+    threshold[i] = !threshold[i];
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MultiThresholdObjects2::thresholdSet(ComparisonSet::Pointer comparisonSet, BoolArrayType::Pointer& currentThreshold, int32_t &err, bool replaceInput, bool inverse)
 {
   if (nullptr == comparisonSet)
   {
     return;
   }
+
+  if (inverse)
+  {
+    inverse = !comparisonSet->getInvertComparison();
+  }
+  else
+  {
+    inverse = comparisonSet->getInvertComparison();
+  }
+
+  int64_t setArraySize;
+  BoolArrayType::Pointer setThresholdArray;
+
+  createBoolArray(setArraySize, setThresholdArray);
+  bool firstValueFound = false;
 
   QVector<AbstractComparison::Pointer> comparisons = comparisonSet->getComparisons();
   for (int i = 0; i < comparisons.size(); i++)
@@ -258,21 +358,15 @@ void MultiThresholdObjects2::thresholdSet(ComparisonSet::Pointer comparisonSet, 
     if (std::dynamic_pointer_cast<ComparisonSet>(comparisons.at(i)))
     { 
       ComparisonSet::Pointer childSet = std::dynamic_pointer_cast<ComparisonSet>(comparisons.at(i));
-      bool childInverse = childSet->getInvertComparison();
-
-      if (inverse)
-      {
-        childInverse = !childInverse;
-      }
-
-      thresholdSet(childSet, err, childInverse);
+      thresholdSet(childSet, setThresholdArray, err, !firstValueFound, false);
+      firstValueFound = true;
     }
     // Check Comparison Values
     if (std::dynamic_pointer_cast<ComparisonValue>(comparisons.at(i)))
     {
       ComparisonValue::Pointer childValue = std::dynamic_pointer_cast<ComparisonValue>(comparisons.at(i));
-      
-      thresholdValue(childValue, err, inverse);
+      thresholdValue(childValue, setThresholdArray, err, !firstValueFound, false);
+      firstValueFound = true;
     }
 
     if (err < 0)
@@ -280,12 +374,26 @@ void MultiThresholdObjects2::thresholdSet(ComparisonSet::Pointer comparisonSet, 
       return;
     }
   }
+
+  if (replaceInput)
+  {
+    if (inverse)
+    {
+      invertThreshold(setArraySize, setThresholdArray);
+    }
+    currentThreshold.swap(setThresholdArray);
+  }
+  else
+  {
+    // insert into current threshold
+    insertThreshold(setArraySize, currentThreshold, comparisonSet->getUnionOperator(), setThresholdArray, inverse);
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdObjects2::thresholdValue(ComparisonValue::Pointer comparisonValue, int32_t &err, bool inverse)
+void MultiThresholdObjects2::thresholdValue(ComparisonValue::Pointer comparisonValue, BoolArrayType::Pointer& inputThreshold, int32_t &err, bool replaceInput, bool inverse)
 {
   if (nullptr == comparisonValue)
   {
@@ -305,10 +413,12 @@ void MultiThresholdObjects2::thresholdValue(ComparisonValue::Pointer comparisonV
 
   // Initialize the array to false
   currentArrayPtr->initializeWithZeros();
-  // Get the pointer to the front of the array. Raw Pointers = fast access = NO Bounds Checking!!!
-  bool* currentArray = currentArrayPtr->getPointer(0);
 
-  ThresholdFilterHelper filter(static_cast<SIMPL::Comparison::Enumeration>(comparisonValue->getCompOperator()), comparisonValue->getCompValue(), currentArrayPtr.get());
+  bool* currentArray = currentArrayPtr->getPointer(0);
+  int compOperator = comparisonValue->getCompOperator();
+  double compValue = comparisonValue->getCompValue();
+
+  ThresholdFilterHelper filter(static_cast<SIMPL::Comparison::Enumeration>(compOperator), compValue, currentArrayPtr.get());
 
   err = filter.execute(m->getAttributeMatrix(amName)->getAttributeArray(comparisonValue->getAttributeArrayName()).get(), currentArrayPtr.get());
   if (err < 0)
@@ -319,22 +429,19 @@ void MultiThresholdObjects2::thresholdValue(ComparisonValue::Pointer comparisonV
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  for (int64_t p = 0; p < totalTuples; ++p)
+  
+  if (replaceInput)
   {
-    // invert the current comparison if necessary
     if (inverse)
     {
-      currentArray[p] = !currentArray[p];
+      invertThreshold(totalTuples, currentArrayPtr);
     }
-
-    if (SIMPL::Union::Operator_Or == comparisonValue->getUnionOperator())
-    {
-      m_Destination[p] = m_Destination[p] || currentArray[p];
-    }
-    else if (m_Destination[p] == false || currentArray[p] == false)
-    {
-      m_Destination[p] = false;
-    }
+    inputThreshold.swap(currentArrayPtr);
+  }
+  else 
+  {
+    // insert into current threshold
+    insertThreshold(totalTuples, inputThreshold, comparisonValue->getUnionOperator(), currentArrayPtr, inverse);
   }
 }
 

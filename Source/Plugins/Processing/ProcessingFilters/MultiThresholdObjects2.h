@@ -157,8 +157,11 @@ class MultiThresholdObjects2 : public AbstractFilter
      */
     void initialize();
 
-    void thresholdSet(ComparisonSet::Pointer comparisonSet, int32_t &err, bool inverse = false);
-    void thresholdValue(ComparisonValue::Pointer comparisonValue, int32_t &err, bool inverse = false);
+    void createBoolArray(int64_t& numItems, BoolArrayType::Pointer& thresholdArrayPtr);
+    void insertThreshold(int64_t numItems, BoolArrayType::Pointer currentArray, int unionOperator, const BoolArrayType::Pointer newArray, bool inverse);
+    void invertThreshold(int64_t numItems, BoolArrayType::Pointer thresholdArray);
+    void thresholdSet(ComparisonSet::Pointer comparisonSet, BoolArrayType::Pointer& inputThreshold, int32_t& err, bool replaceInput = false, bool inverse = false);
+    void thresholdValue(ComparisonValue::Pointer comparisonValue, BoolArrayType::Pointer& inputThreshold, int32_t& err, bool replaceInput = false, bool inverse = false);
 
 
   private:
