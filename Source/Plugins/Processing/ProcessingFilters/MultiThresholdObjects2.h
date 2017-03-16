@@ -45,7 +45,7 @@
 #include "SIMPLib/Common/ComparisonValue.h"
 
 /**
- * @brief The MultiThresholdObjects class. See [Filter documentation](@ref multithresholdobjects) for details.
+ * @brief The MultiThresholdObjects2 class. See [Filter documentation](@ref multithresholdobjects2) for details.
  */
 class MultiThresholdObjects2 : public AbstractFilter
 {
@@ -157,10 +157,46 @@ class MultiThresholdObjects2 : public AbstractFilter
      */
     void initialize();
 
+    /**
+    * @brief Creates and returns a DataArray<bool> for the given AttributeMatrix and the number of tuples
+    */
     void createBoolArray(int64_t& numItems, BoolArrayType::Pointer& thresholdArrayPtr);
+    
+    /**
+    * @brief Merges two DataArray<bool>s of a given size using a union operator AND / OR and inverts the second DataArray if requested
+    * @param numItems Number of values in both DataArrays
+    * @param currentArray DataArray<bool> to merge values into
+    * @param unionOperator Union operator used to merge into currentArray
+    * @param newArray DataArray<bool> of values to merge into the currentArray
+    * @param inverse Should newArray have its boolean values flipped before being merged in
+    */
     void insertThreshold(int64_t numItems, BoolArrayType::Pointer currentArray, int unionOperator, const BoolArrayType::Pointer newArray, bool inverse);
+    
+    /**
+    * @brief Flips the boolean values for a DataArray<bool>
+    * @param numItems Number of tuples in the DataArray
+    * @param thresholdArray DataArray to invert
+    */
     void invertThreshold(int64_t numItems, BoolArrayType::Pointer thresholdArray);
+
+    /**
+    * @brief Performs a check on a ComparisonSet and either merges the result into the DataArray passed in or replaces the DataArray
+    * @param comparisonSet The set of comparisons used for setting the threshold
+    * @param inputThreshold DataArray<bool> merged into or replaced after finding the ComparisonSet's threshould output
+    * @param err Return any error code given
+    * @param replaceInput Specifies whether or not the result gets merged into inputThreshold or replaces it
+    * @param inverse Specifies whether or not the results need to be flipped before merging or replacing inputThreshold
+    */
     void thresholdSet(ComparisonSet::Pointer comparisonSet, BoolArrayType::Pointer& inputThreshold, int32_t& err, bool replaceInput = false, bool inverse = false);
+    
+    /**
+    * @brief Performs a check on a single ComparisonValue and either merges the result into the DataArray passed in or replaces the DataArray
+    * @param comparisonValue The comparison operator and value used for caluculating the threshold
+    * @param inputThreshold DataArray<bool> merged into or replaced after finding the ComparisonSet's threshould output
+    * @param err Return any error code given
+    * @param replaceInput Specifies whether or not the result gets merged into inputThreshold or replaces it
+    * @param inverse Specifies whether or not the results need to be flipped before merging or replacing inputThreshold
+    */
     void thresholdValue(ComparisonValue::Pointer comparisonValue, BoolArrayType::Pointer& inputThreshold, int32_t& err, bool replaceInput = false, bool inverse = false);
 
 
