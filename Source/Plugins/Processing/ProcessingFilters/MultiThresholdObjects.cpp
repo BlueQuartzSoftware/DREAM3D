@@ -260,11 +260,7 @@ void MultiThresholdObjects::execute()
       }
       for(int64_t p = 0; p < totalTuples; ++p)
       {
-        if (SIMPL::Union::Operator_Or == m_SelectedThresholds[i].unionOperator)
-        {
-          m_Destination[p] = m_Destination[p] || currentArray[p];
-        }
-        else if(m_Destination[p] == false || currentArray[p] == false)
+        if(m_Destination[p] == false || currentArray[p] == false)
         {
           m_Destination[p] = false;
         }
