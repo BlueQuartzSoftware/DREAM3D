@@ -58,6 +58,7 @@ configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
 # they will show up in IDEs
 set(TEST_NAMES
   MultiThresholdObjectsTest
+  MultiThresholdObjects2Test
 )
 
 
