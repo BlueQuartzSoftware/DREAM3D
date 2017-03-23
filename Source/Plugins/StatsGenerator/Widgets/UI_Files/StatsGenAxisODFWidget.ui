@@ -139,7 +139,7 @@
                  <string/>
                 </property>
                 <property name="icon">
-                 <iconset>
+                 <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
                   <normaloff>:/add2.png</normaloff>:/add2.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -258,7 +258,7 @@
                  <string/>
                 </property>
                 <property name="icon">
-                 <iconset>
+                 <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
                   <normaloff>:/delete2.png</normaloff>:/delete2.png</iconset>
                 </property>
                 <property name="iconSize">
@@ -521,8 +521,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>98</width>
-                <height>30</height>
+                <width>830</width>
+                <height>331</height>
                </rect>
               </property>
               <property name="sizePolicy">
@@ -743,7 +743,10 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
+  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
+  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
+  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>
