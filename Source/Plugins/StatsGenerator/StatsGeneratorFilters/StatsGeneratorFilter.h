@@ -39,6 +39,8 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <QtCore/QObject>
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -88,6 +90,10 @@ class StatsGeneratorFilter : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(StringDataArray::Pointer, PhaseNames)
     Q_PROPERTY(StringDataArray::Pointer PhaseNames READ getPhaseNames WRITE setPhaseNames)
+
+    SIMPL_FILTER_PARAMETER(DataArrayPath, Path)
+    Q_PROPERTY(DataArrayPath Path READ getPath WRITE setPath)
+
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

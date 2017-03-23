@@ -42,6 +42,10 @@
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
@@ -88,9 +92,21 @@ void StatsGeneratorFilter::setupFilterParameters()
   parameters.push_back(StatsGeneratorFilterParameter::New("StatsGenerator", "StatsGenerator", "", FilterParameter::Parameter));
   parameters.push_back(SIMPL_NEW_STRING_FP("Statistics Data Container", StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Statistics", StatsDataArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures", CrystalStructuresArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Types", PhaseTypesArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Statistics Ensemble Data Array", StatsDataArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures Ensemble Data Array", CrystalStructuresArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Types Ensemble Data Array", PhaseTypesArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+
+//  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Statistics Data Container", StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+
+//  AttributeMatrixCreationFilterParameter::RequirementType amreq;
+//  parameters.push_back(SIMPL_NEW_AM_CREATION_FP("Cell Ensemble Attribute Matrix", Path, FilterParameter::CreatedArray, StatsGeneratorFilter, amreq));
+
+//  DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
+//  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Statistics", Path, FilterParameter::CreatedArray, StatsGeneratorFilter, req));
+//  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Crystal Structures", Path, FilterParameter::CreatedArray, StatsGeneratorFilter, req));
+//  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Phase Types", Path, FilterParameter::CreatedArray, StatsGeneratorFilter, req));
+
+
   setFilterParameters(parameters);
 }
 

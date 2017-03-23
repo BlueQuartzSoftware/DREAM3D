@@ -40,6 +40,7 @@
 #include <QtCore/QFutureWatcher>
 #include <QtGui/QImage>
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QButtonGroup>
 
 #include "ui_StatsGenAxisODFWidget.h"
 
@@ -112,10 +113,13 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     void on_deleteODFTextureBtn_clicked();
     void on_loadODFTextureBtn_clicked();
     void on_selectAnglesFile_clicked();
-    void on_bulkLoadGroupBox_clicked ( bool checked = false );
-    void on_weightSpreadGroupBox_clicked ( bool checked = false );
+
     void on_savePoleFigureImage_clicked();
     void on_angleFilePath_textChanged();
+
+
+    virtual void on_m_WeightSpreads_clicked(bool b);
+    virtual void on_m_WeightSpreadsBulkLoad_clicked(bool b);
 
   signals:
     void dataChanged();
@@ -128,12 +132,13 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     unsigned int      m_CrystalStructure;
     SGODFTableModel*        m_ODFTableModel;
     SGODFTableModel*        m_OdfBulkTableModel;
-    StatsGenMDFWidget*      m_MDFWidget;
+   // StatsGenMDFWidget*      m_MDFWidget;
     QVector<QwtPlotCurve*>  m_PlotCurves;
     QwtPlotMarker*          m_PlotGrid;
     QwtPlotCurve*           m_CircleGrid;
     QwtPlotCurve*           m_RotCross0;
     QwtPlotCurve*           m_RotCross1;
+    QButtonGroup            m_ButtonGroup;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
 
