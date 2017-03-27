@@ -61,19 +61,20 @@
  * @brief The FindEuclideanMap class implements a threaded algorithm that computes the Euclidean distance map
  * for each point in the supplied volume
  */
+template <typename T>
 class FindEuclideanMap
 {
   DataContainer::Pointer m;
   int32_t* m_FeatureIds;
   int32_t* m_NearestNeighbors;
   bool m_OnlyManhattan;
-  float* m_GBEuclideanDistances;
-  float* m_TJEuclideanDistances;
-  float* m_QPEuclideanDistances;
+  T* m_GBEuclideanDistances;
+  T* m_TJEuclideanDistances;
+  T* m_QPEuclideanDistances;
   int32_t mapType;
 
 public:
-  FindEuclideanMap(DataContainer::Pointer datacontainer, int32_t* fIds, int32_t* nearNeighs, bool calcManhattanOnly, float* gbDists, float* tjDists, float* qpDists, int32_t type)
+  FindEuclideanMap(DataContainer::Pointer datacontainer, int32_t* fIds, int32_t* nearNeighs, bool calcManhattanOnly, T* gbDists, T* tjDists, T* qpDists, int32_t type)
   : m(datacontainer)
   , m_FeatureIds(fIds)
   , m_NearestNeighbors(nearNeighs)
@@ -256,15 +257,15 @@ public:
       m_NearestNeighbors[a * 3 + mapType] = voxel_NearestNeighbor[a];
       if(mapType == 0)
       {
-        m_GBEuclideanDistances[a] = static_cast<float>(voxel_EuclideanDistance[a]);
+        m_GBEuclideanDistances[a] = static_cast<T>(voxel_EuclideanDistance[a]);
       }
       else if(mapType == 1)
       {
-        m_TJEuclideanDistances[a] = static_cast<float>(voxel_EuclideanDistance[a]);
+        m_TJEuclideanDistances[a] = static_cast<T>(voxel_EuclideanDistance[a]);
       }
       else if(mapType == 2)
       {
-        m_QPEuclideanDistances[a] = static_cast<float>(voxel_EuclideanDistance[a]);
+        m_QPEuclideanDistances[a] = static_cast<T>(voxel_EuclideanDistance[a]);
       }
     }
   }
@@ -386,34 +387,70 @@ void FindEuclideanDistMap::dataCheck()
   if(m_DoBoundaries == true)
   {
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getGBEuclideanDistancesArrayName());
-    m_GBEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, -1, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_GBEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if (m_CalcOnlyManhattanDist == true)
     {
-      m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+      m_GBMHEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+          this, tempPath, -1, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if(nullptr != m_GBMHEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      {
+        m_GBMHEuclideanDistances = m_GBMHEuclideanDistancesPtr.lock()->getPointer(0);
+      } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
+    else
+    {
+      m_GBEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+          this, tempPath, -1, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if(nullptr != m_GBEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      {
+        m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0);
+      } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
   }
 
   if(m_DoTripleLines == true)
   {
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getTJEuclideanDistancesArrayName());
-    m_TJEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, -1, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_TJEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if (m_CalcOnlyManhattanDist == true)
     {
-      m_TJEuclideanDistances = m_TJEuclideanDistancesPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+      m_TJMHEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+          this, tempPath, -1, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if(nullptr != m_TJMHEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      {
+        m_TJMHEuclideanDistances = m_TJMHEuclideanDistancesPtr.lock()->getPointer(0);
+      } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
+    else
+    {
+      m_TJEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+          this, tempPath, -1, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if(nullptr != m_TJEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      {
+        m_TJEuclideanDistances = m_TJEuclideanDistancesPtr.lock()->getPointer(0);
+      } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
   }
 
   if(m_DoQuadPoints == true)
   {
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getQPEuclideanDistancesArrayName());
-    m_QPEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, -1, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_QPEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if (m_CalcOnlyManhattanDist == true)
     {
-      m_QPEuclideanDistances = m_QPEuclideanDistancesPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
+      m_QPMHEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+          this, tempPath, -1, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if(nullptr != m_QPMHEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      {
+        m_QPMHEuclideanDistances = m_QPMHEuclideanDistancesPtr.lock()->getPointer(0);
+      } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
+    else
+    {
+      m_QPEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+          this, tempPath, -1, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if(nullptr != m_QPEuclideanDistancesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      {
+        m_QPEuclideanDistances = m_QPEuclideanDistancesPtr.lock()->getPointer(0);
+      } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
   }
 
   cDims[0] = 3;
@@ -464,15 +501,36 @@ void FindEuclideanDistMap::find_euclideandistmap()
   {
     if(m_DoBoundaries == true)
     {
-      m_GBEuclideanDistances[i] = -1;
+      if (m_CalcOnlyManhattanDist == true)
+      {
+        m_GBMHEuclideanDistances[i] = -1;
+      }
+      else
+      {
+        m_GBEuclideanDistances[i] = -1;
+      }
     }
     if(m_DoTripleLines == true)
     {
-      m_TJEuclideanDistances[i] = -1;
+      if (m_CalcOnlyManhattanDist == true)
+      {
+        m_TJMHEuclideanDistances[i] = -1;
+      }
+      else
+      {
+        m_TJEuclideanDistances[i] = -1;
+      }
     }
     if(m_DoQuadPoints == true)
     {
-      m_QPEuclideanDistances[i] = -1;
+      if (m_CalcOnlyManhattanDist == true)
+      {
+        m_QPMHEuclideanDistances[i] = -1;
+      }
+      else
+      {
+        m_QPEuclideanDistances[i] = -1;
+      }
     }
   }
 
@@ -559,15 +617,42 @@ void FindEuclideanDistMap::find_euclideandistmap()
       }
       if(coordination.size() >= 1 && m_DoBoundaries == true)
       {
-        m_GBEuclideanDistances[a] = 0.0f, m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = -1, m_NearestNeighbors[a * 3 + 2] = -1;
+        if (m_CalcOnlyManhattanDist == true)
+        {
+          m_GBMHEuclideanDistances[a] = 0;
+        }
+        else
+        {
+          m_GBEuclideanDistances[a] = 0.0f;
+        }
+
+        m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = -1, m_NearestNeighbors[a * 3 + 2] = -1;
       }
       if(coordination.size() >= 2 && m_DoTripleLines == true)
       {
-        m_TJEuclideanDistances[a] = 0.0f, m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = coordination[0], m_NearestNeighbors[a * 3 + 2] = -1;
+        if (m_CalcOnlyManhattanDist == true)
+        {
+          m_TJMHEuclideanDistances[a] = 0;
+        }
+        else
+        {
+          m_TJEuclideanDistances[a] = 0.0f;
+        }
+
+        m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = coordination[0], m_NearestNeighbors[a * 3 + 2] = -1;
       }
       if(coordination.size() > 2 && m_DoQuadPoints == true)
       {
-        m_QPEuclideanDistances[a] = 0.0f, m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = coordination[0], m_NearestNeighbors[a * 3 + 2] = coordination[0];
+        if (m_CalcOnlyManhattanDist == true)
+        {
+          m_QPMHEuclideanDistances[a] = 0;
+        }
+        else
+        {
+          m_QPEuclideanDistances[a] = 0.0f;
+        }
+
+        m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = coordination[0], m_NearestNeighbors[a * 3 + 2] = coordination[0];
       }
       coordination.resize(0);
     }
@@ -584,15 +669,36 @@ void FindEuclideanDistMap::find_euclideandistmap()
     tbb::task_group* g = new tbb::task_group;
     if(m_DoBoundaries == true)
     {
-      g->run(FindEuclideanMap(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, 0));
+      if (m_CalcOnlyManhattanDist == true)
+      {
+        g->run(FindEuclideanMap<int32_t>(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBMHEuclideanDistances, m_TJMHEuclideanDistances, m_QPMHEuclideanDistances, 0));
+      }
+      else
+      {
+        g->run(FindEuclideanMap<float>(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, 0));
+      }
     }
     if(m_DoTripleLines == true)
     {
-      g->run(FindEuclideanMap(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, 1));
+      if (m_CalcOnlyManhattanDist == true)
+      {
+        g->run(FindEuclideanMap<int32_t>(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBMHEuclideanDistances, m_TJMHEuclideanDistances, m_QPMHEuclideanDistances, 1));
+      }
+      else
+      {
+        g->run(FindEuclideanMap<float>(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, 1));
+      }
     }
     if(m_DoQuadPoints == true)
     {
-      g->run(FindEuclideanMap(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, 2));
+      if (m_CalcOnlyManhattanDist == true)
+      {
+        g->run(FindEuclideanMap<int32_t>(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBMHEuclideanDistances, m_TJMHEuclideanDistances, m_QPMHEuclideanDistances, 2));
+      }
+      else
+      {
+        g->run(FindEuclideanMap<float>(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, 2));
+      }
     }
     g->wait();
     delete g;
@@ -604,8 +710,16 @@ void FindEuclideanDistMap::find_euclideandistmap()
     {
       if((i == 0 && m_DoBoundaries == true) || (i == 1 && m_DoTripleLines == true) || (i == 2 && m_DoQuadPoints == true))
       {
-        FindEuclideanMap f(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, i);
-        f();
+        if (m_CalcOnlyManhattanDist == true)
+        {
+          FindEuclideanMap<int32_t> f(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBMHEuclideanDistances, m_TJMHEuclideanDistances, m_QPMHEuclideanDistances, i);
+          f();
+        }
+        else
+        {
+          FindEuclideanMap<float> f(m, m_FeatureIds, m_NearestNeighbors, m_CalcOnlyManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, i);
+          f();
+        }
       }
     }
   }
