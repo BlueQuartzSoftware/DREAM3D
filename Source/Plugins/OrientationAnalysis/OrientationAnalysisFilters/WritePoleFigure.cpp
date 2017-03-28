@@ -554,5 +554,5 @@ const QString WritePoleFigure::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString WritePoleFigure::getHumanLabel()
 {
-  return "Write Pole Figure Images";
+  return "Export Pole Figure Images";
 }

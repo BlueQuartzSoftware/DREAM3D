@@ -384,5 +384,5 @@ const QString FeatureDataCSVWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString FeatureDataCSVWriter::getHumanLabel()
 {
-  return "Write Feature Data as CSV File";
+  return "Export Feature Data as CSV File";
 }

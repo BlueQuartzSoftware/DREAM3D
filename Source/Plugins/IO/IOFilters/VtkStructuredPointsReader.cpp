@@ -1260,5 +1260,5 @@ const QString VtkStructuredPointsReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString VtkStructuredPointsReader::getHumanLabel()
 {
-  return "VTK STRUCTURED_POINTS Reader";
+  return "VTK STRUCTURED_POINTS Importer";
 }

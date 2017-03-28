@@ -970,5 +970,5 @@ const QString SurfaceMeshToNonconformalVtk::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString SurfaceMeshToNonconformalVtk::getHumanLabel()
 {
-  return "Write Vtk PolyData (NonConformal) from SurfaceMesh";
+  return "Export Vtk PolyData (NonConformal) from SurfaceMesh";
 }

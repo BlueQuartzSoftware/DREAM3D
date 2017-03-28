@@ -477,5 +477,5 @@ const QString GoldfeatherReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString GoldfeatherReader::getHumanLabel()
 {
-  return "Goldfeather Mesh Reader";
+  return "Goldfeather Mesh Importer";
 }

@@ -112,7 +112,7 @@ ReadH5Ebsd::~ReadH5Ebsd()
 void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(ReadH5EbsdFilterParameter::New("Read H5Ebsd File", "ReadH5Ebsd", "__NULL__", FilterParameter::Parameter, this));
+  parameters.push_back(ReadH5EbsdFilterParameter::New("Import H5Ebsd File", "ReadH5Ebsd", "__NULL__", FilterParameter::Parameter, this));
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ReadH5Ebsd));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ReadH5Ebsd));
@@ -1098,5 +1098,5 @@ const QString ReadH5Ebsd::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ReadH5Ebsd::getHumanLabel()
 {
-  return "Read H5EBSD File";
+  return "Import H5EBSD File";
 }

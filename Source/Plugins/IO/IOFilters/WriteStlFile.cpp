@@ -480,5 +480,5 @@ const QString WriteStlFile::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString WriteStlFile::getHumanLabel()
 {
-  return "Write STL Files from Triangle Geometry";
+  return "Export STL Files from Triangle Geometry";
 }

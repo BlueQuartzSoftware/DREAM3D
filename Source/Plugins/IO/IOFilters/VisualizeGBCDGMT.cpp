@@ -561,5 +561,5 @@ const QString VisualizeGBCDGMT::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDGMT::getHumanLabel()
 {
-  return "Write GBCD Pole Figure (GMT 5)";
+  return "Export GBCD Pole Figure (GMT 5)";
 }

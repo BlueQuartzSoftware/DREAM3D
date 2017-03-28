@@ -442,5 +442,5 @@ const QString FeatureInfoReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString FeatureInfoReader::getHumanLabel()
 {
-  return "Read Feature Info File";
+  return "Import Feature Info File";
 }

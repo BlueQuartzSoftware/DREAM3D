@@ -725,5 +725,5 @@ const QString AbaqusHexahedronWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString AbaqusHexahedronWriter::getHumanLabel()
 {
-  return "Abaqus Hexahedron Writer";
+  return "Abaqus Hexahedron Exporter";
 }

@@ -607,5 +607,5 @@ const QString YSChoiAbaqusReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString YSChoiAbaqusReader::getHumanLabel()
 {
-  return "Read YS Choi Abaqus Vtk Output File";
+  return "Import YS Choi Abaqus Vtk Output File";
 }

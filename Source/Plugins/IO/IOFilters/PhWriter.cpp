@@ -313,5 +313,5 @@ const QString PhWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString PhWriter::getHumanLabel()
 {
-  return "Write Ph File (Feature Ids)";
+  return "Export Ph File (Feature Ids)";
 }

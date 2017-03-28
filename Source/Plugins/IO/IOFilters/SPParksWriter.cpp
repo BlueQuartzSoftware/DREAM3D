@@ -320,5 +320,5 @@ const QString SPParksWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString SPParksWriter::getHumanLabel()
 {
-  return "Write SPParks Sites (Feature Ids)";
+  return "Export SPParks Sites (Feature Ids)";
 }

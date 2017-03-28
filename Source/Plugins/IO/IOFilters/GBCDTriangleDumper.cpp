@@ -343,5 +343,5 @@ const QString GBCDTriangleDumper::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString GBCDTriangleDumper::getHumanLabel()
 {
-  return "Write GBCD Triangles File";
+  return "Export GBCD Triangles File";
 }

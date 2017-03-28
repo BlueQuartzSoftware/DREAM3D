@@ -525,5 +525,5 @@ const QString INLWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString INLWriter::getHumanLabel()
 {
-  return "Write INL File";
+  return "Export INL File";
 }

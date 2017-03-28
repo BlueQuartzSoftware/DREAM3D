@@ -614,5 +614,5 @@ const QString ReadASCIIData::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ReadASCIIData::getHumanLabel()
 {
-  return "Read ASCII Data";
+  return "Import ASCII Data";
 }

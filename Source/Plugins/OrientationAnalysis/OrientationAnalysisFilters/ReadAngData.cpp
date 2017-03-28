@@ -687,5 +687,5 @@ const QString ReadAngData::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ReadAngData::getHumanLabel()
 {
-  return "Read EDAX EBSD Data (.ang)";
+  return "Import EDAX EBSD Data (.ang)";
 }

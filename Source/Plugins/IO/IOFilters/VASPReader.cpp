@@ -477,5 +477,5 @@ const QString VASPReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString VASPReader::getHumanLabel()
 {
-  return "Read VASP File";
+  return "Import VASP File";
 }

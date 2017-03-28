@@ -700,5 +700,5 @@ const QString ReadCtfData::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ReadCtfData::getHumanLabel()
 {
-  return "Read Oxford Instr. EBSD Data (.ctf)";
+  return "Import Oxford Instr. EBSD Data (.ctf)";
 }
