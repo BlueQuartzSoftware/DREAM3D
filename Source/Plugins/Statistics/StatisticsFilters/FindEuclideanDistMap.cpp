@@ -93,7 +93,7 @@ public:
   void operator()() const
   {
     size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-    double euclideanDistance = 0.0f;
+    double euclideanDistance = 0.0;
     size_t count = 1;
     size_t changed = 1;
     size_t neighpoint = 0;
@@ -143,6 +143,8 @@ public:
         voxel_EuclideanDistance[a] = static_cast<double>(m_QPEuclideanDistances[a]);
       }
     }
+
+    // ------------- Calculate the Manhattan Distance ----------------
     count = 1;
     changed = 1;
     int64_t i = 0;
@@ -221,6 +223,9 @@ public:
         }
       }
     }
+
+    // ------------- Calculate the Euclidian Distance ----------------
+
     if(m_OnlyManhattan == false)
     {
       double x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0, z1 = 0.0, z2 = 0.0;

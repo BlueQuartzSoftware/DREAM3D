@@ -35,6 +35,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
+#include <QtCore/QDir>
 
 #include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Common/FilterManager.h"
@@ -48,6 +49,7 @@
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 
 #include "StatisticsTestFileLocations.h"
 
@@ -164,7 +166,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  DataContainerArray::Pointer initializeDataContainerArray()
+  DataContainerArray::Pointer initializeDataContainerArray(QVector<size_t> tDims)
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
@@ -172,11 +174,11 @@ public:
     m->setName(k_FeatureIdsArrayPath.getDataContainerName());
     ImageGeom::Pointer geom = ImageGeom::CreateGeometry("ImageGeometry");
     m->setGeometry(geom);
+   geom->setDimensions(tDims.data());
+   geom->setResolution(1.0f, 2.0f, 1.0f);
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
-    QVector<size_t> tDims;
-    tDims.push_back(13);
-    tDims.push_back(13);
+
     AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, k_FeatureIdsArrayPath.getAttributeMatrixName(), AttributeMatrix::Type::Cell);
 
     m->addAttributeMatrix(k_FeatureIdsArrayPath.getAttributeMatrixName(), attrMat1);
@@ -189,12 +191,18 @@ public:
     DREAM3D_REQUIRE(err >= 0);
     featureIds->initializeWithValue(1);
 
-    for (size_t i = 1; i < tDims[0] - 1; i++)
+    for (size_t i = 0; i < tDims[0]; i++)
     {
-      for (size_t j = 1; j < tDims[1] - 1; j++)
+      for (size_t j = 0; j < tDims[1]; j++)
       {
         size_t index = tDims[0] * j + i;
-        featureIds->setValue(index, 2);
+        if(i > tDims[0]/2) {
+        featureIds->setValue(index, 1);
+        }
+        else
+        {
+          featureIds->setValue(index, 2);
+        }
       }
     }
 
@@ -225,7 +233,8 @@ public:
   // -----------------------------------------------------------------------------
   int RunTest()
   {
-    DataContainerArray::Pointer dca = initializeDataContainerArray();
+    QVector<size_t> tDims = { 13, 13, 1};
+    DataContainerArray::Pointer dca = initializeDataContainerArray(tDims);
 
     QString filtName = "FindEuclideanDistMap";
     FilterManager* fm = FilterManager::Instance();
@@ -247,8 +256,23 @@ public:
     err = filter->setProperty("GBEuclideanDistancesArrayName", var);
     DREAM3D_REQUIRE(err >= 0);
 
-//    filter->execute();
-//    DREAM3D_REQUIRE(filter->getErrorCondition() >= 0);
+    bool calcOnlyManhattan = false;
+    var.setValue(calcOnlyManhattan);
+    err = filter->setProperty("CalcOnlyManhattanDist", var);
+
+
+    filter->execute();
+    DREAM3D_REQUIRE(filter->getErrorCondition() >= 0);
+
+
+    DataContainerWriter::Pointer writer = DataContainerWriter::New();
+    writer->setOutputFile(UnitTest::StatisticsTempDir + QDir::separator() + "FindEuclideanDistMap.dream3d");
+    writer->setDataContainerArray(dca);
+
+
+    writer->execute();
+    DREAM3D_REQUIRE(writer->getErrorCondition() >= 0);
+
 
 //    // Failures
 //    SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_bool, attrMat2_bool, diffMap1, -90000)
