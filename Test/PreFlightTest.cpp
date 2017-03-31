@@ -93,7 +93,7 @@ void writeAllFilters(QString filePath)
   }
 
   JsonFilterParametersWriter::Pointer writer = JsonFilterParametersWriter::New();
-  writer->writePipelineToFile(pipeline, filePath, "Pipeline", nullptr);
+  writer->writePipelineToFile(pipeline, filePath, "Pipeline");
 }
 
 // -----------------------------------------------------------------------------
