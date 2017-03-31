@@ -337,5 +337,5 @@ const QString LosAlamosFFTWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString LosAlamosFFTWriter::getHumanLabel()
 {
-  return "Write Los Alamos FFT File";
+  return "Export Los Alamos FFT File";
 }

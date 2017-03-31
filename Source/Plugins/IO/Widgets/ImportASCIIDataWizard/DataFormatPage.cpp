@@ -112,7 +112,7 @@ void DataFormatPage::setupGui()
   int numOfDataLines = m_NumLines - beginIndex + 1;
   linesImportedLabel->setText(QString::number(numOfDataLines));
   linesInFileLabel->setText(QString::number(m_NumLines));
-  amTuplesLabel->setText(QString::number(numOfDataLines));
+//  amTuplesLabel->setText(QString::number(numOfDataLines));
 
   tupleDimsTable->blockSignals(true);
   tupleDimsTable->addTupleDimensions(QVector<size_t>(1, numOfDataLines));
@@ -686,7 +686,7 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   if(value > m_NumLines)
   {
     wizard()->button(QWizard::FinishButton)->setDisabled(true);
-    amTuplesLabel->setText("ERR");
+//    amTuplesLabel->setText("ERR");
     return;
   }
 
@@ -998,7 +998,7 @@ bool DataFormatPage::validateTupleDimensions(QVector<size_t> tupleDims)
   {
     tupleTotal = tupleTotal * tupleDims[i];
   }
-  amTuplesLabel->setText(QString::number(tupleTotal));
+//  amTuplesLabel->setText(QString::number(tupleTotal));
   size_t beginIndex = static_cast<size_t>(startRowSpin->value());
   size_t numOfDataLines = m_NumLines - beginIndex + 1;
   if(tupleTotal != numOfDataLines)

@@ -388,5 +388,5 @@ const QString AvizoRectilinearCoordinateWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString AvizoRectilinearCoordinateWriter::getHumanLabel()
 {
-  return "Avizo Rectilinear Coordinate Writer";
+  return "Avizo Rectilinear Coordinate Exporter";
 }

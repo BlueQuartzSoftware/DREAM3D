@@ -322,5 +322,5 @@ const QString LammpsFileWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getHumanLabel()
 {
-  return "Write Lammps File";
+  return "Export Lammps File";
 }

@@ -148,7 +148,7 @@ void ReadEdaxH5Data::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Z Spacing (Microns)", ZSpacing, FilterParameter::Parameter, ReadEdaxH5Data));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin (XYZ)", Origin, FilterParameter::Parameter, ReadEdaxH5Data));
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Read Pattern Data", ReadPatternData, FilterParameter::Parameter, ReadEdaxH5Data));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Import Pattern Data", ReadPatternData, FilterParameter::Parameter, ReadEdaxH5Data));
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ReadEdaxH5Data));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ReadEdaxH5Data));
@@ -808,5 +808,5 @@ const QString ReadEdaxH5Data::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ReadEdaxH5Data::getHumanLabel()
 {
-  return "Read EDAX EBSD Data (.h5)";
+  return "Import EDAX EBSD Data (.h5)";
 }

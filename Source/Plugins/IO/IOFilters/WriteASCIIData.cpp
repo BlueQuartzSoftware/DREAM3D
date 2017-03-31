@@ -413,5 +413,5 @@ const QString WriteASCIIData::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString WriteASCIIData::getHumanLabel()
 {
-  return "Write ASCII Data";
+  return "Export ASCII Data";
 }

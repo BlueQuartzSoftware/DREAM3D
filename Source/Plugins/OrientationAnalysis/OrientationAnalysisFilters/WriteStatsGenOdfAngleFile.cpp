@@ -418,5 +418,5 @@ const QString WriteStatsGenOdfAngleFile::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString WriteStatsGenOdfAngleFile::getHumanLabel()
 {
-  return "Write StatsGenerator ODF Angle File";
+  return "Export StatsGenerator ODF Angle File";
 }

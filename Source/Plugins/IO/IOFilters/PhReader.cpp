@@ -472,5 +472,5 @@ const QString PhReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString PhReader::getHumanLabel()
 {
-  return "Read Ph File (Feature Ids)";
+  return "Import Ph File (Feature Ids)";
 }

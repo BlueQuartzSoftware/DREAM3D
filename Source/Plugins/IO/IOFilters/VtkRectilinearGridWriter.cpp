@@ -525,5 +525,5 @@ const QString VtkRectilinearGridWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getHumanLabel()
 {
-  return "Vtk Rectilinear Grid Writer";
+  return "Vtk Rectilinear Grid Exporter";
 }

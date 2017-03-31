@@ -601,5 +601,5 @@ const QString DxReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString DxReader::getHumanLabel()
 {
-  return "Read Dx File (Feature Ids)";
+  return "Import Dx File (Feature Ids)";
 }

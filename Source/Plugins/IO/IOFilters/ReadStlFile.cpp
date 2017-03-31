@@ -566,5 +566,5 @@ const QString ReadStlFile::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ReadStlFile::getHumanLabel()
 {
-  return "Read STL File";
+  return "Import STL File";
 }

@@ -349,5 +349,5 @@ const QString AvizoUniformCoordinateWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString AvizoUniformCoordinateWriter::getHumanLabel()
 {
-  return "Avizo Uniform Coordinate Writer";
+  return "Avizo Uniform Coordinate Exporter";
 }

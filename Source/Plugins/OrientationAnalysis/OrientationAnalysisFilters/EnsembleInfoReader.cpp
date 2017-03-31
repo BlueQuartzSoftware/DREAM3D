@@ -505,5 +505,5 @@ const QString EnsembleInfoReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString EnsembleInfoReader::getHumanLabel()
 {
-  return "Read Ensemble Info File";
+  return "Import Ensemble Info File";
 }

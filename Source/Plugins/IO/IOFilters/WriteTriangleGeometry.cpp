@@ -332,5 +332,5 @@ const QString WriteTriangleGeometry::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString WriteTriangleGeometry::getHumanLabel()
 {
-  return "Write Triangle Geometry";
+  return "Export Triangle Geometry";
 }

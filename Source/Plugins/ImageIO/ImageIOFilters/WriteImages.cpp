@@ -598,5 +598,5 @@ const QString WriteImages::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString WriteImages::getHumanLabel()
 {
-  return "Write Images";
+  return "Export Images";
 }

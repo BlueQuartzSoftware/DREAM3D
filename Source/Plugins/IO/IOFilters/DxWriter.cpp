@@ -458,5 +458,5 @@ const QString DxWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString DxWriter::getHumanLabel()
 {
-  return "Write Dx File (Feature Ids)";
+  return "Export Dx File (Feature Ids)";
 }
