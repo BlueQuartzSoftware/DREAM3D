@@ -348,7 +348,7 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 {
-  QString proposedFile = m_OpenDialogLastDirectory;
+  QString proposedFile = m_OpenDialogLastFilePath;
   QString file = QFileDialog::getOpenFileName(this, tr("Open MDF File"), proposedFile, tr("Text Document (*.txt)"));
   if(true == file.isEmpty())
   {

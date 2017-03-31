@@ -59,7 +59,7 @@
 #include "ImageIO/ImageIOFilters/ImportVectorImageStack.h"
 
 // Initialize private static member variable
-QString ImportVectorImageStackWidget::m_OpenDialogLastDirectory = "";
+QString ImportVectorImageStackWidget::m_OpenDialogLastFilePath = "";
 
 // -----------------------------------------------------------------------------
 //
@@ -72,9 +72,9 @@ ImportVectorImageStackWidget::ImportVectorImageStackWidget(FilterParameter* para
   m_Filter = qobject_cast<ImportVectorImageStack*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "ImportVectorImageStackWidget can ONLY be used with ImportVectorImageStack filter", __FILE__);
 
-  if(getOpenDialogLastDirectory().isEmpty())
+  if(getOpenDialogLastFilePath().isEmpty())
   {
-    setOpenDialogLastDirectory(QDir::homePath());
+    setOpenDialogLastFilePath(QDir::homePath());
   }
   setupUi(this);
   setupGui();
@@ -235,7 +235,7 @@ void ImportVectorImageStackWidget::validateInputFile()
     //    QString Ftype = getFilterParameter()->getFileType();
     //    QString ext = getFilterParameter()->getFileExtension();
     //    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
-    QString defaultName = m_OpenDialogLastDirectory;
+    QString defaultName = m_OpenDialogLastFilePath;
 
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
@@ -247,7 +247,7 @@ void ImportVectorImageStackWidget::validateInputFile()
     file = QDir::toNativeSeparators(file);
     // Store the last used directory into the private instance variable
     QFileInfo fi(file);
-    m_OpenDialogLastDirectory = fi.path();
+    m_OpenDialogLastFilePath = fi.path();
     m_Filter->setInputPath(file);
   }
 }
@@ -325,14 +325,14 @@ void ImportVectorImageStackWidget::checkIOFiles()
 void ImportVectorImageStackWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
-  QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
+  QString outputFile = this->getOpenDialogLastFilePath() + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Image Directory"), outputFile);
   if(!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(outputFile));
     on_m_InputDir_textChanged(m_InputDir->text());
-    getOpenDialogLastDirectory() = outputFile;
+    getOpenDialogLastFilePath() = outputFile;
     m_InputDir->blockSignals(false);
   }
 }

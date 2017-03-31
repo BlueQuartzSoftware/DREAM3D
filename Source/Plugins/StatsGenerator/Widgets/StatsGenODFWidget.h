@@ -135,7 +135,7 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     QwtPlotCurve*           m_RotCross0;
     QwtPlotCurve*           m_RotCross1;
 
-    QString m_OpenDialogLastDirectory; // Must be last in the list
+    QString m_OpenDialogLastFilePath; // Must be last in the list
 
     StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented

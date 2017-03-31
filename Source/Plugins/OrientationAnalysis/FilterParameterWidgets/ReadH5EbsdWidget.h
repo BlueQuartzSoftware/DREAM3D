@@ -110,8 +110,8 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
 
 
   protected:
-    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
-    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
+    static void setOpenDialogLastFilePath(QString val) { m_OpenDialogLastFilePath = val; }
+    static QString getOpenDialogLastFilePath() { return m_OpenDialogLastFilePath; }
 
 
     /**
@@ -171,7 +171,7 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     AxisAngleInput_t m_SampleTransformation;
     AxisAngleInput_t m_EulerTransformation;
     bool m_Version4Warning;
-    static QString                m_OpenDialogLastDirectory;
+    static QString                m_OpenDialogLastFilePath;
     bool m_DidCausePreflight;
     bool m_NewFileLoaded;
 

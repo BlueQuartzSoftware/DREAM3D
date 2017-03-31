@@ -99,7 +99,7 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
     SGRDFTableModel* m_RDFTableModel;
     QwtPlotCurve*    m_PlotCurve;
 
-    QString m_OpenDialogLastDirectory; // Must be last in the list
+    QString m_OpenDialogLastFilePath; // Must be last in the list
 
 
     StatsGenRDFWidget(const StatsGenRDFWidget&); // Copy Constructor Not Implemented

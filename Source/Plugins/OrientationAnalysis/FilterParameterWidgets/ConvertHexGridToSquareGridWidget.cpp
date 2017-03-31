@@ -49,7 +49,7 @@
 #include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
 
 // Initialize private static member variable
-QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
+QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastFilePath = "";
 
 // -----------------------------------------------------------------------------
 //
@@ -64,9 +64,9 @@ ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParamet
 
   m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(parameter);
 
-  if(getOpenDialogLastDirectory().isEmpty())
+  if(getOpenDialogLastFilePath().isEmpty())
   {
-    setOpenDialogLastDirectory(QDir::homePath());
+    setOpenDialogLastFilePath(QDir::homePath());
   }
   setupUi(this);
   setupGui();
@@ -222,7 +222,7 @@ void ConvertHexGridToSquareGridWidget::validateInputFile()
     //    QString Ftype = m_FilterParameter->getFileType();
     //    QString ext = m_FilterParameter->getFileExtension();
     //    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
-    QString defaultName = m_OpenDialogLastDirectory;
+    QString defaultName = m_OpenDialogLastFilePath;
 
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
@@ -234,7 +234,7 @@ void ConvertHexGridToSquareGridWidget::validateInputFile()
     file = QDir::toNativeSeparators(file);
     // Store the last used directory into the private instance variable
     QFileInfo fi(file);
-    m_OpenDialogLastDirectory = fi.path();
+    m_OpenDialogLastFilePath = fi.path();
     m_Filter->setInputPath(file);
   }
 }
@@ -282,14 +282,14 @@ void ConvertHexGridToSquareGridWidget::checkIOFiles()
 void ConvertHexGridToSquareGridWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
-  QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
+  QString outputFile = this->getOpenDialogLastFilePath() + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
   if(!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(outputFile));
     on_m_InputDir_textChanged(m_InputDir->text());
-    getOpenDialogLastDirectory() = outputFile;
+    getOpenDialogLastFilePath() = outputFile;
     m_InputDir->blockSignals(false);
   }
 }
@@ -326,7 +326,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
   QString currentPath = m_Filter->getOutputPath();
   if(currentPath.isEmpty() == true)
   {
-    currentPath = m_OpenDialogLastDirectory;
+    currentPath = m_OpenDialogLastFilePath;
   }
   QString Ftype = m_FilterParameter->getFileType();
   QString ext = m_FilterParameter->getFileExtension();
@@ -342,7 +342,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
   file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);
-  m_OpenDialogLastDirectory = fi.path();
+  m_OpenDialogLastFilePath = fi.path();
   m_OutputDir->setText(file);
 
   // on_m_OutputDir_textChanged(file);
@@ -356,7 +356,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDir_textChanged(const QString&
   // if (verifyPathExists(text, m_OutputFile) == true )
   {
     QFileInfo fi(text);
-    setOpenDialogLastDirectory(fi.path());
+    setOpenDialogLastFilePath(fi.path());
   }
   emit parametersChanged();
 }

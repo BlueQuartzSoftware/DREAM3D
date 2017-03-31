@@ -95,7 +95,7 @@ class ReadASCIIDataWidget : public FilterParameterWidget, private Ui::ReadASCIID
     ImportASCIIDataWizard*                            m_ImportWizard;
 
     QString                                           m_FilePath;
-    static QString                                    m_OpenDialogLastDirectory;
+    static QString                                    m_OpenDialogLastFilePath;
 
     QThread*                                          m_WorkerThread;
     LineCounterObject*                                m_LineCounter;

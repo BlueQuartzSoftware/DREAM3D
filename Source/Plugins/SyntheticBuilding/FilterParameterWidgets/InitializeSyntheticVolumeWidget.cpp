@@ -66,7 +66,7 @@
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 
 // Initialize private static member variable
-QString InitializeSyntheticVolumeWidget::m_OpenDialogLastDirectory = "";
+QString InitializeSyntheticVolumeWidget::m_OpenDialogLastFilePath = "";
 
 // -----------------------------------------------------------------------------
 //
@@ -81,9 +81,9 @@ InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter
   m_Filter = qobject_cast<InitializeSyntheticVolume*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
 
-  if(getOpenDialogLastDirectory().isEmpty())
+  if(getOpenDialogLastFilePath().isEmpty())
   {
-    setOpenDialogLastDirectory(QDir::homePath());
+    setOpenDialogLastFilePath(QDir::homePath());
   }
   setupUi(this);
   setupGui();
@@ -163,7 +163,7 @@ void InitializeSyntheticVolumeWidget::setupGui()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 {
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), m_OpenDialogLastDirectory, tr("DREAM3D Stats Files (*.dream3d *.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), m_OpenDialogLastFilePath, tr("DREAM3D Stats Files (*.dream3d *.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
   if(true == file.isEmpty())
   {
     return;

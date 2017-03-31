@@ -128,8 +128,8 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
     void stackingOrderChanged(bool checked);
 
   protected:
-    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
-    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
+    static void setOpenDialogLastFilePath(QString val) { m_OpenDialogLastFilePath = val; }
+    static QString getOpenDialogLastFilePath() { return m_OpenDialogLastFilePath; }
 
     /**
      * @brief checkIOFiles
@@ -196,7 +196,7 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
     QButtonGroup*               m_OriginGroup;
     QButtonGroup*               m_zSpacingGroup;
 
-    static QString                m_OpenDialogLastDirectory;
+    static QString                m_OpenDialogLastFilePath;
     bool m_DidCausePreflight;
 
 

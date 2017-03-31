@@ -56,7 +56,7 @@
 
 
 // Initialize private static member variable
-QString ReadASCIIDataWidget::m_OpenDialogLastDirectory = "";
+QString ReadASCIIDataWidget::m_OpenDialogLastFilePath = "";
 
 // -----------------------------------------------------------------------------
 //
@@ -224,7 +224,7 @@ void ReadASCIIDataWidget::on_importFileBtn_pressed()
 
     m_FilePath = QDir::toNativeSeparators(m_FilePath);
     // Store the last used directory into the private instance variable
-    m_OpenDialogLastDirectory = fi.path();
+    m_OpenDialogLastFilePath = fi.path();
 
     // Validate that the file is an ASCII file
     {
