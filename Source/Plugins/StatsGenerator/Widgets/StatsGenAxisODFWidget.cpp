@@ -579,6 +579,7 @@ void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
   QString ext = "*.png";
   QString s = "Image Files (*.tiff *.png *.bmp);;All Files(*.*)";
   QString defaultName = m_OpenDialogLastFilePath;
+  
   QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
 
   if(true == file.isEmpty())

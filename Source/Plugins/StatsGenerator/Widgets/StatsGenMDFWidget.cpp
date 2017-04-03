@@ -356,6 +356,9 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   }
   else
   {
+    QFileInfo fi(file);
+    m_OpenDialogLastFilePath = fi.filePath();
+
     size_t numMisorients = 0;
     QString filename = file;
     std::ifstream inFile;

@@ -777,7 +777,7 @@ void StatsGeneratorWidget::on_saveJsonBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::on_saveH5Btn_clicked()
 {
-  QString proposedFile = m_OpenDialogLastFilePath + QDir::separator() + "Untitled.dream3d";
+  QString proposedFile = m_OpenDialogLastFilePath;
 
   QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM.3D File"), proposedFile, tr("DREAM.3D Files (*.dream3d)"));
 
@@ -788,7 +788,7 @@ void StatsGeneratorWidget::on_saveH5Btn_clicked()
 
   QFileInfo fi(h5file);
   QString ext = fi.suffix();
-  m_OpenDialogLastFilePath = h5file;
+  m_OpenDialogLastFilePath = fi.filePath();
 
   DataContainerArray::Pointer dca = generateDataContainerArray();
 

@@ -593,8 +593,16 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 void StatsGenODFWidget::on_selectAnglesFile_clicked()
 {
   QString proposedFile = m_OpenDialogLastFilePath;
+  if(false == angleFilePath->text().isEmpty())
+  {
+    proposedFile = angleFilePath->text();
+  }
   QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Document (*.txt)"));
-  angleFilePath->setText(file);
+  if (false == file.isEmpty())
+  {
+    angleFilePath->setText(file);
+    m_OpenDialogLastFilePath = file;
+  }
 }
 
 // -----------------------------------------------------------------------------
