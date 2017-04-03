@@ -58,8 +58,6 @@
 
 #include "ImageIO/ImageIOFilters/ImportVectorImageStack.h"
 
-// Initialize private static member variable
-QString ImportVectorImageStackWidget::m_OpenDialogLastFilePath = "";
 
 // -----------------------------------------------------------------------------
 //
@@ -72,13 +70,24 @@ ImportVectorImageStackWidget::ImportVectorImageStackWidget(FilterParameter* para
   m_Filter = qobject_cast<ImportVectorImageStack*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "ImportVectorImageStackWidget can ONLY be used with ImportVectorImageStack filter", __FILE__);
 
-  if(getOpenDialogLastFilePath().isEmpty())
-  {
-    setOpenDialogLastFilePath(QDir::homePath());
-  }
   setupUi(this);
   setupGui();
   // checkIOFiles();
+  if (filter)
+  {
+    QString currentPath = filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    if (currentPath.isEmpty() == false)
+    {
+      currentPath = QDir::toNativeSeparators(currentPath);
+      // Store the last used directory into the private instance variable
+      QFileInfo fi(currentPath);
+      m_InputDir->setText(fi.path());
+    }
+    else
+    {
+      m_InputDir->setText(QDir::homePath());
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -235,8 +244,7 @@ void ImportVectorImageStackWidget::validateInputFile()
     //    QString Ftype = getFilterParameter()->getFileType();
     //    QString ext = getFilterParameter()->getFileExtension();
     //    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
-    QString defaultName = m_OpenDialogLastFilePath;
-
+    QString defaultName = getInputDirectory();
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
     QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
@@ -247,7 +255,7 @@ void ImportVectorImageStackWidget::validateInputFile()
     file = QDir::toNativeSeparators(file);
     // Store the last used directory into the private instance variable
     QFileInfo fi(file);
-    m_OpenDialogLastFilePath = fi.path();
+    setInputDirectory(fi.path());
     m_Filter->setInputPath(file);
   }
 }
@@ -325,14 +333,15 @@ void ImportVectorImageStackWidget::checkIOFiles()
 void ImportVectorImageStackWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
-  QString outputFile = this->getOpenDialogLastFilePath() + QDir::separator();
+  QString outputFile = this->getInputDirectory();
+
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select Image Directory"), outputFile);
   if(!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(outputFile));
     on_m_InputDir_textChanged(m_InputDir->text());
-    getOpenDialogLastFilePath() = outputFile;
+    setInputDirectory(outputFile);
     m_InputDir->blockSignals(false);
   }
 }
@@ -714,4 +723,24 @@ void ImportVectorImageStackWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::afterPreflight()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportVectorImageStackWidget::setInputDirectory(QString val) 
+{
+  m_InputDir->setText(val);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ImportVectorImageStackWidget::getInputDirectory() 
+{
+  if(m_InputDir->text().isEmpty())
+  {
+    return QDir::homePath();
+  }
+  return m_InputDir->text();
 }
