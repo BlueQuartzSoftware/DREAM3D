@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>734</width>
-    <height>449</height>
+    <width>967</width>
+    <height>615</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -110,8 +110,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>375</width>
-        <height>84</height>
+        <width>473</width>
+        <height>292</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -148,19 +148,6 @@
           <string/>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_7">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -261,8 +248,8 @@
           <widget class="QPushButton" name="addODFTextureBtn">
            <property name="minimumSize">
             <size>
-             <width>24</width>
-             <height>24</height>
+             <width>16</width>
+             <height>16</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -279,12 +266,12 @@
            </property>
            <property name="icon">
             <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-             <normaloff>:/add2.png</normaloff>:/add2.png</iconset>
+             <normaloff>:/add.png</normaloff>:/add.png</iconset>
            </property>
            <property name="iconSize">
             <size>
-             <width>24</width>
-             <height>24</height>
+             <width>16</width>
+             <height>16</height>
             </size>
            </property>
            <property name="flat">
@@ -324,8 +311,8 @@
            </property>
            <property name="iconSize">
             <size>
-             <width>24</width>
-             <height>24</height>
+             <width>16</width>
+             <height>16</height>
             </size>
            </property>
            <property name="flat">
@@ -371,6 +358,9 @@
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By default if no custom rows are entered then a completely random ODF will be generated. Adding rows to this table results in those texture values being integrated into the random ODF data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>60</number>
+         </attribute>
         </widget>
        </item>
       </layout>
@@ -546,22 +536,6 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2" rowspan="6">
-    <widget class="StatsGenMDFWidget" name="m_MDFWidget" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>60</width>
-       <height>0</height>
-      </size>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label_2">
      <property name="font">
@@ -593,7 +567,7 @@
      <property name="topMargin">
       <number>10</number>
      </property>
-     <item row="2" column="0">
+     <item row="2" column="1">
       <widget class="QLabel" name="pfLambertLabel">
        <property name="toolTip">
         <string>Controls the size of the Modified Lambert Square that is used for interpolation of the angular data during the stereographic project generation. You should leave this at the default unless you really understand what you are doing.</string>
@@ -603,7 +577,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="1" column="1">
       <widget class="QLabel" name="label_8">
        <property name="toolTip">
         <string>Controls the size of the Modified Lambert Square that is used for interpolation of the angular data during the stereographic project generation. You should leave this at the default unless you really understand what you are doing.</string>
@@ -613,7 +587,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="2" column="2">
       <widget class="QSpinBox" name="pfLambertSize">
        <property name="maximum">
         <number>10000</number>
@@ -623,7 +597,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="1" column="2">
       <widget class="QComboBox" name="imageLayout">
        <property name="currentIndex">
         <number>2</number>
@@ -645,14 +619,14 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="0">
+     <item row="0" column="1">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Image Size:</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="0" column="2">
       <widget class="QSpinBox" name="pfImageSize">
        <property name="maximum">
         <number>10000</number>
@@ -662,47 +636,90 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0" colspan="2">
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <property name="topMargin">
-        <number>0</number>
+     <item row="0" column="3" rowspan="3">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
        </property>
-       <item>
-        <widget class="QPushButton" name="savePoleFigureImage">
-         <property name="text">
-          <string>Save PoleFigure...</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_5">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item>
         <widget class="QPushButton" name="m_CalculateODFBtn">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>48</width>
+           <height>48</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Update ODF Data. Every time a new value is entered this button should be clicked.</string>
+         </property>
          <property name="text">
-          <string>Update ODF</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+           <normaloff>:/refresh@2x.png</normaloff>:/refresh@2x.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
          </property>
          <property name="autoDefault">
           <bool>true</bool>
          </property>
          <property name="default">
           <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="savePoleFigureImage">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>48</width>
+           <height>48</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Save Pole Figure</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+           <normaloff>:/data-transfer-download@2x.png</normaloff>:/data-transfer-download@2x.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -717,6 +734,22 @@
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2" rowspan="6">
+    <widget class="StatsGenMDFWidget" name="m_MDFWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>60</width>
+       <height>0</height>
+      </size>
      </property>
     </widget>
    </item>

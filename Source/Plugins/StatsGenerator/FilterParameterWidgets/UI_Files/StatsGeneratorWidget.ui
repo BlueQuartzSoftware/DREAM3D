@@ -131,13 +131,13 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/cube_molecule_add.png</normaloff>:/cube_molecule_add.png</iconset>
+        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+         <normaloff>:/add@2x.png</normaloff>:/add@2x.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
        <property name="flat">
@@ -172,13 +172,13 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/gear.png</normaloff>:/gear.png</iconset>
+        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+         <normaloff>:/cog.png</normaloff>:/cog.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
        <property name="flat">
@@ -229,19 +229,35 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/cube_molecule_delete.png</normaloff>:/cube_molecule_delete.png</iconset>
+        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+         <normaloff>:/delete2@2x.png</normaloff>:/delete2@2x.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
        <property name="flat">
         <bool>true</bool>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>12</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <widget class="QPushButton" name="updatePipelineBtn">
@@ -264,13 +280,13 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
+        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
          <normaloff>:/refresh@2x.png</normaloff>:/refresh@2x.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
        <property name="flat">
@@ -299,13 +315,13 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/disk_blue@2x.png</normaloff>:/disk_blue@2x.png</iconset>
+        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+         <normaloff>:/data-transfer-download@2x.png</normaloff>:/data-transfer-download@2x.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
        <property name="flat">
@@ -334,7 +350,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
+        <iconset>
          <normaloff>:/disk_green@2x.png</normaloff>:/disk_green@2x.png</iconset>
        </property>
        <property name="iconSize">
@@ -369,7 +385,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
+        <iconset>
          <normaloff>:/folder_out@2x.png</normaloff>:/folder_out@2x.png</iconset>
        </property>
        <property name="iconSize">
@@ -485,7 +501,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -6,23 +6,23 @@
   <file>delete2@2x.png</file>
   <file>delete.png</file>
   <file>delete@2x.png</file>
-  <file>add2.png</file>
-  <file>add2@2x.png</file>
+  <file>add.png</file>
+  <file>add@2x.png</file>
   <file>folder_blue.png</file>
   <file>folder_blue@2x.png</file>
   <file>text.png</file>
   <file>text@2x.png</file>
 
-  <file>help2.png</file>
-  <file>help2@2x.png</file>
+  <file>question-mark.png</file>
+  <file>question-mark@2x.png</file>
   <file>information.png</file>
   <file>information@2x.png</file>
   <file>warning.png</file>
   <file>warning@2x.png</file>
   <file>refresh.png</file>
   <file>refresh@2x.png</file>
-  <file>gear.png</file>
-  <file>gear@2x.png</file>
+  <file>cog.png</file>
+  <file>cog@2x.png</file>
   <file>zoom_in.png</file>
   <file>zoom_in@2x.png</file>
   <file>zoom_out.png</file>
@@ -41,8 +41,8 @@
   <file>arrow_up_green.png</file>
   <file>arrow_up_green@2x.png</file>
 
-  <file>disk_blue.png</file>
-  <file>disk_blue@2x.png</file>
+  <file>data-transfer-download.png</file>
+  <file>data-transfer-download@2x.png</file>
 
   <file>disk_green.png</file>
   <file>disk_green@2x.png</file>
@@ -98,17 +98,7 @@
   <file>QFilterWidgetHeaders/filterWidgetBorder_Error.png</file>
   <file>QFilterWidgetHeaders/filterWidgetBorder_Warning.png</file>
 
-
   <file>DREAM3D.png</file>
-
-  <!-- These are needed for Stats Generator  -->
-  <file>cube_molecule_add.png</file>
-  <file>cube_molecule_delete.png</file>
-  <file>cube_molecule_view.png</file>
-  <file>cube_molecule_add@2x.png</file>
-  <file>cube_molecule_delete@2x.png</file>
-  <file>cube_molecule_view@2x.png</file>
-
 
   <file>bullet_ball_blue.png</file>
   <file>bullet_ball_blue@2x.png</file>
@@ -119,19 +109,11 @@
   <file>bullet_ball_red.png</file>
   <file>bullet_ball_red@2x.png</file>
 
-
-
   <file>delete-corner-pressed.png</file>
   <file>delete-corner.png</file>
  
-  
-  <file>fitToWindow.png</file>
-  <file>minus.png</file>
-  <file>plus.png</file>
-
- 
-  <file>cube_gray.png</file>
-  <file>cube_gray@2x.png</file>
+  <file>filter_gray.png</file>
+  <file>filter_gray@2x.png</file>
   
   <file>cube_red.png</file>
   <file>cube_red@2x.png</file>
@@ -141,11 +123,7 @@
   <file>nav_left_blue.png</file>
   <file>nav_left_blue@2x.png</file>
   <file>nav_refresh_blue.png</file>
-  <file>nav_refresh_blue@2x.png</file>
-
-    <file>navigate_cross.png</file>
-  <file>navigate_cross@2x.png</file>
-  
+  <file>nav_refresh_blue@2x.png</file>  
 
  </qresource>
  </RCC>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>905</width>
-    <height>506</height>
+    <width>1017</width>
+    <height>702</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,7 +35,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="sizeDistributionTab">
       <attribute name="title">
@@ -102,8 +102,8 @@ QToolBox::tab::title {
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>427</width>
-            <height>306</height>
+            <width>483</width>
+            <height>502</height>
            </rect>
           </property>
           <attribute name="label">
@@ -148,8 +148,8 @@ QToolBox::tab::title {
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>427</width>
-            <height>306</height>
+            <width>98</width>
+            <height>28</height>
            </rect>
           </property>
           <attribute name="label">
@@ -190,6 +190,14 @@ QToolBox::tab::title {
           </layout>
          </widget>
          <widget class="QWidget" name="caDistributions">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>98</width>
+            <height>28</height>
+           </rect>
+          </property>
           <attribute name="label">
            <string>C/A Distributions</string>
           </attribute>
@@ -222,6 +230,14 @@ QToolBox::tab::title {
           </layout>
          </widget>
          <widget class="QWidget" name="neighborDistributionTab">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>98</width>
+            <height>28</height>
+           </rect>
+          </property>
           <attribute name="label">
            <string>Neighbor Distributions</string>
           </attribute>

@@ -71,7 +71,7 @@ void TupleTableWidget::setupGui()
   tupleTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
   // Set Icons
-//  QIcon addIcon = QIcon(QString(":/add2.png"));
+//  QIcon addIcon = QIcon(QString(":/add.png"));
 //  QIcon deleteIcon = QIcon(QString(":/delete2.png"));
 //  addTupleBtn->setIcon(addIcon);
 //  deleteTupleBtn->setIcon(deleteIcon);
