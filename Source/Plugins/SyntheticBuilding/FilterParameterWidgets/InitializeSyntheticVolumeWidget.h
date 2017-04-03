@@ -97,9 +97,8 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
 
 
   protected:
-
-    static void setOpenDialogLastFilePath(QString val) { m_OpenDialogLastFilePath = val; }
-    static QString getOpenDialogLastFilePath() { return m_OpenDialogLastFilePath; }
+    void setInputFilePath(QString val);
+    QString getInputFilePath();
 
     /**
      * @brief setInputFile
@@ -163,7 +162,6 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     QList<QWidget*>                    m_WidgetList;
 
     bool                             m_Version4Warning;
-    static QString                   m_OpenDialogLastFilePath;
     bool                             m_DidCausePreflight;
     bool                             m_NewFileLoaded;
 
