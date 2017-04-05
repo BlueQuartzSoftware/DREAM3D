@@ -307,7 +307,7 @@
            </property>
            <property name="icon">
             <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-             <normaloff>:/delete2.png</normaloff>:/delete2.png</iconset>
+             <normaloff>:/delete@2x.png</normaloff>:/delete@2x.png</iconset>
            </property>
            <property name="iconSize">
             <size>
