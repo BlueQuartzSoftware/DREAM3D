@@ -1,4 +1,4 @@
-Crop Image Geometry {#cropimagegeometry}
+Crop Geometry (Image) {#cropimagegeometry}
 =============
 
 ## Group (Subgroup) ##

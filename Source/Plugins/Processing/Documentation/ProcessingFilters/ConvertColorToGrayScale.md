@@ -1,4 +1,4 @@
-Convert Color Data to GrayScale Data {#convertcolortograyscale}
+Color to GrayScale {#convertcolortograyscale}
 =============
 
 ## Group (Subgroup) ##

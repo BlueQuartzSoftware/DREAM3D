@@ -1,4 +1,4 @@
-Write Triangle Geometry {#writetrianglegeometry}
+Export Triangle Geometry {#writetrianglegeometry}
 ======
 
 ## Group (Subgroup) ##

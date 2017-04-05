@@ -1,4 +1,4 @@
-Write ASCII Data {#writeasciidata}
+Export ASCII Data {#writeasciidata}
 =============
 
 ## Group (Subgroup) ##

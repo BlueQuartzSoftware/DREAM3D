@@ -1,4 +1,4 @@
-Write IPF Triangle Legend (Cubic m-3m) {#writeipfstandardtriangle}
+Export IPF Triangle Legend (Cubic m-3m) {#writeipfstandardtriangle}
 =============
 
 ## Group (Subgroup) ##

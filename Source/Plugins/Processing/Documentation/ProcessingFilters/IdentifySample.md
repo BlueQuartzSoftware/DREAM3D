@@ -1,4 +1,4 @@
-Identify Largest Feature (Identify Sample) {#identifysample}
+Isolate Largest Feature (Identify Sample) {#identifysample}
 =============
 
 ## Group (Subgroup) ##

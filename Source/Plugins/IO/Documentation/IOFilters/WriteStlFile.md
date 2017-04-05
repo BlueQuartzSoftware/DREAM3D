@@ -1,4 +1,4 @@
-Write STL Files From Triangle Geometry {#writestlfile}
+Export STL Files From Triangle Geometry {#writestlfile}
 =============
 
 ## Group (Subgroup) ##

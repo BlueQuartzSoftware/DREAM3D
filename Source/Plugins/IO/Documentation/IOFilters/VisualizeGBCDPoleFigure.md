@@ -1,4 +1,4 @@
-Write GBCD Pole Figure (VTK) {#visualizegbcdpolefigure}
+Export GBCD Pole Figure (VTK) {#visualizegbcdpolefigure}
 ============
 
 ## Group (Subgroup) ##
