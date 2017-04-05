@@ -5,7 +5,7 @@ Find Feature Shapes {#findshapes}
 Statistics (Morphological)
 
 ## Description ##
-This **Filter** calculates the second-order moments of each **Feature** in order to determine the *principal axis lengths, pricipal axis directions, aspect ratios and moment invariant Omega3s*.  The *principal axis lengths* are those of a "best-fit" ellipsoid.  The algorithm for determining the moments and these values is as follows:
+This **Filter** calculates the second-order moments of each **Feature** in order to determine the *principal axis lengths, principal axis directions, aspect ratios and moment invariant Omega3s*.  The *principal axis lengths* are those of a "best-fit" ellipsoid.  The algorithm for determining the moments and these values is as follows:
 
 1. For each **Cell**, determine the x, y and z distance to the centroid of the **Feature** that owns the **Cell**
 2. For each **Cell**, calculate Ixx, Iyy, Izz, Ixy, Ixz and Iyz using the x, y and z distances determined in step 1.
