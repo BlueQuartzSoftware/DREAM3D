@@ -118,8 +118,8 @@ void DataFormatPage::setupGui()
   tupleDimsTable->addTupleDimensions(QVector<size_t>(1, numOfDataLines));
   tupleDimsTable->blockSignals(false);
 
-  selectedDCBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
-  selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
+  selectedDCBtn->setStyleSheet(QtSStyles::QToolSelectionButtonStyle(false));
+  selectedAMBtn->setStyleSheet(QtSStyles::QToolSelectionButtonStyle(false));
 
   m_AMMenuMapper = new QSignalMapper(this);
   connect(m_AMMenuMapper, SIGNAL(mapped(QString)),
@@ -261,13 +261,13 @@ void DataFormatPage::amItemSelected(QString path)
   if(nullptr == am.get())
   {
     amSelectionError->setText("An error occured retrieving the Attribute Matrix at " + path);
-    selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
+    selectedAMBtn->setStyleSheet(QtSStyles::QToolSelectionButtonStyle(false));
   }
   else
   {
     //amSelectionError->hide();
     amSelectionError->setText("The tuple dimensions of the selected Attribute Matrix will be used for the Attribute Arrays.");
-    selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(true));
+    selectedAMBtn->setStyleSheet(QtSStyles::QToolSelectionButtonStyle(true));
   }
 
   ImportASCIIDataWizard* importWizard = dynamic_cast<ImportASCIIDataWizard*>(wizard());
@@ -287,12 +287,12 @@ void DataFormatPage::amItemSelected(QString path)
         QString ss = "The header name \"" + headerName + "\" matches an array name that already exists in the selected attribute matrix.";
         amSelectionError->setText(ss);
         amSelectionError->show();
-        selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(false));
+        selectedAMBtn->setStyleSheet(QtSStyles::QToolSelectionButtonStyle(false));
       }
       else
       {
         amSelectionError->hide();
-        selectedAMBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(true));
+        selectedAMBtn->setStyleSheet(QtSStyles::QToolSelectionButtonStyle(true));
       }
     }
   }
@@ -327,7 +327,7 @@ void DataFormatPage::dcItemSelected(QString path)
   }
 
   amCreationError->hide();
-  selectedDCBtn->setStyleSheet(QtSStyles::DAPSelectionButtonStyle(true));
+  selectedDCBtn->setStyleSheet(QtSStyles::QToolSelectionButtonStyle(true));
   QtSStyles::LineEditClearStyle(amName);
   checkTupleDimensions(getTupleTable()->getData());
 }
