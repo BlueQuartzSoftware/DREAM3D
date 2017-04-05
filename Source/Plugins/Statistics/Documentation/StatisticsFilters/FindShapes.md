@@ -38,6 +38,7 @@ Image
 | **Feature Attribute Array** | AxisEulerAngles | float | (3) | Euler angles (in radians) necessary to rotate the sample reference frame to the reference frame of the **Feature**, where the prinicpal axes of the best-fit ellipsoid are (X, Y, Z) |
 | **Feature Attribute Array** | AxisLengths | float | (3) | Axis lengths (a, b, c) for best-fit ellipsoid to **Feature** |
 | **Feature Attribute Array** | Omega3s | float | (1) | 3rd invariant of the second-order moment matrix for the **Feature**, does not assume a shape type (i.e., ellipsoid) |
+| **Feature Attribute Array** | Volumes | float | (1) | The volume of each **Feature** |
 
 ## References ## 
 
