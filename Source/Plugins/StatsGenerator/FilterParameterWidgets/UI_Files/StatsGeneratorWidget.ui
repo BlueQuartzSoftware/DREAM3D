@@ -114,8 +114,8 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>48</width>
+         <height>48</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -136,8 +136,8 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>16</width>
-         <height>16</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
        <property name="flat">
@@ -155,8 +155,8 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>48</width>
+         <height>48</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -177,8 +177,8 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>16</width>
-         <height>16</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
        <property name="flat">
@@ -212,8 +212,8 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>48</width>
+         <height>48</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -230,12 +230,12 @@
        </property>
        <property name="icon">
         <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-         <normaloff>:/delete2@2x.png</normaloff>:/delete2@2x.png</iconset>
+         <normaloff>:/delete@2x.png</normaloff>:/delete@2x.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>16</width>
-         <height>16</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
        <property name="flat">
@@ -269,8 +269,8 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>48</width>
+         <height>48</height>
         </size>
        </property>
        <property name="toolTip">
@@ -281,77 +281,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-         <normaloff>:/refresh@2x.png</normaloff>:/refresh@2x.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>16</width>
-         <height>16</height>
-        </size>
-       </property>
-       <property name="flat">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="saveJsonBtn">
-       <property name="minimumSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Save JSON File</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-         <normaloff>:/data-transfer-download@2x.png</normaloff>:/data-transfer-download@2x.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>16</width>
-         <height>16</height>
-        </size>
-       </property>
-       <property name="flat">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="saveH5Btn">
-       <property name="minimumSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Save HDF5 File</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>:/disk_green@2x.png</normaloff>:/disk_green@2x.png</iconset>
+         <normaloff>:/reload@2x.png</normaloff>:/reload@2x.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -374,8 +304,8 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>48</width>
+         <height>48</height>
         </size>
        </property>
        <property name="toolTip">
@@ -385,8 +315,78 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>:/folder_out@2x.png</normaloff>:/folder_out@2x.png</iconset>
+        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+         <normaloff>:/data-transfer-upload@2x.png</normaloff>:/data-transfer-upload@2x.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveJsonBtn">
+       <property name="minimumSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Save JSON File</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+         <normaloff>:/data-transfer-download@2x.png</normaloff>:/data-transfer-download@2x.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveH5Btn">
+       <property name="minimumSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>48</width>
+         <height>48</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Save HDF5 File</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+         <normaloff>:/data-transfer-hdf@2x.png</normaloff>:/data-transfer-hdf@2x.png</iconset>
        </property>
        <property name="iconSize">
         <size>
