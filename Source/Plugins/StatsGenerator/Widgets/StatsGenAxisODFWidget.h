@@ -34,12 +34,13 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _StatsGenAxisODFWidget_h_
-#define _StatsGenAxisODFWidget_h_
+#ifndef _statsGenAxisODFWidget_h_
+#define _statsGenAxisODFWidget_h_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QButtonGroup>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Constants.h"
@@ -100,6 +101,10 @@ class StatsGenAxisODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     void on_savePoleFigureImage_clicked();
     void tableDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
+    virtual void on_m_WeightSpreads_clicked(bool b);
+    virtual void on_m_WeightSpreadsBulkLoad_clicked(bool b);
+
+
   signals:
     void dataChanged();
 
@@ -116,6 +121,7 @@ class StatsGenAxisODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     QwtPlotCurve*           m_CircleGrid;
     QwtPlotCurve*           m_RotCross0;
     QwtPlotCurve*           m_RotCross1;
+    QButtonGroup            m_ButtonGroup;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGenAxisODFWidget(const StatsGenAxisODFWidget&); // Copy Constructor Not Implemented

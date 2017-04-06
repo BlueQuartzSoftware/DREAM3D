@@ -112,6 +112,23 @@ StatsGenAxisODFWidget::~StatsGenAxisODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::on_m_WeightSpreads_clicked(bool b)
+{
+
+  m_WeightSpreadsStackedWidget->setCurrentIndex(0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool b)
+{
+  m_WeightSpreadsStackedWidget->setCurrentIndex(1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType)
 {
 
@@ -223,9 +240,9 @@ int StatsGenAxisODFWidget::getPhaseIndex()
 // -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
 {
-  tabWidget->setTabText(1, t1);
-  tabWidget->setTabText(2, t2);
-  tabWidget->setTabText(3, t3);
+//  tabWidget->setTabText(1, t1);
+//  tabWidget->setTabText(2, t2);
+//  tabWidget->setTabText(3, t3);
 }
 
 // -----------------------------------------------------------------------------
@@ -269,6 +286,10 @@ void StatsGenAxisODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
 
+  m_ButtonGroup.addButton(m_WeightSpreads);
+  m_ButtonGroup.addButton(m_WeightSpreadsBulkLoad);
+  on_m_WeightSpreads_clicked(true);
+
   // In release mode hide the Lambert Square Size.
   QString releaseType = QString::fromLatin1("Official");
   if(releaseType.compare("Official") == 0)
@@ -277,7 +298,6 @@ void StatsGenAxisODFWidget::setupGui()
     pfLambertLabel->hide();
   }
 
-  bulkLoadGroupBox->hide();
 }
 
 // -----------------------------------------------------------------------------

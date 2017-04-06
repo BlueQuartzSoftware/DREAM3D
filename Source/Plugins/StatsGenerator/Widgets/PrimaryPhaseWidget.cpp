@@ -284,10 +284,10 @@ QPushButton* PrimaryPhaseWidget::getGenerateDefaultDataBtn()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::removeNeighborsPlotWidget()
 {
-  int index = tabWidget->indexOf(neighborDistributionTab);
+  int index = plotToolbox->indexOf(neighborDistributionTab);
   if(index >= 0)
   {
-    tabWidget->removeTab(index);
+    plotToolbox->removeItem(index);
     m_NeighborPlot->setParent(nullptr);
     delete neighborDistributionTab;
     neighborDistributionTab = nullptr;
