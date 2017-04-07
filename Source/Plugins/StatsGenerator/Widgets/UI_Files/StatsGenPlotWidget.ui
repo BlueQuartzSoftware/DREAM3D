@@ -49,6 +49,9 @@
        <height>300</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string>Right click to edit data</string>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>

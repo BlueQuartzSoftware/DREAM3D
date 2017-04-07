@@ -83,7 +83,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
+        <iconset>
          <normaloff>:/add.png</normaloff>:/add.png</iconset>
        </property>
        <property name="iconSize">
@@ -248,6 +248,9 @@
        <horstretch>0</horstretch>
        <verstretch>3</verstretch>
       </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>Enter values in the table above to adjust this plot.</string>
      </property>
      <property name="styleSheet">
       <string notr="true">QwtPlot
