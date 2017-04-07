@@ -47,7 +47,7 @@ nullptr should be used in conjunction with only raw pointers and 0 (zero) should
     int* value = 0; // Bad
 
     int i = 0; // Good
-    int i = nullptr; // Bad 
+    int i = NULL; // Bad 
 
 # Variable Initialization #
 *Never* rely on the compiler to initialize variables or pointers for you. Always initialize your variables before first use:
