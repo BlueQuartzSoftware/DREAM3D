@@ -1,2 +1,2 @@
-# Configure DREAM.3D to compile on your system using CMake # {#configure_dream3d}
+# Configuring DREAM.3D # {#configure_dream3d}
 

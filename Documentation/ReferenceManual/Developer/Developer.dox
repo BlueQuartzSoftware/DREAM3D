@@ -6,11 +6,11 @@ This section of the user manual discusses the various aspects and steps needed t
 with your own plugins, custome filters or allow the developer to fix or extend existing filters. The tasks
 can be broken down to the following items:
 
-@subpage compiler_suite Compiler Suite
+@subpage compiler_suite
 
 @subpage source_download
 
-@subpage sdk_download
+@subpage sdk_install
 
 @subpage configure_dream3d
 
@@ -18,9 +18,7 @@ can be broken down to the following items:
 
 @subpage devhelper_tutorial
 
-
-
-@subpage compilingdream3d How to compile DREAM.3D
+@subpage creating_a_filter
 
 
 

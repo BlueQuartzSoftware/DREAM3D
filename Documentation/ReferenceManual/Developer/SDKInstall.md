@@ -1,4 +1,4 @@
-Download the DREAM.3D SDK {#sdk_download}
+Installing the DREAM.3D SDK {#sdk_install}
 ========
 
 

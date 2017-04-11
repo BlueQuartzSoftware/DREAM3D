@@ -1,4 +1,4 @@
-Compiling DREAM.3D {#compilingdream3d}
+Building DREAM.3D {#build_dream3d}
 ========
 
  
