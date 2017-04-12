@@ -62,7 +62,6 @@ set(TEST_NAMES
   VtkStruturedPointsReaderTest
   EnsembleInfoReaderTest
   ExportDataTest
-  ImportASCIIDataTest
 )
 
 

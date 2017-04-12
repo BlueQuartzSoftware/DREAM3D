@@ -42,13 +42,11 @@
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
 
 #include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/ReadASCIIDataFilterParameter.h"
+#include "SIMPLib/CoreFilters/util/ASCIIWizardData.hpp"
+#include "SIMPLib/CoreFilters/ReadASCIIData.h"
+#include "SIMPLib/CoreFilters/util/AbstractDataParser.hpp"
 
-#include "FilterParameters/ReadASCIIDataFilterParameter.h"
-
-#include "IO/IOFilters/util/ASCIIWizardData.hpp"
-#include "IO/IOFilters/ReadASCIIData.h"
-
-#include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
 #include "Widgets/ImportASCIIDataWizard/DataFormatPage.h"
 #include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
 #include "Widgets/ImportASCIIDataWizard/LineCounterObject.h"
