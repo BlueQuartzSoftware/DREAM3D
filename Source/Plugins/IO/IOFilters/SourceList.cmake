@@ -36,9 +36,7 @@ set(_PublicFilters
   VisualizeGBCDPoleFigure
   VtkRectilinearGridWriter
   VtkStructuredPointsReader
-  WriteASCIIData
   WriteStlFile
-  WriteTriangleGeometry
 )
 
 #--------------
