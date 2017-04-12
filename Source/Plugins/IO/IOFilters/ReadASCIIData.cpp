@@ -7,6 +7,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Utilities/StringOperations.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 
@@ -16,7 +17,6 @@
 #include "IO/IOVersion.h"
 
 #include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
-#include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
 
 // Include the MOC generated file for this class
 #include "moc_ReadASCIIData.cpp"
@@ -514,7 +514,7 @@ void ReadASCIIData::execute()
     for(int lineNum = beginIndex; lineNum <= numLines; lineNum++)
     {
       QString line = in.readLine();
-      QStringList tokens = ImportASCIIDataWizard::TokenizeLine(line, delimiters, consecutiveDelimiters);
+      QStringList tokens = StringOperations::TokenizeString(line, delimiters, consecutiveDelimiters);
 
       if(dataTypes.size() != tokens.size())
       {

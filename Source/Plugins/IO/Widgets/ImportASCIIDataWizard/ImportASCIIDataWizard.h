@@ -112,22 +112,6 @@ class ImportASCIIDataWizard : public QWizard
     static void LoadOriginalLines(QStringList lines);
 
     /**
-    * @brief Static function that will split the lines argument into a list of tokens based on delimiter settings from the wizard
-    * @param lines The lines to tokenize
-    * @param delimiters List of delimiters
-    * @param consecutiveDelimiters Boolean that identifies if the consecutive delimiters checkbox is checked or not.
-    */
-    static QList<QStringList> TokenizeLines(QStringList lines, QList<char> delimiters, bool consecutiveDelimiters);
-
-    /**
-    * @brief Static function that will split the line argument into a list of tokens based on delimiter settings from the wizard
-    * @param line The line to tokenize
-    * @param delimiters List of delimiters
-    * @param consecutiveDelimiters Boolean that identifies if the consecutive delimiters checkbox is checked or not.
-    */
-    static QStringList TokenizeLine(QString line, QList<char> delimiters, bool consecutiveDelimiters);
-
-    /**
     * @brief Static function that will insert the tokenized lines into the preview table.
     * @param tokenizedLines List of tokenized lines
     * @param firstRowHeaderIndex The name of the first row's header (an index, such as '2' or '5')
