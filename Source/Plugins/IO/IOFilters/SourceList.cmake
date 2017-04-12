@@ -24,7 +24,6 @@ set(_PublicFilters
   AvizoUniformCoordinateWriter
   DxReader
   DxWriter
-  FeatureDataCSVWriter
   FeatureInfoReader
   GBCDTriangleDumper
   LosAlamosFFTWriter
