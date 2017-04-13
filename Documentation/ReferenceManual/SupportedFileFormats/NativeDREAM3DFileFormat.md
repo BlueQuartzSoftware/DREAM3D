@@ -46,17 +46,7 @@ The version number for the .dream3d file format is incremented independently of 
 	+ .
 	+ DataContainerN (_Group_)
 + Pipline (_Group_)
-	+ 0 (_Group_)
-		+ FilterParameter1 (_Dataset_)
-		+ FilterParameter2 (_Dataset_)
-		+ .
-		+ .
-		+ FilterParameterN (_Dataset_)
-	+ 1 (_Group_)
-	+ 2 (_Group_)
-	+ .
-	+ .
-	+ N (_Group_)
+	+ Pipeline (_Dataset_)
 
 ## File Format Details ##
 
@@ -69,7 +59,7 @@ The version number for the .dream3d file format is incremented independently of 
 			+ *GeometryInfo*: A collection of _Datasets_ that define the **Geometry** for the parent **Data Container**. For the case of an **Image Geometry**, these will only be the _DIMENSIONS_, _ORIGIN_, and _RESOLUTION_, each of which are 3-vectors. For other **Geometries**, there will always be a _SharedVertexList_ that lists the vertex coordinates, and a _SharedElementList_ that lists the primary unit element as indexing into the _SharedVertexList_. There may be additional arrays at this level as well, such as a _SharedEdgeList_ or an _ElementNeighbors_ list.
 		+ _AttributeMatrix_: A _Group_ that stores **Attribute Arrays**. There may be many _AttributeMatrix_ _Groups_ in each _DataContainer_ _Group_. 
 			+ _AttributeArray_: A _Dataset_ that holds raw data. These _Datasets_ hold the actual array data of the data structure.
-+ _Pipeline_: A _Group_ that stores information about the **Pipline** that was run to produce the data structure present in the _DataContainerBundles_ and _DataContainers_ _Groups_. The information stored in this _Group_ allows for the data provenance to be maintained. There is only ever one _Pipeline_ _Group_ at the top level of a .dream3d file.
++ _Pipeline_: A _Group_ that stores JSON information about the **Pipeline** that was run to produce the data structure present in the _DataContainerBundles_ and _DataContainers_ _Groups_. The information stored in this _Group_ allows for the data provenance to be maintained. There is only ever one _Pipeline_ _Group_ at the top level of a .dream3d file.
 	+ _FilterId_: A _Group_ that holds the _FilterParameters_ for a given **Filter** in the **Pipeline**. This _Group_ will be named a number that corresponds to the _index_ of the **Filter** in the **Pipeline**.
 		+ _FilterParameter_: A _Dataset_ that holds the information about the setting of a _FilterParameter_ for its parent **Filter**. 
 

@@ -10,10 +10,8 @@ DREAM.3D allows the user to _export_ and _import_ **Pipelines** to a variety of 
 
 + .json
 + .dream3d
-+ .txt
-+ .ini
 
-Versions of DREAM.3D prior to version 6 saved **Pipelines** in the .ini format, which may have ended with either the .txt or .ini file extensions. The current version of DREAM.3D is able to read these older formats, but all new **Pipelines** will be saved to either the .json or .dream3d file format. The information written to a **Pipeline** file includes:
+The information written to a **Pipeline** file includes:
 
 + The list of **Filters** in the **Pipeline**, in sequential order
 + All the variables for each **Filter** and their settings
@@ -24,36 +22,64 @@ Versions of DREAM.3D prior to version 6 saved **Pipelines** in the .ini format, 
 -------
 
 	{
-  	  	"0": {
-    	    "CellAttributeMatrixName": "CellData",
-        	"CellEnsembleAttributeMatrixName": "CellEnsembleData",
-    	    "DataContainerName": "DataContainer",
-    	    "FilterVersion": "5.2.1285",
-    	    "Filter_Human_Label": "Read H5Ebsd File",
-    	    "Filter_Name": "ReadH5Ebsd",
-    	    "InputFile": "Data/Output/SmallIN100.h5ebsd",
-    	    "RefFrameZDir": 1,
-    	    "SelectedArrayNames": [
-    	        "Image Quality",
-    	        "Phases",
-    	        "Confidence Index",
-    	        "EulerAngles"
-    	    ],
-    	    "UseTransformations": 1,
-    	    "ZEndIndex": 117,
-    	    "ZStartIndex": 1
-    	},
-    	"1": {
-    	    "FilterVersion": "5.2.1285",
-    	    "Filter_Human_Label": "Write DREAM3D Data File",
-    	    "Filter_Name": "DataContainerWriter",
-    	    "OutputFile": "Data/Output/SmallIN100.dream3d",
-    	    "WriteXdmfFile": 1
-    	},
-    	"PipelineBuilder": {
-    	    "Name": "(02) Small IN100 Initial Visualization",
-    	    "Number_Filters": 2,
-    	    "Version": "5.2.1285"
+    "0": {
+        "CreatedDataContainer": "DataContainer",
+        "FilterVersion": "1.0.606",
+        "Filter_Human_Label": "Create Data Container",
+        "Filter_Name": "CreateDataContainer"
+    },
+    "1": {
+        "AttributeMatrixType": 3,
+        "CreatedAttributeMatrix": {
+            "Attribute Matrix Name": "AttributeMatrix",
+            "Data Array Name": "",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "1.0.606",
+        "Filter_Human_Label": "Create Attribute Matrix",
+        "Filter_Name": "CreateAttributeMatrix",
+        "TupleDimensions": {
+            "Column Headers": [
+                "0"
+            ],
+            "DefaultColCount": 0,
+            "DefaultRowCount": 0,
+            "HasDynamicCols": true,
+            "HasDynamicRows": false,
+            "MinColCount": 0,
+            "MinRowCount": 0,
+            "Row Headers": [
+                "0"
+            ],
+            "Table Data": [
+                [
+                    1
+                ]
+            ]
+        }
+    },
+    "2": {
+        "FilterVersion": "1.0.606",
+        "Filter_Human_Label": "Create Data Array",
+        "Filter_Name": "CreateDataArray",
+        "InitializationRange": {
+            "Max": 0,
+            "Min": 0
+        },
+        "InitializationType": 0,
+        "InitializationValue": "0.785398",
+        "NewArray": {
+            "Attribute Matrix Name": "AttributeMatrix",
+            "Data Array Name": "Eulers",
+            "Data Container Name": "DataContainer"
+        },
+        "NumberOfComponents": 3,
+        "ScalarType": 8
+    },
+    "PipelineBuilder": {
+    	"Name": "(02) Small IN100 Initial Visualization",
+    	"Number_Filters": 2,
+    	"Version": "6"
     	}
 	}
 

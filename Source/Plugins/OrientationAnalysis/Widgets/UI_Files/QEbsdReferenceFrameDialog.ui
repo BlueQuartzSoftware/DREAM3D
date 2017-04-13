@@ -403,7 +403,7 @@ font-size: 10px;
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/help2.png</normaloff>:/help2.png</iconset>
+         <normaloff>:/information.png</normaloff>:/information.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -570,7 +570,7 @@ font-size: 10px;
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/fitToWindow.png</normaloff>:/fitToWindow.png</iconset>
+         <normaloff>:/fit_to_window@2x.png</normaloff>:/fit_to_window@2x.png</iconset>
        </property>
        <property name="iconSize">
         <size>

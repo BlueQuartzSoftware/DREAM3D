@@ -94,7 +94,6 @@ StatsGenODFWidget::StatsGenODFWidget(QWidget* parent)
 , m_PhaseIndex(-1)
 , m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 , m_ODFTableModel(nullptr)
-, m_MDFWidget(nullptr)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   this->setupUi(this);
@@ -110,6 +109,32 @@ StatsGenODFWidget::~StatsGenODFWidget()
   {
     m_ODFTableModel->deleteLater();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_m_WeightSpreads_clicked(bool checked)
+{
+  m_WeightSpreadsStackedWidget->setCurrentIndex(0);
+  m_ODFTableView->setModel(m_ODFTableModel);
+  QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
+  m_ODFTableView->setItemDelegate(idelegate);
+  emit bulkLoadEvent(false);
+  emit dataChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool checked)
+{
+  m_WeightSpreadsStackedWidget->setCurrentIndex(1);
+  m_ODFTableView->setModel(m_OdfBulkTableModel);
+  QAbstractItemDelegate* idelegate = m_OdfBulkTableModel->getItemDelegate();
+  m_ODFTableView->setItemDelegate(idelegate);
+  emit bulkLoadEvent(!(m_OdfBulkTableModel->rowCount() > 0));
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -187,7 +212,7 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, PhaseType::Type 
 
   SGODFTableModel* tableModel = nullptr;
 
-  if(weightSpreadGroupBox->isChecked())
+  if(m_WeightSpreads->isChecked())
   {
     tableModel = m_ODFTableModel;
   }
@@ -225,14 +250,17 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, PhaseType::Type 
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::enableMDFTab(bool b)
 {
-  if(nullptr != m_MDFWidget)
+  if(b)
   {
-    m_MDFWidget->deleteLater();
+    //  if(nullptr != m_MDFWidget)
+    //  {
+    //    m_MDFWidget->deleteLater();
+    //  }
+    //  m_MDFWidget = new StatsGenMDFWidget();
+    m_MDFWidget->setODFTableModel(m_ODFTableModel);
+    // tabWidget->addTab(m_MDFWidget, QString("MDF"));
+    connect(m_MDFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   }
-  m_MDFWidget = new StatsGenMDFWidget();
-  m_MDFWidget->setODFTableModel(m_ODFTableModel);
-  tabWidget->addTab(m_MDFWidget, QString("MDF"));
-  connect(m_MDFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 }
 
 // -----------------------------------------------------------------------------
@@ -310,6 +338,10 @@ void StatsGenODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
+
+  m_ButtonGroup.addButton(m_WeightSpreads);
+  m_ButtonGroup.addButton(m_WeightSpreadsBulkLoad);
+  on_m_WeightSpreads_clicked(true);
 
   // In release mode hide the Lambert Square Size.
   QString releaseType = QString::fromLatin1("Official");
@@ -451,7 +483,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   SGODFTableModel* tableModel = nullptr;
 
   int npoints = 0;
-  if(weightSpreadGroupBox->isChecked())
+  if(m_WeightSpreads->isChecked())
   {
     tableModel = m_ODFTableModel;
     npoints = pfSamplePoints->value();
@@ -571,7 +603,7 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
     float e1 = 0.0;
     float e2 = 0.0;
     float e3 = 0.0;
-    float weight = 1.0;
+    float weight = 500000.0;
     float sigma = 1.0;
 
     t.getODFEntry(e1, e2, e3, weight, sigma);
@@ -899,32 +931,6 @@ SGODFTableModel* StatsGenODFWidget::tableModel()
 StatsGenMDFWidget* StatsGenODFWidget::getMDFWidget()
 {
   return m_MDFWidget;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_bulkLoadGroupBox_clicked(bool checked)
-{
-  weightSpreadGroupBox->setChecked(!checked);
-  m_ODFTableView->setModel(m_OdfBulkTableModel);
-  QAbstractItemDelegate* idelegate = m_OdfBulkTableModel->getItemDelegate();
-  m_ODFTableView->setItemDelegate(idelegate);
-  emit bulkLoadEvent(!(m_OdfBulkTableModel->rowCount() > 0));
-  emit dataChanged();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_weightSpreadGroupBox_clicked(bool checked)
-{
-  bulkLoadGroupBox->setChecked(!checked);
-  m_ODFTableView->setModel(m_ODFTableModel);
-  QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
-  m_ODFTableView->setItemDelegate(idelegate);
-  emit bulkLoadEvent(false);
-  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
