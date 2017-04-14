@@ -511,7 +511,7 @@ void FindEuclideanDistMap::findDistanceMap()
       }
       else
       {
-        m_GBManhattanDistances[i] = -1;
+        m_GBEuclideanDistances[i] = -1;
       }
     }
     if(m_DoTripleLines == true)
@@ -522,7 +522,7 @@ void FindEuclideanDistMap::findDistanceMap()
       }
       else
       {
-        m_TJManhattanDistances[i] = -1;
+        m_TJEuclideanDistances[i] = -1;
       }
     }
     if(m_DoQuadPoints == true)
@@ -533,7 +533,7 @@ void FindEuclideanDistMap::findDistanceMap()
       }
       else
       {
-        m_QPManhattanDistances[i] = -1;
+        m_QPEuclideanDistances[i] = -1;
       }
     }
   }
@@ -629,7 +629,7 @@ void FindEuclideanDistMap::findDistanceMap()
         }
         else
         {
-          m_GBManhattanDistances[a] = 0.0f;
+          m_GBEuclideanDistances[a] = 0.0f;
         }
 
         m_NearestNeighbors[a * 3 + 0] = coordination[0];
@@ -644,7 +644,7 @@ void FindEuclideanDistMap::findDistanceMap()
         }
         else
         {
-          m_TJManhattanDistances[a] = 0.0f;
+          m_TJEuclideanDistances[a] = 0.0f;
         }
 
         m_NearestNeighbors[a * 3 + 0] = coordination[0];
@@ -659,7 +659,7 @@ void FindEuclideanDistMap::findDistanceMap()
         }
         else
         {
-          m_QPManhattanDistances[a] = 0.0f;
+          m_QPEuclideanDistances[a] = 0.0f;
         }
 
         m_NearestNeighbors[a * 3 + 0] = coordination[0];

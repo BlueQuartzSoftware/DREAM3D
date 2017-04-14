@@ -34,91 +34,25 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QFile>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
-#include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 
 #include "StatisticsTestFileLocations.h"
 
-#define CREATE_DATA_ARRAY(type, attrMat, tDims, cDims, initVal, err)                                                                                                                                   \
-  DataArray<type>::Pointer _##type##_##attrMat##Array = DataArray<type>::CreateArray(tDims, cDims, #type, true);                                                                                       \
-  err = attrMat->addAttributeArray(#type, _##type##_##attrMat##Array);                                                                                                                                 \
-  _##type##_##attrMat##Array->initializeWithValue(initVal);                                                                                                                                            \
-  DREAM3D_REQUIRE(err >= 0);
-
-#define SET_PROPERTIES_AND_CHECK_NE(filter, firstPath, secondPath, diffMapPath, errVal)                                                                                                                \
-  var.setValue(firstPath);                                                                                                                                                                             \
-  propWasSet = filter->setProperty("FirstInputArrayPath", var);                                                                                                                                        \
-  if(false == propWasSet)                                                                                                                                                                              \
-  {                                                                                                                                                                                                    \
-    qDebug() << "Unable to set property FirstInputArrayPath";                                                                                                                                          \
-  }                                                                                                                                                                                                    \
-  var.setValue(secondPath);                                                                                                                                                                            \
-  propWasSet = filter->setProperty("SecondInputArrayPath", var);                                                                                                                                       \
-  if(false == propWasSet)                                                                                                                                                                              \
-  {                                                                                                                                                                                                    \
-    qDebug() << "Unable to set property SecondInputArrayPath";                                                                                                                                         \
-  }                                                                                                                                                                                                    \
-  var.setValue(diffMapPath);                                                                                                                                                                           \
-  propWasSet = filter->setProperty("DifferenceMapArrayPath", var);                                                                                                                                     \
-  if(false == propWasSet)                                                                                                                                                                              \
-  {                                                                                                                                                                                                    \
-    qDebug() << "Unable to set property DifferenceMapArrayPath";                                                                                                                                       \
-  }                                                                                                                                                                                                    \
-  filter->execute();                                                                                                                                                                                   \
-  err = filter->getErrorCondition();                                                                                                                                                                   \
-  DREAM3D_REQUIRE_EQUAL(err, errVal);
-
-#define SET_PROPERTIES_AND_CHECK_EQ(filter, firstPath, secondPath, diffMapPath, type)                                                                                                                  \
-  var.setValue(firstPath);                                                                                                                                                                             \
-  propWasSet = filter->setProperty("FirstInputArrayPath", var);                                                                                                                                        \
-  if(false == propWasSet)                                                                                                                                                                              \
-  {                                                                                                                                                                                                    \
-    qDebug() << "Unable to set property FirstInputArrayPath";                                                                                                                                          \
-  }                                                                                                                                                                                                    \
-  var.setValue(secondPath);                                                                                                                                                                            \
-  propWasSet = filter->setProperty("SecondInputArrayPath", var);                                                                                                                                       \
-  if(false == propWasSet)                                                                                                                                                                              \
-  {                                                                                                                                                                                                    \
-    qDebug() << "Unable to set property SecondInputArrayPath";                                                                                                                                         \
-  }                                                                                                                                                                                                    \
-  var.setValue(diffMapPath);                                                                                                                                                                           \
-  propWasSet = filter->setProperty("DifferenceMapArrayPath", var);                                                                                                                                     \
-  if(false == propWasSet)                                                                                                                                                                              \
-  {                                                                                                                                                                                                    \
-    qDebug() << "Unable to set property DifferenceMapArrayPath";                                                                                                                                       \
-  }                                                                                                                                                                                                    \
-  filter->execute();                                                                                                                                                                                   \
-  err = filter->getErrorCondition();                                                                                                                                                                   \
-  DREAM3D_REQUIRE_EQUAL(err, 0);                                                                                                                                                                       \
-  diffMap = dc->getAttributeMatrix(diffMapPath.getAttributeMatrixName())->getAttributeArray(diffMapPath.getDataArrayName());                                                                           \
-  firstArray = dc->getAttributeMatrix(firstPath.getAttributeMatrixName())->getAttributeArray(firstPath.getDataArrayName());                                                                            \
-  if(!TemplateHelpers::CanDynamicCast<DataArray<type>>()(diffMap))                                                                                                                                     \
-  {                                                                                                                                                                                                    \
-    err = -1;                                                                                                                                                                                          \
-  }                                                                                                                                                                                                    \
-  DREAM3D_REQUIRE_EQUAL(err, 0);                                                                                                                                                                       \
-  checkDims1 = firstArray->getComponentDimensions();                                                                                                                                                   \
-  checkDims2 = diffMap->getComponentDimensions();                                                                                                                                                      \
-  if(checkDims1 != checkDims2)                                                                                                                                                                         \
-  {                                                                                                                                                                                                    \
-    err = -1;                                                                                                                                                                                          \
-  }                                                                                                                                                                                                    \
-  DREAM3D_REQUIRE_EQUAL(err, 0);                                                                                                                                                                       \
-  validateDiffMapValues<type>(diffMap);
 
 const DataArrayPath k_FeatureIdsArrayPath = DataArrayPath("TestDataContainer1", "TestAttributeMatrix1", "FeatureIds");
 
@@ -174,8 +108,8 @@ public:
     m->setName(k_FeatureIdsArrayPath.getDataContainerName());
     ImageGeom::Pointer geom = ImageGeom::CreateGeometry("ImageGeometry");
     m->setGeometry(geom);
-   geom->setDimensions(tDims.data());
-   geom->setResolution(1.0f, 2.0f, 1.0f);
+    geom->setDimensions(tDims.data());
+    geom->setResolution(1.0f, 2.0f, 1.0f);
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
 
@@ -191,49 +125,140 @@ public:
     DREAM3D_REQUIRE(err >= 0);
     featureIds->initializeWithValue(1);
 
-    for (size_t i = 0; i < tDims[0]; i++)
-    {
-      for (size_t j = 0; j < tDims[1]; j++)
-      {
-        size_t index = tDims[0] * j + i;
-        if(i > tDims[0]/2) {
-        featureIds->setValue(index, 1);
-        }
-        else
-        {
-          featureIds->setValue(index, 2);
-        }
-      }
-    }
 
+    std::vector<int32_t> features = {
+      1,1,1,3,3,3,4,4,4,0,
+      1,1,1,3,3,3,4,4,4,0,
+      1,1,1,3,3,3,4,4,4,0,
+      2,2,2,3,3,3,5,5,5,0,
+      2,2,2,3,3,3,5,5,5,0,
+      2,2,2,3,3,3,5,5,5,0,
+    };
+
+
+    for(size_t i = 0; i < featureIds->getNumberOfTuples(); i++)
+    {
+      featureIds->setValue(i, features[i]);
+    }
     return dca;
   }
 
-//  // -----------------------------------------------------------------------------
-//  //
-//  // -----------------------------------------------------------------------------
-//  template <typename T> void validateDiffMapValues(IDataArray::Pointer iArray)
-//  {
-//    typename DataArray<T>::Pointer diffMapPtr = std::dynamic_pointer_cast<DataArray<T>>(iArray);
-//    T* diffMap = diffMapPtr->getPointer(0);
-//    size_t numTuples = diffMapPtr->getNumberOfTuples();
-//    int32_t numComps = diffMapPtr->getNumberOfComponents();
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int validateResults(DataContainerArray::Pointer dca)
+  {
 
-//    for(size_t i = 0; i < numTuples; i++)
-//    {
-//      for(size_t j = 0; j < numComps; j++)
-//      {
-//        DREAM3D_REQUIRE_EQUAL(diffMap[numComps * i + j], 5)
-//      }
-//    }
-//  }
+    AttributeMatrix::Pointer am = dca->getAttributeMatrix(k_FeatureIdsArrayPath);
+
+    Int32ArrayType::Pointer int32Array = am->getAttributeArrayAs<Int32ArrayType>("GBManhattanDistance");
+
+    std::vector<int32_t> GBManhattan = {
+    2, 1, 0, 0, 1, 0, 0, 1, 0, -1,
+    1, 1, 0, 0, 1, 0, 0, 1, 0, -1,
+    0, 0, 0, 0, 1, 0, 0, 0, 0, -1,
+    0, 0, 0, 0, 1, 0, 0, 0, 0, -1,
+    1, 1, 0, 0, 1, 0, 0, 1, 0, -1,
+    2, 1, 0, 0, 1, 0, 0, 1, 0, -1};
+
+    for(size_t i = 0; i < int32Array->getNumberOfTuples(); i++)
+    {
+       int32_t computedValue = int32Array->getValue(i);
+       int32_t refValue = GBManhattan[i];
+       DREAM3D_REQUIRE_EQUAL(computedValue, refValue);
+    }
+
+    int32Array = am->getAttributeArrayAs<Int32ArrayType>("TJManhattanDistance");
+    std::vector<int32_t> TJManhattan = {
+    4, 3, 2, 3, 4, 3, 2, 3, 2, -1,
+    3, 2, 1, 2, 3, 2, 1, 2, 1, -1,
+    2, 1, 0, 1, 2, 1, 0, 1, 0, -1,
+    2, 1, 0, 1, 2, 1, 0, 1, 0, -1,
+    3, 2, 1, 2, 3, 2, 1, 2, 1, -1,
+    4, 3, 2, 3, 4, 3, 2, 3, 2, -1};
+
+    for(size_t i = 0; i < int32Array->getNumberOfTuples(); i++)
+    {
+      int32_t computedValue = int32Array->getValue(i);
+      int32_t refValue = TJManhattan[i];
+      DREAM3D_REQUIRE_EQUAL(computedValue, refValue);
+    }
+
+    int32Array = am->getAttributeArrayAs<Int32ArrayType>("QPManhattanDistance");
+    std::vector<int32_t> QPManhattan = {
+    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1};
+    for(size_t i = 0; i < int32Array->getNumberOfTuples(); i++)
+    {
+      int32_t computedValue = int32Array->getValue(i);
+      int32_t refValue = QPManhattan[i];
+      DREAM3D_REQUIRE_EQUAL(computedValue, refValue);
+    }
+
+
+
+    FloatArrayType::Pointer floatArray = am->getAttributeArrayAs<FloatArrayType>("GBEuclideanDistance");
+
+    std::vector<float> GBEuclidean = {
+    4.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    2.0f, 2.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    2.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    2.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0};
+
+    for(size_t i = 0; i < floatArray->getNumberOfTuples(); i++)
+    {
+      float computedValue = floatArray->getValue(i);
+      float refValue = GBEuclidean[i];
+      DREAM3D_COMPARE_FLOATS(&computedValue, &refValue, 1);
+    }
+
+    floatArray = am->getAttributeArrayAs<FloatArrayType>("TJEuclideanDistance");
+    std::vector<float> TJEuclidean = {
+    4.472136f,  4.1231055f, 4.0f, 4.1231055f, 4.472136f,  4.1231055f, 4.0f, 4.1231055f, 4.0f, 0.0f,
+    2.828427f,  2.236068f,  2.0f, 2.236068f,  2.828427f,  2.236068f,  2.0f, 2.236068f,  2.0f, 0.0f,
+    2.0f, 1.0f, 0.0f, 1.0f, 2.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    2.0f, 1.0f, 0.0f, 1.0f, 2.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    2.828427f,  2.236068f,  2.0f, 2.236068f,  2.828427f,  2.236068f,  2.0f, 2.236068f,  2.0f, 0.0f,
+    4.472136f,  4.1231055f, 4.0f, 4.1231055f, 4.472136f,  4.1231055f, 4.0f, 4.1231055f, 4.0f, 0.0};
+
+    for(size_t i = 0; i < floatArray->getNumberOfTuples(); i++)
+    {
+      float computedValue = floatArray->getValue(i);
+      float refValue = TJEuclidean[i];
+      DREAM3D_COMPARE_FLOATS(&computedValue, &refValue, 1);
+    }
+
+    floatArray = am->getAttributeArrayAs<FloatArrayType>("QPEuclideanDistance");
+    std::vector<float> QPEuclidean = {
+    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
+    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
+    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
+    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
+    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
+    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0};
+
+    for(size_t i = 0; i < floatArray->getNumberOfTuples(); i++)
+    {
+      float computedValue = floatArray->getValue(i);
+      float refValue = QPEuclidean[i];
+      DREAM3D_COMPARE_FLOATS(&computedValue, &refValue, 1);
+    }
+
+    return 0;
+  }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   int RunTest()
   {
-    QVector<size_t> tDims = { 13, 13, 1};
+    QVector<size_t> tDims = {10, 6, 1};
     DataContainerArray::Pointer dca = initializeDataContainerArray(tDims);
 
     QString filtName = "FindEuclideanDistMap";
@@ -251,14 +276,58 @@ public:
     int err = filter->setProperty("FeatureIdsArrayPath", var);
     DREAM3D_REQUIRE(err >= 0);
 
-    QString boundaryArrayName = "DistanceToBoundariesArray";
+    QString boundaryArrayName = "GBEuclideanDistance";
     var.setValue(boundaryArrayName);
-    err = filter->setProperty("GBEuclideanDistancesArrayName", var);
+    err = filter->setProperty("GBDistancesArrayName", var);
     DREAM3D_REQUIRE(err >= 0);
 
-    bool calcOnlyManhattan = false;
-    var.setValue(calcOnlyManhattan);
-    err = filter->setProperty("CalcOnlyManhattanDist", var);
+    bool calcManhattan = false;
+    var.setValue(calcManhattan);
+    err = filter->setProperty("CalcManhattanDist", var);
+    DREAM3D_REQUIRE(err >= 0);
+
+
+    var.setValue(true);
+    err = filter->setProperty("DoTripleLines", var);
+    DREAM3D_REQUIRE(err >= 0);
+    var.setValue(QString("TJEuclideanDistance"));
+    err = filter->setProperty("TJDistancesArrayName", var);
+    DREAM3D_REQUIRE(err >= 0);
+
+    var.setValue(true);
+    err = filter->setProperty("DoQuadPoints", var);
+    DREAM3D_REQUIRE(err >= 0);
+    var.setValue(QString("QPEuclideanDistance"));
+    err = filter->setProperty("QPDistancesArrayName", var);
+    DREAM3D_REQUIRE(err >= 0);
+
+    filter->execute();
+    DREAM3D_REQUIRE(filter->getErrorCondition() >= 0);
+
+
+    //-------------------------------------------
+    boundaryArrayName = "GBManhattanDistance";
+    var.setValue(boundaryArrayName);
+    err = filter->setProperty("GBDistancesArrayName", var);
+    DREAM3D_REQUIRE(err >= 0);
+
+    calcManhattan = true;
+    var.setValue(calcManhattan);
+    err = filter->setProperty("CalcManhattanDist", var);
+
+    var.setValue(true);
+    err = filter->setProperty("DoTripleLines", var);
+    DREAM3D_REQUIRE(err >= 0);
+    var.setValue(QString("TJManhattanDistance"));
+    err = filter->setProperty("TJDistancesArrayName", var);
+    DREAM3D_REQUIRE(err >= 0);
+
+    var.setValue(true);
+    err = filter->setProperty("DoQuadPoints", var);
+    DREAM3D_REQUIRE(err >= 0);
+    var.setValue(QString("QPManhattanDistance"));
+    err = filter->setProperty("QPDistancesArrayName", var);
+    DREAM3D_REQUIRE(err >= 0);
 
 
     filter->execute();
@@ -269,16 +338,11 @@ public:
     writer->setOutputFile(UnitTest::StatisticsTempDir + QDir::separator() + "FindEuclideanDistMap.dream3d");
     writer->setDataContainerArray(dca);
 
-
     writer->execute();
     DREAM3D_REQUIRE(writer->getErrorCondition() >= 0);
 
 
-//    // Failures
-//    SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_bool, attrMat2_bool, diffMap1, -90000)
-
-//    // Successes
-//    SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_uint8, attrMat2_uint8, diffMap1, uint8_t)
+    err = validateResults(dca);
 
     return EXIT_SUCCESS;
   }
@@ -300,5 +364,5 @@ public:
 
 private:
   FindEuclideanDistMapTest(const FindEuclideanDistMapTest&); // Copy Constructor Not Implemented
-  void operator=(const FindEuclideanDistMapTest&);        // Operator '=' Not Implemented
+  void operator=(const FindEuclideanDistMapTest&);           // Operator '=' Not Implemented
 };
