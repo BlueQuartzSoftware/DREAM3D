@@ -2,10 +2,12 @@ Find Euclidean Distance Map {#findeuclideandistmap}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Morphological)
 
 ## Description ##
-This **Filter** calculates the distance of each **Cell** from the nearest **Feature** boundary, triple line and/or quadruple point.  The following algorithm explains the process:
+
+This **Filter** calculates the distance of each **Cell** from the nearest **Feature** boundary, **triple line** and/or **quadruple point**.  The following algorithm explains the process:
 
 1. Find the **Feature** that owns each **Cell** and its six face-face neighbors of each **Cell**
 2. For all **Cells** that have *at least 2* different neighbors, set their *GBEuclideanDistance* to *0*.  For all **Cells** that have *at least 3* different neighbors, set their *TJEuclideanDistance* to *0*.  For all **Cells** that have *at least 4* different neighbors, set their *QPEuclideanDistance* to *0*
@@ -17,13 +19,14 @@ This **Filter** calculates the distance of each **Cell** from the nearest **Feat
 
 	*Note:* the distances calculated at this point are "city-block" distances and not "shortest distance" distances.
 
-4. If the option *Calculate Manhattan Distance Only* is *false*, then the "city-block" distances are overwritten with the *Euclidean Distance* from the **Cell** to its *nearest neighbor* **Cell**
+4. If the option *Calculate Manhattan Distance* is *false*, then the "city-block" distances are overwritten with the *Euclidean Distance* from the **Cell** to its *nearest neighbor* **Cell** and stored in a *float* array instead of an *integer* array.
 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
-| Calculate Manhattan Distance Only | bool | Whether the distance to boundaries, triple lines and quadruple points is stored as "city block" or "Euclidean" distances |
+| Calculate Manhattan Distance | bool | Whether the distance to boundaries, triple lines and quadruple points is stored as "city block" or "Euclidean" distances |
 | Calculate Distance to Boundaries | bool | Whetherthe distance of each **Cell** to a **Feature** boundary is calculated |
 | Calculate Distance to Triple Lines | bool | Whetherthe distance of each **Cell** to a triple line between **Features** is calculated |
 | Calculate Distance to Quadruple Points | bool | Whetherthe distance of each **Cell** to a  quadruple point between **Features** is calculated |
@@ -31,7 +34,8 @@ This **Filter** calculates the distance of each **Cell** from the nearest **Feat
 
 
 ## Required Geometry ##
-Image 
+
+Image
 
 ## Required Objects ##
 

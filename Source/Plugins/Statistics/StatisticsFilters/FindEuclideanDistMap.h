@@ -54,17 +54,27 @@ class FindEuclideanDistMap : public AbstractFilter
 
     virtual ~FindEuclideanDistMap();
 
+    using EnumType = uint32_t;
+
+    enum class MapType : EnumType
+    {
+      FeatureBoundary = 0,      //!<
+      TripleJunction = 1, //!<
+      QuadPoint = 2, //!<
+    };
+
+
     SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, GBEuclideanDistancesArrayName)
-    Q_PROPERTY(QString GBEuclideanDistancesArrayName READ getGBEuclideanDistancesArrayName WRITE setGBEuclideanDistancesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, GBDistancesArrayName)
+    Q_PROPERTY(QString GBDistancesArrayName READ getGBDistancesArrayName WRITE setGBDistancesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, TJEuclideanDistancesArrayName)
-    Q_PROPERTY(QString TJEuclideanDistancesArrayName READ getTJEuclideanDistancesArrayName WRITE setTJEuclideanDistancesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, TJDistancesArrayName)
+    Q_PROPERTY(QString TJDistancesArrayName READ getTJDistancesArrayName WRITE setTJDistancesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, QPEuclideanDistancesArrayName)
-    Q_PROPERTY(QString QPEuclideanDistancesArrayName READ getQPEuclideanDistancesArrayName WRITE setQPEuclideanDistancesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, QPDistancesArrayName)
+    Q_PROPERTY(QString QPDistancesArrayName READ getQPDistancesArrayName WRITE setQPDistancesArrayName)
 
     SIMPL_FILTER_PARAMETER(QString, NearestNeighborsArrayName)
     Q_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
@@ -81,8 +91,8 @@ class FindEuclideanDistMap : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, SaveNearestNeighbors)
     Q_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
 
-    SIMPL_FILTER_PARAMETER(bool, CalcOnlyManhattanDist)
-    Q_PROPERTY(bool CalcOnlyManhattanDist READ getCalcOnlyManhattanDist WRITE setCalcOnlyManhattanDist)
+    SIMPL_FILTER_PARAMETER(bool, CalcManhattanDist)
+    Q_PROPERTY(bool CalcManhattanDist READ getCalcManhattanDist WRITE setCalcManhattanDist)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -183,15 +193,22 @@ class FindEuclideanDistMap : public AbstractFilter
      * @brief find_euclideandistmap Provides setup for Euclidean distance map caluclation; note that the
      * actual algorithm is performed in a threaded implementation
      */
-    void find_euclideandistmap();
+    void findDistanceMap();
 
   private:
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     DEFINE_DATAARRAY_VARIABLE(int32_t, NearestNeighbors)
+
+    // Full Euclidean Distance Arrays
     DEFINE_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
     DEFINE_DATAARRAY_VARIABLE(float, TJEuclideanDistances)
     DEFINE_DATAARRAY_VARIABLE(float, QPEuclideanDistances)
+
+    //  Distance Arrays
+    DEFINE_DATAARRAY_VARIABLE(int32_t, GBManhattanDistances)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, TJManhattanDistances)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, QPManhattanDistances)
 
     FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented
     void operator=(const FindEuclideanDistMap&); // Operator '=' Not Implemented
