@@ -8,6 +8,8 @@ Therefore, any C\+\+ compiler that is used **MUST** be C\+\+11 compliant.
 A compiler suite (Visual Studio, Xcode, GCC, etc.) for your operating system is necessary. 
 The following table lists the compilers that DREAM.3D is commonly compiled against.
 
+Find your current OS and download the appropriate compiler.
+
 ## Windows 8/10 ##
 
 | Compiler Version | Notes |
@@ -40,3 +42,6 @@ There are many Linux distributions in use. Below is the list of the minimum comp
 DREAM.3D and its libraries are compiled as a 64 bit application on all operating systems.
 
 32-bit support has been removed and is no longer under active development. Assumptions are made during the development process that the application is running as a 64 bit application.
+
+---
+**Next Page**: [Downloading the Source Code for DREAM.3D](@ref source_download).

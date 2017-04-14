@@ -44,3 +44,8 @@ The shell script will ask for the user's login password in order to install the 
 
 The same OS X build script can be used for Linux although as the developer runs the script they should keep a close eye on the output to look for errors.
 
+---
+**Next Page**: [Configuring and Building DREAM.3D](@ref configure_and_build_dream3d).
+
+**Previous Page**: [Downloading the Source Code for DREAM.3D](@ref source_download).
+

@@ -29,27 +29,19 @@ For more information, please visit [Downloading the Source Code for DREAM.3D](@r
 </a>
 
 Developers of DREAM.3D have several options to install a DREAM.3D SDK, including:
-1. Using a script (Mac OS X only)
+1. Using a script (Mac OS X and Linux only)
 2. Downloading pre-made builds (Windows only)
 3. Using the Superbuild build system.
 
 For more information, please visit [Installing the DREAM.3D SDK](@ref sdk_install).
 
-<a name="configure_dream3d">
-### Configure DREAM.3D ###
+<a name="configure_and_build_dream3d">
+### Configure and Build DREAM.3D ###
 </a>
 
-DREAM.3D needs to be configured with CMake so that it can compile on your system.
+DREAM.3D needs to be configured with CMake and compiled on your system so that the DevHelper tool can be used to create a filter.
 
-For more information, please visit [Configuring DREAM.3D](@ref configure_dream3d).
-
-<a name="build_dream3d">
-### Build DREAM.3D ###
-</a>
-
-DREAM.3D needs to be compiled on your system so that the DevHelper tool can be used to create a filter.
-
-For more information, please visit [Building DREAM.3D](@ref build_dream3d).
+For more information, please visit [Configuring and Building DREAM.3D](@ref configure_and_build_dream3d).
 
 <a name="creating_a_filter">
 ## Using DevHelper to Create a Filter ##

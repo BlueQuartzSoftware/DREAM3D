@@ -1,21 +1,39 @@
-Building DREAM.3D {#build_dream3d}
+Configuring and Building DREAM.3D {#configure_and_build_dream3d}
 ========
+<a name="prerequisites">
+## Prerequisites ##
+</a>
 
- 
+These prerequisites will get your system set up with a DREAM.3D SDK and compiling DREAM.3D.
 
-## Note for MinGW/MSys/Cygwin ##
+If you have already fulfilled all of these prerequisites, skip to the [Using DevHelper to Create a Filter](#creating_a_filter) section.
 
-Due to incompatibilities of HDF5, compiling DREAM.3D using these environments is not supported. Visual Studio Community Edition 2013 is a freely available alternative with no restrictions on use.
+<a name="compiler_suite">
+### Install a Compiler Suite ###
+</a>
 
-## Installing Dependent Libraries ##
+A compatible compiler needs to be installed on your system to be able to build DREAM.3D.
 
-A tutorial is available for [Windows 7/8](http://dream3d.bluequartz.net/?p=954) and [OS X](http://dream3d.bluequartz.net/?p=930) that covers the installation of a DREAM.3D software development kit (SDK using either prebuilt binaries (Windows) or a shell script (OS X). Please use these web sites for reference. Additional information on compiling external libraries can be found [here](@ref compilingexternallibraries).
+For more information, please visit [Installing a Compiler Suite](@ref compiler_suite).
 
-# Building DREAM.3D #
+<a name="downloading_dream3d">
+### Download the Source Code for DREAM.3D ###
+</a>
 
-## Getting the Source Code ##
+The source code for DREAM.3D must be downloaded using Git.
 
-Use git to clone the [DREAM.3D repository](http://github.com/dream3d/dream3d).
+For more information, please visit [Downloading the Source Code for DREAM.3D](@ref source_download).
+
+<a name="installing_sdk">
+### Install the DREAM.3D SDK ###
+</a>
+
+Developers of DREAM.3D have several options to install a DREAM.3D SDK, including:
+1. Using a script (Mac OS X and Linux only)
+2. Downloading pre-made builds (Windows only)
+3. Using the Superbuild build system.
+
+For more information, please visit [Installing the DREAM.3D SDK](@ref sdk_install).
 
 ## Getting Unit Test Data Files ##
 
@@ -51,5 +69,11 @@ Once you have configured DREAM.3D using CMake, simply open the generated solutio
 
 You may need to click configure a few times until all red highlights are gone. Once all red highlighted rows are gone click the "Generate" button to generate your projects files.
 
+## Note for MinGW/MSys/Cygwin ##
 
+Due to incompatibilities of HDF5, compiling DREAM.3D using these environments is not supported. Visual Studio Community Edition 2013 is a freely available alternative with no restrictions on use.
 
+---
+**Previous Page**: [Installing the DREAM.3D SDK](@ref sdk_install).
+
+**Next Page**: [Creating a Filter](@ref creating_a_filter).

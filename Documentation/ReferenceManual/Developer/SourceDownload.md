@@ -31,4 +31,7 @@ All 4 of these repositories should be cloned/downloaded into the same folder so 
     SIMPL
     SIMPLView
 
-Once the above directory structure is obtained the developer can proceed to the next steps of installing or compiling all the DREAM.3D dependent libraries.
+---
+**Next Page**: [Installing the DREAM.3D SDK](@ref sdk_install).
+
+**Previous Page**: [Installing a Compiler Suite](@ref compiler_suite).

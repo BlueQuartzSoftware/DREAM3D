@@ -12,9 +12,7 @@ can be broken down to the following items:
 
 @subpage sdk_install
 
-@subpage configure_dream3d
-
-@subpage build_dream3d
+@subpage configure_and_build_dream3d
 
 @subpage devhelper_tutorial
 
