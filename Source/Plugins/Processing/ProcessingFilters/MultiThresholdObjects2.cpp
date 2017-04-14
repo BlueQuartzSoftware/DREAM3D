@@ -122,7 +122,7 @@ void MultiThresholdObjects2::dataCheck()
   }
   else
   {
-    int32_t count = comparisonValues.size();
+    //int32_t count = comparisonValues.size();
     QString dcName = m_SelectedThresholds.getDataContainerName();
     QString amName = m_SelectedThresholds.getAttributeMatrixName();
 
@@ -414,7 +414,7 @@ void MultiThresholdObjects2::thresholdValue(ComparisonValue::Pointer comparisonV
   // Initialize the array to false
   currentArrayPtr->initializeWithZeros();
 
-  bool* currentArray = currentArrayPtr->getPointer(0);
+  //bool* currentArray = currentArrayPtr->getPointer(0);
   int compOperator = comparisonValue->getCompOperator();
   double compValue = comparisonValue->getCompValue();
 

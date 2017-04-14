@@ -290,7 +290,7 @@ public:
 
     DataArrayPath path = DataArrayPath("dc", "CellData", "TestArrayInt");
     IDataArray::Pointer idatai = filter->getDataContainerArray()->getDataContainer(path)->getAttributeMatrix(path)->getAttributeArray(path.getDataArrayName());
-    DataArray<int>* datai = DataArray<int>::SafePointerDownCast(idatai.get());
+    //DataArray<int>* datai = DataArray<int>::SafePointerDownCast(idatai.get());
     
     // Check AND / OR operators
     ComparisonSet::Pointer compSet = ComparisonSet::New();
