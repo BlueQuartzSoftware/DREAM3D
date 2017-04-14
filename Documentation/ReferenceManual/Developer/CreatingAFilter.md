@@ -28,10 +28,7 @@ For more information, please visit [Downloading the Source Code for DREAM.3D](@r
 ### Install the DREAM.3D SDK ###
 </a>
 
-Developers of DREAM.3D have several options to install a DREAM.3D SDK, including:
-1. Using a script (Mac OS X and Linux only)
-2. Downloading pre-made builds (Windows only)
-3. Using the Superbuild build system.
+Developers of DREAM.3D must use the Superbuild build system to install a DREAM.3D SDK.
 
 For more information, please visit [Installing the DREAM.3D SDK](@ref sdk_install).
 
@@ -46,3 +43,5 @@ For more information, please visit [Configuring and Building DREAM.3D](@ref conf
 <a name="creating_a_filter">
 ## Using DevHelper to Create a Filter ##
 </a>
+
+**Previous Page**: [Configuring and Building DREAM.3D](@ref configure_and_build_dream3d).

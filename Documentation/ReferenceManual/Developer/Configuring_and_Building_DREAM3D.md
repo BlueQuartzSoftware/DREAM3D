@@ -4,9 +4,9 @@ Configuring and Building DREAM.3D {#configure_and_build_dream3d}
 ## Prerequisites ##
 </a>
 
-These prerequisites will get your system set up with a DREAM.3D SDK and compiling DREAM.3D.
+These prerequisites need to be completed before configuring and building DREAM.3D.
 
-If you have already fulfilled all of these prerequisites, skip to the [Using DevHelper to Create a Filter](#creating_a_filter) section.
+If you have already fulfilled all of these prerequisites, skip to the [Setting Up DREAM.3D for CMake Configuration](#cmake_config) section.
 
 <a name="compiler_suite">
 ### Install a Compiler Suite ###
@@ -28,24 +28,37 @@ For more information, please visit [Downloading the Source Code for DREAM.3D](@r
 ### Install the DREAM.3D SDK ###
 </a>
 
-Developers of DREAM.3D have several options to install a DREAM.3D SDK, including:
-1. Using a script (Mac OS X and Linux only)
-2. Downloading pre-made builds (Windows only)
-3. Using the Superbuild build system.
+Developers of DREAM.3D must use the Superbuild build system to install a DREAM.3D SDK.
 
 For more information, please visit [Installing the DREAM.3D SDK](@ref sdk_install).
 
-## Getting Unit Test Data Files ##
-
-Use git to clone the [DREAM.3D data repository](http://github.com/dream3d/DREAM3D_Data). **Be sure to adjust the DREAM3D_DATA_DIR CMake variable to the appropriate location**. See the next section for more information.
-
+<a name="cmake_config">
 ## Setting Up DREAM.3D for CMake Configuration ##
+</a>
 
-Once the SDK is installed (Windows) or compiled (OS X, Linux), a file with the name DREAM3D_SDK.cmake can be found in the _DREAM3D\_SDK_ directory. This file defines all the installed locations for all of the dependent libraries.
+Once the SDK is installed (Windows) or compiled (OS X, Linux), a file with the name DREAM3D_SDK.cmake can be found in the DREAM3D_SDK directory. This file defines all the installed locations for all of the dependent libraries.
 
-Note that if you are on Linux or use an OS X package library (MacPorts, Homebrew, etc.) to install all the dependencies, you must substitute the appropriate paths instead of reusing the DREAM3D_SDK_ROOT variable. On Linux, for example, if installing a dependency from a package manager like apt-get, one would set most of the installation locations to "/usr/". 
+**Note**: If you are on Linux or use an OS X package library (MacPorts, Homebrew, etc.) to install all the dependencies, you must substitute the appropriate paths instead of reusing the DREAM3D_SDK_ROOT variable. On Linux, for example, if installing a dependency from a package manager like apt-get, one would set most of the installation locations to "/usr/". 
 
-**Note: The paths may be different on your system**
+### Procedure ###
+1. Open the **DREAM3D_SDK.cmake** file in the **DREAM3D_SDK** folder.  Check that the path to every dependency is set correctly.  For example, the paths to Qt, HDF5, Boost, Qwt, and others may be written incorrectly and may need to be updated to whatever path each one is located at on the file system.
+
+2. Open CMake and set the **Where is the source code** path to */Users/[YOUR-HOME-FOLDER]/Workspace/DREAM3D*.
+![](Images/source_code_path.png)
+
+3. Set the **Where to build the binaries** path to */Users/[YOUR-HOME-FOLDER]/Workspace/Builds/DREAM3D-Build/Debug*.
+![](Images/build_binaries_debug.png)
+
+4. We are going to create a CMake variable.  Press the **Add Entry** button.
+![](Images/add_entry.png)
+
+5. Set the **Name** to *DREAM3D_SDK*.  Set the **Type** to *PATH* and set the **Value** to the location of the DREAM3D_SDK folder that we created earlier (*/Users/Shared/DREAM3D_SDK*)
+![](Images/create_cmake_variable.png)
+
+6. Repeat steps 3 & 4, except set **Name** to *CMAKE_MAKE_PROGRAM*, **Type** to *FILEPATH*, and **Value** to the path to our ninja executable that we added earlier (*/usr/local/bin/ninja*).
+
+7. You should now have two variables, DREAM3D_SDK and CMAKE_MAKE_PROGRAM.
+![](Images/cmake_before_configuration.png)
 
 When running CMake (either from the command line or from the GUI) be sure to set the CMake variable "DREAM3D_SDK=/Users/Shared/DREAM3D_SDK" (Or the correct path for your system). This should be all that is needed for a successful CMake configuration run.
 
@@ -74,6 +87,6 @@ You may need to click configure a few times until all red highlights are gone. O
 Due to incompatibilities of HDF5, compiling DREAM.3D using these environments is not supported. Visual Studio Community Edition 2013 is a freely available alternative with no restrictions on use.
 
 ---
-**Previous Page**: [Installing the DREAM.3D SDK](@ref sdk_install).
-
 **Next Page**: [Creating a Filter](@ref creating_a_filter).
+
+**Previous Page**: [Installing the DREAM.3D SDK](@ref sdk_install).

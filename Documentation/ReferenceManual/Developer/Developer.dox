@@ -14,8 +14,6 @@ can be broken down to the following items:
 
 @subpage configure_and_build_dream3d
 
-@subpage devhelper_tutorial
-
 @subpage creating_a_filter
 
 
