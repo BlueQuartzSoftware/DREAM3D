@@ -52,7 +52,9 @@ Once the SDK is installed (Windows) or compiled (OS X, Linux), a file with the n
 4. We are going to create a CMake variable.  Press the **Add Entry** button.
 ![](Images/add_entry.png)
 
-5. Set the **Name** to *DREAM3D_SDK*.  Set the **Type** to *PATH* and set the **Value** to the location of the DREAM3D_SDK folder that we created earlier (*/Users/Shared/DREAM3D_SDK*)
+5. Set the **Name** to *DREAM3D_SDK*.  Set the **Type** to *PATH* and set the **Value** to the location of the DREAM3D_SDK folder that we created earlier (An OS X *Add Cache Entry* example is below).
+**OS X**: */Users/Shared/DREAM3D_SDK*)
+**Windows**: C:\DREAM3D_SDK
 ![](Images/create_cmake_variable.png)
 
 6. Repeat steps 3 & 4, except set **Name** to *CMAKE_MAKE_PROGRAM*, **Type** to *FILEPATH*, and **Value** to the path to our ninja executable that we added earlier (*/usr/local/bin/ninja*).
