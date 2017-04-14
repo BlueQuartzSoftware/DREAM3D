@@ -562,7 +562,7 @@ void InsertPrecipitatePhases::execute()
     Int32ArrayType::Pointer exclusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
     exclusionZonesPtr->initializeWithZeros();
     place_precipitates(exclusionZonesPtr);
-    if(getErrorCondition() < 0)
+    if(getErrorCondition() < 0 || getWarningCondition() < 0)
     {
       return;
     }
@@ -642,7 +642,8 @@ void InsertPrecipitatePhases::load_precipitates()
   inFile >> numPrecips;
   if(0 == numPrecips)
   {
-    notifyErrorMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", -600);
+    notifyWarningMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", -600);
+    return;
   }
 
   m_FirstPrecipitateFeature = cellFeatureAttrMat->getNumberOfTuples();
