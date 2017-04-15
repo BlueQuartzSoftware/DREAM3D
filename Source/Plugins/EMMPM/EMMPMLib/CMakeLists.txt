@@ -186,11 +186,16 @@ LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 
 
-set(install_dir "tools")
+set(install_dir "bin")
 set(lib_install_dir "lib")
-if(WIN32)
+
+if(APPLE)
+  get_property(DREAM3D_PACKAGE_DEST_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX)
+  set(install_dir "${DREAM3D_PACKAGE_DEST_PREFIX}bin")
+  set(lib_install_dir "${DREAM3D_PACKAGE_DEST_PREFIX}lib")
+elseif(WIN32)
   set(install_dir ".")
-  set(lib_install_dir "")
+  set(lib_install_dir ".")
 endif()
 
 

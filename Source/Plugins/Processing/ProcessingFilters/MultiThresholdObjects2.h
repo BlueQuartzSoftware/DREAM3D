@@ -34,65 +34,34 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _findeuclideandistmap_h_
-#define _findeuclideandistmap_h_
+#ifndef _multithresholdobjects2_h_
+#define _multithresholdobjects2_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/ComparisonInputsAdvanced.h"
+#include "SIMPLib/Common/ComparisonSet.h"
+#include "SIMPLib/Common/ComparisonValue.h"
 
 /**
- * @brief The FindEuclideanDistMap class. See [Filter documentation](@ref findeuclideandistmap) for details.
+ * @brief The MultiThresholdObjects2 class. See [Filter documentation](@ref multithresholdobjects2) for details.
  */
-class FindEuclideanDistMap : public AbstractFilter
+class MultiThresholdObjects2 : public AbstractFilter
 {
     Q_OBJECT
   public:
-    SIMPL_SHARED_POINTERS(FindEuclideanDistMap)
-    SIMPL_STATIC_NEW_MACRO(FindEuclideanDistMap)
-    SIMPL_TYPE_MACRO_SUPER(FindEuclideanDistMap, AbstractFilter)
+    SIMPL_SHARED_POINTERS(MultiThresholdObjects2)
+    SIMPL_STATIC_NEW_MACRO(MultiThresholdObjects2)
+    SIMPL_TYPE_MACRO_SUPER(MultiThresholdObjects2, AbstractFilter)
 
-    virtual ~FindEuclideanDistMap();
+    virtual ~MultiThresholdObjects2();
 
-    using EnumType = uint32_t;
+    SIMPL_FILTER_PARAMETER(QString, DestinationArrayName)
+    Q_PROPERTY(QString DestinationArrayName READ getDestinationArrayName WRITE setDestinationArrayName)
 
-    enum class MapType : EnumType
-    {
-      FeatureBoundary = 0,      //!<
-      TripleJunction = 1, //!<
-      QuadPoint = 2, //!<
-    };
-
-
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-
-    SIMPL_FILTER_PARAMETER(QString, GBDistancesArrayName)
-    Q_PROPERTY(QString GBDistancesArrayName READ getGBDistancesArrayName WRITE setGBDistancesArrayName)
-
-    SIMPL_FILTER_PARAMETER(QString, TJDistancesArrayName)
-    Q_PROPERTY(QString TJDistancesArrayName READ getTJDistancesArrayName WRITE setTJDistancesArrayName)
-
-    SIMPL_FILTER_PARAMETER(QString, QPDistancesArrayName)
-    Q_PROPERTY(QString QPDistancesArrayName READ getQPDistancesArrayName WRITE setQPDistancesArrayName)
-
-    SIMPL_FILTER_PARAMETER(QString, NearestNeighborsArrayName)
-    Q_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
-
-    SIMPL_FILTER_PARAMETER(bool, DoBoundaries)
-    Q_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)
-
-    SIMPL_FILTER_PARAMETER(bool, DoTripleLines)
-    Q_PROPERTY(bool DoTripleLines READ getDoTripleLines WRITE setDoTripleLines)
-
-    SIMPL_FILTER_PARAMETER(bool, DoQuadPoints)
-    Q_PROPERTY(bool DoQuadPoints READ getDoQuadPoints WRITE setDoQuadPoints)
-
-    SIMPL_FILTER_PARAMETER(bool, SaveNearestNeighbors)
-    Q_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
-
-    SIMPL_FILTER_PARAMETER(bool, CalcManhattanDist)
-    Q_PROPERTY(bool CalcManhattanDist READ getCalcManhattanDist WRITE setCalcManhattanDist)
+    SIMPL_FILTER_PARAMETER(ComparisonInputsAdvanced, SelectedThresholds)
+    Q_PROPERTY(ComparisonInputsAdvanced SelectedThresholds READ getSelectedThresholds WRITE setSelectedThresholds)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -177,7 +146,7 @@ class FindEuclideanDistMap : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    FindEuclideanDistMap();
+    MultiThresholdObjects2();
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -188,30 +157,54 @@ class FindEuclideanDistMap : public AbstractFilter
      */
     void initialize();
 
+    /**
+    * @brief Creates and returns a DataArray<bool> for the given AttributeMatrix and the number of tuples
+    */
+    void createBoolArray(int64_t& numItems, BoolArrayType::Pointer& thresholdArrayPtr);
+    
+    /**
+    * @brief Merges two DataArray<bool>s of a given size using a union operator AND / OR and inverts the second DataArray if requested
+    * @param numItems Number of values in both DataArrays
+    * @param currentArray DataArray<bool> to merge values into
+    * @param unionOperator Union operator used to merge into currentArray
+    * @param newArray DataArray<bool> of values to merge into the currentArray
+    * @param inverse Should newArray have its boolean values flipped before being merged in
+    */
+    void insertThreshold(int64_t numItems, BoolArrayType::Pointer currentArray, int unionOperator, const BoolArrayType::Pointer newArray, bool inverse);
+    
+    /**
+    * @brief Flips the boolean values for a DataArray<bool>
+    * @param numItems Number of tuples in the DataArray
+    * @param thresholdArray DataArray to invert
+    */
+    void invertThreshold(int64_t numItems, BoolArrayType::Pointer thresholdArray);
 
     /**
-     * @brief find_euclideandistmap Provides setup for Euclidean distance map caluclation; note that the
-     * actual algorithm is performed in a threaded implementation
-     */
-    void findDistanceMap();
+    * @brief Performs a check on a ComparisonSet and either merges the result into the DataArray passed in or replaces the DataArray
+    * @param comparisonSet The set of comparisons used for setting the threshold
+    * @param inputThreshold DataArray<bool> merged into or replaced after finding the ComparisonSet's threshould output
+    * @param err Return any error code given
+    * @param replaceInput Specifies whether or not the result gets merged into inputThreshold or replaces it
+    * @param inverse Specifies whether or not the results need to be flipped before merging or replacing inputThreshold
+    */
+    void thresholdSet(ComparisonSet::Pointer comparisonSet, BoolArrayType::Pointer& inputThreshold, int32_t& err, bool replaceInput = false, bool inverse = false);
+    
+    /**
+    * @brief Performs a check on a single ComparisonValue and either merges the result into the DataArray passed in or replaces the DataArray
+    * @param comparisonValue The comparison operator and value used for caluculating the threshold
+    * @param inputThreshold DataArray<bool> merged into or replaced after finding the ComparisonSet's threshould output
+    * @param err Return any error code given
+    * @param replaceInput Specifies whether or not the result gets merged into inputThreshold or replaces it
+    * @param inverse Specifies whether or not the results need to be flipped before merging or replacing inputThreshold
+    */
+    void thresholdValue(ComparisonValue::Pointer comparisonValue, BoolArrayType::Pointer& inputThreshold, int32_t& err, bool replaceInput = false, bool inverse = false);
+
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, Destination)
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, NearestNeighbors)
-
-    // Full Euclidean Distance Arrays
-    DEFINE_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
-    DEFINE_DATAARRAY_VARIABLE(float, TJEuclideanDistances)
-    DEFINE_DATAARRAY_VARIABLE(float, QPEuclideanDistances)
-
-    //  Distance Arrays
-    DEFINE_DATAARRAY_VARIABLE(int32_t, GBManhattanDistances)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, TJManhattanDistances)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, QPManhattanDistances)
-
-    FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented
-    void operator=(const FindEuclideanDistMap&); // Operator '=' Not Implemented
+    MultiThresholdObjects2(const MultiThresholdObjects2&); // Copy Constructor Not Implemented
+    void operator=(const MultiThresholdObjects2&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDEUCLIDEANDISTMAP_H_ */
+#endif /* _MultiThresholdObjects_H_ */
