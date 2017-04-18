@@ -46,11 +46,11 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
     /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPLView
 
 #### Windows 8.1/10 ####
-1. Make a new directory called **Workspace** in your user directory.  The **Workspace** directory's path should be **C:\Users\[*YOUR-USER-DIRECTORY*]\Workspace**.
+1. Make a new directory called **Workspace** in your user directory.  The **Workspace** directory's path should be **C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace**.
 
 2. Open the git-bash application that was installed when you downloaded and installed Git.
 
-3. Navigate to your Workspace directory at **C:\Users\[*YOUR-USER-DIRECTORY*]\Workspace**.
+3. Navigate to your Workspace directory at **C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace**.
 
 4. Use git to clone the DREAM.3D repository to your **Workspace** directory:
 
@@ -64,10 +64,10 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
 	All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
 
-	C:\Users\[*YOUR-USER-DIRECTORY*]\Workspace\DREAM3D
-    C:\Users\[*YOUR-USER-DIRECTORY*]\Workspace\CMP
-    C:\Users\[*YOUR-USER-DIRECTORY*]\Workspace\SIMPL
-    C:\Users\[*YOUR-USER-DIRECTORY*]\Workspace\SIMPLView
+        C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\CMP
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPL
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPLView
 
 #### Linux ####
 
