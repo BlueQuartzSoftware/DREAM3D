@@ -71,24 +71,25 @@ We will use the DevHelper tool to create a new filter.
 
 6. Launch the DevHelper executable inside the **Bin** folder of your DREAM.3D Release build directory.  For **Windows**, this is located at *C:\\Users\\[YOUR-USER-DIRECTORY]\\Workspace\\Builds\\DREAM3D-Build\\Release\\Bin\\DevHelper.exe*.  For **OS X**, this is at */Users/[YOUR-HOME-DIRECTORY]/Workspace/Builds/DREAM3D-Build/Release/Bin/DevHelper.app*
 
-7. If you already have an **existing** plugin that you wish to store the new filter in, skip to **Step 11**.
+7. If you already have an **existing** plugin that you wish to store the new filter in, skip to [Step 11](#step_11).
 
 8. To create a new plugin, we are going to use the **PluginMaker** tab in the DevHelper interface.  Set the **Plugin Name** field to the name of the new plugin.  Set the **Output Dir** field to the **DREAM3D_Plugins** directory that was created in Step 1.
 ![](Images/devhelper1.png)
 
-9. The **PluginMaker** tab creates an empty filter with the plugin by default.  This is useful for people who just want to make a generic filter that goes with the plugin.  However, this is not what we want to do for this tutorial.  Select the **[PLUGIN_NAME]Filter.cpp** file in the tree view and press the **Remove Filter** button.  This will remove the default filter from the plugin.
+9. The **PluginMaker** tab creates an empty filter with the plugin by default.  This is useful for people who just want to make a generic filter that goes with the plugin.  However, this is not what we want to do for this tutorial.  Select the [PLUGIN-NAME]Filter.cpp file in the tree view and press the **Remove Filter** button.  This will remove the default filter from the plugin.
 ![](Images/devhelper2.png)
 
 10. Press the **Generate** button to generate the plugin into the **DREAM3D_Plugins** directory.
-
-11. Click on the **FilterMaker** tab.  This is the section of the interface that allows us to generate a filter.
+<a name="step_11">
+11. </a> Click on the **FilterMaker** tab.  This is the section of the interface that allows us to generate a filter.
 
 12. Set the **Filter Name** field to the name of the new filter.  Set the **Plugin Directory** field to the top-level directory of the plugin that you wish to store the new filter in.
 
 	**Note**: For more information on how to use DevHelper to generate filter parameters, please visit .
 	![](Images/filtermaker1.png)
-    
+
 13. Press the **Generate** button to generate the filter inside the specified plugin.
+
 
 ---
 **Previous Page (Windows)**: [Configuring and Building DREAM.3D on Windows](@ref windows_configure_and_build_dream3d).
