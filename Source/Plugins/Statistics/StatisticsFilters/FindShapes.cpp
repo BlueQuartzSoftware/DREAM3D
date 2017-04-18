@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/FloatSummation.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -322,21 +323,21 @@ void FindShapes::find_moments()
         ydist8 = (y2 - (m_Centroids[gnum * 3 + 1] * static_cast<float>(m_ScaleFactor)));
         zdist8 = (z2 - (m_Centroids[gnum * 3 + 2] * static_cast<float>(m_ScaleFactor)));
 
-        xx = ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3)) + ((ydist4) * (ydist4)) +
-             ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6)) + ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) +
-             ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
-        yy = ((xdist1) * (xdist1)) + ((zdist1) * (zdist1)) + ((xdist2) * (xdist2)) + ((zdist2) * (zdist2)) + ((xdist3) * (xdist3)) + ((zdist3) * (zdist3)) + ((xdist4) * (xdist4)) +
-             ((zdist4) * (zdist4)) + ((xdist5) * (xdist5)) + ((zdist5) * (zdist5)) + ((xdist6) * (xdist6)) + ((zdist6) * (zdist6)) + ((xdist7) * (xdist7)) + ((zdist7) * (zdist7)) +
-             ((xdist8) * (xdist8)) + ((zdist8) * (zdist8));
-        zz = ((xdist1) * (xdist1)) + ((ydist1) * (ydist1)) + ((xdist2) * (xdist2)) + ((ydist2) * (ydist2)) + ((xdist3) * (xdist3)) + ((ydist3) * (ydist3)) + ((xdist4) * (xdist4)) +
-             ((ydist4) * (ydist4)) + ((xdist5) * (xdist5)) + ((ydist5) * (ydist5)) + ((xdist6) * (xdist6)) + ((ydist6) * (ydist6)) + ((xdist7) * (xdist7)) + ((ydist7) * (ydist7)) +
-             ((xdist8) * (xdist8)) + ((ydist8) * (ydist8));
-        xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4)) + ((xdist5) * (ydist5)) + ((xdist6) * (ydist6)) + ((xdist7) * (ydist7)) +
-             ((xdist8) * (ydist8));
-        yz = ((ydist1) * (zdist1)) + ((ydist2) * (zdist2)) + ((ydist3) * (zdist3)) + ((ydist4) * (zdist4)) + ((ydist5) * (zdist5)) + ((ydist6) * (zdist6)) + ((ydist7) * (zdist7)) +
-             ((ydist8) * (zdist8));
-        xz = ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6)) + ((xdist7) * (zdist7)) +
-             ((xdist8) * (zdist8));
+        xx = FloatSummation::Kahanf({ ((ydist1) * (ydist1)), ((zdist1) * (zdist1)), ((ydist2) * (ydist2)), ((zdist2) * (zdist2)), ((ydist3) * (ydist3)), ((zdist3) * (zdist3)), ((ydist4) * (ydist4)),
+             ((zdist4) * (zdist4)), ((ydist5) * (ydist5)), ((zdist5) * (zdist5)), ((ydist6) * (ydist6)), ((zdist6) * (zdist6)), ((ydist7) * (ydist7)), ((zdist7) * (zdist7)),
+             ((ydist8) * (ydist8)), ((zdist8) * (zdist8)) });
+        yy = FloatSummation::Kahanf({ ((xdist1) * (xdist1)), ((zdist1) * (zdist1)), ((xdist2) * (xdist2)), ((zdist2) * (zdist2)), ((xdist3) * (xdist3)), ((zdist3) * (zdist3)), ((xdist4) * (xdist4)),
+             ((zdist4) * (zdist4)), ((xdist5) * (xdist5)), ((zdist5) * (zdist5)), ((xdist6) * (xdist6)), ((zdist6) * (zdist6)), ((xdist7) * (xdist7)), ((zdist7) * (zdist7)),
+             ((xdist8) * (xdist8)), ((zdist8) * (zdist8)) });
+        zz = FloatSummation::Kahanf({ ((xdist1) * (xdist1)), ((ydist1) * (ydist1)), ((xdist2) * (xdist2)), ((ydist2) * (ydist2)), ((xdist3) * (xdist3)), ((ydist3) * (ydist3)), ((xdist4) * (xdist4)),
+             ((ydist4) * (ydist4)), ((xdist5) * (xdist5)), ((ydist5) * (ydist5)), ((xdist6) * (xdist6)), ((ydist6) * (ydist6)), ((xdist7) * (xdist7)), ((ydist7) * (ydist7)),
+             ((xdist8) * (xdist8)), ((ydist8) * (ydist8)) });
+        xy = FloatSummation::Kahanf({ ((xdist1) * (ydist1)), ((xdist2) * (ydist2)), ((xdist3) * (ydist3)), ((xdist4) * (ydist4)), ((xdist5) * (ydist5)), ((xdist6) * (ydist6)), ((xdist7) * (ydist7)),
+             ((xdist8) * (ydist8)) });
+        yz = FloatSummation::Kahanf({ ((ydist1) * (zdist1)), ((ydist2) * (zdist2)), ((ydist3) * (zdist3)), ((ydist4) * (zdist4)), ((ydist5) * (zdist5)), ((ydist6) * (zdist6)), ((ydist7) * (zdist7)),
+             ((ydist8) * (zdist8)) });
+        xz = FloatSummation::Kahanf({ ((xdist1) * (zdist1)), ((xdist2) * (zdist2)), ((xdist3) * (zdist3)), ((xdist4) * (zdist4)), ((xdist5) * (zdist5)), ((xdist6) * (zdist6)), ((xdist7) * (zdist7)),
+             ((xdist8) * (zdist8)) });
 
         m_FeatureMoments[gnum * 6 + 0] = m_FeatureMoments[gnum * 6 + 0] + static_cast<double>(xx);
         m_FeatureMoments[gnum * 6 + 1] = m_FeatureMoments[gnum * 6 + 1] + static_cast<double>(yy);
@@ -366,13 +367,13 @@ void FindShapes::find_moments()
     m_FeatureMoments[i * 6 + 3] = -m_FeatureMoments[i * 6 + 3] * konst1;
     m_FeatureMoments[i * 6 + 4] = -m_FeatureMoments[i * 6 + 4] * konst1;
     m_FeatureMoments[i * 6 + 5] = -m_FeatureMoments[i * 6 + 5] * konst1;
-    u200 = static_cast<float>((m_FeatureMoments[i * 6 + 1] + m_FeatureMoments[i * 6 + 2] - m_FeatureMoments[i * 6 + 0]) / 2.0f);
-    u020 = static_cast<float>((m_FeatureMoments[i * 6 + 0] + m_FeatureMoments[i * 6 + 2] - m_FeatureMoments[i * 6 + 1]) / 2.0f);
-    u002 = static_cast<float>((m_FeatureMoments[i * 6 + 0] + m_FeatureMoments[i * 6 + 1] - m_FeatureMoments[i * 6 + 2]) / 2.0f);
+    u200 = FloatSummation::Kahanf({ static_cast<float>((m_FeatureMoments[i * 6 + 1], m_FeatureMoments[i * 6 + 2], -m_FeatureMoments[i * 6 + 0]) / 2.0f) });
+    u020 = FloatSummation::Kahanf({ static_cast<float>((m_FeatureMoments[i * 6 + 0], m_FeatureMoments[i * 6 + 2], -m_FeatureMoments[i * 6 + 1]) / 2.0f) });
+    u002 = FloatSummation::Kahanf({ static_cast<float>((m_FeatureMoments[i * 6 + 0], m_FeatureMoments[i * 6 + 1], -m_FeatureMoments[i * 6 + 2]) / 2.0f) });
     u110 = static_cast<float>(-m_FeatureMoments[i * 6 + 3]);
     u011 = static_cast<float>(-m_FeatureMoments[i * 6 + 4]);
     u101 = static_cast<float>(-m_FeatureMoments[i * 6 + 5]);
-    o3 = static_cast<double>((u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110));
+    o3 = FloatSummation::Kahan({ static_cast<double>((u200 * u020 * u002), (2.0f * u110 * u101 * u011), -(u200 * u011 * u011), -(u020 * u101 * u101), -(u002 * u110 * u110)) });
     vol5 = pow(vol5, 5.0);
     omega3 = vol5 / o3;
     omega3 = omega3 / sphere;
@@ -461,9 +462,9 @@ void FindShapes::find_moments2D()
       ydist3 = (y1 - (m_Centroids[gnum * 3 + 1] * static_cast<float>(m_ScaleFactor)));
       xdist4 = (x2 - (m_Centroids[gnum * 3 + 0] * static_cast<float>(m_ScaleFactor)));
       ydist4 = (y2 - (m_Centroids[gnum * 3 + 1] * static_cast<float>(m_ScaleFactor)));
-      xx = ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
-      yy = ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
-      xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
+      xx = FloatSummation::Kahanf({ ((ydist1) * (ydist1)), ((ydist2) * (ydist2)), ((ydist3) * (ydist3)), ((ydist4) * (ydist4)) });
+      yy = FloatSummation::Kahanf({ ((xdist1) * (xdist1)), ((xdist2) * (xdist2)), ((xdist3) * (xdist3)), ((xdist4) * (xdist4)) });
+      xy = FloatSummation::Kahanf({ ((xdist1) * (ydist1)), ((xdist2) * (ydist2)), ((xdist3) * (ydist3)), ((xdist4) * (ydist4)) });
       m_FeatureMoments[gnum * 6 + 0] = m_FeatureMoments[gnum * 6 + 0] + xx;
       m_FeatureMoments[gnum * 6 + 1] = m_FeatureMoments[gnum * 6 + 1] + yy;
       m_FeatureMoments[gnum * 6 + 2] = m_FeatureMoments[gnum * 6 + 2] + xy;
@@ -513,13 +514,13 @@ void FindShapes::find_axes()
     Ixz = m_FeatureMoments[i * 6 + 5];
 
     a = 1.0;
-    b = (-Ixx - Iyy - Izz);
-    c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
+    b = FloatSummation::Kahan({ -Ixx, -Iyy, -Izz });
+    c = FloatSummation::Kahan({ (Ixx * Izz), (Ixx * Iyy), (Iyy * Izz), -(Ixz * Ixz), -(Ixy * Ixy), -(Iyz * Iyz) });
     d = 0.0;
-    d = ((Ixz * Iyy * Ixz) + (Ixy * Izz * Ixy) + (Iyz * Ixx * Iyz) - (Ixx * Iyy * Izz) - (Ixy * Iyz * Ixz) - (Ixy * Iyz * Ixz));
+    d = FloatSummation::Kahan({ (Ixz * Iyy * Ixz), (Ixy * Izz * Ixy), (Iyz * Ixx * Iyz), -(Ixx * Iyy * Izz), -(Ixy * Iyz * Ixz), -(Ixy * Iyz * Ixz) });
     // f and g are the p and q values when reducing the cubic equation to t^3 + pt + q = 0
     f = ((3.0 * c / a) - ((b / a) * (b / a))) / 3.0;
-    g = ((2.0 * (b / a) * (b / a) * (b / a)) - (9.0 * b * c / (a * a)) + (27.0 * (d / a))) / 27.0;
+    g = FloatSummation::Kahan({ ((2.0 * (b / a) * (b / a) * (b / a)), -(9.0 * b * c / (a * a)), (27.0 * (d / a))) / 27.0 });
     h = (g * g / 4.0) + (f * f * f / 27.0);
     rsquare = (g * g / 4.0) - h;
     r = sqrt(rsquare);
@@ -777,9 +778,9 @@ void FindShapes::find_axiseulers()
     double n3x = vect[2][0];
     double n3y = vect[2][1];
     double n3z = vect[2][2];
-    double norm1 = sqrt(((n1x * n1x) + (n1y * n1y) + (n1z * n1z)));
-    double norm2 = sqrt(((n2x * n2x) + (n2y * n2y) + (n2z * n2z)));
-    double norm3 = sqrt(((n3x * n3x) + (n3y * n3y) + (n3z * n3z)));
+    double norm1 = sqrt(FloatSummation::Kahan({ ((n1x * n1x), (n1y * n1y), (n1z * n1z)) }));
+    double norm2 = sqrt(FloatSummation::Kahan({ ((n2x * n2x), (n2y * n2y), (n2z * n2z)) }));
+    double norm3 = sqrt(FloatSummation::Kahan({ ((n3x * n3x), (n3y * n3y), (n3z * n3z)) }));
     n1x = n1x / norm1;
     n1y = n1y / norm1;
     n1z = n1z / norm1;
@@ -925,7 +926,6 @@ void FindShapes::execute()
     find_moments2D();
     find_axes2D();
     find_axiseulers2D();
-
   }
 
 
