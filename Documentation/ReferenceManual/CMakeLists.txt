@@ -50,7 +50,9 @@ set(DOCUMENTATION_SOURCE_FILES
 option(DREAM3D_INCLUDE_DEVELOPER_DOCS "Include the Developer Documentation in the DOxygen Generated output." ON)
 if(DREAM3D_INCLUDE_DEVELOPER_DOCS)
   set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
-    \"${PROJECT_SOURCE_DIR}/Developer/Configuring_and_Building_DREAM3D.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/OSX_Configuring_and_Building_DREAM3D.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/Windows_Configuring_and_Building_DREAM3D.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/Linux_Configuring_and_Building_DREAM3D.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/CodeGuidelines.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/CompilerSuite.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/Compiling_External_Libraries.md\"

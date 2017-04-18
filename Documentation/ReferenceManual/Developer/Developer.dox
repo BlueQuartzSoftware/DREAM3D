@@ -12,7 +12,11 @@ can be broken down to the following items:
 
 @subpage sdk_install
 
-@subpage configure_and_build_dream3d
+@subpage windows_configure_and_build_dream3d\
+
+@subpage osx_configure_and_build_dream3d
+
+@subpage linux_configure_and_build_dream3d
 
 @subpage creating_a_filter
 

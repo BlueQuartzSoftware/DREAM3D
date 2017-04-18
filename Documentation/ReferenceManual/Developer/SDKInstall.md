@@ -62,7 +62,11 @@ DREAM.3D depends on several 3rd party libraries to be installed and ready to lin
 | ITK | 4.9.1 | [ITK.org](http://www.itk.org) 4.9.1 is the earliest version compatible with HDF5 1.8.16 |
 
 ---
-**Next Page**: [Configuring and Building DREAM.3D](@ref configure_and_build_dream3d).
+**Next Page (Windows)**: [Configuring and Building DREAM.3D on Windows](@ref windows_configure_and_build_dream3d).
+
+**Next Page (OS X)**: [Configuring and Building DREAM.3D on Mac OS X](@ref osx_configure_and_build_dream3d).
+
+**Next Page (Linux)**: [Configuring and Building DREAM.3D on Linux](@ref linux_configure_and_build_dream3d).
 
 **Previous Page**: [Downloading the Source Code for DREAM.3D](@ref source_download).
 
