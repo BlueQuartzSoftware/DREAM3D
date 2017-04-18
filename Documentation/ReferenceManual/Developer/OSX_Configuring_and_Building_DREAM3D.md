@@ -52,7 +52,6 @@ There are different instructions to configure and generate the DREAM.3D project,
 2. In the **Build & Run** vertical tab, choose the **Kits** horizontal tab.  Set up a new kit that uses the proper compiler, Qt installation, and CMake tool.  You may need to use the other horizontal tabs to point the kit to all of these items.
 
 3. Set the CMake generator to **CodeBlocks - Ninja**.
-
 ![](Images/OSX/qt_creator_kit_setup.png)
 
 4. Click the **Change...** button next to the **CMake Configuration** row.
