@@ -100,10 +100,17 @@ void ComputeMomentInvariants2D::dataCheck()
   setErrorCondition(0);
 
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+  if(nullptr == igeom.get())
+  {
+    setErrorCondition(-73001);
+    QString ss = QObject::tr("The ImageGeometry or DataContainer for %1 does not exist or is invalid.").arg(getFeatureIdsArrayPath().getDataContainerName());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(igeom);
   size_t imageDims[3] = { 0,0,0};
   imageGeom->getDimensions(imageDims);
-  if (imageDims[2] != 0)
+  if (imageDims[2] != 1)
   {
     setErrorCondition(-73000);
     QString ss = QObject::tr("This filter currently only works on XY Planes in 2D data. Either crop the 3D data down to 2D in the Z Direction or use other data.");
