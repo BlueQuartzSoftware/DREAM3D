@@ -95,6 +95,44 @@ PrimaryPhaseWidget::~PrimaryPhaseWidget()
 {
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_Omega3Btn_clicked(bool b)
+{
+  Q_UNUSED(b)
+  plotToolbox->setCurrentIndex(0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_BOverABtn_clicked(bool b)
+{
+  Q_UNUSED(b)
+  plotToolbox->setCurrentIndex(1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_COverABtn_clicked(bool b)
+{
+  Q_UNUSED(b)
+  plotToolbox->setCurrentIndex(2);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_NeighborBtn_clicked(bool b)
+{
+  Q_UNUSED(b)
+  plotToolbox->setCurrentIndex(3);
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -284,16 +322,10 @@ QPushButton* PrimaryPhaseWidget::getGenerateDefaultDataBtn()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::removeNeighborsPlotWidget()
 {
-  int index = plotToolbox->indexOf(neighborDistributionTab);
-  if(index >= 0)
-  {
-    plotToolbox->removeItem(index);
-    m_NeighborPlot->setParent(nullptr);
-    delete neighborDistributionTab;
-    neighborDistributionTab = nullptr;
-    delete m_NeighborPlot;
-    m_NeighborPlot = nullptr;
-  }
+  plotToolbox->removeWidget(m_NeighborPlot);
+  m_NeighborPlot->setParent(nullptr);
+  delete m_NeighborPlot;
+  m_NeighborPlot = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -429,6 +461,14 @@ void PrimaryPhaseWidget::setupGui()
   connect(m_FeatureSizeDistWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 
   connect(m_FeatureSizeDistWidget, SIGNAL(userEnteredValidData(bool)), m_GenerateDefaultData, SLOT(setEnabled(bool)));
+
+
+  m_Omega3Btn->setChecked(true);
+  m_DistButtonGroup.addButton(m_Omega3Btn);
+  m_DistButtonGroup.addButton(m_BOverABtn);
+  m_DistButtonGroup.addButton(m_COverABtn);
+  m_DistButtonGroup.addButton(m_NeighborBtn);
+  on_m_Omega3Btn_clicked(true);
 }
 
 // -----------------------------------------------------------------------------

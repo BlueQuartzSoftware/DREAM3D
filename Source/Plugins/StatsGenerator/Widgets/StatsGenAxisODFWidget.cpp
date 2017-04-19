@@ -290,6 +290,7 @@ void StatsGenAxisODFWidget::setupGui()
   m_ButtonGroup.addButton(m_WeightSpreadsBulkLoad);
   on_m_WeightSpreads_clicked(true);
 
+
   // In release mode hide the Lambert Square Size.
   QString releaseType = QString::fromLatin1("Official");
   if(releaseType.compare("Official") == 0)
@@ -516,6 +517,7 @@ void StatsGenAxisODFWidget::on_addODFTextureBtn_clicked()
     m_ODFTableView->setFocus();
     QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
     m_ODFTableView->setCurrentIndex(index);
+    updatePlots();
   }
   emit dataChanged();
 }
@@ -540,6 +542,7 @@ void StatsGenAxisODFWidget::on_deleteODFTextureBtn_clicked()
   {
     m_ODFTableView->resizeColumnsToContents();
   }
+  updatePlots();
   emit dataChanged();
 }
 
