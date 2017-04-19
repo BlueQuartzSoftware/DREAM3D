@@ -2,27 +2,29 @@
 
 @page compile Introduction to Compiling DREAM.3D
 
-This section of the user manual discusses the various aspects and steps needed to begin extending DREAM.3D 
-with your own plugins, custome filters or allow the developer to fix or extend existing filters. The tasks
+This section of the user manual discusses steps required to configure, generate, and compile DREAM.3D. The tasks
 can be broken down to the following items:
 
-@subpage compiler_suite Compiler Suite
+@subpage compiler_suite
 
 @subpage source_download
 
-@subpage sdk_download
+@subpage sdk_install
 
-@subpage configure_dream3d
+@subpage windows_configure_and_build_dream3d\
 
-@subpage build_dream3d
+@subpage osx_configure_and_build_dream3d
 
-@subpage devhelper_tutorial
-
-
-
-@subpage compilingdream3d How to compile DREAM.3D
+@subpage linux_configure_and_build_dream3d
 
 
+@page intro_to_develop Introduction to Developing for DREAM.3D
+
+This section of the user manual discusses the various aspects and steps needed to begin extending DREAM.3D 
+with your own plugins, custom filters or allow the developer to fix or extend existing filters. The tasks
+can be broken down to the following items:
+
+@subpage creating_a_filter
 
 
 @page developer Additional Developer Information

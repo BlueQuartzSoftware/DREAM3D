@@ -1,1 +1,0 @@
-# Run the "DevHelper" application to generate a new plugin and compile DREAM.3D again. # {#devhelper_tutorial}
