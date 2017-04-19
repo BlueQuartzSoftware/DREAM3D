@@ -41,8 +41,11 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 	All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
 
 	/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D
+    
     /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/CMP
+    
     /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPL
+    
     /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPLView
 
 #### Windows 8.1/10 ####
@@ -64,12 +67,40 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
 	All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
 
-        C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D
+    
     C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\CMP
+    
     C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPL
+    
     C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPLView
 
 #### Linux ####
+1. Make a new directory called **Workspace** in your home directory.  The **Workspace** directory's path should be **/home/[*YOUR-HOME-DIRECTORY*]/Workspace**.
+
+2. Open the Terminal program.
+
+3. Navigate to your Workspace directory at **/home/[*YOUR-HOME-DIRECTORY*]/Workspace**.
+
+4. Use git to clone the DREAM.3D repository to your **Workspace** directory:
+
+    `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
+
+	Clone 3 other repositories to your **Workspace** directory that are required to build DREAM.3D:
+
+    `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
+
+	All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
+
+	/home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D
+    
+    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/CMP
+    
+    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPL
+    
+    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPLView
 
 ---
 **Next Page**: [Installing the DREAM.3D SDK](@ref sdk_install).
