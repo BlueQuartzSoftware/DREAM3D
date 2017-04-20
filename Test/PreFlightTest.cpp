@@ -346,10 +346,44 @@ void verifyPreflightEmitsProperly()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestPreflight()
+void TestPreflight(bool dataContainer = false, bool attributeMatrix = false, bool dataArray = false)
 {
   qDebug() << "-------------- TestPreflight ------------------------------";
+
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
   FilterManager* fm = FilterManager::Instance();
+
+  QString includeStr = "----------- ";
+  if(true == dataContainer)
+  {
+    IFilterFactory::Pointer ff = fm->getFactoryForFilter(QString("CreateDataContainer"));
+
+    AbstractFilter::Pointer dcFilter = ff->create();
+    pipeline->pushBack(dcFilter);
+
+    includeStr += "With Data Container ";
+    if(true == attributeMatrix)
+    {
+      IFilterFactory::Pointer ff = fm->getFactoryForFilter(QString("CreateAttributeMatrix"));
+
+      AbstractFilter::Pointer amFilter = ff->create();
+      pipeline->pushBack(amFilter);
+
+      includeStr += "and Attribute Matrix ";
+      if(true == dataArray)
+      {
+        IFilterFactory::Pointer ff = fm->getFactoryForFilter(QString("CreateDataArray"));
+
+        AbstractFilter::Pointer daFilter = ff->create();
+        pipeline->pushBack(daFilter);
+
+        includeStr += "and Data Array ";
+      }
+    }
+
+    includeStr += "-----------";
+    qDebug() << includeStr.toStdString().c_str();
+  }
 
   FilterManager::Collection factories = fm->getFactories();
   FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
@@ -361,16 +395,18 @@ void TestPreflight()
     {
       AbstractFilter::Pointer filter = factory->create();
 
-      filter->preflight();
-
+      pipeline->pushBack(filter);
+      pipeline->preflightPipeline();
+      
       //DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
-      err = filter->getErrorCondition();
+      err = pipeline->getErrorCondition();
       // An error condition GREATER than ZERO is an anomoly and should be looked at.
       if (err > 0)
       {
         qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass()
                  << " Error Condition = " << filter->getErrorCondition();
       }
+      pipeline->popBack();
     }
     factoryMapIter++;
   }
@@ -530,6 +566,9 @@ int main(int argc, char** argv)
   writeAllFilters(outputFilePath);
   DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
   DREAM3D_REGISTER_TEST( TestPreflight() )
+  DREAM3D_REGISTER_TEST( TestPreflight(true) )
+  DREAM3D_REGISTER_TEST( TestPreflight(true, true) )
+  DREAM3D_REGISTER_TEST( TestPreflight(true, true, true) )
   DREAM3D_REGISTER_TEST( TestUniqueHumanLabels() )
   DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
   DREAM3D_REGISTER_TEST( TestUncategorizedFilterParameters() )
