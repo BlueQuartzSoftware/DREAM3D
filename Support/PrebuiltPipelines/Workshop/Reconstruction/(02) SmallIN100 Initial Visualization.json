@@ -4,25 +4,43 @@
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "1.0.278",
-        "Filter_Human_Label": "Read H5EBSD File",
+        "FilterVersion": "6.4.409",
+        "Filter_Human_Label": "Import H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
         "InputFile": "Data/Output/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
-            "SEM Signal",
-            "Image Quality",
             "Phases",
             "Fit",
+            "SEM Signal",
+            "EulerAngles",
             "Confidence Index",
-            "EulerAngles"
+            "Image Quality"
         ],
         "UseTransformations": 1,
         "ZEndIndex": 117,
         "ZStartIndex": 1
     },
     "1": {
-        "FilterVersion": "1.0.278",
+        "ChangeOrigin": 1,
+        "ChangeResolution": 0,
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "1.0.799",
+        "Filter_Human_Label": "Set Origin & Resolution (Image)",
+        "Filter_Name": "SetOriginResolutionImageGeom",
+        "Origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "Resolution": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        }
+    },
+    "2": {
+        "FilterVersion": "1.0.799",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100.dream3d",
@@ -30,7 +48,7 @@
     },
     "PipelineBuilder": {
         "Name": "(02) SmallIN100 Initial Visualization",
-        "Number_Filters": 2,
-        "Version": "1.0"
+        "Number_Filters": 3,
+        "Version": 6
     }
 }
