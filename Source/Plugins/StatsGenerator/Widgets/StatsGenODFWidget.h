@@ -119,8 +119,12 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
 
     void tableDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
-    virtual void on_m_WeightSpreads_clicked(bool b);
-    virtual void on_m_WeightSpreadsBulkLoad_clicked(bool b);
+    void on_m_ODFParametersBtn_clicked(bool b);
+    void on_m_MDFParametersBtn_clicked(bool b);
+
+    void on_m_WeightSpreads_clicked(bool b);
+    void on_m_WeightSpreadsBulkLoad_clicked(bool b);
+    void on_pfImageSize_valueChanged(int v);
 
   signals:
     void dataChanged();
@@ -131,15 +135,16 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
   private:
     int      m_PhaseIndex;
     unsigned int      m_CrystalStructure;
-    SGODFTableModel*        m_ODFTableModel;
-    SGODFTableModel*        m_OdfBulkTableModel;
-   // StatsGenMDFWidget*      m_MDFWidget;
+    SGODFTableModel*        m_ODFTableModel = nullptr;
+    SGODFTableModel*        m_OdfBulkTableModel = nullptr;
     QVector<QwtPlotCurve*>  m_PlotCurves;
-    QwtPlotMarker*          m_PlotGrid;
-    QwtPlotCurve*           m_CircleGrid;
-    QwtPlotCurve*           m_RotCross0;
-    QwtPlotCurve*           m_RotCross1;
+    QwtPlotMarker*          m_PlotGrid = nullptr;
+    QwtPlotCurve*           m_CircleGrid = nullptr;
+    QwtPlotCurve*           m_RotCross0 = nullptr;
+    QwtPlotCurve*           m_RotCross1 = nullptr;
     QButtonGroup            m_ButtonGroup;
+    QButtonGroup            m_ODFGroup;
+    bool                    m_AbortUpdate = true;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
 

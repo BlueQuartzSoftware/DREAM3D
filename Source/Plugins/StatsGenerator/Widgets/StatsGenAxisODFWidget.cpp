@@ -92,7 +92,6 @@ StatsGenAxisODFWidget::StatsGenAxisODFWidget(QWidget* parent)
 , m_PhaseIndex(-1)
 , m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic)
 , m_ODFTableModel(nullptr)
-, m_MDFWidget(nullptr)
 {
   this->setupUi(this);
   this->setupGui();
@@ -124,6 +123,30 @@ void StatsGenAxisODFWidget::on_m_WeightSpreads_clicked(bool b)
 void StatsGenAxisODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool b)
 {
   m_WeightSpreadsStackedWidget->setCurrentIndex(1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::on_m_ODFParametersBtn_clicked(bool b)
+{
+  stackedWidget->setCurrentIndex(0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::on_m_MDFParametersBtn_clicked(bool b)
+{
+  stackedWidget->setCurrentIndex(1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::on_pfImageSize_valueChanged(int v)
+{
+  updatePlots();
 }
 
 // -----------------------------------------------------------------------------
@@ -288,16 +311,27 @@ void StatsGenAxisODFWidget::setupGui()
 
   m_ButtonGroup.addButton(m_WeightSpreads);
   m_ButtonGroup.addButton(m_WeightSpreadsBulkLoad);
+  m_WeightSpreads->setVisible(false);
+  m_WeightSpreadsBulkLoad->setVisible(false);
   on_m_WeightSpreads_clicked(true);
 
-
   // In release mode hide the Lambert Square Size.
-  QString releaseType = QString::fromLatin1("Official");
+  QString releaseType = QString::fromLatin1(SIMPLProj_RELEASE_TYPE);
   if(releaseType.compare("Official") == 0)
   {
     pfLambertSize->hide();
     pfLambertLabel->hide();
   }
+
+  // Disable the MDF tab
+  m_MDFParametersBtn->setDisabled(true);
+
+  m_ODFGroup.addButton(m_ODFParametersBtn);
+  m_ODFGroup.addButton(m_MDFParametersBtn);
+  m_ODFParametersBtn->setVisible(false);
+  m_MDFParametersBtn->setVisible(false);
+
+  on_m_ODFParametersBtn_clicked(true);
 
 }
 
@@ -422,7 +456,7 @@ void StatsGenAxisODFWidget::updatePlots()
 void StatsGenAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
-  // qDebug() << "StatsGenAxisODFWidget[" << objectName() << "]::on_m_CalculateODFBtn_clicked" << "\n";
+
   QwtArray<float> e1s;
   QwtArray<float> e2s;
   QwtArray<float> e3s;
@@ -517,9 +551,7 @@ void StatsGenAxisODFWidget::on_addODFTextureBtn_clicked()
     m_ODFTableView->setFocus();
     QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
     m_ODFTableView->setCurrentIndex(index);
-    updatePlots();
   }
-  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------

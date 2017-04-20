@@ -106,8 +106,9 @@ protected slots:
   virtual void on_m_COverABtn_clicked(bool b);
   virtual void on_m_NeighborBtn_clicked(bool b);
 
-  signals:
+ signals:
   void dataChanged();
+  void progressText(const QString &text);
 
 protected:
   /**

@@ -136,6 +136,7 @@ void StatsGeneratorWidget::setupGui()
     size_t ensembles = sda->getNumberOfTuples();
     QProgressDialog progress("Opening Stats File....", "Cancel", 0, ensembles, this);
     progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
 
     QVector<size_t> tDims(1, ensembles);
     AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
@@ -184,6 +185,7 @@ void StatsGeneratorWidget::setupGui()
         progress.setLabelText("Opening Primary Phase...");
         PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
+        connect(w, SIGNAL(progressText(const QString&)), &progress, SLOT(setLabelText(const QString&)));
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
         connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }

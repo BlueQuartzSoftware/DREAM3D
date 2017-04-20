@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1148</width>
-    <height>927</height>
+    <width>736</width>
+    <height>395</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -290,7 +290,6 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <zorder>plotToolbox</zorder>
         </widget>
        </item>
       </layout>

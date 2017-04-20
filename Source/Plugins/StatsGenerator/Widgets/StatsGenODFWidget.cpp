@@ -77,6 +77,8 @@
 #include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/Widgets/TextureDialog.h"
+#include "StatsGenerator/Widgets/ProgressDialog.h"
+
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1
@@ -135,6 +137,30 @@ void StatsGenODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool checked)
   m_ODFTableView->setItemDelegate(idelegate);
   emit bulkLoadEvent(!(m_OdfBulkTableModel->rowCount() > 0));
   emit dataChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_m_ODFParametersBtn_clicked(bool b)
+{
+  stackedWidget->setCurrentIndex(0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_m_MDFParametersBtn_clicked(bool b)
+{
+  stackedWidget->setCurrentIndex(1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_pfImageSize_valueChanged(int v)
+{
+  updatePlots();
 }
 
 // -----------------------------------------------------------------------------
@@ -252,13 +278,7 @@ void StatsGenODFWidget::enableMDFTab(bool b)
 {
   if(b)
   {
-    //  if(nullptr != m_MDFWidget)
-    //  {
-    //    m_MDFWidget->deleteLater();
-    //  }
-    //  m_MDFWidget = new StatsGenMDFWidget();
     m_MDFWidget->setODFTableModel(m_ODFTableModel);
-    // tabWidget->addTab(m_MDFWidget, QString("MDF"));
     connect(m_MDFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
   }
 }
@@ -360,12 +380,17 @@ void StatsGenODFWidget::setupGui()
   on_m_WeightSpreads_clicked(true);
 
   // In release mode hide the Lambert Square Size.
-  QString releaseType = QString::fromLatin1("Official");
+  QString releaseType = QString::fromLatin1(SIMPLProj_RELEASE_TYPE);
   if(releaseType.compare("Official") == 0)
   {
     pfLambertSize->hide();
     pfLambertLabel->hide();
   }
+
+  m_ODFGroup.addButton(m_ODFParametersBtn);
+  m_ODFGroup.addButton(m_MDFParametersBtn);
+
+  on_m_ODFParametersBtn_clicked(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -489,6 +514,12 @@ void StatsGenODFWidget::updatePlots()
 void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
+  if(m_AbortUpdate) { return; }
+  ProgressDialog* findDialog = new ProgressDialog();
+  findDialog->setLabelText("Updating ODF Sampling.... ");
+  findDialog->show();
+  findDialog->raise();
+  findDialog->activateWindow();
 
   QwtArray<float> e1s;
   QwtArray<float> e2s;
@@ -600,6 +631,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
 
   emit dataChanged();
+  delete findDialog;
 }
 
 // -----------------------------------------------------------------------------
@@ -611,10 +643,12 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
   int r = t.exec();
   if(r == QDialog::Accepted)
   {
+    m_AbortUpdate = true;
     if(!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount()))
     {
       return;
     }
+    m_AbortUpdate = false;
     // Gather values from the dialog and push them to the Table Model
     float e1 = 0.0;
     float e2 = 0.0;

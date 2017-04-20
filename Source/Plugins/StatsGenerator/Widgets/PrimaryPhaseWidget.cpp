@@ -569,7 +569,7 @@ void PrimaryPhaseWidget::updatePlots()
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
     progress.setWindowModality(Qt::WindowModal);
-    progress.setMinimumDuration(2000);
+    progress.setMinimumDuration(0);
 
     progress.setValue(1);
     progress.setLabelText("[1/3] Calculating Size Distributions ...");
@@ -786,6 +786,7 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
+  emit progressText(QString("Primary Phase extracting statistics..."));
   setWidgetListEnabled(true);
   setPhaseIndex(index);
 
@@ -871,6 +872,8 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   }
 
   m_FeatureSizeDistWidget->extractStatsData(primaryStatsData, index);
+  emit progressText(QString("Extracting Size Distribution Values"));
+  qApp->processEvents();
 
   float mu = m_FeatureSizeDistWidget->getMu();
   float sigma = m_FeatureSizeDistWidget->getSigma();
@@ -878,27 +881,41 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   float maxCutOff = m_FeatureSizeDistWidget->getMaxCutOff();
   float binStepSize = m_FeatureSizeDistWidget->getBinStep();
 
+  emit progressText(QString("Extracting Omega 3 Distribution Values"));
+  qApp->processEvents();
   m_Omega3Plot->setDistributionType(primaryStatsData->getOmegas_DistType(), false);
   m_Omega3Plot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_Omegas());
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
+  emit progressText(QString("Extracting B Over a Distribution Values"));
+  qApp->processEvents();
   m_BOverAPlot->setDistributionType(primaryStatsData->getBOverA_DistType(), false);
   m_BOverAPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_BOverA());
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
+  emit progressText(QString("Extracting C Over A Distribution Values"));
+  qApp->processEvents();
   m_COverAPlot->setDistributionType(primaryStatsData->getCOverA_DistType(), false);
   m_COverAPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   if(m_NeighborPlot)
   {
+    emit progressText(QString("Extracting Neighbor Distribution Values"));
+    qApp->processEvents();
     m_NeighborPlot->setDistributionType(primaryStatsData->getNeighbors_DistType(), false);
     m_NeighborPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_Neighbors());
     m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
   }
+
+  emit progressText(QString("Extracting ODF Distribution Values"));
+  qApp->processEvents();
   // Set the ODF Data
   m_ODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
 
+
+  emit progressText(QString("Extracting Axis ODF Distribution Values"));
+  qApp->processEvents();
   // Set the Axis ODF Data
   m_AxisODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
 
