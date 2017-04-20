@@ -409,6 +409,7 @@ void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPl
   canvas->setAutoFillBackground(false);
   canvas->setFrameStyle(QFrame::NoFrame);
   canvas->setPalette(pal);
+  canvas->setToolTip("Right-Click to edit data");
   plot->setCanvas(canvas);
 
   QFont font;

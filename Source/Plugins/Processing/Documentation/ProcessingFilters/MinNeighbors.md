@@ -9,6 +9,9 @@ This **Filter** sets the minimum number of contiguous neighboring **Features** a
 
 The **Filter** can be run in a mode where the minimum number of neighbors is applied to a single **Ensemble**.  The user can select to apply the minimum to one specific **Ensemble**.
 
+## Notes ##
+
+If any features are removed **and** the CellFeature AttributeMatrix contains any _NeighborList_ data arrays those arrays will be **REMOVED** because those lists are now invalid. Re-run the Find Neighbors filter to re-create the lists.
 
 ## Parameters ##
 

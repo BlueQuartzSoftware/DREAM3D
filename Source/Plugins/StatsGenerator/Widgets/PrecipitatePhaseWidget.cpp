@@ -412,6 +412,8 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
+  emit progressText(QString("Precipitate Phase extracting statistics..."));
+
   setWidgetListEnabled(true);
   setPhaseIndex(index);
 
@@ -456,7 +458,8 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   {
     qbins[i] = bins->getValue(i);
   }
-
+  emit progressText(QString("Extracting Size Distribution Values"));
+  qApp->processEvents();
   getFeatureSizeWidget()->extractStatsData(precipitateStatsData, index);
 
   float mu = getFeatureSizeWidget()->getMu();
@@ -464,24 +467,31 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   float minCutOff = getFeatureSizeWidget()->getMinCutOff();
   float maxCutOff = getFeatureSizeWidget()->getMaxCutOff();
   float binStepSize = getFeatureSizeWidget()->getBinStep();
-
+  emit progressText(QString("Extracting Omega 3 Distribution Values"));
+  qApp->processEvents();
   getOmega3PlotWidget()->setDistributionType(precipitateStatsData->getOmegas_DistType(), false);
   getOmega3PlotWidget()->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_Omegas());
   getOmega3PlotWidget()->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-
+  emit progressText(QString("Extracting B Over a Distribution Values"));
+  qApp->processEvents();
   getBOverAPlotPlotWidget()->setDistributionType(precipitateStatsData->getBOverA_DistType(), false);
   getBOverAPlotPlotWidget()->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_BOverA());
   getBOverAPlotPlotWidget()->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-
+  emit progressText(QString("Extracting C Over A Distribution Values"));
+  qApp->processEvents();
   getCOverAPlotWidget()->setDistributionType(precipitateStatsData->getCOverA_DistType(), false);
   getCOverAPlotWidget()->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_COverA());
   getCOverAPlotWidget()->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_RdfPlot->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
 
+  emit progressText(QString("Extracting ODF Distribution Values"));
+  qApp->processEvents();
   // Set the ODF Data
   getODFWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
 
+  emit progressText(QString("Extracting Axis ODF Distribution Values"));
+  qApp->processEvents();
   // Set the Axis ODF Data
   getAxisODFWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
 

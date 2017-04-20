@@ -1,48 +1,108 @@
-# Download the source code for DREAM.3D # {#source_download}
+# Downloading the Source Code for DREAM.3D # {#source_download}
+<a name="prerequisites">
+## Prerequisites ##
+</a>
 
-The development of DREAM.3D is done "in the open" using public [git](http://www.git-scm.org) servers and is best accessed using [git](http://www.git-scm.org). The user is strongly encouraged to use a GUI based Git tool such as [SourceTree](http://www.sourcetreeapp.com) in order to manage cloning all four (4) source archives.
+These prerequisites need to be completed before the source code for DREAM.3D is downloaded.
 
+If you have already fulfilled all of these prerequisites, skip to the [Downloading the Source Code](#downloading_src_code) section.
 
+<a name="compiler_suite">
+### Install a Compiler Suite ###
+</a>
 
-The source for DREAM.3D is located at [http://www.github.com/bluequartzsoftware/dream3d](http://www.github.com/bluequartzsoftware/dream3d).
+A compatible compiler needs to be installed on your system to be able to build DREAM.3D.
 
-You do not need an account at github to download it but it does help if you are going to be serious about fixing bugs in DREAM.3D and want to contribute those fixes back to the DREAM.3D developers through merge requests.
+For more information, please visit [Installing a Compiler Suite](@ref compiler_suite).
 
-## I have Git Installed on My System ##
+<a name="downloading_src_code">
+## Downloading the Source Code ##
+</a>
 
-Use git clone the DREAM.3D repository:
+DREAM.3D is publicly available on Github, and can be downloaded using [Git](http://www.git-scm.org). The user is strongly encouraged to use a GUI based Git tool such as [SourceTree](http://www.sourcetreeapp.com) in order to manage cloning all four (4) source archives.
 
-    git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D
+#### Mac OS X ####
+1. Make a new directory called **Workspace** in your home directory.  The **Workspace** directory's path should be **/Users/[*YOUR-HOME-DIRECTORY*]/Workspace**.
 
-In addition there are 3 other repositories that are required to build DREAM.3D:
+2. Open Terminal at /Applications/Utilities/Terminal.app.
 
-    git clone -b develop https://www.github.com/bluequartzsoftware/CMP
-    git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL
-    git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView
+3. Navigate to your Workspace directory at **/Users/[*YOUR-HOME-DIRECTORY*]/Workspace**.
 
+4. Use git to clone the DREAM.3D repository to your **Workspace** directory:
 
-## I do NOT have Git Installed on My System ##
+    `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
 
-The user will need to download 4 zip archives directly from each of the project web pages:
+	Clone 3 other repositories to your **Workspace** directory that are required to build DREAM.3D:
 
-[https://www.github.com/bluequartzsoftware/CMP](https://www.github.com/bluequartzsoftware/CMP)
-[https://www.github.com/bluequartzsoftware/DREAM3D](https://www.github.com/bluequartzsoftware/DREAM3D)
-[https://www.github.com/bluequartzsoftware/SIMPL](https://www.github.com/bluequartzsoftware/SIMPL)
-[https://www.github.com/bluequartzsoftware/SIMPLView](https://www.github.com/bluequartzsoftware/SIMPLView)
+    `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
 
-The following images shows what the user interface should look like:
+	All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
 
-![Images/download_source_image1.png](Images/download_source_image1.png)
+	/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D
+    
+    /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/CMP
+    
+    /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPL
+    
+    /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPLView
 
+#### Windows 8.1/10 ####
+1. Make a new directory called **Workspace** in your user directory.  The **Workspace** directory's path should be **C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace**.
 
-## Directory Layout ##
+2. Open the git-bash application that was installed when you downloaded and installed Git.
 
+3. Navigate to your Workspace directory at **C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace**.
 
-All 4 of these repositories should be cloned/downloaded so that the final folder structure looks like the following:
+4. Use git to clone the DREAM.3D repository to your **Workspace** directory:
 
-    CMP
-    DREAM3D
-    SIMPL
-    SIMPLView
+    `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
 
-Once the above directory structure is obtained the developer can proceed to the next steps of installing or compiling all the DREAM.3D dependent libraries.
+	Clone 3 other repositories to your **Workspace** directory that are required to build DREAM.3D:
+
+    `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
+
+	All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
+
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D
+    
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\CMP
+    
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPL
+    
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPLView
+
+#### Linux ####
+1. Make a new directory called **Workspace** in your home directory.  The **Workspace** directory's path should be **/home/[*YOUR-HOME-DIRECTORY*]/Workspace**.
+
+2. Open the Terminal program.
+
+3. Navigate to your Workspace directory at **/home/[*YOUR-HOME-DIRECTORY*]/Workspace**.
+
+4. Use git to clone the DREAM.3D repository to your **Workspace** directory:
+
+    `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
+
+	Clone 3 other repositories to your **Workspace** directory that are required to build DREAM.3D:
+
+    `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
+    `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView`
+
+	All 4 of these repositories should be cloned/downloaded into the **Workspace** folder so that the final paths to all 4 repositories look like the following:
+
+	/home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D
+    
+    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/CMP
+    
+    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPL
+    
+    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPLView
+
+---
+**Next Page**: [Installing the DREAM.3D SDK](@ref sdk_install).
+
+**Previous Page**: [Installing a Compiler Suite](@ref compiler_suite).

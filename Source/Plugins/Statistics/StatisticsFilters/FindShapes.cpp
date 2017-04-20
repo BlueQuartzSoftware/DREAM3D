@@ -140,7 +140,7 @@ void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 void FindShapes::initialize()
 {
-  m_ScaleFactor = 1.0f;
+  m_ScaleFactor = 1.0;
 }
 
 // -----------------------------------------------------------------------------

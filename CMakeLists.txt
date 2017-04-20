@@ -59,7 +59,7 @@ cmake_minimum_required(VERSION 3.1.0)
 #------------------------------------------------------------------------------
 # Create the Top level Project
 # 
-project(DREAM3DProj VERSION 6.3.0.0)
+project(DREAM3DProj VERSION 6.4.0.0)
 set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 
 # ---------- Setup output Directories -------------------------
@@ -181,7 +181,7 @@ endif()
 # Development: This is currently in development and probably has bugs.
 get_property(DREAM3DProj_RELEASE_TYPE GLOBAL PROPERTY PACKAGE_RELEASE_TYPE)
 if("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "")
-  set(DREAM3DProj_RELEASE_TYPE "Development")
+  set(DREAM3DProj_RELEASE_TYPE "Beta")
   set_property(GLOBAL PROPERTY PACKAGE_RELEASE_TYPE "${DREAM3DProj_RELEASE_TYPE}")
 endif()
 

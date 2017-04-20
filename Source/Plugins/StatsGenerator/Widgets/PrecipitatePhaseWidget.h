@@ -93,6 +93,8 @@ class PrecipitatePhaseWidget : public PrimaryPhaseWidget
 
   void dataChanged();
 
+  void progressText(const QString &text);
+
   protected:
 
     void setupGui() override;
