@@ -31,7 +31,7 @@ if [ "x@ITK_FOUND@" = "x1" ]; then
 	arr=$(echo $ITK_LIBS | tr ";" "\n")
 	for x in $arr
 	do
-	    copyLibraries "@ITK_INSTALL_PREFIX@/lib"  "$x"
+	    copyLibraries "@ITK_DIR@/lib"  "$x"
 	done
 fi
 
