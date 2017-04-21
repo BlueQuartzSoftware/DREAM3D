@@ -27,12 +27,11 @@ function copyLibraries()
 # ONLY copy ITK Libraries if they were used in the build.
 if [ "x@ITK_FOUND@" = "x1" ]; then
 	echo "  Installing/Packaging ITK Libraries"
-
 	ITK_LIBS="itk* ITK*"
 	arr=$(echo $ITK_LIBS | tr ";" "\n")
 	for x in $arr
 	do
-	    copyLibraries "@ITK_LIBRARY_DIR@"  "$x"
+	    copyLibraries "@ITK_INSTALL_PREFIX@/lib"  "$x"
 	done
 fi
 
