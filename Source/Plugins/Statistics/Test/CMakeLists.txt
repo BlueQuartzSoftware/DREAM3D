@@ -62,6 +62,7 @@ set(TEST_NAMES
   CalculateArrayHistogramTest
   FindDifferenceMapTest
   FindEuclideanDistMapTest
+  FindShapesTest
   FindSizesTest
 )
 
