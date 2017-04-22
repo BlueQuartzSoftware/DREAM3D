@@ -1,12 +1,10 @@
 {
     "0": {
-        "BoundsFile": "",
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "1.0.278",
-        "Filter_Human_Label": "Import Images (3D Stack)",
-        "Filter_Name": "ImportImageStack",
-        "GeometryType": 0,
+        "FilterVersion": "1.0.351",
+        "Filter_Human_Label": "ITK::Import Images (3D Stack) (KW)",
+        "Filter_Name": "ITKImportImageStack",
         "ImageDataArrayName": "ImageData",
         "InputFileListInfo": {
             "EndIndex": 174,
@@ -24,13 +22,13 @@
             "z": 0
         },
         "Resolution": {
-            "x": 2,
-            "y": 2,
-            "z": 4
+            "x": 1,
+            "y": 1,
+            "z": 1
         }
     },
     "1": {
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "1.0.803",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/Images.dream3d",
@@ -39,6 +37,6 @@
     "PipelineBuilder": {
         "Name": "(08) Image Initial Visualization",
         "Number_Filters": 2,
-        "Version": "1.0"
+        "Version": 6
     }
 }

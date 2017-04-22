@@ -1,12 +1,10 @@
 {
     "0": {
-        "BoundsFile": "",
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "6.3.287",
-        "Filter_Human_Label": "Import Images (3D Stack)",
-        "Filter_Name": "ImportImageStack",
-        "GeometryType": 0,
+        "FilterVersion": "1.0.351",
+        "Filter_Human_Label": "ITK::Import Images (3D Stack) (KW)",
+        "Filter_Name": "ITKImportImageStack",
         "ImageDataArrayName": "ImageData",
         "InputFileListInfo": {
             "EndIndex": 174,
@@ -24,14 +22,14 @@
             "z": 0
         },
         "Resolution": {
-            "x": 2,
-            "y": 2,
-            "z": 4
+            "x": 1,
+            "y": 1,
+            "z": 1
         }
     },
     "1": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.4.415",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -48,7 +46,7 @@
         "ActiveArrayName": "Active",
         "CellFeatureAttributeMatrixName": "CellFeatureData",
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.4.415",
         "Filter_Human_Label": "Segment Features (Scalar)",
         "Filter_Name": "ScalarSegmentFeatures",
         "GoodVoxelsArrayPath": {
@@ -76,7 +74,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.4.415",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
         "NumElementsArrayName": "NumElements",
@@ -90,7 +88,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.600",
+        "FilterVersion": "1.0.803",
         "Filter_Human_Label": "Create Element Array from Feature Array",
         "Filter_Name": "CopyFeatureArrayToElementArray",
         "SelectedFeatureArrayPath": {
@@ -100,7 +98,7 @@
         }
     },
     "5": {
-        "FilterVersion": "1.0.600",
+        "FilterVersion": "1.0.803",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/Images.dream3d",
