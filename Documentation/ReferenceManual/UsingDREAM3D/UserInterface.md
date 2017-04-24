@@ -157,7 +157,7 @@ To view the help page for the selected **Filter**, press the _?_ icon.
 ![Data Browser](Images/OverView-DataBrowser.png)
 @image latex Images/OverView-DataBrowser.png "Data Browser" width=6in
 
-The **Data Browser** displays the current data structure of the pipeline, including all data containers, attribute matrices, and data arrays that exist in the current pipeline's data container array.
+The **Data Browser** displays the current data structure of the pipeline, including all data containers, attribute matrices, and data arrays that exist in the current pipeline's data container array.  This tool is a good way to tell at-a-glance the current structure of your data when clicking on filters in the pipeline.
 
 ---
 
