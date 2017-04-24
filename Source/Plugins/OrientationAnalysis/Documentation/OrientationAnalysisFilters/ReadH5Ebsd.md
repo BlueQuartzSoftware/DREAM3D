@@ -1,4 +1,4 @@
-Read H5EBSD File {#readh5ebsd}
+Import H5EBSD File {#readh5ebsd}
 =============
 
 ## Group (Subgroup) ##

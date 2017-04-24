@@ -1,4 +1,4 @@
-Write StatsGenerator ODF Angle File {#writestatsgenodfanglefile}
+Export StatsGenerator ODF Angle File {#writestatsgenodfanglefile}
 =====
 
 ## Group (Subgroup) ##
@@ -11,7 +11,7 @@ This **Filter** is used in a workflow where the user would like to generate a sy
 
 1. Import Euler angle data (e.g., ANG or CTF files)
 2. Optionally threshold the data so each cell is marked as allowable or not-allowable
-3. Insert the "Write StatsGenerator ODF Angle File" **Filter** in the **Pipeline**
+3. Insert the "Export StatsGenerator ODF Angle File" **Filter** in the **Pipeline**
 4. Run the **Pipeline** to produce the file
 5. Launch **StatsGenerator**
 6. Generate the data

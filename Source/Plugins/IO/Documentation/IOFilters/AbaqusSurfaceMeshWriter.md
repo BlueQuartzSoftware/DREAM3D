@@ -1,4 +1,4 @@
-Write Abaqus Surface Mesh {#abaqussurfacemeshwriter}
+Export Abaqus Surface Mesh {#abaqussurfacemeshwriter}
 =============
 
 ## Group (Subgroup) ##

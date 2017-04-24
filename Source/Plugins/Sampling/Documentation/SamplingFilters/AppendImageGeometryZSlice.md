@@ -1,4 +1,4 @@
-Append Image Geometry Z-Slice  {#appendimagegeometryzslice}
+Append Z-Slice  {#appendimagegeometryzslice}
 =====
 
 ## Group (Subgroup) ##

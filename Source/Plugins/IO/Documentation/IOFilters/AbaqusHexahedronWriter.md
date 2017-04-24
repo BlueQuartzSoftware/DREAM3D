@@ -1,4 +1,4 @@
-Abaqus Hexahedron Writer {#abaqushexahedronwriter}
+Abaqus Hexahedron Exporter {#abaqushexahedronwriter}
 =============
 
 ## Group (Subgroup) ##

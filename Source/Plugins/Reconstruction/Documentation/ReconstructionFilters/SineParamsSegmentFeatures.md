@@ -5,14 +5,13 @@ Segment Features (Sine Parameters) {#sineparamssegmentfeatures}
 Reconstruction Filters (Segmentation)
 
 ## Description ##
-This filter groups together **Cells** that differ in some user defined scalar value by less than a user defined tolerance.  For example, if the user selected array was an 8bit image array, then the array would consist of integer values between *0* and *255*.  If the user then set a tolerance vlaue of 10, then the filter would identify all sets of contiguous **Cells** that have *grayscale* values with *10* of each other.
+This filter groups together **Cells** that differ in some user defined scalar value by less than a user defined tolerance.  For example, if the user selected array was an 8bit image array, then the array would consist of integer values between *0* and *255*.  If the user then set a tolerance value of 10, then the filter would identify all sets of contiguous **Cells** that have *grayscale* values with *10* of each other.
 
 ## Parameters ##
 
 | Name | Type |
 |------|------|
-| Input Cell Array Name | Unknown Type |
-| Scalar Tolerance | Double |
+| Use Good Voxels Array | Bool |
 
 ## Required DataContainers ##
 Voxel
@@ -22,13 +21,15 @@ Voxel
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
+| Cell | GoodVoxels Array Path | | | |
 
 ## Created Objects ##
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Cell | GrainIds |  |
-| Feature | Active |  |
+| Feature | FeatureIds | |
+| Cell | Cell Feature Attribute Matrix Name | |
+| Feature | Active | |
 
 
 

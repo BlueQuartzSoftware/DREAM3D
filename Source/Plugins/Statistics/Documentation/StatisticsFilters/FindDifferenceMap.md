@@ -1,4 +1,4 @@
-FindDifferenceMap {#finddifferencemap}
+Find Difference Map {#finddifferencemap}
 =============
 
 ## Group (Subgroup) ##

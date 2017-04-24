@@ -31,14 +31,15 @@ The ANSI-C99 standard defines typedefs for 8, 16, 32 and 64 bit integer types. T
 should be avoided at all costs. This usage is important since the number of bytes that a "long" variable occupies will change depending on CPU type and compiler used. This can have an impact on many important operations, such as pointer arithmetic and binary file IO. All Unix  systems have a *stdint.h*  file included with the compiler that defines the proper types. The Microsoft Visual Studio Compiler does not have this file included. There are lots of examples of creating one on the internet. An exemplar file is  also included with the Electronic Imaging software distribution that is generated using CMake.
 
 ## C99 Integer Types ##
-    int8_t    8  Bit Singed Integer
-    uint8_t   8  Bit UnSinged Integer
-    int16_t   16 Bit Singed Integer
-    uint16_t  16 Bit UnSinged Integer
-    int32_t   32 Bit Singed Integer
-    uint32_t  32 Bit UnSinged Integer
-    int64_t   64 Bit Singed Integer
-    uint64_t  64 Bit UnSinged Integer
+
+    int8_t    8  Bit Signed Integer
+    uint8_t   8  Bit Unsigned Integer
+    int16_t   16 Bit Signed Integer
+    uint16_t  16 Bit Unsigned Integer
+    int32_t   32 Bit Signed Integer
+    uint32_t  32 Bit Unsigned Integer
+    int64_t   64 Bit Signed Integer
+    uint64_t  64 Bit Unsigned Integer
 
 # Special Constants #
 nullptr should be used in conjunction with only raw pointers and 0 (zero) should be used in conjunction with numeric values:

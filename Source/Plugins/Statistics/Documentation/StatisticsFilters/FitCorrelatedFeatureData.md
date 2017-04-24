@@ -1,8 +1,8 @@
-Name of Filter {#fitcorrelatedfeaturedata}
+Fit Correlated Distributions To Feature Data {#fitcorrelatedfeaturedata}
 =====
 
 ## Group (Subgroup) ##
-Filter Group (Filter Subgroup)
+Statistics (Ensemble)
 
 
 ## Description ##
@@ -11,9 +11,7 @@ This filter will correlate one **Feature** with another **Feature** and bin the 
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Feature Array To Fit | String | Feature to be fit to a distribution. |
 | Distribution Type | Choice | Choose from a lognormal, power and beta distribution. |
-| Array To Correlate With | String | Feature to correlate with the Selected Feature Array To Fit. |
 | Number Of Bins For Correlated Array | Integer | |
 | Remove Biased Features | Boolean | TRUE if biased features are to be omitted from the binning counts. |
 
@@ -21,9 +19,11 @@ This filter will correlate one **Feature** with another **Feature** and bin the 
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Feature | BiasedFeatures | Boolean flag of 1 if **Feature** is biased or of 0 if it is not. | | Find Biased Features (Generic) |
-| Feature | SelectedFeature | | | |
-| Feature | Correlated Feature | | | |
+| Feature | Feature Array To Fit | Feature to be fit to a distribution. | |
+| -- | Array To Correlate With | Feature to correlate with the Selected Feature Array To Fit. | |
+| Feature | BiasedFeatures | Boolean flag of 1 if **Feature** is biased or of 0 if it is not. | Find Biased Features (Generic) |
+| Feature | FeaturePhases | | |
+| Feature | Biased Features | | |
 
 ## Created Objects ##
 
