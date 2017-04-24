@@ -6,8 +6,9 @@ DREAM.3D has 4 main sections of its user interface:
 1. [DREAM.3D Toolbox](#dream3dtoolbox) (contains [Filter List](#filterlist), [Filter Library](#filterlibrary), and [Bookmarks](#bookmarks))
 2. [Pipeline View](#pipelineview)
 3. [Filter Input View](#filterinputview)
-4. [Pipeline Error Table](#pipelineerrortable)
+4. [Data Browser](#databrowser)
 5. [Pipeline Output Log](#pipelineoutputlog)
+6. [Pipeline Issues Table](#pipelineissuestable)
 
 The **Pipeline Error Table** can be _undocked_ from the main window and moved around. Additionally, it can also have its visibility toggled by the appropriate button found in DREAM.3D's **View** menu.
 
@@ -149,17 +150,14 @@ To view the help page for the selected **Filter**, press the _?_ icon.
 
 ---
 
-<a name="pipelineerrortable">
-## Pipeline Error Table ##
+<a name="databrowser">
+## Data Browser ##
 </a>
 
-![Pipeline Error Table](Images/OverView-PipelineErrorTable.png)
-@image latex Images/OverView-PipelineErrorTable.png "Pipeline Error Table" width=6in
+![Data Browser](Images/OverView-DataBrowser.png)
+@image latex Images/OverView-DataBrowser.png "Data Browser" width=6in
 
-The **Pipeline Error Table** displays any errors and/or warnings associated with **Filters** that are actively being used in the **Pipeline View**.
-
-#### Preflights and Table Repopulation ####
-This section gets repopulated every time the **Pipeline** runs its **Preflight** process, which makes sure that the **Pipeline** will have all the necessary data available to execute normally.  The **Preflight** process is run any time the user modifies the **Pipeline View** or **Filter Input View** sections.
+The **Data Browser** displays the current data structure of the pipeline, including all data containers, attribute matrices, and data arrays that exist in the current pipeline's data container array.  This tool is a good way to tell at-a-glance the current structure of your data when clicking on filters in the pipeline.
 
 ---
 
@@ -178,3 +176,17 @@ Messages are added to the output log when:
 3. A pipeline is opened.
 4. An executing pipeline needs to display output.
 5. A message is set in DREAM.3D's status bar.
+
+---
+
+<a name="pipelineissuestable">
+## Pipeline Issues Table ##
+</a>
+
+![Pipeline Issues Table](Images/OverView-PipelineErrorTable.png)
+@image latex Images/OverView-PipelineErrorTable.png "Pipeline Error Table" width=6in
+
+The **Pipeline Error Table** displays any errors and/or warnings associated with **Filters** that are actively being used in the **Pipeline View**.
+
+#### Preflights and Table Repopulation ####
+This section gets repopulated every time the **Pipeline** runs its **Preflight** process, which makes sure that the **Pipeline** will have all the necessary data available to execute normally.  The **Preflight** process is run any time the user modifies the **Pipeline View** or **Filter Input View** sections.
