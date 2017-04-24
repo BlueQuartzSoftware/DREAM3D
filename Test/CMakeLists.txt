@@ -64,8 +64,6 @@ set(PREBUILT_PIPELINE_NAMES
 "Reconstruction/(05) SmallIN100 Segmentation"
 "Reconstruction/(06) SmallIN100 Postsegmentation Processing"
 "Reconstruction/(07) SmallIN100 Final Processing"
-"Reconstruction/(08) Image Initial Visualization"
-"Reconstruction/(09) Image Segmentation"
 "Reconstruction/(10) SmallIN100 Full Reconstruction"
 "Statistics/(01) SmallIN100 Morphological Statistics"
 "Statistics/(02) SmallIN100 Export Statistics"
@@ -83,6 +81,14 @@ set(PREBUILT_PIPELINE_NAMES
 "Synthetic/(05) Composite"
 "Synthetic/(06) SmallIN100 Synthetic"
 )
+
+if(SIMPL_USE_ITK)
+  set(PREBUILT_PIPELINE_NAMES
+    ${PREBUILT_PIPELINE_NAMES}
+    "Reconstruction/(08) Image Initial Visualization"
+    "Reconstruction/(09) Image Segmentation"
+endif()
+
 
 configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
                ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
