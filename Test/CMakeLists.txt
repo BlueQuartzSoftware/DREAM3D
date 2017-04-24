@@ -87,17 +87,18 @@ if(SIMPL_USE_ITK)
     ${PREBUILT_PIPELINE_NAMES}
     "Reconstruction/(08) Image Initial Visualization"
     "Reconstruction/(09) Image Segmentation"
+    )
 endif()
 
 
 configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
                ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 
-add_executable(PipelineRunnerTest 
+add_executable(PipelineRunnerTest
                 ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib SIMPLib)
 set_target_properties(PipelineRunnerTest PROPERTIES FOLDER "DREAM3D UnitTests")
-add_test(NAME PipelineRunnerTest 
+add_test(NAME PipelineRunnerTest
           COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest
           WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
