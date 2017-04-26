@@ -180,54 +180,7 @@
          <property name="horizontalSpacing">
           <number>12</number>
          </property>
-         <item row="0" column="1">
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Image Size:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QSpinBox" name="pfImageSize">
-           <property name="maximum">
-            <number>10000</number>
-           </property>
-           <property name="value">
-            <number>200</number>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QLabel" name="label_8">
-           <property name="toolTip">
-            <string>Controls the size of the Modified Lambert Square that is used for interpolation of the angular data during the stereographic project generation. You should leave this at the default unless you really understand what you are doing.</string>
-           </property>
-           <property name="text">
-            <string>Image Layout</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="5">
-          <widget class="QLabel" name="pfLambertLabel">
-           <property name="toolTip">
-            <string>Controls the size of the Modified Lambert Square that is used for interpolation of the angular data during the stereographic project generation. You should leave this at the default unless you really understand what you are doing.</string>
-           </property>
-           <property name="text">
-            <string>Lambert Square Size</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="6">
-          <widget class="QSpinBox" name="pfLambertSize">
-           <property name="maximum">
-            <number>10000</number>
-           </property>
-           <property name="value">
-            <number>32</number>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
           <widget class="QComboBox" name="imageLayout">
            <property name="currentIndex">
             <number>0</number>
@@ -249,7 +202,7 @@
            </item>
           </widget>
          </item>
-         <item row="0" column="7">
+         <item row="0" column="8">
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -261,6 +214,144 @@
             </size>
            </property>
           </spacer>
+         </item>
+         <item row="0" column="0">
+          <widget class="QPushButton" name="m_CalculateODFBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Refresh Pole Figures</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+             <normaloff>:/reload@2x.png</normaloff>:/reload@2x.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoDefault">
+            <bool>true</bool>
+           </property>
+           <property name="default">
+            <bool>false</bool>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Image Size:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QSpinBox" name="pfImageSize">
+           <property name="toolTip">
+            <string>Press the 'Refresh' button after making any edits to this value</string>
+           </property>
+           <property name="maximum">
+            <number>10000</number>
+           </property>
+           <property name="value">
+            <number>200</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QLabel" name="label_8">
+           <property name="toolTip">
+            <string>Controls the size of the Modified Lambert Square that is used for interpolation of the angular data during the stereographic project generation. You should leave this at the default unless you really understand what you are doing.</string>
+           </property>
+           <property name="text">
+            <string>Image Layout</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="6">
+          <widget class="QLabel" name="pfLambertLabel">
+           <property name="toolTip">
+            <string>Controls the size of the Modified Lambert Square that is used for interpolation of the angular data during the stereographic project generation. You should leave this at the default unless you really understand what you are doing.</string>
+           </property>
+           <property name="text">
+            <string>Lambert Square Size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="7">
+          <widget class="QSpinBox" name="pfLambertSize">
+           <property name="maximum">
+            <number>10000</number>
+           </property>
+           <property name="value">
+            <number>32</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="savePoleFigureImage">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Save Pole Figure</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+             <normaloff>:/data-transfer-download@2x.png</normaloff>:/data-transfer-download@2x.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -406,94 +497,6 @@
              <property name="topMargin">
               <number>0</number>
              </property>
-             <item>
-              <widget class="QPushButton" name="m_CalculateODFBtn">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Update ODF Data. Every time a new value is entered this button should be clicked.</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-                 <normaloff>:/reload@2x.png</normaloff>:/reload@2x.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="autoDefault">
-                <bool>true</bool>
-               </property>
-               <property name="default">
-                <bool>false</bool>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="savePoleFigureImage">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Save Pole Figure</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-                 <normaloff>:/data-transfer-download@2x.png</normaloff>:/data-transfer-download@2x.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>24</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
              <item>
               <spacer name="horizontalSpacer_4">
                <property name="orientation">

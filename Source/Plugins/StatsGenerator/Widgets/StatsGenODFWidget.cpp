@@ -158,10 +158,11 @@ void StatsGenODFWidget::on_m_MDFParametersBtn_clicked(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_pfImageSize_valueChanged(int v)
-{
-  updatePlots();
-}
+//void StatsGenODFWidget::on_pfImageSize_editingFinished()
+//{
+//  updatePlots();
+//  m_PoleFigureLabel->focusWidget();
+//}
 
 // -----------------------------------------------------------------------------
 //
@@ -336,7 +337,6 @@ void StatsGenODFWidget::tableDataChanged(const QModelIndex& topLeft, const QMode
 {
   Q_UNUSED(topLeft);
   Q_UNUSED(bottomRight);
-
   updatePlots();
 }
 
@@ -505,7 +505,9 @@ void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::updatePlots()
 {
-  on_m_CalculateODFBtn_clicked();
+  m_AbortUpdate = false;
+  calculateODF();
+  m_AbortUpdate = true;
 }
 
 // -----------------------------------------------------------------------------
@@ -513,13 +515,21 @@ void StatsGenODFWidget::updatePlots()
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 {
+  updatePlots();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::calculateODF()
+{
   int err = 0;
   if(m_AbortUpdate) { return; }
-  ProgressDialog* findDialog = new ProgressDialog();
-  findDialog->setLabelText("Updating ODF Sampling.... ");
-  findDialog->show();
-  findDialog->raise();
-  findDialog->activateWindow();
+  ProgressDialog* progressDialog = new ProgressDialog();
+  progressDialog->setLabelText("Updating ODF Sampling.... ");
+  progressDialog->show();
+  progressDialog->raise();
+  progressDialog->activateWindow();
 
   QwtArray<float> e1s;
   QwtArray<float> e2s;
@@ -631,7 +641,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
 
   emit dataChanged();
-  delete findDialog;
+  delete progressDialog;
 }
 
 // -----------------------------------------------------------------------------

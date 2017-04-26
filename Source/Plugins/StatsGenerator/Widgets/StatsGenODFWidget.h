@@ -124,13 +124,18 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
 
     void on_m_WeightSpreads_clicked(bool b);
     void on_m_WeightSpreadsBulkLoad_clicked(bool b);
-    void on_pfImageSize_valueChanged(int v);
+
 
   signals:
     void dataChanged();
     void bulkLoadEvent(bool fail);
 
   protected:
+
+    /**
+     * @brief calculateODF
+     */
+    void calculateODF();
 
   private:
     int      m_PhaseIndex;

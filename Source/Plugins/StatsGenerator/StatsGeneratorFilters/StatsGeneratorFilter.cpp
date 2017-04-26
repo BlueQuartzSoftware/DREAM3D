@@ -105,6 +105,8 @@ void StatsGeneratorFilter::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Statistics Array Name", StatsDataArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
   parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures Array Name", CrystalStructuresArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
   parameters.push_back(SIMPL_NEW_STRING_FP("Phase Types Array Name", PhaseTypesArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Names Array Name", PhaseNamesArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+
   setFilterParameters(parameters);
 }
 
@@ -145,6 +147,7 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
   setStatsDataArrayName(reader->readString("StatsDataArrayName", getStatsDataArrayName()));
   setCrystalStructuresArrayName(reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName()));
   setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName()));
+  setPhaseNamesArrayName(reader->readString("PhaseNamesArrayName", getPhaseNamesArrayName()));
 
   reader->closeFilterGroup();
 }
@@ -254,20 +257,24 @@ void StatsGeneratorFilter::dataCheck()
     QVector<size_t> tDims(1, m_StatsDataArray->getNumberOfTuples());
     AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
 
+    m_StatsDataArray->setName(getStatsDataArrayName());
     cellEnsembleAttrMat->addAttributeArray(getStatsDataArrayName(), m_StatsDataArray);
 
     if(nullptr != m_CrystalStructures)
     {
+      m_CrystalStructures->setName(getCrystalStructuresArrayName());
       cellEnsembleAttrMat->addAttributeArray(getCrystalStructuresArrayName(), m_CrystalStructures);
     }
 
     if(nullptr != m_PhaseTypes)
     {
+      m_PhaseTypes->setName(getPhaseTypesArrayName());
       cellEnsembleAttrMat->addAttributeArray(getPhaseTypesArrayName(), m_PhaseTypes);
     }
 
     if(nullptr != m_PhaseNames)
     {
+      m_PhaseNames->setName(getPhaseNamesArrayName());
       cellEnsembleAttrMat->addAttributeArray(getPhaseNamesArrayName(), m_PhaseNames);
     }
   }
