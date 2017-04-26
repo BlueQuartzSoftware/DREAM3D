@@ -125,7 +125,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/delete@2x.png</normaloff>:/delete@2x.png</iconset>
+         <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -166,7 +166,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/folder_out@2x.png</normaloff>:/folder_out@2x.png</iconset>
+         <normaloff>:/folder_out.png</normaloff>:/folder_out.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -207,7 +207,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/refresh@2x.png</normaloff>:/refresh@2x.png</iconset>
+         <normaloff>:/refresh.png</normaloff>:/refresh.png</iconset>
        </property>
        <property name="iconSize">
         <size>

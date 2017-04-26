@@ -122,7 +122,7 @@
      </property>
      <property name="icon">
       <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/data-transfer-download@2x.png</normaloff>:/data-transfer-download@2x.png</iconset>
+       <normaloff>:/data-transfer-download.png</normaloff>:/data-transfer-download.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -169,7 +169,7 @@
      </property>
      <property name="icon">
       <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/delete@2x.png</normaloff>:/delete@2x.png</iconset>
+       <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -210,7 +210,7 @@
      </property>
      <property name="icon">
       <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/reload@2x.png</normaloff>:/reload@2x.png</iconset>
+       <normaloff>:/reload.png</normaloff>:/reload.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -257,7 +257,7 @@
      </property>
      <property name="icon">
       <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/add@2x.png</normaloff>:/add@2x.png</iconset>
+       <normaloff>:/add.png</normaloff>:/add.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -298,7 +298,7 @@
      </property>
      <property name="icon">
       <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/data-transfer-hdf@2x.png</normaloff>:/data-transfer-hdf@2x.png</iconset>
+       <normaloff>:/data-transfer-hdf.png</normaloff>:/data-transfer-hdf.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -372,7 +372,7 @@
      </property>
      <property name="icon">
       <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/data-transfer-upload@2x.png</normaloff>:/data-transfer-upload@2x.png</iconset>
+       <normaloff>:/data-transfer-upload.png</normaloff>:/data-transfer-upload.png</iconset>
      </property>
      <property name="iconSize">
       <size>
