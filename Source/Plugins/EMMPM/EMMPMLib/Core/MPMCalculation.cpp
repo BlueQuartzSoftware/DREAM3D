@@ -42,13 +42,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * and funded by the Air Force Research Laboratory, Wright-Patterson AFB.
  */
 #include "MPMCalculation.h"
+
 //-- C Includes
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 //-- C++ includes
 #include <random>
+#include <chrono>
 
 #include "EMMPMLib/Common/EMMPM_Math.h"
 #include "EMMPMLib/Common/EMTime.h"

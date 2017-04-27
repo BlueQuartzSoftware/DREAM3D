@@ -35,6 +35,8 @@
 
 #include "EBSDSegmentFeatures.h"
 
+#include <chrono>
+
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"

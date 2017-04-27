@@ -37,6 +37,7 @@
 
 #include <limits>
 #include <random>
+#include <chrono>
 
 #include <QtCore/QDateTime>
 
