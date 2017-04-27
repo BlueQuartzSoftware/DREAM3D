@@ -41,6 +41,7 @@
 
 //-- C++ includes
 #include <random>
+#include <chrono>
 
 //-- EMMMPM Lib Includes
 #include "EMMPMLib/Common/EMMPM_Math.h"

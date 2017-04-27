@@ -4,44 +4,26 @@
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Import H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
         "InputFile": "Data/Output/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
             "Phases",
+            "Image Quality",
             "Fit",
-            "SEM Signal",
             "EulerAngles",
-            "Confidence Index",
-            "Image Quality"
+            "SEM Signal",
+            "Confidence Index"
         ],
         "UseTransformations": 1,
         "ZEndIndex": 117,
         "ZStartIndex": 1
     },
     "01": {
-        "ChangeOrigin": 1,
-        "ChangeResolution": 0,
-        "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "1.0.799",
-        "Filter_Human_Label": "Set Origin & Resolution (Image)",
-        "Filter_Name": "SetOriginResolutionImageGeom",
-        "Origin": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-        },
-        "Resolution": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        }
-    },
-    "02": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -61,8 +43,8 @@
             }
         ]
     },
-    "03": {
-        "FilterVersion": "6.4.409",
+    "02": {
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
         "InputOrientationArrayPath": {
@@ -74,7 +56,7 @@
         "OutputOrientationArrayName": "Quats",
         "OutputType": 2
     },
-    "04": {
+    "03": {
         "AlignmentShiftFileName": "",
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
@@ -86,7 +68,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Align Sections (Misorientation)",
         "Filter_Name": "AlignSectionsMisorientation",
         "GoodVoxelsArrayPath": {
@@ -103,9 +85,9 @@
         "UseGoodVoxels": 1,
         "WriteAlignmentShifts": 0
     },
-    "05": {
+    "04": {
         "FillHoles": 0,
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
         "Filter_Name": "IdentifySample",
         "GoodVoxelsArrayPath": {
@@ -114,9 +96,9 @@
             "Data Container Name": "ImageDataContainer"
         }
     },
-    "06": {
+    "05": {
         "AlignmentShiftFileName": "",
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Align Sections (Feature Centroid)",
         "Filter_Name": "AlignSectionsFeatureCentroid",
         "GoodVoxelsArrayPath": {
@@ -128,7 +110,7 @@
         "UseReferenceSlice": 1,
         "WriteAlignmentShifts": 0
     },
-    "07": {
+    "06": {
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Phases",
@@ -139,7 +121,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
         "Filter_Name": "BadDataNeighborOrientationCheck",
         "GoodVoxelsArrayPath": {
@@ -155,7 +137,7 @@
             "Data Container Name": "ImageDataContainer"
         }
     },
-    "08": {
+    "07": {
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Phases",
@@ -171,7 +153,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Neighbor Orientation Correlation",
         "Filter_Name": "NeighborOrientationCorrelation",
         "Level": 2,
@@ -183,7 +165,7 @@
             "Data Container Name": "ImageDataContainer"
         }
     },
-    "09": {
+    "08": {
         "ActiveArrayName": "Active",
         "CellFeatureAttributeMatrixName": "CellFeatureData",
         "CellPhasesArrayPath": {
@@ -197,7 +179,7 @@
             "Data Container Name": "ImageDataContainer"
         },
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Segment Features (Misorientation)",
         "Filter_Name": "EBSDSegmentFeatures",
         "GoodVoxelsArrayPath": {
@@ -213,7 +195,7 @@
         },
         "UseGoodVoxels": 1
     },
-    "10": {
+    "09": {
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Phases",
@@ -229,11 +211,11 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Find Feature Phases",
         "Filter_Name": "FindFeaturePhases"
     },
-    "11": {
+    "10": {
         "AvgEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "AvgEulerAngles",
@@ -259,7 +241,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
         "QuatsArrayPath": {
@@ -268,7 +250,7 @@
             "Data Container Name": "ImageDataContainer"
         }
     },
-    "12": {
+    "11": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
             "Attribute Matrix Name": "CellFeatureData",
@@ -280,7 +262,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList2",
@@ -290,7 +272,7 @@
         "StoreSurfaceFeatures": 0,
         "SurfaceFeaturesArrayName": "SurfaceFeatures"
     },
-    "13": {
+    "12": {
         "ActiveArrayName": "Active",
         "AngleTolerance": 2,
         "AvgQuatsArrayPath": {
@@ -321,7 +303,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Merge Twins",
         "Filter_Name": "MergeTwins",
         "NewCellFeatureAttributeMatrixName": "NewCellFeatureData",
@@ -332,7 +314,7 @@
         },
         "UseNonContiguousNeighbors": 0
     },
-    "14": {
+    "13": {
         "EquivalentDiametersArrayName": "EquivalentDiameters",
         "FeatureAttributeMatrixName": {
             "Attribute Matrix Name": "CellFeatureData",
@@ -344,14 +326,14 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
         "NumElementsArrayName": "NumElements",
         "SaveElementSizes": 0,
         "VolumesArrayName": "Volumes"
     },
-    "15": {
+    "14": {
         "ApplyToSinglePhase": 0,
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
@@ -363,7 +345,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Minimum Size",
         "Filter_Name": "MinSize",
         "MinAllowedFeatureSize": 16,
@@ -374,7 +356,7 @@
         },
         "PhaseNumber": 0
     },
-    "16": {
+    "15": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
             "Attribute Matrix Name": "CellFeatureData",
@@ -386,7 +368,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -396,7 +378,7 @@
         "StoreSurfaceFeatures": 0,
         "SurfaceFeaturesArrayName": "SurfaceFeatures"
     },
-    "17": {
+    "16": {
         "ApplyToSinglePhase": 0,
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
@@ -408,7 +390,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Minimum Number of Neighbors",
         "Filter_Name": "MinNeighbors",
         "MinNumNeighbors": 2,
@@ -419,7 +401,7 @@
         },
         "PhaseNumber": 0
     },
-    "18": {
+    "17": {
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Phases",
@@ -430,20 +412,35 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Fill Bad Data",
         "Filter_Name": "FillBadData",
         "MinAllowedDefectSize": 1000,
         "StoreAsNewPhase": 0
     },
-    "19": {
+    "18": {
         "Direction": 1,
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
+        "Filter_Human_Label": "Erode/Dilate Bad Data",
+        "Filter_Name": "ErodeDilateBadData",
+        "NumIterations": 2,
+        "XDirOn": 1,
+        "YDirOn": 1,
+        "ZDirOn": 1
+    },
+    "19": {
+        "Direction": 0,
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
         "NumIterations": 2,
@@ -452,21 +449,6 @@
         "ZDirOn": 1
     },
     "20": {
-        "Direction": 0,
-        "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
-            "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
-        },
-        "FilterVersion": "6.4.409",
-        "Filter_Human_Label": "Erode/Dilate Bad Data",
-        "Filter_Name": "ErodeDilateBadData",
-        "NumIterations": 2,
-        "XDirOn": 1,
-        "YDirOn": 1,
-        "ZDirOn": 1
-    },
-    "21": {
         "CellEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "EulerAngles",
@@ -483,7 +465,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -498,8 +480,8 @@
         },
         "UseGoodVoxels": 1
     },
-    "22": {
-        "FilterVersion": "1.0.799",
+    "21": {
+        "FilterVersion": "1.0.858",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
@@ -507,7 +489,7 @@
     },
     "PipelineBuilder": {
         "Name": "(10) SmallIN100 Full Reconstruction",
-        "Number_Filters": 23,
+        "Number_Filters": 22,
         "Version": 6
     }
 }
