@@ -365,9 +365,10 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
 void VectorSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax)
 {
 
-std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
-m_Generator.seed(seed);
-m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  m_Generator.seed(seed);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
 }
 
 // -----------------------------------------------------------------------------

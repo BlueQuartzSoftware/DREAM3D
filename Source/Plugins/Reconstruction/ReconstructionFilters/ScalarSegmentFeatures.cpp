@@ -208,16 +208,14 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, ScalarSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
-    QVector<IGeometry::Type> geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
+    QVector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Scalar Array to Segment", ScalarArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    QVector<IGeometry::Type> geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    QVector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
@@ -464,9 +462,10 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
 void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax)
 {
 
-std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
-m_Generator.seed(seed);
-m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  m_Generator.seed(seed);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
 }
 
 // -----------------------------------------------------------------------------

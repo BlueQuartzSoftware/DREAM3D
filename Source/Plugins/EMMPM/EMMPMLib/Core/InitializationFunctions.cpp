@@ -42,7 +42,6 @@
 //-- C++ includes
 #include <random>
 
-
 //-- EMMMPM Lib Includes
 #include "EMMPMLib/Common/EMMPM_Math.h"
 #include "EMMPMLib/Common/EMTime.h"

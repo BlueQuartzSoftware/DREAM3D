@@ -409,8 +409,8 @@ void MergeTwins::execute()
     // Generate all the numbers up front
     const int32_t rangeMin = 1;
     const int32_t rangeMax = numParents - 1;
-    std::random_device randomDevice;  //Will be used to obtain a seed for the random number engine
-    std::mt19937_64 generator(randomDevice()); //Standard mersenne_twister_engine seeded with rd()
+    std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+    std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
     std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
     generator.seed(seed);
     std::uniform_int_distribution<int32_t> distribution(rangeMin, rangeMax);

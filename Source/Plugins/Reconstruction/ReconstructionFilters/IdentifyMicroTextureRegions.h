@@ -33,203 +33,199 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _identifymicrotextureregions_h_
 #define _identifymicrotextureregions_h_
 
 #include <random>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The IdentifyMicroTextureRegions class. See [Filter documentation](@ref identifymicrotextureregions) for details.
  */
 class IdentifyMicroTextureRegions : public AbstractFilter
 {
-    Q_OBJECT
-  public:
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(IdentifyMicroTextureRegions)
+  SIMPL_STATIC_NEW_MACRO(IdentifyMicroTextureRegions)
+  SIMPL_TYPE_MACRO_SUPER(IdentifyMicroTextureRegions, AbstractFilter)
 
+  virtual ~IdentifyMicroTextureRegions();
 
-    SIMPL_SHARED_POINTERS(IdentifyMicroTextureRegions)
-    SIMPL_STATIC_NEW_MACRO(IdentifyMicroTextureRegions)
-    SIMPL_TYPE_MACRO_SUPER(IdentifyMicroTextureRegions, AbstractFilter)
+  SIMPL_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
+  Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
-    virtual ~IdentifyMicroTextureRegions();
+  SIMPL_FILTER_PARAMETER(float, CAxisTolerance)
+  Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
 
-    SIMPL_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
-    Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(float, MinMTRSize)
+  Q_PROPERTY(float MinMTRSize READ getMinMTRSize WRITE setMinMTRSize)
 
-    SIMPL_FILTER_PARAMETER(float, CAxisTolerance)
-    Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
+  SIMPL_FILTER_PARAMETER(float, MinVolFrac)
+  Q_PROPERTY(float MinVolFrac READ getMinVolFrac WRITE setMinVolFrac)
 
-    SIMPL_FILTER_PARAMETER(float, MinMTRSize)
-    Q_PROPERTY(float MinMTRSize READ getMinMTRSize WRITE setMinMTRSize)
+  SIMPL_INSTANCE_PROPERTY(bool, RandomizeMTRIds)
 
-    SIMPL_FILTER_PARAMETER(float, MinVolFrac)
-    Q_PROPERTY(float MinVolFrac READ getMinVolFrac WRITE setMinVolFrac)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CAxisLocationsArrayPath)
+  Q_PROPERTY(DataArrayPath CAxisLocationsArrayPath READ getCAxisLocationsArrayPath WRITE setCAxisLocationsArrayPath)
 
-    SIMPL_INSTANCE_PROPERTY(bool, RandomizeMTRIds)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CAxisLocationsArrayPath)
-    Q_PROPERTY(DataArrayPath CAxisLocationsArrayPath READ getCAxisLocationsArrayPath WRITE setCAxisLocationsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  SIMPL_FILTER_PARAMETER(QString, MTRIdsArrayName)
+  Q_PROPERTY(QString MTRIdsArrayName READ getMTRIdsArrayName WRITE setMTRIdsArrayName)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
+  Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, MTRIdsArrayName)
-    Q_PROPERTY(QString MTRIdsArrayName READ getMTRIdsArrayName WRITE setMTRIdsArrayName)
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
-    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+protected:
+  IdentifyMicroTextureRegions();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-  protected:
-    IdentifyMicroTextureRegions();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+private:
+  DEFINE_DATAARRAY_VARIABLE(float, CAxisLocations)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  DEFINE_DATAARRAY_VARIABLE(int32_t, MTRIds)
+  DEFINE_DATAARRAY_VARIABLE(bool, Active)
+  DEFINE_DATAARRAY_VARIABLE(bool, InMTR)
+  DEFINE_DATAARRAY_VARIABLE(float, VolFrac)
+  DEFINE_DATAARRAY_VARIABLE(float, AvgCAxis)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, PatchIds)
+  DEFINE_DATAARRAY_VARIABLE(bool, PatchActive)
 
+  std::random_device m_RandomDevice;
+  std::mt19937_64 m_Generator;
+  std::uniform_int_distribution<int64_t> m_Distribution;
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(float, CAxisLocations)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+  size_t m_TotalRandomNumbersGenerated;
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, MTRIds)
-    DEFINE_DATAARRAY_VARIABLE(bool, Active)
-    DEFINE_DATAARRAY_VARIABLE(bool, InMTR)
-    DEFINE_DATAARRAY_VARIABLE(float, VolFrac)
-    DEFINE_DATAARRAY_VARIABLE(float, AvgCAxis)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, PatchIds)
-    DEFINE_DATAARRAY_VARIABLE(bool, PatchActive)
+  float m_CAxisToleranceRad;
 
-    std::random_device   m_RandomDevice;
-    std::mt19937_64         m_Generator;
-    std::uniform_int_distribution<int64_t>  m_Distribution;
+  /**
+   * @brief randomizeGrainIds Randomizes Feature Ids
+   * @param totalPoints Size of Feature Ids array to randomize
+   * @param totalFeatures Number of Features
+   */
+  void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
 
-    size_t                       m_TotalRandomNumbersGenerated;
+  /**
+   * @brief findMTRregions Determines the existing microtexture zones; CURRENTLY
+   * NOT IMPLEMENTED
+   */
+  void findMTRregions();
 
-    float m_CAxisToleranceRad;
+  /**
+   * @brief initializeVoxelSeedGenerator Initializes the boost random number generators
+   * @param rangeMin Minimum range for random number selection
+   * @param rangeMax Maximum range for random number selection
+   */
+  void initializeVoxelSeedGenerator(const int32_t rangeMin, const int32_t rangeMax);
 
-    /**
-     * @brief randomizeGrainIds Randomizes Feature Ids
-     * @param totalPoints Size of Feature Ids array to randomize
-     * @param totalFeatures Number of Features
-     */
-    void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
+  /**
+   * @brief updateFeatureInstancePointers Updates raw Feature pointers
+   */
+  void updateFeatureInstancePointers();
 
-    /**
-     * @brief findMTRregions Determines the existing microtexture zones; CURRENTLY
-     * NOT IMPLEMENTED
-     */
-    void findMTRregions();
-
-    /**
-     * @brief initializeVoxelSeedGenerator Initializes the boost random number generators
-     * @param rangeMin Minimum range for random number selection
-     * @param rangeMax Maximum range for random number selection
-     */
-    void initializeVoxelSeedGenerator(const int32_t rangeMin, const int32_t rangeMax);
-
-    /**
-     * @brief updateFeatureInstancePointers Updates raw Feature pointers
-     */
-    void updateFeatureInstancePointers();
-
-    IdentifyMicroTextureRegions(const IdentifyMicroTextureRegions&); // Copy Constructor Not Implemented
-    void operator=(const IdentifyMicroTextureRegions&); // Operator '=' Not Implemented
+  IdentifyMicroTextureRegions(const IdentifyMicroTextureRegions&); // Copy Constructor Not Implemented
+  void operator=(const IdentifyMicroTextureRegions&);              // Operator '=' Not Implemented
 };
 
 #endif /* IdentifyMicroTextureRegions_H_ */
