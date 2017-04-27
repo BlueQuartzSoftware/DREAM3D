@@ -36,10 +36,8 @@
 #include "LaueOps.h"
 
 #include <limits>
+#include <random>
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
 
 #include <QtCore/QDateTime>
 
@@ -433,16 +431,18 @@ std::vector<QString> LaueOps::GetLaueNames()
 // -----------------------------------------------------------------------------
 size_t LaueOps::getRandomSymmetryOperatorIndex(int numSymOps)
 {
-  const int rangeMin = 0;
-  const int rangeMax = numSymOps-1;
-  typedef boost::uniform_int<int> NumberDistribution;
-  typedef boost::mt19937 RandomNumberGenerator;
-  typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
-  NumberDistribution distribution(rangeMin, rangeMax);
-  RandomNumberGenerator generator;
-  Generator numberGenerator(generator, distribution);
-  generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
-  size_t symOp = numberGenerator(); // Random remaining position.
+  using SizeTDistributionType = std::uniform_int_distribution<size_t>;
+
+  const SizeTDistributionType::result_type rangeMin = 0;
+  const SizeTDistributionType::result_type rangeMax = static_cast<SizeTDistributionType::result_type>(numSymOps-1);
+
+  std::random_device randomDevice;  //Will be used to obtain a seed for the random number engine
+  std::mt19937_64 generator(randomDevice()); //Standard mersenne_twister_engine seeded with rd()
+std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+generator.seed(seed);
+  SizeTDistributionType distribution(rangeMin, rangeMax);
+
+  size_t symOp = distribution(generator); // Random remaining position.
   return symOp;
 }

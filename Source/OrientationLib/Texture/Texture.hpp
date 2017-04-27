@@ -34,15 +34,13 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _TEXTURE_H_
-#define _TEXTURE_H_
+#ifndef _texture_h_
+#define _texture_h_
 
 #include <vector>
-#include <QtCore/QString>
 #include <fstream>
 
-#include <boost/shared_array.hpp>
-
+#include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -92,7 +90,6 @@ class Texture
                                       T* weights, T* sigmas,
                                       bool normalize, T* odf, size_t numEntries)
     {
-      SIMPL_RANDOMNG_NEW()
       CubicOps ops;
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
       int32_t* TextureBins = textureBins->getPointer(0);
@@ -212,7 +209,6 @@ class Texture
     static void CalculateHexODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
     {
       HexagonalOps hexOps;
-      SIMPL_RANDOMNG_NEW()
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;

@@ -32,14 +32,10 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _scalarsegmentfeatures_h_
 #define _scalarsegmentfeatures_h_
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
+#include <random>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -56,10 +52,6 @@ class ScalarSegmentFeatures : public SegmentFeatures
 {
     Q_OBJECT
   public:
-    typedef boost::uniform_int<int64_t> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
-
     SIMPL_SHARED_POINTERS(ScalarSegmentFeatures)
     SIMPL_STATIC_NEW_MACRO(ScalarSegmentFeatures)
     SIMPL_TYPE_MACRO_SUPER(ScalarSegmentFeatures, AbstractFilter)
@@ -179,9 +171,9 @@ class ScalarSegmentFeatures : public SegmentFeatures
 
     std::shared_ptr<CompareFunctor> m_Compare;
 
-    std::shared_ptr<NumberDistribution> m_Distribution;
-    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    std::shared_ptr<Generator> m_NumberGenerator;
+    std::random_device   m_RandomDevice;
+    std::mt19937_64         m_Generator;
+    std::uniform_int_distribution<int64_t>  m_Distribution;
 
     /**
      * @brief randomizeGrainIds Randomizes Feature Ids

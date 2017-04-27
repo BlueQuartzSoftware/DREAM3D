@@ -5,8 +5,6 @@
 # create Resource files for the various license files that are used and
 # also create a header file that lists all the License Files
 set(LICENSE_FILES
-               #   ${DREAM3DProj_SOURCE_DIR}/ReadMe.txt
-                   ${PROJECT_RESOURCES_DIR}/ThirdParty/Boost.txt
                    ${PROJECT_RESOURCES_DIR}/ThirdParty/Qt.txt
                    ${PROJECT_RESOURCES_DIR}/ThirdParty/Qwt.txt
                    ${PROJECT_RESOURCES_DIR}/ThirdParty/HDF5.txt

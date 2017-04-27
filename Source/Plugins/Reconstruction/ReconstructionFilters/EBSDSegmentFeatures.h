@@ -37,9 +37,7 @@
 #ifndef _ebsdsegmentfeatures_h_
 #define _ebsdsegmentfeatures_h_
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
+#include <random>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -55,11 +53,8 @@
 class EBSDSegmentFeatures : public SegmentFeatures
 {
     Q_OBJECT
-  public:
-    typedef boost::uniform_int<int64_t> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
+  public:
     SIMPL_SHARED_POINTERS(EBSDSegmentFeatures)
     SIMPL_STATIC_NEW_MACRO(EBSDSegmentFeatures)
     SIMPL_TYPE_MACRO_SUPER(EBSDSegmentFeatures, AbstractFilter)
@@ -187,9 +182,9 @@ class EBSDSegmentFeatures : public SegmentFeatures
 
     QVector<LaueOps::Pointer> m_OrientationOps;
 
-    std::shared_ptr<NumberDistribution> m_Distribution;
-    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    std::shared_ptr<Generator> m_NumberGenerator;
+    std::random_device   m_RandomDevice;
+    std::mt19937_64         m_Generator;
+    std::uniform_int_distribution<int64_t>  m_Distribution;
 
     float m_MisoTolerance;
 

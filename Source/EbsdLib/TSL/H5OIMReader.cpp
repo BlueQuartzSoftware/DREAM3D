@@ -37,8 +37,6 @@
 
 #include <vector>
 
-#include <boost/shared_array.hpp>
-
 #include <QtCore/QtDebug>
 #include <QtCore/QStringList>
 #include <QtCore/QVector>
@@ -432,7 +430,6 @@ int H5OIMReader::readHeader(hid_t parId)
   }
   HDF5ScopedGroupSentinel sentinel(&gid, false);
 
-  //READ_EBSD_HEADER_DATA("H5OIMReader", AngHeaderEntry<float>, flboost::dynamicEMPIXPerUM, Ebsd::Ang::TEMPIXPerUM)
   QString path = Ebsd::H5::PatternCenterCalibration + "/" + Ebsd::Ang::XStar;
   hid_t patternCenterCalibrationGid = H5Gopen(gid, Ebsd::H5::PatternCenterCalibration.toLatin1().data(), H5P_DEFAULT);
   if(patternCenterCalibrationGid < 0)
@@ -565,7 +562,7 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
 
   herr_t status = 1;
   //HKLFamily_t data;
-  boost::shared_array<HKLFamily_t> data;
+  std::vector<HKLFamily_t> data;
   QVector<HKLFamily::Pointer> families;
 
   // setup compound memory type
@@ -587,8 +584,8 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
     int nDims = H5Sget_simple_extent_dims(dataspace, dimsFam, nullptr);
     if(nDims > 0)
     {
-      data = boost::shared_array<HKLFamily_t>(new HKLFamily_t[dimsFam[0]]); // (HKLFamily_t *) calloc(dimsFam[0], sizeof(HKLFamily_t));
-      herr_t status = H5Dread (dataset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(data.get()) );
+      data.resize(dimsFam[0]);
+      herr_t status = H5Dread (dataset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(data.data()) );
       if (status < 0)
       {
         setErrorCode(-90011);
@@ -603,7 +600,7 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
   for (int i = 0; i < phase->getNumberFamilies(); ++i)
   {
     HKLFamily::Pointer f = HKLFamily::New();
-    HKLFamily_t* ptr = data.get() + i;
+    HKLFamily_t* ptr = data.data() + i;
     f->copyFromStruct(ptr);
     families.push_back(f);
   }

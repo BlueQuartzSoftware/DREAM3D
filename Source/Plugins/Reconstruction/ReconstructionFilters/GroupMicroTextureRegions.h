@@ -32,14 +32,11 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _groupmicrotextureregions_h_
 #define _groupmicrotextureregions_h_
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
+#include <random>
+
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -56,13 +53,9 @@ class GroupMicroTextureRegions : public GroupFeatures
 {
     Q_OBJECT
   public:
-    typedef boost::uniform_int<int32_t> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
-
     SIMPL_SHARED_POINTERS(GroupMicroTextureRegions)
     SIMPL_STATIC_NEW_MACRO(GroupMicroTextureRegions)
-    SIMPL_TYPE_MACRO_SUPER(GroupMicroTextureRegions, AbstractFilter)
+    SIMPL_TYPE_MACRO_SUPER(GroupMicroTextureRegions, GroupFeatures)
 
     virtual ~GroupMicroTextureRegions();
 
@@ -218,9 +211,10 @@ class GroupMicroTextureRegions : public GroupFeatures
      */
     void updateFeatureInstancePointers();
 
-    std::shared_ptr<NumberDistribution> m_Distribution;
-    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    std::shared_ptr<Generator> m_NumberGenerator;
+    std::random_device   m_RandomDevice;
+    std::mt19937_64         m_Generator;
+    std::uniform_int_distribution<int64_t>  m_Distribution;
+
     size_t                       m_TotalRandomNumbersGenerated;
 
     GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented

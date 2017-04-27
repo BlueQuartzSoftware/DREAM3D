@@ -37,16 +37,10 @@
 #ifndef _sineparamssegmentfeatures_h_
 #define _sineparamssegmentfeatures_h_
 
+#include <random>
+
+
 #include <QtCore/QString>
-
-///Boost Random Number generator stuff
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
-
-typedef boost::uniform_int<int> NumberDistribution;
-typedef boost::mt19937 RandomNumberGenerator;
-typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -179,11 +173,9 @@ class SineParamsSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    ///Boost Random Number generator stuff. We use the std::shared_ptr to ensure the pointers are cleaned up when the
-    ///filter is deleted
-    std::shared_ptr<NumberDistribution> m_Distribution;
-    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    std::shared_ptr<Generator> m_NumberGenerator;
+    std::random_device   m_RandomDevice;
+    std::mt19937_64         m_Generator;
+    std::uniform_int_distribution<int64_t>  m_Distribution;
 
     float angleTolerance;
 

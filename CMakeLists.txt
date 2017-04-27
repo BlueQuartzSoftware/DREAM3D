@@ -358,18 +358,6 @@ CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
 # HDF5 is installed.
 include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
 
-# ---------- Find Boost Headers/Libraries -----------------------
-#set(Boost_FIND_REQUIRED FALSE)
-set(Boost_DEBUG FALSE)
-set(Boost_USE_MULTITHREADED TRUE)
-set(Boost_ADDITIONAL_VERSIONS 1.57)
-set(Boost_FIND_COMPONENTS "")
-set(Boost_NO_BOOST_CMAKE 1)
-FIND_PACKAGE(Boost)
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
-list(APPEND CMP_LIB_SEARCH_DIRS ${Boost_LIBRARY_DIRS})
-
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
