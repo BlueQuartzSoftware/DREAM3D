@@ -463,7 +463,7 @@ template <typename T> void InitializeData::initializeArrayWithInts(IDataArray::P
   std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
   std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
   generator.seed(seed);
-  std::uniform_int_distribution<T> distribution(rangeMin, rangeMax);
+  std::uniform_int_distribution<> distribution(rangeMin, rangeMax);
 
   for(int32_t k = m_ZMin; k < m_ZMax + 1; k++)
   {
