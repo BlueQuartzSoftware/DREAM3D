@@ -36,6 +36,7 @@
 #include "JumbleOrientations.h"
 
 #include <random>
+#include <chrono>
 
 #include <QtCore/QDateTime>
 

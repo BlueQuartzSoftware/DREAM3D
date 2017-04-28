@@ -36,6 +36,7 @@
 #include "MergeTwins.h"
 
 #include <random>
+#include <chrono>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
