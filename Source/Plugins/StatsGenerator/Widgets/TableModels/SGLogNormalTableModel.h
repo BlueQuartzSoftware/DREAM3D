@@ -63,7 +63,6 @@ class SGLogNormalTableModel : public SGAbstractTableModel
       BinNumber = 0,
       Average,
       StdDev,
-      LineColor,
       ColumnCount
     };
 
