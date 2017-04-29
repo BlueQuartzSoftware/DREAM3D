@@ -1,7 +1,7 @@
 os: Visual Studio 2015
 platform: x64
 version: '6.4.{build}'
-clone_folder: c:\DREAM3D_SDK\DREAM3D
+clone_folder: c:\projects\DREAM3D
 cache:
   - C:\DREAM3D_SDK\Eigen-3.2.9.7z
   - C:\DREAM3D_SDK\Eigen-3.2.9.7z.sha512
