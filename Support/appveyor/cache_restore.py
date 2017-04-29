@@ -33,6 +33,10 @@ downloads = [{
     '_id': '58a3819a8d777f0721a659ea',
     'name': 'tbb44_20160526oss.7z',
     'target': '.',
+}, {
+    '_id': '58a3819a8d777f0721a659ea',
+    'name': 'superbuild.7z',
+    'target': '.',
 }
 ]
 

@@ -17,6 +17,8 @@ cache:
   - C:\DREAM3D_SDK\qwt-6.1.3.7z.sha512
   - C:\DREAM3D_SDK\tbb44_20160526oss.7z
   - C:\DREAM3D_SDK\tbb44_20160526oss.7z.sha512
+  - C:\DREAM3D_SDK\superbuild.7z
+  - C:\DREAM3D_SDK\superbuild.7z.sha512
 
 install:
   # Take care of submodules
@@ -29,7 +31,7 @@ install:
   - cd C:\projects
   - git clone -b develop https://github.com/dream3d/DREAM3D_Data DREAM3D_Data
   - cd C:\
-  - mkdir DREAM3D_SDK
+  - mkdir -p C:/DREAM3D_SDK/superbuild/ITK/Source/
   - cd C:\DREAM3D_SDK
   # Restore our cached deps
   - set DREAM3D_TEST_PYTHON_EXECUTABLE=C:\Python27\python.exe
