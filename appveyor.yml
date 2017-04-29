@@ -33,6 +33,9 @@ install:
   - set DREAM3D_TEST_PYTHON_EXECUTABLE=C:\Python27\python.exe
   - python -m pip install -r %APPVEYOR_BUILD_FOLDER%\Support\appveyor\requirements-dev.txt
   - python %APPVEYOR_BUILD_FOLDER%\Support\appveyor\cache_restore.py
+  - echo ----------------------------------------------------
+  - cd C:\projects
+  - dir
 
 build_script:
   # Setup PATH

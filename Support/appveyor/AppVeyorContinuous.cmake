@@ -62,7 +62,7 @@ set(ITK_DIR "${DREAM3D_SDK_ROOT}/ITK-4.11.0")
     DREAM3D_BUILD_DEVHELPER=${BUILD_DEVHELPER}
     SIMPL_DISABLE_MSVC_WARNINGS:BOOL=ON
     ")
-  set(cfg_options  -DCMAKE_BUILD_TYPE:STRING="Release")
+  set(cfg_options "-DCMAKE_BUILD_TYPE:STRING=Release")
 
 ctest_start("Continuous")
 ctest_configure(OPTIONS "${cfg_options}")
