@@ -30,7 +30,7 @@ install:
   # Restore our cached deps
   - set DREAM3D_TEST_PYTHON_EXECUTABLE=C:\Python27\python.exe
   #- python -m pip install -r %APPVEYOR_BUILD_FOLDER%\acquisition\requirements-dev.txt
-  - python %APPVEYOR_BUILD_FOLDER%\Scripts\Support\appveyor\cache_restore.py
+  - python %APPVEYOR_BUILD_FOLDER%\Support\Scripts\appveyor\cache_restore.py
 
 build_script:
   # Setup PATH
