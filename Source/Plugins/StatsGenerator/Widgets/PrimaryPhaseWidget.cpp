@@ -368,7 +368,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("Omega 3 Probability Density Functions"));
   w->setXAxisName(QString("Omega 3"));
   w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
+  w->setDataTitle(QString("Edit Omega3 Distribution Values"));
   w->setDistributionType(SIMPL::DistributionType::Beta);
   w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVOmega3);
   w->blockDistributionTypeChanges(true);
@@ -388,7 +388,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("B/A Shape Distribution"));
   w->setXAxisName(QString("B/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
+  w->setDataTitle(QString("Edit B/A Distribution Values"));
   w->setDistributionType(SIMPL::DistributionType::Beta);
   w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVBoverA);
   w->blockDistributionTypeChanges(true);
@@ -408,7 +408,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("C/A Shape Distribution"));
   w->setXAxisName(QString("C/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
+  w->setDataTitle(QString("Edit C/A Distribution Values"));
   w->setDistributionType(SIMPL::DistributionType::Beta);
   w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVCoverA);
   w->blockDistributionTypeChanges(true);
@@ -428,7 +428,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("Neighbors Distributions"));
   w->setXAxisName(QString("Number of Features (within 1 diameter)"));
   w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
+  w->setDataTitle(QString("Edit Neighbor Distribution Values"));
   w->setDistributionType(SIMPL::DistributionType::LogNormal);
   w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVNeighbors);
   w->blockDistributionTypeChanges(true);

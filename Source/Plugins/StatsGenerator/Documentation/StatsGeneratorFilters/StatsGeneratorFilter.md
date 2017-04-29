@@ -44,7 +44,7 @@ The user can add, remove or modify properties of the phase by clicking the *Phas
 ![Phase Properties Manager](Images/SG_PhaseProperties.png)
 @image latex Images/SG_PhaseProperties.png "Phase Properties Manager" width=6in
 
-The *Phase Properties Manager* is a pop-up window where the user can enter information about the phase for which statistics are currently being generated. The following items can be set in the manager:
+The *Phase Properties* is a dialog where the user can enter information about the phase for which statistics are currently being generated. The following items can be set in the manager:
 
 + **Select Crystal Structure**: Allows the user to specify the crystal structure of the phase
 + **Fraction**: The _volume fraction_ of the phase. The _Calculated Phase Fraction_ is updated as more phases are added, by scaling the current total of all the phases fractions to 1 (in case the user's total is not equal to 1 when finished)
@@ -192,7 +192,7 @@ The ODF tab controls the generation of the Orientation Distribution Function. Th
 This sub-tab will display the baseline _misorientation distribution function_ (MDF) for the generated ODF.  The  implemented algorithm proceeds by randomly sampling pairs of orientations from the ODF and calculating the misorientation (axis-angle only). Only the angle is plotted in the misorientation distribution plot.  The user can also add axis-angle pairs to increase in weight.
 
 ![MDF GUI](Images/MDF_Plot.png)
-@image latex Images/MDF_Plot.png "MDF GUI" width=6in 
+@image latex Images/MDF_Plot.png "MDF GUI" width=6in
 
 + **Angle**: The angle of the misorientation to increase in weight
 + **Axis**: The axis of the misorientation to increase in weight.  If the crystal structure being used for the phase is Hexagonal, then this axis is in the 3-index, orthogonal convention, not the true (hkil) convention

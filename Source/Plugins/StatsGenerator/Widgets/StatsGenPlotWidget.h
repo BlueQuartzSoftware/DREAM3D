@@ -127,14 +127,14 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
   private:
     unsigned int          m_DistributionType;
-    SGAbstractTableModel* m_TableModel;
-    QwtPlotGrid*          m_grid;
+    SGAbstractTableModel* m_TableModel = nullptr;
+    QwtPlotGrid*          m_grid = nullptr;
     unsigned int          m_StatsType;
     bool                  m_UserUpdatedData;
 
     QVector<QwtPlotCurve* > m_PlotCurves;
-    QWidget*                m_TableViewWidget;
-    QTableView*             m_TableView;
+    QWidget*                m_TableViewWidget = nullptr;
+    QTableView*             m_TableView = nullptr;
     QPoint                  m_ContextMenuPoint;
 
 
