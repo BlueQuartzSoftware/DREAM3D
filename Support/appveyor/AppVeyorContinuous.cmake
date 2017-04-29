@@ -4,11 +4,11 @@ set(CTEST_BINARY_DIRECTORY "C:/projects/DREAM3D-Release-appveyor")
 set(CTEST_COMMAND ctest)
 include(${CTEST_SOURCE_DIRECTORY}/CTestConfig.cmake)
 set(CTEST_SITE "AppVeyor")
-set(_prefix "develop")
+set(_prefix "")
 if (DEFINED ENV{APPVEYOR_PULL_REQUEST_NUMBER})
-  set(_prefix "pull/$ENV{APPVEYOR_PULL_REQUEST_NUMBER}")
+  set(_prefix "-pull_$ENV{APPVEYOR_PULL_REQUEST_NUMBER}")
 endif()
-set(CTEST_BUILD_NAME "${_prefix}-#$ENV{APPVEYOR_BUILD_NUMBER}")
+set(CTEST_BUILD_NAME "Release-VS2015x64${_prefix}-$ENV{APPVEYOR_BUILD_NUMBER}")
 set(CTEST_CMAKE_GENERATOR "Visual Studio 14 2015 Win64")
 set(CTEST_CONFIGURATION_TYPE "Release")
 
@@ -62,7 +62,9 @@ set(ITK_DIR "${DREAM3D_SDK_ROOT}/ITK-4.11.0")
     DREAM3D_BUILD_DEVHELPER=${BUILD_DEVHELPER}
     SIMPL_DISABLE_MSVC_WARNINGS:BOOL=ON
     ")
-  set(cfg_options "-DCMAKE_BUILD_TYPE:STRING=Release")
+  set(cfg_options 
+    "-DCMAKE_BUILD_TYPE:STRING=Release" 
+    "-DHDF5_DIR:PATH=C:/projects/hdf5-1.8.16/cmake")
 
 ctest_start("Continuous")
 ctest_configure(OPTIONS "${cfg_options}")
