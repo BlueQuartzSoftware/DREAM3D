@@ -25,9 +25,7 @@ install:
   - cd ../
   - git clone -b develop http://github.com/bluequartzsoftware/SIMPLView SIMPLView
   - cd ../
-  - git clone -b develop http://github.com/bluequartzsoftware/SIMPL SIMPL
-  - cd ../
-  - git clone -b develop http://github.com/dream3d/DREAM3D_Data
+  - git clone -b develop http://github.com/dream3d/DREAM3D_Data DREAM3D_Data
   - cd ../
   # Restore our cached deps
   - set DREAM3D_TEST_PYTHON_EXECUTABLE=C:\Python27\python.exe
