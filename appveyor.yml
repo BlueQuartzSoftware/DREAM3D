@@ -1,5 +1,7 @@
 os: Visual Studio 2015
 platform: x64
+version: '6.4.{build}'
+clone_folder: c:\projects\DREAM3D
 cache:
   - C:\projects\Eigen-3.2.9.7z
   - C:\projects\Eigen-3.2.9.7z.sha512
@@ -18,15 +20,15 @@ cache:
 
 install:
   # Take care of submodules
-  - cd ..
+  - cd C:\projects
   - git clone -b develop https://github.com/bluequartzsoftware/CMP CMP
-  - cd ../
+  - cd C:\projects
   - git clone -b develop https://github.com/bluequartzsoftware/SIMPL SIMPL
-  - cd ../
+  - cd C:\projects
   - git clone -b develop https://github.com/bluequartzsoftware/SIMPLView SIMPLView
-  - cd ../
+  - cd C:\projects
   - git clone -b develop https://github.com/dream3d/DREAM3D_Data DREAM3D_Data
-  - cd ../
+  - cd C:\projects
   # Restore our cached deps
   - set DREAM3D_TEST_PYTHON_EXECUTABLE=C:\Python27\python.exe
   - python -m pip install -r %APPVEYOR_BUILD_FOLDER%\Support\appveyor\requirements-dev.txt
