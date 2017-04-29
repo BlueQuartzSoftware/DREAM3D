@@ -37,35 +37,33 @@
 
 #include <vector>
 
-#include <boost/shared_array.hpp>
-
-#include <QtCore/QtDebug>
 #include <QtCore/QStringList>
 #include <QtCore/QVector>
+#include <QtCore/QtDebug>
 
 #include "AngConstants.h"
 
-#include "H5Support/QH5Lite.h"
-#include "H5Support/QH5Utilities.h"
 #include "H5Support/H5Utilities.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/QH5Lite.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdMacros.h"
 
-#if defined (H5Support_NAMESPACE)
+#if defined(H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
 #endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5OIMReader::H5OIMReader() :
-  AngReader(),
-  m_HDF5Path(),
-  m_ReadPatternData(false),
-  m_PatternData(nullptr),
-  m_ReadAllArrays(true)
+H5OIMReader::H5OIMReader()
+: AngReader()
+, m_HDF5Path()
+, m_ReadPatternData(false)
+, m_PatternData(nullptr)
+, m_ReadAllArrays(true)
 {
 
   m_HeaderMap.clear();
@@ -101,7 +99,7 @@ H5OIMReader::H5OIMReader() :
 H5OIMReader::~H5OIMReader()
 {
   deletePointers();
-  this->deallocateArrayData<uint8_t> (m_PatternData);
+  this->deallocateArrayData<uint8_t>(m_PatternData);
 }
 
 // -----------------------------------------------------------------------------
@@ -110,7 +108,7 @@ H5OIMReader::~H5OIMReader()
 int H5OIMReader::readFile()
 {
   int err = -1;
-  if (m_HDF5Path.isEmpty() == true)
+  if(m_HDF5Path.isEmpty() == true)
   {
     QString str;
     QTextStream ss(&str);
@@ -121,7 +119,7 @@ int H5OIMReader::readFile()
   }
 
   hid_t fileId = QH5Utilities::openFile(getFileName(), true);
-  if (fileId < 0)
+  if(fileId < 0)
   {
     QString str;
     QTextStream ss(&str);
@@ -131,10 +129,9 @@ int H5OIMReader::readFile()
     return err;
   }
 
-
   HDF5ScopedFileSentinel sentinel(&fileId, false);
   hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
-  if (gid < 0)
+  if(gid < 0)
   {
     QString str;
     QTextStream ss(&str);
@@ -182,7 +179,6 @@ int H5OIMReader::readFile()
     setErrorMessage(str);
     return getErrorCode();
   }
-
 
   err = H5Gclose(ebsdGid);
   ebsdGid = -1;
@@ -234,7 +230,7 @@ int H5OIMReader::readHeaderOnly()
   int err = -1;
 
   hid_t fileId = QH5Utilities::openFile(getFileName().toLatin1().data(), true);
-  if (fileId < 0)
+  if(fileId < 0)
   {
     QString str;
     QTextStream ss(&str);
@@ -245,7 +241,7 @@ int H5OIMReader::readHeaderOnly()
   }
   HDF5ScopedFileSentinel sentinel(&fileId, false);
 
-  if (m_HDF5Path.isEmpty() == true)
+  if(m_HDF5Path.isEmpty() == true)
   {
     QStringList names;
     err = QH5Utilities::getGroupObjects(fileId, H5Utilities::H5Support_GROUP, names);
@@ -254,7 +250,7 @@ int H5OIMReader::readHeaderOnly()
     QTextStream ss(&str);
     ss << "H5OIMReader Error (Internal HDF5 Path is empty): The name of the scan was not specified. There are " << names.count() << " scans available. ";
     int nameCount = names.count();
-    if(nameCount < 10 )
+    if(nameCount < 10)
     {
       ss << " The scan names are: ";
     }
@@ -263,7 +259,7 @@ int H5OIMReader::readHeaderOnly()
       nameCount = 10;
       ss << " The first 10 scan names are: ";
     }
-    for (int i = 0; i < nameCount; ++i)
+    for(int i = 0; i < nameCount; ++i)
     {
       ss << names.at(i) << "\n";
     }
@@ -273,7 +269,7 @@ int H5OIMReader::readHeaderOnly()
   }
 
   hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
-  if (gid < 0)
+  if(gid < 0)
   {
     QString str;
     QTextStream ss(&str);
@@ -345,7 +341,7 @@ int H5OIMReader::readScanNames(QStringList& names)
 {
   int err = -1;
   hid_t fileId = QH5Utilities::openFile(getFileName().toLatin1().data(), true);
-  if (fileId < 0)
+  if(fileId < 0)
   {
     QString str;
     QTextStream ss(&str);
@@ -365,16 +361,16 @@ int H5OIMReader::readScanNames(QStringList& names)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename ClassType, typename T, typename HeaderEntryClass>
-int ReadEbsdHeaderData(ClassType* c, const QString& key, hid_t gid, const QMap<QString, EbsdHeaderEntry::Pointer>& headerMap)
+template <typename ClassType, typename T, typename HeaderEntryClass> int ReadEbsdHeaderData(ClassType* c, const QString& key, hid_t gid, const QMap<QString, EbsdHeaderEntry::Pointer>& headerMap)
 {
 
   T t;
   herr_t err = QH5Lite::readScalarDataset(gid, key, t);
-  if (err < 0)
+  if(err < 0)
   {
     QString ss = QObject::tr("%1: The header value for '%2' was not found in the EDAX Hdf5 file. Was this header originally found in the files that were imported into this H5EBSD File?")
-                 .arg(c->getNameOfClass()).arg(key);
+                     .arg(c->getNameOfClass())
+                     .arg(key);
     c->setErrorCode(-90001);
     c->setErrorMessage(ss);
     return -90001;
@@ -391,16 +387,16 @@ int ReadEbsdHeaderData(ClassType* c, const QString& key, hid_t gid, const QMap<Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename ClassType, typename T, typename HeaderEntryClass>
-int ReadEbsdHeaderStringData(ClassType* c, const QString& key, hid_t gid, const QMap<QString, EbsdHeaderEntry::Pointer>& headerMap)
+template <typename ClassType, typename T, typename HeaderEntryClass> int ReadEbsdHeaderStringData(ClassType* c, const QString& key, hid_t gid, const QMap<QString, EbsdHeaderEntry::Pointer>& headerMap)
 {
 
   T t;
   herr_t err = QH5Lite::readStringDataset(gid, key, t);
-  if (err < 0)
+  if(err < 0)
   {
     QString ss = QObject::tr("%1: The header value for '%2' was not found in the EDAX Hdf5 file. Was this header originally found in the files that were imported into this H5EBSD File?")
-                 .arg(c->getNameOfClass()).arg(key);
+                     .arg(c->getNameOfClass())
+                     .arg(key);
     c->setErrorCode(-90001);
     c->setErrorMessage(ss);
     return -90001;
@@ -424,7 +420,7 @@ int H5OIMReader::readHeader(hid_t parId)
   int err = -1;
 
   hid_t gid = H5Gopen(parId, Ebsd::H5::Header.toLatin1().data(), H5P_DEFAULT);
-  if (gid < 0)
+  if(gid < 0)
   {
     setErrorCode(-90008);
     setErrorMessage("H5OIMReader Error: Could not open 'Header' Group");
@@ -432,7 +428,6 @@ int H5OIMReader::readHeader(hid_t parId)
   }
   HDF5ScopedGroupSentinel sentinel(&gid, false);
 
-  //READ_EBSD_HEADER_DATA("H5OIMReader", AngHeaderEntry<float>, flboost::dynamicEMPIXPerUM, Ebsd::Ang::TEMPIXPerUM)
   QString path = Ebsd::H5::PatternCenterCalibration + "/" + Ebsd::Ang::XStar;
   hid_t patternCenterCalibrationGid = H5Gopen(gid, Ebsd::H5::PatternCenterCalibration.toLatin1().data(), H5P_DEFAULT);
   if(patternCenterCalibrationGid < 0)
@@ -454,7 +449,7 @@ int H5OIMReader::readHeader(hid_t parId)
 
   HDF_ERROR_HANDLER_OFF
   int value = 0;
-  if (QH5Lite::datasetExists(gid, Ebsd::Ang::PatternWidth))
+  if(QH5Lite::datasetExists(gid, Ebsd::Ang::PatternWidth))
   {
     // Read the Pattern Width - This may not exist
     err = QH5Lite::readScalarDataset(gid, Ebsd::Ang::PatternWidth, value);
@@ -466,7 +461,7 @@ int H5OIMReader::readHeader(hid_t parId)
 
   // Read the Pattern Height - This may not exist
   value = 0;
-  if (QH5Lite::datasetExists(gid, Ebsd::Ang::PatternHeight))
+  if(QH5Lite::datasetExists(gid, Ebsd::Ang::PatternHeight))
   {
     err = QH5Lite::readScalarDataset(gid, Ebsd::Ang::PatternHeight, value);
     EbsdHeaderEntry::Pointer p = m_HeaderMap[Ebsd::Ang::PatternHeight];
@@ -482,7 +477,7 @@ int H5OIMReader::readHeader(hid_t parId)
   ReadEbsdHeaderStringData<H5OIMReader, QString, AngStringHeaderEntry>(this, Ebsd::Ang::GridType, gid, m_HeaderMap);
 
   hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phase.toLatin1().data(), H5P_DEFAULT);
-  if (phasesGid < 0)
+  if(phasesGid < 0)
   {
     setErrorCode(-90007);
     setErrorMessage("H5OIMReader Error: Could not open Header/Phase HDF Group.");
@@ -493,7 +488,7 @@ int H5OIMReader::readHeader(hid_t parId)
 
   QStringList names;
   err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
-  if (err < 0 || names.size() == 0)
+  if(err < 0 || names.size() == 0)
   {
     setErrorCode(-90009);
     setErrorMessage("H5OIMReader Error: There were no Phase groups present in the HDF5 file");
@@ -501,7 +496,7 @@ int H5OIMReader::readHeader(hid_t parId)
     H5Gclose(gid);
     return getErrorCode();
   }
-  //m_Phases.clear();
+  // m_Phases.clear();
   QVector<AngPhase::Pointer> phaseVector;
 
   foreach(QString phaseGroupName, names)
@@ -525,18 +520,21 @@ int H5OIMReader::readHeader(hid_t parId)
     READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantBeta, LatticeConstantBeta, currentPhase)
     READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantGamma, LatticeConstantGamma, currentPhase)
 
-
-    if (currentPhase->getNumberFamilies() > 0)
+    if(currentPhase->getNumberFamilies() > 0)
     {
       // hid_t hklGid = H5Gopen(pid, Ebsd::Ang::HKLFamilies.toLatin1().data(), H5P_DEFAULT);
       // Only read the HKL Families if they are there. Trying to open the group will tell us if there
       // are any families to read
 
       err = readHKLFamilies(pid, currentPhase);
-      if (getErrorCode() < 0) { err = H5Gclose(pid); return -1; }
+      if(getErrorCode() < 0)
+      {
+        err = H5Gclose(pid);
+        return -1;
+      }
     }
     /* The 'Categories' header may actually be missing from certain types of .ang files */
-    if (QH5Lite::datasetExists(pid, Ebsd::Ang::Categories) == true)
+    if(QH5Lite::datasetExists(pid, Ebsd::Ang::Categories) == true)
     {
       READ_PHASE_HEADER_ARRAY("H5OIMReader", pid, int, Ebsd::Ang::Categories, Categories, currentPhase)
     }
@@ -564,18 +562,18 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
 {
 
   herr_t status = 1;
-  //HKLFamily_t data;
-  boost::shared_array<HKLFamily_t> data;
+  // HKLFamily_t data;
+  std::vector<HKLFamily_t> data;
   QVector<HKLFamily::Pointer> families;
 
   // setup compound memory type
   hid_t memtype = H5Tcreate(H5T_COMPOUND, sizeof(HKLFamily_t));
-  H5Tinsert(memtype, "H", HOFFSET (HKLFamily_t, h), H5T_NATIVE_INT);
-  H5Tinsert(memtype, "K", HOFFSET (HKLFamily_t, k), H5T_NATIVE_INT);
-  H5Tinsert(memtype, "L", HOFFSET (HKLFamily_t, l), H5T_NATIVE_INT);
-  H5Tinsert(memtype, "Diffraction Intensity", HOFFSET (HKLFamily_t, diffractionIntensity), H5T_NATIVE_FLOAT);
-  H5Tinsert(memtype, "Use in Indexing", HOFFSET (HKLFamily_t, s1), H5T_NATIVE_CHAR);
-  H5Tinsert(memtype, "Show bands", HOFFSET (HKLFamily_t, s2), H5T_NATIVE_CHAR);
+  H5Tinsert(memtype, "H", HOFFSET(HKLFamily_t, h), H5T_NATIVE_INT);
+  H5Tinsert(memtype, "K", HOFFSET(HKLFamily_t, k), H5T_NATIVE_INT);
+  H5Tinsert(memtype, "L", HOFFSET(HKLFamily_t, l), H5T_NATIVE_INT);
+  H5Tinsert(memtype, "Diffraction Intensity", HOFFSET(HKLFamily_t, diffractionIntensity), H5T_NATIVE_FLOAT);
+  H5Tinsert(memtype, "Use in Indexing", HOFFSET(HKLFamily_t, s1), H5T_NATIVE_CHAR);
+  H5Tinsert(memtype, "Show bands", HOFFSET(HKLFamily_t, s2), H5T_NATIVE_CHAR);
 
   // Create dataspace & dataset
   hid_t dataset = H5Dopen(hklGid, Ebsd::Ang::HKL_Families.toLatin1().data(), H5P_DEFAULT);
@@ -587,9 +585,9 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
     int nDims = H5Sget_simple_extent_dims(dataspace, dimsFam, nullptr);
     if(nDims > 0)
     {
-      data = boost::shared_array<HKLFamily_t>(new HKLFamily_t[dimsFam[0]]); // (HKLFamily_t *) calloc(dimsFam[0], sizeof(HKLFamily_t));
-      herr_t status = H5Dread (dataset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(data.get()) );
-      if (status < 0)
+      data.resize(dimsFam[0]);
+      herr_t status = H5Dread(dataset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(data.data()));
+      if(status < 0)
       {
         setErrorCode(-90011);
         QString ss = QObject::tr("H5OIMReader Error: Could not read the HKLFamily data");
@@ -599,42 +597,43 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
     }
   }
 
-
-  for (int i = 0; i < phase->getNumberFamilies(); ++i)
+  for(int i = 0; i < phase->getNumberFamilies(); ++i)
   {
     HKLFamily::Pointer f = HKLFamily::New();
-    HKLFamily_t* ptr = data.get() + i;
+    HKLFamily_t* ptr = data.data() + i;
     f->copyFromStruct(ptr);
     families.push_back(f);
   }
 
   //// close resources
-  H5Tclose (memtype);
-  H5Sclose (dataspace);
-  H5Dclose (dataset);
+  H5Tclose(memtype);
+  H5Sclose(dataspace);
+  H5Dclose(dataset);
 
   phase->setHKLFamilies(families);
   return status;
 }
 
-
-#define ANG_READER_ALLOCATE_AND_READ(name, h5name, type)\
-  if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ang::name) != m_ArrayNames.end()) {\
-    type* _##name = allocateArray<type>(totalDataRows);\
-    if (nullptr != _##name) {\
-      ::memset(_##name, 0, numBytes);\
-      err = QH5Lite::readPointerDataset(gid, h5name, _##name);\
-      if (err < 0) {\
-        deallocateArrayData(_##name); /*deallocate the array*/\
-        setErrorCode(-90020);\
-        ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
-           "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
-        setErrorMessage(ss.string());\
-        err = H5Gclose(gid);\
-        return -90020;\
-      }\
-    }\
-    set##name##Pointer(_##name);\
+#define ANG_READER_ALLOCATE_AND_READ(name, h5name, type)                                                                                                                                               \
+  if(m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ang::name) != m_ArrayNames.end())                                                                                                              \
+  {                                                                                                                                                                                                    \
+    type* _##name = allocateArray<type>(totalDataRows);                                                                                                                                                \
+    if(nullptr != _##name)                                                                                                                                                                             \
+    {                                                                                                                                                                                                  \
+      ::memset(_##name, 0, numBytes);                                                                                                                                                                  \
+      err = QH5Lite::readPointerDataset(gid, h5name, _##name);                                                                                                                                         \
+      if(err < 0)                                                                                                                                                                                      \
+      {                                                                                                                                                                                                \
+        deallocateArrayData(_##name); /*deallocate the array*/                                                                                                                                         \
+        setErrorCode(-90020);                                                                                                                                                                          \
+        ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "                                                                \
+                                                    "the program is set to read ALL the Data arrays or the program was instructed to read this array.";                                                \
+        setErrorMessage(ss.string());                                                                                                                                                                  \
+        err = H5Gclose(gid);                                                                                                                                                                           \
+        return -90020;                                                                                                                                                                                 \
+      }                                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
+    set##name##Pointer(_##name);                                                                                                                                                                       \
   }
 
 // -----------------------------------------------------------------------------
@@ -654,26 +653,26 @@ int H5OIMReader::readData(hid_t parId)
   size_t nColumns = getNumColumns();
   size_t nRows = getNumRows();
 
-  if (nRows < 1)
+  if(nRows < 1)
   {
     err = -200;
     setErrorMessage("H5OIMReader Error: The number of Rows was < 1.");
     setErrorCode(err);
     return err;
   }
-  else if (grid.startsWith(Ebsd::Ang::SquareGrid) == true)
+  else if(grid.startsWith(Ebsd::Ang::SquareGrid) == true)
   {
     // if (nCols > 0) { numElements = nRows * nCols; }
-    if (nColumns > 0)
+    if(nColumns > 0)
     {
-      totalDataRows = nRows * nColumns;/* nCols = nOddCols;*/
+      totalDataRows = nRows * nColumns; /* nCols = nOddCols;*/
     }
     else
     {
       totalDataRows = 0;
     }
   }
-  else if (grid.startsWith(Ebsd::Ang::HexGrid) == true)
+  else if(grid.startsWith(Ebsd::Ang::HexGrid) == true)
   {
     setErrorCode(-90400);
     setErrorMessage("Ang Files with Hex Grids Are NOT currently supported. Please convert them to Square Grid files first");
@@ -694,7 +693,7 @@ int H5OIMReader::readData(hid_t parId)
   }
 
   hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toLatin1().data(), H5P_DEFAULT);
-  if (gid < 0)
+  if(gid < 0)
   {
     setErrorMessage("H5OIMReader Error: Could not open 'Data' Group");
     setErrorCode(-90012);
@@ -727,13 +726,13 @@ int H5OIMReader::readData(hid_t parId)
 
   ANG_READER_ALLOCATE_AND_READ(Fit, Ebsd::Ang::Fit, float);
 
-  if (err < 0)
+  if(err < 0)
   {
     setNumFeatures(9);
   }
 
   ANG_READER_ALLOCATE_AND_READ(SEMSignal, Ebsd::Ang::SEMSignal, float);
-  if (err < 0)
+  if(err < 0)
   {
     setNumFeatures(8);
   }
@@ -744,7 +743,7 @@ int H5OIMReader::readData(hid_t parId)
     QVector<hsize_t> dims;
     size_t type_size = 0;
     err = QH5Lite::getDatasetInfo(gid, Ebsd::Ang::PatternData, dims, type_class, type_size);
-    if (err >= 0) // Only read the pattern data if the pattern data is available.
+    if(err >= 0) // Only read the pattern data if the pattern data is available.
     {
       totalDataRows = 1; // Calculate the total number of elements to allocate for the pattern data
       for(qint32 i = 0; i < dims.size(); i++)
@@ -763,7 +762,6 @@ int H5OIMReader::readData(hid_t parId)
 
   return err;
 }
-
 
 // -----------------------------------------------------------------------------
 //

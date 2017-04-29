@@ -4,44 +4,26 @@
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Import H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
         "InputFile": "Data/Output/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
             "Phases",
+            "Image Quality",
             "Fit",
-            "SEM Signal",
             "EulerAngles",
-            "Confidence Index",
-            "Image Quality"
+            "SEM Signal",
+            "Confidence Index"
         ],
         "UseTransformations": 1,
         "ZEndIndex": 117,
         "ZStartIndex": 1
     },
     "1": {
-        "ChangeOrigin": 1,
-        "ChangeResolution": 0,
-        "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "1.0.799",
-        "Filter_Human_Label": "Set Origin & Resolution (Image)",
-        "Filter_Name": "SetOriginResolutionImageGeom",
-        "Origin": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-        },
-        "Resolution": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        }
-    },
-    "2": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -61,8 +43,8 @@
             }
         ]
     },
-    "3": {
-        "FilterVersion": "6.4.409",
+    "2": {
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
         "InputOrientationArrayPath": {
@@ -74,7 +56,7 @@
         "OutputOrientationArrayName": "Quats",
         "OutputType": 2
     },
-    "4": {
+    "3": {
         "AlignmentShiftFileName": "",
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
@@ -86,7 +68,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Align Sections (Misorientation)",
         "Filter_Name": "AlignSectionsMisorientation",
         "GoodVoxelsArrayPath": {
@@ -103,9 +85,9 @@
         "UseGoodVoxels": 1,
         "WriteAlignmentShifts": 0
     },
-    "5": {
+    "4": {
         "FillHoles": 0,
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
         "Filter_Name": "IdentifySample",
         "GoodVoxelsArrayPath": {
@@ -114,9 +96,9 @@
             "Data Container Name": "ImageDataContainer"
         }
     },
-    "6": {
+    "5": {
         "AlignmentShiftFileName": "",
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Align Sections (Feature Centroid)",
         "Filter_Name": "AlignSectionsFeatureCentroid",
         "GoodVoxelsArrayPath": {
@@ -128,7 +110,7 @@
         "UseReferenceSlice": 1,
         "WriteAlignmentShifts": 0
     },
-    "7": {
+    "6": {
         "CellEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "EulerAngles",
@@ -145,7 +127,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.409",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -160,8 +142,8 @@
         },
         "UseGoodVoxels": 1
     },
-    "8": {
-        "FilterVersion": "1.0.799",
+    "7": {
+        "FilterVersion": "1.0.858",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100.dream3d",
@@ -169,7 +151,7 @@
     },
     "PipelineBuilder": {
         "Name": "(03) SmallIN100 Alignment",
-        "Number_Filters": 9,
+        "Number_Filters": 8,
         "Version": 6
     }
 }

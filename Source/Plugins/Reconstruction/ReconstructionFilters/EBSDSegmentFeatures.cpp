@@ -35,6 +35,8 @@
 
 #include "EBSDSegmentFeatures.h"
 
+#include <chrono>
+
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"
@@ -99,18 +101,15 @@ void EBSDSegmentFeatures::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, EBSDSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, EBSDSegmentFeatures, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, EBSDSegmentFeatures, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, EBSDSegmentFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
@@ -282,9 +281,6 @@ void EBSDSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t total
   const int64_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-  // Get a reference variable to the Generator object
-  Generator& numberGenerator = *m_NumberGenerator;
-
   DataArray<int64_t>::Pointer rndNumbers = DataArray<int64_t>::CreateArray(totalFeatures, "_INTERNAL_USE_ONLY_NewFeatureIds");
 
   int64_t* gid = rndNumbers->getPointer(0);
@@ -300,7 +296,7 @@ void EBSDSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t total
   //--- Shuffle elements by randomly exchanging each with one other.
   for(int64_t i = 1; i < totalFeatures; i++)
   {
-    r = numberGenerator(); // Random remaining position.
+    r = m_Distribution(m_Generator); // Random remaining position.
     if(r >= totalFeatures)
     {
       continue;
@@ -402,14 +398,9 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
 // -----------------------------------------------------------------------------
 void EBSDSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax)
 {
-  // The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
-  // to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
-  // total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
-  // make sure that every voxel can be a seed point.
-  m_Distribution = std::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
-  m_RandomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
-  m_NumberGenerator = std::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
-  m_RandomNumberGenerator->seed(static_cast<size_t>(QDateTime::currentMSecsSinceEpoch())); // seed with the current time
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  m_Generator.seed(seed);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
 }
 
 // -----------------------------------------------------------------------------

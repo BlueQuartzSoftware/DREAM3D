@@ -35,8 +35,6 @@
 
 #include "NodesTrianglesToStl.h"
 
-#include <boost/shared_array.hpp>
-
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 

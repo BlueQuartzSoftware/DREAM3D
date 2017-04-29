@@ -35,6 +35,8 @@
 
 #include "GroupMicroTextureRegions.h"
 
+#include <chrono>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -84,7 +86,6 @@ GroupMicroTextureRegions::GroupMicroTextureRegions()
 , m_FeatureParentIds(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
-
   m_AvgCAxes[0] = 0.0f;
   m_AvgCAxes[1] = 0.0f;
   m_AvgCAxes[2] = 0.0f;
@@ -316,9 +317,6 @@ void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t 
   const int32_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-  // Get a reference variable to the Generator object
-  Generator& numberGenerator = *m_NumberGenerator;
-
   DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "_INTERNAL_USE_ONLY_NewFeatureIds");
 
   int32_t* gid = rndNumbers->getPointer(0);
@@ -334,7 +332,7 @@ void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t 
   //--- Shuffle elements by randomly exchanging each with one other.
   for(int64_t i = 1; i < totalFeatures; i++)
   {
-    r = numberGenerator(); // Random remaining position.
+    r = m_Distribution(m_Generator); // Random remaining position.
     if(r >= totalFeatures)
     {
       continue;
@@ -499,15 +497,9 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::initializeVoxelSeedGenerator(const int32_t rangeMin, const int32_t rangeMax)
 {
-  // The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
-  // to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
-  // total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
-  // make sure that every voxel can be a seed point.
-  //  const size_t rangeMin = 0;
-  m_Distribution = std::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
-  m_RandomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
-  m_NumberGenerator = std::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
-  m_RandomNumberGenerator->seed(static_cast<size_t>(QDateTime::currentMSecsSinceEpoch())); // seed with the current time
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  m_Generator.seed(seed);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
   m_TotalRandomNumbersGenerated = 0;
 }
 

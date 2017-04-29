@@ -53,10 +53,6 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-#define NEW_SHARED_ARRAY(var, m_msgType, size)                                                                                                                                                         \
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);                                                                                                                                      \
-  m_msgType* var = var##Array.get();
-
 // Include the MOC generated file for this class
 #include "moc_FindLocalAverageCAxisMisalignments.cpp"
 

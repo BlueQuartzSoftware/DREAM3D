@@ -47,12 +47,6 @@
 // C++ Includes
 #include <iostream>
 
-// TCLAP Includes
-#include <tclap/CmdLine.h>
-#include <tclap/ValueArg.h>
-
-// Boost includes
-#include <boost/assert.hpp>
 
 // Qt Includes
 #include <QtCore/QtDebug>

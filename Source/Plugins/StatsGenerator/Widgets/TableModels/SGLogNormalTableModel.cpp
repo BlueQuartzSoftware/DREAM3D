@@ -89,10 +89,6 @@ Qt::ItemFlags SGLogNormalTableModel::flags(const QModelIndex& index) const
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
-    else if(col == LineColor)
-    {
-      //  theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-    }
   }
   return theFlags;
 }
@@ -144,16 +140,6 @@ QVariant SGLogNormalTableModel::data(const QModelIndex& index, qint32 role) cons
       }
       break;
     }
-    case LineColor:
-    {
-      //        comboBox.currentText = QString("Dark Blue      ");
-      //        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-      //        if (header.length() > comboBox.currentText.length())
-      //        {
-      //          comboBox.currentText = header;
-      //        }
-      break;
-    }
     default:
       Q_ASSERT(false);
     }
@@ -181,10 +167,6 @@ QVariant SGLogNormalTableModel::data(const QModelIndex& index, qint32 role) cons
     {
       return QVariant(m_StdDev[index.row()]);
     }
-    else if(col == LineColor)
-    {
-      //  return QVariant(m_Colors[index.row()]);
-    }
   }
 
   return QVariant();
@@ -207,9 +189,6 @@ QVariant SGLogNormalTableModel::headerData(int section, Qt::Orientation orientat
       break;
     case StdDev:
       return QVariant(QString("StdDev"));
-      break;
-    case LineColor:
-      //  return QVariant(QString("Color"));
       break;
     default:
       break;
@@ -257,9 +236,6 @@ bool SGLogNormalTableModel::setData(const QModelIndex& index, const QVariant& va
     break;
   case StdDev:
     m_StdDev[row] = value.toFloat(&ok);
-    break;
-  case LineColor:
-    m_Colors[row] = value.toString();
     break;
   default:
     Q_ASSERT(false);

@@ -84,15 +84,12 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
       QLineEdit* stdDev;
       QDoubleValidator* avgValidator;
       QDoubleValidator* stdDevValidator;
-      QComboBox* colorCombo;
 
       qint32 col = index.column();
       switch(col)
       {
         case SGLogNormalTableModel::BinNumber:
           return nullptr;
-          break;
-
         case SGLogNormalTableModel::Average:
           avg = new QLineEdit(parent);
           avg->setFrame(false);
@@ -107,9 +104,6 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
           stdDevValidator->setDecimals(6);
           stdDev->setValidator(stdDevValidator);
           return stdDev;
-        case SGLogNormalTableModel::LineColor:
-          colorCombo = new QtSColorComboPicker(parent);
-          return colorCombo;
         default:
           break;
       }
@@ -130,13 +124,6 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else if (col == SGLogNormalTableModel::LineColor)
-      {
-        QString state = index.model()->data(index).toString();
-        QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
-        Q_ASSERT(comboBox);
-        comboBox->setCurrentIndex(comboBox->findText(state));
-      }
       else { QStyledItemDelegate::setEditorData(editor, index); }
     }
 
@@ -155,12 +142,6 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
         bool ok = false;
         double v = lineEdit->text().toFloat(&ok);
         model->setData(index, v);
-      }
-      else if (col == SGLogNormalTableModel::LineColor)
-      {
-        QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
-        Q_ASSERT(comboBox);
-        model->setData(index, comboBox->currentText());
       }
       else { QStyledItemDelegate::setModelData(editor, model, index); }
     }

@@ -39,10 +39,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-//-- Boost Includes
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/variate_generator.hpp>
+//-- C++ includes
+#include <random>
+#include <chrono>
 
 //-- EMMMPM Lib Includes
 #include "EMMPMLib/Common/EMMPM_Math.h"
@@ -233,21 +232,19 @@ void XtArrayInitialization::initialize(EMMPM_Data::Pointer data)
 
   total = data->rows * data->columns;
 
-  const float rangeMin = 0.0f;
-  const float rangeMax = 1.0f;
-  typedef boost::uniform_real<> NumberDistribution;
-  typedef boost::mt19937 RandomNumberGenerator;
-  typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+  const double rangeMin = 0.0;
+  const double rangeMax = 1.0;
 
-  NumberDistribution distribution(rangeMin, rangeMax);
-  RandomNumberGenerator generator;
-  Generator numberGenerator(generator, distribution);
-  generator.seed(EMMPM_getMilliSeconds()); // seed with the current time
+  std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+  std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  generator.seed(seed);
+  std::uniform_real_distribution<> distribution(rangeMin, rangeMax);
 
   /* Initialize classification of each pixel randomly with a uniform disribution */
   for(size_t i = 0; i < total; i++)
   {
-    data->xt[i] = numberGenerator() * data->classes;
+    data->xt[i] = distribution(generator) * data->classes;
   }
 }
 

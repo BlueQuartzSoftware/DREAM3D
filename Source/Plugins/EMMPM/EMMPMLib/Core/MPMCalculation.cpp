@@ -43,14 +43,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "MPMCalculation.h"
 
+//-- C Includes
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/variate_generator.hpp>
+//-- C++ includes
+#include <random>
+#include <chrono>
 
 #include "EMMPMLib/Common/EMMPM_Math.h"
 #include "EMMPMLib/Common/EMTime.h"
@@ -408,16 +409,14 @@ void MPMCalculation::execute()
     }
   }
 
-  const float rangeMin = 0;
-  const float rangeMax = 1.0f;
-  typedef boost::uniform_real<real_t> NumberDistribution;
-  typedef boost::mt19937 RandomNumberGenerator;
-  typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+  const double rangeMin = 0.0;
+  const double rangeMax = 1.0;
 
-  NumberDistribution distribution(rangeMin, rangeMax);
-  RandomNumberGenerator generator;
-  Generator numberGenerator(generator, distribution);
-  generator.seed(EMMPM_getMilliSeconds()); // seed with the current time
+  std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+  std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  generator.seed(seed);
+  std::uniform_real_distribution<> distribution(rangeMin, rangeMax);
 
   // Generate all the numbers up front
   size_t total = rows * cols;
@@ -425,7 +424,7 @@ void MPMCalculation::execute()
   real_t* rndNumbersPtr = &(rndNumbers.front());
   for(size_t i = 0; i < total; ++i)
   {
-    rndNumbersPtr[i] = numberGenerator(); // Work directly with the pointer for speed.
+    rndNumbersPtr[i] = distribution(generator); // Work directly with the pointer for speed.
   }
 
   // unsigned long long int millis = EMMPM_getMilliSeconds();

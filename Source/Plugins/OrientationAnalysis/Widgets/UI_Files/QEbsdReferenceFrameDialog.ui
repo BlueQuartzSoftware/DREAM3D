@@ -570,7 +570,7 @@ font-size: 10px;
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/fit_to_window@2x.png</normaloff>:/fit_to_window@2x.png</iconset>
+         <normaloff>:/fit_to_window.png</normaloff>:/fit_to_window.png</iconset>
        </property>
        <property name="iconSize">
         <size>

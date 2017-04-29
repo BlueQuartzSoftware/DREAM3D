@@ -35,6 +35,8 @@
 
 #include "IdentifyMicroTextureRegions.h"
 
+#include <chrono>
+
 #include <QtCore/QDateTime>
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -87,6 +89,10 @@ public:
   , m_CAxisTolerance(caxisTol)
   {
   }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   virtual ~FindPatchMisalignmentsImpl()
   {
   }
@@ -430,9 +436,6 @@ void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64
   const int32_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-  // Get a reference variable to the Generator object
-  Generator& numberGenerator = *m_NumberGenerator;
-
   DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "_INTERNAL_USE_ONLY_NewFeatureIds");
 
   int32_t* gid = rndNumbers->getPointer(0);
@@ -448,7 +451,7 @@ void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64
   //--- Shuffle elements by randomly exchanging each with one other.
   for(int64_t i = 1; i < totalFeatures; i++)
   {
-    r = numberGenerator(); // Random remaining position.
+    r = m_Distribution(m_Generator); // Random remaining position.
     if(r >= totalFeatures)
     {
       continue;
@@ -478,15 +481,11 @@ void IdentifyMicroTextureRegions::findMTRregions()
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::initializeVoxelSeedGenerator(const int32_t rangeMin, const int32_t rangeMax)
 {
-  // The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
-  // to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
-  // total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
-  // make sure that every voxel can be a seed point.
-  m_Distribution = std::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
-  m_RandomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
-  m_NumberGenerator = std::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
-  m_RandomNumberGenerator->seed(static_cast<size_t>(QDateTime::currentMSecsSinceEpoch())); // seed with the current time
-  m_TotalRandomNumbersGenerated = 0;
+
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  m_Generator.seed(seed);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
 }
 
 // -----------------------------------------------------------------------------
