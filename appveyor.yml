@@ -29,12 +29,12 @@ install:
   - cd ../
   # Restore our cached deps
   - set DREAM3D_TEST_PYTHON_EXECUTABLE=C:\Python27\python.exe
-  - python -m pip install -r %APPVEYOR_BUILD_FOLDER%\Support\Scripts\appveyor\requirements-dev.txt
-  - python %APPVEYOR_BUILD_FOLDER%\Support\Scripts\appveyor\cache_restore.py
+  - python -m pip install -r %APPVEYOR_BUILD_FOLDER%\Support\appveyor\requirements-dev.txt
+  - python %APPVEYOR_BUILD_FOLDER%\Support\appveyor\cache_restore.py
 
 build_script:
   # Setup PATH
   - set PATH=C:\projects\doxygen-1.8.11.windows.x64.bin;%PATH%
   - set PATH=C:\Qt\5.6\msvc2015_64\bin;%PATH%
   # Now call ctest
-  - ctest -VV -S %APPVEYOR_BUILD_FOLDER%\cmake\AppVeyorContinuous.cmake
+  - ctest -VV -S %APPVEYOR_BUILD_FOLDER%\Support\appveyor\AppVeyorContinuous.cmake
