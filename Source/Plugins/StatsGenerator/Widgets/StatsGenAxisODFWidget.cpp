@@ -93,6 +93,7 @@ StatsGenAxisODFWidget::StatsGenAxisODFWidget(QWidget* parent)
 , m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic)
 , m_ODFTableModel(nullptr)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   this->setupUi(this);
   this->setupGui();
 }
@@ -139,14 +140,6 @@ void StatsGenAxisODFWidget::on_m_ODFParametersBtn_clicked(bool b)
 void StatsGenAxisODFWidget::on_m_MDFParametersBtn_clicked(bool b)
 {
   stackedWidget->setCurrentIndex(1);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenAxisODFWidget::on_pfImageSize_valueChanged(int v)
-{
-  updatePlots();
 }
 
 // -----------------------------------------------------------------------------
@@ -447,13 +440,21 @@ void StatsGenAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
 // -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::updatePlots()
 {
-  on_m_CalculateODFBtn_clicked();
+  calculateAxisODF();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::on_m_CalculateODFBtn_clicked()
+{
+  calculateAxisODF();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::calculateAxisODF()
 {
   int err = 0;
 
@@ -539,7 +540,7 @@ void StatsGenAxisODFWidget::on_addODFTextureBtn_clicked()
     float e1 = 0.0;
     float e2 = 0.0;
     float e3 = 0.0;
-    float weight = 1.0;
+    float weight = 500000.0;
     float sigma = 1.0;
 
     t.getODFEntry(e1, e2, e3, weight, sigma);
@@ -551,6 +552,7 @@ void StatsGenAxisODFWidget::on_addODFTextureBtn_clicked()
     m_ODFTableView->setFocus();
     QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
     m_ODFTableView->setCurrentIndex(index);
+    updatePlots();
   }
 }
 

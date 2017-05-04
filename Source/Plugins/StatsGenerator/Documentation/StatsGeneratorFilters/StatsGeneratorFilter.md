@@ -42,9 +42,9 @@ The user can use the following buttons to add, remove or edit a phase
 The user can add, remove or modify properties of the phase by clicking the *Phase Properties Buttons* at the bottom of the StatsGenerator GUI. The _plus button_ allows the user to add a phase, the _minus button_ allows the user to remove a phase, and the _cogwheel button_ allows the user to edit the currently selected phase.
 
 ![Phase Properties Manager](Images/SG_PhaseProperties.png)
-@image latex Images/SG_PhaseProperties.png "Phase Properties Manager" width=6in 
+@image latex Images/SG_PhaseProperties.png "Phase Properties Manager" width=6in
 
-The *Phase Properties Manager* is a pop-up window where the user can enter information about the phase for which statistics are currently being generated. The following items can be set in the manager:
+The *Phase Properties* is a dialog where the user can enter information about the phase for which statistics are currently being generated. The following items can be set in the manager:
 
 + **Select Crystal Structure**: Allows the user to specify the crystal structure of the phase
 + **Fraction**: The _volume fraction_ of the phase. The _Calculated Phase Fraction_ is updated as more phases are added, by scaling the current total of all the phases fractions to 1 (in case the user's total is not equal to 1 when finished)
@@ -95,7 +95,7 @@ After all desired input fields have been set to desired values the user will nee
 
 ####IMPORTANT NOTE:####
 
-Anytime the user changes any input fields in the **Size Distribution** tab the **Create Data** button MUST be clicked.
+Anytime the user changes any input fields in the **Size Distribution** tab the **Create Data** button MUST be clicked ![images/CreateDataBtn.png](images/CreateDataBtn.png)
 
 ## Omega3 Tab ##
 
@@ -107,8 +107,8 @@ The Omega3 tab controls the morphological shape of the features that are generat
 + **Beta**: The &beta; parameter of the beta distribution
 
 
-![Omega3 GUI](Images/image003.png)
-@image latex Images/image003.png "Omega3 GUI" width=6in
+![Omega3 GUI](Images/Omega3Plot.png)
+@image latex Images/Omega3Plot.png "Omega3 GUI" width=6in
 
 ![Examples of object shapes from the class of the superellipsoid shapes. The normalized affine invariant &omega;3 is shown as a function of the shape parameter __n__. Figure courtesy of M. De Graef](Images/Omega3_Chart.png)
 ![Examples of object shapes from the class of the superellipsoid shapes. The normalized affine invariant &Omega;3 is shown as a function of the shape parameter __n__. Figure courtesy of M. De Graef](Images/Omega3Range.png)
@@ -117,8 +117,10 @@ The Omega3 tab controls the morphological shape of the features that are generat
 
 ## Shape Distribution Tab ##
 
-![Shape Distribution (Aspect Ratios) GUI](Images/image004.png)
-@image latex Images/image004.png "Shape Distribution (Aspect Ratios) GUI" width=6in 
+![Shape Distribution (Aspect Ratios) GUI](Images/BOverAPlot.png)
+@image latex Images/BOverAPlot.png "Shape Distribution (Aspect Ratios) GUI" width=6in
+![Shape Distribution (Aspect Ratios) GUI](Images/COverAPlot.png)
+@image latex Images/COverAPlot.png "Shape Distribution (Aspect Ratios) GUI" width=6in
 
 + **Bin**: Xalculated from the size distribution and cannot be changed
 + **Alpha**: The &alpha; parameter of a beta distribution. B/A, C/A and C/B are normalized and can only be between 0 and 1 to insure that the beta distribution is a good fit
@@ -127,8 +129,8 @@ The Omega3 tab controls the morphological shape of the features that are generat
 
 ## Neighbor Distribution Tab ##
 
-![Number of Neighbors Distribution GUI](Images/image005.png)
-@image latex Images/image005.png "Number of Neighbors Distribution GUI" width=6in 
+![Number of Neighbors Distribution GUI](Images/NeighborDistPlot.png)
+@image latex Images/NeighborDistPlot.png "Number of Neighbors Distribution GUI" width=6in 
 
 + **Bin**: Calculated from the size distribution and cannot be changed
 + **Alpha**: The &alpha; parameter of a power law distribution, which the exponent of a power law distribution
@@ -137,51 +139,60 @@ The Omega3 tab controls the morphological shape of the features that are generat
 
 ## Radial Distribution Function Tab ## 
 
-This option is only available for the precipitate phase. 
+This option is only available for the precipitate phase.
 ![Radial Distribution Function GUI]
 (Images/image010.png)
 
 + **Min Distance**: The minimum separation distance between precipitates in the box
-+ **Max Distance** The maximum separation distance between precipitates in the box 
++ **Max Distance** The maximum separation distance between precipitates in the box
 + **Num Bins** The number of bins to create the RDF
 + **Box Size X** The size of the x-dimension of the box in microns.
-+ **Box Size Y** The size of the y-dimension of the box in microns. 
-+ **Box Size Z** The size of the z-dimension of the box in microns. 
++ **Box Size Y** The size of the y-dimension of the box in microns.
++ **Box Size Z** The size of the z-dimension of the box in microns.
 
-The list, **Normalized Frequencies** creates a random distribution based on the input parameters. If the user wants something else, the user may enter the values manually in the bins. 
+The list, **Normalized Frequencies** creates a random distribution based on the input parameters. If the user wants something else, the user may enter the values manually in the bins.
 
-Also note, the number of created bins in the normalized frequency list may be MORE than the number of bins the user specified. This is because there are extra bins created for values that may fall outside the min and max distances the user sets. These extra bins will not be used, they are just there to help visualize the full distribution. 
+Also note, the number of created bins in the normalized frequency list may be MORE than the number of bins the user specified. This is because there are extra bins created for values that may fall outside the min and max distances the user sets. These extra bins will not be used, they are just there to help visualize the full distribution.
 
-The user **MUST** click **Generate RDF** button for the values to get stored. 
+The user **MUST** click **Generate RDF** button for the values to get stored.
 
+![RDF Plot](images/RDFPlot.png)
+@image latex Images/RDFPlot.png "Radial Distribution Plot" width=6in
 
 ## ODF Tab ##
+
+The ODF tab controls the generation of the Orientation Distribution Function. This is the place where the user can apply a crystalographic texture to their synthetic structure. The user can enter specific angles in degrees to add a texture to their synthetic structure or read angle representations from a simple text file. The format of the text file is described in the _Write StatsGenerator ODF Angle File_ filter.
 
 ![ODF (Crystallographic Orientation) GUI](Images/SG_ODF_1.png)
 @image latex Images/SG_ODF_1.png "ODF (Crystallographic Orientation) GUI" width=6in
 
-### Weights and Spreads Sub-Tab ###
+### Weights and Spreads Section ###
 
 + **Euler 1-3**: The Euler angles that define an orientation that the user would like to increase in weight
-+ **Weight**: The weight in units of MRD (multiples of random distribution) for the entered orientation
++ **Weight**: The weight in units of MRD (multiples of random distribution) for the entered orientation. To generate a strong texture use a value of 500,000.
 + **Sigma**: Spread to use in blurring out the orientation chosen. The value corresponds to the number of bins in Rodrigues (orientation) space that it takes for the MRD value entered in the _Weight_ column to reduce to 0.0 (decreasing quadratically from the bin of the entered orientation)
 + **Calculate ODF**: Builds the ODF and then creates pole figures (PFs) for the user to inspect
-
-### Pole Figure (PF) Sub-Tabs ###
-
 + Three PFs are formed for each of the crystal structures that can be chosen (though they are of different directions for the different crystal structures)
 
-![ODF (Crystallographic Orientation) GUI](Images/SG_ODF_2.png)
-@image latex Images/SG_ODF_2.png "ODF (Crystallographic Orientation) GUI" width=6in
+| | Sigma = 1 | Sigma = 3 | Sigma = 5 |
+|-|-|-|-|
+| Weight = 1 | ![](images/ODF_W1_S1.png) | ![](images/ODF_W1_S3.png) | ![](images/ODF_W1_S5.png) |
+| Weight = 500 | ![](images/ODF_W500_S1.png) | ![](images/ODF_W500_S3.png) | ![](images/ODF_W500_S5.png) |
+| Weight = 100,000 | ![](images/ODF_W100000_S1.png) | ![](images/ODF_W100000_S3.png) | ![](images/ODF_W100000_S5.png) |
+
+### Bulk Load of Angle Data ##
+
+![Bulk Load the ODF Angles from a File.](images/BulkLoadAngles.png)
+@image latex Images/BulkLoadAngles.png "Bulk Load the ODF Angles from a File." width=6in
 
 
 
-### MDF Sub-Tab ###
+### MDF Section ###
 
 This sub-tab will display the baseline _misorientation distribution function_ (MDF) for the generated ODF.  The  implemented algorithm proceeds by randomly sampling pairs of orientations from the ODF and calculating the misorientation (axis-angle only). Only the angle is plotted in the misorientation distribution plot.  The user can also add axis-angle pairs to increase in weight.
 
-![MDF GUI](Images/image007.png)
-@image latex Images/image007.png "MDF GUI" width=6in 
+![MDF GUI](Images/MDF_Plot.png)
+@image latex Images/MDF_Plot.png "MDF GUI" width=6in
 
 + **Angle**: The angle of the misorientation to increase in weight
 + **Axis**: The axis of the misorientation to increase in weight.  If the crystal structure being used for the phase is Hexagonal, then this axis is in the 3-index, orthogonal convention, not the true (hkil) convention
@@ -189,23 +200,21 @@ This sub-tab will display the baseline _misorientation distribution function_ (M
 
 ## Axis ODF Tab ##
 
+This tab works in a similar fashion to the ODF tab in that the user can enter values that will orient the grains in a morhphological sense.
+
 ![Axis ODF (Morphological Orientation) GUI](Images/AxisODF_1.png)
 @image latex Images/AxisODF_1.png "Axis ODF (Morphological Orientation) GUI" width=6in 
 
-### Weights and Spreads Sub-Tab ###
+### Weights and Spreads Section ###
 
 + **Euler 1-3**: The Euler angles that define an orientation that the user would like to increase in weight
 + **Weight**: The weight in units of MRD (multiples of random distribution) for the entered orientation
 + **Sigma**: Spread to use in blurring out the orientation chosen. The value corresponds to the number of bins in Rodrigues (orientation) space it takes for the MRD value entered in the _Weight_ column to reduce to 0.0 (decreasing quadratically from the bin of the entered orientation)
 + **Calculate ODF**: Builds the ODF and then creates pole figures (PFs) for the user to inspect
 
-### Pole Figure (PF) Sub-Tabs ###
 
 + Three PFs are formed, which correspond to the location of the 3 principal axes of the grains to be generated (i.e., A > B > C)
 
-
-![Axis ODF (Morphological Orientation) GUI](Images/AxisODF_2.png)
-@image latex Images/AxisODF_1.png "Axis ODF (Morphological Orientation) GUI" width=6in 
 
 ## Required Geometry ##
 Not Applicable

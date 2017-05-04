@@ -94,6 +94,7 @@ StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent)
 , m_PhaseIndex(-1)
 , m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   this->setupUi(this);
   this->setupGui();
 }

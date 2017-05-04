@@ -107,17 +107,20 @@ class StatsGenAxisODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     virtual void on_m_WeightSpreads_clicked(bool b);
     virtual void on_m_WeightSpreadsBulkLoad_clicked(bool b);
 
-    void on_pfImageSize_valueChanged(int v);
-
   signals:
     void dataChanged();
 
   protected:
     SIMPL_INSTANCE_PROPERTY(bool, Initializing)
 
+    /**
+     * @brief calculateAxisODF
+     */
+    void calculateAxisODF();
+
   private:
-    int      m_PhaseIndex;
-    unsigned int      m_CrystalStructure;
+    int                     m_PhaseIndex;
+    unsigned int            m_CrystalStructure;
     SGODFTableModel*        m_ODFTableModel;
     QVector<QwtPlotCurve*>  m_PlotCurves;
     QwtPlotMarker*          m_PlotGrid;
@@ -126,8 +129,8 @@ class StatsGenAxisODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     QwtPlotCurve*           m_RotCross1;
     QButtonGroup            m_ButtonGroup;
     QButtonGroup            m_ODFGroup;
+    QString                 m_OpenDialogLastDirectory; // Must be last in the list
 
-    QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGenAxisODFWidget(const StatsGenAxisODFWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenAxisODFWidget&); // Operator '=' Not Implemented
 };
