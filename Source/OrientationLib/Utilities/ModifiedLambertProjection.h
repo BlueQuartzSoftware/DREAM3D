@@ -196,39 +196,6 @@ class OrientationLib_EXPORT ModifiedLambertProjection
 };
 
 
-/**
-* @class GenerateIntensityMapImpl This class is a wrapper around simply generating a stereo graphically projected intensity "image" (2D Array) based
-* off the intended final size of an image and a modified Lambert projection for a set of XYZ coordinates that represent
-* the Coords generated from Euler Angles. This all feeds into generating a pole figure.
-*/
-class GenerateIntensityMapImpl
-{
-  public:
-    GenerateIntensityMapImpl(FloatArrayType* xyzCoords, PoleFigureConfiguration_t* config, DoubleArrayType* intensity) :
-      m_XYZCoords(xyzCoords),
-      m_Config(config),
-      m_Intensity(intensity)
-    {
-
-    }
-    virtual ~GenerateIntensityMapImpl() {}
-
-    void operator()() const
-    {
-      ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(m_XYZCoords, m_Config->lambertDim, m_Config->sphereRadius);
-      lambert->normalizeSquaresToMRD();
-      m_Intensity->resize(m_Config->imageDim * m_Config->imageDim);
-      lambert->createStereographicProjection(m_Config->imageDim, m_Intensity);
-    }
-
-  protected:
-    GenerateIntensityMapImpl() {}
-
-  private:
-    FloatArrayType*     m_XYZCoords;
-    PoleFigureConfiguration_t* m_Config;
-    DoubleArrayType*    m_Intensity;
-};
 
 #endif /* _ModifiedLambertProjection_H_ */
 
