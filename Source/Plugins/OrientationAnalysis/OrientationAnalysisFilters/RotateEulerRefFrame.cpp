@@ -284,7 +284,7 @@ const QString RotateEulerRefFrame::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getGroupName()
 {
-  return SIMPL::FilterGroups::OrientationAnalysisFilters;
+  return SIMPL::FilterGroups::ProcessingFilters;
 }
 
 // -----------------------------------------------------------------------------

@@ -325,7 +325,7 @@ const QString ConvertOrientations::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getGroupName()
 {
-  return SIMPL::FilterGroups::OrientationAnalysisFilters;
+  return SIMPL::FilterGroups::ProcessingFilters;
 }
 
 // -----------------------------------------------------------------------------

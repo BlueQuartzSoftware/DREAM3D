@@ -370,7 +370,7 @@ const QString FindSurfaceFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString FindSurfaceFeatures::getGroupName()
 {
-  return SIMPL::FilterGroups::GenericFilters;
+  return SIMPL::FilterGroups::Generic;
 }
 
 // -----------------------------------------------------------------------------

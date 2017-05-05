@@ -295,7 +295,7 @@ const QString Stereographic3D::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString Stereographic3D::getGroupName()
 {
-  return SIMPL::FilterGroups::OrientationAnalysisFilters;
+  return SIMPL::FilterGroups::Utilities;
 }
 
 // -----------------------------------------------------------------------------

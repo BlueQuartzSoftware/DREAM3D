@@ -287,7 +287,7 @@ const QString FindBoundaryCells::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString FindBoundaryCells::getGroupName()
 {
-  return SIMPL::FilterGroups::GenericFilters;
+  return SIMPL::FilterGroups::Generic;
 }
 
 // -----------------------------------------------------------------------------

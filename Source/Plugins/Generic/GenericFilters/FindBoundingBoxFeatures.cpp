@@ -527,7 +527,7 @@ const QString FindBoundingBoxFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString FindBoundingBoxFeatures::getGroupName()
 {
-  return SIMPL::FilterGroups::GenericFilters;
+  return SIMPL::FilterGroups::Generic;
 }
 
 // -----------------------------------------------------------------------------
