@@ -76,13 +76,11 @@ class OrientationLib_EXPORT ModifiedLambertProjection
      * @param sphereRadius The radius of the sphere from where the coordinates are coming from.
      * @return
      */
-    static Pointer CreateProjectionFromXYZCoords(FloatArrayType* coords, int dimension, float sphereRadius);
-
+    static Pointer LambertBallToSquare(FloatArrayType* coords, int dimension, float sphereRadius);
 
     SIMPL_GET_PROPERTY(int, Dimension)
     SIMPL_GET_PROPERTY(float, StepSize)
     SIMPL_GET_PROPERTY(float, SphereRadius)
-
 
     SIMPL_GET_PROPERTY(DoubleArrayType::Pointer, NorthSquare)
     SIMPL_GET_PROPERTY(DoubleArrayType::Pointer, SouthSquare)
@@ -188,8 +186,6 @@ class OrientationLib_EXPORT ModifiedLambertProjection
 
     DoubleArrayType::Pointer m_NorthSquare;
     DoubleArrayType::Pointer m_SouthSquare;
-
-
 
     ModifiedLambertProjection(const ModifiedLambertProjection&); // Copy Constructor Not Implemented
     void operator=(const ModifiedLambertProjection&); // Operator '=' Not Implemented

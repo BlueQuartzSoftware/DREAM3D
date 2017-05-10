@@ -310,7 +310,7 @@ class ModifiedLambertProjection3D
       // inverse M_1
       OMHelperType::scalarDivide(xyz1, LPs::sc);
 
-      // reverst the coordinates back to the regular order according to the original pyramid number
+      // reverse the coordinates back to the regular order according to the original pyramid number
       switch (p)
       {
         case 1:

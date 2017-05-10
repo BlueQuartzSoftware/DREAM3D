@@ -22,6 +22,7 @@ set(_PublicFilters
   ChangeAngleRepresentation
   ConvertHexGridToSquareGrid
   ConvertOrientations
+  CreateLambertSphere
   EbsdToH5Ebsd
   EnsembleInfoReader
   FindAvgCAxes

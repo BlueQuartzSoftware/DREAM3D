@@ -45,6 +45,7 @@ set(OrientationLib_Utilities_HDRS
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjection3D.hpp
   ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureImageUtilities.h
   ${OrientationLib_SOURCE_DIR}/Utilities/ComputeStereographicProjection.h
+  ${OrientationLib_SOURCE_DIR}/Utilities/LambertUtilities.h
 )
 
 set(OrientationLib_Utilities_SRCS
@@ -54,6 +55,7 @@ set(OrientationLib_Utilities_SRCS
   ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureImageUtilities.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureData.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/ComputeStereographicProjection.cpp
+  ${OrientationLib_SOURCE_DIR}/Utilities/LambertUtilities.cpp
 )
 QT5_WRAP_CPP( OrientationLib_Generated_MOC_SRCS ${OrientationLib_Utilities_MOC_HDRS} )
 set_source_files_properties( ${OrientationLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)

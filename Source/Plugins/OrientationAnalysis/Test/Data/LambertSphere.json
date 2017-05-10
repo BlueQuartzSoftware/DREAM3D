@@ -1,0 +1,93 @@
+{
+    "0": {
+        "CellAttributeMatrixName": "CellData",
+        "DataContainerName": "ImageDataContainer",
+        "FileName": "/Users/mjackson/Downloads/referencepattern/MasterPattern_Lambert.png",
+        "FilterVersion": "1.0.356",
+        "Filter_Human_Label": "ITK::Image Reader (KW)",
+        "Filter_Name": "ITKImageReader",
+        "ImageDataArrayName": "ImageData"
+    },
+    "1": {
+        "ChangeOrigin": 1,
+        "ChangeResolution": 1,
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "1.0.934",
+        "Filter_Human_Label": "Set Origin & Resolution (Image)",
+        "Filter_Name": "SetOriginResolutionImageGeom",
+        "Origin": {
+            "x": -1.253309965133667,
+            "y": -1.253309965133667,
+            "z": 0
+        },
+        "Resolution": {
+            "x": 0.0025041201151907444,
+            "y": 0.0025041201151907444,
+            "z": 1
+        }
+    },
+    "2": {
+        "ColorChannel": 0,
+        "ColorWeights": {
+            "x": 0.21250000596046448,
+            "y": 0.71539998054504395,
+            "z": 0.072099998593330383
+        },
+        "ConversionAlgorithm": 0,
+        "CreateNewAttributeMatrix": 0,
+        "FilterVersion": "6.4.474",
+        "Filter_Human_Label": "Color to GrayScale",
+        "Filter_Name": "ConvertColorToGrayScale",
+        "InputDataArrayVector": [
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "ImageData",
+                "Data Container Name": "ImageDataContainer"
+            }
+        ],
+        "OutputArrayPrefix": "LambertSquareMasterPattern",
+        "OutputAttributeMatrixName": "GrayScaleData"
+    },
+    "3": {
+        "FaceAttributeMatrixName": "FaceData",
+        "FilterVersion": "6.4.474",
+        "Filter_Human_Label": "Create 3D Sphere from 2D Master Pattern",
+        "Filter_Name": "CreateLambertSphere",
+        "Hemisphere": 0,
+        "MasterPatternFaceDataArrayName": "NorthernMasterPattern",
+        "MasterPatternImageDataPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "LambertSquareMasterPatternImageData",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "SurfaceDataContainerName": "NorthernHemisphere",
+        "VertexAttributeMatrixName": "VertexData"
+    },
+    "4": {
+        "FaceAttributeMatrixName": "FaceData",
+        "FilterVersion": "6.4.474",
+        "Filter_Human_Label": "Create 3D Sphere from 2D Master Pattern",
+        "Filter_Name": "CreateLambertSphere",
+        "Hemisphere": 1,
+        "MasterPatternFaceDataArrayName": "SouthernMasterPattern",
+        "MasterPatternImageDataPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "LambertSquareMasterPatternImageData",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "SurfaceDataContainerName": "SouthernHemisphere",
+        "VertexAttributeMatrixName": "VertexData"
+    },
+    "5": {
+        "FilterVersion": "1.0.934",
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "OutputFile": "Data/Output/QuadSphere.dream3d",
+        "WriteXdmfFile": 1
+    },
+    "PipelineBuilder": {
+        "Name": "LambertBall",
+        "Number_Filters": 6,
+        "Version": 6
+    }
+}
