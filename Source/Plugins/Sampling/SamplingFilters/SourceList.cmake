@@ -29,6 +29,10 @@ set(_PublicFilters
   WarpRegularGrid
 )
 
+
+list(LENGTH _PublicFilters PluginNumFilters)
+set_property(GLOBAL PROPERTY PluginNumFilters ${PluginNumFilters})
+
 #--------------
 # Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user
 # interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop

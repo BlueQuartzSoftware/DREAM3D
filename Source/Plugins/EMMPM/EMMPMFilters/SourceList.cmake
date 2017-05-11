@@ -22,6 +22,12 @@ set(_PublicFilters
   MultiEmmpmFilter
 )
 
+list(LENGTH _PublicFilters PluginNumFilters)
+set_property(GLOBAL PROPERTY PluginNumFilters ${PluginNumFilters})
+
+
+list(LENGTH _PublicFilters PluginNumFilters)
+set_property(GLOBAL PROPERTY PluginNumFilters ${PluginNumFilters})
 
 #--------------
 # Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user

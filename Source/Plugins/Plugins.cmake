@@ -18,11 +18,14 @@ function(DREAM3D_COMPILE_PLUGIN)
     set(options)
     set(oneValueArgs PLUGIN_NAME PLUGIN_SOURCE_DIR)
     cmake_parse_arguments(PLUG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    set_property(GLOBAL PROPERTY PluginNumFilters "-1")
 
     option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
     if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
-        message(STATUS "Plugin [ENABLED]: ${PLUG_PLUGIN_NAME} .... ")
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})
+        get_property(PluginNumFilters GLOBAL PROPERTY PluginNumFilters)
+        message(STATUS "${PLUG_PLUGIN_NAME} [ENABLED] ${PluginNumFilters} Filters")
+
         #- Now set up the dependency between the main application and each of the plugins so that
         #- things like Visual Studio are forced to rebuild the plugins when launching
         #- the DREAM3D application
@@ -44,7 +47,7 @@ function(DREAM3D_ADD_PLUGINS)
     set(multiValueArgs PLUGIN_NAMES)
     cmake_parse_arguments(PLUG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)
-    message(STATUS "DREAM3D_PARENT_DIR: ${DREAM3D_PARENT_DIR}")
+    #message(STATUS "DREAM3D_PARENT_DIR: ${DREAM3D_PARENT_DIR}")
 
     #-- Attempt to look in our local source directory for the plugin. Anywhere else
     # and the user will have to put the entire path into CMake manually.
@@ -106,6 +109,9 @@ function(DREAM3D_ADD_PLUGINS)
     endforeach()
 
 endfunction()
+
+set(PluginNumFilters 0)
+set_property(GLOBAL PROPERTY PluginNumFilters ${PluginNumFilters})
 
 #-----------------
 # These are the core plugins that need to be built
