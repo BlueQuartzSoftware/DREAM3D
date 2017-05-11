@@ -131,8 +131,11 @@ class ConvertHexGridToSquareGridWidget : public FilterParameterWidget, private U
     void resolutionChanged(const QString& string);
 
   protected:
-    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
-    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
+    void setInputDirectory(QString val);
+    QString getInputDirectory();
+
+    void setOutputDirectory(QString val);
+    QString getOutputDirectory();
 
     /**
      * @brief checkIOFiles
@@ -181,7 +184,6 @@ class ConvertHexGridToSquareGridWidget : public FilterParameterWidget, private U
     QButtonGroup*               m_OriginGroup;
     QButtonGroup*               m_zSpacingGroup;
 
-    static QString                m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
 
 

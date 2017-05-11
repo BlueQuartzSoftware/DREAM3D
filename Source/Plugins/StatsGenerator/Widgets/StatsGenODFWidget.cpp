@@ -97,7 +97,7 @@ StatsGenODFWidget::StatsGenODFWidget(QWidget* parent)
 , m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 , m_ODFTableModel(nullptr)
 {
-  m_OpenDialogLastDirectory = QDir::homePath();
+  m_OpenDialogLastFilePath = QDir::homePath();
   this->setupUi(this);
   this->setupGui();
 }
@@ -684,9 +684,17 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_selectAnglesFile_clicked()
 {
-  QString proposedFile = m_OpenDialogLastDirectory;
+  QString proposedFile = m_OpenDialogLastFilePath;
+  if(false == angleFilePath->text().isEmpty())
+  {
+    proposedFile = angleFilePath->text();
+  }
   QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Document (*.txt)"));
-  angleFilePath->setText(file);
+  if (false == file.isEmpty())
+  {
+    angleFilePath->setText(file);
+    m_OpenDialogLastFilePath = file;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1001,7 +1009,7 @@ void StatsGenODFWidget::on_savePoleFigureImage_clicked()
   QString Ftype = "Image Files";
   QString ext = "*.png";
   QString s = "Image Files (*.tiff *.png *.bmp);;All Files(*.*)";
-  QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.png";
+  QString defaultName = m_OpenDialogLastFilePath;
   QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
 
   if(true == file.isEmpty())
@@ -1011,8 +1019,7 @@ void StatsGenODFWidget::on_savePoleFigureImage_clicked()
   // bool ok = false;
   file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
-  QFileInfo fi(file);
-  m_OpenDialogLastDirectory = fi.path();
+  m_OpenDialogLastFilePath = file;
 
   QImage image = m_PoleFigureLabel->pixmap()->toImage();
   image.save(file);

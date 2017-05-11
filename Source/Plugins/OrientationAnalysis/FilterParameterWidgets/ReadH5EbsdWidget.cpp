@@ -56,9 +56,6 @@
 #include "OrientationAnalysis/FilterParameters/ReadH5EbsdFilterParameter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
 
-// Initialize private static member variable
-QString ReadH5EbsdWidget::m_OpenDialogLastDirectory = "";
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -84,12 +81,13 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
 
   qRegisterMetaType<QSet<QString>>("QSet<QString>");
 
-  if(getOpenDialogLastDirectory().isEmpty())
-  {
-    setOpenDialogLastDirectory(QDir::homePath());
-  }
   setupUi(this);
   setupGui();
+
+  if (getInputFilePath().isEmpty())
+  {
+    setInputFilePath(QDir::homePath());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -193,19 +191,17 @@ void ReadH5EbsdWidget::validateInputFile()
     QString Ftype = m_FilterParameter->getFileType();
     QString ext = m_FilterParameter->getFileExtension();
     QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
-    QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
-
+    
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
-    QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
+    QString file = QFileDialog::getOpenFileName(this, title, getInputFilePath(), s);
     if(true == file.isEmpty())
     {
       file = currentPath;
     }
     file = QDir::toNativeSeparators(file);
     // Store the last used directory into the private instance variable
-    QFileInfo fi(file);
-    m_OpenDialogLastDirectory = fi.path();
+    setInputFilePath(file);
     m_Filter->setInputFile(file);
   }
 }
@@ -223,8 +219,8 @@ void ReadH5EbsdWidget::on_m_InputFileBtn_clicked()
   QString Ftype = m_FilterParameter->getFileType();
   QString ext = m_FilterParameter->getFileExtension();
   QString s = Ftype + QString("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)");
-  QString defaultName = getOpenDialogLastDirectory();
-  QString inputFile = QFileDialog::getOpenFileName(this, tr("Select H5Ebsd Input File"), defaultName, s);
+
+  QString inputFile = QFileDialog::getOpenFileName(this, tr("Select H5Ebsd Input File"), getInputFilePath(), s);
   if(true == inputFile.isEmpty())
   {
     return;
@@ -242,7 +238,6 @@ void ReadH5EbsdWidget::on_m_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString& text)
 {
-  setOpenDialogLastDirectory(m_InputFile->text());
   verifyPathExists(m_InputFile->text(), m_InputFile);
 
   m_NewFileLoaded = true;
@@ -648,4 +643,25 @@ void ReadH5EbsdWidget::resetGuiFileInfoWidgets()
   m_ZMin->setText("xxx");
   m_ZMax->setText("xxx");
   m_RefFrameZDir->setText("xxx");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdWidget::setInputFilePath(QString val) 
+{
+  m_InputFile->setText(val);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReadH5EbsdWidget::getInputFilePath() 
+{
+  if(m_InputFile->text().isEmpty())
+  {
+    return QDir::homePath();
+  }
+
+  return m_InputFile->text();
 }

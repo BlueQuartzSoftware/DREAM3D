@@ -94,7 +94,6 @@ StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent)
 , m_PhaseIndex(-1)
 , m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
-  m_OpenDialogLastDirectory = QDir::homePath();
   this->setupUi(this);
   this->setupGui();
 }
@@ -349,7 +348,7 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 {
-  QString proposedFile = m_OpenDialogLastDirectory;
+  QString proposedFile = m_OpenDialogLastFilePath;
   QString file = QFileDialog::getOpenFileName(this, tr("Open MDF File"), proposedFile, tr("Text Document (*.txt)"));
   if(true == file.isEmpty())
   {
@@ -357,6 +356,9 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   }
   else
   {
+    QFileInfo fi(file);
+    m_OpenDialogLastFilePath = fi.filePath();
+
     size_t numMisorients = 0;
     QString filename = file;
     std::ifstream inFile;

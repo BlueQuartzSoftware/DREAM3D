@@ -48,9 +48,6 @@
 #include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
 
-// Initialize private static member variable
-QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,13 +61,17 @@ ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParamet
 
   m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(parameter);
 
-  if(getOpenDialogLastDirectory().isEmpty())
-  {
-    setOpenDialogLastDirectory(QDir::homePath());
-  }
   setupUi(this);
   setupGui();
   //  checkIOFiles();
+  if(getInputDirectory().isEmpty())
+  {
+    setInputDirectory(QDir::homePath());
+  }
+  if(getOutputDirectory().isEmpty())
+  {
+    setOutputDirectory(QDir::homePath());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -222,11 +223,10 @@ void ConvertHexGridToSquareGridWidget::validateInputFile()
     //    QString Ftype = m_FilterParameter->getFileType();
     //    QString ext = m_FilterParameter->getFileExtension();
     //    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
-    QString defaultName = m_OpenDialogLastDirectory;
-
+    
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
-    QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
+    QString file = QFileDialog::getExistingDirectory(this, title, getInputDirectory(), QFileDialog::ShowDirsOnly);
     if(true == file.isEmpty())
     {
       file = currentPath;
@@ -234,7 +234,7 @@ void ConvertHexGridToSquareGridWidget::validateInputFile()
     file = QDir::toNativeSeparators(file);
     // Store the last used directory into the private instance variable
     QFileInfo fi(file);
-    m_OpenDialogLastDirectory = fi.path();
+    setInputDirectory(fi.path());
     m_Filter->setInputPath(file);
   }
 }
@@ -282,14 +282,13 @@ void ConvertHexGridToSquareGridWidget::checkIOFiles()
 void ConvertHexGridToSquareGridWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
-  QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
-  outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
+  QString outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), getInputDirectory());
   if(!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(outputFile));
     on_m_InputDir_textChanged(m_InputDir->text());
-    getOpenDialogLastDirectory() = outputFile;
+    setInputDirectory(outputFile);
     m_InputDir->blockSignals(false);
   }
 }
@@ -301,7 +300,6 @@ void ConvertHexGridToSquareGridWidget::on_m_InputDir_textChanged(const QString& 
 {
   if(verifyPathExists(m_InputDir->text(), m_InputDir))
   {
-
     findMaxSliceAndPrefix();
     QDir dir(m_InputDir->text());
     QString dirname = dir.dirName();
@@ -323,16 +321,10 @@ void ConvertHexGridToSquareGridWidget::on_m_InputDir_textChanged(const QString& 
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
 {
-  QString currentPath = m_Filter->getOutputPath();
-  if(currentPath.isEmpty() == true)
-  {
-    currentPath = m_OpenDialogLastDirectory;
-  }
   QString Ftype = m_FilterParameter->getFileType();
   QString ext = m_FilterParameter->getFileExtension();
   QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
-  QString defaultName = currentPath + QDir::separator() + "Untitled";
-  QString file = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"), defaultName, QFileDialog::ShowDirsOnly);
+  QString file = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"), getOutputDirectory(), QFileDialog::ShowDirsOnly);
 
   if(true == file.isEmpty())
   {
@@ -342,7 +334,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
   file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);
-  m_OpenDialogLastDirectory = fi.path();
+  setOutputDirectory(fi.path());
   m_OutputDir->setText(file);
 
   // on_m_OutputDir_textChanged(file);
@@ -354,10 +346,10 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
 void ConvertHexGridToSquareGridWidget::on_m_OutputDir_textChanged(const QString& text)
 {
   // if (verifyPathExists(text, m_OutputFile) == true )
-  {
-    QFileInfo fi(text);
-    setOpenDialogLastDirectory(fi.path());
-  }
+  //{
+  //  QFileInfo fi(text);
+  //  setOpenDialogLastFilePath(fi.path());
+  //}
   emit parametersChanged();
 }
 
@@ -645,4 +637,36 @@ void ConvertHexGridToSquareGridWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::afterPreflight()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridWidget::setInputDirectory(QString val) 
+{
+  m_InputDir->setText(val);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGridWidget::getInputDirectory() 
+{
+  return m_InputDir->text();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridWidget::setOutputDirectory(QString val) 
+{
+  m_OutputDir->setText(val);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGridWidget::getOutputDirectory() 
+{
+  return m_OutputDir->text();
 }

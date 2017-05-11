@@ -82,7 +82,7 @@ StatsGeneratorWidget::StatsGeneratorWidget(FilterParameter* parameter, AbstractF
   m_Filter = dynamic_cast<StatsGeneratorFilter*>(filter);
   Q_ASSERT_X(m_Filter != nullptr, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilter filter");
 
-  m_OpenDialogLastDirectory = QDir::homePath();
+  m_OpenDialogLastFilePath = QDir::homePath();
   setWidgetIsExpanding(true);
   setupUi(this);
   setupGui();
@@ -740,7 +740,7 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
 void StatsGeneratorWidget::on_saveJsonBtn_clicked()
 {
 
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.json";
+  QString proposedFile = m_OpenDialogLastFilePath + QDir::separator() + "Untitled.json";
   QString outFile = QFileDialog::getSaveFileName(this, tr("Save JSON File"), proposedFile, tr("JSON Files (*.json)"));
 
   if(true == outFile.isEmpty())
@@ -749,7 +749,7 @@ void StatsGeneratorWidget::on_saveJsonBtn_clicked()
   }
   QFileInfo fi(outFile);
   QString ext = fi.suffix();
-  m_OpenDialogLastDirectory = fi.path();
+  m_OpenDialogLastFilePath = outFile;
 
   DataContainerArray::Pointer dca = generateDataContainerArray();
   AttributeMatrix::Pointer am = dca->getAttributeMatrix(DataArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, ""));
@@ -784,7 +784,7 @@ void StatsGeneratorWidget::on_saveJsonBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::on_saveH5Btn_clicked()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
+  QString proposedFile = m_OpenDialogLastFilePath;
 
   QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM.3D File"), proposedFile, tr("DREAM.3D Files (*.dream3d)"));
 
@@ -795,7 +795,7 @@ void StatsGeneratorWidget::on_saveH5Btn_clicked()
 
   QFileInfo fi(h5file);
   QString ext = fi.suffix();
-  m_OpenDialogLastDirectory = fi.path();
+  m_OpenDialogLastFilePath = fi.filePath();
 
   DataContainerArray::Pointer dca = generateDataContainerArray();
 
@@ -818,7 +818,7 @@ void StatsGeneratorWidget::on_saveH5Btn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::on_openStatsFile_clicked()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
+  QString proposedFile = m_OpenDialogLastFilePath + QDir::separator() + "Untitled.dream3d";
   QString h5file = QFileDialog::getOpenFileName(this, tr("Open Statistics File"), proposedFile, tr("DREAM3D Files (*.dream3d);;H5Stats Files(*.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
   if(true == h5file.isEmpty())
   {
@@ -842,7 +842,7 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
   }
 
   // Set the last directory that contains our file
-  m_OpenDialogLastDirectory = fi.path();
+  m_OpenDialogLastFilePath = fi.path();
 
   // Delete any existing phases from the GUI
   phaseTabs->clear();

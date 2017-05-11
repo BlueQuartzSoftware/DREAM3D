@@ -128,8 +128,11 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     void stackingOrderChanged(bool checked);
 
   protected:
-    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
-    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
+    void setInputDirectory(QString val);
+    QString getInputDirectory();
+
+    void setOutputPath(QString val);
+    QString getOutputPath();
 
     /**
      * @brief checkIOFiles
@@ -201,7 +204,6 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     AxisAngleInput_t m_SampleTransformation;
     AxisAngleInput_t m_EulerTransformation;
 
-    static QString                m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
 
 

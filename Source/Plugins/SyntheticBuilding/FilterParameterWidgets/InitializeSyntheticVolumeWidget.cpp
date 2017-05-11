@@ -65,9 +65,6 @@
 
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 
-// Initialize private static member variable
-QString InitializeSyntheticVolumeWidget::m_OpenDialogLastDirectory = "";
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -81,12 +78,13 @@ InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter
   m_Filter = qobject_cast<InitializeSyntheticVolume*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
 
-  if(getOpenDialogLastDirectory().isEmpty())
-  {
-    setOpenDialogLastDirectory(QDir::homePath());
-  }
   setupUi(this);
   setupGui();
+
+  if(getInputFilePath().isEmpty())
+  {
+    setInputFilePath(QDir::homePath());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -163,7 +161,7 @@ void InitializeSyntheticVolumeWidget::setupGui()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 {
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), m_OpenDialogLastDirectory, tr("DREAM3D Stats Files (*.dream3d *.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), getInputFilePath(), tr("DREAM3D Stats Files (*.dream3d *.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
   if(true == file.isEmpty())
   {
     return;
@@ -171,7 +169,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
   QFileInfo fi(file);
   m_InputFile->blockSignals(true);
   QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
-  m_InputFile->setText(p);
+  setInputFilePath(p);
   on_m_InputFile_textChanged(m_InputFile->text());
   m_InputFile->blockSignals(false);
 }
@@ -572,6 +570,22 @@ bool InitializeSyntheticVolumeWidget::verifyPathExists(QString outFilePath, QLin
     lineEdit->setStyleSheet("");
   }
   return fileinfo.exists();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolumeWidget::setInputFilePath(QString val) 
+{
+  m_InputFile->setText(val);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString InitializeSyntheticVolumeWidget::getInputFilePath() 
+{
+  return m_InputFile->text();
 }
 
 #if 0

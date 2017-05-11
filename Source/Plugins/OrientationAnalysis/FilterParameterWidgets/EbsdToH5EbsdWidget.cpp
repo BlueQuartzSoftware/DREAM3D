@@ -63,8 +63,6 @@
 
 #include "OrientationAnalysis/Widgets/QEbsdReferenceFrameDialog.h"
 
-// Initialize private static member variable
-QString EbsdToH5EbsdWidget::m_OpenDialogLastDirectory = "";
 
 // -----------------------------------------------------------------------------
 //
@@ -91,12 +89,17 @@ EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilte
   m_Filter = qobject_cast<EbsdToH5Ebsd*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
 
-  if(getOpenDialogLastDirectory().isEmpty())
-  {
-    setOpenDialogLastDirectory(QDir::homePath());
-  }
   setupUi(this);
   setupGui();
+
+  if (getInputDirectory().isEmpty())
+  {
+    setInputDirectory(QDir::homePath());
+  }
+  if (getOutputPath().isEmpty())
+  {
+    setOutputPath(QDir::homePath());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -224,7 +227,11 @@ void EbsdToH5EbsdWidget::validateInputFile()
     //    QString Ftype = getFilterParameter()->getFileType();
     //    QString ext = getFilterParameter()->getFileExtension();
     //    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
-    QString defaultName = m_OpenDialogLastDirectory;
+    QString defaultName = getInputDirectory();
+    if(!m_InputDir->text().isEmpty())
+    {
+      defaultName = m_InputDir->text();
+    }
 
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
@@ -236,7 +243,7 @@ void EbsdToH5EbsdWidget::validateInputFile()
     file = QDir::toNativeSeparators(file);
     // Store the last used directory into the private instance variable
     QFileInfo fi(file);
-    m_OpenDialogLastDirectory = fi.path();
+    setInputDirectory(fi.path());
     m_Filter->setInputPath(file);
   }
 }
@@ -260,10 +267,10 @@ d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0]
 void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
 {
   // if (verifyPathExists(text, m_OutputFile) == true )
-  {
-    QFileInfo fi(text);
-    setOpenDialogLastDirectory(fi.path());
-  }
+  //{
+  //  QFileInfo fi(text);
+  //  setOutputPath(fi.filePath());
+  //}
   emit parametersChanged();
 }
 
@@ -301,7 +308,8 @@ void EbsdToH5EbsdWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
 {
-  QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"), getOpenDialogLastDirectory(), tr("HDF5 EBSD Files (*.h5ebsd)"));
+  QString defaultName = getOutputPath();
+  QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"), defaultName, tr("HDF5 EBSD Files (*.h5ebsd)"));
   if(true == file.isEmpty())
   {
     return;
@@ -309,7 +317,7 @@ void EbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
   QFileInfo fi(file);
   QString ext = fi.suffix();
   m_OutputFile->setText(fi.absoluteFilePath());
-  setOpenDialogLastDirectory(fi.path());
+  setOutputPath(file);
 }
 
 // -----------------------------------------------------------------------------
@@ -318,14 +326,14 @@ void EbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
 void EbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
-  QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
+  QString outputFile = this->getInputDirectory() + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
   if(!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(outputFile));
     on_m_InputDir_textChanged(m_InputDir->text());
-    getOpenDialogLastDirectory() = outputFile;
+    setInputDirectory(outputFile);
     m_InputDir->blockSignals(false);
   }
 }
@@ -770,4 +778,45 @@ void EbsdToH5EbsdWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::afterPreflight()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::setInputDirectory(QString val)
+{
+  m_InputDir->setText(val);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString EbsdToH5EbsdWidget::getInputDirectory() 
+{
+  if (m_InputDir->text().isEmpty())
+  {
+    return QDir::homePath();
+  }
+  return m_InputDir->text();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+
+void EbsdToH5EbsdWidget::setOutputPath(QString val) 
+{
+  m_OutputFile->setText(val);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString EbsdToH5EbsdWidget::getOutputPath() 
+{
+  if (m_OutputFile->text().isEmpty())
+  {
+    return QDir::homePath();
+  }
+  return m_OutputFile->text();
 }

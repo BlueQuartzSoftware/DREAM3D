@@ -635,7 +635,8 @@ void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
   QString Ftype = "Image Files";
   QString ext = "*.png";
   QString s = "Image Files (*.tiff *.png *.bmp);;All Files(*.*)";
-  QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.png";
+  QString defaultName = m_OpenDialogLastDirectory;
+  
   QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
 
   if(true == file.isEmpty())
@@ -645,8 +646,7 @@ void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
   // bool ok = false;
   file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
-  QFileInfo fi(file);
-  m_OpenDialogLastDirectory = fi.path();
+  m_OpenDialogLastDirectory = file;
 
   QImage image = m_PoleFigureLabel->pixmap()->toImage();
   image.save(file);
