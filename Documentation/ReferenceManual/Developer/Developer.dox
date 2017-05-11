@@ -44,5 +44,9 @@ How to compile the external dependencies for DREAM.3D
 
 Explanation of DREAM.3D's versioning scheme
 
+@subpage writingafilter
+
+How to Write a DREAM.3D Filter
+
 
 */

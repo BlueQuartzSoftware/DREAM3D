@@ -62,6 +62,9 @@ if(DREAM3D_INCLUDE_DEVELOPER_DOCS)
     \"${PROJECT_SOURCE_DIR}/Developer/SDKInstall.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/SourceDownload.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/Versioning.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/WritingAFilter.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/DataCheck.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/Execute.md\"
   )
 endif()
 
