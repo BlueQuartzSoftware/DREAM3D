@@ -94,10 +94,6 @@ Qt::ItemFlags SGPowerLawTableModel::flags(const QModelIndex& index) const
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
-    else if(col == LineColor)
-    {
-      // theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-    }
   }
   return theFlags;
 }
@@ -159,16 +155,6 @@ QVariant SGPowerLawTableModel::data(const QModelIndex& index, qint32 role) const
       }
       break;
     }
-    case LineColor:
-    {
-      //        comboBox.currentText = QString("Dark Blue     ");
-      //        const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-      //        if (header.length() > comboBox.currentText.length())
-      //        {
-      //          comboBox.currentText = header;
-      //        }
-      break;
-    }
     default:
       Q_ASSERT(false);
     }
@@ -200,10 +186,6 @@ QVariant SGPowerLawTableModel::data(const QModelIndex& index, qint32 role) const
     {
       return QVariant(m_Beta[index.row()]);
     }
-    else if(col == LineColor)
-    {
-      //  return QVariant(m_Colors[index.row()]);
-    }
   }
 
   return QVariant();
@@ -229,9 +211,6 @@ QVariant SGPowerLawTableModel::headerData(int section, Qt::Orientation orientati
       break;
     case Beta:
       return QVariant(QString("Beta"));
-      break;
-    case LineColor:
-      // return QVariant(QColor("white"));
       break;
     default:
       break;
@@ -282,9 +261,6 @@ bool SGPowerLawTableModel::setData(const QModelIndex& index, const QVariant& val
     break;
   case Beta:
     m_Beta[row] = value.toFloat(&ok);
-    break;
-  case LineColor:
-    // m_Colors[row] = value.to();
     break;
   default:
     Q_ASSERT(false);

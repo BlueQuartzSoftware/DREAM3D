@@ -83,7 +83,6 @@ class SGBetaItemDelegate : public QStyledItemDelegate
       QLineEdit* beta;
       QDoubleValidator* alphaValidator;
       QDoubleValidator* betaValidator;
-      QComboBox* colorCombo;
 
       qint32 col = index.column();
       switch(col)
@@ -106,9 +105,6 @@ class SGBetaItemDelegate : public QStyledItemDelegate
           betaValidator->setDecimals(6);
           beta->setValidator(betaValidator);
           return beta;
-        case SGBetaTableModel::LineColor:
-          colorCombo = new QtSColorComboPicker(parent);
-          return colorCombo;
         default:
           break;
       }
@@ -129,13 +125,6 @@ class SGBetaItemDelegate : public QStyledItemDelegate
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else if (col == SGBetaTableModel::LineColor)
-      {
-        QString state = index.model()->data(index).toString();
-        QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
-        Q_ASSERT(comboBox);
-        comboBox->setCurrentIndex(comboBox->findText(state));
-      }
       else { QStyledItemDelegate::setEditorData(editor, index); }
     }
 
@@ -154,12 +143,6 @@ class SGBetaItemDelegate : public QStyledItemDelegate
         bool ok = false;
         double v = lineEdit->text().toFloat(&ok);
         model->setData(index, v);
-      }
-      else if (col == SGBetaTableModel::LineColor)
-      {
-        QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
-        Q_ASSERT(comboBox);
-        model->setData(index, comboBox->currentText());
       }
       else { QStyledItemDelegate::setModelData(editor, model, index); }
 

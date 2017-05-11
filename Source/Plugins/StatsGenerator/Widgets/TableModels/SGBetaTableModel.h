@@ -63,7 +63,6 @@ class SGBetaTableModel : public SGAbstractTableModel
       BinNumber = 0,
       Alpha,
       Beta,
-      LineColor,
       ColumnCount
     };
 

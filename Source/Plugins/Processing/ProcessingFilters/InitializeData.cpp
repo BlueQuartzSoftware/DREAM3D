@@ -35,13 +35,11 @@
 
 #include "InitializeData.h"
 
+#include <random>
+#include <chrono>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDateTime>
-
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/variate_generator.hpp>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -103,8 +101,8 @@ void InitializeData::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-                                                                                                                            AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    MultiDataArraySelectionFilterParameter::RequirementType req =
+        MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Cell Arrays", CellAttributeMatrixPaths, FilterParameter::RequiredArray, InitializeData, req));
   }
   parameters.push_back(SIMPL_NEW_INTEGER_FP("X Min (Column)", XMin, FilterParameter::Parameter, InitializeData));
@@ -461,15 +459,11 @@ template <typename T> void InitializeData::initializeArrayWithInts(IDataArray::P
     rangeMax = std::numeric_limits<T>().max();
   }
 
-  typedef boost::mt19937 RandomNumberGenerator;
-  typedef boost::uniform_int<T> IntDistribution;
-  typedef boost::variate_generator<RandomNumberGenerator&, IntDistribution> IntGenerator;
-
-  std::shared_ptr<IntDistribution> distribution = std::shared_ptr<IntDistribution>(new IntDistribution(rangeMin, rangeMax));
-  std::shared_ptr<RandomNumberGenerator> randomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
-  randomNumberGenerator->seed(static_cast<size_t>(QDateTime::currentMSecsSinceEpoch())); // seed with the current time
-  std::shared_ptr<IntGenerator> intGeneratorPtr = std::shared_ptr<IntGenerator>(new IntGenerator(*randomNumberGenerator, *distribution));
-  IntGenerator& intGenerator = *intGeneratorPtr;
+  std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+  std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  generator.seed(seed);
+  std::uniform_int_distribution<> distribution(rangeMin, rangeMax);
 
   for(int32_t k = m_ZMin; k < m_ZMax + 1; k++)
   {
@@ -486,7 +480,7 @@ template <typename T> void InitializeData::initializeArrayWithInts(IDataArray::P
         }
         else
         {
-          T temp = intGenerator();
+          T temp = distribution(generator);
           p->initializeTuple(index, &temp);
         }
       }
@@ -512,15 +506,11 @@ template <typename T> void InitializeData::initializeArrayWithReals(IDataArray::
     rangeMax = std::numeric_limits<T>().max();
   }
 
-  typedef boost::mt19937 RandomNumberGenerator;
-  typedef boost::uniform_real<T> RealDistribution;
-  typedef boost::variate_generator<RandomNumberGenerator&, RealDistribution> RealGenerator;
-
-  std::shared_ptr<RealDistribution> distribution = std::shared_ptr<RealDistribution>(new RealDistribution(rangeMin, rangeMax));
-  std::shared_ptr<RandomNumberGenerator> randomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
-  randomNumberGenerator->seed(static_cast<size_t>(QDateTime::currentMSecsSinceEpoch())); // seed with the current time
-  std::shared_ptr<RealGenerator> realGeneratorPtr = std::shared_ptr<RealGenerator>(new RealGenerator(*randomNumberGenerator, *distribution));
-  RealGenerator& realGenerator = *realGeneratorPtr;
+  std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+  std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  generator.seed(seed);
+  std::uniform_real_distribution<T> distribution(rangeMin, rangeMax);
 
   for(int32_t k = m_ZMin; k < m_ZMax + 1; k++)
   {
@@ -537,7 +527,7 @@ template <typename T> void InitializeData::initializeArrayWithReals(IDataArray::
         }
         else
         {
-          T temp = realGenerator();
+          T temp = distribution(generator);
           p->initializeTuple(index, &temp);
         }
       }

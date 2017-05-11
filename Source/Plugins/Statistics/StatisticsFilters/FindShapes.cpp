@@ -140,7 +140,7 @@ void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 void FindShapes::initialize()
 {
-  m_ScaleFactor = 1.0f;
+  m_ScaleFactor = 1.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -288,9 +288,9 @@ void FindShapes::find_moments()
       for(size_t k = 0; k < xPoints; k++)
       {
         int32_t gnum = m_FeatureIds[zStride + yStride + k];
-        x = float(k * modXRes) + xOrigin;
-        y = float(j * modYRes) + yOrigin;
-        z = float(i * modZRes) + zOrigin;
+        x = float(k * modXRes) + (xOrigin * static_cast<float>(m_ScaleFactor));
+        y = float(j * modYRes) + (yOrigin * static_cast<float>(m_ScaleFactor));
+        z = float(i * modZRes) + (zOrigin * static_cast<float>(m_ScaleFactor));
         x1 = x + (modXRes / 4.0f);
         x2 = x - (modXRes / 4.0f);
         y1 = y + (modYRes / 4.0f);
@@ -447,8 +447,8 @@ void FindShapes::find_moments2D()
     for(size_t k = 0; k < xPoints; k++)
     {
       int32_t gnum = m_FeatureIds[yStride + k];
-      x = float(k) * modXRes;
-      y = float(j) * modYRes;
+      x = float(k * modXRes) + (xOrigin * static_cast<float>(m_ScaleFactor));
+      y = float(j * modYRes) + (yOrigin * static_cast<float>(m_ScaleFactor));
       x1 = x + (modXRes / 4.0f);
       x2 = x - (modXRes / 4.0f);
       y1 = y + (modYRes / 4.0f);

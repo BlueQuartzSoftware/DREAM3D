@@ -36,48 +36,45 @@
 #include "LaueOps.h"
 
 #include <limits>
-
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
+#include <random>
+#include <chrono>
 
 #include <QtCore/QDateTime>
 
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Utilities/ColorTable.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
-#include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/CubicLowOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalLowOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/LaueOps/TrigonalOps.h"
-#include "OrientationLib/LaueOps/TetragonalOps.h"
-#include "OrientationLib/LaueOps/TrigonalLowOps.h"
-#include "OrientationLib/LaueOps/TetragonalLowOps.h"
-#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
 #include "OrientationLib/LaueOps/MonoclinicOps.h"
-
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+#include "OrientationLib/LaueOps/TetragonalLowOps.h"
+#include "OrientationLib/LaueOps/TetragonalOps.h"
+#include "OrientationLib/LaueOps/TriclinicOps.h"
+#include "OrientationLib/LaueOps/TrigonalLowOps.h"
+#include "OrientationLib/LaueOps/TrigonalOps.h"
 
 namespace Detail
 {
 
-//const static float m_OnePointThree = 1.33333333333f;
+// const static float m_OnePointThree = 1.33333333333f;
 
-  const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(SIMPLib::Constants::k_ACosNeg1 / 2.0f) );
-  const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(SIMPLib::Constants::k_ACos1 / 2.0f) );
-  const float sin_of_acos_neg_1 = sinf(SIMPLib::Constants::k_ACosNeg1);
-  const float sin_of_acos_pos_1 = sinf(SIMPLib::Constants::k_ACos1);
+const float sin_wmin_neg_1_over_2 = static_cast<float>(sinf(SIMPLib::Constants::k_ACosNeg1 / 2.0f));
+const float sin_wmin_pos_1_over_2 = static_cast<float>(sinf(SIMPLib::Constants::k_ACos1 / 2.0f));
+const float sin_of_acos_neg_1 = sinf(SIMPLib::Constants::k_ACosNeg1);
+const float sin_of_acos_pos_1 = sinf(SIMPLib::Constants::k_ACos1);
 
 //  const float recip_sin_of_acos_neg_1 = 1.0f / sin_of_acos_neg_1;
 //  const float recip_sin_of_acos_pos_1 = 1.0f / sin_of_acos_pos_1;
 
-  const static float SinOfHalf = sinf(0.5f);
-  const static float CosOfHalf = cosf(0.5f);
-  const static float SinOfZero = sinf(0.0f);
-  const static float CosOfZero = cosf(0.0f);
+const static float SinOfHalf = sinf(0.5f);
+const static float CosOfHalf = cosf(0.5f);
+const static float SinOfZero = sinf(0.0f);
+const static float CosOfZero = cosf(0.0f);
 }
 
 // -----------------------------------------------------------------------------
@@ -102,9 +99,7 @@ void LaueOps::getFZQuat(QuatF& qr)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float LaueOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
-                                   QuatF& q1, QuatF& q2,
-                                   float& n1, float& n2, float& n3)
+float LaueOps::_calcMisoQuat(const QuatF quatsym[24], int numsym, QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
@@ -119,15 +114,15 @@ float LaueOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
 
   QuaternionMathF::Conjugate(q2inv);
   QuaternionMathF::Multiply(q1, q2inv, qr);
-  for (int i = 0; i < numsym; i++)
+  for(int i = 0; i < numsym; i++)
   {
 
     QuaternionMathF::Multiply(quatsym[i], qr, qc);
-    if (qc.w < -1)
+    if(qc.w < -1)
     {
       qc.w = -1;
     }
-    else if (qc.w > 1)
+    else if(qc.w > 1)
     {
       qc.w = 1;
     }
@@ -136,11 +131,11 @@ float LaueOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
     FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
     ax.toAxisAngle(n1, n2, n3, w);
 
-    if (w > SIMPLib::Constants::k_Pi)
+    if(w > SIMPLib::Constants::k_Pi)
     {
       w = SIMPLib::Constants::k_2Pi - w;
     }
-    if (w < wmin)
+    if(w < wmin)
     {
       wmin = w;
       n1min = n1;
@@ -209,9 +204,7 @@ FOrientArrayType LaueOps::_calcRodNearestOrigin(const float rodsym[24][3], int n
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LaueOps::_calcNearestQuat(const QuatF quatsym[24], int numsym,
-                                     QuatF& q1,
-                                     QuatF& q2)
+void LaueOps::_calcNearestQuat(const QuatF quatsym[24], int numsym, QuatF& q1, QuatF& q2)
 {
   float dist = 0;
   float smallestdist = 1000000.0f;
@@ -261,7 +254,6 @@ void LaueOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF&
     {
       smallestdist = dist;
       QuaternionMathF::Copy(qc, qmax);
-
     }
   }
   QuaternionMathF::Copy(qmax, qr);
@@ -271,7 +263,6 @@ void LaueOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF&
   }
 }
 
-
 int LaueOps::_calcMisoBin(float dim[3], float bins[3], float step[3], const FOrientArrayType& ho)
 {
   int miso1bin = int((ho[0] + dim[0]) / step[0]);
@@ -279,15 +270,15 @@ int LaueOps::_calcMisoBin(float dim[3], float bins[3], float step[3], const FOri
   int miso3bin = int((ho[2] + dim[2]) / step[2]);
   if(miso1bin >= bins[0])
   {
-    miso1bin = static_cast<int>( bins[0] - 1 );
+    miso1bin = static_cast<int>(bins[0] - 1);
   }
   if(miso2bin >= bins[1])
   {
-    miso2bin = static_cast<int>( bins[1] - 1 );
+    miso2bin = static_cast<int>(bins[1] - 1);
   }
   if(miso3bin >= bins[2])
   {
-    miso3bin = static_cast<int>( bins[2] - 1 );
+    miso3bin = static_cast<int>(bins[2] - 1);
   }
   if(miso1bin < 0)
   {
@@ -301,7 +292,7 @@ int LaueOps::_calcMisoBin(float dim[3], float bins[3], float step[3], const FOri
   {
     miso3bin = 0;
   }
-  return (static_cast<int>( (bins[0] * bins[1] * miso3bin) + (bins[0] * miso2bin) + miso1bin ));
+  return (static_cast<int>((bins[0] * bins[1] * miso3bin) + (bins[0] * miso2bin) + miso1bin));
 }
 
 void LaueOps::_calcDetermineHomochoricValues(uint64_t seed, float init[3], float step[3], int32_t phi[3], int choose, float& r1, float& r2, float& r3)
@@ -309,11 +300,11 @@ void LaueOps::_calcDetermineHomochoricValues(uint64_t seed, float init[3], float
   float random;
 
   SIMPL_RANDOMNG_NEW_SEEDED(seed)
-  random = static_cast<float>( rg.genrand_res53() );
+  random = static_cast<float>(rg.genrand_res53());
   r1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
-  random = static_cast<float>( rg.genrand_res53() );
+  random = static_cast<float>(rg.genrand_res53());
   r2 = (step[1] * phi[1]) + (step[1] * random) - (init[1]);
-  random = static_cast<float>( rg.genrand_res53() );
+  random = static_cast<float>(rg.genrand_res53());
   r3 = (step[2] * phi[2]) + (step[2] * random) - (init[2]);
 }
 
@@ -331,15 +322,15 @@ int LaueOps::_calcODFBin(float dim[3], float bins[3], float step[3], FOrientArra
   g1euler3bin = int((ho[2] + dim[2]) / step[2]);
   if(g1euler1bin >= bins[0])
   {
-    g1euler1bin = static_cast<int>( bins[0] - 1 );
+    g1euler1bin = static_cast<int>(bins[0] - 1);
   }
   if(g1euler2bin >= bins[1])
   {
-    g1euler2bin = static_cast<int>( bins[1] - 1 );
+    g1euler2bin = static_cast<int>(bins[1] - 1);
   }
   if(g1euler3bin >= bins[2])
   {
-    g1euler3bin = static_cast<int>( bins[2] - 1 );
+    g1euler3bin = static_cast<int>(bins[2] - 1);
   }
   if(g1euler1bin < 0)
   {
@@ -353,7 +344,7 @@ int LaueOps::_calcODFBin(float dim[3], float bins[3], float step[3], FOrientArra
   {
     g1euler3bin = 0;
   }
-  g1odfbin = static_cast<int>( (g1euler3bin * bins[0] * bins[1]) + (g1euler2bin * bins[0]) + (g1euler1bin) );
+  g1odfbin = static_cast<int>((g1euler3bin * bins[0] * bins[1]) + (g1euler2bin * bins[0]) + (g1euler1bin));
   return g1odfbin;
 }
 
@@ -368,18 +359,17 @@ QVector<LaueOps::Pointer> LaueOps::getOrientationOpsQVector()
   m_OrientationOps.push_back(CubicOps::New());
 
   m_OrientationOps.push_back(HexagonalLowOps::New()); // Hex Low
-  m_OrientationOps.push_back(CubicLowOps::New()); // Cubic Low
-  m_OrientationOps.push_back(TriclinicOps::New()); // Triclinic
-  m_OrientationOps.push_back(MonoclinicOps::New()); // Monoclinic
+  m_OrientationOps.push_back(CubicLowOps::New());     // Cubic Low
+  m_OrientationOps.push_back(TriclinicOps::New());    // Triclinic
+  m_OrientationOps.push_back(MonoclinicOps::New());   // Monoclinic
 
-  m_OrientationOps.push_back(OrthoRhombicOps::New());// OrthoRhombic
-
+  m_OrientationOps.push_back(OrthoRhombicOps::New()); // OrthoRhombic
 
   m_OrientationOps.push_back(TetragonalLowOps::New()); // Tetragonal-low
-  m_OrientationOps.push_back(TetragonalOps::New());// Tetragonal-high
+  m_OrientationOps.push_back(TetragonalOps::New());    // Tetragonal-high
 
   m_OrientationOps.push_back(TrigonalLowOps::New()); // Trigonal-low
-  m_OrientationOps.push_back(TrigonalOps::New());// Trigonal-High
+  m_OrientationOps.push_back(TrigonalOps::New());    // Trigonal-High
 
   m_OrientationOps.push_back(OrthoRhombicOps::New()); // Axis OrthorhombicOps
 
@@ -397,18 +387,17 @@ std::vector<LaueOps::Pointer> LaueOps::getOrientationOpsVector()
   m_OrientationOps.push_back(CubicOps::New());
 
   m_OrientationOps.push_back(HexagonalLowOps::New()); // Hex Low
-  m_OrientationOps.push_back(CubicLowOps::New()); // Cubic Low
-  m_OrientationOps.push_back(TriclinicOps::New()); // Triclinic
-  m_OrientationOps.push_back(MonoclinicOps::New()); // Monoclinic
+  m_OrientationOps.push_back(CubicLowOps::New());     // Cubic Low
+  m_OrientationOps.push_back(TriclinicOps::New());    // Triclinic
+  m_OrientationOps.push_back(MonoclinicOps::New());   // Monoclinic
 
-  m_OrientationOps.push_back(OrthoRhombicOps::New());// OrthoRhombic
-
+  m_OrientationOps.push_back(OrthoRhombicOps::New()); // OrthoRhombic
 
   m_OrientationOps.push_back(TetragonalLowOps::New()); // Tetragonal-low
-  m_OrientationOps.push_back(TetragonalOps::New());// Tetragonal-high
+  m_OrientationOps.push_back(TetragonalOps::New());    // Tetragonal-high
 
   m_OrientationOps.push_back(TrigonalLowOps::New()); // Trigonal-low
-  m_OrientationOps.push_back(TrigonalOps::New());// Trigonal-High
+  m_OrientationOps.push_back(TrigonalOps::New());    // Trigonal-High
 
   m_OrientationOps.push_back(OrthoRhombicOps::New()); // Axis OrthorhombicOps
 
@@ -423,7 +412,7 @@ std::vector<QString> LaueOps::GetLaueNames()
   std::vector<QString> names;
 
   std::vector<LaueOps::Pointer> ops = getOrientationOpsVector();
-  std::for_each(ops.begin(), ops.end(), [&](LaueOps::Pointer op){ names.push_back(op->getSymmetryName()); });
+  std::for_each(ops.begin(), ops.end(), [&](LaueOps::Pointer op) { names.push_back(op->getSymmetryName()); });
 
   return names;
 }
@@ -433,16 +422,18 @@ std::vector<QString> LaueOps::GetLaueNames()
 // -----------------------------------------------------------------------------
 size_t LaueOps::getRandomSymmetryOperatorIndex(int numSymOps)
 {
-  const int rangeMin = 0;
-  const int rangeMax = numSymOps-1;
-  typedef boost::uniform_int<int> NumberDistribution;
-  typedef boost::mt19937 RandomNumberGenerator;
-  typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
-  NumberDistribution distribution(rangeMin, rangeMax);
-  RandomNumberGenerator generator;
-  Generator numberGenerator(generator, distribution);
-  generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
-  size_t symOp = numberGenerator(); // Random remaining position.
+  using SizeTDistributionType = std::uniform_int_distribution<size_t>;
+
+  const SizeTDistributionType::result_type rangeMin = 0;
+  const SizeTDistributionType::result_type rangeMax = static_cast<SizeTDistributionType::result_type>(numSymOps - 1);
+
+  std::random_device randomDevice;           // Will be used to obtain a seed for the random number engine
+  std::mt19937_64 generator(randomDevice()); // Standard mersenne_twister_engine seeded with rd()
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  generator.seed(seed);
+  SizeTDistributionType distribution(rangeMin, rangeMax);
+
+  size_t symOp = distribution(generator); // Random remaining position.
   return symOp;
 }

@@ -64,7 +64,6 @@ class SGPowerLawTableModel : public SGAbstractTableModel
       Alpha,
       K,
       Beta,
-      LineColor,
       ColumnCount
     };
 

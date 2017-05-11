@@ -251,7 +251,7 @@ const QString FindTriangleGeomCentroids::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindTriangleGeomCentroids::getGroupName()
-{ return SIMPL::FilterGroups::GenericFilters; }
+{ return SIMPL::FilterGroups::Generic; }
 
 // -----------------------------------------------------------------------------
 //

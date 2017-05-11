@@ -35,6 +35,8 @@
 
 #include "ScalarSegmentFeatures.h"
 
+#include <chrono>
+
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"
@@ -208,16 +210,14 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, ScalarSegmentFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
-    QVector<IGeometry::Type> geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
+    QVector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Scalar Array to Segment", ScalarArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    QVector<IGeometry::Type> geomTypes = { IGeometry::Type::Image, IGeometry::Type::RectGrid };
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    QVector<IGeometry::Type> geomTypes = {IGeometry::Type::Image, IGeometry::Type::RectGrid};
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
@@ -368,9 +368,6 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
   const int64_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-  // Get a reference variable to the Generator object
-  Generator& numberGenerator = *m_NumberGenerator;
-
   DataArray<int64_t>::Pointer rndNumbers = DataArray<int64_t>::CreateArray(totalFeatures, "_INTERNAL_USE_ONLY_NewFeatureIds");
 
   int64_t* gid = rndNumbers->getPointer(0);
@@ -387,7 +384,7 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
   //--- Shuffle elements by randomly exchanging each with one other.
   for(int64_t i = 1; i < totalFeatures; i++)
   {
-    r = numberGenerator(); // Random remaining position.
+    r = m_Distribution(m_Generator); // Random remaining position.
     if(r >= totalFeatures)
     {
       continue;
@@ -466,10 +463,11 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax)
 {
-  m_Distribution = std::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
-  m_RandomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
-  m_NumberGenerator = std::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
-  m_RandomNumberGenerator->seed(static_cast<size_t>(QDateTime::currentMSecsSinceEpoch())); // seed with the current time
+
+  std::mt19937_64::result_type seed = static_cast<std::mt19937_64::result_type>(std::chrono::steady_clock::now().time_since_epoch().count());
+  m_Generator.seed(seed);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
+  m_Distribution = std::uniform_int_distribution<int64_t>(rangeMin, rangeMax);
 }
 
 // -----------------------------------------------------------------------------

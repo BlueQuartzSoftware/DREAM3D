@@ -40,6 +40,7 @@
 #include <QtCore/QFutureWatcher>
 #include <QtGui/QImage>
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QButtonGroup>
 
 #include "ui_StatsGenAxisODFWidget.h"
 
@@ -112,10 +113,18 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     void on_deleteODFTextureBtn_clicked();
     void on_loadODFTextureBtn_clicked();
     void on_selectAnglesFile_clicked();
-    void on_bulkLoadGroupBox_clicked ( bool checked = false );
-    void on_weightSpreadGroupBox_clicked ( bool checked = false );
+
     void on_savePoleFigureImage_clicked();
     void on_angleFilePath_textChanged();
+
+    void tableDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+
+    void on_m_ODFParametersBtn_clicked(bool b);
+    void on_m_MDFParametersBtn_clicked(bool b);
+
+    void on_m_WeightSpreads_clicked(bool b);
+    void on_m_WeightSpreadsBulkLoad_clicked(bool b);
+
 
   signals:
     void dataChanged();
@@ -123,17 +132,24 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
 
   protected:
 
+    /**
+     * @brief calculateODF
+     */
+    void calculateODF();
+
   private:
     int      m_PhaseIndex;
     unsigned int      m_CrystalStructure;
-    SGODFTableModel*        m_ODFTableModel;
-    SGODFTableModel*        m_OdfBulkTableModel;
-    StatsGenMDFWidget*      m_MDFWidget;
+    SGODFTableModel*        m_ODFTableModel = nullptr;
+    SGODFTableModel*        m_OdfBulkTableModel = nullptr;
     QVector<QwtPlotCurve*>  m_PlotCurves;
-    QwtPlotMarker*          m_PlotGrid;
-    QwtPlotCurve*           m_CircleGrid;
-    QwtPlotCurve*           m_RotCross0;
-    QwtPlotCurve*           m_RotCross1;
+    QwtPlotMarker*          m_PlotGrid = nullptr;
+    QwtPlotCurve*           m_CircleGrid = nullptr;
+    QwtPlotCurve*           m_RotCross0 = nullptr;
+    QwtPlotCurve*           m_RotCross1 = nullptr;
+    QButtonGroup            m_ButtonGroup;
+    QButtonGroup            m_ODFGroup;
+    bool                    m_AbortUpdate = true;
 
     QString m_OpenDialogLastFilePath; // Must be last in the list
 

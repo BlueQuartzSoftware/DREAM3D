@@ -61,6 +61,8 @@ set(TEST_NAMES
   ComputeMomentInvariants2DTest
   CalculateArrayHistogramTest
   FindDifferenceMapTest
+  FindEuclideanDistMapTest
+  FindShapesTest
   FindSizesTest
 )
 

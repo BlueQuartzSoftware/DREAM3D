@@ -95,6 +95,44 @@ PrimaryPhaseWidget::~PrimaryPhaseWidget()
 {
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_Omega3Btn_clicked(bool b)
+{
+  Q_UNUSED(b)
+  plotToolbox->setCurrentIndex(0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_BOverABtn_clicked(bool b)
+{
+  Q_UNUSED(b)
+  plotToolbox->setCurrentIndex(1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_COverABtn_clicked(bool b)
+{
+  Q_UNUSED(b)
+  plotToolbox->setCurrentIndex(2);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_NeighborBtn_clicked(bool b)
+{
+  Q_UNUSED(b)
+  plotToolbox->setCurrentIndex(3);
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -284,16 +322,10 @@ QPushButton* PrimaryPhaseWidget::getGenerateDefaultDataBtn()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::removeNeighborsPlotWidget()
 {
-  int index = tabWidget->indexOf(neighborDistributionTab);
-  if(index >= 0)
-  {
-    tabWidget->removeTab(index);
-    m_NeighborPlot->setParent(nullptr);
-    delete neighborDistributionTab;
-    neighborDistributionTab = nullptr;
-    delete m_NeighborPlot;
-    m_NeighborPlot = nullptr;
-  }
+  plotToolbox->removeWidget(m_NeighborPlot);
+  m_NeighborPlot->setParent(nullptr);
+  delete m_NeighborPlot;
+  m_NeighborPlot = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -336,7 +368,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("Omega 3 Probability Density Functions"));
   w->setXAxisName(QString("Omega 3"));
   w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
+  w->setDataTitle(QString("Edit Omega3 Distribution Values"));
   w->setDistributionType(SIMPL::DistributionType::Beta);
   w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVOmega3);
   w->blockDistributionTypeChanges(true);
@@ -356,7 +388,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("B/A Shape Distribution"));
   w->setXAxisName(QString("B/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
+  w->setDataTitle(QString("Edit B/A Distribution Values"));
   w->setDistributionType(SIMPL::DistributionType::Beta);
   w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVBoverA);
   w->blockDistributionTypeChanges(true);
@@ -376,7 +408,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("C/A Shape Distribution"));
   w->setXAxisName(QString("C/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
+  w->setDataTitle(QString("Edit C/A Distribution Values"));
   w->setDistributionType(SIMPL::DistributionType::Beta);
   w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVCoverA);
   w->blockDistributionTypeChanges(true);
@@ -396,7 +428,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("Neighbors Distributions"));
   w->setXAxisName(QString("Number of Features (within 1 diameter)"));
   w->setYAxisName(QString("Frequency"));
-  w->setDataTitle(QString("Edit Distribution Values"));
+  w->setDataTitle(QString("Edit Neighbor Distribution Values"));
   w->setDistributionType(SIMPL::DistributionType::LogNormal);
   w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVNeighbors);
   w->blockDistributionTypeChanges(true);
@@ -429,6 +461,14 @@ void PrimaryPhaseWidget::setupGui()
   connect(m_FeatureSizeDistWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 
   connect(m_FeatureSizeDistWidget, SIGNAL(userEnteredValidData(bool)), m_GenerateDefaultData, SLOT(setEnabled(bool)));
+
+
+  m_Omega3Btn->setChecked(true);
+  m_DistButtonGroup.addButton(m_Omega3Btn);
+  m_DistButtonGroup.addButton(m_BOverABtn);
+  m_DistButtonGroup.addButton(m_COverABtn);
+  m_DistButtonGroup.addButton(m_NeighborBtn);
+  on_m_Omega3Btn_clicked(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -529,7 +569,7 @@ void PrimaryPhaseWidget::updatePlots()
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
     progress.setWindowModality(Qt::WindowModal);
-    progress.setMinimumDuration(2000);
+    progress.setMinimumDuration(0);
 
     progress.setValue(1);
     progress.setLabelText("[1/3] Calculating Size Distributions ...");
@@ -593,17 +633,13 @@ void PrimaryPhaseWidget::updatePlots()
       }
     }
 
+
+    progress.setValue(2);
+    progress.setLabelText("[2/3] Calculating ODF Data ...");
+//    m_ODFWidget->updatePlots();
     // Get any presets for the ODF/AxisODF/MDF also
     getMicroPreset()->initializeODFTableModel(data);
     SGODFTableModel* model = m_ODFWidget->tableModel();
-    if(model)
-    {
-      model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
-                          data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
-    }
-
-    getMicroPreset()->initializeAxisODFTableModel(data);
-    model = m_AxisODFWidget->tableModel();
     if(model)
     {
       model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
@@ -618,13 +654,19 @@ void PrimaryPhaseWidget::updatePlots()
       mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
     }
 
-    progress.setValue(2);
-    progress.setLabelText("[2/3] Calculating ODF Data ...");
-    m_ODFWidget->updatePlots();
-
     progress.setValue(3);
     progress.setLabelText("[3/3] Calculating Axis ODF Data ...");
-    m_AxisODFWidget->updatePlots();
+    // m_AxisODFWidget->updatePlots();
+    getMicroPreset()->initializeAxisODFTableModel(data);
+    model = m_AxisODFWidget->tableModel();
+    if(model)
+    {
+      model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                          data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+    }
+
+
+
 
     progress.setValue(4);
 
@@ -746,6 +788,7 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
+  emit progressText(QString("Primary Phase extracting statistics..."));
   setWidgetListEnabled(true);
   setPhaseIndex(index);
 
@@ -831,6 +874,8 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   }
 
   m_FeatureSizeDistWidget->extractStatsData(primaryStatsData, index);
+  emit progressText(QString("Extracting Size Distribution Values"));
+  qApp->processEvents();
 
   float mu = m_FeatureSizeDistWidget->getMu();
   float sigma = m_FeatureSizeDistWidget->getSigma();
@@ -838,27 +883,41 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   float maxCutOff = m_FeatureSizeDistWidget->getMaxCutOff();
   float binStepSize = m_FeatureSizeDistWidget->getBinStep();
 
+  emit progressText(QString("Extracting Omega 3 Distribution Values"));
+  qApp->processEvents();
   m_Omega3Plot->setDistributionType(primaryStatsData->getOmegas_DistType(), false);
   m_Omega3Plot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_Omegas());
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
+  emit progressText(QString("Extracting B Over a Distribution Values"));
+  qApp->processEvents();
   m_BOverAPlot->setDistributionType(primaryStatsData->getBOverA_DistType(), false);
   m_BOverAPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_BOverA());
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
+  emit progressText(QString("Extracting C Over A Distribution Values"));
+  qApp->processEvents();
   m_COverAPlot->setDistributionType(primaryStatsData->getCOverA_DistType(), false);
   m_COverAPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   if(m_NeighborPlot)
   {
+    emit progressText(QString("Extracting Neighbor Distribution Values"));
+    qApp->processEvents();
     m_NeighborPlot->setDistributionType(primaryStatsData->getNeighbors_DistType(), false);
     m_NeighborPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_Neighbors());
     m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
   }
+
+  emit progressText(QString("Extracting ODF Distribution Values"));
+  qApp->processEvents();
   // Set the ODF Data
   m_ODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
 
+
+  emit progressText(QString("Extracting Axis ODF Distribution Values"));
+  qApp->processEvents();
   // Set the Axis ODF Data
   m_AxisODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
 

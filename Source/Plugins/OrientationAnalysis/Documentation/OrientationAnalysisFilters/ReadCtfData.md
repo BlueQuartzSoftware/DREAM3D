@@ -1,4 +1,4 @@
-Read Oxford Instr. Ebsd Data {#readctfdata}
+Import Oxford Instr. Ebsd Data {#readctfdata}
 =============
 
 ## Group (Subgroup) ##

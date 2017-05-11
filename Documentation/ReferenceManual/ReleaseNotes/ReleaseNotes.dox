@@ -1,13 +1,24 @@
 /*!
-
 @page releasenotes Release Notes
 
-@subpage releasenotes_6_0_0 
+ This page lists the various release notes for the current and previous versions of DREAM.3D
 
-@subpage releasenotes_6_1_0 
+@subpage releasenotes_6_4_0 
+
+@subpage releasenotes_6_3_0 
 
 @subpage releasenotes_6_2_0 
 
-@subpage releasenotes_6_3_0 
+@subpage releasenotes_6_1_0 
+
+@subpage releasenotes_6_0_0 
+
+
+
+
+
+
+
+
 
 */

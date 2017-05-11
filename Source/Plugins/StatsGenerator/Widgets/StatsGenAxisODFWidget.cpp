@@ -92,8 +92,8 @@ StatsGenAxisODFWidget::StatsGenAxisODFWidget(QWidget* parent)
 , m_PhaseIndex(-1)
 , m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic)
 , m_ODFTableModel(nullptr)
-, m_MDFWidget(nullptr)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   this->setupUi(this);
   this->setupGui();
 }
@@ -107,6 +107,39 @@ StatsGenAxisODFWidget::~StatsGenAxisODFWidget()
   {
     m_ODFTableModel->deleteLater();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::on_m_WeightSpreads_clicked(bool b)
+{
+
+  m_WeightSpreadsStackedWidget->setCurrentIndex(0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool b)
+{
+  m_WeightSpreadsStackedWidget->setCurrentIndex(1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::on_m_ODFParametersBtn_clicked(bool b)
+{
+  stackedWidget->setCurrentIndex(0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::on_m_MDFParametersBtn_clicked(bool b)
+{
+  stackedWidget->setCurrentIndex(1);
 }
 
 // -----------------------------------------------------------------------------
@@ -223,9 +256,9 @@ int StatsGenAxisODFWidget::getPhaseIndex()
 // -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
 {
-  tabWidget->setTabText(1, t1);
-  tabWidget->setTabText(2, t2);
-  tabWidget->setTabText(3, t3);
+//  tabWidget->setTabText(1, t1);
+//  tabWidget->setTabText(2, t2);
+//  tabWidget->setTabText(3, t3);
 }
 
 // -----------------------------------------------------------------------------
@@ -269,15 +302,30 @@ void StatsGenAxisODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
 
+  m_ButtonGroup.addButton(m_WeightSpreads);
+  m_ButtonGroup.addButton(m_WeightSpreadsBulkLoad);
+  m_WeightSpreads->setVisible(false);
+  m_WeightSpreadsBulkLoad->setVisible(false);
+  on_m_WeightSpreads_clicked(true);
+
   // In release mode hide the Lambert Square Size.
-  QString releaseType = QString::fromLatin1("Official");
+  QString releaseType = QString::fromLatin1(SIMPLProj_RELEASE_TYPE);
   if(releaseType.compare("Official") == 0)
   {
     pfLambertSize->hide();
     pfLambertLabel->hide();
   }
 
-  bulkLoadGroupBox->hide();
+  // Disable the MDF tab
+  m_MDFParametersBtn->setDisabled(true);
+
+  m_ODFGroup.addButton(m_ODFParametersBtn);
+  m_ODFGroup.addButton(m_MDFParametersBtn);
+  m_ODFParametersBtn->setVisible(false);
+  m_MDFParametersBtn->setVisible(false);
+
+  on_m_ODFParametersBtn_clicked(true);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -392,7 +440,7 @@ void StatsGenAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
 // -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::updatePlots()
 {
-  on_m_CalculateODFBtn_clicked();
+  calculateAxisODF();
 }
 
 // -----------------------------------------------------------------------------
@@ -400,8 +448,16 @@ void StatsGenAxisODFWidget::updatePlots()
 // -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
+  calculateAxisODF();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::calculateAxisODF()
+{
   int err = 0;
-  // qDebug() << "StatsGenAxisODFWidget[" << objectName() << "]::on_m_CalculateODFBtn_clicked" << "\n";
+
   QwtArray<float> e1s;
   QwtArray<float> e2s;
   QwtArray<float> e3s;
@@ -484,7 +540,7 @@ void StatsGenAxisODFWidget::on_addODFTextureBtn_clicked()
     float e1 = 0.0;
     float e2 = 0.0;
     float e3 = 0.0;
-    float weight = 1.0;
+    float weight = 500000.0;
     float sigma = 1.0;
 
     t.getODFEntry(e1, e2, e3, weight, sigma);
@@ -496,8 +552,8 @@ void StatsGenAxisODFWidget::on_addODFTextureBtn_clicked()
     m_ODFTableView->setFocus();
     QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
     m_ODFTableView->setCurrentIndex(index);
+    updatePlots();
   }
-  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -520,6 +576,7 @@ void StatsGenAxisODFWidget::on_deleteODFTextureBtn_clicked()
   {
     m_ODFTableView->resizeColumnsToContents();
   }
+  updatePlots();
   emit dataChanged();
 }
 
@@ -528,7 +585,7 @@ void StatsGenAxisODFWidget::on_deleteODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::on_loadODFTextureBtn_clicked()
 {
-  QString proposedFile = m_OpenDialogLastFilePath;
+  QString proposedFile = m_OpenDialogLastDirectory;
   QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
   if(true == file.isEmpty())
   {
@@ -578,7 +635,7 @@ void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
   QString Ftype = "Image Files";
   QString ext = "*.png";
   QString s = "Image Files (*.tiff *.png *.bmp);;All Files(*.*)";
-  QString defaultName = m_OpenDialogLastFilePath;
+  QString defaultName = m_OpenDialogLastDirectory;
   
   QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
 
@@ -589,7 +646,7 @@ void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
   // bool ok = false;
   file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
-  m_OpenDialogLastFilePath = file;
+  m_OpenDialogLastDirectory = file;
 
   QImage image = m_PoleFigureLabel->pixmap()->toImage();
   image.save(file);

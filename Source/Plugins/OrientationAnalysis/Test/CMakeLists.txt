@@ -48,6 +48,7 @@ include_directories(${EbsdLibTest_BINARY_DIR})
 set(TEST_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
+set(${PLUGIN_NAME}_TEST_DATA_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Data )
 
 configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
                ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
@@ -62,6 +63,7 @@ set(TEST_NAMES
   CtfCachingTest
   AngleFileIOTest
   OrientationUtilityTest
+  CreateLambertSphereTest
 )
 
 

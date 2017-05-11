@@ -52,8 +52,8 @@
 
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Utilities/ComputeStereographicProjection.h"
 
 namespace Detail
 {
@@ -813,9 +813,9 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 
   if(doParallel == true)
   {
-    g->run(GenerateIntensityMapImpl(coords[0].get(), &config, intensity001.get()));
-    g->run(GenerateIntensityMapImpl(coords[1].get(), &config, intensity100.get()));
-    g->run(GenerateIntensityMapImpl(coords[2].get(), &config, intensity010.get()));
+    g->run(ComputeStereographicProjection(coords[0].get(), &config, intensity001.get()));
+    g->run(ComputeStereographicProjection(coords[1].get(), &config, intensity100.get()));
+    g->run(ComputeStereographicProjection(coords[2].get(), &config, intensity010.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
     g = nullptr;
@@ -823,11 +823,11 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   else
 #endif
   {
-    GenerateIntensityMapImpl m001(coords[0].get(), &config, intensity001.get());
+    ComputeStereographicProjection m001(coords[0].get(), &config, intensity001.get());
     m001();
-    GenerateIntensityMapImpl m011(coords[1].get(), &config, intensity100.get());
+    ComputeStereographicProjection m011(coords[1].get(), &config, intensity100.get());
     m011();
-    GenerateIntensityMapImpl m111(coords[2].get(), &config, intensity010.get());
+    ComputeStereographicProjection m111(coords[2].get(), &config, intensity010.get());
     m111();
   }
 

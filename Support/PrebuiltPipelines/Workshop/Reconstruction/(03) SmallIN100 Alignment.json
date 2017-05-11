@@ -4,18 +4,18 @@
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "1.0.278",
-        "Filter_Human_Label": "Read H5EBSD File",
+        "FilterVersion": "6.4.440",
+        "Filter_Human_Label": "Import H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
         "InputFile": "Data/Output/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
-            "SEM Signal",
-            "Image Quality",
             "Phases",
+            "Image Quality",
             "Fit",
-            "Confidence Index",
-            "EulerAngles"
+            "EulerAngles",
+            "SEM Signal",
+            "Confidence Index"
         ],
         "UseTransformations": 1,
         "ZEndIndex": 117,
@@ -23,7 +23,7 @@
     },
     "1": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -44,7 +44,7 @@
         ]
     },
     "2": {
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
         "InputOrientationArrayPath": {
@@ -68,7 +68,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Align Sections (Misorientation)",
         "Filter_Name": "AlignSectionsMisorientation",
         "GoodVoxelsArrayPath": {
@@ -87,7 +87,7 @@
     },
     "4": {
         "FillHoles": 0,
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
         "Filter_Name": "IdentifySample",
         "GoodVoxelsArrayPath": {
@@ -98,7 +98,7 @@
     },
     "5": {
         "AlignmentShiftFileName": "",
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Align Sections (Feature Centroid)",
         "Filter_Name": "AlignSectionsFeatureCentroid",
         "GoodVoxelsArrayPath": {
@@ -127,7 +127,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -143,7 +143,7 @@
         "UseGoodVoxels": 1
     },
     "7": {
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "1.0.858",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100.dream3d",
@@ -152,6 +152,6 @@
     "PipelineBuilder": {
         "Name": "(03) SmallIN100 Alignment",
         "Number_Filters": 8,
-        "Version": "1.0"
+        "Version": 6
     }
 }

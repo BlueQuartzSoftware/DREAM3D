@@ -1,0 +1,49 @@
+os: Visual Studio 2015
+platform: x64
+version: '6.4.{build}'
+clone_folder: c:\projects\DREAM3D
+cache:
+  - C:\DREAM3D_SDK\Eigen-3.2.9.7z
+  - C:\DREAM3D_SDK\Eigen-3.2.9.7z.sha512
+  - C:\DREAM3D_SDK\ITK-4.11.0.7z
+  - C:\DREAM3D_SDK\ITK-4.11.0.7z.sha512
+  - C:\DREAM3D_SDK\boost-1.60.0.7z
+  - C:\DREAM3D_SDK\boost-1.60.0.7z.sha512
+  - C:\DREAM3D_SDK\doxygen-1.8.11.windows.x64.bin.7z
+  - C:\DREAM3D_SDK\doxygen-1.8.11.windows.x64.bin.7z.sha512
+  - C:\DREAM3D_SDK\hdf5-1.8.16.7z
+  - C:\DREAM3D_SDK\hdf5-1.8.16.7z.sha512
+  - C:\DREAM3D_SDK\qwt-6.1.3.7z
+  - C:\DREAM3D_SDK\qwt-6.1.3.7z.sha512
+  - C:\DREAM3D_SDK\tbb44_20160526oss.7z
+  - C:\DREAM3D_SDK\tbb44_20160526oss.7z.sha512
+  - C:\DREAM3D_SDK\superbuild.7z
+  - C:\DREAM3D_SDK\superbuild.7z.sha512
+
+install:
+  # Take care of submodules
+  - cd C:\projects
+  - git clone -b develop https://github.com/bluequartzsoftware/CMP CMP
+  - cd C:\projects
+  - git clone -b develop https://github.com/bluequartzsoftware/SIMPL SIMPL
+  - cd C:\projects
+  - git clone -b develop https://github.com/bluequartzsoftware/SIMPLView SIMPLView
+  - cd C:\projects
+  - git clone -b develop https://github.com/dream3d/DREAM3D_Data DREAM3D_Data
+  - cd C:\
+  - mkdir DREAM3D_SDK
+  - cd C:\DREAM3D_SDK
+  # Restore our cached deps
+  - set DREAM3D_TEST_PYTHON_EXECUTABLE=C:\Python27\python.exe
+  - python -m pip install -r %APPVEYOR_BUILD_FOLDER%\Support\appveyor\requirements-dev.txt
+  - python %APPVEYOR_BUILD_FOLDER%\Support\appveyor\cache_restore.py
+  - dir
+  - cd C:\projects
+  - dir
+
+build_script:
+  # Setup PATH
+  - set PATH=C:\DREAM3D_SDK\doxygen-1.8.11.windows.x64.bin;%PATH%
+  - set PATH=C:\Qt\5.6\msvc2015_64\bin;%PATH%
+  # Now call ctest
+  - ctest -VV -S %APPVEYOR_BUILD_FOLDER%\Support\appveyor\AppVeyorContinuous.cmake

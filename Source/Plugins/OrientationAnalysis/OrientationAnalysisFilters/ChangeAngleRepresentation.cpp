@@ -278,7 +278,7 @@ const QString ChangeAngleRepresentation::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString ChangeAngleRepresentation::getGroupName()
 {
-  return SIMPL::FilterGroups::OrientationAnalysisFilters;
+  return SIMPL::FilterGroups::ProcessingFilters;
 }
 
 // -----------------------------------------------------------------------------

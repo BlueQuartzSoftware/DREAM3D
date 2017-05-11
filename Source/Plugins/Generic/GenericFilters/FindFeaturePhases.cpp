@@ -275,7 +275,7 @@ const QString FindFeaturePhases::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString FindFeaturePhases::getGroupName()
 {
-  return SIMPL::FilterGroups::GenericFilters;
+  return SIMPL::FilterGroups::Generic;
 }
 
 // -----------------------------------------------------------------------------

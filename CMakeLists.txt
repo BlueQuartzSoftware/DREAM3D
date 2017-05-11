@@ -43,6 +43,11 @@ if(NOT "${DREAM3D_SDK}" STREQUAL "")
   endif()
 endif()
 
+# Request C++11 standard, using new CMake variables.
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS False)
+
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   # CMake 3.0 introduces VERSION variables for each Project.
   cmake_policy(SET CMP0048 NEW)
@@ -54,12 +59,12 @@ if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   cmake_policy(SET CMP0002 NEW)
 endif()
 
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.6.0)
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
 # 
-project(DREAM3DProj VERSION 6.3.0.0)
+project(DREAM3DProj VERSION 6.4.0.0)
 set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 
 # ---------- Setup output Directories -------------------------
@@ -181,7 +186,7 @@ endif()
 # Development: This is currently in development and probably has bugs.
 get_property(DREAM3DProj_RELEASE_TYPE GLOBAL PROPERTY PACKAGE_RELEASE_TYPE)
 if("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "")
-  set(DREAM3DProj_RELEASE_TYPE "Development")
+  set(DREAM3DProj_RELEASE_TYPE "Beta")
   set_property(GLOBAL PROPERTY PACKAGE_RELEASE_TYPE "${DREAM3DProj_RELEASE_TYPE}")
 endif()
 
@@ -339,7 +344,7 @@ endif(BUILD_SHARED_LIBS)
 # --------------------------------------------------------------------
 # Find and Use the Qt5 Libraries
 include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
-set(DREAM3D_Qt5_Components Core Widgets Network Gui Concurrent Svg Xml OpenGL PrintSupport Sql)
+set(DREAM3D_Qt5_Components Core Widgets Network Gui Concurrent Xml OpenGL PrintSupport Sql)
 option(SIMPLView_USE_QtWebEngine "Use QWebEngine to display Help. OFF=Use default web browser" ON)
 CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
                     "${SIMPLView_USE_QtWebEngine}"
@@ -352,18 +357,6 @@ CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
 # up the targets (Exported) that it needs. We just need to find where
 # HDF5 is installed.
 include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
-
-# ---------- Find Boost Headers/Libraries -----------------------
-#set(Boost_FIND_REQUIRED FALSE)
-set(Boost_DEBUG FALSE)
-set(Boost_USE_MULTITHREADED TRUE)
-set(Boost_ADDITIONAL_VERSIONS 1.57)
-set(Boost_FIND_COMPONENTS "")
-set(Boost_NO_BOOST_CMAKE 1)
-FIND_PACKAGE(Boost)
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
-list(APPEND CMP_LIB_SEARCH_DIRS ${Boost_LIBRARY_DIRS})
 
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks

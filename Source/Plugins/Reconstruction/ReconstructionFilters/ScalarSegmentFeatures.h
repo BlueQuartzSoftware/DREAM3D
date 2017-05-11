@@ -32,18 +32,14 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _scalarsegmentfeatures_h_
 #define _scalarsegmentfeatures_h_
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
+#include <random>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
@@ -54,156 +50,152 @@ class CompareFunctor;
  */
 class ScalarSegmentFeatures : public SegmentFeatures
 {
-    Q_OBJECT
-  public:
-    typedef boost::uniform_int<int64_t> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(ScalarSegmentFeatures)
+  SIMPL_STATIC_NEW_MACRO(ScalarSegmentFeatures)
+  SIMPL_TYPE_MACRO_SUPER(ScalarSegmentFeatures, AbstractFilter)
 
-    SIMPL_SHARED_POINTERS(ScalarSegmentFeatures)
-    SIMPL_STATIC_NEW_MACRO(ScalarSegmentFeatures)
-    SIMPL_TYPE_MACRO_SUPER(ScalarSegmentFeatures, AbstractFilter)
+  virtual ~ScalarSegmentFeatures();
 
-    virtual ~ScalarSegmentFeatures();
+  SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+  Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, ScalarArrayPath)
+  Q_PROPERTY(DataArrayPath ScalarArrayPath READ getScalarArrayPath WRITE setScalarArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, ScalarArrayPath)
-    Q_PROPERTY(DataArrayPath ScalarArrayPath READ getScalarArrayPath WRITE setScalarArrayPath)
+  SIMPL_FILTER_PARAMETER(float, ScalarTolerance)
+  Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance)
 
-    SIMPL_FILTER_PARAMETER(float, ScalarTolerance)
-    Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance)
+  SIMPL_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
-    SIMPL_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
+  SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+  Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
-    Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
+  Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
-    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
-  protected:
-    ScalarSegmentFeatures();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  ScalarSegmentFeatures();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  /**
+   * @brief getSeed Reimplemented from @see SegmentFeatures class
+   */
+  virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
 
-    /**
-     * @brief getSeed Reimplemented from @see SegmentFeatures class
-     */
-    virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
+  /**
+   * @brief determineGrouping Reimplemented from @see SegmentFeatures class
+   */
+  virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
-    /**
-     * @brief determineGrouping Reimplemented from @see SegmentFeatures class
-     */
-    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
+private:
+  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+  DEFINE_IDATAARRAY_VARIABLE(InputData)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
-    DEFINE_IDATAARRAY_VARIABLE(InputData)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(bool, Active)
+  std::shared_ptr<CompareFunctor> m_Compare;
 
-    std::shared_ptr<CompareFunctor> m_Compare;
+  std::random_device m_RandomDevice;
+  std::mt19937_64 m_Generator;
+  std::uniform_int_distribution<int64_t> m_Distribution;
 
-    std::shared_ptr<NumberDistribution> m_Distribution;
-    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    std::shared_ptr<Generator> m_NumberGenerator;
+  /**
+   * @brief randomizeGrainIds Randomizes Feature Ids
+   * @param totalPoints Size of Feature Ids array to randomize
+   * @param totalFeatures Number of Features
+   */
+  void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
 
-    /**
-     * @brief randomizeGrainIds Randomizes Feature Ids
-     * @param totalPoints Size of Feature Ids array to randomize
-     * @param totalFeatures Number of Features
-     */
-    void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
+  /**
+   * @brief initializeVoxelSeedGenerator Initializes the boost random number generators
+   * @param rangeMin Minimum range for random number selection
+   * @param rangeMax Maximum range for random number selection
+   */
+  void initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax);
 
-    /**
-     * @brief initializeVoxelSeedGenerator Initializes the boost random number generators
-     * @param rangeMin Minimum range for random number selection
-     * @param rangeMax Maximum range for random number selection
-     */
-    void initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax);
+  /**
+   * @brief updateFeatureInstancePointers Updates raw Feature pointers
+   */
+  void updateFeatureInstancePointers();
 
-    /**
-     * @brief updateFeatureInstancePointers Updates raw Feature pointers
-     */
-    void updateFeatureInstancePointers();
-
-    ScalarSegmentFeatures(const ScalarSegmentFeatures&); // Copy Constructor Not Implemented
-    void operator=(const ScalarSegmentFeatures&); // Operator '=' Not Implemented
+  ScalarSegmentFeatures(const ScalarSegmentFeatures&); // Copy Constructor Not Implemented
+  void operator=(const ScalarSegmentFeatures&);        // Operator '=' Not Implemented
 };
 
 #endif /* ScalarSegmentFeatures_H_ */

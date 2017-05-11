@@ -68,7 +68,7 @@ ModifiedLambertProjection::~ModifiedLambertProjection()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFromXYZCoords(FloatArrayType* coords, int dimension, float sphereRadius)
+ModifiedLambertProjection::Pointer ModifiedLambertProjection::LambertBallToSquare(FloatArrayType* coords, int dimension, float sphereRadius)
 {
 
   size_t npoints = coords->getNumberOfTuples();

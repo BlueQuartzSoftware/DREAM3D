@@ -338,7 +338,7 @@ const QString GenerateVectorColors::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getGroupName()
 {
-  return SIMPL::FilterGroups::GenericFilters;
+  return SIMPL::FilterGroups::Generic;
 }
 
 // -----------------------------------------------------------------------------

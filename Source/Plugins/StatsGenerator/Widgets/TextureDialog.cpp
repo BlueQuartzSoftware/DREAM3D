@@ -134,8 +134,8 @@ void TextureDialog::on_presetListWidget_itemDoubleClicked(QListWidgetItem* item)
   euler2->setText(QString::number(t->getEuler2()));
   euler3->setText(QString::number(t->getEuler3()));
 
-  weight->setText("1.0");
-  sigma->setValue(1.0);
+  weight->setText("500000.0");
+  sigma->setValue(2.0);
 }
 
 // -----------------------------------------------------------------------------

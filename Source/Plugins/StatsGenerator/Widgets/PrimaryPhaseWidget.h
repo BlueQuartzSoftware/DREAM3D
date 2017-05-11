@@ -101,9 +101,14 @@ protected slots:
 
   void bulkLoadEvent(bool fail);
 
+  virtual void on_m_Omega3Btn_clicked(bool b);
+  virtual void on_m_BOverABtn_clicked(bool b);
+  virtual void on_m_COverABtn_clicked(bool b);
+  virtual void on_m_NeighborBtn_clicked(bool b);
 
-  signals:
+ signals:
   void dataChanged();
+  void progressText(const QString &text);
 
 protected:
   /**
@@ -125,6 +130,7 @@ protected:
 
 private:
   QList<QWidget*> m_WidgetList;
+  QButtonGroup            m_DistButtonGroup;
 
   PrimaryPhaseWidget(const PrimaryPhaseWidget&); // Copy Constructor Not Implemented
   void operator=(const PrimaryPhaseWidget&);     // Operator '=' Not Implemented

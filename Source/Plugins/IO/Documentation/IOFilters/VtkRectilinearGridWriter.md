@@ -1,4 +1,4 @@
-Write Vtk File (Rectilinear Grid) {#vtkrectilineargridwriter}
+Vtk Rectilinear Grid Exporter {#vtkrectilineargridwriter}
 ======
 
 ## Group (Subgroup) ##

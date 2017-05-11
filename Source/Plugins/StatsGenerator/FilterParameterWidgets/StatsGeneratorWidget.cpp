@@ -136,6 +136,7 @@ void StatsGeneratorWidget::setupGui()
     size_t ensembles = sda->getNumberOfTuples();
     QProgressDialog progress("Opening Stats File....", "Cancel", 0, ensembles, this);
     progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
 
     QVector<size_t> tDims(1, ensembles);
     AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
@@ -184,6 +185,7 @@ void StatsGeneratorWidget::setupGui()
         progress.setLabelText("Opening Primary Phase...");
         PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
         phaseTabs->addTab(w, w->getTabTitle());
+        connect(w, SIGNAL(progressText(const QString&)), &progress, SLOT(setLabelText(const QString&)));
         w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
         connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
@@ -334,7 +336,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     if(dialog.getPhaseType() == PhaseType::Type::Primary)
     {
       PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget();
-      phaseTabs->addTab(ppw, "Primary");
+      phaseTabs->addTab(ppw, dialog.getPhaseName());
 
       connect(ppw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
@@ -353,7 +355,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     else if(dialog.getPhaseType() == PhaseType::Type::Precipitate)
     {
       PrecipitatePhaseWidget* ppw = new PrecipitatePhaseWidget();
-      phaseTabs->addTab(ppw, "Precipitate");
+      phaseTabs->addTab(ppw, dialog.getPhaseName());
 
       connect(ppw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
@@ -372,7 +374,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     else if(dialog.getPhaseType() == PhaseType::Type::Transformation)
     {
       TransformationPhaseWidget* tpw = new TransformationPhaseWidget();
-      phaseTabs->addTab(tpw, "Transformation");
+      phaseTabs->addTab(tpw, dialog.getPhaseName());
 
       connect(tpw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
@@ -390,7 +392,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     else if(dialog.getPhaseType() == PhaseType::Type::Matrix)
     {
       MatrixPhaseWidget* mpw = new MatrixPhaseWidget();
-      phaseTabs->addTab(mpw, "Matrix");
+      phaseTabs->addTab(mpw, dialog.getPhaseName());
 
       connect(mpw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
@@ -407,7 +409,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     else if(dialog.getPhaseType() == PhaseType::Type::Boundary)
     {
       BoundaryPhaseWidget* bpw = new BoundaryPhaseWidget();
-      phaseTabs->addTab(bpw, "Boundary");
+      phaseTabs->addTab(bpw, dialog.getPhaseName());
 
       connect(bpw, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
 
@@ -495,6 +497,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
       ppw->setPhaseName(dialog.getPhaseName());
+      phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = ppw->getComboString();
       setWindowModified(true);
       emit parametersChanged();
@@ -508,6 +511,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       ppw->setPhaseType(dialog.getPhaseType());
       ppw->setPptFraction(dialog.getPptFraction());
       ppw->setPhaseName(dialog.getPhaseName());
+      phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = ppw->getComboString();
       setWindowModified(true);
       emit parametersChanged();
@@ -521,6 +525,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       tpw->setPhaseType(dialog.getPhaseType());
       //tpw->setParentPhase(dialog.getParentPhase());
       tpw->setPhaseName(dialog.getPhaseName());
+      phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = tpw->getComboString();
       setWindowModified(true);
       emit parametersChanged();
@@ -533,6 +538,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       mpw->setPhaseFraction(dialog.getPhaseFraction());
       mpw->setPhaseType(dialog.getPhaseType());
       mpw->setPhaseName(dialog.getPhaseName());
+      phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = mpw->getComboString();
       setWindowModified(true);
       emit parametersChanged();
@@ -544,6 +550,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       bpw->setPhaseFraction(dialog.getPhaseFraction());
       bpw->setPhaseType(dialog.getPhaseType());
       bpw->setPhaseName(dialog.getPhaseName());
+      phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = bpw->getComboString();
       setWindowModified(true);
       emit parametersChanged();

@@ -1,4 +1,4 @@
-Write INL File {#inlwriter}
+Export INL File {#inlwriter}
 =============
 
 ## Group (Subgroup) ##

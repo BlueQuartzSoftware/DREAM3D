@@ -98,7 +98,8 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     SGMDFTableModel* m_MDFTableModel = nullptr;
     QwtPlotCurve*    m_PlotCurve = nullptr;
 
-    QString m_OpenDialogLastFilePath; // Must be last in the list
+    QString          m_OpenDialogLastFilePath; // Must be last in the list
+
     StatsGenMDFWidget(const StatsGenMDFWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenMDFWidget&); // Operator '=' Not Implemented
 

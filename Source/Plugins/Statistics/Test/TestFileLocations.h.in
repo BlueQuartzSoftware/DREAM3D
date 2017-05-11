@@ -16,7 +16,7 @@
 
 namespace UnitTest
 {
-
+  const QString StatisticsTempDir("@TEST_TEMP_DIR@");
 
   namespace FeatureIdsTest
   {
@@ -60,6 +60,15 @@ namespace UnitTest
 namespace UnitTest
 {
   namespace ComputeMomentInvariants2DTest
+  {
+   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+  }
+}
+
+namespace UnitTest
+{
+  namespace FindShapesTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");

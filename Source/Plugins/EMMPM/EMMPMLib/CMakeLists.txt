@@ -34,7 +34,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 # set project's name
 PROJECT( EMMPMLib VERSION 1.0)
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.6.0)
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
@@ -186,11 +186,16 @@ LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 
 
-set(install_dir "tools")
+set(install_dir "bin")
 set(lib_install_dir "lib")
-if(WIN32)
+
+if(APPLE)
+  get_property(DREAM3D_PACKAGE_DEST_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX)
+  set(install_dir "${DREAM3D_PACKAGE_DEST_PREFIX}bin")
+  set(lib_install_dir "${DREAM3D_PACKAGE_DEST_PREFIX}lib")
+elseif(WIN32)
   set(install_dir ".")
-  set(lib_install_dir "")
+  set(lib_install_dir ".")
 endif()
 
 

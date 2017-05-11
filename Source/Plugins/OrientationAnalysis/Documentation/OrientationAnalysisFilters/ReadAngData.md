@@ -1,4 +1,4 @@
-Read EDAX EBSD Data (.ang) {#readangdata}
+Import EDAX EBSD Data (.ang) {#readangdata}
 =============
 
 ## Group (Subgroup) ##

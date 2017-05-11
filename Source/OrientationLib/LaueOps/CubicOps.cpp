@@ -52,7 +52,7 @@
 
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
+#include "OrientationLib/Utilities/ComputeStereographicProjection.h"
 
 namespace Detail
 {
@@ -1809,9 +1809,9 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 
   if(doParallel == true)
   {
-    g->run(GenerateIntensityMapImpl(xyz001.get(), &config, intensity001.get()));
-    g->run(GenerateIntensityMapImpl(xyz011.get(), &config, intensity011.get()));
-    g->run(GenerateIntensityMapImpl(xyz111.get(), &config, intensity111.get()));
+    g->run(ComputeStereographicProjection(xyz001.get(), &config, intensity001.get()));
+    g->run(ComputeStereographicProjection(xyz011.get(), &config, intensity011.get()));
+    g->run(ComputeStereographicProjection(xyz111.get(), &config, intensity111.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
     g = nullptr;
@@ -1819,11 +1819,11 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   else
 #endif
   {
-    GenerateIntensityMapImpl m001(xyz001.get(), &config, intensity001.get());
+    ComputeStereographicProjection m001(xyz001.get(), &config, intensity001.get());
     m001();
-    GenerateIntensityMapImpl m011(xyz011.get(), &config, intensity011.get());
+    ComputeStereographicProjection m011(xyz011.get(), &config, intensity011.get());
     m011();
-    GenerateIntensityMapImpl m111(xyz111.get(), &config, intensity111.get());
+    ComputeStereographicProjection m111(xyz111.get(), &config, intensity111.get());
     m111();
   }
 

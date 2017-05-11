@@ -409,6 +409,7 @@ void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPl
   canvas->setAutoFillBackground(false);
   canvas->setFrameStyle(QFrame::NoFrame);
   canvas->setPalette(pal);
+  canvas->setToolTip("Right-Click to edit data");
   plot->setCanvas(canvas);
 
   QFont font;
@@ -459,30 +460,22 @@ void StatsGenPlotWidget::setupGui()
   this->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(requestContextMenu(const QPoint&)));
 
-  m_TableViewWidget = new QWidget(nullptr);
-  m_TableViewWidget->setObjectName(QStringLiteral("m_TableViewWidget"));
-  m_TableViewWidget->setMinimumSize(QSize(0, 0));
-  m_TableViewWidget->resize(400, 300);
-  QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  sizePolicy.setHorizontalStretch(0);
-  sizePolicy.setVerticalStretch(0);
-  sizePolicy.setHeightForWidth(m_TableViewWidget->sizePolicy().hasHeightForWidth());
 
-  QVBoxLayout* verticalLayout = new QVBoxLayout(m_TableViewWidget);
-  verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-  verticalLayout->setContentsMargins(2, 2, 2, 2);
+  m_TableViewWidget = new QWidget(nullptr);
+  m_TableViewWidget->resize(371, 197);
+  m_TableViewWidget->setObjectName(QStringLiteral("m_TableViewWidget"));
+  QGridLayout* tableViewWidgetGrid = new QGridLayout(m_TableViewWidget);
+  tableViewWidgetGrid->setObjectName(QStringLiteral("gridLayout"));
+  tableViewWidgetGrid->setContentsMargins(0, 0, 0, 0);
   m_TableView = new QTableView(m_TableViewWidget);
   m_TableView->setObjectName(QStringLiteral("m_TableView"));
+  m_TableView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContentsOnFirstShow);
+  m_TableView->setAlternatingRowColors(true);
+  m_TableView->setCornerButtonEnabled(false);
+  m_TableView->horizontalHeader()->setCascadingSectionResizes(true);
+  m_TableView->horizontalHeader()->setStretchLastSection(true);
 
-  verticalLayout->addWidget(m_TableView);
-
-  m_TableViewWidget->setVisible(false);
-
-  // Setup the TableView and Table Models
-  QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
-  headerView->sectionResizeMode(QHeaderView::Interactive);
-  m_TableView->setHorizontalHeader(headerView);
-  headerView->show();
+  tableViewWidgetGrid->addWidget(m_TableView, 0, 0, 1, 1);
 
   // Setup the Qwt Plot Widget
   initQwtPlot("", "", m_PlotView);

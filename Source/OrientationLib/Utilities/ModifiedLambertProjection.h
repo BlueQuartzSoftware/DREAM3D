@@ -76,13 +76,11 @@ class OrientationLib_EXPORT ModifiedLambertProjection
      * @param sphereRadius The radius of the sphere from where the coordinates are coming from.
      * @return
      */
-    static Pointer CreateProjectionFromXYZCoords(FloatArrayType* coords, int dimension, float sphereRadius);
-
+    static Pointer LambertBallToSquare(FloatArrayType* coords, int dimension, float sphereRadius);
 
     SIMPL_GET_PROPERTY(int, Dimension)
     SIMPL_GET_PROPERTY(float, StepSize)
     SIMPL_GET_PROPERTY(float, SphereRadius)
-
 
     SIMPL_GET_PROPERTY(DoubleArrayType::Pointer, NorthSquare)
     SIMPL_GET_PROPERTY(DoubleArrayType::Pointer, SouthSquare)
@@ -189,46 +187,11 @@ class OrientationLib_EXPORT ModifiedLambertProjection
     DoubleArrayType::Pointer m_NorthSquare;
     DoubleArrayType::Pointer m_SouthSquare;
 
-
-
     ModifiedLambertProjection(const ModifiedLambertProjection&); // Copy Constructor Not Implemented
     void operator=(const ModifiedLambertProjection&); // Operator '=' Not Implemented
 };
 
 
-/**
-* @class GenerateIntensityMapImpl This class is a wrapper around simply generating a stereo graphically projected intensity "image" (2D Array) based
-* off the intended final size of an image and a modified Lambert projection for a set of XYZ coordinates that represent
-* the Coords generated from Euler Angles. This all feeds into generating a pole figure.
-*/
-class GenerateIntensityMapImpl
-{
-  public:
-    GenerateIntensityMapImpl(FloatArrayType* xyzCoords, PoleFigureConfiguration_t* config, DoubleArrayType* intensity) :
-      m_XYZCoords(xyzCoords),
-      m_Config(config),
-      m_Intensity(intensity)
-    {
-
-    }
-    virtual ~GenerateIntensityMapImpl() {}
-
-    void operator()() const
-    {
-      ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(m_XYZCoords, m_Config->lambertDim, m_Config->sphereRadius);
-      lambert->normalizeSquaresToMRD();
-      m_Intensity->resize(m_Config->imageDim * m_Config->imageDim);
-      lambert->createStereographicProjection(m_Config->imageDim, m_Intensity);
-    }
-
-  protected:
-    GenerateIntensityMapImpl() {}
-
-  private:
-    FloatArrayType*     m_XYZCoords;
-    PoleFigureConfiguration_t* m_Config;
-    DoubleArrayType*    m_Intensity;
-};
 
 #endif /* _ModifiedLambertProjection_H_ */
 

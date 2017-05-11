@@ -1,7 +1,7 @@
 DevHelper {#devhelper}
 ========
 
-**DevHelper** is a developer tool that allows the user to generate the _skeleton_ code necessary to create a new **Plugin** or **Filter**.  **DevHelper** _does not_ create a functioning **Filter** automatically, and _is not_ a development environment. Instead, it streamlines the development process by auto-generating much of "boiler plate" code that is necessary for a working **Plugin** or **Filter**.
+**DevHelper** is a developer tool that allows the user to generate the _skeleton_ code necessary to create a new **Plugin** or **Filter**.  **DevHelper** _does not_ create a functioning **Filter** automatically, and _is not_ a development environment. Instead, it streamlines the development process by auto-generating most of the "boiler plate" code that is necessary for a working **Plugin** or **Filter**.
 
 **DevHelper** is divided into two sub-tools: 
 
