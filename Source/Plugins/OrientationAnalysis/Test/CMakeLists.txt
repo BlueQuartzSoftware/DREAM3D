@@ -63,9 +63,14 @@ set(TEST_NAMES
   CtfCachingTest
   AngleFileIOTest
   OrientationUtilityTest
-  CreateLambertSphereTest
 )
 
+if(SIMPL_USE_ITK)
+  set(TEST_NAMES 
+    ${TEST_NAMES}
+    CreateLambertSphereTest
+  )
+endif()
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
 set(FilterTestIncludes "")
