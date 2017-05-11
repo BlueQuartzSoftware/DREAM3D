@@ -501,5 +501,5 @@ const QString EMMPMFilter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getHumanLabel()
 {
-  return "[EMMPM] EM/MPM";
+  return "Segment Features (EM/MPM)";
 }

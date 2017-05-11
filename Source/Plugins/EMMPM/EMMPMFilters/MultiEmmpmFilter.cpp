@@ -405,5 +405,5 @@ const QString MultiEmmpmFilter::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString MultiEmmpmFilter::getHumanLabel()
 {
-  return "[EMMPM] EM/MPM (Multi-Array)";
+  return "Segment Features (EM/MPM Multi-Array)";
 }
