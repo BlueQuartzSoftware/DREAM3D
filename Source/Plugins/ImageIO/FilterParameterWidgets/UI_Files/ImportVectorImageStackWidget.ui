@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>760</width>
-    <height>956</height>
+    <height>594</height>
    </rect>
   </property>
   <property name="title" stdset="0">
@@ -237,7 +237,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QtSFSDropLineEdit" name="m_InputDir"/>
+      <widget class="QtSLineEdit" name="m_LineEdit"/>
      </item>
      <item row="1" column="2">
       <widget class="QPushButton" name="m_InputDirBtn">
@@ -611,13 +611,13 @@ font-size: 11px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QtSFSDropLineEdit</class>
+   <class>QtSLineEdit</class>
    <extends>QLineEdit</extends>
-   <header location="global">QtSFSDropLineEdit.h</header>
+   <header location="global">QtSLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>m_InputDir</tabstop>
+  <tabstop>m_LineEdit</tabstop>
   <tabstop>m_InputDirBtn</tabstop>
   <tabstop>xOrigin</tabstop>
   <tabstop>yOrigin</tabstop>

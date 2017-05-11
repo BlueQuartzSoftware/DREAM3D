@@ -109,7 +109,7 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
 
     void on_m_InputDirBtn_clicked();
     // slots to catch signals emittd by the various QLineEdit widgets
-    void on_m_InputDir_textChanged(const QString& text);
+    void on_m_LineEdit_textChanged(const QString& text);
 
 
     void on_m_FilePrefix_textChanged(const QString& string);
@@ -140,14 +140,6 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
      * @brief validateInputFile
      */
     void validateInputFile();
-
-    /**
-     * @brief verifyPathExists
-     * @param outFilePath
-     * @param lineEdit
-     * @return
-     */
-    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
     /**
      * @brief setWidgetListEnabled
@@ -189,14 +181,27 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
     FloatVec3_t getOriginValues();
 
 
+    /**
+    * @brief
+    * @param event
+    */
+    void keyPressEvent(QKeyEvent* event);
+
+    /**
+     * @brief setupMenuField
+     */
+    void setupMenuField();
+
   private:
     ImportVectorImageStack*     m_Filter;
     QList<QWidget*>             m_WidgetList;
     QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;
     QButtonGroup*               m_zSpacingGroup;
-
-    bool m_DidCausePreflight;
+    QAction* m_ShowFileAction = nullptr;
+    QString  m_CurrentlyValidPath = "";
+    QString  m_CurrentText = "";
+    bool     m_DidCausePreflight = false;
 
 
     ImportVectorImageStackWidget(const ImportVectorImageStackWidget&); // Copy Constructor Not Implemented

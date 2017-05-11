@@ -103,6 +103,11 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
+    /**
+     * @brief showFileInFileSystem
+     */
+    virtual void showFileInFileSystem();
+
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
@@ -122,7 +127,7 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     void on_m_zSpacing_textChanged(const QString& string);
 
     // slots to catch signals emitted by the various QLineEdit widgets
-    void on_m_InputDir_textChanged(const QString& text);
+    void on_m_LineEdit_textChanged(const QString& text);
     void on_m_OutputFile_textChanged(const QString& text);
 
     void stackingOrderChanged(bool checked);
@@ -143,14 +148,6 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
      * @brief validateInputFile
      */
     void validateInputFile();
-
-    /**
-     * @brief verifyPathExists
-     * @param outFilePath
-     * @param lineEdit
-     * @return
-     */
-    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
     /**
      * @brief setWidgetListEnabled
@@ -188,14 +185,24 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
      * @brief IdentifyRefFrame
      */
     void identifyRefFrame();
+    
+    /**
+    * @brief
+    * @param event
+    */
+    void keyPressEvent(QKeyEvent* event);
 
+    /**
+     * @brief setupMenuField
+     */
+    void setupMenuField();
 
   private:
-    EbsdToH5Ebsd*               m_Filter;
+    EbsdToH5Ebsd*               m_Filter = nullptr;
     QList<QWidget*>             m_WidgetList;
-    QButtonGroup*               m_StackingGroup;
-    QButtonGroup*               m_OriginGroup;
-    QButtonGroup*               m_zSpacingGroup;
+    QButtonGroup*               m_StackingGroup = nullptr;
+    QButtonGroup*               m_OriginGroup = nullptr;
+    QButtonGroup*               m_zSpacingGroup = nullptr;
 
     bool m_TSLchecked;
     bool m_HKLchecked;
@@ -203,8 +210,10 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     bool m_NoTranschecked;
     AxisAngleInput_t m_SampleTransformation;
     AxisAngleInput_t m_EulerTransformation;
-
-    bool m_DidCausePreflight;
+    QAction* m_ShowFileAction = nullptr;
+    QString  m_CurrentlyValidPath = "";
+    QString  m_CurrentText = "";
+    bool     m_DidCausePreflight = false;
 
 
     EbsdToH5EbsdWidget(const EbsdToH5EbsdWidget&); // Copy Constructor Not Implemented

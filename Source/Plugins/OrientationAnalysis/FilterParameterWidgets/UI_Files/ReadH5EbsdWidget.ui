@@ -45,7 +45,7 @@ font-size: 11px;
       </widget>
      </item>
      <item>
-      <widget class="QtSFSDropLineEdit" name="m_InputFile">
+      <widget class="QtSLineEdit" name="m_LineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -55,7 +55,7 @@ font-size: 11px;
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="m_InputFileBtn">
+      <widget class="QPushButton" name="m_LineEditBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -839,9 +839,9 @@ font-size: 11px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QtSFSDropLineEdit</class>
+   <class>QtSLineEdit</class>
    <extends>QLineEdit</extends>
-   <header location="global">QtSFSDropLineEdit.h</header>
+   <header location="global">QtSLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
