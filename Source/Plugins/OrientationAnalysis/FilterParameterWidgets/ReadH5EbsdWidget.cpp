@@ -164,10 +164,9 @@ void ReadH5EbsdWidget::setupGui()
   m_LineEdit->setCompleter(com);
   QObject::connect(com, SIGNAL(activated(const QString&)), this, SLOT(on_m_LineEdit_textChanged(const QString&)));
 
-  validateInputFile();
-
   setupMenuField();
 
+  validateInputFile();
 
   // Setup the GUI widgets from what ever is in the Filter instance
   QString inputPath = m_Filter->getInputFile();
