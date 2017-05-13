@@ -14,7 +14,7 @@ Principal Curvatures 1 and 2 are the &kappa; <sub>1 </sub> and &kappa; <sub>2 </
 
 -----
 
-![Curvature Coloring of a Feature](FeatureFaceCurvatureFilter.png)
+![Curvature Coloring of a Feature](Images/FeatureFaceCurvatureFilter.png)
 @image latex FeatureFaceCurvatureFilter.png "Curvature Coloring of a Feature" width = 6in
 
 -----

@@ -10,8 +10,8 @@ This **Filter** reads from the .h5ebsd file that was generated with the [Import 
 
 -----
 
-![Read H5Ebsd File User Interface](images/ReadH5Ebsd_UI.png)
-@image latex images/ReadH5Ebsd_UI.png "Read H5Ebsd File User Interface" width=6in
+![Read H5Ebsd File User Interface](Images/ReadH5Ebsd_UI.png)
+@image latex Images/ReadH5Ebsd_UI.png "Read H5Ebsd File User Interface" width=6in
 
 -----
 
@@ -37,7 +37,7 @@ An excellant reference for this is the following PDF file:
 
 | Incorrect | Correct |
 |---------|---------|
-|![Read H5Ebsd File User Interface](images/ReadH5Ebsd_Wrong.png) | ![Read H5Ebsd File User Interface](images/ReadH5Ebsd_Right.png) |
+|![Read H5Ebsd File User Interface](Images/ReadH5Ebsd_Wrong.png) | ![Read H5Ebsd File User Interface](Images/ReadH5Ebsd_Right.png) |
 | Euler angles were treated as Radians | Euler angles were converted from Degrees to Radians |
 |"Interstitial Free (IF) Steel courtesy of [1]"| |
 
@@ -52,7 +52,7 @@ An excellant reference for this is the following PDF file:
 + DREAM.3D uses the TSL/EDAX convention.
 + **The result of this is that the filter will _AUTOMATICALLY_ add 30° to phi2 when reading Oxford Instr (.ctf) files or .h5ebsd files denoted with the HKL manufacturer ID. There is no way to turn off this behavior. **
 
-![Figure 1 showing TSL \& Oxford Instr. conventions.](images/Hexagonal_Axis_Alignment.png)
+![Figure 1 showing TSL \& Oxford Instr. conventions.](Images/Hexagonal_Axis_Alignment.png)
 
 
 

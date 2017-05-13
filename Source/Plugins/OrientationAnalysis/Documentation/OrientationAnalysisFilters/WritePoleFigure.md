@@ -13,8 +13,8 @@ The pole figure algorithm uses a _modified Lambert square_ to perform the interp
 
 -----
 
-![Example Pole Figure Using Square Layout](images/PoleFigure_Example.png)
-@image latex images/PoleFigure_Example.png "Example Pole Figure Using Square Layout" width=6in
+![Example Pole Figure Using Square Layout](Images/PoleFigure_Example.png)
+@image latex Images/PoleFigure_Example.png "Example Pole Figure Using Square Layout" width=6in
 
 -----
 

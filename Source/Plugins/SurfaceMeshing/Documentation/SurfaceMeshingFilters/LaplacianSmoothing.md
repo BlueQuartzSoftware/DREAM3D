@@ -11,23 +11,23 @@ This **Filter** applies Laplacian smoothing to a **Triangle Geometry** that repr
 
 Let us consider a triangulated surface and for any vertex P let us define the so-called umbrella-operator
 
-![](Laplacian_Fig1.png)
+![](Images/Laplacian_Fig1.png)
 @image latex Laplacian_Fig1.png " " width=6in
 
 where summation is taken over all neighbors of P and wi are positive
 weights. See Fig. 1 for the geometric idea behind the umbrella-operator.
 
-![](Laplacian_Fig2.png)
+![](Images/Laplacian_Fig2.png)
 @image latex Laplacian_Fig2.png " " width=3in
 
 The weights, can be defined, for example, as the inverse distances between P and its neighbors. The simplest umbrella-operator is obtained if *w* i = 1 and the umbrella-operator has the form
 
-![](Laplacian_Eq1.png)
+![](Images/Laplacian_Eq1.png)
 @image latex Laplacian_Eq1.png " " width=3in
 
 where n is the number of neighbors. The local update rule
 
-![](Laplacian_Eq2.png)
+![](Images/Laplacian_Eq2.png)
 @image latex Laplacian_Eq2.png " " width=3in
 
 

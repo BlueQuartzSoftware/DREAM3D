@@ -11,8 +11,8 @@ This **Filter** will generate a standard inverse pole figure color stereographic
 
 -----
 
-![Cubic Standard Stereographic Triangle](images/IPFFilterLegend.tif)
-@image latex images/IPFFilterLegend.tif "Cubic Standard Stereographic Triangle" width=6in
+![Cubic Standard Stereographic Triangle](Images/IPFFilterLegend.tif)
+@image latex Images/IPFFilterLegend.tif "Cubic Standard Stereographic Triangle" width=6in
 
 -----
 

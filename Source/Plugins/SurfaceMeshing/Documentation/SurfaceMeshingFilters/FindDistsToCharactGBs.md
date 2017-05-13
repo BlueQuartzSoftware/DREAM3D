@@ -21,7 +21,7 @@ In the above formulas, &alpha; = | **u** * **n**<sub>1</sub> | with **u** and **
 unit vectors representing the misorientation axis and boundary normal given in *first* of the crystallites, respectively;
 &omega; stands for the misorientation angle, and minimization is over symmetrically equivalent boundary representations.
 
-![GB network reconstructed from the pure Ni 3D data set presented by J. Li, S.J. Dillon and G.S. Rohrer in 'Relative Grain Boundary Area and Energy Distributions in Nickel', Acta Mater. 57, 4304-4311 (2009). GBs are colored according to their distances to the nearest symmetric(-tilt) boundaries; Boundaries with that distance smaller than 8 deg. are marked with blue color.](FindDistsToCharactGBs_example.png)
+![GB network reconstructed from the pure Ni 3D data set presented by J. Li, S.J. Dillon and G.S. Rohrer in 'Relative Grain Boundary Area and Energy Distributions in Nickel', Acta Mater. 57, 4304-4311 (2009). GBs are colored according to their distances to the nearest symmetric(-tilt) boundaries; Boundaries with that distance smaller than 8 deg. are marked with blue color.](Images/FindDistsToCharactGBs_example.png)
 
 ### Why are some distances equal to 999.0? ###
 If phases of **Features** separated by a **Face** are the same, i.e., if the **Face** is a grain boundary, then the distances are

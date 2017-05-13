@@ -9,7 +9,7 @@ This **Filter** assigns a unique Id to each **Triangle** in a **Triangle Geometr
 
 ---------------
 
-![Example Surface Mesh Coloring By Feature Face Id](featureFaceIds.png)
+![Example Surface Mesh Coloring By Feature Face Id](Images/featureFaceIds.png)
 @image latex featureFaceIds.png "Example Surface Mesh Coloring By Feature Face Id" width=6in
 
 ---------------

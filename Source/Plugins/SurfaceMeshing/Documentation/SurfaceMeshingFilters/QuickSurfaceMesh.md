@@ -13,7 +13,7 @@ For more information on surface meshing, visit the [tutorial](@ref tutorialsurfa
 
 ---------------
 
-![Example Quick Mesh Output](QuickSurfaceMeshOutput.png)
+![Example Quick Mesh Output](Images/QuickSurfaceMeshOutput.png)
 @image latex QuickSurfaceMeshOutput.png "Example Quick Mesh Output" width=6in
 
 ---------------

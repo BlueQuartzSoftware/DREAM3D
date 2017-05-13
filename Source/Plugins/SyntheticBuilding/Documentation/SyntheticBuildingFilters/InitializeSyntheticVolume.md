@@ -11,7 +11,7 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 
 ### User Interface ###
 
-![](InitializeSyntheticVolume.png)
+![](Images/InitializeSyntheticVolume.png)
 @image latex InitializeSyntheticVolume.png "User Interface" width=6in
 
 ### Relationship between Dimensions and Resolution ###
@@ -23,8 +23,8 @@ voxels on a side and either 0.5 or 0.25 resolution. The units are arbitrary leng
 
 |                    | Resolution (0.5^3) | Resolution (0.25^3) |
 |--------------------|--------------------|---------------------|
-| **Dimensions (128^3)** | ![316 Features](128x50.png)  | ![40 Features](128x25.png)  |
-| **Dimensions (64^3)**  | ![44 Features](64x50.png)   | ![2 Features](64x25.png)   |
+| **Dimensions (128^3)** | ![316 Features](128x50.png)  | ![40 Features](Images/128x25.png)  |
+| **Dimensions (64^3)**  | ![44 Features](64x50.png)   | ![2 Features](Images/64x25.png)   |
 
 
 ## Parameters ##

@@ -27,7 +27,7 @@ The values for the __Node Type__ array can take one of the following values.
 
 ---------------
 
-![Example output showing a single grain on the edge of a box. Note the beveled edge of the box.](M3CSurfaceMeshOutput.png)
+![Example output showing a single grain on the edge of a box. Note the beveled edge of the box.](Images/M3CSurfaceMeshOutput.png)
 
 @image latex M3CSurfaceMeshOutput.png "Example output showing a single grain on the edge of a box. Note the beveled edge of the box." width=3in
 

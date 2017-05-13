@@ -9,7 +9,7 @@ This **Filter** generates a pair of colors for each **Triangle** in a **Triangle
 
 ------------
 
-![Face IPF Coloring](GenerateFaceIPFColoring.png)
+![Face IPF Coloring](Images/GenerateFaceIPFColoring.png)
 @image latex GenerateFaceIPFColoring.png "Face IPF Coloring" width=6in
 
 ------------

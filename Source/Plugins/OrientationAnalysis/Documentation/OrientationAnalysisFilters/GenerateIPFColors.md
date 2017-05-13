@@ -19,12 +19,12 @@ This **Filter** will generate _inverse pole figure_ (IPF) colors for cubic, hexa
 
 -----
 
-![IPF Color Triangle](images/IPFFilterLegend.tif)
-@image latex images/IPFFilterLegend.tif "IPF Color Triangle" width=6in
+![IPF Color Triangle](Images/IPFFilterLegend.tif)
+@image latex Images/IPFFilterLegend.tif "IPF Color Triangle" width=6in
 
 -----
 
-![Example Data Set](images/IPFColor_1.png)
+![Example Data Set](Images/IPFColor_1.png)
 @image latex IPFColor_1.png "Example Data Set" width=6in
 
 -----
