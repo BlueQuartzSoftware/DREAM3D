@@ -35,10 +35,10 @@ The range on the data is [1.6, 5.1]. Using 8 bins starting from 1.5 with a bin w
 	[5,5.5)             4
 
 ### Example Plot ###
-![Example Plot of the Frequency Data from the Old Faithful data set](images/HistogramExample.png)
+![Example Plot of the Frequency Data from the Old Faithful data set](Images/HistogramExample.png)
 
 ### Additional Information ###
-Also see Histogram Quick Reference at https://plot.ly/histogram/. 
+Also see Histogram Quick Reference at [https://plot.ly/histogram/](https://plot.ly/histogram/).
 
 ## Parameters ##
 | Name | Type | Description |

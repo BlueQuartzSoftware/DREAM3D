@@ -258,8 +258,8 @@ template <typename T> void findHistogram(IDataArray::Pointer inDataPtr, int32_t 
   float max = -1.0 * std::numeric_limits<float>::max();
   if(userRange)
   {
-    min = minRange;
-    max = maxRange;
+    min = static_cast<float>(minRange);
+    max = static_cast<float>(maxRange);
   }
   else
   {
