@@ -55,8 +55,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTriangleGeomCentroids::FindTriangleGeomCentroids() :
-  AbstractFilter()
+FindTriangleGeomCentroids::FindTriangleGeomCentroids()
+: AbstractFilter()
 , m_FeatureAttributeMatrixName(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "")
 , m_FaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
@@ -90,8 +90,9 @@ void FindTriangleGeomCentroids::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType dasReq = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
-	  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomCentroids, dasReq));
+    DataArraySelectionFilterParameter::RequirementType dasReq =
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Labels", FaceLabelsArrayPath, FilterParameter::RequiredArray, FindTriangleGeomCentroids, dasReq));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
   {
@@ -114,30 +115,39 @@ void FindTriangleGeomCentroids::dataCheck()
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getFaceLabelsArrayPath().getDataContainerName());
 
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   dataArrays.push_back(triangles->getTriangles());
 
   QVector<size_t> cDims(1, 2);
 
-  m_FaceLabelsPtr =
-      getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFaceLabelsArrayPath(),
+                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FaceLabelsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0) { dataArrays.push_back(m_FaceLabelsPtr.lock()); }
+  if(getErrorCondition() >= 0)
+  {
+    dataArrays.push_back(m_FaceLabelsPtr.lock());
+  }
 
   DataContainer::Pointer tdc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceLabelsArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   DataArrayPath path(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getCentroidsArrayName());
   cDims[0] = 3;
   m_CentroidsPtr =
       getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, path, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (nullptr != m_CentroidsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_CentroidsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
-	  m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
+    m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
@@ -147,12 +157,12 @@ void FindTriangleGeomCentroids::dataCheck()
 void FindTriangleGeomCentroids::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -162,7 +172,10 @@ void FindTriangleGeomCentroids::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getDataContainer(m_FaceLabelsArrayPath.getDataContainerName())->getGeometryAs<TriangleGeom>();
   float* vertPtr = triangles->getVertexPointer(0);
@@ -171,29 +184,29 @@ void FindTriangleGeomCentroids::execute()
   int64_t* tris = triangles->getTriPointer(0);
 
   int64_t numFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  std::vector<std::set<int64_t> > vertexSets(numFeatures);
+  std::vector<std::set<int64_t>> vertexSets(numFeatures);
 
   for(int64_t i = 0; i < numTriangles; i++)
   {
     if(m_FaceLabels[2 * i + 0] > 0)
-	  { 
-		  vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 0]);
-		  vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 1]);
-		  vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 2]);
-	  }
+    {
+      vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 0]);
+      vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 1]);
+      vertexSets[m_FaceLabels[2 * i + 0]].insert(tris[3 * i + 2]);
+    }
     if(m_FaceLabels[2 * i + 1] > 0)
-	  {
-		  vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 0]);
-		  vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 1]);
-		  vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 2]);
-	  }
+    {
+      vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 0]);
+      vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 1]);
+      vertexSets[m_FaceLabels[2 * i + 1]].insert(tris[3 * i + 2]);
+    }
   }
 
   std::set<int64_t>::iterator it;
   for(int64_t i = 0; i < numFeatures; i++)
   {
     for(it = vertexSets[i].begin(); it != vertexSets[i].end(); ++it)
-	  {
+    {
       int32_t vert = *it;
       m_Centroids[3 * i + 0] += vertPtr[3 * vert + 0];
       m_Centroids[3 * i + 1] += vertPtr[3 * vert + 1];
@@ -205,7 +218,7 @@ void FindTriangleGeomCentroids::execute()
       m_Centroids[3 * i + 1] /= vertexSets[i].size();
       m_Centroids[3 * i + 2] /= vertexSets[i].size();
     }
-	  vertexSets[i].clear();
+    vertexSets[i].clear();
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -228,13 +241,17 @@ AbstractFilter::Pointer FindTriangleGeomCentroids::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString FindTriangleGeomCentroids::getCompiledLibraryName()
-{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
+{
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindTriangleGeomCentroids::getBrandingString()
-{ return "SurfaceMeshing"; }
+{
+  return "SurfaceMeshing";
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -243,7 +260,7 @@ const QString FindTriangleGeomCentroids::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
+  vStream << SurfaceMeshing::Version::Major() << "." << SurfaceMeshing::Version::Minor() << "." << SurfaceMeshing::Version::Patch();
   return version;
 }
 
@@ -251,17 +268,22 @@ const QString FindTriangleGeomCentroids::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindTriangleGeomCentroids::getGroupName()
-{ return SIMPL::FilterGroups::Generic; }
+{
+  return SIMPL::FilterGroups::Generic;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindTriangleGeomCentroids::getSubGroupName()
-{ return SIMPL::FilterSubGroups::MiscFilters; }
+{
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindTriangleGeomCentroids::getHumanLabel()
-{ return "Find Feature Centroids from Triangle Geometry"; }
-
+{
+  return "Find Feature Centroids from Triangle Geometry";
+}

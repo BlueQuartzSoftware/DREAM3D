@@ -283,7 +283,7 @@ const QString FindFeaturePhases::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindFeaturePhases::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::MiscFilters;
+  return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
 
 // -----------------------------------------------------------------------------
