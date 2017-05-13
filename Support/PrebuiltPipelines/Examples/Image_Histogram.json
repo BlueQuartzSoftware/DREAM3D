@@ -1,0 +1,51 @@
+{
+    "0": {
+        "CellAttributeMatrixName": "CellData",
+        "DataContainerName": "ImageDataContainer",
+        "FileName": "Data/Image/slice_11.tif",
+        "FilterVersion": "1.0.358",
+        "Filter_Human_Label": "ITK::Image Reader (KW)",
+        "Filter_Name": "ITKImageReader",
+        "ImageDataArrayName": "ImageData"
+    },
+    "1": {
+        "FilterVersion": "6.4.500",
+        "Filter_Human_Label": "Calculate Frequency Histogram",
+        "Filter_Name": "CalculateArrayHistogram",
+        "MaxRange": 256,
+        "MinRange": 0,
+        "NewAttributeMatrixName": "HistogramAttributeMatrix",
+        "NewDataArrayName": "Image_Histogram",
+        "NewDataContainer": 0,
+        "NewDataContainerName": "NewDataContainer",
+        "Normalize": 0,
+        "NumberOfBins": 256,
+        "SelectedArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "ImageData",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "UserDefinedRange": 1
+    },
+    "2": {
+        "Delimiter": 0,
+        "FileExtension": ".csv",
+        "FilterVersion": "1.0.953",
+        "Filter_Human_Label": "Export ASCII Data",
+        "Filter_Name": "WriteASCIIData",
+        "MaxValPerLine": 1,
+        "OutputPath": "Data/Output/Histograms",
+        "SelectedDataArrayPaths": [
+            {
+                "Attribute Matrix Name": "HistogramAttributeMatrix",
+                "Data Array Name": "Image_Histogram",
+                "Data Container Name": "ImageDataContainer"
+            }
+        ]
+    },
+    "PipelineBuilder": {
+        "Name": "Image_Histogram",
+        "Number_Filters": 3,
+        "Version": 6
+    }
+}

@@ -1,0 +1,114 @@
+{
+    "0": {
+        "CellAttributeMatrixName": "CellData",
+        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "6.4.500",
+        "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
+        "Filter_Name": "ReadAngData",
+        "InputFile": "Data/SmallIN100/Slice_1.ang"
+    },
+    "1": {
+        "CellAttributeMatrixPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.500",
+        "Filter_Human_Label": "Rotate Sample Reference Frame",
+        "Filter_Name": "RotateSampleRefFrame",
+        "RotationAngle": 180,
+        "RotationAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        }
+    },
+    "2": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.500",
+        "Filter_Human_Label": "Rotate Euler Reference Frame",
+        "Filter_Name": "RotateEulerRefFrame",
+        "RotationAngle": 90,
+        "RotationAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        }
+    },
+    "3": {
+        "DestinationArrayName": "Mask",
+        "FilterVersion": "6.4.500",
+        "Filter_Human_Label": "Threshold Objects",
+        "Filter_Name": "MultiThresholdObjects",
+        "SelectedThresholds": [
+            {
+                "Attribute Array Name": "Confidence Index",
+                "Attribute Matrix Name": "CellData",
+                "Comparison Operator": 0,
+                "Comparison Value": 0,
+                "Data Container Name": "ImageDataContainer"
+            }
+        ]
+    },
+    "4": {
+        "ConditionalArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Mask",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "1.0.953",
+        "Filter_Human_Label": "Replace Value in Array (Conditional)",
+        "Filter_Name": "ConditionalSetValue",
+        "ReplaceValue": 0,
+        "SelectedArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Confidence Index",
+            "Data Container Name": "ImageDataContainer"
+        }
+    },
+    "5": {
+        "FilterVersion": "6.4.500",
+        "Filter_Human_Label": "Calculate Frequency Histogram",
+        "Filter_Name": "CalculateArrayHistogram",
+        "MaxRange": 1,
+        "MinRange": 0,
+        "NewAttributeMatrixName": "Histograms",
+        "NewDataArrayName": "CI_Histogram",
+        "NewDataContainer": 0,
+        "NewDataContainerName": "NewDataContainer",
+        "Normalize": 0,
+        "NumberOfBins": 50,
+        "SelectedArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Confidence Index",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "UserDefinedRange": 0
+    },
+    "6": {
+        "Delimiter": 0,
+        "FileExtension": ".csv",
+        "FilterVersion": "1.0.953",
+        "Filter_Human_Label": "Export ASCII Data",
+        "Filter_Name": "WriteASCIIData",
+        "MaxValPerLine": 1,
+        "OutputPath": "Data/Output/Histograms",
+        "SelectedDataArrayPaths": [
+            {
+                "Attribute Matrix Name": "Histograms",
+                "Data Array Name": "CI_Histogram",
+                "Data Container Name": "ImageDataContainer"
+            }
+        ]
+    },
+    "PipelineBuilder": {
+        "Name": "CI_Histogram",
+        "Number_Filters": 7,
+        "Version": 6
+    }
+}
