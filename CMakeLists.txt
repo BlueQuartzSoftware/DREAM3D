@@ -595,6 +595,9 @@ if(EXISTS ${data_file})
   install(FILES ${SYNTHETIC_STATS_FILES}
           DESTINATION Data/
           COMPONENT Applications )
+  install(DIRECTORY ${DREAM3D_DATA_DIR}/Data/SmallIN100 ${DREAM3D_DATA_DIR}/Data/Image
+          DESTINATION Data/
+          COMPONENT Applications)
 endif()
 
 #-- This is example code that loops over all the DocGroups and each .md BUILD_WITH_INSTALL_RPATH
