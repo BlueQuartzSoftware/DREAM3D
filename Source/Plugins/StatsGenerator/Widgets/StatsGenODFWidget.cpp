@@ -67,6 +67,8 @@
 #include "EbsdLib/HKL/CtfReader.h"
 #include "EbsdLib/TSL/AngReader.h"
 
+#include "SVWidgetsLib/Widgets/ProgressDialog.h"
+
 #include "OrientationLib/IO/AngleFileLoader.h"
 #include "OrientationLib/Texture/StatsGen.hpp"
 #include "OrientationLib/Texture/Texture.hpp"
@@ -77,7 +79,6 @@
 #include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/Widgets/TextureDialog.h"
-#include "StatsGenerator/Widgets/ProgressDialog.h"
 
 
 #define SHOW_POLE_FIGURES 1
@@ -626,6 +627,7 @@ void StatsGenODFWidget::calculateODF()
 
   if(err == 1)
   {
+    delete progressDialog;
     // TODO: Present Error Message
     return;
   }
@@ -639,9 +641,8 @@ void StatsGenODFWidget::calculateODF()
     m_MDFWidget->setEnabled(true);
     m_MDFWidget->updateMDFPlot(odf);
   }
-
-  emit dataChanged();
   delete progressDialog;
+  emit dataChanged();
 }
 
 // -----------------------------------------------------------------------------
