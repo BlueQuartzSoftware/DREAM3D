@@ -244,10 +244,11 @@ void CalculateArrayHistogram::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool userRange, double minRange, double maxRange, DoubleArrayType::Pointer newDataArray)
+template <typename T>
+void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool userRange, double minRange, double maxRange, DoubleArrayType::Pointer newDataArray, int &overflow)
 {
   typename DataArray<T>::Pointer inputDataPtr = std::dynamic_pointer_cast<DataArray<T>>(inDataPtr);
-
+  overflow = 0;
   newDataArray->initializeWithZeros(); // we must initialize the histogram array to prepare for incrementing the array elements
   double* newDataArrayPtr = newDataArray->getPointer(0);
 
@@ -291,6 +292,10 @@ template <typename T> void findHistogram(IDataArray::Pointer inDataPtr, int32_t 
       {
         newDataArrayPtr[bin * 2 + 1]++; // increment histogram element corresponding to this input array value
       }
+      else
+      {
+        overflow++;
+      }
     }
   }
 
@@ -298,14 +303,6 @@ template <typename T> void findHistogram(IDataArray::Pointer inDataPtr, int32_t 
   {
     newDataArrayPtr[i * 2] = min + increment * (i + 1);
   }
-
-  //  if (normalize) // if normalize is checked, divide each element in the histogram by total number of points
-  //  {
-  //    for (size_t i = 0; i < numberOfBins; i++)
-  //    {
-  //      newDataArrayPtr[i] /= numPoints;
-  //    }
-  //  }
 }
 
 // -----------------------------------------------------------------------------
@@ -319,8 +316,14 @@ void CalculateArrayHistogram::execute()
   {
     return;
   }
+  int overflow = 0;
+  EXECUTE_FUNCTION_TEMPLATE(this, findHistogram, m_InDataArrayPtr.lock(), m_InDataArrayPtr.lock(), m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock(), overflow)
 
-  EXECUTE_FUNCTION_TEMPLATE(this, findHistogram, m_InDataArrayPtr.lock(), m_InDataArrayPtr.lock(), m_NumberOfBins, m_UserDefinedRange, m_MinRange, m_MaxRange, m_NewDataArrayPtr.lock())
+  if(overflow > 0)
+  {
+    QString msg = QString("%1 values were not catagorized into a bin.").arg(overflow);
+    notifyWarningMessage(getHumanLabel(), msg, 0);
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
