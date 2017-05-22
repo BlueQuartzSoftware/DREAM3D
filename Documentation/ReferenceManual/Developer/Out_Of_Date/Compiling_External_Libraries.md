@@ -54,7 +54,7 @@ Our **DREAM3D\_SDK** is located at
 
 With this environment setup, proceed to download and install git, CMake and Doxygen into the **DREAM3D\_SDK** directory. Then proceed to download, build and install the rest of the dependent libraries.
 
-# CMake 3.5.1 #
+# CMake 3.8 #
 
 [CMake Download Link](http://www.cmake.org/download/)
 
@@ -87,7 +87,7 @@ Extract the archive to your **Workspace** location. Then using a terminal (for L
 
 ## Windows Notes ##
 
-Use CMake to configure HDF5 for building with Visual Studio. The developer should select the _Visual Studio 12 2013 Win64_ generator type when configuring the build. This will build both Debug and Release from the same Visual Studio solution.
+Use CMake to configure HDF5 for building with Visual Studio. The developer should select the _Visual Studio 12 2015 Win64_ generator type when configuring the build. This will build both Debug and Release from the same Visual Studio solution.
 
 ## OS X & Linux Notes ##
 
@@ -109,36 +109,7 @@ With the introduction of proper CMakeConfig support into HDF5 1.8.14 there now e
 
 **This setup becomes critically important when the using the ITK library in DREAM.3D. This procedure ensures that a consistent HDF5 library is linked into the Plugin and DREAM.3D.**
 
-# Building Boost 1.60.0 #
-
-[http://sourceforge.net/projects/boost/files/boost/1.60.0/ ]( http://sourceforge.net/projects/boost/files/boost/1.60.0/ )
-
-Windows developers should select the *.zip file and OS X users should select the .tar.gz file.
-
-## Windows Notes ##
-
-[http://stackoverflow.com/questions/18732075/install-boost-headers-to-specific-directory-windows](http://stackoverflow.com/questions/18732075/install-boost-headers-to-specific-directory-windows)
-
-	Download the boost-1.60.0.zip file for windows.
-	Decompress and open up a Visual Studio x64 command prompt.
-	CD into the boost-1.60.0 directory.
-	./bootstrap
-	C:\\Users\\mjackson\\Workspace\boost_1_57_0>.\b2 --build-dir=Build toolset=msvc  --prefix=C:/DREAM3D_SDK/boost-1.57.0 --layout=system variant=debug,release link=static threading=multi address-model=64 install
-
-## OS X Notes ##
-
-	[user] $ tar -xvzf boost_1_58_0.tar.gz
-	[user] $ cd boost_1_58_0
-	[user] $ ./bootstrap.sh
-	[user] $ ./b2 --prefix=/Users/Shared/DREAM3D_SDK/boost-1.60.0 --build-dir=Build variant=release link=shared threading=multi install
-	[user] $
-
-
-## Linux Notes ##
-
-The distribution of boost with most modern Linux distributions is usually good enough for the needs of DREAM.3D.
-
-# Building Eigen 3.2.8 #
+# Building Eigen 3.2.9 #
 
 + [http://eigen.tuxfamily.org/index.php?title=Main_Page](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 + The project is configured with CMake and no compiling is necessary. Just configure and then execute the "install" target for your IDE or makefiles.
@@ -156,7 +127,7 @@ The distribution of boost with most modern Linux distributions is usually good e
 
  If you use Ninja to configure and build Eigen there are a few additional steps. this is what worked for me.
 
-+ path\\to\\eigen-3.2.4\\zRel> cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/DREAM3D_SDK/Eigen-3.2.8 -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF ../
++ path\\to\\eigen-3.2.9\\zRel> cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/DREAM3D_SDK/Eigen-3.2.9 -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF ../
 + Then create an empty file called "DartConfiguration.tcl" in the build directory.
 + Run the CMake command again
 + ninja install
@@ -178,21 +149,21 @@ Within the DREAM3D/Support/Scripts/OSX_Build_Scripts directory is a shell script
 + Install into the **_DREAM3D\_SDK** location.
 
 
-# Qt 5.4.x #
+# Qt 5.6.x #
 Download Qt from [http://www.qt.io](http://www.qt.io). One can usually download and install the "Qt SDK" which will have everything you need.
 
 Install Qt into C:/DREAM3D_SDK/Qt5.6.0 (Windows) /Users/Shared/DREAM3D_SDK/Qt5.6.0 (OS X) or /opt/DREAM3D_SDK/Qt5.6.0 (Linux).
 
-**Windows Visual Studio Users** The Qt-Project provides pre-built binaries for Qt for Visual Studio (VS) BUT they are ONLY 64 bit and they are ONLY for Visual Studio 2013 and ONLY for a specific version of Visual Studio 2013. If your version of Visual Studio does NOT match theirs, down to the exact security patches and service packs you **will** get errors due to mismatched "manifests", C/C++ runtime DLL issues and a few other things.
+**Windows Visual Studio Users** The Qt-Project provides pre-built binaries for Qt for Visual Studio (VS) BUT they are ONLY 64 bit and they are ONLY for Visual Studio 2013 and ONLY for a specific version of Visual Studio 2015. If your version of Visual Studio does NOT match theirs, down to the exact security patches and service packs you **will** get errors due to mismatched "manifests", C/C++ runtime DLL issues and a few other things.
 
-# Building Qwt 6.1.2 #
+# Building Qwt 6.1.3 #
 
-Build Qwt 6.1.2 which is the first version to be compatible with Qt 5.6.0
+Build Qwt 6.1.3 which is the first version to be compatible with Qt 5.6.0
 
 + Download version [Qwt 6.1.2](http://sourceforge.net/projects/qwt/files/latest/download) for Qt 5.6 compatibility
 + Modify the following files:
 
-## Edit qwt-6.1.2/src/src.pro ##
+## Edit qwt-6.1.3/src/src.pro ##
 
 This is only for OS X to build a proper framework.
 
@@ -207,7 +178,7 @@ with this:
 
 This will set correctly the full path to the framework that is built. If this is **NOT** performed then the final DREAM.3D packaging will not work correctly.
 
-## Edit qwt-6.1.2/qwtconfig.pri ##
+## Edit qwt-6.1.3/qwtconfig.pri ##
 
 replace the following line:
 
@@ -225,7 +196,7 @@ Adjust the path to place Qwt where all the other DREAM3D library dependencies ar
 
 ### Compile ###
 
-Use qmake from the Qt 5.4 distribution from the command line with the following commands executed from inside the qwt-6.1.2 directory
+Use qmake from the Qt 5.4 distribution from the command line with the following commands executed from inside the qwt-6.1.3 directory
 
 	qmake qwt.pro
 

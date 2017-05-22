@@ -118,7 +118,6 @@ Some examples of common sanity checks:
 - Values that cannot be negative should be positive, and vice versa.
 - The value that was input into the filter is in range. (i.e. An unsigned 8-bit integer array should be initialized only with values between 0-255).
 
-To learn more about dataCheck(), see [The DataCheck Function](#dataCheckPage).
 
 <a name="execute">
 ### execute() ###
@@ -126,13 +125,10 @@ To learn more about dataCheck(), see [The DataCheck Function](#dataCheckPage).
 
 The **execute()** function runs when the user actually starts the pipeline.  This function contains the code that actually accomplishes the filter's intended objective.
 
-To learn more about execute(), see [The Execute Function](#theexecutefunction).
-
 <a name="getterfunctions">
 ### Getter Functions ###
 </a>
 
-![](Images/FilterList-HTML-PopUp.png)
 
 The **getter functions** allow the filter to procure various values for other areas of DREAM.3D to use.  These functions are:
 

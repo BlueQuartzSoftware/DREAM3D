@@ -51,20 +51,17 @@ set(DOCUMENTATION_SOURCE_FILES
 option(DREAM3D_INCLUDE_DEVELOPER_DOCS "Include the Developer Documentation in the DOxygen Generated output." ON)
 if(DREAM3D_INCLUDE_DEVELOPER_DOCS)
   set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
-    \"${PROJECT_SOURCE_DIR}/Developer/OSX_Configuring_and_Building_DREAM3D.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/Windows_Configuring_and_Building_DREAM3D.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/Linux_Configuring_and_Building_DREAM3D.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/CodeGuidelines.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/CompilerSuite.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/Compiling_External_Libraries.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/CreatingAFilter.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/Developer.dox\"
+    \"${PROJECT_SOURCE_DIR}/Developer/Linux_Configuring_and_Building_DREAM3D.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/OSX_Configuring_and_Building_DREAM3D.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/RepositoryLayout.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/SDKInstall.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/SourceDownload.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/Versioning.md\"
+    \"${PROJECT_SOURCE_DIR}/Developer/Windows_Configuring_and_Building_DREAM3D.md\"
     \"${PROJECT_SOURCE_DIR}/Developer/WritingAFilter.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/DataCheck.md\"
-    \"${PROJECT_SOURCE_DIR}/Developer/Execute.md\"
   )
 endif()
 
