@@ -1,0 +1,147 @@
+{
+    "0": {
+        "CellAttributeMatrixName": "CellData",
+        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "6.4.510",
+        "Filter_Human_Label": "Import Oxford Instr. EBSD Data (.ctf)",
+        "Filter_Name": "ReadCtfData",
+        "InputFile": "Data/Textured_Copper/Cugrid_after 2nd_15kv_2kx_2.ctf"
+    },
+    "1": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "ConversionType": 0,
+        "FilterVersion": "6.4.510",
+        "Filter_Human_Label": "Convert Angles to Degrees or Radians",
+        "Filter_Name": "ChangeAngleRepresentation"
+    },
+    "2": {
+        "CellAttributeMatrixPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "CellFeatureAttributeMatrixPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.510",
+        "Filter_Human_Label": "Crop Geometry (Image)",
+        "Filter_Name": "CropImageGeometry",
+        "NewDataContainerName": "NewImageDataContainer",
+        "RenumberFeatures": 0,
+        "SaveAsNewDataContainer": 0,
+        "UpdateOrigin": 1,
+        "XMax": 549,
+        "XMin": 62,
+        "YMax": 399,
+        "YMin": 0,
+        "ZMax": 0,
+        "ZMin": 0
+    },
+    "3": {
+        "DestinationArrayName": "Mask",
+        "FilterVersion": "6.4.510",
+        "Filter_Human_Label": "Threshold Objects",
+        "Filter_Name": "MultiThresholdObjects",
+        "SelectedThresholds": [
+            {
+                "Attribute Array Name": "Error",
+                "Attribute Matrix Name": "CellData",
+                "Comparison Operator": 2,
+                "Comparison Value": 0,
+                "Data Container Name": "ImageDataContainer"
+            }
+        ]
+    },
+    "4": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "CellIPFColorsArrayName": "IPF_Exposed_001",
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.510",
+        "Filter_Human_Label": "Generate IPF Colors",
+        "Filter_Name": "GenerateIPFColors",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Mask",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "ReferenceDir": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        },
+        "UseGoodVoxels": 1
+    },
+    "5": {
+        "FileName": "Data/Output/TexturedCopper/IPF_Exposed.png",
+        "FilterVersion": "1.0.360",
+        "Filter_Human_Label": "ITK::Image Writer",
+        "Filter_Name": "ITKImageWriter",
+        "ImageArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "IPF_Exposed_001",
+            "Data Container Name": "ImageDataContainer"
+        }
+    },
+    "6": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.510",
+        "Filter_Human_Label": "Export Pole Figure Images",
+        "Filter_Name": "WritePoleFigure",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Mask",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "ImageFormat": 0,
+        "ImageLayout": 2,
+        "ImagePrefix": "Exposed_",
+        "ImageSize": 512,
+        "LambertSize": 32,
+        "NumColors": 32,
+        "OutputPath": "Data/Output/TexturedCopper"
+    },
+    "PipelineBuilder": {
+        "Name": "TxCopper_Exposed",
+        "Number_Filters": 7,
+        "Version": 6
+    }
+}
