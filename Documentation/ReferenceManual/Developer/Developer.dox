@@ -11,7 +11,7 @@ can be broken down to the following items:
 
 @subpage sdk_install
 
-@subpage windows_configure_and_build_dream3d\
+@subpage windows_configure_and_build_dream3d
 
 @subpage osx_configure_and_build_dream3d
 
@@ -24,7 +24,9 @@ This section of the user manual discusses the various aspects and steps needed t
 with your own plugins, custom filters or allow the developer to fix or extend existing filters. The tasks
 can be broken down to the following items:
 
-@subpage creating_a_filter
+@subpage creating_a_filter Create a Plugin with DevHelper
+
+@subpage writingafilter Filter Code Explanation
 
 
 @page developer Additional Developer Information
@@ -34,19 +36,8 @@ The DREAM.3D Developer Manual contains information for developers wishing to add
 
 Explanation of good coding practices for contributing to DREAM.3D
 
+@subpage repository_layout Relationships of the various Git repositories
 
-
-@subpage compilingexternallibraries
-
-How to compile the external dependencies for DREAM.3D
-
-@subpage versioning 
-
-Explanation of DREAM.3D's versioning scheme
-
-@subpage writingafilter
-
-How to Write a DREAM.3D Filter
 
 
 */

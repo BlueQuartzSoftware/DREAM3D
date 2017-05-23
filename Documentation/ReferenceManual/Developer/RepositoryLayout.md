@@ -1,4 +1,4 @@
-# Repository Layout #
+# Repository Layout # {#repository_layout}
 
 The DREAM.3D project is organized into three separate repositories. These repositories are hosted at [GitHub.com/bluequartzsoftware](http://www.github.com/bluequartzsoftware). The repositories are the following:
 
