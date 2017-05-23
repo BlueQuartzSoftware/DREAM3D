@@ -192,7 +192,7 @@ void CropImageGeometry::dataCheck()
     IGeometry::Pointer imageCopy = image->deepCopy();
     destCellDataContainer->setGeometry(imageCopy);
 
-    destCellAttrMat = srcCellAttrMat->deepCopy();
+    destCellAttrMat = srcCellAttrMat->deepCopy(getInPreflight());
     destCellDataContainer->addAttributeMatrix(destCellAttrMat->getName(), destCellAttrMat);
   }
   else
@@ -379,7 +379,7 @@ void CropImageGeometry::execute()
     destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(ox, oy, oz);
     destCellDataContainer->getGeometryAs<ImageGeom>()->setResolution(rx, ry, rz);
 
-    AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy();
+    AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy(false);
     destCellDataContainer->addAttributeMatrix(cellAttrMatCopy->getName(), cellAttrMatCopy);
     cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   }

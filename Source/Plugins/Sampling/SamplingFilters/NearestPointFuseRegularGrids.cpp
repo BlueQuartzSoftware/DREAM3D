@@ -169,7 +169,7 @@ void NearestPointFuseRegularGrids::dataCheck()
         }
         else
         {
-          AttributeMatrix::Pointer attrMat = tmpAttrMat->deepCopy();
+          AttributeMatrix::Pointer attrMat = tmpAttrMat->deepCopy(getInPreflight());
           mR->addAttributeMatrix(*it, attrMat);
         }
       }
