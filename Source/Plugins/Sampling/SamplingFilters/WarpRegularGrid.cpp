@@ -241,7 +241,7 @@ void WarpRegularGrid::execute()
   }
 
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  AttributeMatrix::Pointer newCellAttrMat = cellAttrMat->deepCopy();
+  AttributeMatrix::Pointer newCellAttrMat = cellAttrMat->deepCopy(false);
 
   size_t dims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(dims);
