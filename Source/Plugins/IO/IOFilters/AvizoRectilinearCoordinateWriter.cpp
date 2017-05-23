@@ -48,7 +48,9 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_AvizoRectilinearCoordinateWriter.cpp"
@@ -60,6 +62,7 @@ AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter()
 : AbstractFilter()
 , m_OutputFile("")
 , m_WriteBinaryFile(false)
+, m_Units("microns")
 , m_WriteFeatureIds(true)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FeatureIds(nullptr)
@@ -88,6 +91,8 @@ void AvizoRectilinearCoordinateWriter::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, AvizoRectilinearCoordinateWriter, req));
   }
+
+  parameters.push_back(SIMPL_NEW_STRING_FP("Units", Units, FilterParameter::Parameter, AvizoRectilinearCoordinateWriter, 0));
 
   setFilterParameters(parameters);
 }
@@ -179,24 +184,25 @@ void AvizoRectilinearCoordinateWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    setErrorCondition(-1);
+    setErrorCondition(-93000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  QFile writer(getOutputFile());
-  if(!writer.open(QIODevice::WriteOnly | QIODevice::Text))
+  FILE* avizoFile = fopen(getOutputFile().toLatin1().data(), "wb");
+  if(nullptr == avizoFile)
   {
-    QString ss = QObject::tr("Avizo Output file could not be opened: %1").arg(getOutputFile());
-    setErrorCondition(-100);
+    setErrorCondition(-93001);
+    QString ss = QObject::tr("Error creating file '%1'").arg(getOutputFile());
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  QDataStream out(&writer);
-  generateHeader(out);
+  generateHeader(avizoFile);
 
-  err = writeData(out);
+  err = writeData(avizoFile);
+
+  fclose(avizoFile);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -205,54 +211,56 @@ void AvizoRectilinearCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream& ss)
+void AvizoRectilinearCoordinateWriter::generateHeader(FILE* f)
 {
   if(m_WriteBinaryFile == true)
   {
 #ifdef CMP_WORDS_BIGENDIAN
-    ss << "# AmiraMesh BINARY 2.1\n";
+    fprintf(f, "# AmiraMesh BINARY 2.1\n");
 #else
-    ss << "# AmiraMesh BINARY-LITTLE-ENDIAN 2.1\n";
+    fprintf(f, "# AmiraMesh BINARY-LITTLE-ENDIAN 2.1\n");
 #endif
   }
   else
   {
-    ss << "# AmiraMesh 3D ASCII 2.0\n";
+    fprintf(f, "# AmiraMesh 3D ASCII 2.0\n");
   }
-  ss << "\n";
-  ss << "# Dimensions in x-, y-, and z-direction\n";
+  fprintf(f, "\n");
+  fprintf(f, "# Dimensions in x-, y-, and z-direction\n");
   size_t x = 0, y = 0, z = 0;
   getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getDimensions(x, y, z);
-  ss << "define Lattice " << (qint64)x << " " << (qint64)y << (qint64)z << "\n";
-  ss << "define Coordinates " << (qint64)(x + y + z) << "\n\n";
 
-  ss << "Parameters {\n";
-  ss << "     DREAM3DParams {\n";
-  ss << "         Author \"DREAM3D\",\n";
-  ss << "         DateTime \"" << QDateTime::currentDateTime().toString() << "\"\n";
-  ss << "     }\n";
+  fprintf(f, "define Lattice %llu %llu %llu\n", static_cast<unsigned long long>(x), static_cast<unsigned long long>(y), static_cast<unsigned long long>(z));
+  fprintf(f, "define Coordinates %llu\n\n", static_cast<unsigned long long>(x + y + z));
 
-  ss << "     Units {\n";
-  ss << "         Coordinates \"microns\"\n";
-  ss << "     }\n";
+  fprintf(f, "Parameters {\n");
+  fprintf(f, "     DREAM3DParams {\n");
+  fprintf(f, "         Author \"DREAM.3D %s\",\n", IO::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "         DateTime \"%s\"\n", QDateTime::currentDateTime().toString().toLatin1().data());
+  fprintf(f, "         FeatureIds Path \"%s\"\n", getFeatureIdsArrayPath().serialize("/").toLatin1().data());
+  fprintf(f, "     }\n");
+
+  fprintf(f, "     Units {\n");
+  fprintf(f, "         Coordinates \"%s\"\n", getUnits().toLatin1().data());
+  fprintf(f, "     }\n");
   float origin[3];
   getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getOrigin(origin);
   float res[3];
   getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getResolution(res);
 
-  ss << "     CoordType \"rectilinear\"\n";
-  ss << "}\n\n";
+  fprintf(f, "     CoordType \"rectilinear\"\n");
+  fprintf(f, "}\n\n");
 
-  ss << "Lattice { int FeatureIds } = @1\n";
-  ss << "Coordinates { float xyz } = @2\n\n";
+  fprintf(f, "Lattice { int FeatureIds } = @1\n");
+  fprintf(f, "Coordinates { float xyz } = @2\n\n");
 
-  ss << "# Data section follows\n";
+  fprintf(f, "# Data section follows\n");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
+int AvizoRectilinearCoordinateWriter::writeData(FILE* f)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t dims[3];
@@ -263,42 +271,37 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
   m->getGeometryAs<ImageGeom>()->getResolution(res);
 
   QString start("@1 # FeatureIds in z, y, x with X moving fastest, then Y, then Z\n");
-  out << start;
+  fprintf(f, "%s", start.toLatin1().data());
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+
   if(true == m_WriteBinaryFile)
   {
-    out.writeRawData(reinterpret_cast<char*>(m_FeatureIds), m_FeatureIdsPtr.lock()->getNumberOfTuples() * sizeof(int32_t));
-    // writer.writeArray(m_FeatureIds, getDataContainerArray()->getDataContainer(getDataContainerName())->getTotalPoints());
-    out << "\n";
+    fwrite(m_FeatureIds, sizeof(int32_t), totalPoints, f);
   }
   else
   {
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
-    int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
     int count = 0;
-    QString ss;
-    for(int64_t i = 0; i < totalPoints; ++i)
+    for(size_t i = 0; i < totalPoints; ++i)
     {
-      out << m_FeatureIds[i];
+      fprintf(f, "%d", m_FeatureIds[i]);
       if(count < 20)
       {
-        ss = ss.append(" ");
+        fprintf(f, " ");
         count++;
       }
       else
       {
-        out << "\n";
-        out << ss;
-        ss.clear();
+        fprintf(f, "\n");
         count = 0;
       }
     }
-    ss = ss.append("\n"); // Make sure there is a new line at the end of the data block
-    // Pick up any remaining data that was not written because we did not have 20 items on a line.
-    out << ss;
   }
+  fprintf(f, "\n");
 
   start = "@2 # x coordinates, then y, then z\n";
-  out << start;
+  fprintf(f, "%s", start.toLatin1().data());
+
   if(true == m_WriteBinaryFile)
   {
     for(int d = 0; d < 3; ++d)
@@ -308,8 +311,8 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
       {
         coords[i] = origin[d] + (res[d] * i);
       }
-      out.writeRawData(reinterpret_cast<char*>(&(coords.front())), dims[d] * sizeof(float));
-      out << "\n"; // This puts a new line character
+      fwrite(reinterpret_cast<char*>(coords.data()), sizeof(char), sizeof(char) * sizeof(float) * dims[d], f);
+      fprintf(f, "\n");
     }
   }
   else
@@ -318,9 +321,9 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
     {
       for(size_t i = 0; i < dims[d]; ++i)
       {
-        out << (origin[d] + (res[d] * i)) << " ";
+        fprintf(f, "%f ", origin[d] + (res[d] * i));
       }
-      out << "\n";
+      fprintf(f, "\n");
     }
   }
 
