@@ -37,9 +37,9 @@
 #ifndef _avizouniformcoordinatewriter_h_
 #define _avizouniformcoordinatewriter_h_
 
-#include <QtCore/QString>
+#include <stdio.h>
 
-#include <QtCore/QFile>
+#include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -70,6 +70,9 @@ class AvizoUniformCoordinateWriter : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
+
+    SIMPL_FILTER_PARAMETER(QString, Units)
+    Q_PROPERTY(QString Units READ getUnits WRITE setUnits)
 
     SIMPL_INSTANCE_PROPERTY(bool, WriteFeatureIds)
 
@@ -175,19 +178,18 @@ class AvizoUniformCoordinateWriter : public AbstractFilter
      */
     void initialize();
 
-
     /**
      * @brief Generates the Avizo Header for this file
      * @return The header as a string
      */
-    void generateHeader(QDataStream& ss);
+    void generateHeader(FILE *f);
 
     /**
      * @brief Writes the data to the Avizo file
      * @param writer The MXAFileWriter object
      * @return Error code
      */
-    int writeData(QDataStream& out);
+    int writeData(FILE* f);
 
   private:
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
