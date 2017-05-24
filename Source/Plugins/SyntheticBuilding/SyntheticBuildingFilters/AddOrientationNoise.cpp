@@ -39,7 +39,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
@@ -74,7 +74,7 @@ AddOrientationNoise::~AddOrientationNoise()
 void AddOrientationNoise::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Magnitude of Orientation Noise (Degrees)", Magnitude, FilterParameter::Parameter, AddOrientationNoise));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Magnitude of Orientation Noise (Degrees)", Magnitude, FilterParameter::Parameter, AddOrientationNoise));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Category::Element);
@@ -181,7 +181,7 @@ void AddOrientationNoise::add_orientation_noise()
     ny = static_cast<float>(rg.genrand_res53());
     nz = static_cast<float>(rg.genrand_res53());
     w = static_cast<float>(rg.genrand_res53());
-    w = 2.0 * (w - 0.5);
+    w = 2.0f * (w - 0.5f);
     w *= m_Magnitude;
     ax.fromAxisAngle(nx, ny, nz, w);
     FOrientTransformsType::ax2om(ax, om);
