@@ -95,7 +95,7 @@ After all desired input fields have been set to desired values the user will nee
 
 ####IMPORTANT NOTE:####
 
-Anytime the user changes any input fields in the **Size Distribution** tab the **Create Data** button MUST be clicked ![images/CreateDataBtn.png](images/CreateDataBtn.png)
+Anytime the user changes any input fields in the **Size Distribution** tab the **Create Data** button MUST be clicked ![Images/CreateDataBtn.png](Images/CreateDataBtn.png)
 
 ## Omega3 Tab ##
 
@@ -156,7 +156,7 @@ Also note, the number of created bins in the normalized frequency list may be MO
 
 The user **MUST** click **Generate RDF** button for the values to get stored.
 
-![RDF Plot](images/RDFPlot.png)
+![RDF Plot](Images/RDFPlot.png)
 @image latex Images/RDFPlot.png "Radial Distribution Plot" width=6in
 
 ## ODF Tab ##
@@ -175,14 +175,14 @@ The ODF tab controls the generation of the Orientation Distribution Function. Th
 + Three PFs are formed for each of the crystal structures that can be chosen (though they are of different directions for the different crystal structures)
 
 | | Sigma = 1 | Sigma = 3 | Sigma = 5 |
-|-|-|-|-|
-| Weight = 1 | ![](images/ODF_W1_S1.png) | ![](images/ODF_W1_S3.png) | ![](images/ODF_W1_S5.png) |
-| Weight = 500 | ![](images/ODF_W500_S1.png) | ![](images/ODF_W500_S3.png) | ![](images/ODF_W500_S5.png) |
-| Weight = 100,000 | ![](images/ODF_W100000_S1.png) | ![](images/ODF_W100000_S3.png) | ![](images/ODF_W100000_S5.png) |
+|-|-----------|-----------|-----------|
+| Weight = 1 | ![ODF_W1_S1](Images/ODF_W1_S1.png) | ![ODF_W1_S3](Images/ODF_W1_S3.png) | ![ODF_W1_S5](Images/ODF_W1_S5.png) |
+| Weight = 500 | ![ODF_W500_S1](Images/ODF_W500_S1.png) | ![ODF_W500_S3](Images/ODF_W500_S3.png) | ![ODF_W500_S5](Images/ODF_W500_S5.png) |
+| Weight = 100,000 | ![ODF_W100000_S1](Images/ODF_W100000_S1.png) | ![ODF_W100000_S3](Images/ODF_W100000_S3.png) | ![ODF_W100000_S5](Images/ODF_W100000_S5.png) |
 
 ### Bulk Load of Angle Data ##
 
-![Bulk Load the ODF Angles from a File.](images/BulkLoadAngles.png)
+![Bulk Load the ODF Angles from a File.](Images/BulkLoadAngles.png)
 @image latex Images/BulkLoadAngles.png "Bulk Load the ODF Angles from a File." width=6in
 
 
