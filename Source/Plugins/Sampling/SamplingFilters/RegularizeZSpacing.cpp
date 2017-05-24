@@ -40,7 +40,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -77,7 +77,7 @@ void RegularizeZSpacing::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Current Z Positions File", InputFile, FilterParameter::Parameter, RegularizeZSpacing, "*.txt"));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("New Z Resolution", NewZRes, FilterParameter::Parameter, RegularizeZSpacing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("New Z Resolution", NewZRes, FilterParameter::Parameter, RegularizeZSpacing));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);

@@ -40,7 +40,7 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -91,17 +91,17 @@ void LaplacianSmoothing::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Default Lambda", Lambda, FilterParameter::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Default Lambda", Lambda, FilterParameter::Parameter, LaplacianSmoothing));
 
   QStringList linkedProps;
   linkedProps << "MuFactor";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Taubin Smoothing", UseTaubinSmoothing, FilterParameter::Parameter, LaplacianSmoothing, linkedProps));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Mu Factor", MuFactor, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Triple Line Lambda", TripleLineLambda, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Quadruple Points Lambda", QuadPointLambda, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Outer Points Lambda", SurfacePointLambda, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Outer Triple Line Lambda", SurfaceTripleLineLambda, FilterParameter::Parameter, LaplacianSmoothing));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Outer Quadruple Points Lambda", SurfaceQuadPointLambda, FilterParameter::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Mu Factor", MuFactor, FilterParameter::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Triple Line Lambda", TripleLineLambda, FilterParameter::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Quadruple Points Lambda", QuadPointLambda, FilterParameter::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outer Points Lambda", SurfacePointLambda, FilterParameter::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outer Triple Line Lambda", SurfaceTripleLineLambda, FilterParameter::Parameter, LaplacianSmoothing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outer Quadruple Points Lambda", SurfaceQuadPointLambda, FilterParameter::Parameter, LaplacianSmoothing));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

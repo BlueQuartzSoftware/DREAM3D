@@ -46,7 +46,7 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -402,7 +402,7 @@ FindGBCD::~FindGBCD()
 void FindGBCD::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("GBCD Resolution (Degrees)", GBCDRes, FilterParameter::Parameter, FindGBCD));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("GBCD Resolution (Degrees)", GBCDRes, FilterParameter::Parameter, FindGBCD));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
