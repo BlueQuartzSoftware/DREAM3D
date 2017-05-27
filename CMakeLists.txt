@@ -595,7 +595,7 @@ if(EXISTS ${data_file})
   install(FILES ${SYNTHETIC_STATS_FILES}
           DESTINATION Data/
           COMPONENT Applications )
-  install(DIRECTORY ${DREAM3D_DATA_DIR}/Data/SmallIN100 ${DREAM3D_DATA_DIR}/Data/Image
+  install(DIRECTORY ${DREAM3D_DATA_DIR}/Data/SmallIN100 ${DREAM3D_DATA_DIR}/Data/Image ${DREAM3D_DATA_DIR}/Data/Textured_Copper
           DESTINATION Data/
           COMPONENT Applications)
 endif()
