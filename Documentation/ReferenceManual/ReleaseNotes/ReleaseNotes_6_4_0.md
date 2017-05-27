@@ -16,8 +16,9 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ### Version 6.4.0 ###
 
-+ User interface changes to most of the input type widgets which should improve usability.
-+ User interface changes to the pipeline view that show more information to the user before and during execution of a pipeline
++ User interface changes which should improve usability.
++ User interface changes to the pipeline view that shows more information to the user before and during execution of a pipeline
++ Add color to each of the filters in the pipeline view that denotes which major group the filter is categorized as.
 
 + BUG: Fixed issue when reading .ang file the last row of data would not be parsed from file
 + FEATURE: Allow user to re-edit the ASCI Import Wizard settings after clicking the "Done" button. (Issue 599)
@@ -74,9 +75,6 @@ updates #571
 + Add bins to the Feature Size Probability Density Function plot
 + Allow user to input a true ESD that then calculates the value of Mu
 + Mousing over ESD PDF plot shows the value under the mouse pointer.
-
-
-
 
 ### Developer Notes ###
 
