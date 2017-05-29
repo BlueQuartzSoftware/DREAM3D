@@ -186,7 +186,7 @@ endif()
 # Development: This is currently in development and probably has bugs.
 get_property(DREAM3DProj_RELEASE_TYPE GLOBAL PROPERTY PACKAGE_RELEASE_TYPE)
 if("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "")
-  set(DREAM3DProj_RELEASE_TYPE "Official")
+  set(DREAM3DProj_RELEASE_TYPE "Development")
   set_property(GLOBAL PROPERTY PACKAGE_RELEASE_TYPE "${DREAM3DProj_RELEASE_TYPE}")
 endif()
 
@@ -595,7 +595,7 @@ if(EXISTS ${data_file})
   install(FILES ${SYNTHETIC_STATS_FILES}
           DESTINATION Data/
           COMPONENT Applications )
-  install(DIRECTORY ${DREAM3D_DATA_DIR}/Data/SmallIN100 ${DREAM3D_DATA_DIR}/Data/Image
+  install(DIRECTORY ${DREAM3D_DATA_DIR}/Data/SmallIN100 ${DREAM3D_DATA_DIR}/Data/Image ${DREAM3D_DATA_DIR}/Data/Textured_Copper
           DESTINATION Data/
           COMPONENT Applications)
 endif()
