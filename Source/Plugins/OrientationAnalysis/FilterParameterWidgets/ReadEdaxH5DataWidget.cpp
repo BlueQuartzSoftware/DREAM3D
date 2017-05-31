@@ -119,8 +119,8 @@ void ReadEdaxH5DataWidget::setupGui()
   QStringList selectedList = m_Filter->getSelectedScanNames();
   selectedScanNames->addItems(selectedList);
 
-  connect(selectedScanNames, SIGNAL(dropOccurred()), this, SLOT(on_addScanName_pressed()));
-  connect(totalScanNames, SIGNAL(dropOccurred()), this, SLOT(on_removeScanName_pressed()));
+  connect(selectedScanNames, SIGNAL(dropOccurred()), this, SLOT(on_addScanName_clicked()));
+  connect(totalScanNames, SIGNAL(dropOccurred()), this, SLOT(on_removeScanName_clicked()));
 
   updateList();
 }
@@ -203,7 +203,7 @@ void ReadEdaxH5DataWidget::updateList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::on_addScanName_pressed()
+void ReadEdaxH5DataWidget::on_addScanName_clicked()
 {
   if(nullptr != totalScanNames->currentItem())
   {
@@ -224,7 +224,7 @@ void ReadEdaxH5DataWidget::on_addScanName_pressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::on_removeScanName_pressed()
+void ReadEdaxH5DataWidget::on_removeScanName_clicked()
 {
   if(nullptr != selectedScanNames->currentItem())
   {

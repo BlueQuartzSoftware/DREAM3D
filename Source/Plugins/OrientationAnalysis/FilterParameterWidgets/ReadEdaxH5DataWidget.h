@@ -85,8 +85,8 @@ class ReadEdaxH5DataWidget : public FilterParameterWidget, private Ui::ReadEdaxH
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void on_addScanName_pressed();
-    void on_removeScanName_pressed();
+    void on_addScanName_clicked();
+    void on_removeScanName_clicked();
     void on_stackLowToHighBtn_toggled(bool checked);
 
   signals:
