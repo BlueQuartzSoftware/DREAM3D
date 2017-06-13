@@ -1,0 +1,93 @@
+{
+    "0": {
+        "CellAttributeMatrixName": "CellData",
+        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "6.4.5",
+        "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
+        "Filter_Name": "ReadAngData",
+        "InputFile": "Data/SmallIN100/Slice_1.ang"
+    },
+    "1": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.5",
+        "Filter_Human_Label": "Rotate Euler Reference Frame",
+        "Filter_Name": "RotateEulerRefFrame",
+        "RotationAngle": 90,
+        "RotationAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        }
+    },
+    "2": {
+        "CellAttributeMatrixPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.5",
+        "Filter_Human_Label": "Rotate Sample Reference Frame",
+        "Filter_Name": "RotateSampleRefFrame",
+        "RotationAngle": 180,
+        "RotationAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        }
+    },
+    "3": {
+        "DestinationArrayName": "Mask",
+        "FilterVersion": "6.4.5",
+        "Filter_Human_Label": "Threshold Objects",
+        "Filter_Name": "MultiThresholdObjects",
+        "SelectedThresholds": [
+            {
+                "Attribute Array Name": "Confidence Index",
+                "Attribute Matrix Name": "CellData",
+                "Comparison Operator": 1,
+                "Comparison Value": 0.10000000149011612,
+                "Data Container Name": "ImageDataContainer"
+            },
+            {
+                "Attribute Array Name": "Image Quality",
+                "Attribute Matrix Name": "CellData",
+                "Comparison Operator": 1,
+                "Comparison Value": 120,
+                "Data Container Name": "ImageDataContainer"
+            }
+        ]
+    },
+    "4": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "ConvertToDegrees": 1,
+        "FilterVersion": "6.4.5",
+        "Filter_Human_Label": "Export StatsGenerator ODF Angle File",
+        "Filter_Name": "WriteStatsGenOdfAngleFile",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Mask",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "OutputFile": "Data/Output/StatsGenODF.txt",
+        "UseGoodVoxels": 1
+    },
+    "PipelineBuilder": {
+        "Name": "StatsGenOdfData",
+        "Number_Filters": 5,
+        "Version": 6
+    }
+}
