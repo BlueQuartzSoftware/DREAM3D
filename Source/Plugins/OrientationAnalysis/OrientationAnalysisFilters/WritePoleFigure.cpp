@@ -145,23 +145,23 @@ void WritePoleFigure::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Euler Angles", CellEulerAnglesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", CellPhasesArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, WritePoleFigure, req));
   }
   setFilterParameters(parameters);
@@ -201,8 +201,6 @@ void WritePoleFigure::dataCheck()
   setErrorCondition(0);
 
   QDir path(getOutputPath());
-
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellPhasesArrayPath().getDataContainerName());
 
   if(m_OutputPath.isEmpty() == true)
   {
@@ -357,11 +355,6 @@ void WritePoleFigure::execute()
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_CellPhasesArrayPath.getDataContainerName());
-
-  size_t dims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
-
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QDir path(getOutputPath());
@@ -374,6 +367,8 @@ void WritePoleFigure::execute()
     return;
   }
 
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_CellPhasesArrayPath.getDataContainerName());
+
   bool missingGoodVoxels = true;
 
   if(nullptr != m_GoodVoxels)
@@ -381,8 +376,10 @@ void WritePoleFigure::execute()
     missingGoodVoxels = false;
   }
 
+  // Find the total number of angles we have based on the number of Tuples of the
+  // Euler Angles array
+  size_t numPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
   // Find how many phases we have by getting the number of Crystal Structures
-  size_t numPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   size_t numPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
 
   // Loop over all the voxels gathering the Eulers for a specific phase into an array
