@@ -64,20 +64,29 @@ class WriteStatsGenOdfAngleFile : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
+    SIMPL_FILTER_PARAMETER(float, Weight)
+    Q_PROPERTY(float Weight READ getWeight WRITE setWeight)
+
+    SIMPL_FILTER_PARAMETER(int, Sigma)
+    Q_PROPERTY(int Sigma READ getSigma WRITE setSigma)
+
+    SIMPL_FILTER_PARAMETER(int, Delimiter)
+    Q_PROPERTY(int Delimiter READ getDelimiter WRITE setDelimiter)
+
     SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+
     SIMPL_FILTER_PARAMETER(bool, ConvertToDegrees)
     Q_PROPERTY(bool ConvertToDegrees READ getConvertToDegrees WRITE setConvertToDegrees)
 
     SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
-
-    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

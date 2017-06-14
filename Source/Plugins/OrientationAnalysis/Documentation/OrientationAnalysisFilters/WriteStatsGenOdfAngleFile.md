@@ -28,8 +28,8 @@ This **Filter** is used in a workflow where the user would like to generate a sy
 ## Notes on Implementation ##
 
 + A separate file is written for each phase
-+ Spaces are used as the delimiters between values
-+ Default values of 1.0 are used for both the _weight_ and _sigma_
++ Spaces are the default as the delimiters between values. The user can select another value
++ Default values of 1.0 are used for both the _weight_ and _sigma_. **If the user needs a stronger texture due to a low number of angles then larger values should be used such as 10, 100 or even 1000.**
 + The user has the option to convert the supplied Euler angles to degrees. **StatsGenerator** is able to import Euler angles as either degrees or radians based on user input, so the output type from this **Filter** could remain as radians or be converted to degrees. The user should remain cognizant of what representation their angles are in so that the correct option is chosen during the import process in **StatsGenerator**
 
 ## Example File ##
@@ -54,13 +54,27 @@ The **only** required header line is:
 
 There are 5 columns of data which are the 3 Euler Angles, the Weight Value and the Sigma Value.
 
+
+### Delimiter ###
+Choice of delimiter is as follows:
+
+    0 = , (comma)
+    1 = ; (semicolon)
+    2 = (space)   <==== DEFAULT VALUE
+    3 = : (colon)
+    4 = \t (tab)
+
+
 ## Parameters ##
 
 | Name | Type | Description |
 |---------|---------| --------------- |
-| Output File | File Path | Output angles file path |  
-| Convert to Degrees | bool | Whether to convert the Euler angles from radians to degrees. If the Euler angles are already in degrees, this option will "convert" the data again, resulting in garbage orientations! |  
-| Only Write Good Elements | bool | Whether to only write the Euler angles for those elements denoted as true in the supplied mask array |  
+| Output File | File Path | Output angles file path |
+| Default Weight | float | This value will be used for the Weight column |
+| Default Sigma | int | This value will be used for the Sigma column |
+| Delimiter | Enumeration | The delimeter separating the data |
+| Convert to Degrees | bool | Whether to convert the Euler angles from radians to degrees. If the Euler angles are already in degrees, this option will "convert" the data again, resulting in garbage orientations! |
+| Only Write Good Elements | bool | Whether to only write the Euler angles for those elements denoted as true in the supplied mask array |
 
 
 ## Required Objects ##
