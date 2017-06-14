@@ -53,7 +53,10 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -78,11 +81,14 @@
 WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile()
 : AbstractFilter()
 , m_OutputFile("")
+, m_Weight(1.0f)
+, m_Sigma(1)
+, m_Delimiter(2)
 , m_CellPhasesArrayPath("", "", "")
 , m_CellEulerAnglesArrayPath("", "", "")
+, m_GoodVoxelsArrayPath("", "", "")
 , m_ConvertToDegrees(false)
 , m_UseGoodVoxels(false)
-, m_GoodVoxelsArrayPath("", "", "")
 {
   setupFilterParameters();
 }
@@ -103,6 +109,25 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
 
   /* For String input use this code */
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Default Weight", Weight, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Default Sigma", Sigma, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New(); // Delimiter choice
+    parameter->setHumanLabel("Delimiter");
+    parameter->setPropertyName("Delimiter");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(WriteStatsGenOdfAngleFile, this, Delimiter));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(WriteStatsGenOdfAngleFile, this, Delimiter));
+
+    QVector<QString> choices;
+    choices.push_back(", (comma)");
+    choices.push_back("; (semicolon)");
+    choices.push_back("  (space)");
+    choices.push_back(": (colon)");
+    choices.push_back("\\t (Tab)");
+    parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
   parameters.push_back(SIMPL_NEW_BOOL_FP("Convert to Degrees", ConvertToDegrees, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Only Write Good Elements", UseGoodVoxels, FilterParameter::Parameter, WriteStatsGenOdfAngleFile, linkedProps));
@@ -157,7 +182,7 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   if(getOutputFile().isEmpty() == true)
   {
     ss = QObject::tr("The output file must be set");
-    setErrorCondition(-1);
+    setErrorCondition(-94000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QFileInfo fi(getOutputFile());
@@ -166,6 +191,20 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   {
     ss = QObject::tr("The directory path for the output file does not exist");
     notifyWarningMessage(getHumanLabel(), ss, -1);
+  }
+
+  if(getWeight() < 1.0f)
+  {
+    ss = QObject::tr("The default 'Weight' value should be at least 1.0. Undefined results will occur from this filter.");
+    setErrorCondition(-94001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if(getSigma() < 1)
+  {
+    ss = QObject::tr("The default 'Sigma' value should be at least 1. Undefined results will occur from this filter.");
+    setErrorCondition(-94002);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<size_t> cDims(1, 1);
@@ -316,12 +355,22 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
   out << "# All lines starting with '#' are comments and should come before the data.\n";
   out << "# DREAM.3D StatsGenerator ODF Angles Input File\n";
   out << "# DREAM.3D Version " << OrientationAnalysis::Version::Complete() << "\n";
-  out << "# Angle Data is space delimited.\n";
+
+  QChar delimiter[5] = {',', ';', ' ', '"', '\t'};
+  QString delStr[5] = {"Comma", "Semicolon", "Space", "Colon", "Tab"};
+
+  out << "# Angle Data is " << delStr[m_Delimiter] << " delimited.\n";
+
+  if(m_ConvertToDegrees == true)
+  {
+    out << "# Euler angles are expressed in degrees\n";
+  }
+  else
+  {
+    out << "# Euler angles are expressed in radians\n";
+  }
   out << "# Euler0 Euler1 Euler2 Weight Sigma\n";
   out << "Angle Count:" << lineCount << "\n";
-
-  float weight = 1.0f;
-  float sigma = 1.0f;
 
   for(int64_t i = 0; i < totalPoints; i++)
   {
@@ -346,11 +395,11 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
       float e2 = m_CellEulerAngles[i * 3 + 2];
       if(m_ConvertToDegrees == true)
       {
-        e0 = e0 * SIMPLib::Constants::k_180OverPi;
-        e1 = e1 * SIMPLib::Constants::k_180OverPi;
-        e2 = e2 * SIMPLib::Constants::k_180OverPi;
+        e0 = e0 * static_cast<float>(SIMPLib::Constants::k_180OverPi);
+        e1 = e1 * static_cast<float>(SIMPLib::Constants::k_180OverPi);
+        e2 = e2 * static_cast<float>(SIMPLib::Constants::k_180OverPi);
       }
-      out << e0 << " " << e1 << " " << e2 << " " << weight << " " << sigma << "\n";
+      out << e0 << delimiter[m_Delimiter] << e1 << delimiter[m_Delimiter] << e2 << delimiter[m_Delimiter] << m_Weight << delimiter[m_Delimiter] << m_Sigma << "\n";
     }
   }
 
