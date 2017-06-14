@@ -275,6 +275,13 @@ endif()
 get_property(DREAM3D_PACKAGE_DEST_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PREFIX)
 
 
+# ------- Enable the CTest testing. ---------------
+OPTION(SIMPL_BUILD_TESTING "Compile the test programs" ON)
+if(SIMPL_BUILD_TESTING)
+    #ENABLE_TESTING()
+    include( CTest )
+endif()
+
 
 # -----------------------------------------------------------------------
 # Bring in the SIMPLView Project, which will bring in SIMPLib
@@ -457,18 +464,8 @@ if(MSVC)
  option(SIMPL_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
 endif()
 
-
-
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
 include_directories(${PROJECT_BINARY_DIR})
-
-
-# ------- Enable the CTest testing. Use make test to run all tests ---------------
-OPTION(SIMPL_BUILD_TESTING "Compile the test programs" ON)
-if(SIMPL_BUILD_TESTING)
-    #ENABLE_TESTING()
-    include( CTest )
-endif()
 
 # -----------------------------------------------------------------------
 # -- Build the EbsdLib Library
