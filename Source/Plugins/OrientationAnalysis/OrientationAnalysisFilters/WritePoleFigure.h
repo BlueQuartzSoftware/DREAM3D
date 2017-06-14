@@ -83,7 +83,6 @@ class WritePoleFigure : public AbstractFilter
       JpgImageType = 3
     };
 
-
     SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
@@ -95,6 +94,9 @@ class WritePoleFigure : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+
+    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+    Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

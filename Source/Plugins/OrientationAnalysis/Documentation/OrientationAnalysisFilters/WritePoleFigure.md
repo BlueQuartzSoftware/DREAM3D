@@ -28,9 +28,10 @@ The pole figure algorithm uses a _modified Lambert square_ to perform the interp
 | Image Prefix | String | Prefix the prepend each pole figure file with |
 | Output Path | File Path | Output directory path for images |
 | Image Size (Square Pixels) | int32_t | Size of the output image in square pixels |
- 
+| Use Mask Array | bool | Specifies whether to use a boolean array to exclude some **Cells**. Only those cells that have a _Mask Array_ value of 1 will be used. |
 ## Required Geometry ##
-Image
+
+NONE
 
 ## Required Objects ##
 

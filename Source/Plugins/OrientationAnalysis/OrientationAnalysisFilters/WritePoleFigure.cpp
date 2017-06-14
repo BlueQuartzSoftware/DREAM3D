@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -85,6 +86,7 @@ WritePoleFigure::WritePoleFigure()
 , m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_UseGoodVoxels(false)
 , m_CellEulerAngles(nullptr)
 , m_CellPhases(nullptr)
 , m_CrystalStructures(nullptr)
@@ -142,6 +144,9 @@ void WritePoleFigure::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Image Prefix", ImagePrefix, FilterParameter::Parameter, WritePoleFigure));
   parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, WritePoleFigure));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Parameter, WritePoleFigure));
+  QStringList linkedProps("GoodVoxelsArrayPath");
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, EBSDSegmentFeatures, linkedProps));
+
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -246,13 +251,13 @@ void WritePoleFigure::dataCheck()
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
-  cDims[0] = 1;
-  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
-                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_GoodVoxelsPtr.lock().get())
+  if(getUseGoodVoxels() == true)
   {
-    if(nullptr != m_GoodVoxelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
+    cDims[0] = 1;
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
+                                                                                                       cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -369,13 +374,6 @@ void WritePoleFigure::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_CellPhasesArrayPath.getDataContainerName());
 
-  bool missingGoodVoxels = true;
-
-  if(nullptr != m_GoodVoxels)
-  {
-    missingGoodVoxels = false;
-  }
-
   // Find the total number of angles we have based on the number of Tuples of the
   // Euler Angles array
   size_t numPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
@@ -392,7 +390,7 @@ void WritePoleFigure::execute()
     {
       if(m_CellPhases[i] == phase)
       {
-        if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        if(m_UseGoodVoxels == false || m_GoodVoxels[i] == true)
         {
           count++;
         }
@@ -409,7 +407,7 @@ void WritePoleFigure::execute()
     {
       if(m_CellPhases[i] == phase)
       {
-        if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        if(m_UseGoodVoxels == false || m_GoodVoxels[i] == true)
         {
           eu[count * 3] = m_CellEulerAngles[i * 3];
           eu[count * 3 + 1] = m_CellEulerAngles[i * 3 + 1];
