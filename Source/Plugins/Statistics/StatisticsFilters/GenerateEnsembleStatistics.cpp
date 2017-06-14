@@ -153,8 +153,10 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   QStringList phaseTypeStrings;
   PhaseType::getPhaseTypeStrings(phaseTypeStrings);
   PhaseTypeSelectionFilterParameter::Pointer phaseType_parameter = PhaseTypeSelectionFilterParameter::New(
-      "Phase Types", "PhaseTypeData", getCellEnsembleAttributeMatrixPath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
-      SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, PhaseTypeData), "PhaseTypeArray", "PhaseCount", "CellEnsembleAttributeMatrixPath", phaseTypeStrings);
+        "Phase Types", "PhaseTypeData", getCellEnsembleAttributeMatrixPath(), FilterParameter::Parameter,
+        SIMPL_BIND_SETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
+        SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
+        "PhaseTypeArray", "PhaseCount", "CellEnsembleAttributeMatrixPath", phaseTypeStrings);
   parameters.push_back(phaseType_parameter);
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Size Correlation Resolution", SizeCorrelationResolution, FilterParameter::Parameter, GenerateEnsembleStatistics));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
@@ -309,10 +311,10 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setCalculateAxisODF(reader->readValue("CalculateAxisODF", getCalculateAxisODF()));
   setSizeCorrelationResolution(reader->readValue("SizeCorrelationResolution", getSizeCorrelationResolution()));
 
-  QVector<uint32_t> data = getPhaseTypeData().d;
+  QVector<PhaseType::EnumType> data;// = getPhaseTypeData();
   data = reader->readArray("PhaseTypeArray", data);
-  UInt32Vector_t vec;
-  vec.d = data;
+  PhaseType::Types vec = PhaseType::FromQVector(data);
+
   setPhaseTypeData(vec);
 
   reader->closeFilterGroup();
@@ -339,10 +341,12 @@ void GenerateEnsembleStatistics::readFilterParameters(QJsonObject& obj)
   setCellEnsembleAttributeMatrixPath(dap);
 
   QJsonArray jsonArray = obj["PhaseTypeArray"].toArray();
+  PhaseType::Types vec(jsonArray.size(), PhaseType::Type::Unknown);
   for(int i = 0; i < jsonArray.size(); i++)
   {
-    getPhaseTypeData().d.push_back(static_cast<uint32_t>(jsonArray[i].toInt()));
+    vec[i] = static_cast<PhaseType::Type>(jsonArray[i].toInt());
   }
+  setPhaseTypeData(vec);
 }
 
 // FP: Check why these values are not connected to a filter parameter!
@@ -370,7 +374,7 @@ void GenerateEnsembleStatistics::writeFilterParameters(QJsonObject& obj)
   dapObj["Data Array Name"] = dap.getDataArrayName();
   obj["CellEnsembleAttributeMatrixPath"] = dapObj;
 
-  QVector<uint32_t> data = getPhaseTypeData().d;
+  PhaseType::Types data = getPhaseTypeData();
   QJsonArray jsonArray;
   for(int i = 0; i < data.size(); i++)
   {
@@ -604,13 +608,13 @@ void GenerateEnsembleStatistics::dataCheck()
     dataArrayPaths.push_back(getNeighborListArrayPath());
   }
 
-  if(m_PhaseTypeData.d.size() == 0)
+  if(m_PhaseTypeData.size() == 0)
   {
     setErrorCondition(-1000);
     notifyErrorMessage(getHumanLabel(), "The phase type array must contain at least one member. An Ensemble Attribute Matrix must be selected", getErrorCondition());
     return;
   }
-  else if(m_PhaseTypeData.d.size() == 1 && m_PhaseTypeData.d[0] == static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown))
+  else if(m_PhaseTypeData.size() == 1 && m_PhaseTypeData[0] == PhaseType::Type::Unknown)
   {
     setErrorCondition(-1001);
     notifyErrorMessage(getHumanLabel(), "The phase type array must contain at least one member. An Ensemble Attribute Matrix must be selected", getErrorCondition());
@@ -625,7 +629,7 @@ void GenerateEnsembleStatistics::dataCheck()
     if(nullptr != m_PhaseTypesPtr.lock().get())                     /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
-      m_PhaseTypeData.d.resize(m_PhaseTypesPtr.lock()->getNumberOfTuples());
+      m_PhaseTypeData.resize(m_PhaseTypesPtr.lock()->getNumberOfTuples());
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -1417,22 +1421,22 @@ void GenerateEnsembleStatistics::execute()
   size_t totalEnsembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
   // Check to see if the user has over ridden the phase types for this filter
-  if(m_PhaseTypeData.d.size() > 0)
+  if(m_PhaseTypeData.size() > 0)
   {
-    if(static_cast<int32_t>(m_PhaseTypeData.d.size()) < totalEnsembles)
+    if(static_cast<int32_t>(m_PhaseTypeData.size()) < totalEnsembles)
     {
       setErrorCondition(-3013);
       notifyErrorMessage(getHumanLabel(), "The number of phase types entered is less than the number of Ensembles", -999);
       return;
     }
-    if(static_cast<int32_t>(m_PhaseTypeData.d.size()) > totalEnsembles)
+    if(static_cast<int32_t>(m_PhaseTypeData.size()) > totalEnsembles)
     {
       QString ss = QObject::tr("The number of phase types entered is more than the number of Ensembles. Only the first %1 will be used").arg(totalEnsembles - 1);
       notifyErrorMessage(getHumanLabel(), ss, -3014);
     }
     for(int32_t r = 0; r < totalEnsembles; ++r)
     {
-      m_PhaseTypes[r] = m_PhaseTypeData.d[r];
+      m_PhaseTypes[r] = static_cast<PhaseType::EnumType>(m_PhaseTypeData[r]);
     }
     m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
   }
