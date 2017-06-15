@@ -86,8 +86,6 @@ void EstablishShapeTypes::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Shape Types", ShapeTypesArrayName, FilterParameter::CreatedArray, EstablishShapeTypes));
-  // ShapeTypeSelectionFilterParameter::Pointer sType_parameter = ShapeTypeSelectionFilterParameter::New( "Shape Types", "ShapeTypeData", "UInt32Vector_t", FilterParameter::CreatedArray,
-  // SIMPL_BIND_SETTER(EstablishShapeTypes, this, ShapeTypeData), SIMPL_BIND_GETTER(EstablishShapeTypes, this, ShapeTypeData), "PhaseCount", "InputPhaseTypesArrayPath");
   ShapeTypeSelectionFilterParameter::Pointer sType_parameter =
       SIMPL_NEW_SHAPETYPE_SELECTION_FP("Shape Types", ShapeTypeData, FilterParameter::CreatedArray, EstablishShapeTypes, "PhaseCount", "InputPhaseTypesArrayPath");
   parameters.push_back(sType_parameter);
