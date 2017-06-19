@@ -89,6 +89,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases()
 , m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
 , m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
 , m_NumFeaturesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures)
+, m_SaveGeometricDescriptions(false)
 , m_FeatureIds(nullptr)
 , m_CellPhases(nullptr)
 , m_Mask(nullptr)
@@ -195,6 +196,9 @@ void InsertPrecipitatePhases::setupFilterParameters()
   linkedProps << "CsvOutputFile";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
+
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Save Shape Description Arrays", SaveGeometricDescriptions, FilterParameter::Parameter, InsertPrecipitatePhases));
+
   setFilterParameters(parameters);
 }
 
@@ -520,13 +524,8 @@ void InsertPrecipitatePhases::preflight()
     return;
   }
 
-  attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
-  attrMat->removeAttributeArray(m_Omega3sArrayName);
-  attrMat->removeAttributeArray(m_AxisEulerAnglesArrayName);
-  attrMat->removeAttributeArray(m_AxisLengthsArrayName);
-  attrMat->removeAttributeArray(m_VolumesArrayName);
-  attrMat->removeAttributeArray(m_CentroidsArrayName);
-  attrMat->removeAttributeArray(m_NumCellsArrayName);
+  moveShapeDescriptions();
+
   setInPreflight(false);
 }
 
@@ -610,14 +609,7 @@ void InsertPrecipitatePhases::execute()
     write_goal_attributes();
   }
 
-  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
-  cellFeatureAttrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
-  cellFeatureAttrMat->removeAttributeArray(m_Omega3sArrayName);
-  cellFeatureAttrMat->removeAttributeArray(m_AxisEulerAnglesArrayName);
-  cellFeatureAttrMat->removeAttributeArray(m_AxisLengthsArrayName);
-  cellFeatureAttrMat->removeAttributeArray(m_VolumesArrayName);
-  cellFeatureAttrMat->removeAttributeArray(m_CentroidsArrayName);
-  cellFeatureAttrMat->removeAttributeArray(m_NumCellsArrayName);
+  moveShapeDescriptions();
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -2162,7 +2154,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   if (shapeclass >= ShapeType::Type::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
-    setErrorCondition(-666);
+    setErrorCondition(-667);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -2795,6 +2787,32 @@ void InsertPrecipitatePhases::write_goal_attributes()
       data[p]->printTuple(dStream, i, space);
     }
     dStream << "\n";
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::moveShapeDescriptions()
+{
+  QStringList names;
+  names << m_EquivalentDiametersArrayName << m_Omega3sArrayName << m_AxisEulerAnglesArrayName << m_AxisLengthsArrayName << m_VolumesArrayName << m_CentroidsArrayName;
+
+  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer shapeDescriptions = AttributeMatrix::New(tDims, "Synthetic Shape Parameters (Precipitate)", AttributeMatrix::Type::Generic);
+  foreach(const QString name, names)
+  {
+    IDataArray::Pointer p = cellFeatureAttrMat->removeAttributeArray(name);
+    size_t numTuples = p->getNumberOfTuples();
+    tDims[0] = numTuples;
+    shapeDescriptions->resizeAttributeArrays(tDims);
+    shapeDescriptions->addAttributeArray(p->getName(), p);
+  }
+  if(getSaveGeometricDescriptions())
+  {
+    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath());
+    m->addAttributeMatrix(shapeDescriptions->getName(), shapeDescriptions);
   }
 }
 

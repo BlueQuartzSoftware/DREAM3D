@@ -146,6 +146,9 @@ class InsertPrecipitatePhases : public AbstractFilter
     SIMPL_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
+    SIMPL_FILTER_PARAMETER(bool, SaveGeometricDescriptions)
+    Q_PROPERTY(bool SaveGeometricDescriptions READ getSaveGeometricDescriptions WRITE setSaveGeometricDescriptions)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
@@ -407,6 +410,11 @@ class InsertPrecipitatePhases : public AbstractFilter
      */
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
 
+    /**
+     * @brief Moves the temporary arrays that hold the inputs into the shape algorithms
+     * into another attribute matrix
+     */
+    void moveShapeDescriptions();
 
   private:
     int32_t m_FirstPrecipitateFeature;
