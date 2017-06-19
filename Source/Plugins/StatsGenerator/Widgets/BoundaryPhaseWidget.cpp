@@ -162,6 +162,7 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
     phaseName = QString("Boundary Phase (%1)").arg(index);
   }
   setPhaseName(phaseName);
+  setTabTitle(phaseName);
   setPhaseFraction(boundaryStatsData->getPhaseFraction());
 }
 

@@ -817,6 +817,7 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
     phaseName = QString("Primary Phase (%1)").arg(index);
   }
   setPhaseName(phaseName);
+  setTabTitle(phaseName);
   m_FeatureSizeDistWidget->setCrystalStructure(getCrystalStructure());
   foreach(StatsGenPlotWidget* w, m_SGPlotWidgets)
   {

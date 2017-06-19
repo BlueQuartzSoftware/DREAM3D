@@ -168,6 +168,7 @@ void MatrixPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int i
     phaseName = QString("Matrix Phase (%1)").arg(index);
   }
   setPhaseName(phaseName);
+  setTabTitle(phaseName);
 }
 
 // -----------------------------------------------------------------------------
