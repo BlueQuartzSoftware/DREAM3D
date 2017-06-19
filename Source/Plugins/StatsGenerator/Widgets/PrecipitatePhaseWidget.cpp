@@ -440,7 +440,9 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   {
     phaseName = QString("Precipitate Phase (%1)").arg(index);
   }
-  setPhaseName(phaseName);  setPhaseFraction(precipitateStatsData->getPhaseFraction());
+  setPhaseName(phaseName);
+  setTabTitle(phaseName);
+  setPhaseFraction(precipitateStatsData->getPhaseFraction());
   m_PptFraction = precipitateStatsData->getPrecipBoundaryFraction();
 
   getFeatureSizeWidget()->setCrystalStructure(getCrystalStructure());

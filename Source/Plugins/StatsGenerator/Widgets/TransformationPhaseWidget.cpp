@@ -838,6 +838,7 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
     phaseName = QString("Transformation Phase (%1)").arg(index);
   }
   setPhaseName(phaseName);
+  setTabTitle(phaseName);
   m_PhaseFraction = transformationStatsData->getPhaseFraction();
 
   m_ParentPhase = transformationStatsData->getParentPhase();

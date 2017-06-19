@@ -226,7 +226,7 @@ void StatsGeneratorFilter::readArray(const QJsonObject& jsonRoot, size_t numTupl
     PhaseType::Type pt = m_StatsDataArray->getStatsData(index)->getPhaseType();
     m_PhaseTypes->setValue(index, static_cast<PhaseType::EnumType>(pt));
 
-    QString phaseName = phaseObject[SIMPL::EnsembleData::PhaseName].toString();
+    QString phaseName = phaseObject[SIMPL::StringConstants::Name].toString();
     m_PhaseNames->setValue(index, phaseName);
   }
 }
