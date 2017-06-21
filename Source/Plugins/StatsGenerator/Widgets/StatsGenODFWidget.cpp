@@ -624,6 +624,14 @@ void StatsGenODFWidget::calculateODF()
 
     figures = ops.generatePoleFigure(config);
   }
+  else
+  {
+    err = 1;
+    QString ss("Only Cubic_High, Hexagonal_High or OrthoRhombic are allowed for the Laue group.");
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::critical(nullptr, QString("ODF Generation Error"), ss, QMessageBox::Ok);
+    Q_UNUSED(reply);
+  }
 
   if(err == 1)
   {
