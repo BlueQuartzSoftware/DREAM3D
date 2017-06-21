@@ -277,6 +277,14 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
       return;
     }
   }
+  else
+  {
+    err = 1;
+    QString ss("Only Cubic_High or Hexagonal_High are allowed for the Laue group.");
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::critical(nullptr, QString("MDF Generation Error"), ss, QMessageBox::Ok);
+    Q_UNUSED(reply);
+  }
 
   QwtArray<double> xD(static_cast<int>(x.size()));
   QwtArray<double> yD(static_cast<int>(x.size()));
