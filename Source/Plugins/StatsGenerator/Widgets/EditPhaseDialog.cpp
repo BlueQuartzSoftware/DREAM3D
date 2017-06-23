@@ -35,6 +35,8 @@
 
 #include "EditPhaseDialog.h"
 
+#include <QtGui/QStandardItemModel.h>
+
 #include "SIMPLib/Common/PhaseType.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
@@ -192,6 +194,16 @@ void EditPhaseDialog::setupGui()
   pptFractionLabel->setEnabled(false);
   on_phaseFraction_textChanged(QString());
   m_PhaseName->setText("Name of Phase");
+
+  // Disable the selection of crystal structures that are not supported.
+  QVector<qint32> indx = {2, 3, 4, 5, 7, 8, 9, 10};
+  foreach(int idx, indx)
+  {
+    QStandardItemModel* model = qobject_cast<QStandardItemModel*>(xtalCombo->model());
+    bool disabled = true;
+    QStandardItem* item = model->item(idx);
+    item->setFlags(disabled ? item->flags() & ~Qt::ItemIsEnabled : item->flags() | Qt::ItemIsEnabled);
+  }
 }
 
 // -----------------------------------------------------------------------------
