@@ -16,14 +16,14 @@
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DynamicTableFilterParameter.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec2FilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/RadialDistributionFunction.h"
-#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
@@ -47,17 +47,18 @@ GeneratePrecipitateStatsData::GeneratePrecipitateStatsData()
 , m_PhaseIndex(-1)
 , m_CrystalSymmetry(1)
 , m_MicroPresetModel(0)
-, m_PhaseFraction(1.0)
-, m_Mu(2.29)
+, m_PhaseFraction(0.05f)
+, m_Mu(1)
 , m_Sigma(0.1)
 , m_MinCutOff(5)
 , m_MaxCutOff(5)
-, m_BinStepSize(1.5)
+, m_BinStepSize(0.5)
 , m_CreateEnsembleAttributeMatrix(true)
 , m_DataContainerName(SIMPL::Defaults::StatsGenerator)
 , m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
 , m_AppendToExistingAttributeMatrix(false)
 , m_SelectedEnsembleAttributeMatrix()
+, m_PrecipitateStatsData(nullptr)
 {
   initialize();
   setupFilterParameters();
@@ -78,7 +79,7 @@ void GeneratePrecipitateStatsData::initialize()
   setErrorCondition(0);
   setCancel(false);
   m_StatsDataArray = nullptr;
-  m_PrimaryStatsData = nullptr;
+  m_PrecipitateStatsData = nullptr;
   m_CrystalStructures = nullptr;
   m_PhaseTypes = nullptr;
   m_PhaseNames = nullptr;
@@ -267,9 +268,9 @@ void GeneratePrecipitateStatsData::dataCheck()
     cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::Statistics, statsDataArray);
     m_StatsDataArray = statsDataArray.get();
 
-    PrimaryStatsData::Pointer primaryStatsData = PrimaryStatsData::New();
-    statsDataArray->setStatsData(1, primaryStatsData);
-    m_PrimaryStatsData = primaryStatsData.get();
+    PrecipitateStatsData::Pointer PrecipitateStatsData = PrecipitateStatsData::New();
+    statsDataArray->setStatsData(1, PrecipitateStatsData);
+    m_PrecipitateStatsData = PrecipitateStatsData.get();
 
     QVector<size_t> cDims(1, 1);
     UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
@@ -315,9 +316,9 @@ void GeneratePrecipitateStatsData::dataCheck()
     }
     m_StatsDataArray = statsDataArray.get();
 
-    PrimaryStatsData::Pointer primaryStatsData = PrimaryStatsData::New();
-    statsDataArray->setStatsData(tDims[0] - 1, primaryStatsData);
-    m_PrimaryStatsData = primaryStatsData.get();
+    PrecipitateStatsData::Pointer PrecipitateStatsData = PrecipitateStatsData::New();
+    statsDataArray->setStatsData(tDims[0] - 1, PrecipitateStatsData);
+    m_PrecipitateStatsData = PrecipitateStatsData.get();
 
     QVector<size_t> cDims(1, 1);
 
@@ -455,15 +456,15 @@ void GeneratePrecipitateStatsData::execute()
   m_CrystalStructures->setComponent(m_PhaseIndex, 0, m_CrystalSymmetry);
   m_PhaseNames->setValue(m_PhaseIndex, m_PhaseName);
   m_PhaseTypes->setValue(m_PhaseIndex, static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate));
-  m_PrimaryStatsData->setName(m_PhaseName);
-  m_PrimaryStatsData->setPhaseFraction(m_PhaseFraction);
+  m_PrecipitateStatsData->setName(m_PhaseName);
+  m_PrecipitateStatsData->setPhaseFraction(m_PhaseFraction);
 
   normalizePhaseFractions(m_StatsDataArray);
 
   // Feature Diameter Info
-  m_PrimaryStatsData->setBinStepSize(m_BinStepSize);
-  m_PrimaryStatsData->setMaxFeatureDiameter(xCo[1]);
-  m_PrimaryStatsData->setMinFeatureDiameter(xCo[0]);
+  m_PrecipitateStatsData->setBinStepSize(m_BinStepSize);
+  m_PrecipitateStatsData->setMaxFeatureDiameter(xCo[1]);
+  m_PrecipitateStatsData->setMinFeatureDiameter(xCo[0]);
   // Feature Size Distribution
   {
     VectorOfFloatArray data;
@@ -473,9 +474,9 @@ void GeneratePrecipitateStatsData::execute()
     data.push_back(d2);
     d1->setValue(0, m_Mu);
     d2->setValue(0, m_Sigma);
-    m_PrimaryStatsData->setFeatureSizeDistribution(data);
-    m_PrimaryStatsData->setFeatureSize_DistType(SIMPL::DistributionType::LogNormal);
-    m_PrimaryStatsData->generateBinNumbers();
+    m_PrecipitateStatsData->setFeatureSizeDistribution(data);
+    m_PrecipitateStatsData->setFeatureSize_DistType(SIMPL::DistributionType::LogNormal);
+    m_PrecipitateStatsData->generateBinNumbers();
   }
 
   {
@@ -485,8 +486,8 @@ void GeneratePrecipitateStatsData::execute()
     FloatArrayType::Pointer d2 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kBeta], SIMPL::StringConstants::Beta);
     data.push_back(d1);
     data.push_back(d2);
-    m_PrimaryStatsData->setFeatureSize_Omegas(data);
-    m_PrimaryStatsData->setOmegas_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution));
+    m_PrecipitateStatsData->setFeatureSize_Omegas(data);
+    m_PrecipitateStatsData->setOmegas_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution));
   }
 
   {
@@ -496,8 +497,8 @@ void GeneratePrecipitateStatsData::execute()
     FloatArrayType::Pointer d2 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kBeta], SIMPL::StringConstants::Beta);
     data.push_back(d1);
     data.push_back(d2);
-    m_PrimaryStatsData->setFeatureSize_BOverA(data);
-    m_PrimaryStatsData->setBOverA_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution));
+    m_PrecipitateStatsData->setFeatureSize_BOverA(data);
+    m_PrecipitateStatsData->setBOverA_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution));
   }
 
   {
@@ -507,21 +508,21 @@ void GeneratePrecipitateStatsData::execute()
     FloatArrayType::Pointer d2 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kBeta], SIMPL::StringConstants::Beta);
     data.push_back(d1);
     data.push_back(d2);
-    m_PrimaryStatsData->setFeatureSize_COverA(data);
-    m_PrimaryStatsData->setBOverA_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution));
+    m_PrecipitateStatsData->setFeatureSize_COverA(data);
+    m_PrecipitateStatsData->setBOverA_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution));
   }
 
-  {
-    absPresetPtr->initializeNeighborTableModel(dataMap, colors); // LogNormal
+  //  {
+  //    absPresetPtr->initializeNeighborTableModel(dataMap, colors); // LogNormal
 
-    VectorOfFloatArray data;
-    FloatArrayType::Pointer d1 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kMu], SIMPL::StringConstants::Average);
-    FloatArrayType::Pointer d2 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kSigma], SIMPL::StringConstants::StandardDeviation);
-    data.push_back(d1);
-    data.push_back(d2);
-    m_PrimaryStatsData->setFeatureSize_Neighbors(data);
-    m_PrimaryStatsData->setBOverA_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kNeighborDistribution));
-  }
+  //    VectorOfFloatArray data;
+  //    FloatArrayType::Pointer d1 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kMu], SIMPL::StringConstants::Average);
+  //    FloatArrayType::Pointer d2 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kSigma], SIMPL::StringConstants::StandardDeviation);
+  //    data.push_back(d1);
+  //    data.push_back(d2);
+  //    m_PrecipitateStatsData->setFeatureSize_Neighbors(data);
+  //    m_PrecipitateStatsData->setBOverA_DistType(absPresetPtr->getDistributionType(AbstractMicrostructurePreset::kNeighborDistribution));
+  //  }
 
   QString msg;
   QTextStream ss(&msg);
@@ -541,14 +542,14 @@ void GeneratePrecipitateStatsData::execute()
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
     {
-      e1s.push_back(odfData[i][0] * SIMPLib::Constants::k_PiOver180);
-      e2s.push_back(odfData[i][1] * SIMPLib::Constants::k_PiOver180);
-      e3s.push_back(odfData[i][2] * SIMPLib::Constants::k_PiOver180);
-      weights.push_back(odfData[i][3]);
-      sigmas.push_back(odfData[i][4]);
+      e1s.push_back(static_cast<float>(odfData[i][0] * SIMPLib::Constants::k_PiOver180));
+      e2s.push_back(static_cast<float>(odfData[i][1] * SIMPLib::Constants::k_PiOver180));
+      e3s.push_back(static_cast<float>(odfData[i][2] * SIMPLib::Constants::k_PiOver180));
+      weights.push_back(static_cast<float>(odfData[i][3]));
+      sigmas.push_back(static_cast<float>(odfData[i][4]));
     }
     // Convert angles to Radians when this is implemented
-    StatsGeneratorUtilities::GenerateODFBinData(m_PrimaryStatsData, PhaseType::Type::Primary, m_CrystalSymmetry, e1s, e2s, e3s, weights, sigmas, true);
+    StatsGeneratorUtilities::GenerateODFBinData(m_PrecipitateStatsData, PhaseType::Type::Precipitate, static_cast<uint32_t>(m_CrystalSymmetry), e1s, e2s, e3s, weights, sigmas, true);
   }
 
   msg.clear();
@@ -564,11 +565,11 @@ void GeneratePrecipitateStatsData::execute()
     std::vector<std::vector<double>> odfData = m_OdfData.getTableData();
     for(size_t i = 0; i < odfData.size(); i++)
     {
-      e1s.push_back(odfData[i][0] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
-      e2s.push_back(odfData[i][1] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
-      e3s.push_back(odfData[i][2] * static_cast<float>(SIMPLib::Constants::k_PiOver180));
-      odf_weights.push_back(odfData[i][3]);
-      sigmas.push_back(odfData[i][4]);
+      e1s.push_back(static_cast<float>(odfData[i][0] * SIMPLib::Constants::k_PiOver180));
+      e2s.push_back(static_cast<float>(odfData[i][1] * SIMPLib::Constants::k_PiOver180));
+      e3s.push_back(static_cast<float>(odfData[i][2] * SIMPLib::Constants::k_PiOver180));
+      odf_weights.push_back(static_cast<float>(odfData[i][3]));
+      sigmas.push_back(static_cast<float>(odfData[i][4]));
     }
 
     QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalSymmetry, e1s, e2s, e3s, odf_weights, sigmas, true);
@@ -579,14 +580,14 @@ void GeneratePrecipitateStatsData::execute()
     std::vector<std::vector<double>> mdfData = m_MdfData.getTableData();
     for(size_t i = 0; i < mdfData.size(); i++)
     {
-      angles.push_back(mdfData[i][0]);
-      axes.push_back(mdfData[i][1]);
-      axes.push_back(mdfData[i][2]);
-      axes.push_back(mdfData[i][3]);
-      weights.push_back(mdfData[i][4]);
+      angles.push_back(static_cast<float>(mdfData[i][0]));
+      axes.push_back(static_cast<float>(mdfData[i][1]));
+      axes.push_back(static_cast<float>(mdfData[i][2]));
+      axes.push_back(static_cast<float>(mdfData[i][3]));
+      weights.push_back(static_cast<float>(mdfData[i][4]));
     }
 
-    StatsGeneratorUtilities::GenerateMisorientationBinData(m_PrimaryStatsData, PhaseType::Type::Primary, m_CrystalSymmetry, odf, angles, axes, weights, true);
+    StatsGeneratorUtilities::GenerateMisorientationBinData(m_PrecipitateStatsData, PhaseType::Type::Precipitate, m_CrystalSymmetry, odf, angles, axes, weights, true);
   }
 
   msg.clear();
@@ -602,13 +603,13 @@ void GeneratePrecipitateStatsData::execute()
     std::vector<std::vector<double>> axisOdfData = m_AxisOdfData.getTableData();
     for(size_t i = 0; i < axisOdfData.size(); i++)
     {
-      e1s.push_back(axisOdfData[i][0] * SIMPLib::Constants::k_PiOver180);
-      e2s.push_back(axisOdfData[i][1] * SIMPLib::Constants::k_PiOver180);
-      e3s.push_back(axisOdfData[i][2] * SIMPLib::Constants::k_PiOver180);
-      weights.push_back(axisOdfData[i][3]);
-      sigmas.push_back(axisOdfData[i][4]);
+      e1s.push_back(static_cast<float>(axisOdfData[i][0] * SIMPLib::Constants::k_PiOver180));
+      e2s.push_back(static_cast<float>(axisOdfData[i][1] * SIMPLib::Constants::k_PiOver180));
+      e3s.push_back(static_cast<float>(axisOdfData[i][2] * SIMPLib::Constants::k_PiOver180));
+      weights.push_back(static_cast<float>(axisOdfData[i][3]));
+      sigmas.push_back(static_cast<float>(axisOdfData[i][4]));
     }
-    StatsGeneratorUtilities::GenerateAxisODFBinData(m_PrimaryStatsData, PhaseType::Type::Primary, e1s, e2s, e3s, weights, sigmas, true);
+    StatsGeneratorUtilities::GenerateAxisODFBinData(m_PrecipitateStatsData, PhaseType::Type::Precipitate, e1s, e2s, e3s, weights, sigmas, true);
   }
 
   msg.clear();
