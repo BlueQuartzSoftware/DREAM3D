@@ -122,6 +122,9 @@ public:
   SIMPL_FILTER_PARAMETER(bool, WriteGoalAttributes)
   Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
+  SIMPL_FILTER_PARAMETER(bool, SaveGeometricDescriptions)
+  Q_PROPERTY(bool SaveGeometricDescriptions READ getSaveGeometricDescriptions WRITE setSaveGeometricDescriptions)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -217,7 +220,9 @@ signals:
   void preflightExecuted();
 
 protected:
+
   PackPrimaryPhases();
+
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
@@ -376,6 +381,12 @@ protected:
    * @return Integer number of esimtated Features
    */
   int32_t estimateNumFeatures(size_t xpoints, size_t ypoints, size_t zpoints, float xres, float yres, float zres);
+
+  /**
+   * @brief Moves the temporary arrays that hold the inputs into the shape algorithms
+   * into another attribute matrix
+   */
+  void moveShapeDescriptions();
 
 private:
   // Names for the arrays used by the packing algorithm

@@ -14,7 +14,7 @@
 
 class StatsDataArray;
 class StringDataArray;
-class PrimaryStatsData;
+class PrecipitateStatsData;
 
 /**
  * @brief The GeneratePrecipitateStatsData class. See [Filter documentation](@ref GeneratePrecipitateStatsData) for details.
@@ -193,7 +193,7 @@ protected:
 
 private:
   StatsDataArray* m_StatsDataArray;
-  PrimaryStatsData* m_PrimaryStatsData;
+  PrecipitateStatsData* m_PrecipitateStatsData;
   UInt32ArrayType* m_CrystalStructures;
   UInt32ArrayType* m_PhaseTypes;
   StringDataArray* m_PhaseNames;
