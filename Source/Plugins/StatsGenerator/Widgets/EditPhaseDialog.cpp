@@ -35,7 +35,7 @@
 
 #include "EditPhaseDialog.h"
 
-#include <QtGui/QStandardItemModel.h>
+#include <QtGui/QStandardItemModel>
 
 #include "SIMPLib/Common/PhaseType.h"
 
