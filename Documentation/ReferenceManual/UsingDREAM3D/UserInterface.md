@@ -125,6 +125,26 @@ In the example above, filters 2 and 4 are selected and then copied to the bottom
 #### Undo/Redo Filter Placement ####
 It is possible to undo and redo actions such as adding, removing, moving, and clearing **Filters** using the **Undo** and **Redo** items in the **Edit** menu.  Additionally, **Undo** and **Redo** can also be invoked by pressing their universal keyboard shortcuts (Ctrl+Z, Ctrl+Shift+Z).
 
+### A Note out the Colors of the Filters ###
+
+Each filter in the pipeline will have a specific background color. The colors are tied to the main group that the filter has been grouped under. The user may actually find the coloring of the filters useful as a way to easily find your way back to a particular filter.
+
+* Core
+* Generic
+* IO
+* Processing
+* Reconstruction
+* Sampling
+* Statistics
+* Synthetic Building
+* Surface Meshing
+* Utilities
+* Custom
+* Unsupported.
+
+![Filter Group Colors](Images/FilterColors.png)
+@image latex FilterColors.png "Filter Group Colors" width=3in
+
 ---
 
 <a name="filterinputview">
