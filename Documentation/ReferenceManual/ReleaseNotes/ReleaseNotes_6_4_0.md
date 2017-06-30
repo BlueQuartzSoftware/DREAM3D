@@ -11,7 +11,23 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.4.x ##
+## Version 6.4.31 ##
+
++ SIMPL Issue #64: Can not drag multiple filters in DREAM.3D Pipeline View
++ SIMPL Issue #78: IGeometry type enum is not unique
++ SIMPL Issue #76: Add a LinkedDataContainerSelectionFilterParameter and associated widget
++ SIMPL Issue #84: Extend the "Move Objects" filter to allow multiple objects to be moved in a single filter instance.
++ SIMPL Issue #94: Better number formatting in the QToolTip text
++ SIMPL API Added to Abstract Filter and FilterPipeline
++ SIMPL: Fixing issue where users are unable to select a phase type from the combo box
++ SIMPL: "Delete Data" filter should allow a "Select All" option
++ SIMPL: Fix issue where some core tests were not being run during nightly builds
++ SIMPLView: Create buttons in the StatusBar area that will toggle the Issues, DataStructure and Console dock widgets
++ DREAM3D Issue #696: StatsGenerator Filter and widget crash when generating ODF and MDF for Tetragonal Laue Group
++ DREAM3D Issue #693: Phase Names are not correctly initialized when pipeline file is read from a JSON file and PipelineRunner is used to execute a pipeline.
++ DREAM3D Issue #688: Using a mask array in WritePole Figure should be optional
++ DREAM3D Issue #686: WritePoleFigure requires Cell Attribute Matrix and Image Geometry. Remove these constraints
++ Updated developer documentation so that images proper appear in some of the documentation.
 
 
 ### Version 6.4.0 ###
