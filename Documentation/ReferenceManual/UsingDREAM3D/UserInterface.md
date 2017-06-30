@@ -6,7 +6,7 @@ DREAM.3D has 4 main sections of its user interface:
 1. [DREAM.3D Toolbox](#dream3dtoolbox) (contains [Filter List](#filterlist), [Filter Library](#filterlibrary), and [Bookmarks](#bookmarks))
 2. [Pipeline View](#pipelineview)
 3. [Filter Input View](#filterinputview)
-4. [Data Browser](#databrowser)
+4. [Data Structure](#datastructure)
 5. [Pipeline Output Log](#pipelineoutputlog)
 6. [Pipeline Issues Table](#pipelineissuestable)
 
@@ -167,14 +167,14 @@ To view the help page for the selected **Filter**, press the _?_ icon.
 
 ---
 
-<a name="databrowser">
-## Data Browser ##
+<a name="datastructure">
+## Data Structure ##
 </a>
 
-![Data Browser](Images/OverView-DataStructure.png)
-@image latex Images/OverView-DataBrowser.png "Data Browser" width=6in
+![Data Structure](Images/OverView-DataStructure.png)
+@image latex Images/OverView-DataStructure.png "Data Structure" width=6in
 
-The **Data Browser** displays the current data structure of the pipeline, including all data containers, attribute matrices, and data arrays that exist in the current pipeline's data container array.  This tool is a good way to tell at-a-glance the current structure of your data when clicking on filters in the pipeline.
+The **Data Structure** displays the current data structure of the pipeline, including all data containers, attribute matrices, and data arrays that exist in the current pipeline's data container array.  This tool is a good way to tell at-a-glance the current structure of your data when clicking on filters in the pipeline.
 
 ---
 
