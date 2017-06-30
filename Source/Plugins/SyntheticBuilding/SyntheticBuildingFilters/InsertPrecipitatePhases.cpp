@@ -857,6 +857,11 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         {
           QString ss = QObject::tr("Packing Precipitates || Generating Feature #%1").arg(currentnumfeatures);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
+          if(getCancel() == true)
+          {
+            return;
+          }
         }
 
         tDims[0] = currentnumfeatures + 1;
@@ -871,6 +876,11 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         currentnumfeatures++;
       }
     }
+  }
+
+  if(getCancel() == true)
+  {
+    return;
   }
 
   QString ss = QObject::tr("Packing Precipitates || Starting Feature Placement...");
