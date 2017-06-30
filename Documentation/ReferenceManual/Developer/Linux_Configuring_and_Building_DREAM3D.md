@@ -1,9 +1,11 @@
 Configuring and Building DREAM.3D on Linux {#linux_configure_and_build_dream3d}
 ========
+
 <a name="prerequisites">
 ## Prerequisites ##
 </a>
 
+Linux is configured in much the same way as macOS.
 These prerequisites need to be completed before configuring and building DREAM.3D.
 
 If you have already fulfilled all of these prerequisites, skip to the [Setting Up DREAM.3D for CMake Configuration](#cmake_config) section.
@@ -45,19 +47,19 @@ Open the **DREAM3D_SDK.cmake** file in the **DREAM3D_SDK** folder.  Check that t
 
 ## Instructions ##
 1. Open CMake and set the **Where is the source code** path to */home/[YOUR-HOME-FOLDER]/Workspace/DREAM3D*.
-![](Images/source_code_path.png)
+![](Images/OSX_source_code_path.png)
 
 2. Set the **Where to build the binaries** path to */home/[YOUR-HOME-FOLDER]/Workspace/Builds/DREAM3D-Build/Debug*.
-![](Images/build_binaries_debug.png)
+![](Images/OSX_build_binaries_debug.png)
 
 3. We are going to create a CMake variable.  Press the **Add Entry** button.
-![](Images/add_entry.png)
+![](Images/OSX_add_entry.png)
 
 4. Set the **Name** to *DREAM3D_SDK*.  Set the **Type** to *PATH* and set the **Value** to */opt/DREAM3D_SDK*
-![](Images/create_cmake_variable.png)
+![](Images/OSX_create_cmake_variable.png)
 
 6. You should now have one variable, DREAM3D_SDK.
-![](Images/cmake_before_config.png)
+![](Images/OSX_cmake_before_config.png)
 
 7. Press the **Configure** button in CMake.
 
@@ -65,12 +67,12 @@ Open the **DREAM3D_SDK.cmake** file in the **DREAM3D_SDK** folder.  Check that t
     For command line use, set it to **Unix Makefiles** or, if installed, **Ninja**.  Any generator can be used for command line, but these are the recommended ones.
     
 	Make sure **Use default native compilers** is checked.
-![](Images/generator.png)
+![](Images/OSX_generator.png)
 
 9. When the configuration is finished, make sure that **CMAKE_BUILD_TYPE** is set to *Debug*.
 
 10. Press the **Configure** button in CMake again.  You may need to click **Configure** a few times until all the red highlights are gone.
-![](Images/cmake_after_config.png)
+![](Images/OSX_cmake_after_config.png)
 
 11. Press the **Generate** button in CMake to generate the build files.
 

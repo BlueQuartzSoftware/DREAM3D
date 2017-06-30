@@ -14,7 +14,6 @@ Find your current OS and download the appropriate compiler.
 
 | Compiler Version | Notes |
 | ---------------- | ----- |
-| Visual Studio 2013 Pro & Community SP5 | DREAM3D SDK **ONLY** supports this version |
 | Visual Studio 2015 Pro & Community | Developer will need to compile all dependent libraries |
 
 
@@ -30,12 +29,18 @@ Mac OS X 10.10 (Yosemite), 10.11 (El Capitan), and 10.12 (Sierra) are supported
 
 ## Linux ##
 
-There are many Linux distributions in use. Below is the list of the minimum compiler versions that are known to work on linux. DREAM.3D is commonly built on Ubuntu 14.04 LTS with Clang 3.8.
+There are many Linux distributions in use. Below is the list of the minimum compiler versions that are known to work on linux. DREAM.3D is commonly built on Ubuntu 14.04 LTS with GCC 4.8.5
 
 | Compiler Version | Notes |
 | ---------------- | ----- |
-| GCC 4.8.x |  |
+| GCC 4.8.5 | Minimum working version of GCC |
 | Clang 3.8 | Part of the LLVM 3.8 package. |
+
+## Enterprise Linux Distributions ##
+
++ DREAM.3D will *NOT* compile or run on SUSE Enterprise Linux 11 SP4.
++ DREAM.3D will *NOT* compile or run on Red Hat Enterprise Linux 6.x
+
 
 ## 32 Bit Support ##
 

@@ -44,19 +44,19 @@ Open the **DREAM3D_SDK.cmake** file in the **DREAM3D_SDK** folder.  Check that t
 ## Instructions ##
 
 1. Open CMake and set the **Where is the source code** path to *C:\\[YOUR-USER-FOLDER]\\Workspace\\DREAM3D*.
-![](Images/source_code_path.png)
+![](Images/Win_source_code_path.png)
 
 2. Set the **Where to build the binaries** path to *C:\\[YOUR-USER-FOLDER]\\Workspace\\Builds\\DREAM3D-Build\\Debug*.
-![](Images/build_binaries_debug.png)
+![](Images/Win_build_binaries_debug.png)
 
 3. We are going to create a CMake variable.  Press the **Add Entry** button.
-![](Images/add_entry.png)
+![](Images/Win_add_entry.png)
 
 4. Set the **Name** to *DREAM3D_SDK*.  Set the **Type** to *PATH* and set the **Value** to *C:\\DREAM3D_SDK*
-![](Images/create_cmake_variable.png)
+![](Images/Win_create_cmake_variable.png)
 
 5. You should now have one variable, DREAM3D_SDK.
-![](Images/cmake_before_config.png)
+![](Images/Win_cmake_before_config.png)
 
 6. Press the **Configure** button in CMake.
 
@@ -64,9 +64,9 @@ Open the **DREAM3D_SDK.cmake** file in the **DREAM3D_SDK** folder.  Check that t
 	- For Visual Studio 2013, set it to **Visual Studio 12 2013 Win64**.
     - For Visual Studio 2015, set it to **Visual Studio 14 2015 Win64**.
     - For command line use, set it to **Unix Makefiles** or, if installed, **Ninja**.  Any generator can be used for command line, but these are the recommended ones.
-    
-	Make sure **Use default native compilers** is checked.
-![](Images/generator.png)
+
+Make sure **Use default native compilers** is checked.
+![](Images/Win_generator.png)
 
 8. When the configuration is finished, make sure that **CMAKE_BUILD_TYPE** is set to *Debug*.
 
