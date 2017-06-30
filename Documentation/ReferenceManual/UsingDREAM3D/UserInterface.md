@@ -134,9 +134,6 @@ It is possible to undo and redo actions such as adding, removing, moving, and cl
 ![Filter Input View - Variables Tab](Images/OverView-FilterInputView1.png)
 @image latex OverView-FilterInputView1.png "Filter Input View - Variables Tab" width=6in
 
-![Filter Input View - Current Structure Tab](Images/OverView-FilterInputView2.png)
-@image latex Images/OverView-FilterInputView2.png "Filter Input View - Current Structure Tab" width=6in
-
 The **Filter Input View** contains all the parameters for the selected **Filter**. There are two sections: **Variables** and **Current Structure**:
 
 + **Variables**: Contains **Filter** _Parameters_, _Required Arrays_, and _Created Arrays_:
@@ -154,7 +151,7 @@ To view the help page for the selected **Filter**, press the _?_ icon.
 ## Data Browser ##
 </a>
 
-![Data Browser](Images/OverView-DataBrowser.png)
+![Data Browser](Images/OverView-DataStructure.png)
 @image latex Images/OverView-DataBrowser.png "Data Browser" width=6in
 
 The **Data Browser** displays the current data structure of the pipeline, including all data containers, attribute matrices, and data arrays that exist in the current pipeline's data container array.  This tool is a good way to tell at-a-glance the current structure of your data when clicking on filters in the pipeline.
