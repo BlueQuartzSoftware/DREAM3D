@@ -130,15 +130,17 @@ if(WIN32 AND NOT UNIX)
   SET(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "DREAM3D Software Tools")
 ENDif(WIN32 AND NOT UNIX)
 
-# if(APPLE)
-#   set(CPACK_GENERATOR "DragNDrop")
-# endif(APPLE)
-# if("${CPACK_GENERATOR}" STREQUAL "DragNDrop")
-#   set(CPACK_DMG_BACKGROUND_IMAGE
-#       "${BrandedSIMPLView_DIR}/packaging/DREAM3D_DMGBackground.tif")
-#   set(CPACK_DMG_DS_STORE_SETUP_SCRIPT
-#       "${PROJECT_RESOURCES_DIR}/CPack/DREAM3D_DMGSetup.scpt")
-# endif()
+if(APPLE)
+  set(CPACK_GENERATOR "DragNDrop")
+  option(CPACK_BINARY_DRAGNDROP    "Enable to build DMG packages"     OFF)
+  option(CPACK_BINARY_TGZ  "Enable to build TGZ packages"     ON)
+endif(APPLE)
+if("${CPACK_GENERATOR}" STREQUAL "DragNDrop")
+  set(CPACK_DMG_BACKGROUND_IMAGE
+      "${BrandedSIMPLView_DIR}/packaging/DREAM3D_DMGBackground.tif")
+  set(CPACK_DMG_DS_STORE_SETUP_SCRIPT
+      "${PROJECT_RESOURCES_DIR}/CPack/DREAM3D_DMGSetup.scpt")
+endif()
 
 
 set(CPACK_GENERATOR "")
