@@ -41,10 +41,13 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -63,49 +66,50 @@
 //
 // -----------------------------------------------------------------------------
 InsertPrecipitatePhases::InsertPrecipitatePhases()
-: AbstractFilter()
-, m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList)
-, m_ErrorOutputFile("")
-, m_CsvOutputFile("")
-, m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_UseMask(false)
-, m_HavePrecips(false)
-, m_PrecipInputFile("")
-, m_PeriodicBoundaries(false)
-, m_MatchRDF(false)
-, m_WriteGoalAttributes(false)
-, m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
-, m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
-, m_InputShapeTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::ShapeTypes)
-, m_FeatureIdsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_CellPhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
-, m_BoundaryCellsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::BoundaryCells)
-, m_FeaturePhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
-, m_NumCellsArrayName(SIMPL::FeatureData::NumCells)
-, m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
-, m_VolumesArrayName(SIMPL::FeatureData::Volumes)
-, m_Omega3sArrayName(SIMPL::FeatureData::Omega3s)
-, m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
-, m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
-, m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
-, m_NumFeaturesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures)
-, m_SaveGeometricDescriptions(false)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_Mask(nullptr)
-, m_BoundaryCells(nullptr)
-, m_AxisEulerAngles(nullptr)
-, m_Centroids(nullptr)
-, m_AxisLengths(nullptr)
-, m_Volumes(nullptr)
-, m_Omega3s(nullptr)
-, m_EquivalentDiameters(nullptr)
-, m_FeaturePhases(nullptr)
-, m_NumCells(nullptr)
-, m_PhaseTypes(nullptr)
-, m_ShapeTypes(nullptr)
-, m_NumFeatures(nullptr)
-, m_Neighbors(nullptr)
+  : AbstractFilter()
+  , m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList)
+  , m_ErrorOutputFile("")
+  , m_CsvOutputFile("")
+  , m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+  , m_UseMask(false)
+  , m_HavePrecips(false)
+  , m_PrecipInputFile("")
+  , m_PeriodicBoundaries(false)
+  , m_MatchRDF(false)
+  , m_WriteGoalAttributes(false)
+  , m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
+  , m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
+  , m_InputShapeTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::ShapeTypes)
+  , m_FeatureIdsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+  , m_CellPhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
+  , m_BoundaryCellsArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::BoundaryCells)
+  , m_FeaturePhasesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
+  , m_NumCellsArrayName(SIMPL::FeatureData::NumCells)
+  , m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
+  , m_VolumesArrayName(SIMPL::FeatureData::Volumes)
+  , m_Omega3sArrayName(SIMPL::FeatureData::Omega3s)
+  , m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
+  , m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
+  , m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
+  , m_NumFeaturesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures)
+  , m_SaveGeometricDescriptions(false)
+  , m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::PrecipitateSyntheticShapeParametersName, "")
+  , m_FeatureIds(nullptr)
+  , m_CellPhases(nullptr)
+  , m_Mask(nullptr)
+  , m_BoundaryCells(nullptr)
+  , m_AxisEulerAngles(nullptr)
+  , m_Centroids(nullptr)
+  , m_AxisLengths(nullptr)
+  , m_Volumes(nullptr)
+  , m_Omega3s(nullptr)
+  , m_EquivalentDiameters(nullptr)
+  , m_FeaturePhases(nullptr)
+  , m_NumCells(nullptr)
+  , m_PhaseTypes(nullptr)
+  , m_ShapeTypes(nullptr)
+  , m_NumFeatures(nullptr)
+  , m_Neighbors(nullptr)
 {
 
   initialize();
@@ -197,8 +201,36 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Save Shape Description Arrays", SaveGeometricDescriptions, FilterParameter::Parameter, InsertPrecipitatePhases));
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Save Shape Description Arrays");
+    parameter->setPropertyName("SaveGeometricDescriptions");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, SaveGeometricDescriptions));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, SaveGeometricDescriptions));
 
+    QVector<QString> choices;
+    choices.push_back("Save To New Attribute Matrix");
+    choices.push_back("Append To Existing Attribute Matrix");
+    choices.push_back("Do Not Save");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "NewAttributeMatrixPath"
+                << "SelectedAttributeMatrixPath";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+
+  {
+    AttributeMatrixCreationFilterParameter::RequirementType req;
+    parameters.push_back(SIMPL_NEW_AM_CREATION_FP("New Attribute Matrix", NewAttributeMatrixPath, FilterParameter::Parameter, InsertPrecipitatePhases, req, 0));
+  }
+
+  {
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Category::Feature);
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Attribute Matrix", SelectedAttributeMatrixPath, FilterParameter::Parameter, InsertPrecipitatePhases, req, 1));
+  }
   setFilterParameters(parameters);
 }
 
@@ -414,6 +446,20 @@ void InsertPrecipitatePhases::dataCheck()
     }
   }
 
+  QVector<size_t> tDims(1, 0);
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath());
+
+  InsertPrecipitatePhases::SaveMethod saveMethod = static_cast<InsertPrecipitatePhases::SaveMethod>(getSaveGeometricDescriptions());
+  if (saveMethod == InsertPrecipitatePhases::SaveMethod::SaveToNew)
+  {
+    m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixPath().getAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  }
+  else if (saveMethod == InsertPrecipitatePhases::SaveMethod::AppendToExisting)
+  {
+    int err = 0;
+    m->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedAttributeMatrixPath().getAttributeMatrixName(), err);
+  }
+
   // Feature Data
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
                                                                                                            cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -424,7 +470,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getNumCellsArrayName());
   m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims, getNumCellsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        this, tempPath, 0, cDims, getNumCellsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_NumCellsPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
@@ -432,7 +478,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getEquivalentDiametersArrayName());
   m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims, getEquivalentDiametersArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        this, tempPath, 0, cDims, getEquivalentDiametersArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_EquivalentDiametersPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
@@ -440,7 +486,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getVolumesArrayName());
   m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims, getVolumesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        this, tempPath, 0, cDims, getVolumesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_VolumesPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);
@@ -448,7 +494,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getOmega3sArrayName());
   m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims, getOmega3sArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        this, tempPath, 0, cDims, getOmega3sArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_Omega3sPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
@@ -457,7 +503,7 @@ void InsertPrecipitatePhases::dataCheck()
   cDims[0] = 3;
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getCentroidsArrayName());
   m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims, getCentroidsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        this, tempPath, 0, cDims, getCentroidsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_CentroidsPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
@@ -465,7 +511,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisEulerAnglesArrayName());
   m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims, getAxisEulerAnglesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        this, tempPath, 0, cDims, getAxisEulerAnglesArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_AxisEulerAnglesPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
@@ -473,7 +519,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisLengthsArrayName());
   m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims, getAxisLengthsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        this, tempPath, 0, cDims, getAxisLengthsArrayName()); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_AxisLengthsPtr.lock().get())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
@@ -549,7 +595,7 @@ void InsertPrecipitatePhases::execute()
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+    static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   m_TotalPoints = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
@@ -701,7 +747,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+    static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   m_XPoints = static_cast<int64_t>(dims[0]);
@@ -762,9 +808,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrecipitateStatsData* "
                                  "pointer but this resulted in a nullptr pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrecipitateStatsData)\n")
-                         .arg(i)
-                         .arg(i)
-                         .arg(m_PhaseTypes[i]);
+            .arg(i)
+            .arg(i)
+            .arg(m_PhaseTypes[i]);
         setErrorCondition(-666);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
@@ -1409,7 +1455,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
 {
   SIMPL_RANDOMNG_NEW_SEEDED(m_Seed)
 
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+      StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   float r1 = 1.0f;
   float a2 = 0.0f, a3 = 0.0f;
@@ -2136,7 +2182,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 {
   SIMPL_RANDOMNG_NEW()
 
-  float inside = -1.0f;
+      float inside = -1.0f;
   int64_t column = 0, row = 0, plane = 0;
   int64_t centercolumn = 0, centerrow = 0, centerplane = 0;
   int64_t xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
@@ -2263,7 +2309,7 @@ void InsertPrecipitatePhases::assign_voxels()
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+    static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   int64_t index;
@@ -2800,19 +2846,45 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
 
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer shapeDescriptions = AttributeMatrix::New(tDims, "Synthetic Shape Parameters (Precipitate)", AttributeMatrix::Type::Generic);
+
+  QList<IDataArray::Pointer> attrArrays;
   foreach(const QString name, names)
   {
-    IDataArray::Pointer p = cellFeatureAttrMat->removeAttributeArray(name);
-    size_t numTuples = p->getNumberOfTuples();
-    tDims[0] = numTuples;
-    shapeDescriptions->resizeAttributeArrays(tDims);
-    shapeDescriptions->addAttributeArray(p->getName(), p);
+    attrArrays.push_back(cellFeatureAttrMat->removeAttributeArray(name));
   }
-  if(getSaveGeometricDescriptions())
+
+  InsertPrecipitatePhases::SaveMethod saveMethod = static_cast<InsertPrecipitatePhases::SaveMethod>(getSaveGeometricDescriptions());
+  foreach (IDataArray::Pointer p, attrArrays)
   {
-    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath());
-    m->addAttributeMatrix(shapeDescriptions->getName(), shapeDescriptions);
+    if (saveMethod == InsertPrecipitatePhases::SaveMethod::SaveToNew)
+    {
+      AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
+      if (shapeDescriptions != AttributeMatrix::NullPointer())
+      {
+        size_t numTuples = p->getNumberOfTuples();
+        tDims[0] = numTuples;
+        shapeDescriptions->resizeAttributeArrays(tDims);
+        shapeDescriptions->addAttributeArray(p->getName(), p);
+      }
+    }
+    else if (saveMethod == InsertPrecipitatePhases::SaveMethod::AppendToExisting)
+    {
+      AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
+      if (shapeDescriptions != AttributeMatrix::NullPointer())
+      {
+        size_t attrArrayTuples = p->getNumberOfTuples();
+        size_t selectedTuples = shapeDescriptions->getTupleDimensions()[0];
+        tDims[0] = attrArrayTuples + selectedTuples;
+        shapeDescriptions->resizeAttributeArrays(tDims);
+
+        int err = 0;
+        IDataArray::Pointer destArray = shapeDescriptions->getPrereqIDataArray<IDataArray, AbstractFilter>(this, p->getName(), err);
+        if (destArray != IDataArray::NullPointer())
+        {
+          destArray->copyData(selectedTuples, p);
+        }
+      }
+    }
   }
 }
 
