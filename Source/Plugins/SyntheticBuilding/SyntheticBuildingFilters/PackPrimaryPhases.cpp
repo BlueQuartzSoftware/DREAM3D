@@ -235,6 +235,8 @@ class AssignVoxelsGapsImpl
 // Include the MOC generated file for this class
 #include "moc_PackPrimaryPhases.cpp"
 
+const QString PrimaryPhaseSyntheticShapeParametersName("Synthetic Shape Parameters (Primary Phase)");
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -259,7 +261,7 @@ PackPrimaryPhases::PackPrimaryPhases()
   , m_PeriodicBoundaries(false)
   , m_WriteGoalAttributes(false)
   , m_SaveGeometricDescriptions(false)
-  , m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::PrimaryPhaseSyntheticShapeParametersName, "")
+  , m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, PrimaryPhaseSyntheticShapeParametersName, "")
   , m_NeighborhoodsArrayName(SIMPL::FeatureData::Neighborhoods)
   , m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
   , m_VolumesArrayName(SIMPL::FeatureData::Volumes)

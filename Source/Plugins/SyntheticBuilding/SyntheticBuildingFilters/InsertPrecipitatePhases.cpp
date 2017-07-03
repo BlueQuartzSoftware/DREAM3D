@@ -62,6 +62,8 @@
 // Include the MOC generated file for this class
 #include "moc_InsertPrecipitatePhases.cpp"
 
+const QString PrecipitateSyntheticShapeParametersName("Synthetic Shape Parameters (Precipitate)");
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -93,7 +95,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases()
   , m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
   , m_NumFeaturesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures)
   , m_SaveGeometricDescriptions(false)
-  , m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::PrecipitateSyntheticShapeParametersName, "")
+  , m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, PrecipitateSyntheticShapeParametersName, "")
   , m_FeatureIds(nullptr)
   , m_CellPhases(nullptr)
   , m_Mask(nullptr)
