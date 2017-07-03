@@ -2856,34 +2856,45 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
   }
 
   InsertPrecipitatePhases::SaveMethod saveMethod = static_cast<InsertPrecipitatePhases::SaveMethod>(getSaveGeometricDescriptions());
-  foreach (IDataArray::Pointer p, attrArrays)
+  if (saveMethod == InsertPrecipitatePhases::SaveMethod::SaveToNew)
   {
-    if (saveMethod == InsertPrecipitatePhases::SaveMethod::SaveToNew)
+    AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
+    if (shapeDescriptions != AttributeMatrix::NullPointer())
     {
-      AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
-      if (shapeDescriptions != AttributeMatrix::NullPointer())
+      if (attrArrays.size() > 0)
       {
-        size_t numTuples = p->getNumberOfTuples();
-        tDims[0] = numTuples;
+        size_t numTuples = attrArrays[0]->getNumberOfTuples();
+        size_t selectedTuples = shapeDescriptions->getTupleDimensions()[0];
+        tDims[0] = numTuples + selectedTuples;
         shapeDescriptions->resizeAttributeArrays(tDims);
+      }
+
+      foreach (IDataArray::Pointer p, attrArrays)
+      {
         shapeDescriptions->addAttributeArray(p->getName(), p);
       }
     }
-    else if (saveMethod == InsertPrecipitatePhases::SaveMethod::AppendToExisting)
+  }
+  else if (saveMethod == InsertPrecipitatePhases::SaveMethod::AppendToExisting)
+  {
+    AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
+    if (shapeDescriptions != AttributeMatrix::NullPointer())
     {
-      AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
-      if (shapeDescriptions != AttributeMatrix::NullPointer())
+      if (attrArrays.size() > 0)
       {
-        size_t attrArrayTuples = p->getNumberOfTuples();
+        size_t numTuples = attrArrays[0]->getNumberOfTuples();
         size_t selectedTuples = shapeDescriptions->getTupleDimensions()[0];
-        tDims[0] = attrArrayTuples + selectedTuples;
+        tDims[0] = numTuples + selectedTuples;
         shapeDescriptions->resizeAttributeArrays(tDims);
+      }
 
+      foreach (IDataArray::Pointer p, attrArrays)
+      {
         int err = 0;
         IDataArray::Pointer destArray = shapeDescriptions->getPrereqIDataArray<IDataArray, AbstractFilter>(this, p->getName(), err);
         if (destArray != IDataArray::NullPointer())
         {
-          destArray->copyData(selectedTuples, p);
+          destArray->copyData(tDims[0], p);
         }
       }
     }
