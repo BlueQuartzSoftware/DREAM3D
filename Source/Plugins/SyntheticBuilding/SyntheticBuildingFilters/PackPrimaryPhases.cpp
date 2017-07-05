@@ -52,8 +52,8 @@
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -81,155 +81,154 @@
  */
 class AssignVoxelsGapsImpl
 {
-    int64_t dims[3];
-    float Invradcur[3];
-    float res[3];
-    int32_t* m_FeatureIds;
-    float xc;
-    float yc;
-    float zc;
-    ShapeOps* m_ShapeOps;
-    float ga[3][3];
-    int32_t curFeature;
-    Int32ArrayType::Pointer newownersPtr;
-    FloatArrayType::Pointer ellipfuncsPtr;
+  int64_t dims[3];
+  float Invradcur[3];
+  float res[3];
+  int32_t* m_FeatureIds;
+  float xc;
+  float yc;
+  float zc;
+  ShapeOps* m_ShapeOps;
+  float ga[3][3];
+  int32_t curFeature;
+  Int32ArrayType::Pointer newownersPtr;
+  FloatArrayType::Pointer ellipfuncsPtr;
 
-  public:
-    AssignVoxelsGapsImpl(int64_t* dimensions, float* resolution, int32_t* featureIds, float* radCur,
-                         float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature,
-    Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs)
-    : m_FeatureIds(featureIds)
-    , m_ShapeOps(shapeOps)
-    , curFeature(cur_feature)
+public:
+  AssignVoxelsGapsImpl(int64_t* dimensions, float* resolution, int32_t* featureIds, float* radCur, float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature,
+                       Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs)
+  : m_FeatureIds(featureIds)
+  , m_ShapeOps(shapeOps)
+  , curFeature(cur_feature)
+  {
+    size = 0;
+    dims[0] = dimensions[0];
+    dims[1] = dimensions[1];
+    dims[2] = dimensions[2];
+    Invradcur[0] = 1.0f / radCur[0];
+    Invradcur[1] = 1.0f / radCur[1];
+    Invradcur[2] = 1.0f / radCur[2];
+
+    res[0] = resolution[0];
+    res[1] = resolution[1];
+    res[2] = resolution[2];
+
+    xc = xx[0];
+    yc = xx[1];
+    zc = xx[2];
+
+    ga[0][0] = gA[0][0];
+    ga[0][1] = gA[0][1];
+    ga[0][2] = gA[0][2];
+    ga[1][0] = gA[1][0];
+    ga[1][1] = gA[1][1];
+    ga[1][2] = gA[1][2];
+    ga[2][0] = gA[2][0];
+    ga[2][1] = gA[2][1];
+    ga[2][2] = gA[2][2];
+
+    newownersPtr = newowners;
+    ellipfuncsPtr = ellipfuncs;
+  }
+
+  virtual ~AssignVoxelsGapsImpl()
+  {
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void convert(int64_t zStart, int64_t zEnd, int64_t yStart, int64_t yEnd, int64_t xStart, int64_t xEnd) const
+  {
+    int64_t column = 0;
+    int64_t row = 0;
+    int64_t plane = 0;
+    int64_t index = 0;
+    float coords[3] = {0.0f, 0.0f, 0.0f};
+    float inside = 0.0f;
+    float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
+    int32_t* newowners = newownersPtr->getPointer(0);
+    float* ellipfuncs = ellipfuncsPtr->getPointer(0);
+
+    int64_t dim0_dim_1 = dims[0] * dims[1];
+    for(int64_t iter1 = xStart; iter1 < xEnd; iter1++)
     {
-      size = 0;
-      dims[0] = dimensions[0];
-      dims[1] = dimensions[1];
-      dims[2] = dimensions[2];
-      Invradcur[0] = 1.0f / radCur[0];
-      Invradcur[1] = 1.0f / radCur[1];
-      Invradcur[2] = 1.0f / radCur[2];
-
-      res[0] = resolution[0];
-      res[1] = resolution[1];
-      res[2] = resolution[2];
-
-      xc = xx[0];
-      yc = xx[1];
-      zc = xx[2];
-
-      ga[0][0] = gA[0][0];
-      ga[0][1] = gA[0][1];
-      ga[0][2] = gA[0][2];
-      ga[1][0] = gA[1][0];
-      ga[1][1] = gA[1][1];
-      ga[1][2] = gA[1][2];
-      ga[2][0] = gA[2][0];
-      ga[2][1] = gA[2][1];
-      ga[2][2] = gA[2][2];
-
-      newownersPtr = newowners;
-      ellipfuncsPtr = ellipfuncs;
-    }
-
-    virtual ~AssignVoxelsGapsImpl()
-    {
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void convert(int64_t zStart, int64_t zEnd, int64_t yStart, int64_t yEnd, int64_t xStart, int64_t xEnd) const
-    {
-      int64_t column = 0;
-      int64_t row = 0;
-      int64_t plane = 0;
-      int64_t index = 0;
-      float coords[3] = {0.0f, 0.0f, 0.0f};
-      float inside = 0.0f;
-      float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
-      int32_t* newowners = newownersPtr->getPointer(0);
-      float* ellipfuncs = ellipfuncsPtr->getPointer(0);
-
-      int64_t dim0_dim_1 = dims[0] * dims[1];
-      for(int64_t iter1 = xStart; iter1 < xEnd; iter1++)
+      column = iter1;
+      if(iter1 < 0)
       {
-        column = iter1;
-        if(iter1 < 0)
+        column = iter1 + dims[0];
+      }
+      else if(iter1 > dims[0] - 1)
+      {
+        column = iter1 - dims[0];
+      }
+
+      for(int64_t iter2 = yStart; iter2 < yEnd; iter2++)
+      {
+        row = iter2;
+        if(iter2 < 0)
         {
-          column = iter1 + dims[0];
+          row = iter2 + dims[1];
         }
-        else if(iter1 > dims[0] - 1)
+        else if(iter2 > dims[1] - 1)
         {
-          column = iter1 - dims[0];
+          row = iter2 - dims[1];
         }
+        size_t row_dim = row * dims[0];
 
-        for(int64_t iter2 = yStart; iter2 < yEnd; iter2++)
+        for(int64_t iter3 = zStart; iter3 < zEnd; iter3++)
         {
-          row = iter2;
-          if(iter2 < 0)
+          plane = iter3;
+          if(iter3 < 0)
           {
-            row = iter2 + dims[1];
+            plane = iter3 + dims[2];
           }
-          else if(iter2 > dims[1] - 1)
+          else if(iter3 > dims[2] - 1)
           {
-            row = iter2 - dims[1];
+            plane = iter3 - dims[2];
           }
-          size_t row_dim = row * dims[0];
 
-          for(int64_t iter3 = zStart; iter3 < zEnd; iter3++)
+          index = static_cast<int64_t>((plane * dim0_dim_1) + (row_dim) + column);
+
+          inside = -1.0f;
+          coords[0] = float(iter1) * res[0];
+          coords[1] = float(iter2) * res[1];
+          coords[2] = float(iter3) * res[2];
+
+          coords[0] = coords[0] - xc;
+          coords[1] = coords[1] - yc;
+          coords[2] = coords[2] - zc;
+          MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
+          float axis1comp = coordsRotated[0] * Invradcur[0];
+          float axis2comp = coordsRotated[1] * Invradcur[1];
+          float axis3comp = coordsRotated[2] * Invradcur[2];
+          inside = m_ShapeOps->inside(axis1comp, axis2comp, axis3comp);
+          // if (inside >= 0 && newowners[index] > 0)
+          if(inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
           {
-            plane = iter3;
-            if(iter3 < 0)
-            {
-              plane = iter3 + dims[2];
-            }
-            else if(iter3 > dims[2] - 1)
-            {
-              plane = iter3 - dims[2];
-            }
-
-            index = static_cast<int64_t>((plane * dim0_dim_1) + (row_dim) + column);
-
-            inside = -1.0f;
-            coords[0] = float(iter1) * res[0];
-            coords[1] = float(iter2) * res[1];
-            coords[2] = float(iter3) * res[2];
-
-            coords[0] = coords[0] - xc;
-            coords[1] = coords[1] - yc;
-            coords[2] = coords[2] - zc;
-            MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
-            float axis1comp = coordsRotated[0] * Invradcur[0];
-            float axis2comp = coordsRotated[1] * Invradcur[1];
-            float axis3comp = coordsRotated[2] * Invradcur[2];
-            inside = m_ShapeOps->inside(axis1comp, axis2comp, axis3comp);
-            // if (inside >= 0 && newowners[index] > 0)
-            if(inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
-            {
-              newowners[index] = curFeature;
-              ellipfuncs[index] = inside;
-              // newowners[index] = -2;
-              // ellipfuncs[index] = inside;
-            }
-            else if(inside >= 0 && newowners[index] == -1)
-            {
-              newowners[index] = curFeature;
-              ellipfuncs[index] = inside;
-            }
+            newowners[index] = curFeature;
+            ellipfuncs[index] = inside;
+            // newowners[index] = -2;
+            // ellipfuncs[index] = inside;
+          }
+          else if(inside >= 0 && newowners[index] == -1)
+          {
+            newowners[index] = curFeature;
+            ellipfuncs[index] = inside;
           }
         }
       }
     }
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range3d<int64_t, int64_t, int64_t>& r) const
-    {
-      convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
-    }
+  void operator()(const tbb::blocked_range3d<int64_t, int64_t, int64_t>& r) const
+  {
+    convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
+  }
 #endif
 
-  private:
+private:
 };
 
 // Include the MOC generated file for this class
@@ -241,52 +240,52 @@ const QString PrimaryPhaseSyntheticShapeParametersName("Synthetic Shape Paramete
 //
 // -----------------------------------------------------------------------------
 PackPrimaryPhases::PackPrimaryPhases()
-  : AbstractFilter()
-  , m_OutputCellAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
-  , m_OutputCellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
-  , m_OutputCellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
-  , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
-  , m_CellPhasesArrayName(SIMPL::CellData::Phases)
-  , m_FeaturePhasesArrayName(SIMPL::FeatureData::Phases)
-  , m_NumFeaturesArrayName(SIMPL::EnsembleData::NumFeatures)
-  , m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
-  , m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
-  , m_InputPhaseNamesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseName)
-  , m_InputShapeTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::ShapeTypes)
-  , m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-  , m_UseMask(false)
-  , m_HaveFeatures(false)
-  , m_FeatureInputFile("")
-  , m_CsvOutputFile("")
-  , m_PeriodicBoundaries(false)
-  , m_WriteGoalAttributes(false)
-  , m_SaveGeometricDescriptions(false)
-  , m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, PrimaryPhaseSyntheticShapeParametersName, "")
-  , m_NeighborhoodsArrayName(SIMPL::FeatureData::Neighborhoods)
-  , m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
-  , m_VolumesArrayName(SIMPL::FeatureData::Volumes)
-  , m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
-  , m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
-  , m_Omega3sArrayName(SIMPL::FeatureData::Omega3s)
-  , m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
-  , m_Neighbors(nullptr)
-  , m_FeatureIds(nullptr)
-  , m_CellPhases(nullptr)
-  , m_Mask(nullptr)
-  , m_BoundaryCells(nullptr)
-  , m_FeaturePhases(nullptr)
-  , m_Neighborhoods(nullptr)
-  , m_Centroids(nullptr)
-  , m_Volumes(nullptr)
-  , m_AxisLengths(nullptr)
-  , m_AxisEulerAngles(nullptr)
-  , m_Omega3s(nullptr)
-  , m_EquivalentDiameters(nullptr)
-  , m_PhaseTypes(nullptr)
-  , m_ShapeTypes(nullptr)
-  , m_NumFeatures(nullptr)
-  , m_ErrorOutputFile("")
-  , m_VtkOutputFile("")
+: AbstractFilter()
+, m_OutputCellAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
+, m_OutputCellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
+, m_OutputCellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
+, m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
+, m_CellPhasesArrayName(SIMPL::CellData::Phases)
+, m_FeaturePhasesArrayName(SIMPL::FeatureData::Phases)
+, m_NumFeaturesArrayName(SIMPL::EnsembleData::NumFeatures)
+, m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
+, m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
+, m_InputPhaseNamesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseName)
+, m_InputShapeTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::ShapeTypes)
+, m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+, m_UseMask(false)
+, m_HaveFeatures(false)
+, m_FeatureInputFile("")
+, m_CsvOutputFile("")
+, m_PeriodicBoundaries(false)
+, m_WriteGoalAttributes(false)
+, m_SaveGeometricDescriptions(false)
+, m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, PrimaryPhaseSyntheticShapeParametersName, "")
+, m_NeighborhoodsArrayName(SIMPL::FeatureData::Neighborhoods)
+, m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
+, m_VolumesArrayName(SIMPL::FeatureData::Volumes)
+, m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
+, m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
+, m_Omega3sArrayName(SIMPL::FeatureData::Omega3s)
+, m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
+, m_Neighbors(nullptr)
+, m_FeatureIds(nullptr)
+, m_CellPhases(nullptr)
+, m_Mask(nullptr)
+, m_BoundaryCells(nullptr)
+, m_FeaturePhases(nullptr)
+, m_Neighborhoods(nullptr)
+, m_Centroids(nullptr)
+, m_Volumes(nullptr)
+, m_AxisLengths(nullptr)
+, m_AxisEulerAngles(nullptr)
+, m_Omega3s(nullptr)
+, m_EquivalentDiameters(nullptr)
+, m_PhaseTypes(nullptr)
+, m_ShapeTypes(nullptr)
+, m_NumFeatures(nullptr)
+, m_ErrorOutputFile("")
+, m_VtkOutputFile("")
 {
 
   initialize();
@@ -372,8 +371,7 @@ void PackPrimaryPhases::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", OutputCellAttributeMatrixPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
@@ -635,7 +633,7 @@ void PackPrimaryPhases::dataCheck()
   // Cell Data
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellAttributeMatrixPath().getAttributeMatrixName(), getFeatureIdsArrayName());
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-        this, tempPath, -1, cDims); /* Assigns the shared_ptr<>(this, tempPath, -1, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, -1, cDims); /* Assigns the shared_ptr<>(this, tempPath, -1, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock().get())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -643,7 +641,7 @@ void PackPrimaryPhases::dataCheck()
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellAttributeMatrixPath().getAttributeMatrixName(), getCellPhasesArrayName());
   m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-        this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, cDims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_CellPhasesPtr.lock().get())
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
@@ -660,11 +658,11 @@ void PackPrimaryPhases::dataCheck()
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
 
   PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
-  if (saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
+  if(saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
   {
     m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixPath().getAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
   }
-  else if (saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
+  else if(saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
   {
     int err = 0;
     m->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedAttributeMatrixPath().getAttributeMatrixName(), err);
@@ -690,7 +688,7 @@ void PackPrimaryPhases::dataCheck()
   // Feature Data
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName());
   m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-        this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeaturePhasesPtr.lock().get())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
@@ -705,7 +703,7 @@ void PackPrimaryPhases::dataCheck()
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_EquivalentDiametersArrayName);
   m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_EquivalentDiametersPtr.lock().get())
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
@@ -738,7 +736,7 @@ void PackPrimaryPhases::dataCheck()
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisEulerAnglesArrayName);
   m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_AxisEulerAnglesPtr.lock().get())
   {
     m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
@@ -756,7 +754,7 @@ void PackPrimaryPhases::dataCheck()
   cDims[0] = 1;
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellEnsembleAttributeMatrixName(), getNumFeaturesArrayName());
   m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-        this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_NumFeaturesPtr.lock().get())
   {
     m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0);
@@ -904,7 +902,6 @@ void PackPrimaryPhases::execute()
   {
     return;
   }
-
 
   moveShapeDescriptions();
 
@@ -1094,7 +1091,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   int64_t dims[3] = {
-    static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
@@ -1140,9 +1137,9 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
                                  "pointer but this resulted in a nullptr pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
-            .arg(i)
-            .arg(i)
-            .arg(m_PhaseTypes[i]);
+                         .arg(i)
+                         .arg(i)
+                         .arg(m_PhaseTypes[i]);
         setErrorCondition(-78007);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
@@ -1765,7 +1762,7 @@ void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint3
 {
   SIMPL_RANDOMNG_NEW_SEEDED(m_Seed)
 
-      StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
   float r1 = 1.0f;
   float a2 = 0.0f, a3 = 0.0f;
@@ -1855,7 +1852,7 @@ void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint3
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if (shapeclass == static_cast<ShapeType::EnumType>(ShapeType::Type::Ellipsoid))
+  if(shapeclass == static_cast<ShapeType::EnumType>(ShapeType::Type::Ellipsoid))
   {
     omega3f = 1;
   }
@@ -2495,7 +2492,7 @@ void PackPrimaryPhases::insertFeature(size_t gnum)
   uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
 
   // Bail if the shapeclass is not one of our enumerated types
-  if (shapeclass >= static_cast<ShapeType::EnumType>(ShapeType::Type::ShapeTypeEnd))
+  if(shapeclass >= static_cast<ShapeType::EnumType>(ShapeType::Type::ShapeTypeEnd))
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     setErrorCondition(-78009);
@@ -2614,7 +2611,7 @@ void PackPrimaryPhases::assignVoxels()
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   int64_t dims[3] = {
-    static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -2770,7 +2767,7 @@ void PackPrimaryPhases::assignVoxels()
     float radCur[3] = {radcur1, radcur2, radcur3};
     float xx[3] = {xc, yc, zc};
     ShapeOps* shapeOps = m_ShapeOps[shapeclass].get();
-    //#if 0
+//#if 0
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
@@ -3029,7 +3026,7 @@ void PackPrimaryPhases::cleanupFeatures()
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   int64_t dims[3] = {
-    static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
   int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
@@ -3275,7 +3272,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
 
   SIMPL_RANDOMNG_NEW()
 
-      std::vector<int32_t> primaryPhasesLocal;
+  std::vector<int32_t> primaryPhasesLocal;
   std::vector<double> primaryPhaseFractionsLocal;
   double totalprimaryfractions = 0.0;
   // find which phases are primary phases
@@ -3450,10 +3447,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   QStringList names;
-  names << m_EquivalentDiametersArrayName << m_Omega3sArrayName << m_AxisEulerAnglesArrayName
-        << m_AxisLengthsArrayName << m_VolumesArrayName
-        << m_CentroidsArrayName << m_NeighborhoodsArrayName;
-
+  names << m_EquivalentDiametersArrayName << m_Omega3sArrayName << m_AxisEulerAnglesArrayName << m_AxisLengthsArrayName << m_VolumesArrayName << m_CentroidsArrayName << m_NeighborhoodsArrayName;
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
   QVector<size_t> tDims(1, 0);
@@ -3465,12 +3459,12 @@ void PackPrimaryPhases::moveShapeDescriptions()
   }
 
   PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
-  if (saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
+  if(saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
   {
     AttributeMatrix::Pointer newAM = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
-    if (newAM != AttributeMatrix::NullPointer())
+    if(newAM != AttributeMatrix::NullPointer())
     {
-      if (attrArrays.size() > 0)
+      if(attrArrays.size() > 0)
       {
         size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
         size_t newAMTupleCount = newAM->getTupleDimensions()[0];
@@ -3478,18 +3472,18 @@ void PackPrimaryPhases::moveShapeDescriptions()
         newAM->resizeAttributeArrays(tDims);
       }
 
-      foreach (IDataArray::Pointer incomingArray, attrArrays)
+      foreach(IDataArray::Pointer incomingArray, attrArrays)
       {
         newAM->addAttributeArray(incomingArray->getName(), incomingArray);
       }
     }
   }
-  else if (saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
+  else if(saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
   {
     AttributeMatrix::Pointer existingAM = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
-    if (existingAM != AttributeMatrix::NullPointer())
+    if(existingAM != AttributeMatrix::NullPointer())
     {
-      if (attrArrays.size() > 0)
+      if(attrArrays.size() > 0)
       {
         size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
         size_t existingAMTupleCount = existingAM->getTupleDimensions()[0];
@@ -3497,11 +3491,11 @@ void PackPrimaryPhases::moveShapeDescriptions()
         existingAM->resizeAttributeArrays(tDims);
       }
 
-      foreach (IDataArray::Pointer incomingArray, attrArrays)
+      foreach(IDataArray::Pointer incomingArray, attrArrays)
       {
         int err = 0;
         IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);
-        if (existingArray != IDataArray::NullPointer())
+        if(existingArray != IDataArray::NullPointer())
         {
           existingArray->copyData(tDims[0], incomingArray);
         }
