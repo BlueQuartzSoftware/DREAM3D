@@ -1,4 +1,4 @@
-![DREAM.3D](Resources/OpenSourceEdition/Splash/branded_splash.png)
+![](https://github.com/BlueQuartzSoftware/DREAM3D/raw/develop/Resources/OpenSourceEdition/splash/branded_splash.png)
 
 # DREAM.3D  #
 
