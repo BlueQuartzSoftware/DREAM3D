@@ -2992,7 +2992,7 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
   foreach(const QString name, names)
   {
     IDataArray::Pointer arrayPtr = cellFeatureAttrMat->removeAttributeArray(name);
-    if (arrayPtr != IDataArray::NullPointer())
+    if(arrayPtr != IDataArray::NullPointer())
     {
       attrArrays.push_back(arrayPtr);
     }
