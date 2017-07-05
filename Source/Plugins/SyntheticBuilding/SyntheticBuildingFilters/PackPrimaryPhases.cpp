@@ -3465,34 +3465,45 @@ void PackPrimaryPhases::moveShapeDescriptions()
   }
 
   PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
-  foreach (IDataArray::Pointer p, attrArrays)
+  if (saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
   {
-    if (saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
+    AttributeMatrix::Pointer newAM = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
+    if (newAM != AttributeMatrix::NullPointer())
     {
-      AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
-      if (shapeDescriptions != AttributeMatrix::NullPointer())
+      if (attrArrays.size() > 0)
       {
-        size_t numTuples = p->getNumberOfTuples();
-        tDims[0] = numTuples;
-        shapeDescriptions->resizeAttributeArrays(tDims);
-        shapeDescriptions->addAttributeArray(p->getName(), p);
+        size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
+        size_t newAMTupleCount = newAM->getTupleDimensions()[0];
+        tDims[0] = incomingArrayTupleCount + newAMTupleCount;
+        newAM->resizeAttributeArrays(tDims);
+      }
+
+      foreach (IDataArray::Pointer incomingArray, attrArrays)
+      {
+        newAM->addAttributeArray(incomingArray->getName(), incomingArray);
       }
     }
-    else if (saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
+  }
+  else if (saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
+  {
+    AttributeMatrix::Pointer existingAM = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
+    if (existingAM != AttributeMatrix::NullPointer())
     {
-      AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
-      if (shapeDescriptions != AttributeMatrix::NullPointer())
+      if (attrArrays.size() > 0)
       {
-        size_t attrArrayTuples = p->getNumberOfTuples();
-        size_t selectedTuples = shapeDescriptions->getTupleDimensions()[0];
-        tDims[0] = attrArrayTuples + selectedTuples;
-        shapeDescriptions->resizeAttributeArrays(tDims);
+        size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
+        size_t existingAMTupleCount = existingAM->getTupleDimensions()[0];
+        tDims[0] = incomingArrayTupleCount + existingAMTupleCount;
+        existingAM->resizeAttributeArrays(tDims);
+      }
 
+      foreach (IDataArray::Pointer incomingArray, attrArrays)
+      {
         int err = 0;
-        IDataArray::Pointer destArray = shapeDescriptions->getPrereqIDataArray<IDataArray, AbstractFilter>(this, p->getName(), err);
-        if (destArray != IDataArray::NullPointer())
+        IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);
+        if (existingArray != IDataArray::NullPointer())
         {
-          destArray->copyData(selectedTuples, p);
+          existingArray->copyData(tDims[0], incomingArray);
         }
       }
     }

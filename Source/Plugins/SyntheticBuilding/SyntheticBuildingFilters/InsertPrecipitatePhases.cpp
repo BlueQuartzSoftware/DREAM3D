@@ -449,7 +449,8 @@ void InsertPrecipitatePhases::dataCheck()
   }
 
   QVector<size_t> tDims(1, 0);
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeaturePhasesArrayPath().getDataContainerName());
+  if (getErrorCondition() < 0) { return; }
 
   InsertPrecipitatePhases::SaveMethod saveMethod = static_cast<InsertPrecipitatePhases::SaveMethod>(getSaveGeometricDescriptions());
   if (saveMethod == InsertPrecipitatePhases::SaveMethod::SaveToNew)
@@ -2858,43 +2859,43 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
   InsertPrecipitatePhases::SaveMethod saveMethod = static_cast<InsertPrecipitatePhases::SaveMethod>(getSaveGeometricDescriptions());
   if (saveMethod == InsertPrecipitatePhases::SaveMethod::SaveToNew)
   {
-    AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
-    if (shapeDescriptions != AttributeMatrix::NullPointer())
+    AttributeMatrix::Pointer newAM = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
+    if (newAM != AttributeMatrix::NullPointer())
     {
       if (attrArrays.size() > 0)
       {
-        size_t numTuples = attrArrays[0]->getNumberOfTuples();
-        size_t selectedTuples = shapeDescriptions->getTupleDimensions()[0];
-        tDims[0] = numTuples + selectedTuples;
-        shapeDescriptions->resizeAttributeArrays(tDims);
+        size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
+        size_t newAMTupleCount = newAM->getTupleDimensions()[0];
+        tDims[0] = incomingArrayTupleCount + newAMTupleCount;
+        newAM->resizeAttributeArrays(tDims);
       }
 
-      foreach (IDataArray::Pointer p, attrArrays)
+      foreach (IDataArray::Pointer incomingArray, attrArrays)
       {
-        shapeDescriptions->addAttributeArray(p->getName(), p);
+        newAM->addAttributeArray(incomingArray->getName(), incomingArray);
       }
     }
   }
   else if (saveMethod == InsertPrecipitatePhases::SaveMethod::AppendToExisting)
   {
-    AttributeMatrix::Pointer shapeDescriptions = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
-    if (shapeDescriptions != AttributeMatrix::NullPointer())
+    AttributeMatrix::Pointer existingAM = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
+    if (existingAM != AttributeMatrix::NullPointer())
     {
+      size_t existingAMTupleCount = existingAM->getTupleDimensions()[0];
       if (attrArrays.size() > 0)
       {
-        size_t numTuples = attrArrays[0]->getNumberOfTuples();
-        size_t selectedTuples = shapeDescriptions->getTupleDimensions()[0];
-        tDims[0] = numTuples + selectedTuples;
-        shapeDescriptions->resizeAttributeArrays(tDims);
+        size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
+        tDims[0] = incomingArrayTupleCount + existingAMTupleCount;
+        existingAM->resizeAttributeArrays(tDims);
       }
 
-      foreach (IDataArray::Pointer p, attrArrays)
+      foreach (IDataArray::Pointer incomingArray, attrArrays)
       {
         int err = 0;
-        IDataArray::Pointer destArray = shapeDescriptions->getPrereqIDataArray<IDataArray, AbstractFilter>(this, p->getName(), err);
-        if (destArray != IDataArray::NullPointer())
+        IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);
+        if (existingArray != IDataArray::NullPointer())
         {
-          destArray->copyData(tDims[0], p);
+          existingArray->copyData(existingAMTupleCount, incomingArray);
         }
       }
     }
