@@ -3455,7 +3455,11 @@ void PackPrimaryPhases::moveShapeDescriptions()
   QList<IDataArray::Pointer> attrArrays;
   foreach(const QString name, names)
   {
-    attrArrays.push_back(cellFeatureAttrMat->removeAttributeArray(name));
+    IDataArray::Pointer arrayPtr = cellFeatureAttrMat->removeAttributeArray(name);
+    if (arrayPtr != IDataArray::NullPointer())
+    {
+      attrArrays.push_back(arrayPtr);
+    }
   }
 
   PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
