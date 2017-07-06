@@ -353,7 +353,7 @@ int ModifiedLambertProjectionArray::copyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ModifiedLambertProjectionArray::copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray, size_t srcTupleOffset, size_t totalSrcTuples)
+bool ModifiedLambertProjectionArray::copyFromArray(size_t destTupleOffset, IDataArray::Pointer sourceArray, size_t srcTupleOffset, size_t totalSrcTuples)
 {
   if(!m_IsAllocated) { return false; }
   if(0 == m_ModifiedLambertProjectionArray.size()) { return false; }

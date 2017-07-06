@@ -3501,7 +3501,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
         IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);
         if(existingArray != IDataArray::NullPointer())
         {
-          existingArray->copyData(tDims[0], incomingArray);
+          existingArray->copyFromArray(tDims[0], incomingArray);
         }
       }
     }

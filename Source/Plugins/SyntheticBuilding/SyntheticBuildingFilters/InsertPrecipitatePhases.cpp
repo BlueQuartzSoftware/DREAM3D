@@ -3037,7 +3037,7 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
         IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);
         if(existingArray != IDataArray::NullPointer())
         {
-          existingArray->copyData(existingAMTupleCount, incomingArray);
+          existingArray->copyFromArray(existingAMTupleCount, incomingArray);
         }
       }
     }
