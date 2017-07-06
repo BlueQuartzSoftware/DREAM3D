@@ -52,11 +52,13 @@
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -93,8 +95,7 @@ class AssignVoxelsGapsImpl
   FloatArrayType::Pointer ellipfuncsPtr;
 
 public:
-  AssignVoxelsGapsImpl(int64_t* dimensions, float* resolution, int32_t* featureIds, float* radCur,
-                       float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature,
+  AssignVoxelsGapsImpl(int64_t* dimensions, float* resolution, int32_t* featureIds, float* radCur, float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature,
                        Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs)
   : m_FeatureIds(featureIds)
   , m_ShapeOps(shapeOps)
@@ -233,6 +234,8 @@ private:
 // Include the MOC generated file for this class
 #include "moc_PackPrimaryPhases.cpp"
 
+const QString PrimaryPhaseSyntheticShapeParametersName("Synthetic Shape Parameters (Primary Phase)");
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -257,6 +260,7 @@ PackPrimaryPhases::PackPrimaryPhases()
 , m_PeriodicBoundaries(false)
 , m_WriteGoalAttributes(false)
 , m_SaveGeometricDescriptions(false)
+, m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, PrimaryPhaseSyntheticShapeParametersName, "")
 , m_NeighborhoodsArrayName(SIMPL::FeatureData::Neighborhoods)
 , m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
 , m_VolumesArrayName(SIMPL::FeatureData::Volumes)
@@ -367,8 +371,7 @@ void PackPrimaryPhases::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", OutputCellAttributeMatrixPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
@@ -430,7 +433,36 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, PackPrimaryPhases, "*.csv", "Comma Separated Data"));
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Save Shape Description Arrays", SaveGeometricDescriptions, FilterParameter::Parameter, PackPrimaryPhases));
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Save Shape Description Arrays");
+    parameter->setPropertyName("SaveGeometricDescriptions");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(PackPrimaryPhases, this, SaveGeometricDescriptions));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(PackPrimaryPhases, this, SaveGeometricDescriptions));
+
+    QVector<QString> choices;
+    choices.push_back("Save To New Attribute Matrix");
+    choices.push_back("Append To Existing Attribute Matrix");
+    choices.push_back("Do Not Save");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "NewAttributeMatrixPath"
+                << "SelectedAttributeMatrixPath";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+
+  {
+    AttributeMatrixCreationFilterParameter::RequirementType req;
+    parameters.push_back(SIMPL_NEW_AM_CREATION_FP("New Attribute Matrix", NewAttributeMatrixPath, FilterParameter::Parameter, PackPrimaryPhases, req, 0));
+  }
+
+  {
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Category::Feature);
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Selected Attribute Matrix", SelectedAttributeMatrixPath, FilterParameter::Parameter, PackPrimaryPhases, req, 1));
+  }
 
 #if PPP_SHOW_DEBUG_OUTPUTS
   parameters.push_back(InputFileFilterParameter::New("Debug VTK File", "VtkOutputFile", getVtkOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK File"));
@@ -624,6 +656,17 @@ void PackPrimaryPhases::dataCheck()
 
   QVector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+
+  PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
+  if(saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
+  {
+    m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixPath().getAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  }
+  else if(saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
+  {
+    int err = 0;
+    m->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedAttributeMatrixPath().getAttributeMatrixName(), err);
+  }
 
   AttributeMatrix::Pointer outEnsembleAttrMat = AttributeMatrix::NullPointer();
   if(m->doesAttributeMatrixExist(getOutputCellEnsembleAttributeMatrixName()))
@@ -859,7 +902,6 @@ void PackPrimaryPhases::execute()
   {
     return;
   }
-
 
   moveShapeDescriptions();
 
@@ -1810,7 +1852,7 @@ void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint3
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
   float omega3f = static_cast<float>(rg.genrand_beta(mf, s));
-  if (shapeclass == static_cast<ShapeType::EnumType>(ShapeType::Type::Ellipsoid))
+  if(shapeclass == static_cast<ShapeType::EnumType>(ShapeType::Type::Ellipsoid))
   {
     omega3f = 1;
   }
@@ -2450,7 +2492,7 @@ void PackPrimaryPhases::insertFeature(size_t gnum)
   uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
 
   // Bail if the shapeclass is not one of our enumerated types
-  if (shapeclass >= static_cast<ShapeType::EnumType>(ShapeType::Type::ShapeTypeEnd))
+  if(shapeclass >= static_cast<ShapeType::EnumType>(ShapeType::Type::ShapeTypeEnd))
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     setErrorCondition(-78009);
@@ -3405,25 +3447,64 @@ void PackPrimaryPhases::moveShapeDescriptions()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   QStringList names;
-  names << m_EquivalentDiametersArrayName << m_Omega3sArrayName << m_AxisEulerAnglesArrayName
-        << m_AxisLengthsArrayName << m_VolumesArrayName
-        << m_CentroidsArrayName << m_NeighborhoodsArrayName;
-
+  names << m_EquivalentDiametersArrayName << m_Omega3sArrayName << m_AxisEulerAnglesArrayName << m_AxisLengthsArrayName << m_VolumesArrayName << m_CentroidsArrayName << m_NeighborhoodsArrayName;
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer shapeDescriptions = AttributeMatrix::New(tDims, "Synthetic Shape Parameters (Primary Phase)", AttributeMatrix::Type::Generic);
+
+  QList<IDataArray::Pointer> attrArrays;
   foreach(const QString name, names)
   {
-    IDataArray::Pointer p = cellFeatureAttrMat->removeAttributeArray(name);
-    size_t numTuples = p->getNumberOfTuples();
-    tDims[0] = numTuples;
-    shapeDescriptions->resizeAttributeArrays(tDims);
-    shapeDescriptions->addAttributeArray(p->getName(), p);
+    IDataArray::Pointer arrayPtr = cellFeatureAttrMat->removeAttributeArray(name);
+    if(arrayPtr != IDataArray::NullPointer())
+    {
+      attrArrays.push_back(arrayPtr);
+    }
   }
-  if(getSaveGeometricDescriptions())
+
+  PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
+  if(saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
   {
-    m->addAttributeMatrix(shapeDescriptions->getName(), shapeDescriptions);
+    AttributeMatrix::Pointer newAM = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
+    if(newAM != AttributeMatrix::NullPointer())
+    {
+      if(attrArrays.size() > 0)
+      {
+        size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
+        size_t newAMTupleCount = newAM->getTupleDimensions()[0];
+        tDims[0] = incomingArrayTupleCount + newAMTupleCount;
+        newAM->resizeAttributeArrays(tDims);
+      }
+
+      foreach(IDataArray::Pointer incomingArray, attrArrays)
+      {
+        newAM->addAttributeArray(incomingArray->getName(), incomingArray);
+      }
+    }
+  }
+  else if(saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
+  {
+    AttributeMatrix::Pointer existingAM = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
+    if(existingAM != AttributeMatrix::NullPointer())
+    {
+      if(attrArrays.size() > 0)
+      {
+        size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
+        size_t existingAMTupleCount = existingAM->getTupleDimensions()[0];
+        tDims[0] = incomingArrayTupleCount + existingAMTupleCount;
+        existingAM->resizeAttributeArrays(tDims);
+      }
+
+      foreach(IDataArray::Pointer incomingArray, attrArrays)
+      {
+        int err = 0;
+        IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);
+        if(existingArray != IDataArray::NullPointer())
+        {
+          existingArray->copyFromArray(tDims[0], incomingArray);
+        }
+      }
+    }
   }
 }
 

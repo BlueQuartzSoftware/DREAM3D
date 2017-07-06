@@ -289,7 +289,7 @@ void AppendImageGeometryZSlice::execute()
     IDataArray::Pointer inputArray = inputCellAttrMat->getAttributeArray(*iter);
     if(nullptr != inputArray.get())
     {
-      p->copyData(tupleOffset, inputArray);
+      p->copyFromArray(tupleOffset, inputArray);
     }
     else
     {
