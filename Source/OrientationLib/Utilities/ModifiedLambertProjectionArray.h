@@ -252,24 +252,30 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual int copyTuple(size_t currentPos, size_t newPos);
 
+    // This line must be here, because we are overloading the copyData pure virtual function in IDataArray.
+    // This is required so that other classes can call this version of copyData from the subclasses.
+    using IDataArray::copyFromArray;
+
     /**
-     * @brief copyData This method copies all data from the <b>sourceArray</b> into
-     * the current array starting at the target destination tuple offset value.
+     * @brief copyData This method copies the number of tuples specified by the
+     * totalSrcTuples value starting from the source tuple offset value in <b>sourceArray</b>
+     * into the current array starting at the target destination tuple offset value.
      *
-     * For example if the DataArray has 10 tuples and the destTupleOffset = 5 then
-     * then source data will be copied into the destination array starting at
-     * destination tuple 5. In psuedo code it would be the following:
+     * For example if the DataArray has 10 tuples, the source DataArray has 10 tuples,
+     *  the destTupleOffset = 5, the srcTupleOffset = 5, and the totalSrcTuples = 3,
+     *  then tuples 5, 6, and 7 will be copied from the source into tuples 5, 6, and 7
+     * of the destination array. In psuedo code it would be the following:
      * @code
-     *  destArray[5] = sourceArray[0];
-     *  destArray[6] = sourceArray[1];
+     *  destArray[5] = sourceArray[5];
+     *  destArray[6] = sourceArray[6];
+     *  destArray[7] = sourceArray[7];
      *  .....
      * @endcode
      * @param destTupleOffset
      * @param sourceArray
      * @return
      */
-    virtual bool copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray);
-
+    virtual bool copyFromArray(size_t destTupleOffset, IDataArray::Pointer sourceArray, size_t srcTupleOffset, size_t totalSrcTuples);
 
     /**
      * @brief Splats the same value c across all values in the Tuple

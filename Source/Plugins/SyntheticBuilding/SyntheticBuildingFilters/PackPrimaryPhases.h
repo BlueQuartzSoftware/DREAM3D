@@ -68,6 +68,15 @@ public:
 
   virtual ~PackPrimaryPhases();
 
+  using EnumType = unsigned int;
+
+  enum class SaveMethod : EnumType
+  {
+    SaveToNew = 0,
+    AppendToExisting = 1,
+    DoNotSave = 2
+  };
+
   SIMPL_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
   Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
 
@@ -122,8 +131,14 @@ public:
   SIMPL_FILTER_PARAMETER(bool, WriteGoalAttributes)
   Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
-  SIMPL_FILTER_PARAMETER(bool, SaveGeometricDescriptions)
-  Q_PROPERTY(bool SaveGeometricDescriptions READ getSaveGeometricDescriptions WRITE setSaveGeometricDescriptions)
+  SIMPL_FILTER_PARAMETER(int, SaveGeometricDescriptions)
+  Q_PROPERTY(int SaveGeometricDescriptions READ getSaveGeometricDescriptions WRITE setSaveGeometricDescriptions)
+
+  SIMPL_FILTER_PARAMETER(DataArrayPath, NewAttributeMatrixPath)
+  Q_PROPERTY(DataArrayPath NewAttributeMatrixPath READ getNewAttributeMatrixPath WRITE setNewAttributeMatrixPath)
+
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedAttributeMatrixPath)
+  Q_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

@@ -353,7 +353,7 @@ int ModifiedLambertProjectionArray::copyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ModifiedLambertProjectionArray::copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray)
+bool ModifiedLambertProjectionArray::copyFromArray(size_t destTupleOffset, IDataArray::Pointer sourceArray, size_t srcTupleOffset, size_t totalSrcTuples)
 {
   if(!m_IsAllocated) { return false; }
   if(0 == m_ModifiedLambertProjectionArray.size()) { return false; }
@@ -363,11 +363,17 @@ bool ModifiedLambertProjectionArray::copyData(size_t destTupleOffset, IDataArray
 
   if(sourceArray->getNumberOfComponents() != getNumberOfComponents()) { return false; }
 
-  if( sourceArray->getNumberOfTuples()*sourceArray->getNumberOfComponents() + destTupleOffset*getNumberOfComponents() > m_ModifiedLambertProjectionArray.size() ) { return false; }
+  if(srcTupleOffset + totalSrcTuples > sourceArray->getNumberOfTuples())
+  {
+    return false;
+  }
 
-  size_t sourceNTuples = source->getNumberOfTuples();
+  if(totalSrcTuples * sourceArray->getNumberOfComponents() + destTupleOffset * getNumberOfComponents() > m_ModifiedLambertProjectionArray.size())
+  {
+    return false;
+  }
 
-  for(size_t i = 0; i < sourceNTuples; i++)
+  for(size_t i = srcTupleOffset; i < srcTupleOffset + totalSrcTuples; i++)
   {
     m_ModifiedLambertProjectionArray[destTupleOffset + i] = (*source)[i];
   }
