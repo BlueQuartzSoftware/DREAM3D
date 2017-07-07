@@ -2986,7 +2986,6 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
   names << m_EquivalentDiametersArrayName << m_Omega3sArrayName << m_AxisEulerAnglesArrayName << m_AxisLengthsArrayName << m_VolumesArrayName << m_CentroidsArrayName;
 
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
-  QVector<size_t> tDims(1, 0);
 
   QList<IDataArray::Pointer> attrArrays;
   foreach(const QString name, names)
@@ -3001,44 +3000,66 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
   InsertPrecipitatePhases::SaveMethod saveMethod = static_cast<InsertPrecipitatePhases::SaveMethod>(getSaveGeometricDescriptions());
   if(saveMethod == InsertPrecipitatePhases::SaveMethod::SaveToNew)
   {
-    AttributeMatrix::Pointer newAM = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
-    if(newAM != AttributeMatrix::NullPointer())
-    {
-      if(attrArrays.size() > 0)
-      {
-        size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
-        size_t newAMTupleCount = newAM->getTupleDimensions()[0];
-        tDims[0] = incomingArrayTupleCount + newAMTupleCount;
-        newAM->resizeAttributeArrays(tDims);
-      }
-
-      foreach(IDataArray::Pointer incomingArray, attrArrays)
-      {
-        newAM->addAttributeArray(incomingArray->getName(), incomingArray);
-      }
-    }
+    saveToNewAttributeMatrix(attrArrays);
   }
   else if(saveMethod == InsertPrecipitatePhases::SaveMethod::AppendToExisting)
   {
-    AttributeMatrix::Pointer existingAM = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
-    if(existingAM != AttributeMatrix::NullPointer())
-    {
-      size_t existingAMTupleCount = existingAM->getTupleDimensions()[0];
-      if(attrArrays.size() > 0)
-      {
-        size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
-        tDims[0] = incomingArrayTupleCount + existingAMTupleCount;
-        existingAM->resizeAttributeArrays(tDims);
-      }
+    appendToExistingAttributeMatrix(attrArrays);
+  }
+}
 
-      foreach(IDataArray::Pointer incomingArray, attrArrays)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::saveToNewAttributeMatrix(QList<IDataArray::Pointer> incomingArrays)
+{
+  QVector<size_t> tDims(1, 0);
+
+  AttributeMatrix::Pointer newAM = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
+  if(newAM != AttributeMatrix::NullPointer())
+  {
+    if(incomingArrays.size() > 0)
+    {
+      size_t incomingArrayTupleCount = incomingArrays[0]->getNumberOfTuples();
+      size_t newAMTupleCount = newAM->getTupleDimensions()[0];
+      tDims[0] = incomingArrayTupleCount + newAMTupleCount;
+      newAM->resizeAttributeArrays(tDims);
+    }
+
+    foreach(IDataArray::Pointer incomingArray, incomingArrays)
+    {
+      newAM->addAttributeArray(incomingArray->getName(), incomingArray);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::appendToExistingAttributeMatrix(QList<IDataArray::Pointer> incomingArrays)
+{
+  QVector<size_t> tDims(1, 0);
+
+  AttributeMatrix::Pointer existingAM = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
+  if(existingAM != AttributeMatrix::NullPointer())
+  {
+    size_t existingAMTupleCount = existingAM->getTupleDimensions()[0];
+    if(incomingArrays.size() > 0)
+    {
+      size_t incomingArrayTupleCount = incomingArrays[0]->getNumberOfTuples();
+      tDims[0] = incomingArrayTupleCount;
+      existingAM->resizeAttributeArrays(tDims);
+    }
+
+    foreach(IDataArray::Pointer incomingArray, incomingArrays)
+    {
+      int err = 0;
+      IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);
+      if(existingArray != IDataArray::NullPointer())
       {
-        int err = 0;
-        IDataArray::Pointer existingArray = existingAM->getPrereqIDataArray<IDataArray, AbstractFilter>(this, incomingArray->getName(), err);
-        if(existingArray != IDataArray::NullPointer())
-        {
-          existingArray->copyFromArray(existingAMTupleCount, incomingArray);
-        }
+        // ATTENTION: This "append" code is making the assumption that there will be 0's preceding the precipitate phase data.  The number of preceding
+        // 0's is equal to the number of elements in the existing array that will be appended to.  If this changes, then this "append" code needs to be updated!
+        existingArray->copyFromArray(existingAMTupleCount, incomingArray, existingAMTupleCount, existingArray->getNumberOfTuples() - existingAMTupleCount);
       }
     }
   }

@@ -520,6 +520,16 @@ class InsertPrecipitatePhases : public AbstractFilter
      */
     void updateFeatureInstancePointers();
 
+    /**
+     * @brief saveToNewAttributeMatrix
+     */
+    void saveToNewAttributeMatrix(QList<IDataArray::Pointer> incomingArrays);
+
+    /**
+     * @brief appendToExistingAttributeMatrix
+     */
+    void appendToExistingAttributeMatrix(QList<IDataArray::Pointer> incomingArrays);
+
     InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented
     void operator=(const InsertPrecipitatePhases&); // Operator '=' Not Implemented
 };
