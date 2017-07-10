@@ -113,12 +113,12 @@ void StatsGenFeatureSizeWidget::setupGui()
 
   m_MuValidator = new QDoubleValidator(m_Mu_SizeDistribution);
   m_MuValidator->setLocale(loc);
-  m_MuValidator->setRange(0.0001, 10.0, 6);
+  m_MuValidator->setRange(-1000000, 1000000, 6);
   m_Mu_SizeDistribution->setValidator(m_MuValidator);
 
   m_SigmaValidator = new QDoubleValidator(m_Sigma_SizeDistribution);
   m_SigmaValidator->setLocale(loc);
-  m_SigmaValidator->setRange(0.0000, 5.0, 6);
+  m_SigmaValidator->setRange(0.0000, 10.0, 6);
   m_Sigma_SizeDistribution->setValidator(m_SigmaValidator);
 
   m_MinCutoffValidator = new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 6, m_MinSigmaCutOff);
@@ -354,16 +354,16 @@ bool StatsGenFeatureSizeWidget::validateMuSigma()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenFeatureSizeWidget::on_m_FeatureESD_editingFinished()
-{
-  QLocale loc = QLocale::system();
-  bool ok = false;
-  float esd = loc.toFloat(m_FeatureESD->text(), &ok);
-  float mu = std::log(esd);
-  m_EsdUpdated = true;
-  m_Mu_SizeDistribution->setText(loc.toString(mu));
-  m_EsdUpdated = false;
-}
+//void StatsGenFeatureSizeWidget::on_m_FeatureESD_editingFinished()
+//{
+//  QLocale loc = QLocale::system();
+//  bool ok = false;
+//  float esd = loc.toFloat(m_FeatureESD->text(), &ok);
+//  float mu = std::log(esd);
+//  m_EsdUpdated = true;
+//  m_Mu_SizeDistribution->setText(loc.toString(mu));
+//  m_EsdUpdated = false;
+//}
 
 // -----------------------------------------------------------------------------
 //
@@ -381,8 +381,9 @@ void StatsGenFeatureSizeWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
     QLocale loc = QLocale::system();
     m_FeatureESD->blockSignals(true);
     bool ok = false;
+    float sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
     float mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
-    float esd = std::exp(mu);
+    float esd = std::exp(mu + (sigma*sigma)/2.0f);
     m_FeatureESD->setText(loc.toString(esd));
     m_FeatureESD->blockSignals(false);
   }
@@ -408,6 +409,19 @@ void StatsGenFeatureSizeWidget::on_m_Sigma_SizeDistribution_textChanged(const QS
   {
     return;
   }
+
+  if(!m_EsdUpdated)
+  {
+    QLocale loc = QLocale::system();
+    m_FeatureESD->blockSignals(true);
+    bool ok = false;
+    float sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
+    float mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
+    float esd = std::exp(mu + (sigma*sigma)/2.0f);
+    m_FeatureESD->setText(loc.toString(esd));
+    m_FeatureESD->blockSignals(false);
+  }
+
   if(updateSizeDistributionPlot() < 0)
   {
     return;

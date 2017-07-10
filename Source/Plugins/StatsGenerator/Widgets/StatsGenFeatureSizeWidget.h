@@ -234,10 +234,12 @@ protected slots:
 
   void on_m_Mu_SizeDistribution_textChanged(const QString& text);
   void on_m_Sigma_SizeDistribution_textChanged(const QString& text);
+
   void on_m_MinSigmaCutOff_textChanged(const QString& text);
   void on_m_MaxSigmaCutOff_textChanged(const QString& text);
   void on_m_BinStepSize_valueChanged(double v);
-  void on_m_FeatureESD_editingFinished();
+
+  //void on_m_FeatureESD_editingFinished();
 
   /**
    * @brief plotPointSelected Slot to pick up signal from Qwt when a user clicks on the plot.
