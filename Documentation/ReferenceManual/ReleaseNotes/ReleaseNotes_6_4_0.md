@@ -11,7 +11,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.4.xx ##
+## Version 6.4.56 ##
 
 + CMP: Fixed issues related to packaging DREAM.3D, verbose error messages and supporting Visual Studio 2017
 + SIMPL: Added API to IDataArray to copyDataFrom() another IDataArray
