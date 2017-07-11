@@ -11,6 +11,17 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.4.xx ##
+
++ CMP: Fixed issues related to packaging DREAM.3D, verbose error messages and supporting Visual Studio 2017
++ SIMPL: Added API to IDataArray to copyDataFrom() another IDataArray
++ SIMPL: Disabled the NTFS permissions checking on Windows platforms which slowed down preflights unacceptably.
++ SIMPLView: Allow an external project to set the project version strings.
++ DREAM3D: Fixed incorrect calculation of the Mean of the Log-Normal distribution
++ DREAM3D: Allow negative Mu values in StatsGenerator
++ DREAM3D: StatsGenerator, The ESD value is now Read Only as it depends on both the Mu and Sigma parameters.
++ DREAM3D: PackPrimaryPhases and InsertPrecipitatePhases now have an option to save the ellipsoid parameters and other parameters that are used to generate the synthetic shape before that shape becomes voxelized.
+
 ## Version 6.4.39 ##
 
 + SIMPL Issue #64: Can not drag multiple filters in DREAM.3D Pipeline View
