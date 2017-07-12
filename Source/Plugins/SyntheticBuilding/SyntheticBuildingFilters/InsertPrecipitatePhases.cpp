@@ -1709,9 +1709,9 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
       if(m_PeriodicBoundaries == true)
       {
         // Perform mod arithmetic to ensure we are within the packing points range
-        col = col % m_PackingPoints[0];
-        row = row % m_PackingPoints[1];
-        plane = plane % m_PackingPoints[2];
+        col = col % m_XPoints;
+        row = row % m_YPoints;
+        plane = plane % m_ZPoints;
 
         if(col < 0)
         {
@@ -1778,9 +1778,9 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
       if(m_PeriodicBoundaries == true)
       {
         // Perform mod arithmetic to ensure we are within the packing points range
-        col = col % m_PackingPoints[0];
-        row = row % m_PackingPoints[1];
-        plane = plane % m_PackingPoints[2];
+		col = col % m_XPoints;
+		row = row % m_YPoints;
+		plane = plane % m_ZPoints;
 
         if(col < 0)
         {
