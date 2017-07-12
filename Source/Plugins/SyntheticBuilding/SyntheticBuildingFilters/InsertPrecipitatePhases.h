@@ -77,9 +77,9 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     enum class SaveMethod : EnumType
     {
-      SaveToNew = 0,
-      AppendToExisting = 1,
-      DoNotSave = 2
+      DoNotSave = 0,
+      SaveToNew = 1,
+      AppendToExisting = 1
     };
 
     SIMPL_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)

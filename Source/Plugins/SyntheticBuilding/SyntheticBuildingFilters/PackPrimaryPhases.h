@@ -72,9 +72,9 @@ public:
 
   enum class SaveMethod : EnumType
   {
+    DoNotSave = 2,
     SaveToNew = 0,
-    AppendToExisting = 1,
-    DoNotSave = 2
+    AppendToExisting = 1
   };
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
