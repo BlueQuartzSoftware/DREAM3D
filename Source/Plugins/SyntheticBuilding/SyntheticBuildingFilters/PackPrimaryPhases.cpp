@@ -2291,6 +2291,11 @@ float PackPrimaryPhases::checkFillingError(int32_t gadd, int32_t gremove, Int32A
       plane = pl[i];
       if(m_PeriodicBoundaries == true)
       {
+        // Perform mod arithmetic to ensure we are within the packing points range
+        col = col % m_PackingPoints[0];
+        row = row % m_PackingPoints[1];
+        plane = plane % m_PackingPoints[2];
+
         if(col < 0)
         {
           col = col + m_PackingPoints[0];
@@ -2373,6 +2378,11 @@ float PackPrimaryPhases::checkFillingError(int32_t gadd, int32_t gremove, Int32A
       plane = pl[i];
       if(m_PeriodicBoundaries == true)
       {
+        // Perform mod arithmetic to ensure we are within the packing points range
+        col = col % m_PackingPoints[0];
+        row = row % m_PackingPoints[1];
+        plane = plane % m_PackingPoints[2];
+
         if(col < 0)
         {
           col = col + m_PackingPoints[0];
