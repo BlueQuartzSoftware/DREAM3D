@@ -181,6 +181,20 @@ void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, Ph
     QVector<float> sigmas(static_cast<int>(arrays[3]->getNumberOfTuples()));
     ::memcpy(&(sigmas.front()), arrays[3]->getVoidPointer(0), sizeof(float) * sigmas.size());
 
+    // Data was stored as radians, convert back to angles
+    for(int e = 0; e < e1.size(); e++)
+    {
+      e1[e] = e1[0] * 180.0f / SIMPLib::Constants::k_Pif;
+    }
+    for(int e = 0; e < e2.size(); e++)
+    {
+      e2[e] = e2[0] * 180.0f / SIMPLib::Constants::k_Pif;
+    }
+    for(int e = 0; e < e3.size(); e++)
+    {
+      e3[e] = e3[0] * 180.0f / SIMPLib::Constants::k_Pif;
+    }
+
     if(e1.size() > 0)
     {
       // Load the data into the table model
