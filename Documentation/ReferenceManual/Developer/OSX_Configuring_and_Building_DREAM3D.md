@@ -1,7 +1,10 @@
 Configuring and Building DREAM.3D on Mac OS X {#osx_configure_and_build_dream3d}
 ========
+
 <a name="prerequisites">
+
 ## Prerequisites ##
+
 </a>
 
 These prerequisites need to be completed before configuring and building DREAM.3D.
@@ -9,7 +12,9 @@ These prerequisites need to be completed before configuring and building DREAM.3
 If you have already fulfilled all of these prerequisites, skip to the [Setting Up DREAM.3D for CMake Configuration](#cmake_config) section.
 
 <a name="compiler_suite">
+
 ### Install a Compiler Suite ###
+
 </a>
 
 A compatible compiler needs to be installed on your system to be able to build DREAM.3D.
@@ -17,7 +22,9 @@ A compatible compiler needs to be installed on your system to be able to build D
 For more information, please visit [Installing a Compiler Suite](@ref compiler_suite).
 
 <a name="downloading_dream3d">
+
 ### Download the Source Code for DREAM.3D ###
+
 </a>
 
 The source code for DREAM.3D must be downloaded using Git.
@@ -25,7 +32,9 @@ The source code for DREAM.3D must be downloaded using Git.
 For more information, please visit [Downloading the Source Code for DREAM.3D](@ref source_download).
 
 <a name="installing_sdk">
+
 ### Install the DREAM.3D SDK ###
+
 </a>
 
 Developers of DREAM.3D must use the Superbuild build system to install a DREAM.3D SDK.
@@ -33,7 +42,9 @@ Developers of DREAM.3D must use the Superbuild build system to install a DREAM.3
 For more information, please visit [Installing the DREAM.3D SDK](@ref sdk_install).
 
 <a name="cmake_config">
+
 ## Setting Up DREAM.3D for CMake Configuration ##
+
 </a>
 
 Once the SDK is installed, a file with the name DREAM3D_SDK.cmake can be found in the DREAM3D_SDK directory at */Users/Shared/DREAM3D_SDK/DREAM3D_SDK.cmake*. This file defines all the installed locations for all of the dependent libraries.
