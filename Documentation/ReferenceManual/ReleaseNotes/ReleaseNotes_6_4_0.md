@@ -11,7 +11,15 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.4.xx ##
+## Version 6.4.65 ##
+
++ DREAM3D Issue #702: Fix crashing bug in PackPrimaryPhases and InsertPrecipitates when Periodic boundaries are used.
++ DREAM3D Issue #703: Fix issue where Axis ODF values are not converted to Degrees after being
+read from a file.
++ DREAM3D Issue #704: Adjust the default to NOT save the Shape parameters during synthetic runs.
++ DREAM3D Issue #708: Fix issue where clicking create default data will also reset the ODF, MDF and Axis ODF in the StatsGenerator Widget.
+
+## Version 6.4.56 ##
 
 + CMP: Fixed issues related to packaging DREAM.3D, verbose error messages and supporting Visual Studio 2017
 + SIMPL: Added API to IDataArray to copyDataFrom() another IDataArray
