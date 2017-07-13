@@ -49,4 +49,8 @@ DREAM.3D and its libraries are compiled as a 64 bit application on all operating
 32-bit support has been removed and is no longer under active development. Assumptions are made during the development process that the application is running as a 64 bit application.
 
 ---
-**Next Page**: [Downloading the Source Code for DREAM.3D](@ref source_download).
+**Next Page (Windows)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_Windows.md">Making an SDK</a>
+
+**Next Page (OS X)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_OSX.md">Making an SDK</a>
+
+**Next Page (Linux)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_Linux.md">Making an SDK</a>

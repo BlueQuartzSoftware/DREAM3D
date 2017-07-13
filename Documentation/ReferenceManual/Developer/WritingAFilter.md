@@ -7,7 +7,9 @@ A DREAM.3D filter's major functions are [setupFilterParameters()](#setupFilterPa
 
 ## Major Functions ##
 <a name="setupFilterParameters">
+
 ### setupFilterParameters() ###
+
 </a>
 
 **setupFilterParameters()** is where the filter instantiates its filter parameters.  Filter parameters are used as a way to set values into properties either in the DREAM.3D user interface or some other algorithm.  To learn more about filter parameters and the different available types, see [Filter Parameters](#filterparameters).
@@ -75,7 +77,9 @@ SIMPL_NEW_DA_SELECTION_FP's additional parameter, *RequirementType*, determines 
 The order that the filter parameters are pushed into the FilterParameterVector determines the order that they appear in the DREAM.3D user interface.
 
 <a name="preflight">
+
 ### preflight() ###
+
 </a>
 
 DREAM.3D uses a process called **preflight** to check its current pipeline for errors and warnings whenever any of the filters or values in the current pipeline have changed.  The **preflight** process analyzes the current pipeline for setup errors and other mistakes before the user is given the option to execute the pipeline.
@@ -106,7 +110,9 @@ The **setInPreflight(false)** function marks the filter as no longer "in preflig
 Example 3 shows the necessary preflight code that should be written in every filter; developers can add extra code to the **preflight()** function if they wish.
 
 <a name="dataCheck">
+
 ### dataCheck() ###
+
 </a>
 
 The **dataCheck()** function is the section where the filter's developer can write all the sanity checks for the filter to make sure that the filter will run smoothly and without errors.  These checks will be executed when preflight runs on the filter, and errors and warnings will appear if any of the checks fail.
@@ -120,13 +126,17 @@ Some examples of common sanity checks:
 
 
 <a name="execute">
+
 ### execute() ###
+
 </a>
 
 The **execute()** function runs when the user actually starts the pipeline.  This function contains the code that actually accomplishes the filter's intended objective.
 
 <a name="getterfunctions">
+
 ### Getter Functions ###
+
 </a>
 
 
@@ -143,3 +153,6 @@ The **getter functions** allow the filter to procure various values for other ar
 **getBrandingString()**: The *Branding String* is a custom string that appears in the user interface to further label the filter.
 
 **getCompiledLibraryName()**: The *Compiled Library Name* (or the *Compiled Plugin Name* in the image above) is the name of the plugin group that this filter is categorized in.
+
+---
+**Previous Page**: [Creating a Filter](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/creating_a_filter.html)

@@ -1,4 +1,7 @@
 # Downloading the Source Code for DREAM.3D # {#source_download}
+
+**Note**: If you used the DREAM.3D Superbuild to build your SDK, you can skip this page.  The DREAM.3D Superbuild automatically downloads the source code for you.
+
 <a name="prerequisites">
 ## Prerequisites ##
 </a>
@@ -7,13 +10,13 @@ These prerequisites need to be completed before the source code for DREAM.3D is 
 
 If you have already fulfilled all of these prerequisites, skip to the [Downloading the Source Code](#downloading_src_code) section.
 
-<a name="compiler_suite">
-### Install a Compiler Suite ###
-</a>
+### Install Git ###
 
-A compatible compiler needs to be installed on your system to be able to build DREAM.3D.
+Git needs to be installed on your system to be able to clone repositories from Github.
 
-For more information, please visit [Installing a Compiler Suite](@ref compiler_suite).
+To install Git, please visit the [Git website](https://git-scm.com/downloads).
+
+**Note**: If using Windows, during the installation ensure that the "Windows command prompt" can use Git.
 
 <a name="downloading_src_code">
 ## Downloading the Source Code ##
@@ -103,6 +106,14 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
     /home/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPLView
 
 ---
-**Next Page**: [Installing the DREAM.3D SDK](@ref sdk_install).
+**Next Page (Windows)**: [Configuring and Building DREAM.3D on Windows](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/windows_configure_and_build_dream3d.html).
 
-**Previous Page**: [Installing a Compiler Suite](@ref compiler_suite).
+**Next Page (OS X)**: [Configuring and Building DREAM.3D on Mac OS X](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/osx_configure_and_build_dream3d.html).
+
+**Next Page (Linux)**: [Configuring and Building DREAM.3D on Linux](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/linux_configure_and_build_dream3d.html).
+
+**Previous Page (Windows)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_Windows.md">Making an SDK</a>
+
+**Previous Page (OS X)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_OSX.md">Making an SDK</a>
+
+**Previous Page (Linux)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_Linux.md">Making an SDK</a>
