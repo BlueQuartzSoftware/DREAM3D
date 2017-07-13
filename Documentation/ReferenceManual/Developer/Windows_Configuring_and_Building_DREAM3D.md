@@ -19,7 +19,7 @@ If you have already fulfilled all of these prerequisites, skip to the [Setting U
 
 A compatible compiler needs to be installed on your system to be able to build DREAM.3D.
 
-For more information, please visit [Installing a Compiler Suite](CompilerSuite.md).
+For more information, please visit [Installing a Compiler Suite](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/compiler_suite.html) (external link).
 
 <a name="downloading_dream3d">
 
@@ -29,7 +29,7 @@ For more information, please visit [Installing a Compiler Suite](CompilerSuite.m
 
 The source code for DREAM.3D must be downloaded using Git.
 
-For more information, please visit [Downloading the Source Code for DREAM.3D](SourceDownload.md).
+For more information, please visit [Downloading the Source Code for DREAM.3D](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/source_download.html) (external link).
 
 <a name="installing_sdk">
 
@@ -92,6 +92,6 @@ Make sure **Use default native compilers** is checked.
 Once you have configured DREAM.3D, simply build DREAM.3D in your preferred IDE, or open the Windows Command Line and build DREAM.3D without an IDE.
 
 ---
-**Next Page**: [Creating a Filter](@ref creating_a_filter).
+**Next Page**: [Creating a Filter](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/creating_a_filter.html) (external link).
 
-**Previous Page**: [Installing the DREAM.3D SDK](@ref sdk_install).
+**Previous Page**: [Making an SDK](https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making-an-SDK-(Windows).md) (external link).
