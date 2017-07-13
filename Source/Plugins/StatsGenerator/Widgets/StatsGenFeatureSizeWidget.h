@@ -2,6 +2,7 @@
 #define _statsGenFeatureSizeWidget_H_
 
 #include <cmath>
+#include <limits>
 
 #include <QtCore/QEvent>
 #include <QtCore/QObject>
@@ -51,16 +52,17 @@ public:
   StatsGenFeatureSizeWidget(QWidget* parent = 0);
   virtual ~StatsGenFeatureSizeWidget();
 
-  SIMPL_INSTANCE_PROPERTY(float, Mu)
-  SIMPL_INSTANCE_PROPERTY(float, Sigma)
-  SIMPL_INSTANCE_PROPERTY(float, MinCutOff)
-  SIMPL_INSTANCE_PROPERTY(float, MaxCutOff)
-  SIMPL_INSTANCE_PROPERTY(float, BinStep)
+  float getMu();
+  float getSigma();
+  float getMinCutOff();
+  float getMaxCutOff();
+  float getBinStep();
+
 
   SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
   SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
 
-  SIMPL_INSTANCE_PROPERTY(QwtArray<float>, BinSizes);
+  SIMPL_INSTANCE_PROPERTY(QwtArray<float>, BinSizes)
 
   /**
    * @brief plotSizeDistribution
@@ -185,7 +187,8 @@ public:
     m_MaxSigmaCutOff->blockSignals(false);
 
     // Set the Mu value which will force the update to the plots
-    on_m_Mu_SizeDistribution_textChanged(loc.toString(mu));
+    QString fromDouble = loc.toString(mu);
+    m_Mu_SizeDistribution->setText(fromDouble);
     int err = calculateNumberOfBins();
     if(err < 0)
     {

@@ -79,11 +79,6 @@
 // -----------------------------------------------------------------------------
 StatsGenFeatureSizeWidget::StatsGenFeatureSizeWidget(QWidget* parent)
 : QWidget(parent)
-, m_Mu(1.0f)
-, m_Sigma(0.1f)
-, m_MinCutOff(5.0f)
-, m_MaxCutOff(5.0f)
-, m_BinStep(0.5f)
 , m_PhaseIndex(-1)
 , m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
@@ -224,6 +219,8 @@ void StatsGenFeatureSizeWidget::userEditedPlotData()
 // -----------------------------------------------------------------------------
 void StatsGenFeatureSizeWidget::resetUI()
 {
+  QLocale loc = QLocale::system();
+
   m_Mu_SizeDistribution->setEnabled(true);
   m_Sigma_SizeDistribution->setEnabled(true);
   m_MinSigmaCutOff->setEnabled(true);
@@ -233,8 +230,8 @@ void StatsGenFeatureSizeWidget::resetUI()
   distributionTypeCombo->setEnabled(true);
 
   this->blockSignals(true);
-  m_Mu_SizeDistribution->setText("1.0");
-  m_Sigma_SizeDistribution->setText("0.1");
+  m_Mu_SizeDistribution->setText(loc.toString(StatsGeneratorConstants::k_Mu));
+  m_Sigma_SizeDistribution->setText(loc.toString(StatsGeneratorConstants::k_Sigma));
   m_MinSigmaCutOff->setText("5.0");
   m_MaxSigmaCutOff->setText("5.0");
   distributionTypeCombo->setCurrentIndex(0);
@@ -804,11 +801,6 @@ void StatsGenFeatureSizeWidget::plotSizeDistribution()
     return;
   }
 
-  m_Mu = mu;
-  m_Sigma = sigma;
-  m_MaxCutOff = maxCutOff;
-  m_MinCutOff = minCutOff;
-  m_BinStep = stepSize;
   m_BinSizes = binSizes;
 }
 
@@ -864,3 +856,79 @@ int StatsGenFeatureSizeWidget::getStatisticsData(PrimaryStatsData* primaryStatsD
 
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float StatsGenFeatureSizeWidget::getMu()
+{
+  QLocale loc = QLocale::system();
+  bool ok = false;
+  float f = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
+  if(!ok)
+  {
+    f = std::numeric_limits<float>::quiet_NaN();
+  }
+  return f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float StatsGenFeatureSizeWidget::getSigma()
+{
+  QLocale loc = QLocale::system();
+  bool ok = false;
+  float f = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
+  if(!ok)
+  {
+    f = std::numeric_limits<float>::quiet_NaN();
+  }
+  return f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float StatsGenFeatureSizeWidget::getMinCutOff()
+{
+  QLocale loc = QLocale::system();
+  bool ok = false;
+  float f = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
+  if(!ok)
+  {
+    f = std::numeric_limits<float>::quiet_NaN();
+  }
+  return f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float StatsGenFeatureSizeWidget::getMaxCutOff()
+{
+  QLocale loc = QLocale::system();
+  bool ok = false;
+  float f = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
+  if(!ok)
+  {
+    f = std::numeric_limits<float>::quiet_NaN();
+  }
+  return f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float StatsGenFeatureSizeWidget::getBinStep()
+{
+  QLocale loc = QLocale::system();
+  bool ok = false;
+  float f = loc.toFloat(m_BinStepSize->text(), &ok);
+  if(!ok)
+  {
+    f = std::numeric_limits<float>::quiet_NaN();
+  }
+  return f;
+}
+
