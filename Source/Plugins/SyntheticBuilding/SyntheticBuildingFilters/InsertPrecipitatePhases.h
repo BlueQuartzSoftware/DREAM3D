@@ -79,7 +79,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     {
       DoNotSave = 0,
       SaveToNew = 1,
-      AppendToExisting = 1
+      AppendToExisting = 2
     };
 
     SIMPL_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
