@@ -39,7 +39,7 @@ For more information, please visit [Downloading the Source Code for DREAM.3D](ht
 
 Developers of DREAM.3D must use the Superbuild build system to install a DREAM.3D SDK.
 
-For more information, please visit [Making an SDK](https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making-an-SDK-(OS-X).md) (external link).
+For more information, please visit <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_OSX.md">Making an SDK</a>.
 
 <a name="cmake_config">
 

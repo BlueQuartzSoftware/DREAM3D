@@ -112,8 +112,8 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
 **Next Page (Linux)**: [Configuring and Building DREAM.3D on Linux](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/linux_configure_and_build_dream3d.html).
 
-**Previous Page (Windows)**: [Making an SDK](https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making-an-SDK-(Windows).md)
+**Previous Page (Windows)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_Windows.md">Making an SDK</a>
 
-**Previous Page (OS X)**: [Making an SDK](https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making-an-SDK-(OS-X).md)
+**Previous Page (OS X)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_OSX.md">Making an SDK</a>
 
-**Previous Page (Linux)**: [Making an SDK](https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making-an-SDK-(Linux).md)
+**Previous Page (Linux)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_Linux.md">Making an SDK</a>
