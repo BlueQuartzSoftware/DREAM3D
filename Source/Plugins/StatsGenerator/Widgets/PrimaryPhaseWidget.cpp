@@ -636,38 +636,42 @@ void PrimaryPhaseWidget::updatePlots()
 
     progress.setValue(2);
     progress.setLabelText("[2/3] Calculating ODF Data ...");
-//    m_ODFWidget->updatePlots();
-    // Get any presets for the ODF/AxisODF/MDF also
-    getMicroPreset()->initializeODFTableModel(data);
-    SGODFTableModel* model = m_ODFWidget->tableModel();
-    if(model)
+
+    if(m_ResetData)
     {
-      model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
-                          data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
-    }
+      getMicroPreset()->initializeODFTableModel(data);
+      SGODFTableModel* model = m_ODFWidget->tableModel();
+      if(model)
+      {
+        model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                            data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+      }
 
-    // m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
-    getMicroPreset()->initializeMDFTableModel(data);
-    SGMDFTableModel* mdfModel = (m_ODFWidget->getMDFWidget()->tableModel());
-    if(mdfModel)
+      // m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
+      getMicroPreset()->initializeMDFTableModel(data);
+      SGMDFTableModel* mdfModel = (m_ODFWidget->getMDFWidget()->tableModel());
+      if(mdfModel)
+      {
+        mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
+      }
+
+      progress.setValue(3);
+      progress.setLabelText("[3/3] Calculating Axis ODF Data ...");
+      // m_AxisODFWidget->updatePlots();
+      getMicroPreset()->initializeAxisODFTableModel(data);
+      model = m_AxisODFWidget->tableModel();
+      if(model)
+      {
+        model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                            data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+      }
+    }
+    else
     {
-      mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
+      m_ODFWidget->updatePlots();
+      m_AxisODFWidget->updatePlots();
+      // Get any presets for the ODF/AxisODF/MDF also
     }
-
-    progress.setValue(3);
-    progress.setLabelText("[3/3] Calculating Axis ODF Data ...");
-    // m_AxisODFWidget->updatePlots();
-    getMicroPreset()->initializeAxisODFTableModel(data);
-    model = m_AxisODFWidget->tableModel();
-    if(model)
-    {
-      model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
-                          data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
-    }
-
-
-
-
     progress.setValue(4);
 
     setTabsPlotTabsEnabled(true);
@@ -702,8 +706,10 @@ void PrimaryPhaseWidget::on_m_ResetDataBtn_clicked()
   setupGui();
 
   setDataHasBeenGenerated(true); // Set this boolean to true so that data generation is triggered
+  m_ResetData = true;
   updatePlots();  // Regenerate all the default data
   emit dataChanged();
+  m_ResetData = false;
 }
 
 // -----------------------------------------------------------------------------
