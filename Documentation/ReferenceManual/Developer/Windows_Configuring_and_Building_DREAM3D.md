@@ -82,7 +82,7 @@ Make sure **Use default native compilers** is checked.
 8. When the configuration is finished, make sure that **CMAKE_BUILD_TYPE** is set to *Debug*.
 
 9. Press the **Configure** button in CMake again.  You may need to click **Configure** a few times until all the red highlights are gone.
-![](Images/cmake_after_config.png)
+![](Images/Win_cmake_after_config.png)
 
 10. Press the **Generate** button in CMake to generate the build files.
 
@@ -92,6 +92,6 @@ Make sure **Use default native compilers** is checked.
 Once you have configured DREAM.3D, simply build DREAM.3D in your preferred IDE, or open the Windows Command Line and build DREAM.3D without an IDE.
 
 ---
-**Next Page**: [Creating a Filter](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/creating_a_filter.html) (external link).
+**Next Page**: [Creating a Filter](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/creating_a_filter.html)
 
-**Previous Page**: [Making an SDK](https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making-an-SDK-(Windows).md) (external link).
+**Previous Page**: [Downloading the DREAM.3D Source Code](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/source_download.html)
