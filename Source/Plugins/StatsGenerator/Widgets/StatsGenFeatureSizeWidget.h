@@ -167,7 +167,7 @@ public:
     m_FeatureESD->blockSignals(true);
 
     m_Sigma_SizeDistribution->setText(loc.toString(sigma));
-    float esd = std::exp(mu);
+    float esd = std::exp(mu + (sigma * sigma) / 2.0f);
     m_FeatureESD->setText(loc.toString(esd));
 
     m_FeatureESD->blockSignals(false);
@@ -184,16 +184,13 @@ public:
     m_MaxSigmaCutOff->setText(QString::number(maxCutOff));
     m_MaxSigmaCutOff->blockSignals(false);
 
-    // Set the Text of the Mu QLineEdit which will cause all the plots to update
-    // because we are NOT blocking signals
-    m_Mu_SizeDistribution->setText(loc.toString(mu));
-
+    // Set the Mu value which will force the update to the plots
+    on_m_Mu_SizeDistribution_textChanged(loc.toString(mu));
     int err = calculateNumberOfBins();
     if(err < 0)
     {
 
     }
-
   }
 
 signals:
