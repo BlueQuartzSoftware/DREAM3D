@@ -19,7 +19,7 @@ If you have already fulfilled all of these prerequisites, skip to the [Setting U
 
 A compatible compiler needs to be installed on your system to be able to build DREAM.3D.
 
-For more information, please visit [Installing a Compiler Suite](@ref compiler_suite).
+For more information, please visit [Installing a Compiler Suite](CompilerSuite.md).
 
 <a name="downloading_dream3d">
 
@@ -29,7 +29,7 @@ For more information, please visit [Installing a Compiler Suite](@ref compiler_s
 
 The source code for DREAM.3D must be downloaded using Git.
 
-For more information, please visit [Downloading the Source Code for DREAM.3D](@ref source_download).
+For more information, please visit [Downloading the Source Code for DREAM.3D](SourceDownload.md).
 
 <a name="installing_sdk">
 
@@ -39,7 +39,7 @@ For more information, please visit [Downloading the Source Code for DREAM.3D](@r
 
 Developers of DREAM.3D must use the Superbuild build system to install a DREAM.3D SDK.
 
-For more information, please visit [Installing the DREAM.3D SDK](@ref sdk_install).
+For more information, please visit [Making an SDK](https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making-an-SDK-(Windows).md) (external link).
 
 <a name="cmake_config">
 
