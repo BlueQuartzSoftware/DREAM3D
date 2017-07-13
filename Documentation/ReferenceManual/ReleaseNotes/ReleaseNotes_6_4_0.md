@@ -11,8 +11,10 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.4.65 ##
+## Version 6.4.xx ##
 
++ SIMPL Issues #103: Some selection widgets do not allow selections if the filter parameter has Geometry::Type::Any as a requirement
++ SIMPL Issues #104: Pipelines with Exactly 11 filters will not load correctly 
 + DREAM3D Issue #702: Fix crashing bug in PackPrimaryPhases and InsertPrecipitates when Periodic boundaries are used.
 + DREAM3D Issue #703: Fix issue where Axis ODF values are not converted to Degrees after being
 read from a file.
