@@ -11,8 +11,10 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.4.xx ##
+## Version 6.4.78 ##
 
++ SIMPL: Add Cmd-W as a short cut to close the windows.
++ SIMPL: Detect missing PhaseName from StatsData JSON files and change the returned string to match the type of StatsData
 + SIMPL Issues #103: Some selection widgets do not allow selections if the filter parameter has Geometry::Type::Any as a requirement
 + SIMPL Issues #104: Pipelines with Exactly 11 filters will not load correctly 
 + DREAM3D Issue #702: Fix crashing bug in PackPrimaryPhases and InsertPrecipitates when Periodic boundaries are used.
@@ -21,7 +23,6 @@ read from a file.
 + DREAM3D Issue #704: Adjust the default to NOT save the Shape parameters during synthetic runs.
 + DREAM3D Issue #708: Fix issue where clicking create default data will also reset the ODF, MDF and Axis ODF in the StatsGenerator Widget.
 + DREAM3D: Fix bug when reading/writing Primary and Precipitate StatsData from/to .dream3d and .json files
-+ SIMPL: Detect missing PhaseName from StatsData JSON files and change the returned string to match the type of StatsData
 
 ## Version 6.4.56 ##
 
