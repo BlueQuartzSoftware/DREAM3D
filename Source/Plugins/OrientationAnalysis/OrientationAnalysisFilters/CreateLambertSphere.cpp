@@ -127,7 +127,7 @@ void CreateLambertSphere::dataCheck()
     notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return;
   }
-  QVector<size_t> cDims(1);
+  QVector<size_t> cDims = {1};
   DataContainerArray::Pointer dca = getDataContainerArray();
   DataContainer::Pointer m = dca->getPrereqDataContainer<AbstractFilter>(this, getMasterPatternImageDataPath().getDataContainerName(), false);
   if(nullptr == m.get() || getErrorCondition() < 0)
@@ -136,6 +136,13 @@ void CreateLambertSphere::dataCheck()
     QString msg("The data container was invalid. Please select a valid DataContainer.");
     notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return;
+  }
+
+  m_MasterPatternPtr = getDataContainerArray()->getPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(this, getMasterPatternImageDataPath(), cDims);
+  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_MasterPatternPtr.lock().get())
+  {
+    m_MasterPattern = m_MasterPatternPtr.lock()->getPointer(0);/* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
@@ -270,7 +277,9 @@ void CreateLambertSphere::execute()
   int64_t totalQuads = static_cast<int64_t>(imageDims[0] * imageDims[1]);
   QVector<size_t> tDims(1, totalQuads);
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->resizeAttributeArrays(tDims);
-  m_MasterPatternPtr = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getAttributeArrayAs<UInt8ArrayType>(getMasterPatternFaceDataArrayName());
+  AttributeMatrix::Pointer am = sm->getAttributeMatrix(getFaceAttributeMatrixName());
+
+  m_MasterPatternPtr = am->getAttributeArrayAs<UInt8ArrayType>(getMasterPatternFaceDataArrayName());
   m_MasterPattern = m_MasterPatternPtr.lock()->getPointer(0);
 
   SharedQuadList::Pointer quads = quadGeom->getQuads();
