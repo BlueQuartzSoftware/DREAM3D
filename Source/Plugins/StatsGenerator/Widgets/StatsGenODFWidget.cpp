@@ -955,6 +955,9 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   m_OdfBulkTableModel = new SGODFTableModel;
   m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
   m_OdfBulkTableModel->setInitialValues();
+  m_ODFTableView->setModel(m_OdfBulkTableModel);
+  QAbstractItemDelegate* idelegate = m_OdfBulkTableModel->getItemDelegate();
+  m_ODFTableView->setItemDelegate(idelegate);
 
 #if 1
   m_OdfBulkTableModel->blockSignals(true);
