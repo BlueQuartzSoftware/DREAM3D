@@ -184,32 +184,32 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     FOrientArrayType euler(3);
     if (m_AngleRepresentation == EulerAngles)
     {
-      euler[0] = tokens[0].toFloat(&ok);
-      euler[1] = tokens[1].toFloat(&ok);
-      euler[2] = tokens[2].toFloat(&ok);
-      weight = tokens[3].toFloat(&ok);
-      sigma = tokens[4].toFloat(&ok);
+      euler[0] = tokens[0].trimmed().toFloat(&ok);
+      euler[1] = tokens[1].trimmed().toFloat(&ok);
+      euler[2] = tokens[2].trimmed().toFloat(&ok);
+      weight = tokens[3].trimmed().toFloat(&ok);
+      sigma = tokens[4].trimmed().toFloat(&ok);
     }
     else if (m_AngleRepresentation == QuaternionAngles)
     {
       FOrientArrayType quat(4);
-      quat[0] = tokens[0].toFloat(&ok);
-      quat[1] = tokens[1].toFloat(&ok);
-      quat[2] = tokens[2].toFloat(&ok);
-      quat[3] = tokens[3].toFloat(&ok);
+      quat[0] = tokens[0].trimmed().toFloat(&ok);
+      quat[1] = tokens[1].trimmed().toFloat(&ok);
+      quat[2] = tokens[2].trimmed().toFloat(&ok);
+      quat[3] = tokens[3].trimmed().toFloat(&ok);
       FOrientTransformsType::qu2eu(quat, euler);
-      weight = tokens[4].toFloat(&ok);
-      sigma = tokens[5].toFloat(&ok);
+      weight = tokens[4].trimmed().toFloat(&ok);
+      sigma = tokens[5].trimmed().toFloat(&ok);
     }
     else if (m_AngleRepresentation == RodriguezAngles)
     {
       FOrientArrayType rod(4, 0.0);
-      rod[0] = tokens[0].toFloat(&ok);
-      rod[1] = tokens[1].toFloat(&ok);
-      rod[2] = tokens[2].toFloat(&ok);
+      rod[0] = tokens[0].trimmed().toFloat(&ok);
+      rod[1] = tokens[1].trimmed().toFloat(&ok);
+      rod[2] = tokens[2].trimmed().toFloat(&ok);
       FOrientTransformsType::ro2eu(rod, euler);
-      weight = tokens[3].toFloat(&ok);
-      sigma = tokens[4].toFloat(&ok);
+      weight = tokens[3].trimmed().toFloat(&ok);
+      sigma = tokens[4].trimmed().toFloat(&ok);
     }
 
     // Values in File are in Radians and the user wants them in Degrees
