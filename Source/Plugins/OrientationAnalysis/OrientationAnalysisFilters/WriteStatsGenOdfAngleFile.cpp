@@ -280,6 +280,18 @@ void WriteStatsGenOdfAngleFile::execute()
   std::vector<QFile*> oFiles;
 
   QFileInfo fi(getOutputFile());
+
+  QDir dir(fi.path());
+  if(!dir.mkpath("."))
+  {
+    QString ss;
+    ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
+    setErrorCondition(-45001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+
   QString absPath = fi.absolutePath();
   QString fname = fi.completeBaseName();
   QString suffix = fi.suffix();
