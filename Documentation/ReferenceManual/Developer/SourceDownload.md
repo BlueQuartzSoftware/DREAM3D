@@ -35,7 +35,9 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
     `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
 
-	Clone 3 other repositories to your **Workspace** directory that are required to build DREAM.3D:
+    Create and navigate to ExternalProjects directory inside DREAM3D directory
+
+	Clone 3 other repositories to your **ExternalProjects** directory.  These repositories are required to build DREAM.3D:
 
     `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
     `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
@@ -45,11 +47,11 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
 	/Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D
     
-    /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/CMP
+    /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/CMP
     
-    /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPL
+    /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/SIMPL
     
-    /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPLView
+    /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/SIMPLView
 
 #### Windows 8.1/10 ####
 1. Make a new directory called **Workspace** in your user directory.  The **Workspace** directory's path should be **C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace**.
@@ -62,7 +64,9 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
     `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
 
-	Clone 3 other repositories to your **Workspace** directory that are required to build DREAM.3D:
+    Create and navigate to ExternalProjects directory inside DREAM3D directory
+
+	Clone 3 other repositories to your **ExternalProjects** directory that are required to build DREAM.3D:
 
     `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
     `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
@@ -72,11 +76,11 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
     C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D
     
-    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\CMP
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D\\ExternalProjects\\CMP
     
-    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPL
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D\\ExternalProjects\\SIMPL
     
-    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\SIMPLView
+    C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace\\DREAM3D\\ExternalProjects\\SIMPLView
 
 #### Linux ####
 1. Make a new directory called **Workspace** in your home directory.  The **Workspace** directory's path should be **/home/[*YOUR-HOME-DIRECTORY*]/Workspace**.
@@ -89,7 +93,9 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
     `git clone -b develop https://www.github.com/bluequartzsoftware/DREAM3D`
 
-	Clone 3 other repositories to your **Workspace** directory that are required to build DREAM.3D:
+	Create and navigate to ExternalProjects directory inside DREAM3D directory
+
+    Clone 3 other repositories to your **ExternalProjects** directory.  These repositories are required to build DREAM.3D:
 
     `git clone -b develop https://www.github.com/bluequartzsoftware/CMP`
     `git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL`
@@ -99,11 +105,11 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
 
 	/home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D
     
-    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/CMP
+    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/CMP
     
-    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPL
+    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/SIMPL
     
-    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/SIMPLView
+    /home/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/SIMPLView
 
 ---
 **Next Page (Windows)**: [Configuring and Building DREAM.3D on Windows](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/windows_configure_and_build_dream3d.html).

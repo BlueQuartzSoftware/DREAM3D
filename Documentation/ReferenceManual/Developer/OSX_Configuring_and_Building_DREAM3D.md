@@ -21,16 +21,6 @@ A compatible compiler needs to be installed on your system to be able to build D
 
 For more information, please visit [Installing a Compiler Suite](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/compiler_suite.html) (external link).
 
-<a name="downloading_dream3d">
-
-### Download the Source Code for DREAM.3D ###
-
-</a>
-
-The source code for DREAM.3D must be downloaded using Git.
-
-For more information, please visit [Downloading the Source Code for DREAM.3D](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/source_download.html) (external link).
-
 <a name="installing_sdk">
 
 ### Install the DREAM.3D SDK ###
@@ -127,4 +117,4 @@ Once you have configured DREAM.3D, simply build DREAM.3D in your preferred IDE, 
 ---
 **Next Page**: [Creating a Filter](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/creating_a_filter.html)
 
-**Previous Page**: [Downloading the DREAM.3D Source Code](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/source_download.html)
+**Previous Page**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_OSX.md">Making an SDK</a>
