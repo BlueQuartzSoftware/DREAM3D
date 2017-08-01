@@ -11,6 +11,22 @@
 #include "SIMPLib/DataContainers/DataArrayPath.h"
 
 
+
+#define ADD_NEW_FILTER_PARAMETER(Params, Class, Desc, Prop, Category, Type)                                                                                                                                             \
+  Class::SetterCallbackType _##Prop##_ParamSetter = [this](Type i) { return this->set##Prop(i); };                                                                                                       \
+  Class::GetterCallbackType _##Prop##_ParamGetter = [this] { return this->get##Prop(); };                                                                                                                \
+  Params.push_back(Class::New(Desc, #Prop, get##Prop(), Category, _##Prop##_ParamSetter, _##Prop##_ParamGetter));
+
+#define ADD_DOUBLE_PARAMETER(Params, Desc, Prop, Category) \
+  ADD_NEW_FILTER_PARAMETER(Params, DoubleParameter, Desc, Prop, Category, double)
+
+//#define ADD_INT32_PARAMETER(Params, Desc, Prop) \
+//  ADD_NEW_FILTER_PARAMETER(Params, Int32Parameter, Desc, Prop, int)
+
+//#define ADD_DATAARRAYPATH_PARAMETER(Params, Desc, Prop) \
+//  ADD_NEW_FILTER_PARAMETER(Params, DataArrayPathParameter, Desc, Prop, DataArrayPath)
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -19,11 +35,29 @@ namespace Detail
 const QString FilterName("FilterName");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 class IFilterParameter
 {
 public:
   SIMPL_SHARED_POINTERS(IFilterParameter)
-  IFilterParameter()
+
+  using EnumType = unsigned int;
+
+  enum class Category : EnumType
+  {
+    Parameter = 0,
+    RequiredArray = 1,
+    CreatedArray = 2,
+    Uncategorized = 3
+  };
+
+  IFilterParameter(const QString& humanLabel, const QString& propertyName, Category category, int groupIndex)
+    : m_HumanLabel(humanLabel)
+    , m_PropertyName(propertyName)
+    , m_Category(category)
+    , m_GroupIndex(groupIndex)
   {
   }
 
@@ -31,88 +65,80 @@ public:
   {
   }
 
-  virtual void parseJsonObject(const QJsonObject& json) = 0;
-  virtual void toJsonObject(QJsonObject& json) = 0;
+  SIMPL_INSTANCE_STRING_PROPERTY(HumanLabel)
+  SIMPL_INSTANCE_STRING_PROPERTY(PropertyName)
+  SIMPL_INSTANCE_PROPERTY(Category, Category)
+  SIMPL_INSTANCE_PROPERTY(int, GroupIndex)
+
+
+  virtual void readJson(const QJsonObject& json) = 0;
+  virtual void writeJson(QJsonObject& json) = 0;
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class IntParameter : public IFilterParameter
+class Int32Parameter : public IFilterParameter
 {
 
 public:
-  SIMPL_SHARED_POINTERS(IntParameter)
+  SIMPL_SHARED_POINTERS(Int32Parameter)
 
   using SetterCallbackType = std::function<void(int)>;
   using GetterCallbackType = std::function<int(void)>;
 
 
-  static Pointer New(const QString& property,
-              SetterCallbackType setterCallback,
-
-              GetterCallbackType getterCallback)
+  static Pointer New(const QString& humanLabel,
+                     const QString& propertyName,
+                     const int& defaultValue,
+                     Category category,
+                     SetterCallbackType setterCallback,
+                     GetterCallbackType getterCallback,
+                     int groupIndex = -1)
   {
-    Pointer sharedPtr(new IntParameter(property, setterCallback, getterCallback));
+    Pointer sharedPtr(new Int32Parameter(humanLabel, propertyName, defaultValue, category, setterCallback, getterCallback, groupIndex));
     return sharedPtr;
   }
 
+  SIMPL_INSTANCE_PROPERTY(int, DefaultValue)
 
-//  template<typename Setter,
-//  typename std::enable_if <std::is_same<Setter, SetterCallbackType>::value == true>::type* = nullptr, typename Getter>
-//  static Pointer New(const QString& property, Setter setterCallback, Getter getterCallback)
-//  {
-//    static_assert(std::is_copy_constructible<Setter>::value, "Compile Error");
-//    Pointer sharedPtr(new IntParameter(property, setterCallback, getterCallback));
-//    return sharedPtr;
-//  }
-
-
-  SetterCallbackType getSetterCallback() { return m_SetterCallback; }
-  GetterCallbackType getGetterCallback() { return m_GetterCallback; }
-
-  void parseJsonObject(const QJsonObject& json)
+  SetterCallbackType getSetterCallback()
   {
-    QJsonValue jsonValue = json[m_Key];
+    return m_SetterCallback;
+  }
+  GetterCallbackType getGetterCallback()
+  {
+    return m_GetterCallback;
+  }
+
+  void readJson(const QJsonObject& json)
+  {
+    QJsonValue jsonValue = json[getPropertyName()];
     if(!jsonValue.isUndefined())
     {
       m_SetterCallback(jsonValue.toInt(0.0));
     }
   }
 
-  void toJsonObject(QJsonObject& json)
+  void writeJson(QJsonObject& json)
   {
-    json[m_Key] = m_GetterCallback();
+    json[getPropertyName()] = m_GetterCallback();
   }
 
 protected:
-  IntParameter(const QString& key, SetterCallbackType setterCallback, GetterCallbackType getterCallback)
-  : m_Key(key)
+  Int32Parameter(const QString& humanLabel, const QString& propertyName, int defaultValue, Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback, int groupIndex)
+  : IFilterParameter(humanLabel, propertyName, category, groupIndex)
+  , m_DefaultValue(defaultValue)
   , m_SetterCallback(setterCallback)
   , m_GetterCallback(getterCallback)
   {
   }
 
 private:
-  QString m_Key;
+
   SetterCallbackType m_SetterCallback;
   GetterCallbackType m_GetterCallback;
 };
-
-
-#define ADD_NEW_FILTER_PARAMETER(Params, Class, Var, Type)\
-    Class::SetterCallbackType _##Var##_ParamSetter = [this](Type i){return this->set##Var(i);};\
-    Class::GetterCallbackType _##Var##_ParamGetter = [this]{return this->get##Var();};\
-    Params.push_back(Class::New(#Var, _##Var##_ParamSetter, _##Var##_ParamGetter));\
-
-#define ADD_DOUBLE_PARAMETER(Params, Var)\
-  ADD_NEW_FILTER_PARAMETER(Params, DoubleParameter, Var, double)
-
-#define ADD_INT32_PARAMETER(Params, Var)\
-  ADD_NEW_FILTER_PARAMETER(Params, IntParameter, Var, int)
-
-#define ADD_DATAARRAYPATH_PARAMETER(Params, Var)\
-  ADD_NEW_FILTER_PARAMETER(Params, DataArrayPathParameter, Var, DataArrayPath)
 
 // -----------------------------------------------------------------------------
 //
@@ -125,55 +151,55 @@ public:
   using SetterCallbackType = std::function<void(double)>;
   using GetterCallbackType = std::function<double(void)>;
 
-  static Pointer New(const QString& property, SetterCallbackType setterCallback, GetterCallbackType getterCallback)
+  static Pointer New(const QString& humanLabel,
+                     const QString& propertyName,
+                     const double& defaultValue,
+                     Category category,
+                     SetterCallbackType setterCallback,
+                     GetterCallbackType getterCallback,
+                     int groupIndex = -1)
   {
-    Pointer sharedPtr(new DoubleParameter(property, setterCallback, getterCallback));
+    Pointer sharedPtr(new DoubleParameter(humanLabel, propertyName, defaultValue, category, setterCallback, getterCallback, groupIndex));
     return sharedPtr;
   }
 
-
-//  template<typename Setter
-// // ,typename std::enable_if<std::is_same<Setter, SetterCallbackType>::value == true>::type* = nullptr
-//  ,typename Getter
-// // ,typename std::enable_if<std::is_same<Getter, GetterCallbackType>::value == true>::type* = nullptr
-// >
-//  static Pointer New(const QString property, Setter setterCallback, Getter getterCallback)
-//  {
-//    static_assert(std::is_same<Setter, SetterCallbackType>::value == true, "class DoubleParameter not passed a compatible SetterCallbackType");
-//    static_assert(std::is_same<Getter, GetterCallbackType>::value == true, "class DoubleParameter not passed a compatible GetterCallbackType");
-//    Pointer sharedPtr(new DoubleParameter(property, setterCallback, getterCallback));
-//    return sharedPtr;
-//  }
+  SIMPL_INSTANCE_PROPERTY(double, DefaultValue)
 
 
-
-  SetterCallbackType getSetterCallback() { return m_SetterCallback; }
-  GetterCallbackType getGetterCallback() { return m_GetterCallback; }
-
-  void parseJsonObject(const QJsonObject& json)
+  SetterCallbackType getSetterCallback()
   {
-    QJsonValue jsonValue = json[m_Key];
+    return m_SetterCallback;
+  }
+  GetterCallbackType getGetterCallback()
+  {
+    return m_GetterCallback;
+  }
+
+  void readJson(const QJsonObject& json)
+  {
+    QJsonValue jsonValue = json[getPropertyName()];
     if(!jsonValue.isUndefined() && jsonValue.isDouble())
     {
       m_SetterCallback(jsonValue.toDouble(0.0));
     }
   }
 
-  void toJsonObject(QJsonObject& json)
+  void writeJson(QJsonObject& json)
   {
-    json[m_Key] = m_GetterCallback();
+    json[getPropertyName()] = m_GetterCallback();
   }
 
 protected:
-  DoubleParameter(const QString& key, SetterCallbackType setterCallback, GetterCallbackType getterCallback)
-  : m_Key(key)
+  DoubleParameter(const QString& humanLabel, const QString& propertyName, double defaultValue, Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback, int groupIndex)
+  : IFilterParameter(humanLabel, propertyName, category, groupIndex)
+  , m_DefaultValue(defaultValue)
   , m_SetterCallback(setterCallback)
   , m_GetterCallback(getterCallback)
   {
   }
 
 private:
-  QString m_Key;
+
   SetterCallbackType m_SetterCallback;
   GetterCallbackType m_GetterCallback;
 };
@@ -189,19 +215,34 @@ public:
   using SetterCallbackType = std::function<void(DataArrayPath)>;
   using GetterCallbackType = std::function<DataArrayPath(void)>;
 
-  static Pointer New(const QString& property, SetterCallbackType setterCallback, GetterCallbackType getterCallback)
+  static Pointer New(const QString& humanLabel,
+                     const QString& propertyName,
+                     const DataArrayPath& defaultValue,
+                     Category category,
+                     SetterCallbackType setterCallback,
+                     GetterCallbackType getterCallback,
+                     int groupIndex = -1)
   {
-    Pointer sharedPtr(new DataArrayPathParameter(property, setterCallback, getterCallback));
+    Pointer sharedPtr(new DataArrayPathParameter(humanLabel, propertyName, defaultValue, category, setterCallback, getterCallback, groupIndex));
     return sharedPtr;
   }
 
-  SetterCallbackType getSetterCallback() { return m_SetterCallback; }
-  GetterCallbackType getGetterCallback() { return m_GetterCallback; }
+  SIMPL_INSTANCE_PROPERTY(DataArrayPath, DefaultValue)
 
-  void parseJsonObject(const QJsonObject& json)
+
+  SetterCallbackType getSetterCallback()
   {
-    QJsonValue jsonValue = json[m_Key];
-    if(!jsonValue.isUndefined() && jsonValue.isObject())
+    return m_SetterCallback;
+  }
+  GetterCallbackType getGetterCallback()
+  {
+    return m_GetterCallback;
+  }
+
+  void readJson(const QJsonObject& json)
+  {
+    QJsonValue jsonValue = json[getPropertyName()];
+    if(!jsonValue.isUndefined() && jsonValue.isObject() && m_SetterCallback)
     {
       DataArrayPath dap;
       QJsonObject obj = jsonValue.toObject();
@@ -210,24 +251,112 @@ public:
     }
   }
 
-  void toJsonObject(QJsonObject& json)
+  void writeJson(QJsonObject& json)
   {
-    json[m_Key] = m_GetterCallback().toJsonObject();
+    if(m_GetterCallback)
+    {
+      json[getPropertyName()] = m_GetterCallback().toJsonObject();
+    }
   }
 
 protected:
-  DataArrayPathParameter(const QString& key, SetterCallbackType setterCallback, GetterCallbackType getterCallback)
-  : m_Key(key)
+  DataArrayPathParameter(const QString& humanLabel, const QString& propertyName, const DataArrayPath &defaultValue, Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback, int groupIndex)
+  : IFilterParameter(humanLabel, propertyName, category, groupIndex)
+  , m_DefaultValue(defaultValue)
   , m_SetterCallback(setterCallback)
   , m_GetterCallback(getterCallback)
   {
   }
 
 private:
-  QString m_Key;
+
   SetterCallbackType m_SetterCallback;
   GetterCallbackType m_GetterCallback;
 };
+
+// -----------------------------------------------------------------------------
+// This section of Macros allows each FilterParameter subclass to create a macro
+// or set of macros that can lessen the amout of code that needs to be written
+// in order to create an instantiation of the subclass. The technique used here
+// is the 'paired, sliding list' of macro parameters that also makes use of
+// __VA__ARGS__
+// -----------------------------------------------------------------------------
+
+#define SIMPL_BIND_SETTER(Class, Type, Prop)\
+  Class::SetterCallbackType _##Prop##_ParamSetter = [this](Type i) { return this->set##Prop(i); };                                                                                                       \
+
+#define SIMPL_BIND_GETTER(Class, Type, Prop)\
+  Class::GetterCallbackType _##Prop##_ParamGetter = [this] { return this->get##Prop(); };                                                                                                                \
+
+// Define overrides that can be used by the expansion of our main macro.
+// Each subclass can define a macro that takes up to nine (9) arguments
+// to the constructor. These macros support a minimum of 4 arguments.
+
+#define SIMPL_NEW_FP_9(Class, Type, Desc, Prop, Category, Index, A, B, C, D, E)\
+  Class::New(Desc, #Prop, get##Prop(), Category, \
+  [this](Type i) { return this->set##Prop(i); }, \
+  [this] { return this->get##Prop(); },\
+  Index, A, B, C, D, E)
+
+#define SIMPL_NEW_FP_8(Class, Type, Desc, Prop, Category, Index, A, B, C, D)\
+  Class::New(Desc, #Prop, get##Prop(), Category, \
+  [this](Type i) { return this->set##Prop(i); }, \
+  [this] { return this->get##Prop(); },\
+  Index, A, B, C, D)
+
+#define SIMPL_NEW_FP_7(Class, Type, Desc, Prop, Category, Index, A, B, C)\
+  Class::New(Desc, #Prop, get##Prop(), Category, \
+  [this](Type i) { return this->set##Prop(i); }, \
+  [this] { return this->get##Prop(); },\
+  Index, A, B, C)
+
+#define SIMPL_NEW_FP_6(Class, Type, Desc, Prop, Category, Index, A, B)\
+  Class::New(Desc, #Prop, get##Prop(), Category, \
+  [this](Type i) { return this->set##Prop(i); }, \
+  [this] { return this->get##Prop(); },\
+  Index, A, B)
+
+#define SIMPL_NEW_FP_5(Class, Type, Desc, Prop, Category, Index, A)\
+  Class::New(Desc, #Prop, get##Prop(), Category, \
+  [this](Type i) { return this->set##Prop(i); }, \
+  [this] { return this->get##Prop(); },\
+  Index, A)
+
+#define SIMPL_NEW_FP_4(Class, Type, Desc, Prop, Category, Index)\
+  Class::New(Desc, #Prop, get##Prop(), Category, \
+  [this](Type i) { return this->set##Prop(i); }, \
+  [this] { return this->get##Prop(); },\
+  Index)
+
+#define SIMPL_NEW_FP_3(Class, Type, Desc, Prop, Category)\
+  Class::New(Desc, #Prop, get##Prop(), Category, \
+  [this](Type i) { return this->set##Prop(i); }, \
+  [this] { return this->get##Prop(); }\
+  )
+
+
+/**
+ * @brief This macro is needed for Visual Studio due to differences of VAR_ARGS when
+ * passed to another macro that results in a new macro that needs expansion.
+ */
+#define SIMPL_EXPAND( x ) x
+
+// -----------------------------------------------------------------------------
+// Define a macro that uses the "paired, sliding arg list"
+// technique to select the appropriate override.
+#define _FP_GET_OVERRIDE(A, B, C, D, E, F, G, H, I, NAME, ...) NAME
+
+
+#define SIMPL_NEW_INT32_FP(...) \
+  SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, \
+  SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4, SIMPL_NEW_FP_3)\
+  (Int32Parameter, int, __VA_ARGS__))
+
+
+#define SIMPL_NEW_DOUBLE_FP(...) \
+  SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, \
+  SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4, SIMPL_NEW_FP_3)\
+  (DoubleParameter, double, __VA_ARGS__))
 
 // -----------------------------------------------------------------------------
 //
@@ -246,34 +375,14 @@ public:
 
   void setupParameters()
   {
-//    IntParameter::SetterCallbackType intParamSetter = [this](int i){return this->setParameter1(i);};
-//    IntParameter::GetterCallbackType intParamGetter = [this]{return this->getParameter1();};
+    std::vector<IFilterParameter::Pointer> params;
+    int groupIndex = -1;
 
+    params.push_back( SIMPL_NEW_INT32_FP("Parameter 1", Parameter1, IFilterParameter::Category::Parameter) );
+    params.push_back( SIMPL_NEW_DOUBLE_FP("Parameter 2", Parameter2, IFilterParameter::Category::Parameter) );
+    params.push_back( SIMPL_NEW_INT32_FP("Index", Index, IFilterParameter::Category::Parameter, groupIndex) );
 
-//    IntParameter::Pointer intParam = IntParameter::New("Parameter1", intParamSetter, intParamGetter);
-//    m_FilterParameters.push_back(intParam);
-
-//    DoubleParameter::SetterCallbackType dParamSetter = [this](double i){return this->setParameter2(i);};
-//    DoubleParameter::GetterCallbackType dParamGetter = [this]{return this->getParameter2();};
-//    m_FilterParameters.push_back(DoubleParameter::New("Parameter2",dParamSetter, dParamGetter));
-
-    ADD_INT32_PARAMETER(m_FilterParameters, Parameter1);
-    ADD_DOUBLE_PARAMETER(m_FilterParameters, Parameter2);
-    ADD_INT32_PARAMETER(m_FilterParameters, Index);
-    ADD_DATAARRAYPATH_PARAMETER(m_FilterParameters, FeatureIdsPath)
-
-//    m_FilterParameters.push_back(DoubleParameter::New
-//          ("Parameter2",
-//          [this](int i){return this->setParameter1(i);},
-//          [this]{return this->getParameter1();}
-//          )
-//         );
-
-
-
-    //  m_FilterParameters.push_back(IntParameter::New("Parameter1", SIMPL_BIND_SETTER(Filter, this, Parameter1), SIMPL_BIND_GETTER(Filter, this, Parameter1)));
-    //  m_FilterParameters.push_back(DoubleParameter::New("Parameter2", SIMPL_BIND_SETTER(Filter, this, Parameter2), SIMPL_BIND_GETTER(Filter, this, Parameter2)));
-    //  m_FilterParameters.push_back(DataArrayPathParameter::New("FeatureIdsPath", SIMPL_BIND_SETTER(Filter, this, FeatureIdsPath), SIMPL_BIND_GETTER(Filter, this, FeatureIdsPath)));
+    m_FilterParameters = params;
   }
 
   SIMPL_FILTER_PARAMETER(int, Index)
@@ -289,7 +398,7 @@ public:
       QJsonObject obj = jsonValue.toObject();
       for(auto const& parameter : m_FilterParameters)
       {
-        parameter->parseJsonObject(obj);
+        parameter->readJson(obj);
       }
     }
   }
@@ -300,7 +409,7 @@ public:
     obj["FilterName"] = getName();
     for(auto const& parameter : m_FilterParameters)
     {
-      parameter->toJsonObject(obj);
+      parameter->writeJson(obj);
     }
     root.insert(QString::number(getIndex()), obj);
   }
@@ -309,7 +418,8 @@ public:
   {
     out << "m_P1: " << m_Parameter1 << std::endl;
     out << "m_P2: " << m_Parameter2 << std::endl;
-    out << "FeatureIds Path: " << m_FeatureIdsPath.serialize("|").toStdString() << std::endl;
+    out << "m_Index: " << m_Index << std::endl;
+    out << "FeatureIds Path: " << m_FeatureIdsPath.serialize("/").toStdString() << std::endl;
   }
 
   QString getName()
@@ -319,7 +429,7 @@ public:
 
   std::vector<IFilterParameter::Pointer> getFilterParameters()
   {
-   return m_FilterParameters;
+    return m_FilterParameters;
   }
 
 private:
@@ -329,63 +439,81 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SimulateWidget(Filter* filter)
+void IntFilterParameterWidget(IFilterParameter* parameter, Filter* filter)
 {
+  if(parameter)
+  {
+    qDebug() << "Human Label: " << parameter->getHumanLabel();
+    qDebug() << "Property Name: " << parameter->getPropertyName();
+  }
 
-  //Lets assume that we have a Widget that has a text box that holds an integer
+  // Lets assume that we have a Widget that has a text box that holds an integer
   // we would need to convert that to an actual integer value:
   bool ok = false;
   QString intTextField("999");
   int value = intTextField.toInt(&ok, 10);
-  if(!ok) {
+  if(!ok)
+  {
     qDebug() << "Error converting text to integer";
   }
 
   // If this simulated widgets knows the "type" of data, i.e., we are collecting
   // an integer from the user, then we know what we should be casting the FilterParameter.
-  IntParameter::Pointer filtParam = std::dynamic_pointer_cast<IntParameter>(filter->getFilterParameters().at(0));
-  if(nullptr != filtParam.get())
+  Int32Parameter* filtParam = dynamic_cast<Int32Parameter*>(parameter);
+  if(nullptr != filtParam)
   {
-    filtParam->getSetterCallback()(value);
+    Int32Parameter::SetterCallbackType setter = filtParam->getSetterCallback();
+    if(setter)
+    {
+      setter(value);
+    }
   }
-
-
+  else
+  {
+    qDebug() << "Filter Parameter is NOT Int32Parameter";
+  }
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-    Filter filter;
-    filter.printValues(std::cout);
-    std::vector<IFilterParameter::Pointer> params = filter.getFilterParameters();
+  Filter filter;
+  filter.printValues(std::cout);
+  std::vector<IFilterParameter::Pointer> params = filter.getFilterParameters();
 
-    IntParameter::Pointer intParam = std::dynamic_pointer_cast<IntParameter>(params.at(0));
-    if(nullptr != intParam.get())
-    {
-      intParam->getSetterCallback()(234234234);
-    }
+  Int32Parameter::Pointer intParam = std::dynamic_pointer_cast<Int32Parameter>(params.at(0));
+  if(nullptr != intParam.get())
+  {
+    intParam->getSetterCallback()(234234234);
+  }
 
-    DoubleParameter::Pointer dblParam = std::dynamic_pointer_cast<DoubleParameter>(params.at(1));
-    if(nullptr != dblParam.get())
-    {
-      dblParam->getSetterCallback()(6.66666);
-    }
+  DoubleParameter::Pointer dblParam = std::dynamic_pointer_cast<DoubleParameter>(params.at(1));
+  if(nullptr != dblParam.get())
+  {
+    dblParam->getSetterCallback()(6.66666);
+  }
 
-    dblParam = std::dynamic_pointer_cast<DoubleParameter>(params.at(2));
-    if(nullptr != dblParam.get())
-    {
-      dblParam->getSetterCallback()(6.66666);
-    }
+  dblParam = std::dynamic_pointer_cast<DoubleParameter>(params.at(2));
+  if(nullptr != dblParam.get())
+  {
+    dblParam->getSetterCallback()(6.66666);
+  }
 
-    filter.printValues(std::cout);
-
-  SimulateWidget(&filter);
   filter.printValues(std::cout);
 
+  IntFilterParameterWidget(intParam.get(), &filter);
+  filter.printValues(std::cout);
+
+  IntFilterParameterWidget(dblParam.get(), &filter);
+  filter.printValues(std::cout);
+
+
+  QJsonObject root;
+  filter.writeParameters(root);
+
+  qDebug() << root;
 
   return 0;
 }
