@@ -321,8 +321,9 @@ void CalculateArrayHistogram::execute()
 
   if(overflow > 0)
   {
-    QString msg = QString("%1 values were not catagorized into a bin.").arg(overflow);
-    notifyWarningMessage(getHumanLabel(), msg, 0);
+    setWarningCondition(-2000);
+    QString ss = QString("%1 values were not catagorized into a bin.").arg(overflow);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

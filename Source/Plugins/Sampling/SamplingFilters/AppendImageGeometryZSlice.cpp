@@ -294,8 +294,8 @@ void AppendImageGeometryZSlice::execute()
     else
     {
       QString ss = QObject::tr("Data Array '%1' does not exist in the Input Cell AttributeMatrix.").arg(*iter);
-      setErrorCondition(0);
-      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      setWarningCondition(-8203);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
   }
 

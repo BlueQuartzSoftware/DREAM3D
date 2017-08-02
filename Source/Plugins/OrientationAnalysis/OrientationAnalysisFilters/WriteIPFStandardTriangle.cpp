@@ -141,8 +141,9 @@ void WriteIPFStandardTriangle::dataCheck()
 
     if(parentPath.exists() == false)
     {
+      setWarningCondition(-1002);
         ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-        notifyWarningMessage(getHumanLabel(), ss, -1);
+        notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
 
     if(ext.isEmpty())

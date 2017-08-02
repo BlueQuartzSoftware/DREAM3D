@@ -683,14 +683,15 @@ void InsertPrecipitatePhases::load_precipitates()
   if(!inFile)
   {
     QString ss = QObject::tr("Failed to open: %1").arg(getPrecipInputFile());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   int32_t numPrecips = 0;
   inFile >> numPrecips;
   if(0 == numPrecips)
   {
-    notifyWarningMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", -600);
+    setWarningCondition(-1001);
+    notifyWarningMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", getWarningCondition());
     return;
   }
 
@@ -1121,7 +1122,8 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   //          precipitates and the target statistics precipitate fraction is
   //          greater than 0. This Filter will run without trying to match
   //          the precipitate fraction");
-  //          notifyWarningMessage(getHumanLabel(), msg, -5010);
+  //          setWarningCondition(-5010);
+  //          notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
   //        }
 
   //        if (availablePointsCount > 0)
@@ -1236,7 +1238,8 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                     "fraction is greater than 0. This Filter will run without "
                     "trying to match the "
                     "precipitate fraction");
-        notifyWarningMessage(getHumanLabel(), msg, -5010);
+        setWarningCondition(-5010);
+        notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
       }
 
       if(m_AvailablePointsCount > 0)
@@ -1440,7 +1443,8 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                         "greater than 0. This Filter will run without trying "
                         "to match the "
                         "precipitate fraction");
-            notifyWarningMessage(getHumanLabel(), msg, -5010);
+            setWarningCondition(-5010);
+            notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
           }
 
           if(m_AvailablePointsCount > 0)

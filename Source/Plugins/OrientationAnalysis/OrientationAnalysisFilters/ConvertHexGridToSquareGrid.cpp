@@ -139,8 +139,9 @@ void ConvertHexGridToSquareGrid::dataCheck()
   }
   else if(dir.exists() == false)
   {
+    setWarningCondition(-1004);
     QString ss = QObject::tr("The output directory path does not exist. DREAM.3D will attempt to create this path during execution");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   if(m_InputPath.isEmpty() == true)
@@ -350,7 +351,8 @@ void ConvertHexGridToSquareGrid::execute()
       {
         if(err == -600)
         {
-          notifyWarningMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
+          setWarningCondition(reader.getErrorCode());
+          notifyWarningMessage(getHumanLabel(), reader.getErrorMessage(), getWarningCondition());
         }
         QString origHeader = reader.getOriginalHeader();
         if(origHeader.isEmpty() == true)

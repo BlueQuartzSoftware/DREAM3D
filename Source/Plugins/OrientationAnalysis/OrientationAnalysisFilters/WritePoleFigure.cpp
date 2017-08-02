@@ -214,8 +214,9 @@ void WritePoleFigure::dataCheck()
   }
   else if(path.exists() == false)
   {
+    setWarningCondition(-1004);
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -451,19 +452,23 @@ void WritePoleFigure::execute()
       break;
     case Ebsd::CrystalStructure::Trigonal_High:
       //   figures = makePoleFigures<TrigonalOps>(config);
-      notifyWarningMessage(getHumanLabel(), "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      setWarningCondition(-1010);
+      notifyWarningMessage(getHumanLabel(), "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::Trigonal_Low:
       //  figures = makePoleFigures<TrigonalLowOps>(config);
-      notifyWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      setWarningCondition(-1010);
+      notifyWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::Tetragonal_High:
       //  figures = makePoleFigures<TetragonalOps>(config);
-      notifyWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      setWarningCondition(-1010);
+      notifyWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::Tetragonal_Low:
       //  figures = makePoleFigures<TetragonalLowOps>(config);
-      notifyWarningMessage(getHumanLabel(), "Tetragonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      setWarningCondition(-1010);
+      notifyWarningMessage(getHumanLabel(), "Tetragonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::OrthoRhombic:
       figures = makePoleFigures<OrthoRhombicOps>(config);

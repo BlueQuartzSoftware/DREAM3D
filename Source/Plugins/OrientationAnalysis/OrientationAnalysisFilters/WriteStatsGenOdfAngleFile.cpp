@@ -189,21 +189,22 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   QDir parentPath = fi.path();
   if(parentPath.exists() == false)
   {
+    setWarningCondition(-94001);
     ss = QObject::tr("The directory path for the output file does not exist");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   if(getWeight() < 1.0f)
   {
     ss = QObject::tr("The default 'Weight' value should be at least 1.0. Undefined results will occur from this filter.");
-    setErrorCondition(-94001);
+    setErrorCondition(-94002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(getSigma() < 1)
   {
     ss = QObject::tr("The default 'Sigma' value should be at least 1. Undefined results will occur from this filter.");
-    setErrorCondition(-94002);
+    setErrorCondition(-94003);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 

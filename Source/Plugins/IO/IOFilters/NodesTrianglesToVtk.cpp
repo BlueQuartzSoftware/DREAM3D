@@ -120,7 +120,7 @@ void NodesTrianglesToVtk::dataCheck()
   QFileInfo fi(m_TrianglesFile);
   if(m_TrianglesFile.isEmpty() == true)
   {
-    setErrorCondition(-1001);
+    setErrorCondition(-1000);
     notifyErrorMessage(getHumanLabel(), "Triangles file is not set correctly", -1001);
   }
   else if(fi.exists() == false)
@@ -128,11 +128,13 @@ void NodesTrianglesToVtk::dataCheck()
 
     if(getInPreflight())
     {
-      notifyWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+      setWarningCondition(-1001);
+      QString ss = "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline";
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
     else
     {
-      setErrorCondition(-1001);
+      setErrorCondition(-1002);
       notifyErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
     }
   }
@@ -140,7 +142,7 @@ void NodesTrianglesToVtk::dataCheck()
   QFileInfo fii(m_NodesFile);
   if(m_NodesFile.isEmpty() == true)
   {
-    setErrorCondition(-1002);
+    setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
   else if(fii.exists() == false)
@@ -148,18 +150,20 @@ void NodesTrianglesToVtk::dataCheck()
 
     if(getInPreflight())
     {
-      notifyWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
+      setWarningCondition(-1004);
+      QString ss = "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline";
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
     else
     {
-      setErrorCondition(-1002);
+      setErrorCondition(-1005);
       notifyErrorMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
     }
   }
 
   if(m_OutputVtkFile.isEmpty() == true)
   {
-    setErrorCondition(-1003);
+    setErrorCondition(-1006);
     notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 }

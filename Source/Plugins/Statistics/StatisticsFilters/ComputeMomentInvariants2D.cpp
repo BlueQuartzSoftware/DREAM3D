@@ -218,8 +218,8 @@ void ComputeMomentInvariants2D::execute()
       m_Omega1[featureId] = 0.0f;
       m_Omega2[featureId] = 0.0f;
       QString ss = QObject::tr("Feature %1 is NOT strictly 2D in the XY plane. Skipping this feature.").arg(featureId);
-      setErrorCondition(0);
-      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      setWarningCondition(-3000);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
       continue;
     }
 

@@ -774,8 +774,9 @@ void PackPrimaryPhases::dataCheck()
     QDir parentPath = fi.path();
     if(parentPath.exists() == false)
     {
+      setWarningCondition(-78002);
       QString ss = QObject::tr("The directory path for the GoalAttribute output file does not exist. The application will attempt to create this path during execution of the filter");
-      notifyWarningMessage(getHumanLabel(), ss, -1);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
   }
 

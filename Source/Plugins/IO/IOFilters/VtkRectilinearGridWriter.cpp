@@ -286,8 +286,9 @@ void VtkRectilinearGridWriter::dataCheck()
     QDir parentPath = fi.path();
     if(parentPath.exists() == false)
     {
+      setWarningCondition(-11000);
       QString ss = QObject::tr("The directory path for the output file does not exist.");
-      notifyWarningMessage(getHumanLabel(), ss, -1);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
   }
   else

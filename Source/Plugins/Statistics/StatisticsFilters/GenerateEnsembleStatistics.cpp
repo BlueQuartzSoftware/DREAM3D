@@ -651,19 +651,23 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_SizeDistributionFitType != SIMPL::DistributionType::LogNormal)
   {
-    notifyWarningMessage(getHumanLabel(), "The size distribution needs to be a lognormal distribution otherwise unpredictable results may occur", -1000);
+    setWarningCondition(-1000);
+    notifyWarningMessage(getHumanLabel(), "The size distribution needs to be a lognormal distribution otherwise unpredictable results may occur", getWarningCondition());
   }
   if(m_AspectRatioDistributionFitType != SIMPL::DistributionType::Beta)
   {
-    notifyWarningMessage(getHumanLabel(), "The aspect ratio distribution needs to be a beta distribution otherwise unpredictable results may occur", -1000);
+    setWarningCondition(-1000);
+    notifyWarningMessage(getHumanLabel(), "The aspect ratio distribution needs to be a beta distribution otherwise unpredictable results may occur", getWarningCondition());
   }
   if(m_Omega3DistributionFitType != SIMPL::DistributionType::Beta)
   {
-    notifyWarningMessage(getHumanLabel(), "The Omega3 distribution needs to be a beta distribution otherwise unpredictable results may occur", -1000);
+    setWarningCondition(-1000);
+    notifyWarningMessage(getHumanLabel(), "The Omega3 distribution needs to be a beta distribution otherwise unpredictable results may occur", getWarningCondition());
   }
   if(m_NeighborhoodDistributionFitType != SIMPL::DistributionType::LogNormal)
   {
-    notifyWarningMessage(getHumanLabel(), "The neighborhood distribution type needs to be a lognormal distribution otherwise unpredictable results may occur", -1000);
+    setWarningCondition(-1000);
+    notifyWarningMessage(getHumanLabel(), "The neighborhood distribution type needs to be a lognormal distribution otherwise unpredictable results may occur", getWarningCondition());
   }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);

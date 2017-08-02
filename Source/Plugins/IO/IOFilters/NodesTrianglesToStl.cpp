@@ -127,7 +127,9 @@ void NodesTrianglesToStl::dataCheck()
 
     if(getInPreflight())
     {
-      notifyWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+      setWarningCondition(-1005);
+      QString ss = "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline";
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
     else
     {
@@ -147,7 +149,9 @@ void NodesTrianglesToStl::dataCheck()
 
     if(getInPreflight())
     {
-      notifyWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
+      setWarningCondition(-1005);
+      QString ss = "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline";
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
     else
     {

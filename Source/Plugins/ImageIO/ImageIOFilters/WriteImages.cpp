@@ -167,8 +167,9 @@ void WriteImages::dataCheck()
   }
   else if(dir.exists() == false)
   {
+    setWarningCondition(-1004);
     QString ss = QObject::tr("The output directory path does not exist. DREAM.3D will attempt to create this path during execution");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getColorsArrayPath().getDataContainerName());
