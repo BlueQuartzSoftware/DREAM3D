@@ -183,6 +183,11 @@ void MinNeighbors::dataCheck()
   }
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
+
+  // Throw a warning to inform the user that the neighbor list arrays could be deleted by this filter
+  QString ss = QObject::tr("If this filter changes the selected feature ids array, all NeighborList arrays will be deleted.");
+  setWarningCondition(-5556);
+  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 }
 
 // -----------------------------------------------------------------------------
