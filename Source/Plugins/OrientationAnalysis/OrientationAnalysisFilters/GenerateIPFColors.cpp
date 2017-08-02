@@ -65,15 +65,18 @@
 class GenerateIPFColorsImpl
 {
 public:
-  GenerateIPFColorsImpl(FloatVec3_t referenceDir, float* eulers, int32_t* phases, uint32_t* crystalStructures, bool* goodVoxels, uint8_t* colors)
-  : m_ReferenceDir(referenceDir)
+  GenerateIPFColorsImpl(GenerateIPFColors* filter, FloatVec3_t referenceDir, float* eulers, int32_t* phases, uint32_t* crystalStructures, int32_t numPhases, bool* goodVoxels, uint8_t* colors)
+  : m_Filter(filter)
+  , m_ReferenceDir(referenceDir)
   , m_CellEulerAngles(eulers)
   , m_CellPhases(phases)
   , m_CrystalStructures(crystalStructures)
+  , m_NumPhases(numPhases)
   , m_GoodVoxels(goodVoxels)
   , m_CellIPFColors(colors)
   {
   }
+
   virtual ~GenerateIPFColorsImpl()
   {
   }
@@ -104,13 +107,18 @@ public:
       {
         calcIPF = m_GoodVoxels[i];
       }
+      // Sanity check the phase data to make sure we do not walk off the end of the array
+      if(phase >= m_NumPhases)
+      {
+        m_Filter->incrementPhaseWarningCount();
+      }
 
-      if(calcIPF && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
+      if(phase < m_NumPhases && calcIPF && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
       {
         argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
-        m_CellIPFColors[index] = RgbColor::dRed(argb);
-        m_CellIPFColors[index + 1] = RgbColor::dGreen(argb);
-        m_CellIPFColors[index + 2] = RgbColor::dBlue(argb);
+        m_CellIPFColors[index] = static_cast<uint8_t>(RgbColor::dRed(argb));
+        m_CellIPFColors[index + 1] = static_cast<uint8_t>(RgbColor::dGreen(argb));
+        m_CellIPFColors[index + 2] = static_cast<uint8_t>(RgbColor::dBlue(argb));
       }
     }
   }
@@ -122,10 +130,12 @@ public:
   }
 #endif
 private:
+  GenerateIPFColors* m_Filter = nullptr;
   FloatVec3_t m_ReferenceDir;
   float* m_CellEulerAngles;
   int32_t* m_CellPhases;
   unsigned int* m_CrystalStructures;
+  int32_t m_NumPhases = 0;
   bool* m_GoodVoxels;
   uint8_t* m_CellIPFColors;
 };
@@ -213,6 +223,7 @@ void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::initialize()
 {
+  m_PhaseWarningCount = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -307,6 +318,7 @@ void GenerateIPFColors::preflight()
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::execute()
 {
+  initialize();
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
@@ -314,7 +326,10 @@ void GenerateIPFColors::execute()
     return;
   }
 
+  m_PhaseWarningCount = 0;
   size_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
+
+  int32_t numPhases = static_cast<int32_t>(m_CrystalStructuresPtr.lock()->getNumberOfTuples());
 
   // Make sure we are dealing with a unit 1 vector.
   FloatVec3_t normRefDir = m_ReferenceDir; // Make a copy of the reference Direction
@@ -328,18 +343,36 @@ void GenerateIPFColors::execute()
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateIPFColorsImpl(normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, m_GoodVoxels, m_CellIPFColors),
-                      tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      GenerateIPFColorsImpl(this, normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, numPhases, m_GoodVoxels, m_CellIPFColors), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    GenerateIPFColorsImpl serial(normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, m_GoodVoxels, m_CellIPFColors);
+    GenerateIPFColorsImpl serial(this, normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, numPhases, m_GoodVoxels, m_CellIPFColors);
     serial.convert(0, totalPoints);
+  }
+
+  if(m_PhaseWarningCount > 0)
+  {
+    setErrorCondition(-48000);
+    QString ss = QObject::tr("The Ensemble Phase information only references %2 phase(s) but %1 cell(s) had a phase value greater than %2. \
+This indicates a problem with the input cell phase data. DREAM.3D will give INCORRECT RESULTS.")
+                     .arg(m_PhaseWarningCount)
+                     .arg(numPhases - 1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenerateIPFColors::incrementPhaseWarningCount()
+{
+  ++m_PhaseWarningCount;
 }
 
 // -----------------------------------------------------------------------------

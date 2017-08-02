@@ -76,6 +76,11 @@ class GenerateIPFColors : public AbstractFilter
     Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
     /**
+     * @brief incrementPhaseWarningCount
+     */
+    void incrementPhaseWarningCount();
+
+    /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
@@ -177,6 +182,7 @@ class GenerateIPFColors : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     DEFINE_DATAARRAY_VARIABLE(uint8_t, CellIPFColors)
+    int32_t m_PhaseWarningCount = 0;
 
     GenerateIPFColors(const GenerateIPFColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateIPFColors&); // Operator '=' Not Implemented
