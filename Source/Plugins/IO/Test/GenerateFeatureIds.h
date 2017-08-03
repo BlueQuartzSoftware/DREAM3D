@@ -42,6 +42,7 @@ class GenerateFeatureIds : public AbstractFilter
     virtual void execute()
     {
       setErrorCondition(0);
+  setWarningCondition(0);
       dataCheck();
       if(getErrorCondition() < 0) { return; }
 
@@ -93,6 +94,7 @@ class GenerateFeatureIds : public AbstractFilter
     void dataCheck()
     {
       setErrorCondition(0);
+  setWarningCondition(0);
       DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
       if(getErrorCondition() < 0) { return; }
       AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);

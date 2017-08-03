@@ -120,6 +120,7 @@ void SharedFeatureFaceFilter::initialize()
 void SharedFeatureFaceFilter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
@@ -191,6 +192,7 @@ void SharedFeatureFaceFilter::preflight()
 void SharedFeatureFaceFilter::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

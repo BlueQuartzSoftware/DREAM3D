@@ -126,6 +126,7 @@ void GBCDTriangleDumper::readFilterParameters(AbstractFilterParametersReader* re
 void GBCDTriangleDumper::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(getOutputFile().isEmpty() == true)
   {
@@ -188,6 +189,7 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
 void GBCDTriangleDumper::dataCheckVoxel()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureEulerAnglesArrayPath().getDataContainerName());
 
@@ -220,6 +222,7 @@ void GBCDTriangleDumper::preflight()
 void GBCDTriangleDumper::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
   if(getErrorCondition() < 0)

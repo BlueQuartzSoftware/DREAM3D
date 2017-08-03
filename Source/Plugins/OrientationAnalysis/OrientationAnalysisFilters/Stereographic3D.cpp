@@ -133,6 +133,7 @@ Stereographic3D::~Stereographic3D()
 void Stereographic3D::initialize()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   setCancel(false);
 }
 
@@ -170,6 +171,7 @@ void Stereographic3D::readFilterParameters(AbstractFilterParametersReader* reade
 void Stereographic3D::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);

@@ -204,6 +204,7 @@ void WritePoleFigure::initialize()
 void WritePoleFigure::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QDir path(getOutputPath());
 
@@ -355,6 +356,7 @@ void WritePoleFigure::writeImage(QImage image, QString label)
 void WritePoleFigure::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

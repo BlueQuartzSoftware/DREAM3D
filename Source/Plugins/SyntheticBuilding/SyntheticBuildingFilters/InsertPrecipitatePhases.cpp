@@ -267,6 +267,7 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 void InsertPrecipitatePhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   if(nullptr != m_FeaturePhasesPtr.lock().get())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
@@ -361,6 +362,7 @@ void InsertPrecipitatePhases::initialize()
 void InsertPrecipitatePhases::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -589,6 +591,7 @@ void InsertPrecipitatePhases::execute()
   initialize();
 
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -747,6 +750,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   }
 
   setErrorCondition(0);
+  setWarningCondition(0);
   m_Seed = QDateTime::currentMSecsSinceEpoch();
   SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 

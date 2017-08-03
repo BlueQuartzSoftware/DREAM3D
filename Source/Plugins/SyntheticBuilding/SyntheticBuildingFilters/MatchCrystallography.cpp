@@ -245,6 +245,7 @@ void MatchCrystallography::initialize()
 void MatchCrystallography::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   DataArrayPath tempPath;
 
@@ -372,6 +373,7 @@ void MatchCrystallography::preflight()
 void MatchCrystallography::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

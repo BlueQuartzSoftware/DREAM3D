@@ -161,6 +161,7 @@ void PhReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 void PhReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -195,6 +196,7 @@ void PhReader::initialize()
 void PhReader::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
 

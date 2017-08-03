@@ -240,6 +240,7 @@ void FindDifferenceMap::initialize()
 void FindDifferenceMap::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<IDataArray::Pointer> dataArrays;
 
@@ -315,6 +316,7 @@ void FindDifferenceMap::preflight()
 void FindDifferenceMap::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

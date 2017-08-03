@@ -200,6 +200,7 @@ void InitializeSyntheticVolume::initialize()
 void InitializeSyntheticVolume::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Create the output Data Container
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
@@ -289,6 +290,7 @@ void InitializeSyntheticVolume::preflight()
 void InitializeSyntheticVolume::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -111,6 +111,7 @@ void RegularizeZSpacing::initialize()
 void RegularizeZSpacing::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(getNewZRes() <= 0)
   {
@@ -180,6 +181,7 @@ void RegularizeZSpacing::preflight()
 void RegularizeZSpacing::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

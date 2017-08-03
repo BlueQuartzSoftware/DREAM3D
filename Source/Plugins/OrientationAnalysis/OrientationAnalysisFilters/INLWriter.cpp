@@ -152,6 +152,7 @@ void INLWriter::initialize()
 void INLWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -305,6 +306,7 @@ uint32_t mapCrystalSymmetryToTslSymmetry(uint32_t symmetry)
 int32_t INLWriter::writeFile()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

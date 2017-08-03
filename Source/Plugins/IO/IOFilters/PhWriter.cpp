@@ -106,6 +106,7 @@ void PhWriter::initialize()
 void PhWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -178,6 +179,7 @@ int32_t PhWriter::writeHeader()
 int32_t PhWriter::writeFile()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -116,6 +116,7 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 void EnsembleInfoReader::updateEnsembleInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -145,6 +146,7 @@ void EnsembleInfoReader::initialize()
 void EnsembleInfoReader::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   DataArrayPath tempPath;
 
@@ -249,6 +251,7 @@ int32_t EnsembleInfoReader::readHeader()
 int32_t EnsembleInfoReader::readFile()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

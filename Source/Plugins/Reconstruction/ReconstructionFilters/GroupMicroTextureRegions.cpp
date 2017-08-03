@@ -167,6 +167,7 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
 void GroupMicroTextureRegions::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -191,6 +192,7 @@ void GroupMicroTextureRegions::initialize()
 void GroupMicroTextureRegions::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   DataArrayPath tempPath;
 
@@ -356,6 +358,7 @@ void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t 
 int32_t GroupMicroTextureRegions::getSeed(int32_t newFid)
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   int32_t numfeatures = static_cast<int32_t>(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
 
@@ -509,6 +512,7 @@ void GroupMicroTextureRegions::initializeVoxelSeedGenerator(const int32_t rangeM
 void GroupMicroTextureRegions::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

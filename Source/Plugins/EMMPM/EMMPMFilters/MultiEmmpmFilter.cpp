@@ -150,6 +150,7 @@ void MultiEmmpmFilter::initialize()
 void MultiEmmpmFilter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(DataArrayPath::ValidateVector(getInputDataArrayVector()) == false)
   {
@@ -266,6 +267,7 @@ void MultiEmmpmFilter::preflight()
 void MultiEmmpmFilter::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -112,6 +112,7 @@ void AbaqusSurfaceMeshWriter::initialize()
 void AbaqusSurfaceMeshWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(m_OutputFile.isEmpty() == true)
   {

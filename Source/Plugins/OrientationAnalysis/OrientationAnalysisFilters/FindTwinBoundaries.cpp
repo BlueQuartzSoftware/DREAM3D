@@ -316,6 +316,7 @@ void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* re
 void FindTwinBoundaries::dataCheckVoxel()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -361,6 +362,7 @@ void FindTwinBoundaries::dataCheckVoxel()
 void FindTwinBoundaries::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -435,6 +437,7 @@ void FindTwinBoundaries::preflight()
 void FindTwinBoundaries::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheckVoxel();
   if(getErrorCondition() < 0)
   {

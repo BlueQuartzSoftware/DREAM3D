@@ -156,6 +156,7 @@ void ImportImageStack::initialize()
 void ImportImageStack::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   DataArrayPath tempPath;
   QString ss;
@@ -345,6 +346,7 @@ void ImportImageStack::preflight()
 void ImportImageStack::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

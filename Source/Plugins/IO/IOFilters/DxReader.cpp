@@ -157,6 +157,7 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 void DxReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -194,6 +195,7 @@ void DxReader::initialize()
 void DxReader::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());

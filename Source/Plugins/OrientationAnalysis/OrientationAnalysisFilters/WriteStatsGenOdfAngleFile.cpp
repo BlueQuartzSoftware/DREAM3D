@@ -177,6 +177,7 @@ void WriteStatsGenOdfAngleFile::initialize()
 void WriteStatsGenOdfAngleFile::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QString ss;
   if(getOutputFile().isEmpty() == true)

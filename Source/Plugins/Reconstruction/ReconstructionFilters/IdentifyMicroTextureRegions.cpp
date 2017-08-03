@@ -319,6 +319,7 @@ void IdentifyMicroTextureRegions::readFilterParameters(AbstractFilterParametersR
 void IdentifyMicroTextureRegions::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -341,6 +342,7 @@ void IdentifyMicroTextureRegions::initialize()
 void IdentifyMicroTextureRegions::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
 
   DataArrayPath tempPath;
@@ -494,6 +496,7 @@ void IdentifyMicroTextureRegions::initializeVoxelSeedGenerator(const int32_t ran
 void IdentifyMicroTextureRegions::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -112,6 +112,7 @@ void FindFeatureCentroids::initialize()
 void FindFeatureCentroids::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -218,6 +219,7 @@ void FindFeatureCentroids::find_centroids()
 void FindFeatureCentroids::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

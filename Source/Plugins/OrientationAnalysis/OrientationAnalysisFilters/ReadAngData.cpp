@@ -158,6 +158,7 @@ void ReadAngData::dataCheck()
   m_FileWasRead = false;
 
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
@@ -590,6 +591,7 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
 void ReadAngData::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

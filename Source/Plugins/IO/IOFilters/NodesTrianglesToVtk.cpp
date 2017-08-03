@@ -116,6 +116,7 @@ void NodesTrianglesToVtk::initialize()
 void NodesTrianglesToVtk::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QFileInfo fi(m_TrianglesFile);
   if(m_TrianglesFile.isEmpty() == true)
@@ -376,6 +377,7 @@ void NodesTrianglesToVtk::execute()
   fclose(vtkFile);
 
   setErrorCondition(0);
+  setWarningCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");
 
   return;

@@ -382,6 +382,7 @@ void FindEuclideanDistMap::initialize()
 void FindEuclideanDistMap::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -753,6 +754,7 @@ void FindEuclideanDistMap::findDistanceMap()
 void FindEuclideanDistMap::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

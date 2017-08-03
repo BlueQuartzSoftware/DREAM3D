@@ -271,6 +271,7 @@ void VtkRectilinearGridWriter::initialize()
 void VtkRectilinearGridWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   if(m_OutputFile.isEmpty() == true)
   {
@@ -351,6 +352,7 @@ void VtkRectilinearGridWriter::preflight()
 void VtkRectilinearGridWriter::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -125,6 +125,7 @@ void WriteIPFStandardTriangle::initialize()
 void WriteIPFStandardTriangle::dataCheck()
 {
     setErrorCondition(0);
+  setWarningCondition(0);
 
     QString ss;
     if(getOutputFile().isEmpty() == true)
@@ -195,6 +196,7 @@ void WriteIPFStandardTriangle::preflight()
 void WriteIPFStandardTriangle::execute()
 {
     setErrorCondition(0);
+  setWarningCondition(0);
     dataCheck();
     if(getErrorCondition() < 0)
     {

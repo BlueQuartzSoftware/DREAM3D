@@ -141,6 +141,7 @@ void SurfaceMeshToVtk::initialize()
 void SurfaceMeshToVtk::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   if(m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
@@ -266,6 +267,7 @@ void SurfaceMeshToVtk::execute()
   }
 
   setErrorCondition(0);
+  setWarningCondition(0);
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName()); /* Place all your code to execute your filter here. */
   TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
   float* nodes = triangleGeom->getVertexPointer(0);
@@ -407,6 +409,7 @@ void SurfaceMeshToVtk::execute()
   fprintf(vtkFile, "\n");
 
   setErrorCondition(0);
+  setWarningCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

@@ -157,6 +157,7 @@ void WriteImages::initialize()
 void WriteImages::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QDir dir(getOutputPath());
 

@@ -502,6 +502,7 @@ void FindGBPDMetricBased::initialize()
 void FindGBPDMetricBased::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Number of Sampling Points (filter params.)
   if(getNumSamplPts() < 1)
@@ -726,6 +727,7 @@ void FindGBPDMetricBased::appendSamplPtsFixedAzimuth(QVector<float>* xVec, QVect
 void FindGBPDMetricBased::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {
