@@ -185,7 +185,22 @@ void MinSize::dataCheck()
 
   // Throw a warning to inform the user that the neighbor list arrays could be deleted by this filter
   QString featureIdsPath = getFeatureIdsArrayPath().getDataContainerName() + "/" + getFeatureIdsArrayPath().getAttributeMatrixName() + "/" + getFeatureIdsArrayPath().getDataArrayName();
-  QString ss = QObject::tr("If this filter changes the selected feature ids array located at '%1', all NeighborList arrays will be deleted.").arg(featureIdsPath);
+  int err = 0;
+  AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getNumCellsArrayPath(), err);
+  if (err < 0 || getErrorCondition() < 0) { return; }
+
+  QString ss = QObject::tr("If this filter changes the selected feature ids array located at '%1', all arrays of type NeighborList will be deleted.  These arrays are:\n").arg(featureIdsPath);
+  QList<QString> featureArrayNames = featureAM->getAttributeArrayNames();
+  for (int i = 0; i < featureArrayNames.size(); i++)
+  {
+    IDataArray::Pointer arr = featureAM->getAttributeArray(featureArrayNames[i]);
+    QString type = arr->getTypeAsString();
+    if(type.compare("NeighborList<T>") == 0)
+    {
+      ss.append("\n" + getNumCellsArrayPath().getDataContainerName() + "/" + getNumCellsArrayPath().getAttributeMatrixName() + "/" + arr->getName());
+    }
+  }
+
   setWarningCondition(-5556);
   notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 }
