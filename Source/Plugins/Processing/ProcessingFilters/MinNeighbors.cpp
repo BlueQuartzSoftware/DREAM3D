@@ -187,11 +187,14 @@ void MinNeighbors::dataCheck()
   QString featureIdsPath = getFeatureIdsArrayPath().getDataContainerName() + "/" + getFeatureIdsArrayPath().getAttributeMatrixName() + "/" + getFeatureIdsArrayPath().getDataArrayName();
   int err = 0;
   AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getNumNeighborsArrayPath(), err);
-  if (err < 0 || getErrorCondition() < 0) { return; }
+  if(err < 0 || getErrorCondition() < 0)
+  {
+    return;
+  }
 
   QString ss = QObject::tr("If this filter changes the selected feature ids array located at '%1', all arrays of type NeighborList will be deleted.  These arrays are:\n").arg(featureIdsPath);
   QList<QString> featureArrayNames = featureAM->getAttributeArrayNames();
-  for (int i = 0; i < featureArrayNames.size(); i++)
+  for(int i = 0; i < featureArrayNames.size(); i++)
   {
     IDataArray::Pointer arr = featureAM->getAttributeArray(featureArrayNames[i]);
     QString type = arr->getTypeAsString();
