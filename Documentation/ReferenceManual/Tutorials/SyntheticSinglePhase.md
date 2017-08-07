@@ -15,7 +15,7 @@ The <i>(01) Single Cubic Phase Equiaxed</i> **Prebuilt Pipeline** reads in a sta
 -------------------
 
 ![Example Generated Synthetic Microstructure](Images/Synthetic.png)
-@image latex Images/synth-2.png "Example Generated Synthetic Microstructure" width=6in
+@image latex Images/Synthetic.png "Example Generated Synthetic Microstructure" width=6in
 
 -------------------
 
@@ -27,7 +27,7 @@ In order to start this swapping process, DREAM.3D will need to know what [types 
 ------------
 
 ![General Workflow for Synthetic Building](Images/SyntheticProcess.png)
-@image latex Images/ebsdreconstruction.png "General Workflow for Synthetic Building" width=6in
+@image latex Images/EbsdReconstruction.png "General Workflow for Synthetic Building" width=6in
 
 ------------
 
