@@ -8,7 +8,7 @@ The interface mechanics of building a **Pipeline** are discussed in the [Overvie
 
 ------
 
-![Anatomy of a Pipeline](Images/pipelineanatomy.png)
+![Anatomy of a Pipeline](Images/PipelineAnatomy.png)
 @image latex Images/pipelineanatomy.png "Anatomy of a Pipeline" width=6in
 
 ------
