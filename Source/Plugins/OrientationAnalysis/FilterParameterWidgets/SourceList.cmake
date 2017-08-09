@@ -6,6 +6,7 @@ set(${PLUGIN_NAME}_ParameterWidgets_UIS "")
 
 set(${PLUGIN_NAME}_PARAMETER_WIDGETS
       EbsdToH5EbsdWidget
+      EnsembleInfoCreationWidget
       ReadH5EbsdWidget
       ReadEdaxH5DataWidget
       OrientationUtilityWidget
@@ -67,6 +68,22 @@ set(AllFilterParameterWidgetsHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/FilterParam
 set(RegisterKnownFilterParameterWidgetsFile ${${PLUGIN_NAME}_BINARY_DIR}/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp)
 
 
+
+# --------------------------------------------------------------------
+# Add some support files that still need MOC and UIC to be run on them
+set(${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS
+  ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS}
+  ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/EnsembleInfoItemDelegate.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/EnsembleInfoTableModel.h
+)
+
+set(${PLUGIN_NAME}_ParameterWidgets_SRCS
+  ${${PLUGIN_NAME}_ParameterWidgets_SRCS}
+  ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/EnsembleInfoItemDelegate.cpp
+  ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/EnsembleInfoTableModel.cpp
+)
+
+
 cmp_IDE_SOURCE_PROPERTIES( "FilterParameterWidgets" "${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS}" "${${PLUGIN_NAME}_ParameterWidgets_SRCS}" "0")
 
 cmp_IDE_GENERATED_PROPERTIES("FilterParameterWidgets/UI_Files" "${${PLUGIN_NAME}_ParameterWidgets_UIS}" "")
@@ -74,6 +91,8 @@ cmp_IDE_GENERATED_PROPERTIES("FilterParameterWidgets/UI_Files" "${${PLUGIN_NAME}
 # --------------------------------------------------------------------
 # and finally this will run moc:
 QT5_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS} )
+set_source_files_properties( ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS} PROPERTIES GENERATED TRUE)
+set_source_files_properties( ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
@@ -91,7 +110,5 @@ QT5_WRAP_UI( ${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS ${${PLUGIN_NAME}_
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "" "${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS}" "0")
 cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS}" "" "0")
 #cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRCS}" "" "0")
-
-
 
 
