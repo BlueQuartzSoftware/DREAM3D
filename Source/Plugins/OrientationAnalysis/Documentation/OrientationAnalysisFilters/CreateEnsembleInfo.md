@@ -2,10 +2,10 @@ Create Ensemble Info {#createensembleinfo}
 =============
 
 ## Group (Subgroup) ##
-IO (Input)
+Processing (Alignment)
 
 ## Description ##
-This **Filter** reads in information about the crystal structure and phase types of all the **Features** that are contained in a **Cell** based volume. These values are needed to allow the calculation of statistics on the volume, if they have not already been provided by some other means.  The format of the input file is a simple ASCII text file with the extension .ini or .txt. The first group in the file is the name [EnsembleInfo] in square brackets with the key Number_Phases=*number of phases* that are contained in the volume. Subsequent groups in the file list the __Phase Number__, __Crystal Structure__ and __Phase Type__. The proper values for the crystal structure and phase type come from internal constants within DREAM.3D and are listed here:
+This **Filter** reads in information about the crystal structure and phase types of all the **Features** that are contained in a **Cell** based volume. These values are needed to allow the calculation of statistics on the volume, if they have not already been provided by some other means. Each row in the table lists the __Crystal Structure__, __Phase Type__, and __Phase Name__. The proper values for the crystal structure and phase type come from internal constants within DREAM.3D and are listed here:
 
 **Crystal Structure**
 
@@ -35,28 +35,12 @@ This **Filter** reads in information about the crystal structure and phase types
 | BoundaryPhase | 4 |
 | UnknownPhaseType | 999 |
 
-## Example Input ##
-
-__Phase numbering starts at One (1). Phase Zero (0) is reserved for internal use in DREAM.3D__
-For example, if you have a structure that has 2 phases that consist of a Cubic Primary phase and a Hexagonal Matrix phase the file would be the following:
-
-	[EnsembleInfo]
-	Number_Phases=2
-
-	[1]
-	CrystalStructure=Cubic_High
-	PhaseType=PrimaryPhase
-
-	[2]
-	CrystalStructure=Hexagonal_High
-	PhaseType=MatrixPhase
-
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------|-------------|
-| Input Ensemble Info File | File Path | The input file path |
+| Ensemble | Create Ensemble Info | The created Ensemble crystal structures, phase types, and phase names |
 
 ## Required Geometry ##
 Not Applicable
@@ -70,6 +54,7 @@ None
 | **Attribute Matrix** | EnsembleAttributeMatrix | Ensemble | N/A | Created **Ensemble Attribute Matrix** name |
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1)  | Enumeration representing the crystal structure for each **Ensemble** |
 | **Ensemble Attribute Array** | PhaseTypes        | uint32_t | (1) | Enumeration representing the phase type for each **Ensemble** |
+| **Ensemble Attribute Array** | PhaseNames        | String | (1) | The phase names for each **Ensemble** |
 
 
 ## License & Copyright ##
