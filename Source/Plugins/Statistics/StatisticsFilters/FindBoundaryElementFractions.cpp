@@ -115,6 +115,7 @@ void FindBoundaryElementFractions::initialize()
 void FindBoundaryElementFractions::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -200,6 +201,7 @@ void FindBoundaryElementFractions::find_surface_voxel_fractions()
 void FindBoundaryElementFractions::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

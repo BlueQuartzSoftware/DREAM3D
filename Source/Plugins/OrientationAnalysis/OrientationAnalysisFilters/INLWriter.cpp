@@ -152,6 +152,7 @@ void INLWriter::initialize()
 void INLWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -166,8 +167,9 @@ void INLWriter::dataCheck()
   QDir parentPath = fi.path();
   if(parentPath.exists() == false)
   {
+    setWarningCondition(-1);
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   QVector<DataArrayPath> cellDataArrayPaths;
@@ -304,6 +306,7 @@ uint32_t mapCrystalSymmetryToTslSymmetry(uint32_t symmetry)
 int32_t INLWriter::writeFile()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

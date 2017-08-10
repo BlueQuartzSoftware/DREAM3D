@@ -157,6 +157,7 @@ void CAxisSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* 
 void CAxisSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -179,6 +180,7 @@ void CAxisSegmentFeatures::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());
@@ -326,6 +328,7 @@ void CAxisSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tota
 int64_t CAxisSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
@@ -432,6 +435,7 @@ void CAxisSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, 
 void CAxisSegmentFeatures::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -134,6 +134,7 @@ void VisualizeGBCDPoleFigure::initialize()
 void VisualizeGBCDPoleFigure::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName());
 
@@ -148,8 +149,9 @@ void VisualizeGBCDPoleFigure::dataCheck()
   QDir parentPath = fi.path();
   if(parentPath.exists() == false && getInPreflight())
   {
+    setWarningCondition(-1001);
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   if(fi.suffix().compare("") == 0)
@@ -209,6 +211,7 @@ void VisualizeGBCDPoleFigure::preflight()
 void VisualizeGBCDPoleFigure::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

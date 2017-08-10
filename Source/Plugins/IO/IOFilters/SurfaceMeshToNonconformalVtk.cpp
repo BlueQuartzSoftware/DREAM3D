@@ -123,6 +123,7 @@ void SurfaceMeshToNonconformalVtk::initialize()
 void SurfaceMeshToNonconformalVtk::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   QString ss;
 
   if(m_OutputVtkFile.isEmpty() == true)
@@ -425,6 +426,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   fprintf(vtkFile, "\n");
 
   setErrorCondition(0);
+  setWarningCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

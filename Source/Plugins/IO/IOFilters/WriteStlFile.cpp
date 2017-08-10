@@ -150,6 +150,7 @@ void WriteStlFile::initialize()
 void WriteStlFile::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
@@ -215,6 +216,7 @@ void WriteStlFile::execute()
 {
   int32_t err = 0;
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -376,6 +378,7 @@ void WriteStlFile::execute()
   }
 
   setErrorCondition(0);
+  setWarningCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");
 
   return;

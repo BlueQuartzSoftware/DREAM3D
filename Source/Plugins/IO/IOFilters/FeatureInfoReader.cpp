@@ -147,6 +147,7 @@ void FeatureInfoReader::readFilterParameters(AbstractFilterParametersReader* rea
 void FeatureInfoReader::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_FeaturePhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -171,6 +172,7 @@ void FeatureInfoReader::initialize()
 void FeatureInfoReader::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName());
@@ -277,6 +279,7 @@ int32_t FeatureInfoReader::readHeader()
 int32_t FeatureInfoReader::readFile()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

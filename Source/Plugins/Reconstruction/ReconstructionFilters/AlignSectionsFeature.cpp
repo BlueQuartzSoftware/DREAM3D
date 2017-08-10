@@ -106,6 +106,7 @@ void AlignSectionsFeature::initialize()
 void AlignSectionsFeature::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   // These are checked for validity in the Parent Class dataCheck
@@ -255,6 +256,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
 void AlignSectionsFeature::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

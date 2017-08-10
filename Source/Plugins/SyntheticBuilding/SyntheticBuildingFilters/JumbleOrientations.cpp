@@ -135,6 +135,7 @@ void JumbleOrientations::initialize()
 void JumbleOrientations::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 1);
@@ -201,6 +202,7 @@ void JumbleOrientations::preflight()
 void JumbleOrientations::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

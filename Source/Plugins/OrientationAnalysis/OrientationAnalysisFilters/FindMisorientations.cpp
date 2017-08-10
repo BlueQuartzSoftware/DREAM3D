@@ -145,6 +145,7 @@ void FindMisorientations::initialize()
 void FindMisorientations::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
 
   DataArrayPath tempPath;
@@ -229,6 +230,7 @@ void FindMisorientations::preflight()
 void FindMisorientations::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

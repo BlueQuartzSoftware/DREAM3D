@@ -110,6 +110,7 @@ void LammpsFileWriter::initialize()
 void LammpsFileWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(m_LammpsFile.isEmpty() == true)
   {
@@ -249,6 +250,7 @@ void LammpsFileWriter::execute()
   fclose(lammpsFile);
 
   setErrorCondition(0);
+  setWarningCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");
 
   return;

@@ -149,6 +149,7 @@ void FindShapes::initialize()
 void FindShapes::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   DataArrayPath tempPath;
 
@@ -881,6 +882,7 @@ void FindShapes::find_axiseulers2D()
 void FindShapes::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

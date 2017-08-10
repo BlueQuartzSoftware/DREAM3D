@@ -106,6 +106,7 @@ void PhWriter::initialize()
 void PhWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -121,8 +122,9 @@ void PhWriter::dataCheck()
   QDir parentPath = fi.path();
   if(parentPath.exists() == false)
   {
+    setWarningCondition(-10200);
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   QVector<size_t> cDims(1, 1);
@@ -142,7 +144,7 @@ void PhWriter::dataCheck()
 
   if(volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples())
   {
-    setErrorCondition(-10200);
+    setErrorCondition(-10201);
     QString ss = QObject::tr("The number of Tuples for the DataArray %1 is %2 and for the associated Image Geometry is %3. The number of tuples must match")
                      .arg(m_FeatureIdsPtr.lock()->getName())
                      .arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
@@ -177,6 +179,7 @@ int32_t PhWriter::writeHeader()
 int32_t PhWriter::writeFile()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

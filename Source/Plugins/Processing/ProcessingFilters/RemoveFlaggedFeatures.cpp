@@ -119,6 +119,7 @@ void RemoveFlaggedFeatures::initialize()
 void RemoveFlaggedFeatures::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -157,6 +158,7 @@ void RemoveFlaggedFeatures::preflight()
 void RemoveFlaggedFeatures::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

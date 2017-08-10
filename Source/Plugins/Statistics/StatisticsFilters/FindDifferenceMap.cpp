@@ -203,23 +203,27 @@ template <typename DataType> void warnOnUnsignedTypes(AbstractFilter* filter, ID
 {
   if(TemplateHelpers::CanDynamicCast<DataArray<uint8_t>>()(ptr))
   {
+    filter->setWarningCondition(-90004);
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint8_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90004);
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getWarningCondition());
   }
   if(TemplateHelpers::CanDynamicCast<DataArray<uint16_t>>()(ptr))
   {
+    filter->setWarningCondition(-90005);
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint16_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90005);
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getWarningCondition());
   }
   if(TemplateHelpers::CanDynamicCast<DataArray<uint32_t>>()(ptr))
   {
+    filter->setWarningCondition(-90006);
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint32_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90006);
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getWarningCondition());
   }
   if(TemplateHelpers::CanDynamicCast<DataArray<uint64_t>>()(ptr))
   {
+    filter->setWarningCondition(-90007);
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint64_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90007);
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getWarningCondition());
   }
 }
 
@@ -236,6 +240,7 @@ void FindDifferenceMap::initialize()
 void FindDifferenceMap::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<IDataArray::Pointer> dataArrays;
 
@@ -311,6 +316,7 @@ void FindDifferenceMap::preflight()
 void FindDifferenceMap::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -156,6 +156,7 @@ void ImportVectorImageStack::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
+  setWarningCondition(0);
   QString ss;
 
   if(m_InputPath.isEmpty() == true)

@@ -135,6 +135,7 @@ void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 void VectorSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -157,6 +158,7 @@ void VectorSegmentFeatures::dataCheck()
 {
 
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   DataArrayPath tempPath;
 
@@ -288,6 +290,7 @@ void VectorSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
 int64_t VectorSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
@@ -379,6 +382,7 @@ void VectorSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin,
 void VectorSegmentFeatures::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

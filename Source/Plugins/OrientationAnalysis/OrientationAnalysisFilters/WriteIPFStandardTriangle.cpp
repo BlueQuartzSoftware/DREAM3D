@@ -37,31 +37,29 @@
 
 #include <QtCore/QDir>
 
-
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
-
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/HexagonalIPFLegendPainter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/CubicIPFLegendPainter.h"
-#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/HexagonalLowIPFLegendPainter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/CubicLowIPFLegendPainter.h"
-#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TriclinicIPFLegendPainter.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/HexagonalIPFLegendPainter.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/HexagonalLowIPFLegendPainter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/MonoclinicIPFLegendPainter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/OrthorhombicIPFLegendPainter.h"
-#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TetragonalLowIPFLegendPainter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TetragonalIPFLegendPainter.h"
-#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TrigonalLowIPFLegendPainter.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TetragonalLowIPFLegendPainter.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TriclinicIPFLegendPainter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TrigonalIPFLegendPainter.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TrigonalLowIPFLegendPainter.h"
 
 // Include the MOC generated file for this class
 #include "moc_WriteIPFStandardTriangle.cpp"
@@ -70,11 +68,11 @@
 //
 // -----------------------------------------------------------------------------
 WriteIPFStandardTriangle::WriteIPFStandardTriangle()
-    : AbstractFilter()
-    , m_OutputFile("")
-    , m_ImageSize(512)
+: AbstractFilter()
+, m_OutputFile("")
+, m_ImageSize(512)
 {
-    setupFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -89,16 +87,16 @@ WriteIPFStandardTriangle::~WriteIPFStandardTriangle()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::setupFilterParameters()
 {
-    FilterParameterVector parameters;
+  FilterParameterVector parameters;
 
-    QVector<QString> choices = QVector<QString>::fromStdVector(LaueOps::GetLaueNames());
-    choices.pop_back(); // Remove the last name because we don't need it.
+  QVector<QString> choices = QVector<QString>::fromStdVector(LaueOps::GetLaueNames());
+  choices.pop_back(); // Remove the last name because we don't need it.
 
-    parameters.push_back(SIMPL_NEW_CHOICE_FP("Select Laue Class", LaueClass, FilterParameter::Parameter, WriteIPFStandardTriangle, choices, false));
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Select Laue Class", LaueClass, FilterParameter::Parameter, WriteIPFStandardTriangle, choices, false));
 
-    parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, WriteIPFStandardTriangle, "*.tif, *.bmp, *.png", "Image"));
-    parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Parameter, WriteIPFStandardTriangle));
-    setFilterParameters(parameters);
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, WriteIPFStandardTriangle, "*.tif, *.bmp, *.png", "Image"));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Parameter, WriteIPFStandardTriangle));
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -106,10 +104,10 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-    reader->openFilterGroup(this, index);
-    setOutputFile(reader->readString("OutputFile", getOutputFile()));
-    setImageSize(reader->readValue("ImageSize", getImageSize()));
-    reader->closeFilterGroup();
+  reader->openFilterGroup(this, index);
+  setOutputFile(reader->readString("OutputFile", getOutputFile()));
+  setImageSize(reader->readValue("ImageSize", getImageSize()));
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -124,55 +122,57 @@ void WriteIPFStandardTriangle::initialize()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::dataCheck()
 {
-    setErrorCondition(0);
+  setErrorCondition(0);
+  setWarningCondition(0);
 
-    QString ss;
-    if(getOutputFile().isEmpty() == true)
-    {
-        ss = QObject::tr("The output file must be set");
-        setErrorCondition(-1);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-    }
+  QString ss;
+  if(getOutputFile().isEmpty() == true)
+  {
+    ss = QObject::tr("The output file must be set");
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
-    QFileInfo fi(getOutputFile());
-    QDir parentPath = fi.path();
-    QString ext = fi.completeSuffix();
+  QFileInfo fi(getOutputFile());
+  QDir parentPath = fi.path();
+  QString ext = fi.completeSuffix();
 
-    if(parentPath.exists() == false)
-    {
-        ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-        notifyWarningMessage(getHumanLabel(), ss, -1);
-    }
+  if(parentPath.exists() == false)
+  {
+    setWarningCondition(-1002);
+    ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+  }
 
-    if(ext.isEmpty())
-    {
-        ss = QObject::tr("The output file does not have an extension");
-        setErrorCondition(-1003);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-    }
-    else if(ext != "tif" && ext != "bmp" && ext != "png")
-    {
-        ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file");
-        setErrorCondition(-1004);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-    }
+  if(ext.isEmpty())
+  {
+    ss = QObject::tr("The output file does not have an extension");
+    setErrorCondition(-1003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+  else if(ext != "tif" && ext != "bmp" && ext != "png")
+  {
+    ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file");
+    setErrorCondition(-1004);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
-    if(m_ImageSize <= 0)
-    {
-        setErrorCondition(-1005);
-        notifyErrorMessage(getHumanLabel(), "The size of the image must be positive", getErrorCondition());
-        return;
-    }
+  if(m_ImageSize <= 0)
+  {
+    setErrorCondition(-1005);
+    notifyErrorMessage(getHumanLabel(), "The size of the image must be positive", getErrorCondition());
+    return;
+  }
 
-    if(m_LaueClass < 0 || m_LaueClass > 10)
-    {
-        setErrorCondition(-1006);
-        notifyErrorMessage(getHumanLabel(), "The Laue Class value must be in the range [0-10]. See documentation for the complete list of values.", getErrorCondition());
-        return;
-    }
+  if(m_LaueClass < 0 || m_LaueClass > 10)
+  {
+    setErrorCondition(-1006);
+    notifyErrorMessage(getHumanLabel(), "The Laue Class value must be in the range [0-10]. See documentation for the complete list of values.", getErrorCondition());
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -180,12 +180,12 @@ void WriteIPFStandardTriangle::dataCheck()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::preflight()
 {
-    setInPreflight(true);
-    emit preflightAboutToExecute();
-    emit updateFilterParameters(this);
-    dataCheck();
-    emit preflightExecuted();
-    setInPreflight(false);
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -193,77 +193,79 @@ void WriteIPFStandardTriangle::preflight()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::execute()
 {
-    setErrorCondition(0);
-    dataCheck();
-    if(getErrorCondition() < 0)
-    {
-        return;
-    }
+  setErrorCondition(0);
+  setWarningCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
-    QImage image;
+  QImage image;
 
-    if(m_LaueClass == 0)
-    {
-        HexagonalIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 1)
-    {
-        CubicIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 2)
-    {
-        HexagonalLowIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 3)
-    {
-        CubicLowIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 4)
-    {
-        TriclinicIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 5)
-    {
-        MonoclinicIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 6)
-    {
-        OrthorhombicIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 7)
-    {
-        TetragonalLowIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 8)
-    {
-        TetragonalIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 9)
-    {
-        TrigonalLowIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
-    else if(m_LaueClass == 10)
-    {
-        TrigonalIPFLegendPainter legendPainter;
-        image = legendPainter.createLegend(getImageSize(), getImageSize());
-    }
+  if(m_LaueClass == 0)
+  {
+    HexagonalIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 1)
+  {
+    CubicIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 2)
+  {
+    HexagonalLowIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 3)
+  {
+    CubicLowIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 4)
+  {
+    TriclinicIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 5)
+  {
+    MonoclinicIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 6)
+  {
+    OrthorhombicIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 7)
+  {
+    TetragonalLowIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 8)
+  {
+    TetragonalIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 9)
+  {
+    TrigonalLowIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
+  else if(m_LaueClass == 10)
+  {
+    TrigonalIPFLegendPainter legendPainter;
+    image = legendPainter.createLegend(getImageSize(), getImageSize());
+  }
 
-    if(!image.isNull()) {
-        writeImage(image);
-    }
+  if(!image.isNull())
+  {
+    writeImage(image);
+  }
 
-    /* Let the GUI know we are done with this filter */
-    notifyStatusMessage(getHumanLabel(), "Complete");
+  /* Let the GUI know we are done with this filter */
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -272,37 +274,36 @@ void WriteIPFStandardTriangle::execute()
 void WriteIPFStandardTriangle::writeImage(QImage& image)
 {
 
-    QString ss = QObject::tr("Writing Image %1").arg(getOutputFile());
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  QString ss = QObject::tr("Writing Image %1").arg(getOutputFile());
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-    QFileInfo fi((m_OutputFile));
-    QDir parent(fi.absolutePath());
-    if(parent.exists() == false)
-    {
-        parent.mkpath(fi.absolutePath());
-    }
+  QFileInfo fi((m_OutputFile));
+  QDir parent(fi.absolutePath());
+  if(parent.exists() == false)
+  {
+    parent.mkpath(fi.absolutePath());
+  }
 
-    bool saved = image.save((m_OutputFile));
-    if(!saved)
-    {
-        QString ss = QObject::tr("The Triangle image file '%1' was not saved").arg(getOutputFile());
-        setErrorCondition(-90011);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
+  bool saved = image.save((m_OutputFile));
+  if(!saved)
+  {
+    QString ss = QObject::tr("The Triangle image file '%1' was not saved").arg(getOutputFile());
+    setErrorCondition(-90011);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFilterParameters)
 {
-    WriteIPFStandardTriangle::Pointer filter = WriteIPFStandardTriangle::New();
-    if(true == copyFilterParameters)
-    {
-        copyFilterParameterInstanceVariables(filter.get());
-    }
-    return filter;
+  WriteIPFStandardTriangle::Pointer filter = WriteIPFStandardTriangle::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
 }
 
 // -----------------------------------------------------------------------------
@@ -310,7 +311,7 @@ AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getCompiledLibraryName()
 {
-    return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
 
 // -----------------------------------------------------------------------------
@@ -318,7 +319,7 @@ const QString WriteIPFStandardTriangle::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getBrandingString()
 {
-    return "OrientationAnalysis";
+  return "OrientationAnalysis";
 }
 
 // -----------------------------------------------------------------------------
@@ -326,17 +327,17 @@ const QString WriteIPFStandardTriangle::getBrandingString()
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getFilterVersion()
 {
-    QString version;
-    QTextStream vStream(&version);
-    vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
-    return version;
+  QString version;
+  QTextStream vStream(&version);
+  vStream << OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getGroupName()
 {
-    return SIMPL::FilterGroups::IOFilters;
+  return SIMPL::FilterGroups::IOFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -344,7 +345,7 @@ const QString WriteIPFStandardTriangle::getGroupName()
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getSubGroupName()
 {
-    return SIMPL::FilterSubGroups::OutputFilters;
+  return SIMPL::FilterSubGroups::OutputFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -352,5 +353,5 @@ const QString WriteIPFStandardTriangle::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getHumanLabel()
 {
-    return "Export IPF Triangle Legend";
+  return "Export IPF Triangle Legend";
 }

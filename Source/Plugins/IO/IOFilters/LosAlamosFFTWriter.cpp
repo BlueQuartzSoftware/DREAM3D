@@ -127,6 +127,7 @@ void LosAlamosFFTWriter::initialize()
 void LosAlamosFFTWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -141,8 +142,9 @@ void LosAlamosFFTWriter::dataCheck()
   QDir parentPath = fi.path();
   if(parentPath.exists() == false)
   {
+    setWarningCondition(-2001);
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -212,6 +214,7 @@ int32_t LosAlamosFFTWriter::writeHeader()
 int32_t LosAlamosFFTWriter::writeFile()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -119,6 +119,7 @@ void FindBoundaryCells::initialize()
 void FindBoundaryCells::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   DataArrayPath tempPath;
 
@@ -160,6 +161,7 @@ void FindBoundaryCells::preflight()
 void FindBoundaryCells::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

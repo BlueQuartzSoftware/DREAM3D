@@ -231,6 +231,7 @@ void RotateSampleRefFrame::initialize()
 void RotateSampleRefFrame::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -240,6 +241,7 @@ void RotateSampleRefFrame::preflight()
 {
   setInPreflight(true);
   setErrorCondition(0);
+  setWarningCondition(0);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
@@ -426,6 +428,7 @@ void RotateSampleRefFrame::preflight()
 void RotateSampleRefFrame::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

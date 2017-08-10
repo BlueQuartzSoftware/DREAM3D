@@ -105,6 +105,7 @@ void AlignSections::initialize()
 void AlignSections::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
@@ -170,6 +171,7 @@ template <typename T> void initializeArrayValues(IDataArray::Pointer p, size_t i
 void AlignSections::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

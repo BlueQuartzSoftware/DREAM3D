@@ -52,6 +52,7 @@ ComputeMomentInvariants2D::~ComputeMomentInvariants2D()
 void ComputeMomentInvariants2D::initialize()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   setCancel(false);
 }
 
@@ -98,6 +99,7 @@ void ComputeMomentInvariants2D::setupFilterParameters()
 void ComputeMomentInvariants2D::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
   if(nullptr == igeom.get())
@@ -218,8 +220,8 @@ void ComputeMomentInvariants2D::execute()
       m_Omega1[featureId] = 0.0f;
       m_Omega2[featureId] = 0.0f;
       QString ss = QObject::tr("Feature %1 is NOT strictly 2D in the XY plane. Skipping this feature.").arg(featureId);
-      setErrorCondition(0);
-      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      setWarningCondition(-3000);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
       continue;
     }
 

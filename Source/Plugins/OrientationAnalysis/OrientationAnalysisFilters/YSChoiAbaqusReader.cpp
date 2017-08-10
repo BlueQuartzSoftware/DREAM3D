@@ -156,6 +156,7 @@ void YSChoiAbaqusReader::readFilterParameters(AbstractFilterParametersReader* re
 void YSChoiAbaqusReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_CellEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -181,6 +182,7 @@ void YSChoiAbaqusReader::updateCellInstancePointers()
 void YSChoiAbaqusReader::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_AvgQuatsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -198,6 +200,7 @@ void YSChoiAbaqusReader::updateFeatureInstancePointers()
 void YSChoiAbaqusReader::updateEnsembleInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -219,6 +222,7 @@ void YSChoiAbaqusReader::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
+  setWarningCondition(0);
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0)

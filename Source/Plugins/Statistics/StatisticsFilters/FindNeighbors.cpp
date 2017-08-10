@@ -150,6 +150,7 @@ void FindNeighbors::initialize()
 void FindNeighbors::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   DataArrayPath tempPath;
 
@@ -228,6 +229,7 @@ void FindNeighbors::preflight()
 void FindNeighbors::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -133,6 +133,7 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
 void QuickSurfaceMesh::updateVertexInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   if(nullptr != m_NodeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
@@ -145,6 +146,7 @@ void QuickSurfaceMesh::updateVertexInstancePointers()
 void QuickSurfaceMesh::updateFaceInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   if(nullptr != m_FaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
@@ -189,6 +191,7 @@ void QuickSurfaceMesh::initialize()
 void QuickSurfaceMesh::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
 
   DataArrayPath tempPath;
@@ -330,6 +333,7 @@ void QuickSurfaceMesh::getGridCoordinates(IGeometryGrid::Pointer grid, size_t x,
 void QuickSurfaceMesh::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

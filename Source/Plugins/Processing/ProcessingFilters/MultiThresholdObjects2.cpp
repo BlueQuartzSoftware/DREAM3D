@@ -112,6 +112,7 @@ void MultiThresholdObjects2::initialize()
 void MultiThresholdObjects2::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<AbstractComparison::Pointer> comparisonValues = m_SelectedThresholds.getComparisonValues();
 

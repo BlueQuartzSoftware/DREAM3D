@@ -123,6 +123,7 @@ void SPParksTextReader::readFilterParameters(AbstractFilterParametersReader* rea
 void SPParksTextReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // if( nullptr != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   //{ m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -146,6 +147,7 @@ void SPParksTextReader::initialize()
 void SPParksTextReader::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
@@ -230,6 +232,7 @@ void SPParksTextReader::execute()
 {
   int32_t err = 0;
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

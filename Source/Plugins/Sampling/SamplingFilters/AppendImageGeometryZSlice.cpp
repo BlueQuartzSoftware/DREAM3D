@@ -111,6 +111,7 @@ void AppendImageGeometryZSlice::initialize()
 void AppendImageGeometryZSlice::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Validate the Source & Destination Attribute Matrix are available
   AttributeMatrix::Pointer inputCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getInputAttributeMatrix(), -8201);
@@ -242,6 +243,7 @@ void AppendImageGeometryZSlice::preflight()
 void AppendImageGeometryZSlice::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   dataCheck();
   if(getErrorCondition() < 0)
@@ -294,8 +296,8 @@ void AppendImageGeometryZSlice::execute()
     else
     {
       QString ss = QObject::tr("Data Array '%1' does not exist in the Input Cell AttributeMatrix.").arg(*iter);
-      setErrorCondition(0);
-      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      setWarningCondition(-8203);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
   }
 
