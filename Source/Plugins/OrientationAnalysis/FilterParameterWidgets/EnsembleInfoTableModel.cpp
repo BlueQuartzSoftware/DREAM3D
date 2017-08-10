@@ -235,19 +235,19 @@ QVariant EnsembleInfoTableModel::data(const QModelIndex& index, qint32 role) con
     if(col == CrystalStructure)
     {
       EnsembleInfo info = m_EnsembleInfo;
-      QString structure = getCrystalStructureStr(info[index.row()].crystalStructure);
+      QString structure = getCrystalStructureStr(info.getCrystalStructure(index.row()));
       return QVariant(structure);
     }
     else if(col == PhaseType)
     {
       EnsembleInfo info = m_EnsembleInfo;
-      QString phase = getPhaseTypeStr(info[index.row()].phaseType);
+      QString phase = getPhaseTypeStr(info.getPhaseType(index.row()));
       return QVariant(phase);
     }
     else if(col == PhaseName)
     {
       EnsembleInfo info = m_EnsembleInfo;
-      QString phaseName = info[index.row()].phaseName;
+      QString phaseName = info.getPhaseName(index.row());
       return QVariant(phaseName);
     }
     //    else if (col == FeaturePhaseValue)
@@ -326,13 +326,13 @@ bool EnsembleInfoTableModel::setData(const QModelIndex& index, const QVariant& v
   switch(col)
   {
   case CrystalStructure:
-    m_EnsembleInfo[row].crystalStructure = static_cast<EnsembleInfo::CrystalStructure>(value.toInt());
+    m_EnsembleInfo.setCrystalStructure(row, static_cast<EnsembleInfo::CrystalStructure>(value.toInt()));
     break;
   case PhaseType:
-    m_EnsembleInfo[row].phaseType = static_cast<PhaseType::Type>(value.toInt(&ok));
+    m_EnsembleInfo.setPhaseType(row, static_cast<PhaseType::Type>(value.toInt(&ok)));
     break;
   case PhaseName:
-    m_EnsembleInfo[row].phaseName = value.toString();
+    m_EnsembleInfo.setPhaseName(row, value.toString());
     break;
   default:
     Q_ASSERT(false);
@@ -354,7 +354,7 @@ bool EnsembleInfoTableModel::insertRows(int row, int count, const QModelIndex& i
   beginInsertRows(QModelIndex(), row, row + count - 1);
   for(int i = 0; i < count; ++i)
   {
-    m_EnsembleInfo.addInput(crystalStructure, phaseType, phaseName);
+    m_EnsembleInfo.addValues(crystalStructure, phaseType, phaseName);
     m_RowCount = m_EnsembleInfo.size();
   }
   endInsertRows();
@@ -404,7 +404,7 @@ void EnsembleInfoTableModel::setTableData(QVector<int> crystalStructures, QVecto
     EnsembleInfo::CrystalStructure crystalStruct = static_cast<EnsembleInfo::CrystalStructure>(crystalStructures[i]);
     PhaseType::Type phase = static_cast<PhaseType::Type>(phaseTypes[i]);
     QString name = phaseNames[i];
-    m_EnsembleInfo.addInput(crystalStruct, phase, name);
+    m_EnsembleInfo.addValues(crystalStruct, phase, name);
   }
 
   m_RowCount = count;
@@ -432,11 +432,7 @@ void EnsembleInfoTableModel::setTableData(EnsembleInfo& ensemble)
   beginInsertRows(QModelIndex(), row, row + count - 1);
 
   m_EnsembleInfo.clear();
-  for(int i = 0; i < ensemble.size(); ++i)
-  {
-    EnsembleInfo::InputType_t info = ensemble[i];
-    m_EnsembleInfo.addInput(info);
-  }
+  m_EnsembleInfo = ensemble;
   m_RowCount = count;
   endInsertRows();
   QModelIndex topLeft = createIndex(0, 0);
@@ -454,12 +450,15 @@ void EnsembleInfoTableModel::getTableData(QVector<int>& crystalStructures, QVect
   QVector<QString> names;
 
   int count = m_EnsembleInfo.size();
+  EnsembleInfo::CrystalStructureType* crystalStructurePtr = m_EnsembleInfo.getCrystalStructureArray()->getPointer(0);
+  PhaseType::EnumType* phaseTypePtr = m_EnsembleInfo.getPhaseTypeArray()->getPointer(0);
+  StringDataArray::Pointer phaseNamePtr = m_EnsembleInfo.getPhaseNameArray();
+
   for(int i = 0; i < count; i++)
   {
-    EnsembleInfo::InputType_t info = m_EnsembleInfo[i];
-    structures.push_back(static_cast<int>(info.crystalStructure));
-    phases.push_back(static_cast<int>(info.phaseType));
-    names.push_back(info.phaseName);
+    structures.push_back(static_cast<int>(crystalStructurePtr[i]));
+    phases.push_back(static_cast<int>(phaseTypePtr[i]));
+    names.push_back(phaseNamePtr->getValue(i));
   }
 
   crystalStructures = structures;

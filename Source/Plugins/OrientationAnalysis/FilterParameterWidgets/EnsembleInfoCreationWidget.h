@@ -129,7 +129,7 @@ class EnsembleInfoCreationWidget : public FilterParameterWidget, private Ui::Ens
      * @brief setComparisons
      * @param comparisons
      */
-    virtual void setEnsembleInput(QVector<EnsembleInfo::InputType_t> info);
+    virtual void setEnsembleInput(EnsembleInfo info);
 
     /**
      * @brief getComparisonInputs

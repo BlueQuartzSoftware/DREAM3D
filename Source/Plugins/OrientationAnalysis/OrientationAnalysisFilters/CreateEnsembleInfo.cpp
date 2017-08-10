@@ -214,34 +214,39 @@ void CreateEnsembleInfo::execute()
     return;
   }
 
+  DataArray<EnsembleInfo::CrystalStructureType>::Pointer crystalStructures = m_Ensemble.getCrystalStructureArray();
+  DataArray<PhaseType::EnumType>::Pointer phaseTypes = m_Ensemble.getPhaseTypeArray();
+  StringDataArray::Pointer phaseNames = m_Ensemble.getPhaseNameArray();
+
   for(int i = 0; i < numPhases; i++)
   {
-    EnsembleInfo::InputType_t info = m_Ensemble[i];
-
     // Crystal Structure
-    if(static_cast<unsigned int>(info.crystalStructure) == Ebsd::CrystalStructure::UnknownCrystalStructure)
+    uint32_t crystalStructure = crystalStructures->getValue(i);
+    if(crystalStructure == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
-      QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(static_cast<unsigned int>(info.crystalStructure));
+      QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(crystalStructure);
       setErrorCondition(-10006);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
-    m_CrystalStructures[i+1] = static_cast<unsigned int>(info.crystalStructure);
+    m_CrystalStructures[i + 1] = crystalStructure;
 
     // Phase Type
-    if(info.phaseType == PhaseType::Type::Unknown)
+    uint32_t phaseType = phaseTypes->getValue(i);
+    if(static_cast<PhaseType::Type>(phaseType) == PhaseType::Type::Unknown)
     {
-      QString ss = QObject::tr("Incorrect phase type '%1'").arg(static_cast<int>(info.phaseType)); // The phase type name was not found in the lookup table
+      QString ss = QObject::tr("Incorrect phase type '%1'").arg(phaseType); // The phase type name was not found in the lookup table
       setErrorCondition(-10007);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
-    m_PhaseTypes[i+1] = static_cast<unsigned int>(info.phaseType);
+    m_PhaseTypes[i+1] = phaseType;
 
     // Phase Name
-    if(info.phaseName.isEmpty())
+    QString phaseName = phaseNames->getValue(i);
+    if(phaseName.isEmpty())
     {
       QString ss = QObject::tr("Phase name cannot be empty'"); // The phase name was not found
       setErrorCondition(-10008);
@@ -249,7 +254,7 @@ void CreateEnsembleInfo::execute()
       return;
     }
 
-    m_PhaseNamesPtr.lock()->setValue(i+1, info.phaseName);
+    m_PhaseNamesPtr.lock()->setValue(i+1, phaseName);
   }
 
   /* Let the GUI know we are done with this filter */

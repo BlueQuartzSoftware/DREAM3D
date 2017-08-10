@@ -96,10 +96,20 @@ void EnsembleInfoFilterParameter::readJson(const QJsonObject& json)
     EnsembleInfo inputs;
     for(int i = 0; i < jsonArray.size(); i++)
     {
-      QJsonObject comparisonObj = jsonArray[i].toObject();
-      EnsembleInfo::InputType_t input;
-      input.readJson(comparisonObj);
-      inputs.addInput(input);
+      QJsonObject ensembleObj = jsonArray[i].toObject();
+
+      if(ensembleObj["CrystalStructure"].isDouble() &&
+        ensembleObj["PhaseType"].isDouble() && 
+        ensembleObj["PhaseName"].isString())
+      {
+        EnsembleInfo::CrystalStructureType crystalStructure = ensembleObj["CrystalStructure"].toInt();
+        PhaseType::EnumType phaseType = ensembleObj["PhaseType"].toInt();
+        QString phaseName = ensembleObj["PhaseName"].toString();
+
+        inputs.addValues(static_cast<EnsembleInfo::CrystalStructure>(crystalStructure),
+          static_cast<PhaseType::Type>(phaseType),
+          phaseName);
+      }
     }
 
     m_SetterCallback(inputs);
@@ -118,9 +128,17 @@ void EnsembleInfoFilterParameter::writeJson(QJsonObject& json)
     EnsembleInfo inputs = m_GetterCallback();
     for(int i = 0; i < inputs.size(); i++)
     {
-      EnsembleInfo::InputType_t input = inputs[i];
+      EnsembleInfo::CrystalStructure crystalStructure;
+      PhaseType::Type phaseType;
+      QString phaseName;
+
+      inputs.getValues(i, crystalStructure, phaseType, phaseName);
+
       QJsonObject obj;
-      input.writeJson(obj);
+      obj["CrystalStructure"] = static_cast<int>(crystalStructure);
+      obj["PhaseType"] = static_cast<int>(phaseType);
+      obj["PhaseName"] = phaseName;
+
       inputsArray.push_back(obj);
     }
 

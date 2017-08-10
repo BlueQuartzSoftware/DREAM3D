@@ -82,19 +82,19 @@ EnsembleInfo EnsembleInfoCreationWidget::getEnsembleInfo()
     return ensembleInfo;
   }
 
-  int filterCount = m_EnsembleInfoTableModel->rowCount();
+  int rowCount = m_EnsembleInfoTableModel->rowCount();
   QVector<int> crystalStructures;
   QVector<int> phaseTypes;
   QVector<QString> phaseNames;
   m_EnsembleInfoTableModel->getTableData(crystalStructures, phaseTypes, phaseNames);
 
-  for(int i = 0; i < filterCount; ++i)
+  for(int i = 0; i < rowCount; ++i)
   {
-    EnsembleInfo::InputType_t info;
-    info.crystalStructure = static_cast<EnsembleInfo::CrystalStructure>(crystalStructures[i]);
-    info.phaseType = static_cast<PhaseType::Type>(phaseTypes[i]);
-    info.phaseName = phaseNames[i];
-    ensembleInfo.addInput(info);
+    EnsembleInfo::CrystalStructure structure = static_cast<EnsembleInfo::CrystalStructure>(crystalStructures[i]);
+    PhaseType::Type phaseType = static_cast<PhaseType::Type>(phaseTypes[i]);
+    QString phaseName = phaseNames[i];
+
+    ensembleInfo.addValues(structure, phaseType, phaseName);
   }
   return ensembleInfo;
 }
@@ -126,8 +126,6 @@ void EnsembleInfoCreationWidget::setupGui()
   m_EnsembleInfoTableModel = createEnsembleInfoModel();
 
   // Set the data into the TableModel
-  QString name = PROPERTY_NAME_AS_CHAR;
-  QVariant prop = getFilter()->property(PROPERTY_NAME_AS_CHAR);
   EnsembleInfo info = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<EnsembleInfo>();
   m_EnsembleInfoTableModel->setTableData(info);
 
@@ -310,7 +308,7 @@ void EnsembleInfoCreationWidget::on_removeComparison_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EnsembleInfoCreationWidget::setEnsembleInput(QVector<EnsembleInfo::InputType_t> info)
+void EnsembleInfoCreationWidget::setEnsembleInput(EnsembleInfo info)
 {
   qint32 count = info.size();
 
@@ -318,11 +316,18 @@ void EnsembleInfoCreationWidget::setEnsembleInput(QVector<EnsembleInfo::InputTyp
   QVector<int> phaseTypes(count);
   QVector<QString> phaseNames(count);
   // bool ok = false;
+
   for(int i = 0; i < count; ++i)
   {
-    crystalStructures[i] = static_cast<int>(info[i].crystalStructure);
-    phaseTypes[i] = static_cast<int>(info[i].phaseType);
-    phaseNames[i] = info[i].phaseName;
+    EnsembleInfo::CrystalStructure structure;
+    PhaseType::Type type;
+    QString name;
+
+    info.getValues(i, structure, type, name);
+
+    crystalStructures[i] = static_cast<int>(structure);
+    phaseTypes[i] = static_cast<int>(type);
+    phaseNames[i] = name;
   }
   m_EnsembleInfoTableModel->setTableData(crystalStructures, phaseTypes, phaseNames);
 }

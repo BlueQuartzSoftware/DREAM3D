@@ -57,17 +57,17 @@ EnsembleInfoItemDelegate::EnsembleInfoItemDelegate(int numPhases, QObject* paren
 : QStyledItemDelegate(parent)
 , m_NumberOfPhases(numPhases)
 {
-  m_CrystalStructureList.push_back("Hexagonal-High 6/mmm");
-  m_CrystalStructureList.push_back("Cubic Cubic-High m3m");
-  m_CrystalStructureList.push_back("Hexagonal-Low 6/m");
-  m_CrystalStructureList.push_back("Cubic Cubic-Low m3 (Tetrahedral)");
-  m_CrystalStructureList.push_back("Triclinic-1");
-  m_CrystalStructureList.push_back("Monoclinic 2/m");
-  m_CrystalStructureList.push_back("Ortgiginbic mmm");
-  m_CrystalStructureList.push_back("Tetragonal-Low 4/m");
-  m_CrystalStructureList.push_back("Tetragonal-High 4/mmm");
-  m_CrystalStructureList.push_back("Trigonal-Low -3");
-  m_CrystalStructureList.push_back("Trigonal-High -3m");
+  m_CrystalStructureList.push_back("Hexagonal-High");
+  m_CrystalStructureList.push_back("Cubic-High");
+  m_CrystalStructureList.push_back("Hexagonal-Low");
+  m_CrystalStructureList.push_back("Cubic-Low");
+  m_CrystalStructureList.push_back("Triclinic");
+  m_CrystalStructureList.push_back("Monoclinic");
+  m_CrystalStructureList.push_back("Ortgiginbic");
+  m_CrystalStructureList.push_back("Tetragonal-Low");
+  m_CrystalStructureList.push_back("Tetragonal-High");
+  m_CrystalStructureList.push_back("Trigonal-Low");
+  m_CrystalStructureList.push_back("Trigonal-High");
 
   m_PhaseTypeList.push_back("Primary Phase");
   m_PhaseTypeList.push_back("Precipitate Phase");
@@ -145,6 +145,7 @@ QWidget* EnsembleInfoItemDelegate::createEditor(QWidget* widgetParent, const QSt
     operatorCombo = new QComboBox(widgetParent);
     operatorCombo->addItems(m_CrystalStructureList);
     operatorCombo->setAutoFillBackground(true);
+    operatorCombo->update();
     if(tableModel)
     {
       connect(operatorCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(crystalStructureChangedData(int)));
@@ -239,6 +240,7 @@ void EnsembleInfoItemDelegate::setModelData(QWidget* editor, QAbstractItemModel*
   {
     QComboBox* comboBox = qobject_cast<QComboBox*>(editor);
     Q_ASSERT(comboBox);
+    int i = comboBox->currentIndex();
     model->setData(index, comboBox->currentIndex());
   }
   else if(col == EnsembleInfoTableModel::PhaseType)
