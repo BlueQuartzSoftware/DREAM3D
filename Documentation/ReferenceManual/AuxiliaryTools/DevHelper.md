@@ -14,8 +14,8 @@ It is highly recommended that developers use **DevHelper** to create their **Plu
 
 -------------------
 
-![DevHelper Main Window - PluginMaker](Images/DevHelper/DevHelper-image001.png)
-@image latex Images/DevHelper/DevHelper-image001.png "DevHelper Main Window - PluginMaker" width=6in
+![DevHelper Main Window - PluginMaker](Images/DevHelper/DevHelper-Image001.png)
+@image latex Images/DevHelper/DevHelper-Image001.png "DevHelper Main Window - PluginMaker" width=6in
 
 -------------------
 
@@ -33,8 +33,8 @@ The **PluginMaker** tab of the **DevHelper** interface is quite simple.  This ta
 1. Choose a **Plugin** name and type it in the _Plugin Name_ field
 2. Choose an output directory by selecting it with the _Select_ button or typing it in the _Output Dir_ field
 3. Press the _Add Filter_ button in the bottom left corner to add additional **Filters**. After pressing the button, the _Add New Filter Dialog_ will appear. Type in the new **Filter's** name, select either public or private, and then press _OK_
-![Add New Filter Dialog](Images/DevHelper/DevHelper-image003.png)
-@image latex Images/DevHelper/DevHelper-image003.png "Add New Filter Dialog" width=6in
+![Add New Filter Dialog](Images/DevHelper/DevHelper-Image003.png)
+@image latex Images/DevHelper/DevHelper-Image003.png "Add New Filter Dialog" width=6in
 4. Continue adding new **Filters** as needed
 5. If a **Filter** has been added erroneously and needs to be removed, just select one of the **Filter's** files in the tree (the **Filter's** .cpp, .h, or .md files) and press _Remove Filter_
 6. Peruse the tree and look over the files that will be generated for accuracy
@@ -46,8 +46,8 @@ The **Plugin** now exists in the directory that was specified in the _Output Dir
 
 -------------------
 
-![DevHelper Main Window - FilterMaker](Images/DevHelper/DevHelper-image002.png)
-@image latex Images/DevHelper/DevHelper-image002.png "DevHelper Main Window - FilterMaker" width=6in
+![DevHelper Main Window - FilterMaker](Images/DevHelper/DevHelper-Image002.png)
+@image latex Images/DevHelper/DevHelper-Image002.png "DevHelper Main Window - FilterMaker" width=6in
 
 -------------------
 
@@ -70,8 +70,8 @@ The **FilterMaker** tab contains all the elements needed to create a new **Filte
 2. Choose the top level directory of the **Plugin** that you want to add the **Filter** to, and type it in the _Plugin Directory_ field.  The directory can also be selected using the _Select_ button
 3. Choose whether to make the **Filter** public or private using buttons in the left pane
 4. Press the _green plus_ icon to add a new **Filter** parameter.  The _Add Filter Parameter Dialog_ will appear
-![Add Filter Parameter Dialog](Images/DevHelper/DevHelper-image004.png)
-@image latex Images/DevHelper/DevHelper-image004.png "Add Filter Parameter Dialog" width=6in
+![Add Filter Parameter Dialog](Images/DevHelper/DevHelper-Image004.png)
+@image latex Images/DevHelper/DevHelper-Image004.png "Add Filter Parameter Dialog" width=6in
 5. In the _Add Filter Parameter Dialog_, choose a _Variable Name_, _Human Name_, and _Initial Value_, and type them in the appropriate fields.  Choose the widget type that your new filter parameter will be using.  Press **Add**.
 6. The new **Filter** parameter will appear in the **Filter** parameters table.  Any value except *Type* can be changed inline, so feel free to rename values as necessary
 7. If a **Filter** parameter has been added erroneously and needs to be removed, just select the **Filter** parameter's row and press the _red minus_ icon.

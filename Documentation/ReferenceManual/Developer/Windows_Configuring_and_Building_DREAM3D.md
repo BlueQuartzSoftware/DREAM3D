@@ -45,19 +45,19 @@ Open the **DREAM3D_SDK.cmake** file in the **DREAM3D_SDK** folder.  Check that t
 ## Instructions ##
 
 1. Open CMake and set the **Where is the source code** path to *C:\\[YOUR-USER-FOLDER]\\Workspace\\DREAM3D*.
-![](Images/Win_source_code_path.png)
+![](Images/Win_SourceCodePath.png)
 
 2. Set the **Where to build the binaries** path to *C:\\[YOUR-USER-FOLDER]\\Workspace\\Builds\\DREAM3D-Build\\Debug*.
-![](Images/Win_build_binaries_debug.png)
+![](Images/Win_BuildBinariesDebug.png)
 
 3. We are going to create a CMake variable.  Press the **Add Entry** button.
-![](Images/Win_add_entry.png)
+![](Images/Win_AddEntry.png)
 
 4. Set the **Name** to *DREAM3D_SDK*.  Set the **Type** to *PATH* and set the **Value** to *C:\\DREAM3D_SDK*
-![](Images/Win_create_cmake_variable.png)
+![](Images/Win_CreateCmakeVariable.png)
 
 5. You should now have one variable, DREAM3D_SDK.
-![](Images/Win_cmake_before_config.png)
+![](Images/Win_CmakeBeforeConfig.png)
 
 6. Press the **Configure** button in CMake.
 
@@ -67,12 +67,12 @@ Open the **DREAM3D_SDK.cmake** file in the **DREAM3D_SDK** folder.  Check that t
     - For command line use, set it to **Unix Makefiles** or, if installed, **Ninja**.  Any generator can be used for command line, but these are the recommended ones.
 
 Make sure **Use default native compilers** is checked.
-![](Images/Win_generator.png)
+![](Images/Win_Generator.png)
 
 8. When the configuration is finished, make sure that **CMAKE_BUILD_TYPE** is set to *Debug*.
 
 9. Press the **Configure** button in CMake again.  You may need to click **Configure** a few times until all the red highlights are gone.
-![](Images/Win_cmake_after_config.png)
+![](Images/Win_CmakeAfterConfig.png)
 
 10. Press the **Generate** button in CMake to generate the build files.
 
