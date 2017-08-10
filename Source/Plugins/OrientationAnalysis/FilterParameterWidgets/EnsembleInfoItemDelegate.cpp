@@ -145,7 +145,6 @@ QWidget* EnsembleInfoItemDelegate::createEditor(QWidget* widgetParent, const QSt
     operatorCombo = new QComboBox(widgetParent);
     operatorCombo->addItems(m_CrystalStructureList);
     operatorCombo->setAutoFillBackground(true);
-    operatorCombo->update();
     if(tableModel)
     {
       connect(operatorCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(crystalStructureChangedData(int)));

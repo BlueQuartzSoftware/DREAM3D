@@ -78,13 +78,13 @@ QString EnsembleInfoTableModel::getCrystalStructureStr(EnsembleInfo::CrystalStru
   switch(structure)
   {
   case EnsembleInfo::CrystalStructure::Hexagonal_High:
-    return "Hexagonal_High";
+    return "Hexagonal-High";
   case EnsembleInfo::CrystalStructure::Cubic_High:
-    return "Cubic_High";
+    return "Cubic-High";
   case EnsembleInfo::CrystalStructure::Hexagonal_Low:
-    return "Hexagonal_Low";
+    return "Hexagonal-Low";
   case EnsembleInfo::CrystalStructure::Cubic_Low:
-    return "Cubic_High";
+    return "Cubic-Low";
   case EnsembleInfo::CrystalStructure::Triclinic:
     return "Triclinic";
   case EnsembleInfo::CrystalStructure::Monoclinic:
@@ -92,13 +92,13 @@ QString EnsembleInfoTableModel::getCrystalStructureStr(EnsembleInfo::CrystalStru
   case EnsembleInfo::CrystalStructure::OrthoRhombic:
     return "OrthoRhombic";
   case EnsembleInfo::CrystalStructure::Tetragonal_Low:
-    return "Tetragonal_Low";
+    return "Tetragonal-Low";
   case EnsembleInfo::CrystalStructure::Tetragonal_High:
-    return "Tetragonal_High";
+    return "Tetragonal-High";
   case EnsembleInfo::CrystalStructure::Trigonal_Low:
-    return "Trigonal_Low";
+    return "Trigonal-Low";
   case EnsembleInfo::CrystalStructure::Trigonal_High:
-    return "Trigonal_High";
+    return "Trigonal-High";
   default:
     return "Unknown Crystal Structure";
   }
