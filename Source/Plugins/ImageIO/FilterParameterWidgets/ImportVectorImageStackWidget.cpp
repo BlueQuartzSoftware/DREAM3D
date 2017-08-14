@@ -57,6 +57,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/StringOperations.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 #include "SVWidgetsLib/QtSupport/QtSFileUtils.h"
@@ -533,12 +534,15 @@ void ImportVectorImageStackWidget::on_m_Separator_textChanged(const QString& str
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::generateExampleInputFile()
 {
+  QString indexString = StringOperations::GeneratePaddedString(m_StartIndex->value(), m_TotalDigits->value(), '0');
+  QString compString = StringOperations::GeneratePaddedString(m_StartComp->value(), m_TotalDigits->value(), '0');
+
 
   QString filename = QString("%1%2%3%4%5.%6")
                          .arg(m_FilePrefix->text())
-                         .arg(m_StartIndex->text(), m_TotalDigits->value(), '0')
+                         .arg(indexString)
                          .arg(m_Separator->text())
-                         .arg(m_StartComp->text(), m_TotalDigits->value(), '0')
+                         .arg(compString)
                          .arg(m_FileSuffix->text())
                          .arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
@@ -701,7 +705,6 @@ void ImportVectorImageStackWidget::filterNeedsInputParameters(AbstractFilter* fi
   ImportVectorImageStack* f = qobject_cast<ImportVectorImageStack*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "ImportVectorImageStackWidget can ONLY be used with ImportVectorImageStack filter", __FILE__);
 
-  bool ok = false;
   f->setInputPath(m_LineEdit->text());
   f->setResolution(getResolutionValues());
   f->setOrigin(getOriginValues());
@@ -710,10 +713,10 @@ void ImportVectorImageStackWidget::filterNeedsInputParameters(AbstractFilter* fi
   f->setSeparator(m_Separator->text());
   f->setFileSuffix(m_FileSuffix->text());
   f->setFileExtension(m_FileExt->text());
-  f->setStartIndex(m_StartIndex->text().toLongLong(&ok));
-  f->setEndIndex(m_EndIndex->text().toLongLong(&ok));
-  f->setStartComp(m_StartComp->text().toLongLong(&ok));
-  f->setEndComp(m_EndComp->text().toLongLong(&ok));
+  f->setStartIndex(m_StartIndex->value());
+  f->setEndIndex(m_EndIndex->value());
+  f->setStartComp(m_StartComp->value());
+  f->setEndComp(m_EndComp->value());
   f->setPaddingDigits(m_TotalDigits->value());
 
   f->setRefFrameZDir(getRefFrameZDir());
