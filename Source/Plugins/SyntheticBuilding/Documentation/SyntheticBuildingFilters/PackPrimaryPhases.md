@@ -39,8 +39,8 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 | Use Mask | Boolean | Whether there is an array that defines where the **Features** can be placed and where they cannot *grow* past |
 | Already Have Featrues | bool | Whether the user already has the final location and the size and shape definition of the **Features** and can skip the **Feature** generation and iterative placement process |
 | Feature Input File | File Path | Path to the file that contains the description and location of the **Features** the user wishes to use (only necessary if *Already Have Featrues* is *true*) |
-| Write Goal Attributes | bool | Whether the user wants the goal attributes of the generated **Features** to be written to a file |
-| Goal Attributes CSV File | File Path | Path to the file that will hold the goal attributes of the generated **Features** (only necessary if *Write Goal Attributes* is *true*) |
+| Save Shape Description Arrays | Int | 0=Do not Save, 1=Save to New Attribute Matrix, 2=Append to existing AttributeMatrix |
+| New AttributeMatrix | DataArrayPath | AttributeMatrix to save the Shape DescriptionArrays into |
 
 ## Required Geometry ##
 Image
@@ -64,6 +64,21 @@ Image
 | **Feature Attribute Array** | Phases | int32_t | (1) |  Specifies to which **Ensemble** each **Feature** belongs |
 | **Attribute Matrix** | CellEnsembleData | Cell Ensemble | N/A | **Ensemble Attribute Matrix** for the created phases |
 | **Ensemble Attribute Array** | NumFeatures | int32_t | (1) |  Specifies the number of **Features** in each **Ensemble** |
+
+
+**Shape Description Arrays**
+
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|------|----------------------|-------------|
+| **Cell Attribute Array** | AxisEulerAngles | float | (3) | Morphological Orientation in Bunge Convention (ZX'Z'') |
+| **Cell Attribute Array** | AxisLengths | float | (3) | The Ellipsoid Aspect Ratios[a, a/b, c/a] |
+| **Cell Attribute Array** | Centroids | float | (3) | The XYZ value for each ellipsoid |
+| **Cell Attribute Array** | EquivalentDiameters | float | (1) | Equivalent Spherical Diameter |
+| **Cell Attribute Array** | Neighborhoods | int32_t | (1) |  |
+| **Cell Attribute Array** | Omega3s | float | (1) | The Shape Parameter |
+| **Cell Attribute Array** | Volumes | float | (1) | The Volume of the ellipsoid |
+
+
 
 ## License & Copyright ##
 

@@ -199,9 +199,9 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Precipitates", HavePrecips, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitate Input File", PrecipInputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.txt", "Text File"));
   linkedProps.clear();
-  linkedProps << "CsvOutputFile";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
+//  linkedProps << "CsvOutputFile";
+//  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
+//  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
