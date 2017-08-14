@@ -63,7 +63,7 @@ EnsembleInfoItemDelegate::EnsembleInfoItemDelegate(int numPhases, QObject* paren
   m_CrystalStructureList.push_back("Cubic-Low");
   m_CrystalStructureList.push_back("Triclinic");
   m_CrystalStructureList.push_back("Monoclinic");
-  m_CrystalStructureList.push_back("Ortgiginbic");
+  m_CrystalStructureList.push_back("OrthoRhombic");
   m_CrystalStructureList.push_back("Tetragonal-Low");
   m_CrystalStructureList.push_back("Tetragonal-High");
   m_CrystalStructureList.push_back("Trigonal-Low");
