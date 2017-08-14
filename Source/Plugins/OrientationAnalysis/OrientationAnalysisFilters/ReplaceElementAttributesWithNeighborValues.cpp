@@ -341,6 +341,7 @@ void ReplaceElementAttributesWithNeighborValues::initialize()
 void ReplaceElementAttributesWithNeighborValues::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getConfidenceIndexArrayPath().getDataContainerName());
 
@@ -378,6 +379,7 @@ void ReplaceElementAttributesWithNeighborValues::preflight()
 void ReplaceElementAttributesWithNeighborValues::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -36,7 +36,7 @@ Thus, to see the internal mesh structure, simply apply the ParaView *Threshold* 
 
 -------------------
 
-![Surface Mesh of Small IN100](Images/surfacemesh.png)
-@image latex Images/surfacemesh.png "Surface Mesh of Small IN100" width=6in
+![Surface Mesh of Small IN100](Images/SurfaceMesh.png)
+@image latex Images/SurfaceMesh.png "Surface Mesh of Small IN100" width=6in
 
 -------------------

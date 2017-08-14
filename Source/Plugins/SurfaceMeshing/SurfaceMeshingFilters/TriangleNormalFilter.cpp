@@ -163,6 +163,7 @@ void TriangleNormalFilter::initialize()
 void TriangleNormalFilter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleNormalsArrayPath().getDataContainerName());
 
@@ -207,6 +208,7 @@ void TriangleNormalFilter::preflight()
 void TriangleNormalFilter::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

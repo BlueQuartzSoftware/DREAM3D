@@ -14,8 +14,8 @@ The above node types are commonly referred to as _objects_, while the data store
 
 -----
 
-![DREAM.3D Data Structure](Images/dataStructure.png)
-@image latex Images/dataStructure.png "DREAM.3D Data Structure" width=6in 
+![DREAM.3D Data Structure](Images/DataStructure.png)
+@image latex Images/DataStructure.png "DREAM.3D Data Structure" width=6in 
 
 -----
 
@@ -58,8 +58,8 @@ The four different types of **Element Attribute Matrix** correspond to the four 
 
 -----
 
-![Attribute Matrix Layout](Images/attributematrix.png)
-@image latex Images/attributematrix.png "Attribute Matrix Layout" width=6in 
+![Attribute Matrix Layout](Images/Attributematrix.png)
+@image latex Images/AttributeMatrix.png "Attribute Matrix Layout" width=6in 
 
 -----
 
@@ -73,8 +73,8 @@ A key concept behind **Features** and **Ensembles** is the existence of a _map_ 
 
 -----
 
-![Object-Attribute Associations](Images/elfeatens.png)
-@image latex Images/elfeatens.png "Object-Attribute Associations" width=6in 
+![Object-Attribute Associations](Images/ElFeatEns.png)
+@image latex Images/ElFeatEns.png "Object-Attribute Associations" width=6in 
 
 -----
 

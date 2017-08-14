@@ -154,6 +154,7 @@ void CalculateArrayHistogram::initialize()
 void CalculateArrayHistogram::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   if(m_NumberOfBins <= 0)
@@ -311,6 +312,7 @@ void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool use
 void CalculateArrayHistogram::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -321,8 +323,9 @@ void CalculateArrayHistogram::execute()
 
   if(overflow > 0)
   {
-    QString msg = QString("%1 values were not catagorized into a bin.").arg(overflow);
-    notifyWarningMessage(getHumanLabel(), msg, 0);
+    setWarningCondition(-2000);
+    QString ss = QString("%1 values were not catagorized into a bin.").arg(overflow);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

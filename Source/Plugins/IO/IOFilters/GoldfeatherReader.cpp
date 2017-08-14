@@ -154,6 +154,7 @@ void GoldfeatherReader::readFilterParameters(AbstractFilterParametersReader* rea
 void GoldfeatherReader::updateVertexInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_SurfaceMeshNodeNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -183,6 +184,7 @@ void GoldfeatherReader::updateVertexInstancePointers()
 void GoldfeatherReader::updateFaceInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {

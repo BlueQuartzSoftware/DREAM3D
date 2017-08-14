@@ -133,6 +133,7 @@ void EbsdToH5Ebsd::initialize()
 void EbsdToH5Ebsd::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   QString ss;
 
   if(m_OutputFile.isEmpty() == true)
@@ -214,6 +215,7 @@ void EbsdToH5Ebsd::preflight()
 void EbsdToH5Ebsd::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

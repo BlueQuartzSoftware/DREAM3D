@@ -162,6 +162,7 @@ void CropImageGeometry::dataCheck()
     return;
   }
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Validate the incoming DataContainer, Geometry, and AttributeMatrix ; bail if any do not exist since we plan on using them later on in the dataCheck
   // Error messages are handled by the getPrereq functions
@@ -353,6 +354,7 @@ void CropImageGeometry::preflight()
 void CropImageGeometry::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   /* Normally, filters call dataCheck during the execute to reuse code.  Unfortunately,
    * this cannot happen for this filter, because calling dataCheck would destroy

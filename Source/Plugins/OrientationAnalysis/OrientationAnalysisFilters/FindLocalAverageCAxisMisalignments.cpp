@@ -187,6 +187,7 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Cell Data
   QVector<size_t> dims(1, 1);
@@ -280,6 +281,7 @@ void FindLocalAverageCAxisMisalignments::preflight()
 void FindLocalAverageCAxisMisalignments::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   dataCheck();
   if(getErrorCondition() < 0)

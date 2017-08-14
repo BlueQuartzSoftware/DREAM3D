@@ -126,6 +126,7 @@ void FillBadData::initialize()
 void FillBadData::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -180,6 +181,7 @@ void FillBadData::preflight()
 void FillBadData::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

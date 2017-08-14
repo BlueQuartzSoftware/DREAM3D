@@ -124,6 +124,7 @@ void EstablishShapeTypes::initialize()
 void EstablishShapeTypes::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   DataContainerArray::Pointer dca = getDataContainerArray();
@@ -176,6 +177,7 @@ void EstablishShapeTypes::preflight()
 void EstablishShapeTypes::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

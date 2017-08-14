@@ -128,6 +128,7 @@ void FindLargestCrossSections::initialize()
 void FindLargestCrossSections::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
@@ -258,6 +259,7 @@ void FindLargestCrossSections::find_crosssections()
 void FindLargestCrossSections::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -429,9 +429,9 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Features", HaveFeatures, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Feature Input File", FeatureInputFile, FilterParameter::Parameter, PackPrimaryPhases, "*.txt", "Text File"));
   linkedProps.clear();
-  linkedProps << "CsvOutputFile";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, PackPrimaryPhases, "*.csv", "Comma Separated Data"));
+//  linkedProps << "CsvOutputFile";
+//  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
+//  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, PackPrimaryPhases, "*.csv", "Comma Separated Data"));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
@@ -528,6 +528,7 @@ void PackPrimaryPhases::writeFilterParameters(QJsonObject& obj)
 void PackPrimaryPhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   if(nullptr != m_FeaturePhasesPtr.lock().get())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
@@ -568,6 +569,7 @@ void PackPrimaryPhases::updateFeatureInstancePointers()
 void PackPrimaryPhases::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   // Make sure we have our input DataContainer with the proper Ensemble data
@@ -774,8 +776,9 @@ void PackPrimaryPhases::dataCheck()
     QDir parentPath = fi.path();
     if(parentPath.exists() == false)
     {
+      setWarningCondition(-78002);
       QString ss = QObject::tr("The directory path for the GoalAttribute output file does not exist. The application will attempt to create this path during execution of the filter");
-      notifyWarningMessage(getHumanLabel(), ss, -1);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
   }
 
@@ -835,6 +838,7 @@ void PackPrimaryPhases::execute()
   initialize();
 
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

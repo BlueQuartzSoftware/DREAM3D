@@ -200,6 +200,7 @@ void InitializeSyntheticVolume::initialize()
 void InitializeSyntheticVolume::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Create the output Data Container
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
@@ -289,6 +290,7 @@ void InitializeSyntheticVolume::preflight()
 void InitializeSyntheticVolume::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -352,16 +354,16 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
     if(getInputStatsFile().isEmpty())
     {
       QString ss = QObject::tr("Phase types array has not been allocated and the input statistics file is empty");
-      setErrorCondition(-1000);
-      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      setWarningCondition(-1000);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
       return "-1";
     }
     QFileInfo fi(getInputStatsFile());
     if(fi.exists() == false)
     {
       QString ss = QObject::tr("Phase types array has not been allocated and the input statistics file does not exist at '%1'").arg(fi.absoluteFilePath());
-      setErrorCondition(-1001);
-      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      setWarningCondition(-1001);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
       return "-1";
     }
 
@@ -382,15 +384,15 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
     if(err < 0)
     {
       QString ss = QObject::tr("Error reading phase type data");
-      setErrorCondition(-1003);
-      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      setWarningCondition(-1003);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
       return "-1";
     }
     if(!phaseType->isAllocated())
     {
       QString ss = QObject::tr("Phase types Array was not allocated due to an error reading the data from the statistics file %1").arg(fi.absoluteFilePath());
-      setErrorCondition(-1002);
-      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      setWarningCondition(-1002);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
       return "-1";
     }
   }

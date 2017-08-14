@@ -320,6 +320,7 @@ void ConvertColorToGrayScale::initialize()
 void ConvertColorToGrayScale::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   if(DataArrayPath::ValidateVector(getInputDataArrayVector()) == false)
   {
     setErrorCondition(-62100);
@@ -424,6 +425,7 @@ void ConvertColorToGrayScale::execute()
 {
   initialize();
   setErrorCondition(0);
+  setWarningCondition(0);
   QString ss;
   dataCheck();
   if(getErrorCondition() < 0)

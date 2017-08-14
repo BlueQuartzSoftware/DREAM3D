@@ -105,6 +105,7 @@ void BinaryNodesTrianglesReader::readFilterParameters(AbstractFilterParametersRe
 void BinaryNodesTrianglesReader::updateVertexInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_SurfaceMeshNodeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -118,6 +119,7 @@ void BinaryNodesTrianglesReader::updateVertexInstancePointers()
 void BinaryNodesTrianglesReader::updateFaceInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_FaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {

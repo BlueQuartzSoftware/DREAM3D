@@ -119,6 +119,7 @@ void FindFeaturePhases::initialize()
 void FindFeaturePhases::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -175,6 +176,7 @@ void FindFeaturePhases::preflight()
 void FindFeaturePhases::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -225,7 +227,9 @@ void FindFeaturePhases::execute()
       ss << "  Phase Feature " << i.key() << " created " << i.value() << " warnings.";
       warnings.append(str);
     }
-    notifyWarningMessage(getHumanLabel(), warnings.join("\n"), getErrorCondition());
+
+    setWarningCondition(-500);
+    notifyWarningMessage(getHumanLabel(), warnings.join("\n"), getWarningCondition());
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

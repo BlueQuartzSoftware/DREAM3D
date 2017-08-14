@@ -89,8 +89,7 @@ void MinNeighbors::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase Index", PhaseNumber, FilterParameter::Parameter, MinNeighbors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, MinNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
@@ -136,6 +135,7 @@ void MinNeighbors::initialize()
 void MinNeighbors::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -183,6 +183,30 @@ void MinNeighbors::dataCheck()
   }
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
+
+  // Throw a warning to inform the user that the neighbor list arrays could be deleted by this filter
+  QString featureIdsPath = getFeatureIdsArrayPath().getDataContainerName() + "/" + getFeatureIdsArrayPath().getAttributeMatrixName() + "/" + getFeatureIdsArrayPath().getDataArrayName();
+  int err = 0;
+  AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getNumNeighborsArrayPath(), err);
+  if(err < 0 || getErrorCondition() < 0)
+  {
+    return;
+  }
+
+  QString ss = QObject::tr("If this filter changes the selected feature ids array located at '%1', all arrays of type NeighborList will be deleted.  These arrays are:\n").arg(featureIdsPath);
+  QList<QString> featureArrayNames = featureAM->getAttributeArrayNames();
+  for(int i = 0; i < featureArrayNames.size(); i++)
+  {
+    IDataArray::Pointer arr = featureAM->getAttributeArray(featureArrayNames[i]);
+    QString type = arr->getTypeAsString();
+    if(type.compare("NeighborList<T>") == 0)
+    {
+      ss.append("\n" + getNumNeighborsArrayPath().getDataContainerName() + "/" + getNumNeighborsArrayPath().getAttributeMatrixName() + "/" + arr->getName());
+    }
+  }
+
+  setWarningCondition(-5556);
+  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 }
 
 // -----------------------------------------------------------------------------
@@ -204,6 +228,7 @@ void MinNeighbors::preflight()
 void MinNeighbors::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

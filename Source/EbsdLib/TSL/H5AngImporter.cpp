@@ -178,7 +178,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     }
     else if (err == -100)
     {
-      ss << "H5AngImporter Error: The Ang file could not be opened.";
+      ss << "H5AngImporter Error: The Ang file could not be opened.'" << angFile << "'";
     }
     else if (reader.getXStep() == 0.0f)
     {
@@ -190,7 +190,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     }
     else
     {
-      ss << "H5AngImporter Error: Unknown error.";
+      ss << "H5AngImporter Error: Unknown error [" << err << "]";
     }
     setPipelineMessage( *(ss.string()));
 

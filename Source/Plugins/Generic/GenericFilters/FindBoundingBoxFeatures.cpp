@@ -131,6 +131,7 @@ void FindBoundingBoxFeatures::initialize()
 void FindBoundingBoxFeatures::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   DataArrayPath tempPath;
 
@@ -461,6 +462,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 void FindBoundingBoxFeatures::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

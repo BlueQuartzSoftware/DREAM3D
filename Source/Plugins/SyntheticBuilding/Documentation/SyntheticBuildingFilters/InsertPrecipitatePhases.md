@@ -50,8 +50,8 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 | Match Radial Distribution Function | bool | Whether to attempt to match the _radial distribution function_ of the precipitates |
 | Already Have Precipitates | bool | Whether to read in a file that lists the available precipitates |
 | Precipitate Input File | File Path | The input precipitates file. Only needed if _Already Have Precipitates_ is checked |
-| Write Goal Attributes | bool | Whether to write the goal attributes of the packed precipitates |
-| Goal Attributes CSV File |  File Path | The output .csv file path. Only needed if _Write Goal Attributes_ is checked |
+| Save Shape Description Arrays | Int | 0=Do not Save, 1=Save to New Attribute Matrix, 2=Append to existing AttributeMatrix |
+| New AttributeMatrix | DataArrayPath | AttributeMatrix to save the Shape DescriptionArrays into |
 
 ## Required Geometry ##
 Image
@@ -70,7 +70,23 @@ Image
 | **Ensemble Attribute Array** | NumFeatures | int32_t | (1) | Specifies the number of **Features** in each **Ensemble** |
 
 ## Created Objects ##
-None
+
+
+
+
+**Shape Description Arrays**
+
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|------|----------------------|-------------|
+| **Cell Attribute Array** | AxisEulerAngles | float | (3) | Morphological Orientation in Bunge Convention (ZX'Z'') |
+| **Cell Attribute Array** | AxisLengths | float | (3) | The Ellipsoid Aspect Ratios[a, a/b, c/a] |
+| **Cell Attribute Array** | Centroids | float | (3) | The XYZ value for each ellipsoid |
+| **Cell Attribute Array** | EquivalentDiameters | float | (1) | Equivalent Spherical Diameter |
+| **Cell Attribute Array** | Neighborhoods | int32_t | (1) |  |
+| **Cell Attribute Array** | Omega3s | float | (1) | The Shape Parameter |
+| **Cell Attribute Array** | Volumes | float | (1) | The Volume of the ellipsoid |
+
+
 
 
 ## License & Copyright ##

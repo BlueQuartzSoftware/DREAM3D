@@ -106,6 +106,7 @@ void IdentifySample::initialize()
 void IdentifySample::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getGoodVoxelsArrayPath().getDataContainerName());
 
@@ -137,6 +138,7 @@ void IdentifySample::preflight()
 void IdentifySample::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

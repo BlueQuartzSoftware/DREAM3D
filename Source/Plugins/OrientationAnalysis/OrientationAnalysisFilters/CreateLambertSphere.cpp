@@ -118,6 +118,7 @@ void CreateLambertSphere::initialize()
 void CreateLambertSphere::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
 
   if(getHemisphere() < 0 || getHemisphere() > 2)
@@ -233,6 +234,7 @@ void CreateLambertSphere::execute()
   float L = static_cast<float>(SIMPLib::Constants::k_SqrtHalfPi);
   // 1.253314137315501
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

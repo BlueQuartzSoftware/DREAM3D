@@ -123,6 +123,7 @@ void FindAvgCAxes::initialize()
 void FindAvgCAxes::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -180,6 +181,7 @@ void FindAvgCAxes::preflight()
 void FindAvgCAxes::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

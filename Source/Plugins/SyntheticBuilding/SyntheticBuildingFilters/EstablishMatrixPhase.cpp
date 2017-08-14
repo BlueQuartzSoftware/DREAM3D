@@ -180,6 +180,7 @@ void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* 
 void EstablishMatrixPhase::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_FeaturePhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -204,6 +205,7 @@ void EstablishMatrixPhase::initialize()
 void EstablishMatrixPhase::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   DataArrayPath tempPath;
 
@@ -320,6 +322,7 @@ void EstablishMatrixPhase::preflight()
 void EstablishMatrixPhase::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

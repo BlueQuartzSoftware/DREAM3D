@@ -502,35 +502,37 @@ void FindGBPDMetricBased::initialize()
 void FindGBPDMetricBased::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Number of Sampling Points (filter params.)
   if(getNumSamplPts() < 1)
   {
+    setErrorCondition(-1000);
     QString ss = QObject::tr("The number of sampling points must be greater than zero");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   // Set some reasonable value, but allow user to use more if he/she knows what he/she does
   if(getNumSamplPts() > 5000)
   {
+    setWarningCondition(-1001);
     QString ss = QObject::tr("Most likely, you do not need to use that many sampling points");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   // Output files (filter params.)
   if(getDistOutputFile().isEmpty() == true)
   {
+    setErrorCondition(-1002);
     QString ss = QObject::tr("The output file for saving the distribution must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1000);
-    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(getErrOutputFile().isEmpty() == true)
   {
+    setErrorCondition(-1003);
     QString ss = QObject::tr("The output file for saving the distribution errors must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1000);
-    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(getErrorCondition() < 0)
@@ -542,16 +544,18 @@ void FindGBPDMetricBased::dataCheck()
   QDir distParentPath = distOutFileInfo.path();
   if(distParentPath.exists() == false)
   {
+    setWarningCondition(-1004);
     QString ss = QObject::tr("The directory path for the distribution output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   QFileInfo errOutFileInfo(getErrOutputFile());
   QDir errParentPath = errOutFileInfo.path();
   if(errParentPath.exists() == false)
   {
+    setWarningCondition(-1005);
     QString ss = QObject::tr("The directory path for the distribution errors output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, -1);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   if(distOutFileInfo.suffix().compare("") == 0)
@@ -582,9 +586,9 @@ void FindGBPDMetricBased::dataCheck()
 
   if(getDistOutputFile().isEmpty() == false && getDistOutputFile() == getErrOutputFile())
   {
+    setErrorCondition(-1006);
     QString ss = QObject::tr("The output files must be different");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   // Crystal Structures
@@ -601,9 +605,9 @@ void FindGBPDMetricBased::dataCheck()
   {
     if(getPhaseOfInterest() >= static_cast<int>(m_CrystalStructuresPtr.lock()->getNumberOfTuples()) || getPhaseOfInterest() <= 0)
     {
+      setErrorCondition(-1007);
       QString ss = QObject::tr("The phase index is either larger than the number of Ensembles or smaller than 1");
-      notifyErrorMessage(getHumanLabel(), ss, -1);
-      setErrorCondition(-381);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 
@@ -723,6 +727,7 @@ void FindGBPDMetricBased::appendSamplPtsFixedAzimuth(QVector<float>* xVec, QVect
 void FindGBPDMetricBased::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

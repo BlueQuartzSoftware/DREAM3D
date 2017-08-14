@@ -649,12 +649,27 @@ class OrientationTransforms
     * @author Marc De Graef, Carnegie Mellon University
     *
     * @brief Euler angles to orientation matrix  [Morawiec, page 28]
+    * also from Appendix 1, equation 1 in
+    *
+    * Consistent representations of and conversions between 3D rotations
+    * D Rowenhorst, A D Rollett, G S Rohrer, M Groeber, M Jackson, P J Konijnenberg, and M De Graef
+    * Published 5 October 2015 IOP Publishing Ltd
+    * Modelling and Simulation in Materials Science and Engineering, Volume 23, Number 8
+    *
+    * The output orientation matrix is laid out in memory such that the following is true:
+    *       |  c1c2-s1cs2      s1c2+c1cs2    ss2 |
+    * OM =  | -c1s2-s1cc2     -s1s2+c1cc2    sc2 |
+    *       |      s1s           -c1s         c  |
+    *
+    *       | res[0]   res[1]  res[2] |
+    * OM =  | res[3]   res[4]  res[5] |
+    *       | res[6]   res[7]  res[8] |
     *
     * @param e 3 Euler angles in radians
     *
     *
     * @date 8/04/13   MDG 1.0 original
-    * @data 7/23/14   MDG 1.1 verified
+    * @date 7/23/14   MDG 1.1 verified
     */
     static void eu2om(const T& e, T& res)
     {

@@ -171,6 +171,7 @@ void InitializeData::initialize()
 void InitializeData::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(m_CellAttributeMatrixPaths.size() <= 0)
   {
@@ -370,6 +371,7 @@ void InitializeData::preflight()
 void InitializeData::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

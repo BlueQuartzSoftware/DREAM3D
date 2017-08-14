@@ -131,6 +131,7 @@ void SineParamsSegmentFeatures::readFilterParameters(AbstractFilterParametersRea
 void SineParamsSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   if(nullptr != m_ActivePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -154,6 +155,7 @@ void SineParamsSegmentFeatures::dataCheck()
   DataArrayPath tempPath;
   initialize();
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_SineParamsArrayPath.getDataContainerName());
@@ -234,6 +236,7 @@ void SineParamsSegmentFeatures::preflight()
 void SineParamsSegmentFeatures::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   dataCheck();
   if(getErrorCondition() < 0)
@@ -332,6 +335,7 @@ void SineParamsSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t 
 int64_t SineParamsSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();

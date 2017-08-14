@@ -271,6 +271,7 @@ void VtkRectilinearGridWriter::initialize()
 void VtkRectilinearGridWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
   if(m_OutputFile.isEmpty() == true)
   {
@@ -286,8 +287,9 @@ void VtkRectilinearGridWriter::dataCheck()
     QDir parentPath = fi.path();
     if(parentPath.exists() == false)
     {
+      setWarningCondition(-11000);
       QString ss = QObject::tr("The directory path for the output file does not exist.");
-      notifyWarningMessage(getHumanLabel(), ss, -1);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
   }
   else
@@ -350,6 +352,7 @@ void VtkRectilinearGridWriter::preflight()
 void VtkRectilinearGridWriter::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

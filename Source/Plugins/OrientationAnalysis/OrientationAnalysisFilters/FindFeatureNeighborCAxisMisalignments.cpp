@@ -150,6 +150,7 @@ void FindFeatureNeighborCAxisMisalignments::initialize()
 void FindFeatureNeighborCAxisMisalignments::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   initialize();
 
   DataArrayPath tempPath;
@@ -234,6 +235,7 @@ void FindFeatureNeighborCAxisMisalignments::preflight()
 void FindFeatureNeighborCAxisMisalignments::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

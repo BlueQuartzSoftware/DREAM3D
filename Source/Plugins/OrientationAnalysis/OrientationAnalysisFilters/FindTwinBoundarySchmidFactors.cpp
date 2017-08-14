@@ -337,6 +337,7 @@ void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParameter
 void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -382,6 +383,7 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -455,6 +457,7 @@ void FindTwinBoundarySchmidFactors::preflight()
 void FindTwinBoundarySchmidFactors::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheckVoxel();
   if(getErrorCondition() < 0)
   {

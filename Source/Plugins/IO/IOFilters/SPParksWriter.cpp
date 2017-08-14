@@ -111,6 +111,7 @@ void SPParksWriter::initialize()
 void SPParksWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -142,6 +143,7 @@ void SPParksWriter::preflight()
 int32_t SPParksWriter::writeHeader()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -193,6 +195,7 @@ int32_t SPParksWriter::writeHeader()
 int32_t SPParksWriter::writeFile()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

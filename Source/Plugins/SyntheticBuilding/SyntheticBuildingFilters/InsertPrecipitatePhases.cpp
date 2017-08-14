@@ -199,9 +199,9 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Precipitates", HavePrecips, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitate Input File", PrecipInputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.txt", "Text File"));
   linkedProps.clear();
-  linkedProps << "CsvOutputFile";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
+//  linkedProps << "CsvOutputFile";
+//  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
+//  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
@@ -267,6 +267,7 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 void InsertPrecipitatePhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   if(nullptr != m_FeaturePhasesPtr.lock().get())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
@@ -361,6 +362,7 @@ void InsertPrecipitatePhases::initialize()
 void InsertPrecipitatePhases::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -589,6 +591,7 @@ void InsertPrecipitatePhases::execute()
   initialize();
 
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -683,14 +686,15 @@ void InsertPrecipitatePhases::load_precipitates()
   if(!inFile)
   {
     QString ss = QObject::tr("Failed to open: %1").arg(getPrecipInputFile());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   int32_t numPrecips = 0;
   inFile >> numPrecips;
   if(0 == numPrecips)
   {
-    notifyWarningMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", -600);
+    setWarningCondition(-1001);
+    notifyWarningMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", getWarningCondition());
     return;
   }
 
@@ -746,6 +750,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   }
 
   setErrorCondition(0);
+  setWarningCondition(0);
   m_Seed = QDateTime::currentMSecsSinceEpoch();
   SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 
@@ -1121,7 +1126,8 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   //          precipitates and the target statistics precipitate fraction is
   //          greater than 0. This Filter will run without trying to match
   //          the precipitate fraction");
-  //          notifyWarningMessage(getHumanLabel(), msg, -5010);
+  //          setWarningCondition(-5010);
+  //          notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
   //        }
 
   //        if (availablePointsCount > 0)
@@ -1236,7 +1242,8 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                     "fraction is greater than 0. This Filter will run without "
                     "trying to match the "
                     "precipitate fraction");
-        notifyWarningMessage(getHumanLabel(), msg, -5010);
+        setWarningCondition(-5010);
+        notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
       }
 
       if(m_AvailablePointsCount > 0)
@@ -1440,7 +1447,8 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                         "greater than 0. This Filter will run without trying "
                         "to match the "
                         "precipitate fraction");
-            notifyWarningMessage(getHumanLabel(), msg, -5010);
+            setWarningCondition(-5010);
+            notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
           }
 
           if(m_AvailablePointsCount > 0)

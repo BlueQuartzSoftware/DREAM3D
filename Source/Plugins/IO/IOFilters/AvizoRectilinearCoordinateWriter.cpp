@@ -119,6 +119,7 @@ void AvizoRectilinearCoordinateWriter::initialize()
 void AvizoRectilinearCoordinateWriter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0)

@@ -137,6 +137,7 @@ void BadDataNeighborOrientationCheck::initialize()
 void BadDataNeighborOrientationCheck::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -206,6 +207,7 @@ void BadDataNeighborOrientationCheck::preflight()
 void BadDataNeighborOrientationCheck::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)
   {

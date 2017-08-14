@@ -92,6 +92,7 @@ void GenerateNodeTriangleConnectivity::initialize()
 void GenerateNodeTriangleConnectivity::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(nullptr == sm)
@@ -171,6 +172,7 @@ void GenerateNodeTriangleConnectivity::execute()
     return;
   }
   setErrorCondition(0);
+  setWarningCondition(0);
 
   notifyStatusMessage(getHumanLabel(), "Starting");
 

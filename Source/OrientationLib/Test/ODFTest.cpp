@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 /**
  * @brief main.cpp This is mainly a test to make sure that the Texture.h
  * file will compile using strict STL containers
@@ -44,67 +43,111 @@
 #include <iostream>
 #include <vector>
 
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/Texture/StatsGen.hpp"
+#include "OrientationLib/Texture/Texture.hpp"
 
-#define POPULATE_DATA(i, e1, e2, e3, w, s)\
-  e1s[i] = e1;\
-  e2s[i] = e2;\
-  e3s[i] = e3;\
-  weights[i] = w;\
+#include "TestPrintFunctions.h"
+
+#define POPULATE_DATA(i, e1, e2, e3, w, s)                                                                                                                                                             \
+  e1s[i] = e1;                                                                                                                                                                                         \
+  e2s[i] = e2;                                                                                                                                                                                         \
+  e3s[i] = e3;                                                                                                                                                                                         \
+  weights[i] = w;                                                                                                                                                                                      \
   sigmas[i] = s;
 
 class ODFTest
 {
-  public:
-    ODFTest(){}
-    virtual ~ODFTest(){}
+public:
+  ODFTest()
+  {
+  }
+  virtual ~ODFTest()
+  {
+  }
 
-    void operator()()
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  template<typename T>
+  void Print_Coord(const T* om)
+  {
+    printf("Coord:% 3.16f % 3.16f % 3.16f\n", om[0], om[1], om[2] );
+  }
+
+  void CubicODFTest()
+  {
+    // Resize the ODF vector properly for Cubic
+    std::vector<float> odf(CubicOps::k_OdfSize);
+    std::vector<float> e1s(2);
+    std::vector<float> e2s(2);
+    std::vector<float> e3s(2);
+    std::vector<float> weights(2);
+    std::vector<float> sigmas(2);
+
+    POPULATE_DATA(0, 35, 45, 0, 1000.0, 2.0)
+    POPULATE_DATA(1, 59, 37, 63, 1000.0, 1.0)
+
+    // Calculate the ODF Data
+
+    size_t numEntries = e1s.size();
+    Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()), &(weights.front()), &(sigmas.front()), true, &(odf.front()), numEntries);
+
+    size_t npoints = 1000;
+    std::vector<float> x001(npoints * 3);
+    std::vector<float> y001(npoints * 3);
+    std::vector<float> x011(npoints * 6);
+    std::vector<float> y011(npoints * 6);
+    std::vector<float> x111(npoints * 4);
+    std::vector<float> y111(npoints * 4);
+  }
+
+  void TestRotation()
+  {
+    float phi1 = 0.0f * SIMPLib::Constants::k_PiOver180;
+    float PHI = 180.0f;
+    float phi2 = 0.0f;
+
+    float ga[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+    FOrientArrayType om(9, 0.0);
+    FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
+    om.toGMatrix(ga);
+
+    float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
+    float coords[3] = {0.0f, 0.0f, 0.0f};
+    float xc = -0.0;
+    float yc = -5.0;
+    float zc = 0.0;
+    coords[0] = coords[0] - xc;
+    coords[1] = coords[1] - yc;
+    coords[2] = coords[2] - zc;
+    MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
+
+    Print_Coord<float>(coords);
+    Print_Coord<float>(coordsRotated);
+
+  }
+
+
+
+
+  void operator()()
+  {
+
+    TestRotation();
+    CubicODFTest();
+
+    int err = 0;
+
+    if(err == 1)
     {
-      // Resize the ODF vector properly for Cubic
-      std::vector<float> odf(CubicOps::k_OdfSize);
-      std::vector<float> e1s(2);
-      std::vector<float> e2s(2);
-      std::vector<float> e3s(2);
-      std::vector<float> weights(2);
-      std::vector<float> sigmas(2);
-
-      POPULATE_DATA(0, 35, 45, 0, 1000.0, 2.0)
-      POPULATE_DATA(1, 59, 37, 63, 1000.0, 1.0)
-
-      // Calculate the ODF Data
-
-      size_t numEntries = e1s.size();
-      Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                     &(weights.front()), &(sigmas.front()), true,
-                                     &(odf.front()), numEntries);
-
-      size_t npoints = 1000;
-      std::vector<float > x001(npoints * 3);
-      std::vector<float > y001(npoints * 3);
-      std::vector<float > x011(npoints * 6);
-      std::vector<float > y011(npoints * 6);
-      std::vector<float > x111(npoints * 4);
-      std::vector<float > y111(npoints * 4);
-
-
-
-      int err = 0;
-      //  err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-      //                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
-      if (err == 1)
-      {
-        //TODO: Present Error Message
-        return;
-      }
-
-
+      // TODO: Present Error Message
+      return;
     }
-  private:
-    ODFTest(const ODFTest&); // Copy Constructor Not Implemented
-    void operator=(const ODFTest&); // Operator '=' Not Implemented
+  }
+
+private:
+  ODFTest(const ODFTest&);        // Copy Constructor Not Implemented
+  void operator=(const ODFTest&); // Operator '=' Not Implemented
 };
-
-
