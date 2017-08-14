@@ -172,7 +172,7 @@ void CreateEnsembleInfo::dataCheck()
 
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseNamesArrayName());
   m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(
-    this, tempPath, "Phase Name", cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    this, tempPath, "_PHASE_NAME_", cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 }
 
 // -----------------------------------------------------------------------------
