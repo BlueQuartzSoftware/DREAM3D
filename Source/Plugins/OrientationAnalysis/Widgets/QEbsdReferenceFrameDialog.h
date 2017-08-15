@@ -43,10 +43,13 @@
 #include <QtWidgets/QDialog>
 
 class QGraphicsPixmapItem;
+class DataArrayPath;
 
 #include "ui_QEbsdReferenceFrameDialog.h"
 
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -110,6 +113,17 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
   protected:
 
     void setupGui();
+
+    int createIpfColors(DataContainerArray::Pointer dca,
+      DataArrayPath cellPhasesArrayPath,
+      DataArrayPath cellEulerAnglesArrayPath,
+      DataArrayPath crystalStructuresArrayPath,
+      QString& outputArrayName);
+    int createArrayColors(DataContainerArray::Pointer dca,
+      DataArrayPath dataArrayPath,
+      QString outputArrayName);
+
+    void generateImageRGB(IDataArray::Pointer dataArray, size_t dims[3]);
 
   private:
     QString                     m_EbsdFileName;
