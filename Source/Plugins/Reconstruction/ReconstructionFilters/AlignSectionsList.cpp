@@ -71,7 +71,7 @@ AlignSectionsList::~AlignSectionsList()
 void AlignSectionsList::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, AlignSectionsList, "*.txt"));
   setFilterParameters(parameters);
 }
@@ -81,7 +81,7 @@ void AlignSectionsList::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  AlignSections::readFilterParameters(reader, index);
+  //AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile()));
   reader->closeFilterGroup();
