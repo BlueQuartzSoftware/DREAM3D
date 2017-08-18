@@ -159,11 +159,6 @@ class EnsembleInfoTableModel : public QAbstractTableModel
 
     void setNumberOfPhases(int n);
 
-  protected:
-    QString getCrystalStructureStr(EnsembleInfo::CrystalStructure structure) const;
-    
-    QString getPhaseTypeStr(PhaseType::Type phase) const;
-
   private:
     int m_ColumnCount;
     int m_RowCount;

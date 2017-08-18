@@ -56,24 +56,10 @@
 EnsembleInfoItemDelegate::EnsembleInfoItemDelegate(int numPhases, QObject* parent)
 : QStyledItemDelegate(parent)
 , m_NumberOfPhases(numPhases)
+, m_CrystalStructureList(EnsembleInfo::CrystalStructureStrings())
 {
-  m_CrystalStructureList.push_back("Hexagonal-High");
-  m_CrystalStructureList.push_back("Cubic-High");
-  m_CrystalStructureList.push_back("Hexagonal-Low");
-  m_CrystalStructureList.push_back("Cubic-Low");
-  m_CrystalStructureList.push_back("Triclinic");
-  m_CrystalStructureList.push_back("Monoclinic");
-  m_CrystalStructureList.push_back("OrthoRhombic");
-  m_CrystalStructureList.push_back("Tetragonal-Low");
-  m_CrystalStructureList.push_back("Tetragonal-High");
-  m_CrystalStructureList.push_back("Trigonal-Low");
-  m_CrystalStructureList.push_back("Trigonal-High");
-
-  m_PhaseTypeList.push_back("Primary Phase");
-  m_PhaseTypeList.push_back("Precipitate Phase");
-  m_PhaseTypeList.push_back("Transformation Phase");
-  m_PhaseTypeList.push_back("Matrix Phase");
-  m_PhaseTypeList.push_back("Boundary Phase");
+  PhaseType::getPhaseTypeStrings(m_PhaseTypeList);
+  m_PhaseTypeList.pop_back(); // Pop "Unknown" PhaseType
 }
 
 // -----------------------------------------------------------------------------

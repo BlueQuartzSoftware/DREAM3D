@@ -73,62 +73,6 @@ EnsembleInfoTableModel::~EnsembleInfoTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString EnsembleInfoTableModel::getCrystalStructureStr(EnsembleInfo::CrystalStructure structure) const
-{
-  switch(structure)
-  {
-  case EnsembleInfo::CrystalStructure::Hexagonal_High:
-    return "Hexagonal-High";
-  case EnsembleInfo::CrystalStructure::Cubic_High:
-    return "Cubic-High";
-  case EnsembleInfo::CrystalStructure::Hexagonal_Low:
-    return "Hexagonal-Low";
-  case EnsembleInfo::CrystalStructure::Cubic_Low:
-    return "Cubic-Low";
-  case EnsembleInfo::CrystalStructure::Triclinic:
-    return "Triclinic";
-  case EnsembleInfo::CrystalStructure::Monoclinic:
-    return "Monoclinic";
-  case EnsembleInfo::CrystalStructure::OrthoRhombic:
-    return "OrthoRhombic";
-  case EnsembleInfo::CrystalStructure::Tetragonal_Low:
-    return "Tetragonal-Low";
-  case EnsembleInfo::CrystalStructure::Tetragonal_High:
-    return "Tetragonal-High";
-  case EnsembleInfo::CrystalStructure::Trigonal_Low:
-    return "Trigonal-Low";
-  case EnsembleInfo::CrystalStructure::Trigonal_High:
-    return "Trigonal-High";
-  default:
-    return "Unknown Crystal Structure";
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString EnsembleInfoTableModel::getPhaseTypeStr(PhaseType::Type phase) const
-{
-  switch(phase)
-  {
-  case PhaseType::Type::Primary:
-    return "Primary Phase";
-  case PhaseType::Type::Precipitate:
-    return "Precipitate Phase";
-  case PhaseType::Type::Transformation:
-    return "Transformation Phase";
-  case PhaseType::Type::Matrix:
-    return "Matrix Phase";
-  case PhaseType::Type::Boundary:
-    return "Boundary Phase";
-  default:
-    return "Unknown Phase Type";
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 Qt::ItemFlags EnsembleInfoTableModel::flags(const QModelIndex& index) const
 {
   //  qDebug() << "EnsembleInfoTableModel::flags" << "\n";
@@ -235,13 +179,13 @@ QVariant EnsembleInfoTableModel::data(const QModelIndex& index, qint32 role) con
     if(col == CrystalStructure)
     {
       EnsembleInfo info = m_EnsembleInfo;
-      QString structure = getCrystalStructureStr(info.getCrystalStructure(index.row()));
+      QString structure = EnsembleInfo::CrystalStructureToStr(info.getCrystalStructure(index.row()));
       return QVariant(structure);
     }
     else if(col == PhaseType)
     {
       EnsembleInfo info = m_EnsembleInfo;
-      QString phase = getPhaseTypeStr(info.getPhaseType(index.row()));
+      QString phase = PhaseType::getPhaseTypeString(info.getPhaseType(index.row()));
       return QVariant(phase);
     }
     else if(col == PhaseName)
