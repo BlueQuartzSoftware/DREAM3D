@@ -164,12 +164,12 @@ class ReadStlFile : public AbstractFilter
   private:
     DEFINE_DATAARRAY_VARIABLE(double, FaceNormals)
 
-    double m_minXcoord;
-    double m_maxXcoord;
-    double m_minYcoord;
-    double m_maxYcoord;
-    double m_minZcoord;
-    double m_maxZcoord;
+    float m_minXcoord;
+    float m_maxXcoord;
+    float m_minYcoord;
+    float m_maxYcoord;
+    float m_minZcoord;
+    float m_maxZcoord;
 
     /**
      * @brief updateFaceInstancePointers Updates raw Face pointers
