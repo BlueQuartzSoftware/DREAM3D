@@ -1,0 +1,82 @@
+{
+    "0": {
+        "CalculatedArray": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Roe_0",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "1.0.132",
+        "Filter_Human_Label": "Attribute Array Calculator",
+        "Filter_Name": "ArrayCalculator",
+        "InfixEquation": "(EulerAngles[0] * 180 / 3.1415927) - 90",
+        "SelectedAttributeMatrix": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "Units": 1
+    },
+    "1": {
+        "CalculatedArray": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Roe_1",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "1.0.132",
+        "Filter_Human_Label": "Attribute Array Calculator",
+        "Filter_Name": "ArrayCalculator",
+        "InfixEquation": "(EulerAngles[1] * 180 / 3.1415927)",
+        "SelectedAttributeMatrix": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "Units": 1
+    },
+    "2": {
+        "CalculatedArray": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Roe_2",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "1.0.132",
+        "Filter_Human_Label": "Attribute Array Calculator",
+        "Filter_Name": "ArrayCalculator",
+        "InfixEquation": "90-(EulerAngles[2] * 180 / 3.1415927)",
+        "SelectedAttributeMatrix": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "Units": 1
+    },
+    "3": {
+        "FilterVersion": "1.0.132",
+        "Filter_Human_Label": "Combine Attribute Arrays",
+        "Filter_Name": "CombineAttributeArrays",
+        "NormalizeData": 0,
+        "SelectedDataArrayPaths": [
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "Roe_0",
+                "Data Container Name": "ImageDataContainer"
+            },
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "Roe_1",
+                "Data Container Name": "ImageDataContainer"
+            },
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "Roe_2",
+                "Data Container Name": "ImageDataContainer"
+            }
+        ],
+        "StackedDataArrayName": "RoeAngles"
+    },
+    "PipelineBuilder": {
+        "Name": "Convert Bunge To Roe",
+        "Number_Filters": 4,
+        "Version": 6
+    }
+}
