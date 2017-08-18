@@ -56,6 +56,7 @@ class AlignSections : public AbstractFilter
     virtual ~AlignSections();
 
     SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
     SIMPL_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
