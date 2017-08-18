@@ -298,7 +298,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       msgBox.setText("Error Reading ANG File");
       QString iText;
       QTextStream ss(&iText);
-      ss << "There was an error reading the ang file.\n. The error code returned was " << err;
+      ss << "There was an error reading the .ang file '"<< fi.absoluteFilePath() << "'\n The error code returned was " << err;
       msgBox.setInformativeText(iText);
       msgBox.setStandardButtons(QMessageBox::Ok);
       msgBox.setDefaultButton(QMessageBox::Ok);
@@ -328,7 +328,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       msgBox.setText("Error Reading CTF File");
       QString iText;
       QTextStream ss(&iText);
-      ss << "There was an error reading the ctf file.\n. The error code returned was " << err;
+      ss << "There was an error reading the .ctf file '"<< fi.absoluteFilePath() << "'\n The error code returned was " << err;
       msgBox.setInformativeText(iText);
       msgBox.setStandardButtons(QMessageBox::Ok);
       msgBox.setDefaultButton(QMessageBox::Ok);
@@ -477,8 +477,23 @@ int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca,
     msgBox.setText("IPF Color Filter Error");
     QString iText;
     QTextStream ss(&iText);
-    ss << "Error Executing the IPF Colors Filter. The error code was " << err;
-    ss << "\n\nDREAM.3D is attempting to display a different data set instead";
+    ss << "There was an error (" << err << ") while computing the IPF colors to display. As a "
+    << "fallback DREAM.3D has selected to display the ";
+    if(m_EbsdFileName.endsWith(".ang", Qt::CaseInsensitive))
+    {
+      ss << Ebsd::Ang::ConfidenceIndex;
+    }
+    else if(m_EbsdFileName.endsWith(".ctf", Qt::CaseInsensitive))
+    {
+      ss <<  Ebsd::Ctf::Bands;
+    }
+    else
+    {
+      ss << " --Current File Type Unsupported-- ";
+    }
+    
+    ss <<  " data set instead. The failure to compute IPF Colors correctly may indicate ";
+    ss << "a data issue with the input orientation file(s).";
     msgBox.setInformativeText(iText);
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.setDefaultButton(QMessageBox::Ok);

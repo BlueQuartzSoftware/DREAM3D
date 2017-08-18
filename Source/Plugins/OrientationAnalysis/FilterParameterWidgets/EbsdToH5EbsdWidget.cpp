@@ -578,11 +578,6 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 {
-  //  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-  //      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-  //      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-  // m_GeneratedFileNameExample->setText(filename);
-
   referenceFrameCheck->setStyleSheet(QString(""));
   referenceFrameCheck->setText("");
 
