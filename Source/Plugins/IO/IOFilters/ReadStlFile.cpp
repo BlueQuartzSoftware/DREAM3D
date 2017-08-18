@@ -52,6 +52,8 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
+#define STL_HEADER_LENGTH 80
+
 /**
  * @brief The FindUniqueIdsImpl class implements a threaded algorithm that determines the set of
  * unique vertices in the triangle geometry
@@ -63,9 +65,6 @@ public:
   : m_Vertex(vertex)
   , m_NodesInBin(nodesInBin)
   , m_UniqueIds(uniqueIds)
-  {
-  }
-  virtual ~FindUniqueIdsImpl()
   {
   }
 
@@ -223,12 +222,11 @@ void ReadStlFile::dataCheck()
 
   QVector<size_t> cDims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName());
-  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, tempPath, 0, cDims);               /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FaceNormalsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims);
+  if(nullptr != m_FaceNormalsPtr.lock().get())
   {
     m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -282,9 +280,26 @@ void ReadStlFile::readFile()
   }
 
   // Read Header
-  char h[80];
+  char h[STL_HEADER_LENGTH];
   int32_t triCount = 0;
-  fread(h, sizeof(int32_t), 20, f);
+  fread(h, STL_HEADER_LENGTH, 1, f);
+
+  // Look for the tell-tale signs that the file was written from Magics Materialise
+  // If the file was written by Magics as a "Color STL" file then the 2byte int
+  // values between each triangle will be NON Zero which will screw up the reading.
+  // This NON Zero value does NOT indicate a length but is some sort of color
+  // value encoded into the file. Instead of being normal like everyone else and
+  // using the STL spec they went off and did their own thing.
+  QByteArray headerArray(h, STL_HEADER_LENGTH);
+  QString headerString(headerArray);
+  bool magicsFile = false;
+  static const QString k_ColorHeader("COLOR=");
+  static const QString k_MaterialHeader("MATERIAL=");
+  if(headerString.contains(k_ColorHeader) && headerString.contains(k_MaterialHeader))
+  {
+    magicsFile = true;
+  }
+  // Read the number of triangles in the file.
   fread(&triCount, sizeof(int32_t), 1, f);
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
@@ -294,7 +309,7 @@ void ReadStlFile::readFile()
   int64_t* triangles = triangleGeom->getTriPointer(0);
 
   // Resize the triangle attribute matrix to hold the normals and update the normals pointer
-  QVector<size_t> tDims(1, triCount);
+  QVector<size_t> tDims(1, static_cast<size_t>(triCount));
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFaceInstancePointers();
 
@@ -304,10 +319,10 @@ void ReadStlFile::readFile()
   unsigned short attr;
   for(int32_t t = 0; t < triCount; ++t)
   {
-    fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f);
+    fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f); // Read the Triangle
 
-    fread(reinterpret_cast<void*>(&attr), sizeof(unsigned short), 1, f);
-    if(attr > 0)
+    fread(reinterpret_cast<void*>(&attr), sizeof(unsigned short), 1, f); // Read the Triangle Attribute Data length
+    if(attr > 0 && !magicsFile)
     {
       std::vector<unsigned char> buffer(attr);                       // Allocate a buffer for the STL attribute data to be placed into
       fread(reinterpret_cast<void*>(&(buffer.front())), attr, 1, f); // Read the bytes into the buffer so that we can skip it.
@@ -384,9 +399,9 @@ void ReadStlFile::readFile()
     {
       m_maxZcoord = v[11];
     }
-    m_FaceNormals[3 * t + 0] = v[0];
-    m_FaceNormals[3 * t + 1] = v[1];
-    m_FaceNormals[3 * t + 2] = v[2];
+    m_FaceNormals[3 * t + 0] = static_cast<double>(v[0]);
+    m_FaceNormals[3 * t + 1] = static_cast<double>(v[1]);
+    m_FaceNormals[3 * t + 2] = static_cast<double>(v[2]);
     nodes[3 * (3 * t + 0) + 0] = v[3];
     nodes[3 * (3 * t + 0) + 1] = v[4];
     nodes[3 * (3 * t + 0) + 2] = v[5];
@@ -413,10 +428,14 @@ void ReadStlFile::eliminate_duplicate_nodes()
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   float* vertex = triangleGeom->getVertexPointer(0);
-  int64_t nNodes = triangleGeom->getNumberOfVertices();
+  int64_t nNodes_ = triangleGeom->getNumberOfVertices();
   int64_t* triangles = triangleGeom->getTriPointer(0);
   int64_t nTriangles = triangleGeom->getNumberOfTris();
-
+  size_t nNodes = 0;
+  if(nNodes_ > 0)
+  {
+    nNodes = static_cast<size_t>(nNodes_);
+  }
   float stepX = (m_maxXcoord - m_minXcoord) / 100.0f;
   float stepY = (m_maxYcoord - m_minYcoord) / 100.0f;
   float stepZ = (m_maxZcoord - m_minZcoord) / 100.0f;
@@ -425,11 +444,11 @@ void ReadStlFile::eliminate_duplicate_nodes()
 
   // determine (xyz) bin each node falls in - used to speed up node comparison
   int32_t bin = 0, xBin = 0, yBin = 0, zBin = 0;
-  for(int64_t i = 0; i < nNodes; i++)
+  for(size_t i = 0; i < nNodes; i++)
   {
-    xBin = (vertex[i * 3] - m_minXcoord) / stepX;
-    yBin = (vertex[i * 3 + 1] - m_minYcoord) / stepY;
-    zBin = (vertex[i * 3 + 2] - m_minZcoord) / stepZ;
+    xBin = static_cast<int32_t>((vertex[i * 3] - m_minXcoord) / stepX);
+    yBin = static_cast<int32_t>((vertex[i * 3 + 1] - m_minYcoord) / stepY);
+    zBin = static_cast<int32_t>((vertex[i * 3 + 2] - m_minZcoord) / stepZ);
     if(xBin == 100)
     {
       xBin = 99;
@@ -449,7 +468,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
   // Create array to hold unique node numbers
   Int64ArrayType::Pointer uniqueIdsPtr = Int64ArrayType::CreateArray(nNodes, "uniqueIds");
   int64_t* uniqueIds = uniqueIdsPtr->getPointer(0);
-  for(int64_t i = 0; i < nNodes; i++)
+  for(int64_t i = 0; i < nNodes_; i++)
   {
     uniqueIds[i] = i;
   }
@@ -474,9 +493,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
 
   // renumber the unique nodes
   int64_t uniqueCount = 0;
-  for(int64_t i = 0; i < nNodes; i++)
+  for(size_t i = 0; i < nNodes; i++)
   {
-    if(uniqueIds[i] == i)
+    if(uniqueIds[i] == static_cast<int64_t>(i))
     {
       uniqueIds[i] = uniqueCount;
       uniqueCount++;
@@ -488,7 +507,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
   }
 
   // Move nodes to unique Id and then resize nodes array
-  for(int64_t i = 0; i < nNodes; i++)
+  for(size_t i = 0; i < nNodes; i++)
   {
     vertex[uniqueIds[i] * 3] = vertex[i * 3];
     vertex[uniqueIds[i] * 3 + 1] = vertex[i * 3 + 1];
@@ -498,7 +517,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
 
   // Update the triangle nodes to reflect the unique ids
   int64_t node1 = 0, node2 = 0, node3 = 0;
-  for(int64_t i = 0; i < nTriangles; i++)
+  for(size_t i = 0; i < static_cast<size_t>(nTriangles); i++)
   {
     node1 = triangles[i * 3];
     node2 = triangles[i * 3 + 1];
