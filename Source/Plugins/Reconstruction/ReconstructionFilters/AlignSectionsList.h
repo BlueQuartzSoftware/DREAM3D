@@ -59,6 +59,9 @@ class AlignSectionsList : public AlignSections
     SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
+    SIMPL_FILTER_PARAMETER(bool, DREAM3DAlignmentFile)
+    Q_PROPERTY(bool DREAM3DAlignmentFile READ getDREAM3DAlignmentFile WRITE setDREAM3DAlignmentFile)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */

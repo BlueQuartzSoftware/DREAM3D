@@ -41,6 +41,8 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -53,6 +55,7 @@
 AlignSectionsList::AlignSectionsList()
 : AlignSections()
 , m_InputFile("")
+, m_DREAM3DAlignmentFile(false)
 {
   // only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();
@@ -71,8 +74,14 @@ AlignSectionsList::~AlignSectionsList()
 void AlignSectionsList::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, AlignSectionsList, "*.txt"));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("DREAM3D Alignment File Format", DREAM3DAlignmentFile, FilterParameter::Parameter, AlignSectionsList));
+
+  DataContainerSelectionFilterParameter::RequirementType req;
+  req.dcGeometryTypes = {IGeometry::Type::Image};
+  parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", DataContainerName, FilterParameter::Parameter, AlignSectionsList, req));
+
   setFilterParameters(parameters);
 }
 
@@ -81,7 +90,7 @@ void AlignSectionsList::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  AlignSections::readFilterParameters(reader, index);
+  //AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile()));
   reader->closeFilterGroup();
@@ -112,16 +121,27 @@ void AlignSectionsList::dataCheck()
   QFileInfo fi(m_InputFile);
   if(true == m_InputFile.isEmpty())
   {
-    ss = QObject::tr("The input file must be set");
-    setErrorCondition(-1);
+    ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
+    setErrorCondition(-15000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if(false == fi.exists())
   {
-    ss = QObject::tr("The input file with name %1 does not exist").arg(m_InputFile);
-    setErrorCondition(-1);
+    ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
+    setErrorCondition(-15001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
+  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
+  ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
+  if(nullptr == geom.get())
+  {
+    QString ss = QObject::tr("DataContainer '%1' does not have an ImageGeometry").arg(getDataContainerName());
+    setErrorCondition(-15002);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+  Q_UNUSED(dc)
 }
 
 // -----------------------------------------------------------------------------
@@ -144,11 +164,10 @@ void AlignSectionsList::find_shifts(std::vector<int64_t>& xshifts, std::vector<i
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  std::ifstream inFile;
-  inFile.open(m_InputFile.toLatin1().data());
+  ImageGeom::Pointer geom = m->getGeometryAs<ImageGeom>();
 
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  geom->getDimensions(udims);
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -156,11 +175,31 @@ void AlignSectionsList::find_shifts(std::vector<int64_t>& xshifts, std::vector<i
 
   int64_t slice = 0;
   int64_t newxshift = 0, newyshift = 0;
-  for(int64_t iter = 1; iter < dims[2]; iter++)
+
+  std::ifstream inFile;
+  inFile.open(m_InputFile.toLatin1().data());
+
+  if(getDREAM3DAlignmentFile())
   {
-    inFile >> slice >> newxshift >> newyshift;
-    xshifts[iter] = xshifts[iter - 1] + newxshift;
-    yshifts[iter] = yshifts[iter - 1] + newyshift;
+    // These are ignored from the input file since DREAM.3D wrote the file
+    int64_t slice2 = 0;
+    float xShift = 0.0f;
+    float yShift = 0.0f;
+    for(int64_t iter = 1; iter < dims[2]; iter++)
+    {
+      inFile >> slice >> slice2 >> newxshift >> newyshift >> xShift >> yShift;
+      xshifts[iter] = xshifts[iter - 1] + newxshift;
+      yshifts[iter] = yshifts[iter - 1] + newyshift;
+    }
+  }
+  else
+  {
+    for(int64_t iter = 1; iter < dims[2]; iter++)
+    {
+      inFile >> slice >> newxshift >> newyshift;
+      xshifts[iter] = xshifts[iter - 1] + newxshift;
+      yshifts[iter] = yshifts[iter - 1] + newyshift;
+    }
   }
 
   inFile.close();
