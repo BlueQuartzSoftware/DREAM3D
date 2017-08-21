@@ -33,14 +33,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _ensembleinfotablemodel_h_
 #define _ensembleinfotablemodel_h_
 
 #include <QtCore/QAbstractTableModel>
-#include <QtCore/QVector>
-#include <QtCore/QVariant>
 #include <QtCore/QStringList>
+#include <QtCore/QVariant>
+#include <QtCore/QVector>
 
 #include "SVWidgetsLib/SVWidgetsLib.h"
 
@@ -53,123 +52,119 @@ class QAbstractItemDelegate;
  */
 class EnsembleInfoTableModel : public QAbstractTableModel
 {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    enum ColumnIndexes
-    {
-      CrystalStructure = 0,
-      PhaseType,
-      PhaseName,
-      ColumnCount
-    };
+public:
+  enum ColumnIndexes
+  {
+    CrystalStructure = 0,
+    PhaseType,
+    PhaseName,
+    ColumnCount
+  };
 
+  EnsembleInfoTableModel(bool showOperators, QObject* parent = 0);
 
-    EnsembleInfoTableModel(bool showOperators, QObject* parent = 0);
+  virtual ~EnsembleInfoTableModel();
 
-    virtual ~EnsembleInfoTableModel();
+  /**
+   *
+   * @param index
+   * @return
+   */
+  virtual Qt::ItemFlags flags(const QModelIndex& index) const;
 
-    /**
-     *
-     * @param index
-     * @return
-     */
-    virtual Qt::ItemFlags flags(const QModelIndex& index) const ;
+  /**
+   *
+   * @param index
+   * @param role
+   * @return
+   */
+  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-    /**
-     *
-     * @param index
-     * @param role
-     * @return
-     */
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const ;
+  /**
+   *
+   * @param section
+   * @param orientation
+   * @param role
+   * @return
+   */
+  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    /**
-     *
-     * @param section
-     * @param orientation
-     * @param role
-     * @return
-     */
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const ;
+  /**
+   *
+   * @param parent
+   * @return
+   */
+  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
-    /**
-     *
-     * @param parent
-     * @return
-     */
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const ;
+  /**
+   *
+   * @param parent
+   * @return
+   */
+  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
-    /**
-     *
-     * @param parent
-     * @return
-     */
-    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const ;
+  /**
+   *
+   * @param index
+   * @param value
+   * @param role
+   * @return
+   */
+  virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
-    /**
-     *
-     * @param index
-     * @param value
-     * @param role
-     * @return
-     */
-    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) ;
+  /**
+   *
+   * @param col
+   * @param orientation
+   * @param data
+   * @param role
+   * @return
+   */
+  virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole);
 
-    /**
-     *
-     * @param col
-     * @param orientation
-     * @param data
-     * @param role
-     * @return
-     */
-    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole) ;
+  /**
+   *
+   * @param row
+   * @param count
+   * @param parent
+   * @return
+   */
+  virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
-    /**
-     *
-     * @param row
-     * @param count
-     * @param parent
-     * @return
-     */
-    virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) ;
+  /**
+   *
+   * @param row
+   * @param count
+   * @param parent
+   * @return
+   */
+  virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
-    /**
-     *
-     * @param row
-     * @param count
-     * @param parent
-     * @return
-     */
-    virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) ;
+  /**
+   *
+   * @return
+   */
+  virtual QAbstractItemDelegate* getItemDelegate();
 
-    /**
-     *
-     * @return
-     */
-    virtual QAbstractItemDelegate* getItemDelegate() ;
+  virtual void setTableData(QVector<int> crystalStructures, QVector<int> phaseTypes, QVector<QString> phaseNames);
 
+  virtual void setTableData(EnsembleInfo& ensemble);
 
-    virtual void setTableData(QVector<int> crystalStructures, QVector<int> phaseTypes, QVector<QString> phaseNames);
+  void getTableData(QVector<int>& crystalStructures, QVector<int>& phaseTypes, QVector<QString>& phaseNames);
 
-    virtual void setTableData(EnsembleInfo& ensemble);
+  void setNumberOfPhases(int n);
 
-    void getTableData( QVector<int>& crystalStructures, QVector<int>& phaseTypes, QVector<QString>& phaseNames);
+private:
+  int m_ColumnCount;
+  int m_RowCount;
+  int m_NumberOfPhases;
 
-    void setNumberOfPhases(int n);
+  EnsembleInfo m_EnsembleInfo;
 
-  private:
-    int m_ColumnCount;
-    int m_RowCount;
-    int m_NumberOfPhases;
-
-    EnsembleInfo m_EnsembleInfo;
-
-
-    EnsembleInfoTableModel(const EnsembleInfoTableModel&); // Copy Constructor Not Implemented
-    void operator=(const EnsembleInfoTableModel&); // Operator '=' Not Implemented
+  EnsembleInfoTableModel(const EnsembleInfoTableModel&); // Copy Constructor Not Implemented
+  void operator=(const EnsembleInfoTableModel&);         // Operator '=' Not Implemented
 };
 
 #endif /* QUALITYMETRICTABLEMODEL_H_ */
-

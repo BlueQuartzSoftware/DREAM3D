@@ -33,8 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-
 #ifndef _ensembleinfoitemdelegate_h_
 #define _ensembleinfoitemdelegate_h_
 
@@ -43,7 +41,6 @@
 #include <QtCore/QModelIndex>
 #include <QtCore/QStringList>
 #include <QtWidgets/QStyledItemDelegate>
-
 
 #include "SIMPLib/Common/Constants.h"
 
@@ -56,44 +53,39 @@ class QAbstractItemModel;
 
 class EnsembleInfoItemDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    explicit EnsembleInfoItemDelegate(int numPhases, QObject* parent = 0);
+public:
+  explicit EnsembleInfoItemDelegate(int numPhases, QObject* parent = 0);
 
-    virtual ~EnsembleInfoItemDelegate();
+  virtual ~EnsembleInfoItemDelegate();
 
+  void setNumberOfPhases(int n);
 
-    void setNumberOfPhases(int n);
+  void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
+  void setCrystalStructureList(QStringList structures);
 
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+  void setPhaseTypeList(QStringList phases);
 
-    void setCrystalStructureList(QStringList structures);
+  QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
-    void setPhaseTypeList(QStringList phases);
+  void setEditorData(QWidget* editor, const QModelIndex& index) const;
 
-    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+  void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
 
-    void setEditorData(QWidget* editor, const QModelIndex& index) const;
+public slots:
+  void crystalStructureChangedData(int i);
+  void phaseTypeChangedData(int i);
+  void phaseNameChangedData(const QString& text);
 
-    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
+private:
+  QStringList m_CrystalStructureList;
+  QStringList m_PhaseTypeList;
+  int m_NumberOfPhases;
 
-  public slots:
-    void crystalStructureChangedData(int i);
-    void phaseTypeChangedData(int i);
-    void phaseNameChangedData(const QString& text);
-
-  private:
-    QStringList m_CrystalStructureList;
-    QStringList m_PhaseTypeList;
-    int m_NumberOfPhases;
-
-    EnsembleInfoItemDelegate(const EnsembleInfoItemDelegate&); // Copy Constructor Not Implemented
-    void operator=(const EnsembleInfoItemDelegate&); // Operator '=' Not Implemented
-
+  EnsembleInfoItemDelegate(const EnsembleInfoItemDelegate&); // Copy Constructor Not Implemented
+  void operator=(const EnsembleInfoItemDelegate&);           // Operator '=' Not Implemented
 };
 
 #endif /*  */
-
-

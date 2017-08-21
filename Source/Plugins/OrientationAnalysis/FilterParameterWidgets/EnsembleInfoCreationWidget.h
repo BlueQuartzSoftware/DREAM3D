@@ -36,21 +36,18 @@
 #ifndef _ensembleinfocreationwidget_h_
 #define _ensembleinfocreationwidget_h_
 
-
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 
 #include <QtWidgets/QWidget>
 
-
 #include "SVWidgetsLib/QtSupport/QtSFaderWidget.h"
-
 
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 
-#include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/SVWidgetsLib.h"
 
 #include "OrientationAnalysis/FilterParameters/EnsembleInfoFilterParameter.h"
 
@@ -72,136 +69,128 @@ class QSignalMapper;
 class EnsembleInfoCreationWidget : public FilterParameterWidget, private Ui::EnsembleInfoCreationWidget
 {
 
-    Q_OBJECT
-  public:
-    EnsembleInfoCreationWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
-    virtual ~EnsembleInfoCreationWidget();
+  Q_OBJECT
+public:
+  EnsembleInfoCreationWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
+  virtual ~EnsembleInfoCreationWidget();
 
-    enum ArrayListType
-    {
-      CellListType,
-      FeatureListType,
-      EnsembleListType,
-      VertexListType,
-      EdgeListType,
-      FaceListType,
-    };
+  enum ArrayListType
+  {
+    CellListType,
+    FeatureListType,
+    EnsembleListType,
+    VertexListType,
+    EdgeListType,
+    FaceListType,
+  };
 
-    SIMPL_INSTANCE_PROPERTY(ArrayListType, ArrayListType)
-    SIMPL_INSTANCE_PROPERTY(bool, ShowOperators)
+  SIMPL_INSTANCE_PROPERTY(ArrayListType, ArrayListType)
+  SIMPL_INSTANCE_PROPERTY(bool, ShowOperators)
 
-    /**
-     * @brief setupGui Initializes some of the GUI elements with selections or other GUI related items
-     */
-    virtual void setupGui();
+  /**
+   * @brief setupGui Initializes some of the GUI elements with selections or other GUI related items
+   */
+  virtual void setupGui();
 
-  public slots:
-    /**
-     * @brief beforePreflight
-     */
-    void beforePreflight();
+public slots:
+  /**
+   * @brief beforePreflight
+   */
+  void beforePreflight();
 
-    /**
-     * @brief afterPreflight
-     */
-    void afterPreflight();
+  /**
+   * @brief afterPreflight
+   */
+  void afterPreflight();
 
-    /**
-     * @brief filterNeedsInputParameters
-     * @param filter
-     */
-    void filterNeedsInputParameters(AbstractFilter* filter);
+  /**
+   * @brief filterNeedsInputParameters
+   * @param filter
+   */
+  void filterNeedsInputParameters(AbstractFilter* filter);
 
-  signals:
-    /**
-     * @brief errorSettingFilterParameter
-     * @param msg
-     */
-    void errorSettingFilterParameter(const QString& msg);
+signals:
+  /**
+   * @brief errorSettingFilterParameter
+   * @param msg
+   */
+  void errorSettingFilterParameter(const QString& msg);
 
-    /**
-     * @brief parametersChanged
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged
+   */
+  void parametersChanged();
 
-  protected:
-    /**
-     * @brief setComparisons
-     * @param comparisons
-     */
-    virtual void setEnsembleInput(EnsembleInfo info);
+protected:
+  /**
+   * @brief setComparisons
+   * @param comparisons
+   */
+  virtual void setEnsembleInput(EnsembleInfo info);
 
-    /**
-     * @brief getComparisonInputs
-     * @return
-     */
-    EnsembleInfo getEnsembleInfo();
+  /**
+   * @brief getComparisonInputs
+   * @return
+   */
+  EnsembleInfo getEnsembleInfo();
 
-    /**
-     * @brief generateAttributeArrayList
-     * @param currentDCName
-     * @param currentAttrMatName
-     * @return
-     */
-    QStringList generateAttributeArrayList(const QString& currentDCName, const QString &currentAttrMatName);
+  /**
+   * @brief generateAttributeArrayList
+   * @param currentDCName
+   * @param currentAttrMatName
+   * @return
+   */
+  QStringList generateAttributeArrayList(const QString& currentDCName, const QString& currentAttrMatName);
 
-    /**
-     * @brief checkStringValues
-     * @param curDcName
-     * @param filtDcName
-     * @return
-     */
-    QString checkStringValues(QString curDcName, QString filtDcName);
+  /**
+   * @brief checkStringValues
+   * @param curDcName
+   * @param filtDcName
+   * @return
+   */
+  QString checkStringValues(QString curDcName, QString filtDcName);
 
+protected slots:
+  /**
+   * @brief on_addComparison_clicked
+   */
+  void on_addComparison_clicked();
 
-  protected slots:
-    /**
-     * @brief on_addComparison_clicked
-     */
-    void on_addComparison_clicked();
+  /**
+   * @brief on_removeComparison_clicked
+   */
+  void on_removeComparison_clicked();
 
-    /**
-     * @brief on_removeComparison_clicked
-     */
-    void on_removeComparison_clicked();
+  /**
+   * @brief tableDataWasChanged
+   * @param topLeft
+   * @param bottomRight
+   */
+  void tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
-    /**
-     * @brief tableDataWasChanged
-     * @param topLeft
-     * @param bottomRight
-     */
-    void tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
+  /**
+   * @brief widgetChanged
+   * @param text
+   */
+  void widgetChanged(const QString& text);
 
-    /**
-     * @brief widgetChanged
-     * @param text
-     */
-    void widgetChanged(const QString& text);
+private:
+  DataContainerArrayProxy m_DcaProxy;
 
-  private:
-    DataContainerArrayProxy m_DcaProxy;
+  bool m_DidCausePreflight;
 
-    bool m_DidCausePreflight;
+  EnsembleInfoTableModel* m_EnsembleInfoTableModel;
 
-    EnsembleInfoTableModel* m_EnsembleInfoTableModel;
+  EnsembleInfoFilterParameter* m_FilterParameter;
 
-    EnsembleInfoFilterParameter* m_FilterParameter;
+  /**
+   * @brief createComparisonModel
+   * @return
+   */
+  EnsembleInfoTableModel* createEnsembleInfoModel();
 
-
-
-    /**
-     * @brief createComparisonModel
-     * @return
-     */
-    EnsembleInfoTableModel* createEnsembleInfoModel();
-
-    EnsembleInfoCreationWidget(const EnsembleInfoCreationWidget&); // Copy Constructor Not Implemented
-    void operator=(const EnsembleInfoCreationWidget&); // Operator '=' Not Implemented
-
+  EnsembleInfoCreationWidget(const EnsembleInfoCreationWidget&); // Copy Constructor Not Implemented
+  void operator=(const EnsembleInfoCreationWidget&);             // Operator '=' Not Implemented
 };
 
-
-
-
 #endif /* _EnsembleInfoCreationWidget_H_ */
-

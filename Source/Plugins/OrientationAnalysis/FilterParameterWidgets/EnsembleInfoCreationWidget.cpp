@@ -371,7 +371,10 @@ void EnsembleInfoCreationWidget::beforePreflight()
 void EnsembleInfoCreationWidget::afterPreflight()
 {
   DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
-  if (nullptr == dca.get()) { return; }
+  if(nullptr == dca.get())
+  {
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------

@@ -56,8 +56,8 @@ EnsembleInfoFilterParameter::~EnsembleInfoFilterParameter()
 //
 // -----------------------------------------------------------------------------
 EnsembleInfoFilterParameter::Pointer EnsembleInfoFilterParameter::New(const QString& humanLabel, const QString& propertyName, EnsembleInfo defaultValue, Category category,
-                                                                                    SetterCallbackType setterCallback, GetterCallbackType getterCallback, QVector<QString> choices, bool showOperators,
-                                                                                    int groupIndex)
+                                                                      SetterCallbackType setterCallback, GetterCallbackType getterCallback, QVector<QString> choices, bool showOperators,
+                                                                      int groupIndex)
 {
   EnsembleInfoFilterParameter::Pointer ptr = EnsembleInfoFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -98,17 +98,13 @@ void EnsembleInfoFilterParameter::readJson(const QJsonObject& json)
     {
       QJsonObject ensembleObj = jsonArray[i].toObject();
 
-      if(ensembleObj["CrystalStructure"].isDouble() &&
-        ensembleObj["PhaseType"].isDouble() && 
-        ensembleObj["PhaseName"].isString())
+      if(ensembleObj["CrystalStructure"].isDouble() && ensembleObj["PhaseType"].isDouble() && ensembleObj["PhaseName"].isString())
       {
         EnsembleInfo::CrystalStructureType crystalStructure = ensembleObj["CrystalStructure"].toInt();
         PhaseType::EnumType phaseType = ensembleObj["PhaseType"].toInt();
         QString phaseName = ensembleObj["PhaseName"].toString();
 
-        inputs.addValues(static_cast<EnsembleInfo::CrystalStructure>(crystalStructure),
-          static_cast<PhaseType::Type>(phaseType),
-          phaseName);
+        inputs.addValues(static_cast<EnsembleInfo::CrystalStructure>(crystalStructure), static_cast<PhaseType::Type>(phaseType), phaseName);
       }
     }
 
@@ -121,7 +117,7 @@ void EnsembleInfoFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 void EnsembleInfoFilterParameter::writeJson(QJsonObject& json)
 {
-  if (m_GetterCallback)
+  if(m_GetterCallback)
   {
     QJsonArray inputsArray;
 

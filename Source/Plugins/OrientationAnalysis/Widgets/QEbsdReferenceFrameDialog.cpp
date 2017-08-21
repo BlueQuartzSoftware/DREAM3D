@@ -38,10 +38,10 @@
 #include <iostream>
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QPropertyAnimation>
 #include <QtCore/QStateMachine>
 #include <QtCore/QtEndian>
-#include <QtCore/QJsonDocument>
 
 #include <QtGui/QColor>
 #include <QtGui/QFont>
@@ -298,7 +298,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       msgBox.setText("Error Reading ANG File");
       QString iText;
       QTextStream ss(&iText);
-      ss << "There was an error reading the .ang file '"<< fi.absoluteFilePath() << "'\n The error code returned was " << err;
+      ss << "There was an error reading the .ang file '" << fi.absoluteFilePath() << "'\n The error code returned was " << err;
       msgBox.setInformativeText(iText);
       msgBox.setStandardButtons(QMessageBox::Ok);
       msgBox.setDefaultButton(QMessageBox::Ok);
@@ -328,7 +328,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       msgBox.setText("Error Reading CTF File");
       QString iText;
       QTextStream ss(&iText);
-      ss << "There was an error reading the .ctf file '"<< fi.absoluteFilePath() << "'\n The error code returned was " << err;
+      ss << "There was an error reading the .ctf file '" << fi.absoluteFilePath() << "'\n The error code returned was " << err;
       msgBox.setInformativeText(iText);
       msgBox.setStandardButtons(QMessageBox::Ok);
       msgBox.setDefaultButton(QMessageBox::Ok);
@@ -438,11 +438,8 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca, 
-  DataArrayPath cellPhasesArrayPath,
-  DataArrayPath cellEulerAnglesArrayPath,
-  DataArrayPath crystalStructuresArrayPath,
-  QString& arrayName)
+int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca, DataArrayPath cellPhasesArrayPath, DataArrayPath cellEulerAnglesArrayPath, DataArrayPath crystalStructuresArrayPath,
+                                               QString& arrayName)
 {
   // We can use this filter directly because it is in the current plugin
   GenerateIPFColors::Pointer ipfColorFilter = GenerateIPFColors::New();
@@ -478,21 +475,21 @@ int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca,
     QString iText;
     QTextStream ss(&iText);
     ss << "There was an error (" << err << ") while computing the IPF colors to display. As a "
-    << "fallback DREAM.3D has selected to display the ";
+       << "fallback DREAM.3D has selected to display the ";
     if(m_EbsdFileName.endsWith(".ang", Qt::CaseInsensitive))
     {
       ss << Ebsd::Ang::ConfidenceIndex;
     }
     else if(m_EbsdFileName.endsWith(".ctf", Qt::CaseInsensitive))
     {
-      ss <<  Ebsd::Ctf::Bands;
+      ss << Ebsd::Ctf::Bands;
     }
     else
     {
       ss << " --Current File Type Unsupported-- ";
     }
-    
-    ss <<  " data set instead. The failure to compute IPF Colors correctly may indicate ";
+
+    ss << " data set instead. The failure to compute IPF Colors correctly may indicate ";
     ss << "a data issue with the input orientation file(s).";
     msgBox.setInformativeText(iText);
     msgBox.setStandardButtons(QMessageBox::Ok);
@@ -508,9 +505,7 @@ int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QEbsdReferenceFrameDialog::createArrayColors(DataContainerArray::Pointer dca,
-  DataArrayPath dataArrayPath,
-  QString outputArrayName)
+int QEbsdReferenceFrameDialog::createArrayColors(DataContainerArray::Pointer dca, DataArrayPath dataArrayPath, QString outputArrayName)
 {
   GenerateColorTable::Pointer colorTableFilter = GenerateColorTable::New();
   FloatVec3_t ref;

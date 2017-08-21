@@ -37,8 +37,8 @@
 
 #include <QtCore/QDebug>
 #include <QtWidgets/QAbstractItemDelegate>
-#include <QtWidgets/QStyleOptionComboBox>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QStyleOptionComboBox>
 
 #include "EnsembleInfoItemDelegate.h"
 
@@ -431,4 +431,3 @@ QAbstractItemDelegate* EnsembleInfoTableModel::getItemDelegate()
 {
   return new EnsembleInfoItemDelegate(m_NumberOfPhases, this);
 }
-
