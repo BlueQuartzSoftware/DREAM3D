@@ -38,10 +38,11 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/ThresholdFilterHelper.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "OrientationAnalysis/FilterParameters/EnsembleInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+
+#include "OrientationAnalysis/FilterParameters/EnsembleInfoFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -156,7 +157,7 @@ void CreateEnsembleInfo::dataCheck()
   DataArrayPath tempPath;
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(
-    this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_CrystalStructuresPtr.lock().get())                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
@@ -164,15 +165,15 @@ void CreateEnsembleInfo::dataCheck()
 
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName());
   m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(
-    this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_PhaseTypesPtr.lock().get())                     /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_PhaseTypesPtr.lock().get())                                             /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseNamesArrayName());
-  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(
-    this, tempPath, "_PHASE_NAME_", cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, "_PHASE_NAME_",
+                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 }
 
 // -----------------------------------------------------------------------------
@@ -242,7 +243,7 @@ void CreateEnsembleInfo::execute()
       return;
     }
 
-    m_PhaseTypes[i+1] = phaseType;
+    m_PhaseTypes[i + 1] = phaseType;
 
     // Phase Name
     QString phaseName = phaseNames->getValue(i);
@@ -254,7 +255,7 @@ void CreateEnsembleInfo::execute()
       return;
     }
 
-    m_PhaseNamesPtr.lock()->setValue(i+1, phaseName);
+    m_PhaseNamesPtr.lock()->setValue(i + 1, phaseName);
   }
 
   /* Let the GUI know we are done with this filter */
