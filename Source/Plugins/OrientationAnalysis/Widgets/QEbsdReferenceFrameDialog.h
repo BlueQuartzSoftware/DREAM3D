@@ -33,19 +33,21 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _qebsdreferenceframedialog_h_
 #define _qebsdreferenceframedialog_h_
 
+#include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QSettings>
 #include <QtWidgets/QDialog>
 
 class QGraphicsPixmapItem;
+class DataArrayPath;
 
 #include "ui_QEbsdReferenceFrameDialog.h"
 
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
 #include "EbsdLib/EbsdConstants.h"
@@ -61,64 +63,67 @@ class QGraphicsPixmapItem;
  */
 class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFrameDialog
 {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    QEbsdReferenceFrameDialog(QString filename, QWidget* parent = 0);
-    virtual ~QEbsdReferenceFrameDialog();
+public:
+  QEbsdReferenceFrameDialog(QString filename, QWidget* parent = 0);
+  virtual ~QEbsdReferenceFrameDialog();
 
-    void setEbsdFileName(QString filename);
-    void setTSLDefault(bool checked);
-    void setHKLDefault(bool checked);
-    void setHEDMDefault(bool checked);
-    void setNoTrans(bool checked);
-    void loadEbsdData();
-    void updateGraphicsView();
-    void updateDisplay();
+  void setEbsdFileName(QString filename);
+  void setTSLDefault(bool checked);
+  void setHKLDefault(bool checked);
+  void setHEDMDefault(bool checked);
+  void setNoTrans(bool checked);
+  void loadEbsdData();
+  void updateGraphicsView();
+  void updateDisplay();
 
+  Ebsd::EbsdToSampleCoordinateMapping getSelectedOrigin();
+  bool getTSLchecked();
+  bool getHKLchecked();
+  bool getHEDMchecked();
+  bool getNoTranschecked();
+  void getSampleTranformation(AxisAngleInput_t& input);
+  void getEulerTranformation(AxisAngleInput_t& input);
 
-    Ebsd::EbsdToSampleCoordinateMapping getSelectedOrigin();
-    bool getTSLchecked();
-    bool getHKLchecked();
-    bool getHEDMchecked();
-    bool getNoTranschecked();
-    void getSampleTranformation(AxisAngleInput_t& input);
-    void getEulerTranformation(AxisAngleInput_t& input);
+protected slots:
+  void originChanged(bool checked);
 
-  protected slots:
-    void originChanged(bool checked);
+  void degToRagsChanged(int state);
 
-    void degToRagsChanged(int state);
+  void referenceDirectionChanged();
+  QImage paintImage(QImage image);
 
-    void referenceDirectionChanged();
-    QImage paintImage(QImage image);
+  void on_showHelp_clicked();
 
-    void on_showHelp_clicked();
+  void z10_triggered();
+  void z25_triggered();
+  void z50_triggered();
+  void z100_triggered();
+  void z125_triggered();
+  void z150_triggered();
+  void z200_triggered();
+  void z400_triggered();
+  void z600_triggered();
 
-    void z10_triggered();
-    void z25_triggered();
-    void z50_triggered();
-    void z100_triggered();
-    void z125_triggered();
-    void z150_triggered();
-    void z200_triggered();
-    void z400_triggered();
-    void z600_triggered();
+  void on_fitToWindow_clicked();
 
-    void on_fitToWindow_clicked();
+protected:
+  void setupGui();
 
-  protected:
+  int createIpfColors(DataContainerArray::Pointer dca, DataArrayPath cellPhasesArrayPath, DataArrayPath cellEulerAnglesArrayPath, DataArrayPath crystalStructuresArrayPath, QString& outputArrayName);
+  int createArrayColors(DataContainerArray::Pointer dca, DataArrayPath dataArrayPath, QString outputArrayName);
 
-    void setupGui();
+  void generateImageRGB(IDataArray::Pointer dataArray, size_t dims[3]);
 
-  private:
-    QString                     m_EbsdFileName;
-    QButtonGroup*               m_OriginGroup;
-    QImage                      m_BaseImage;
-    QImage                      m_DisplayedImage;
+private:
+  QString m_EbsdFileName;
+  QButtonGroup* m_OriginGroup;
+  QImage m_BaseImage;
+  QImage m_DisplayedImage;
 
-    QEbsdReferenceFrameDialog(const QEbsdReferenceFrameDialog&); // Copy Constructor Not Implemented
-    void operator=(const QEbsdReferenceFrameDialog&); // Operator '=' Not Implemented
+  QEbsdReferenceFrameDialog(const QEbsdReferenceFrameDialog&); // Copy Constructor Not Implemented
+  void operator=(const QEbsdReferenceFrameDialog&);            // Operator '=' Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */
