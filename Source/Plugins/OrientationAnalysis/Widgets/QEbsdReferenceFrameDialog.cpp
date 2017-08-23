@@ -38,6 +38,7 @@
 #include <iostream>
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QPropertyAnimation>
 #include <QtCore/QStateMachine>
 #include <QtCore/QtEndian>
@@ -57,6 +58,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/CoreFilters/GenerateColorTable.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
@@ -296,7 +298,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       msgBox.setText("Error Reading ANG File");
       QString iText;
       QTextStream ss(&iText);
-      ss << "There was an error reading the ang file.\n. The error code returned was " << err;
+      ss << "There was an error reading the .ang file '" << fi.absoluteFilePath() << "'\n The error code returned was " << err;
       msgBox.setInformativeText(iText);
       msgBox.setStandardButtons(QMessageBox::Ok);
       msgBox.setDefaultButton(QMessageBox::Ok);
@@ -326,7 +328,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       msgBox.setText("Error Reading CTF File");
       QString iText;
       QTextStream ss(&iText);
-      ss << "There was an error reading the ctf file.\n. The error code returned was " << err;
+      ss << "There was an error reading the .ctf file '" << fi.absoluteFilePath() << "'\n The error code returned was " << err;
       msgBox.setInformativeText(iText);
       msgBox.setStandardButtons(QMessageBox::Ok);
       msgBox.setDefaultButton(QMessageBox::Ok);
@@ -384,6 +386,61 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     }
   }
 
+  QString outputArrayName;
+  int err = createIpfColors(dca, cellPhasesArrayPath, cellEulerAnglesArrayPath, crystalStructuresArrayPath, outputArrayName);
+  if(err < 0)
+  {
+    outputArrayName = "ColorTable";
+
+    // Set the DataArrayPath based on the file type
+    DataArrayPath arrayPath = DataArrayPath(dcName, cellAttrMatName, "");
+    if(m_EbsdFileName.endsWith(".ang", Qt::CaseInsensitive))
+    {
+      arrayPath.setDataArrayName(Ebsd::Ang::ConfidenceIndex);
+    }
+    else if(m_EbsdFileName.endsWith(".ctf", Qt::CaseInsensitive))
+    {
+      arrayPath.setDataArrayName(Ebsd::Ctf::Bands);
+    }
+    else
+    {
+      // No target DataArray to use
+      return;
+    }
+
+    // Generate colors for the given path
+    err = createArrayColors(dca, arrayPath, outputArrayName);
+
+    // If there is stil an error, return
+    if(err < 0)
+    {
+      return;
+    }
+  }
+
+  DataContainer::Pointer m = dca->getDataContainer(dcName);
+  size_t dims[3] = {0, 0, 0};
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  float res[3] = {0.0f, 0.0f, 0.0f};
+  m->getGeometryAs<ImageGeom>()->getResolution(res);
+
+  m_XDim->setText(QString::number(dims[0]));
+  m_YDim->setText(QString::number(dims[1]));
+  m_XRes->setText(QString::number(res[0]));
+  m_YRes->setText(QString::number(res[1]));
+
+  AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(cellAttrMatName);
+  IDataArray::Pointer arrayPtr = attrMat->getAttributeArray(outputArrayName);
+
+  generateImageRGB(arrayPtr, dims);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca, DataArrayPath cellPhasesArrayPath, DataArrayPath cellEulerAnglesArrayPath, DataArrayPath crystalStructuresArrayPath,
+                                               QString& arrayName)
+{
   // We can use this filter directly because it is in the current plugin
   GenerateIPFColors::Pointer ipfColorFilter = GenerateIPFColors::New();
   FloatVec3_t ref;
@@ -417,40 +474,110 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     msgBox.setText("IPF Color Filter Error");
     QString iText;
     QTextStream ss(&iText);
-    ss << "Error Executing the IPF Colors Filter. The error code was " << err;
+    ss << "There was an error (" << err << ") while computing the IPF colors to display. As a "
+       << "fallback DREAM.3D has selected to display the ";
+    if(m_EbsdFileName.endsWith(".ang", Qt::CaseInsensitive))
+    {
+      ss << Ebsd::Ang::ConfidenceIndex;
+    }
+    else if(m_EbsdFileName.endsWith(".ctf", Qt::CaseInsensitive))
+    {
+      ss << Ebsd::Ctf::Bands;
+    }
+    else
+    {
+      ss << " --Current File Type Unsupported-- ";
+    }
+
+    ss << " data set instead. The failure to compute IPF Colors correctly may indicate ";
+    ss << "a data issue with the input orientation file(s).";
     msgBox.setInformativeText(iText);
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.exec();
-    return;
   }
 
-  DataContainer::Pointer m = dca->getDataContainer(dcName);
-  size_t dims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getResolution(res);
+  arrayName = ipfColorFilter->getCellIPFColorsArrayName();
 
-  m_XDim->setText(QString::number(dims[0]));
-  m_YDim->setText(QString::number(dims[1]));
-  m_XRes->setText(QString::number(res[0]));
-  m_YRes->setText(QString::number(res[1]));
+  return err;
+}
 
-  QImage image(dims[0], dims[1], QImage::Format_ARGB32);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QEbsdReferenceFrameDialog::createArrayColors(DataContainerArray::Pointer dca, DataArrayPath dataArrayPath, QString outputArrayName)
+{
+  GenerateColorTable::Pointer colorTableFilter = GenerateColorTable::New();
+  FloatVec3_t ref;
+  ref.x = 0;
+  ref.y = 0;
+  ref.z = 0;
+  if(refDir->currentIndex() == 0)
+  {
+    ref.x = 1;
+  }
+  else if(refDir->currentIndex() == 1)
+  {
+    ref.y = 1;
+  }
+  else if(refDir->currentIndex() == 2)
+  {
+    ref.z = 1;
+  }
+
+  QJsonArray controlPointsArray;
+  controlPointsArray.push_back(0);
+  controlPointsArray.push_back(0);
+  controlPointsArray.push_back(0);
+  controlPointsArray.push_back(0);
+  controlPointsArray.push_back(255);
+  controlPointsArray.push_back(255);
+  controlPointsArray.push_back(255);
+  controlPointsArray.push_back(255);
+
+  colorTableFilter->setDataContainerArray(dca);
+  colorTableFilter->setSelectedDataArrayPath(dataArrayPath);
+  colorTableFilter->setRGB_ArrayName(outputArrayName);
+  colorTableFilter->setSelectedPresetControlPoints(controlPointsArray);
+  colorTableFilter->setSelectedPresetName("Grayscale");
+  colorTableFilter->execute();
+  int err = colorTableFilter->getErrorCondition();
+  if(err < 0)
+  {
+    m_BaseImage = QImage();
+    m_DisplayedImage = QImage();
+    QMessageBox msgBox;
+    msgBox.setText("Generate Color Table Filter Error");
+    QString iText;
+    QTextStream ss(&iText);
+    ss << "Error Executing the GenerateColorTable Filter. The error code was " << err;
+    ss << "\n\nCould not display DataArray " << dataArrayPath.getDataArrayName();
+    msgBox.setInformativeText(iText);
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.exec();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdReferenceFrameDialog::generateImageRGB(IDataArray::Pointer dataArray, size_t dims[3])
+{
   size_t index = 0;
+  QImage image(dims[0], dims[1], QImage::Format_ARGB32);
 
-  AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(cellAttrMatName);
-
-  IDataArray::Pointer arrayPtr = attrMat->getAttributeArray(ipfColorFilter->getCellIPFColorsArrayName());
-  if(nullptr == arrayPtr.get())
+  if(nullptr == dataArray.get())
   {
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();
     return;
   }
 
-  UInt8ArrayType* rgbArray = UInt8ArrayType::SafePointerDownCast(arrayPtr.get());
-  uint8_t* ipfColors = rgbArray->getPointer(0);
+  UInt8ArrayType* rgbArray = UInt8ArrayType::SafePointerDownCast(dataArray.get());
+  uint8_t* generatedColors = rgbArray->getPointer(0);
 
   for(size_t y = 0; y < dims[1]; ++y)
   {
@@ -462,9 +589,9 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 #else
       scanLine[x * 4 + 3] = 0xFF;
       index = y * dims[0] * 3 + x * 3;
-      scanLine[x * 4 + 2] = ipfColors[index + 0];
-      scanLine[x * 4 + 1] = ipfColors[index + 1];
-      scanLine[x * 4 + 0] = ipfColors[index + 2];
+      scanLine[x * 4 + 2] = generatedColors[index + 0];
+      scanLine[x * 4 + 1] = generatedColors[index + 1];
+      scanLine[x * 4 + 0] = generatedColors[index + 2];
 #endif
     }
   }
