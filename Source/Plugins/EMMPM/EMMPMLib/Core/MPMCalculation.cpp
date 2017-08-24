@@ -60,7 +60,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "EMMPMLib/Core/EMMPMUtilities.h"
 
 #define USE_TBB_TASK_GROUP 0
-#if EMMPM_USE_PARALLEL_ALGORITHMS
+#ifdef EMMPM_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range2d.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>

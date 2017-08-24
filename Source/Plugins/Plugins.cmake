@@ -21,19 +21,26 @@ function(DREAM3D_COMPILE_PLUGIN)
     set_property(GLOBAL PROPERTY PluginNumFilters "-1")
 
     option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
+    
     if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})
         get_property(PluginNumFilters GLOBAL PROPERTY PluginNumFilters)
-        message(STATUS "${PLUG_PLUGIN_NAME} [ENABLED] ${PluginNumFilters} Filters")
 
-        #- Now set up the dependency between the main application and each of the plugins so that
-        #- things like Visual Studio are forced to rebuild the plugins when launching
-        #- the DREAM3D application
-        if(DREAM3D_BUILD_PLUGIN_${p})
-            add_dependencies(DREAM3D ${p})
+        if(${PluginNumFilters} GREATER -1)
+          message(STATUS "${PLUG_PLUGIN_NAME} [ENABLED] ${PluginNumFilters} Filters")
+          #- Now set up the dependency between the main application and each of the plugins so that
+          #- things like Visual Studio are forced to rebuild the plugins when launching
+          #- the DREAM3D application
+          if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} AND TARGET DREAM3D AND TARGET ${PLUG_PLUGIN_NAME})
+            add_dependencies(DREAM3D ${PLUG_PLUGIN_NAME})
+          endif()
+        else()
+          set(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "OFF" CACHE BOOL "Build the ${PLUG_PLUGIN_NAME}" FORCE)
+          message(STATUS "${PLUG_PLUGIN_NAME} [DISABLED]: Use -DDREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME}=ON to Enable Plugin")
         endif()
+
     else()
-        message(STATUS "Plugin [DISABLED]: ${PLUG_PLUGIN_NAME}")
+        message(STATUS "${PLUG_PLUGIN_NAME} [DISABLED]: Use -DDREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME}=ON to Enable Plugin")
     endif()
 endfunction()
 
