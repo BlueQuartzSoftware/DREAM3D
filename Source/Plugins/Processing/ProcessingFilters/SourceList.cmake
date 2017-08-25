@@ -27,8 +27,6 @@ set(_PublicFilters
   InitializeData
   MinNeighbors
   MinSize
-  MultiThresholdObjects
-  MultiThresholdObjects2
   RemoveFlaggedFeatures
 )
 
