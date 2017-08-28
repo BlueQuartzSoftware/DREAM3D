@@ -55,8 +55,9 @@
 // -----------------------------------------------------------------------------
 EnsembleInfoItemDelegate::EnsembleInfoItemDelegate(int numPhases, QObject* parent)
 : QStyledItemDelegate(parent)
-, m_NumberOfPhases(numPhases)
 , m_CrystalStructureList(EnsembleInfo::CrystalStructureStrings())
+, m_NumberOfPhases(numPhases)
+
 {
   PhaseType::getPhaseTypeStrings(m_PhaseTypeList);
   m_PhaseTypeList.pop_back(); // Pop "Unknown" PhaseType
@@ -106,9 +107,6 @@ void EnsembleInfoItemDelegate::setPhaseTypeList(QStringList phases)
 // -----------------------------------------------------------------------------
 QWidget* EnsembleInfoItemDelegate::createEditor(QWidget* widgetParent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-  QLineEdit* featureValue = nullptr;
-  QDoubleValidator* featureValueValidator = nullptr;
-
   QComboBox* operatorCombo = nullptr;
   QLineEdit* lineEdit = nullptr;
 
@@ -123,7 +121,6 @@ QWidget* EnsembleInfoItemDelegate::createEditor(QWidget* widgetParent, const QSt
   {
     phases << QString::number(i + 1);
   }
-  bool ok = false;
   qint32 col = index.column();
   switch(col)
   {
@@ -225,7 +222,6 @@ void EnsembleInfoItemDelegate::setModelData(QWidget* editor, QAbstractItemModel*
   {
     QComboBox* comboBox = qobject_cast<QComboBox*>(editor);
     Q_ASSERT(comboBox);
-    int i = comboBox->currentIndex();
     model->setData(index, comboBox->currentIndex());
   }
   else if(col == EnsembleInfoTableModel::PhaseType)
