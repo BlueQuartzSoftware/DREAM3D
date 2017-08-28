@@ -182,12 +182,15 @@ void ConvertOrientations::dataCheck()
     {
       strm << "[" << names[i] << "=" << componentCounts[i] << "] ";
     }
-  
-    QString ss = QObject::tr("The number of components (%1) of the input array does not match the required number of components for the input type (%2). These are the required Component counts. %3").arg(numComps).arg(componentCounts[getInputType()]).arg(sizeNameMappingString);
+
+    QString ss = QObject::tr("The number of components (%1) of the input array does not match the required number of components for the input type (%2). These are the required Component counts. %3")
+                     .arg(numComps)
+                     .arg(componentCounts[getInputType()])
+                     .arg(sizeNameMappingString);
     setErrorCondition(-1006);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  
+
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
