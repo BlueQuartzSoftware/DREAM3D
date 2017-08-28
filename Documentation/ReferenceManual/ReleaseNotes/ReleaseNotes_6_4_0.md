@@ -11,15 +11,50 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.4.XX ##
+
+### New Filters ###
+
++ Create Ensemble Info (Issue #724)
++ Import EBSD Orientation Files: Fallback to CI or Bands if generating IPF Color fails
++ Filters can not be temporarily disabled in the pipeline view.
++ ThresholdObjects filters moved to SIMPL Core from DREAM3D repo.
++ 
+
+### Fixed DREAM3D Issues ###
+
++ DREAM3D Issue #714: Fix bug when reading ODF angle files with a comma as a delimiter and spaces in the data line
++ DREAM3D Issue #716: Write StatsGen ODF Angle File does not create output path directories
++ DREAM3D Issue #718: GenerateIPF Colors filter does not validate phase data and will cause unexpected results or crashes.
++ DREAM3D Issue #723: Image files stored in 'images' or 'Images' subdirectories do not match capitalization.
++ DREAM3D Issue #724: Import Orientation Files Filter Widget needs a fallback mechanism if the IPF Color generation fails
++ DREAM3D Issue #727: Allow filters to be temporarily disabled or turned off in the pipeline
++ DREAM3D Issue #730: AlignSectionsList Shows parameters from parent class
++ DREAM3D Issue #732: When reading STL files parse the header bytes to look for keywords that would identify the file as being from Magic's Materialise software
++ DREAM3D Issue #733: AlignSections (List) filter will not read from DREAM.3D generated Alignment files
++ DREAM3D Issue #737: ConvertOrientationData was not properly checking input arrays for the correct number of components
+
+### Fixed SIMPLView Issues ###
+
++ SIMPLView Issue #17: Failure to check existence of file may lead to application crash
+
+### Fixed SIMPL Issues ###
+
++ SIMPL Issue #123: Fix inconsistent types in the H5Lite library
++ SIMPL Issue: Array calculator will fail for some types of arrays
++ SIMPL Issue #118: Fix FileListInfoWidget internationalization decode issue.
++ SIMPL Issue #114: Allow user to skip writing the number of features in the CSV file
++ SIMPL: Using Ariel font on Linux as Fira Sans is too thin to be easily seen.
++ SIMPL Issue #110: Fix plugin loading issues on linux with case sensitive file systems
+
 ## Version 6.4.78 ##
 
 + SIMPL: Add Cmd-W as a short cut to close the windows.
 + SIMPL: Detect missing PhaseName from StatsData JSON files and change the returned string to match the type of StatsData
 + SIMPL Issues #103: Some selection widgets do not allow selections if the filter parameter has Geometry::Type::Any as a requirement
-+ SIMPL Issues #104: Pipelines with Exactly 11 filters will not load correctly 
++ SIMPL Issues #104: Pipelines with Exactly 11 filters will not load correctly
 + DREAM3D Issue #702: Fix crashing bug in PackPrimaryPhases and InsertPrecipitates when Periodic boundaries are used.
-+ DREAM3D Issue #703: Fix issue where Axis ODF values are not converted to Degrees after being
-read from a file.
++ DREAM3D Issue #703: Fix issue where Axis ODF values are not converted to Degrees after being read from a file.
 + DREAM3D Issue #704: Adjust the default to NOT save the Shape parameters during synthetic runs.
 + DREAM3D Issue #708: Fix issue where clicking create default data will also reset the ODF, MDF and Axis ODF in the StatsGenerator Widget.
 + DREAM3D: Fix bug when reading/writing Primary and Precipitate StatsData from/to .dream3d and .json files
