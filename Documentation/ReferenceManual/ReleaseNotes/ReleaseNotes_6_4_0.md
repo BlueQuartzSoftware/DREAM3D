@@ -44,6 +44,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + SIMPL Issue: Array calculator will fail for some types of arrays
 + SIMPL Issue #118: Fix FileListInfoWidget internationalization decode issue.
 + SIMPL Issue #114: Allow user to skip writing the number of features in the CSV file
++ SIMPL Issue #112: Allow SIMPL to use environment variable to search for plugins. SIMPL_PLUGIN_PATH
 + SIMPL: Using Ariel font on Linux as Fira Sans is too thin to be easily seen.
 + SIMPL Issue #110: Fix plugin loading issues on linux with case sensitive file systems
 
