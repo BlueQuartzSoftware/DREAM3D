@@ -58,7 +58,7 @@ The four different types of **Element Attribute Matrix** correspond to the four 
 
 -----
 
-![Attribute Matrix Layout](Images/Attributematrix.png)
+![Attribute Matrix Layout](Images/AttributeMatrix.png)
 @image latex Images/AttributeMatrix.png "Attribute Matrix Layout" width=6in 
 
 -----
