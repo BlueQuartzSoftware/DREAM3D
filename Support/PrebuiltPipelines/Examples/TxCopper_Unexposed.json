@@ -140,7 +140,7 @@
         "OutputPath": "Data/Output/TexturedCopper"
     },
     "PipelineBuilder": {
-        "Name": "TxCopper_Unexposed",
+        "Name": "Textured Copper [Unexposed]",
         "Number_Filters": 7,
         "Version": 6
     }

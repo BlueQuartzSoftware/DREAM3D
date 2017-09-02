@@ -44,7 +44,7 @@
         ]
     },
     "PipelineBuilder": {
-        "Name": "Image_Histogram",
+        "Name": "Image Histogram",
         "Number_Filters": 3,
         "Version": 6
     }

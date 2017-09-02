@@ -286,7 +286,7 @@
         }
     },
     "PipelineBuilder": {
-        "Name": "INL_Export",
+        "Name": "INL Export",
         "Number_Filters": 14,
         "Version": 6
     }

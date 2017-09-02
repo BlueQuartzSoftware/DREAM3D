@@ -107,7 +107,7 @@
         ]
     },
     "PipelineBuilder": {
-        "Name": "CI_Histogram",
+        "Name": "Confidence Index Histogram",
         "Number_Filters": 7,
         "Version": 6
     }

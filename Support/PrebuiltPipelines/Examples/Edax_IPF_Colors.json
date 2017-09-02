@@ -99,7 +99,7 @@
         }
     },
     "PipelineBuilder": {
-        "Name": "Edax_IPF_Colors",
+        "Name": "Edax IPF Colors",
         "Number_Filters": 6,
         "Version": 6
     }

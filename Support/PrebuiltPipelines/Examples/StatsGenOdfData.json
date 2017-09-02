@@ -86,7 +86,7 @@
         "UseGoodVoxels": 1
     },
     "PipelineBuilder": {
-        "Name": "StatsGenOdfData",
+        "Name": "Export Small IN100 ODF Data (StatsGenerator)",
         "Number_Filters": 5,
         "Version": 6
     }

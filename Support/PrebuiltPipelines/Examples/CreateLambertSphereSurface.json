@@ -1,0 +1,115 @@
+{
+    "0": {
+        "CreatedDataContainer": "ImageDataContainer",
+        "FilterVersion": "1.0.154",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Data Container",
+        "Filter_Name": "CreateDataContainer"
+    },
+    "1": {
+        "Dimensions": {
+            "x": 101,
+            "y": 101,
+            "z": 1
+        },
+        "FilterVersion": "1.0.154",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Geometry (Image)",
+        "Filter_Name": "CreateImageGeometry",
+        "Origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "Resolution": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "SelectedDataContainer": "ImageDataContainer"
+    },
+    "2": {
+        "AttributeMatrixType": 3,
+        "CreatedAttributeMatrix": {
+            "Attribute Matrix Name": "CellAttributeMatrix",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "1.0.154",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Attribute Matrix",
+        "Filter_Name": "CreateAttributeMatrix",
+        "TupleDimensions": {
+            "Column Headers": [
+                "0",
+                "1",
+                "2"
+            ],
+            "DefaultColCount": 0,
+            "DefaultRowCount": 0,
+            "HasDynamicCols": true,
+            "HasDynamicRows": false,
+            "MinColCount": 0,
+            "MinRowCount": 0,
+            "Row Headers": [
+                "0"
+            ],
+            "Table Data": [
+                [
+                    101,
+                    101,
+                    1
+                ]
+            ]
+        }
+    },
+    "3": {
+        "FilterVersion": "1.0.154",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Data Array",
+        "Filter_Name": "CreateDataArray",
+        "InitializationRange": {
+            "Max": 0,
+            "Min": 0
+        },
+        "InitializationType": 0,
+        "InitializationValue": "128",
+        "NewArray": {
+            "Attribute Matrix Name": "CellAttributeMatrix",
+            "Data Array Name": "ScalarValues",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "NumberOfComponents": 1,
+        "ScalarType": 1
+    },
+    "4": {
+        "FaceAttributeMatrixName": "FaceData",
+        "FilterVersion": "6.4.152",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create 3D Sphere from 2D Master Pattern",
+        "Filter_Name": "CreateLambertSphere",
+        "Hemisphere": 0,
+        "MasterPatternFaceDataArrayName": "MasterPattern",
+        "MasterPatternImageDataPath": {
+            "Attribute Matrix Name": "CellAttributeMatrix",
+            "Data Array Name": "ScalarValues",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "SurfaceDataContainerName": "QuadDataContainer",
+        "VertexAttributeMatrixName": "VertexData"
+    },
+    "5": {
+        "FilterVersion": "1.0.154",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "OutputFile": "Data/Output/LambertSphere.dream3d",
+        "WriteTimeSeries": 0,
+        "WriteXdmfFile": 1
+    },
+    "PipelineBuilder": {
+        "Name": "Create Sphere (Qaud Surface Mesh)",
+        "Number_Filters": 6,
+        "Version": 6
+    }
+}
