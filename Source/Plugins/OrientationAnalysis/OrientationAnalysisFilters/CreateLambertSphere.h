@@ -72,6 +72,18 @@ public:
   SIMPL_FILTER_PARAMETER(QString, MasterPatternFaceDataArrayName)
   Q_PROPERTY(QString MasterPatternFaceDataArrayName READ getMasterPatternFaceDataArrayName WRITE setMasterPatternFaceDataArrayName)
 
+  SIMPL_FILTER_PARAMETER(bool, CreateVertexGeometry)
+  Q_PROPERTY(bool CreateVertexGeometry READ getCreateVertexGeometry WRITE setCreateVertexGeometry)
+
+  SIMPL_FILTER_PARAMETER(bool, CreateEdgeGeometry)
+  Q_PROPERTY(bool CreateEdgeGeometry READ getCreateEdgeGeometry WRITE setCreateEdgeGeometry)
+
+  SIMPL_FILTER_PARAMETER(bool, CreateTriangleGeometry)
+  Q_PROPERTY(bool CreateTriangleGeometry READ getCreateTriangleGeometry WRITE setCreateTriangleGeometry)
+
+  SIMPL_FILTER_PARAMETER(bool, CreateQuadGeometry)
+  Q_PROPERTY(bool CreateQuadGeometry READ getCreateQuadGeometry WRITE setCreateQuadGeometry)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -165,8 +177,35 @@ protected:
    */
   void initialize();
 
+  /**
+   * @brief createVertices
+   */
+  void createVertices();
+
+  /**
+   * @brief CreateVertexGeometry
+   */
+  void createVertexGeometry();
+
+  /**
+   * @brief CreateEdgeGeometry
+   */
+  void createEdgeGeometry();
+
+  /**
+   * @brief CreateTriangleGeometry
+   */
+  void createTriangleGeometry();
+
+  /**
+   * @brief CreateQuadGeometry
+   */
+  void createQuadGeometry();
+
 private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, MasterPattern)
+
+  SharedVertexList::Pointer m_Vertices;
 
   /**
    * @brief Transforms the initial flat grid to a sphere using equations from
