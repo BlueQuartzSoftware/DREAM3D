@@ -171,6 +171,10 @@ void ConvertOrientations::dataCheck()
   // Figure out what kind of Array the user selected
   // Get the input data and create the output Data appropriately
   IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getInputOrientationArrayPath());
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   int numComps = iDataArrayPtr->getNumberOfComponents();
   QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
   if(numComps != componentCounts[getInputType()])
