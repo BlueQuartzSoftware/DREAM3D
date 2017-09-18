@@ -40,7 +40,7 @@
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QStyleOptionComboBox>
 
-#include "Applications/SIMPLView/SIMPLViewApplication.h"
+#include "SIMPLView/SIMPLViewApplication.h"
 
 #include "StatsGenerator/Widgets/Delegates/SGMDFItemDelegate.h"
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
