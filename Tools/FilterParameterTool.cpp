@@ -1001,6 +1001,103 @@ void ReplaceMacros(QString absPath)
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void UpdateMarkdownImageNames(QString absPath)
+{
+  QString filterName;
+  QString contents;
+  {
+    // Read the Source File
+    QFileInfo fi(absPath);
+//        if (fi.baseName().compare("InitializeSyntheticVolume") != 0)
+//        {
+//          return;
+//        }
+    filterName = fi.baseName();
+    QFile source(absPath);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+  //qDebug() << absPath;
+
+  QStringList names;
+  bool didReplace = false;
+
+  QVector<int> lines(0);
+
+
+  QString searchString = "![";
+
+  QVector<QString> outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QStringList includes;
+
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+
+    if(line.contains(searchString))
+    {
+     //hou qDebug() << line;
+      QStringList imageLinks = line.split("![");
+      foreach(QString chunk, imageLinks)
+      {
+        //qDebug() << chunk;
+        
+        int rightParenIdx = chunk.lastIndexOf(')');
+        // Look for the last ')' character which _should_ be the end of the image tag
+        if(rightParenIdx > -1)
+        {
+            // Now look for the '(' character which _should_ be the start of the tag.
+            int leftParenIdx = chunk.lastIndexOf('(');
+            if(leftParenIdx > -1)
+            {
+              QString path = chunk.mid(leftParenIdx + 1, rightParenIdx - leftParenIdx - 1);
+              //qDebug() << path;
+              
+              QFileInfo fi2(absPath);
+              QString imagePath = fi2.path() + QDir::separator() + path;
+              //qDebug() << imagePath;
+              QStringList filters;
+              QFileInfo fi3(imagePath);
+              QDir currentDir(fi3.path());
+              QFileInfoList itemList = currentDir.entryInfoList(filters);
+              foreach(QFileInfo itemInfo, itemList)
+              {
+//                qDebug() << itemInfo.fileName().toLower();
+//                qDebug() << fi3.fileName().toLower();
+                QString filename_lowercase = itemInfo.fileName().toLower();
+                if(filename_lowercase.compare(fi3.fileName().toLower(), Qt::CaseSensitive) == 0)
+                {
+                  // the filenames are the same if converted to all lower case. Now lets see
+                  // if they are the same if no conversion is performed.
+                  if(itemInfo.fileName().compare(fi3.fileName(), Qt::CaseSensitive) != 0)
+                  {
+                    // The filenames are different so we need to correct this
+                    line = line.replace(fi3.fileName(), itemInfo.fileName());
+                    didReplace = true;
+                    qDebug() << "Replacing filename .... ";
+                  }
+                }
+                
+              }
+            }
+        }
+       
+      }
+    }
+    outLines.push_back(line);
+  }
+
+  writeOutput(didReplace, outLines, absPath);
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -1010,7 +1107,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 
   QStringList filters;
   //filters.append("*.cpp");
-  filters.append("*.h");
+  filters.append("*.md");
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
   {
@@ -1030,13 +1127,14 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   foreach(QFileInfo itemInfo, itemList)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
-   // ReplaceText(itemFilePath);
-//    std::cout << "-------------------------------------" << std::endl;
-//    std::cout << itemFilePath.toStdString() << std::endl;
-//    AddIGeometryIncludes(itemFilePath);
-//   GroupIncludes(itemFilePath);
-      //ReplaceText(itemFilePath);
-    ReplaceMacros(itemFilePath);
+    // ReplaceText(itemFilePath);
+    //    std::cout << "-------------------------------------" << std::endl;
+    //    std::cout << itemFilePath.toStdString() << std::endl;
+    //    AddIGeometryIncludes(itemFilePath);
+    //   GroupIncludes(itemFilePath);
+    // ReplaceText(itemFilePath);
+    //  ReplaceMacros(itemFilePath);
+    UpdateMarkdownImageNames(itemFilePath);
   }
 }
 
@@ -1072,7 +1170,7 @@ int main(int argc, char* argv[])
 
 
 
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -1095,8 +1193,9 @@ int main(int argc, char* argv[])
 #else
   ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Source" ) );
   ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../SIMPL" ) );
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../SIMPLView" ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL" ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView" ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins" ) );
 
 #endif
   return 0;
