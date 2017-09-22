@@ -57,20 +57,34 @@ public:
   SIMPL_FILTER_PARAMETER(int, Hemisphere)
   Q_PROPERTY(int Hemisphere READ getHemisphere WRITE setHemisphere)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, MasterPatternImageDataPath)
-  Q_PROPERTY(DataArrayPath MasterPatternImageDataPath READ getMasterPatternImageDataPath WRITE setMasterPatternImageDataPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
+  Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-  Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, QuadDataContainerName)
+  Q_PROPERTY(QString QuadDataContainerName READ getQuadDataContainerName WRITE setQuadDataContainerName)
+
+  SIMPL_FILTER_PARAMETER(QString, TriangleDataContainerName)
+  Q_PROPERTY(QString TriangleDataContainerName READ getTriangleDataContainerName WRITE setTriangleDataContainerName)
+
+  SIMPL_FILTER_PARAMETER(QString, EdgeDataContainerName)
+  Q_PROPERTY(QString EdgeDataContainerName READ getEdgeDataContainerName WRITE setEdgeDataContainerName)
+
+  SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
+  Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+
 
   SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
+  SIMPL_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
+  Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
+
+
   SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, MasterPatternFaceDataArrayName)
-  Q_PROPERTY(QString MasterPatternFaceDataArrayName READ getMasterPatternFaceDataArrayName WRITE setMasterPatternFaceDataArrayName)
+//  SIMPL_FILTER_PARAMETER(QString, ImageFaceDataArrayName)
+//  Q_PROPERTY(QString ImageFaceDataArrayName READ getImageFaceDataArrayName WRITE setImageFaceDataArrayName)
 
   SIMPL_FILTER_PARAMETER(bool, CreateVertexGeometry)
   Q_PROPERTY(bool CreateVertexGeometry READ getCreateVertexGeometry WRITE setCreateVertexGeometry)
@@ -203,9 +217,19 @@ protected:
   void createQuadGeometry();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, MasterPattern)
-
+  DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
+  
+  //DEFINE_DATAARRAY_VARIABLE(uint8_t, VertexData)
+  DEFINE_DATAARRAY_VARIABLE(uint8_t, EdgeData)
+  DEFINE_DATAARRAY_VARIABLE(uint8_t, TriangleFaceData)
+  DEFINE_DATAARRAY_VARIABLE(uint8_t, QuadFaceData)
+  
   SharedVertexList::Pointer m_Vertices;
+  
+  QString m_VertexDataName;
+  QString m_EdgeDataName;
+  QString m_TriangleDataName;
+  QString m_QuadDataName;
 
   /**
    * @brief Transforms the initial flat grid to a sphere using equations from
