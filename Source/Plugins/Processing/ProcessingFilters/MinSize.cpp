@@ -186,9 +186,9 @@ void MinSize::dataCheck()
 
   // Throw a warning to inform the user that the neighbor list arrays could be deleted by this filter
   QString featureIdsPath = getFeatureIdsArrayPath().getDataContainerName() + "/" + getFeatureIdsArrayPath().getAttributeMatrixName() + "/" + getFeatureIdsArrayPath().getDataArrayName();
-  int err = 0;
+  int err = -1;
   AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getNumCellsArrayPath(), err);
-  if(err < 0 || getErrorCondition() < 0)
+  if(nullptr == featureAM.get())
   {
     return;
   }

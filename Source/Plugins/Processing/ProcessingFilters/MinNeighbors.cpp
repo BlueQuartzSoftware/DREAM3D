@@ -188,7 +188,7 @@ void MinNeighbors::dataCheck()
   QString featureIdsPath = getFeatureIdsArrayPath().getDataContainerName() + "/" + getFeatureIdsArrayPath().getAttributeMatrixName() + "/" + getFeatureIdsArrayPath().getDataArrayName();
   int err = 0;
   AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getNumNeighborsArrayPath(), err);
-  if(err < 0 || getErrorCondition() < 0)
+  if(nullptr == featureAM.get())
   {
     return;
   }
