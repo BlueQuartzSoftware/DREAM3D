@@ -91,14 +91,21 @@ public:
     // Set a bad path
     DataArrayPath path;
     var.setValue(path);
-    propWasSet = filter->setProperty("MasterPatternImageDataPath", var);
+    propWasSet = filter->setProperty("ImageDataArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
     filter->preflight();
     error = filter->getErrorCondition();
     DREAM3D_REQUIRE(error < 0)
 
-    QStringList props = {"SurfaceDataContainerName", "VertexAttributeMatrixName", "FaceAttributeMatrixName", "MasterPatternFaceDataArrayName"};
+    QStringList props = {"QuadDataContainerName",
+        "TriangleDataContainerName",
+        "EdgeDataContainerName",
+        "VertexDataContainerName",
+        "VertexAttributeMatrixName",
+        "EdgeAttributeMatrixName",
+        "FaceAttributeMatrixName"
+    };
     foreach(QString prop, props)
     {
       // Reset the filter by creating a new one
@@ -116,7 +123,6 @@ public:
     * "Filter_Human_Label": "Set Origin & Resolution (Image)",
     * "Filter_Human_Label": "Color to GrayScale",
     * "Filter_Human_Label": "Create 3D Sphere from 2D Master Pattern",
-    * "Filter_Human_Label": "Create 3D Sphere from 2D Master Pattern",
     * "Filter_Human_Label": "Write DREAM.3D Data File",
     */
 
@@ -133,7 +139,7 @@ public:
     propWasSet = filter->setProperty("FileName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
-    filter = filters[5];
+    filter = filters[4];
     var.setValue(UnitTest::CreateLambertSphereTest::OutputFile);
     propWasSet = filter->setProperty("OutputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
