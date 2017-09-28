@@ -1,7 +1,7 @@
 {
     "0": {
         "CreatedDataContainer": "ImageDataContainer",
-        "FilterVersion": "1.0.154",
+        "FilterVersion": "1.0.160",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Container",
         "Filter_Name": "CreateDataContainer"
@@ -12,7 +12,7 @@
             "y": 101,
             "z": 1
         },
-        "FilterVersion": "1.0.154",
+        "FilterVersion": "1.0.160",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Geometry (Image)",
         "Filter_Name": "CreateImageGeometry",
@@ -35,7 +35,7 @@
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.154",
+        "FilterVersion": "1.0.160",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Attribute Matrix",
         "Filter_Name": "CreateAttributeMatrix",
@@ -64,7 +64,7 @@
         }
     },
     "3": {
-        "FilterVersion": "1.0.154",
+        "FilterVersion": "1.0.160",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Array",
         "Filter_Name": "CreateDataArray",
@@ -83,23 +83,23 @@
         "ScalarType": 1
     },
     "4": {
-        "FaceAttributeMatrixName": "FaceData",
-        "FilterVersion": "6.4.152",
+        "CreateEdgeGeometry": 1,
+        "CreateQuadGeometry": 1,
+        "CreateTriangleGeometry": 1,
+        "CreateVertexGeometry": 1,
+        "FilterVersion": "6.4.162",
         "Filter_Enabled": true,
-        "Filter_Human_Label": "Create 3D Sphere from 2D Master Pattern",
+        "Filter_Human_Label": "Create Sphere (Lambert Projection Technique)",
         "Filter_Name": "CreateLambertSphere",
         "Hemisphere": 0,
-        "MasterPatternFaceDataArrayName": "MasterPattern",
-        "MasterPatternImageDataPath": {
+        "ImageDataArrayPath": {
             "Attribute Matrix Name": "CellAttributeMatrix",
             "Data Array Name": "ScalarValues",
             "Data Container Name": "ImageDataContainer"
-        },
-        "SurfaceDataContainerName": "QuadDataContainer",
-        "VertexAttributeMatrixName": "VertexData"
+        }
     },
     "5": {
-        "FilterVersion": "1.0.154",
+        "FilterVersion": "1.0.160",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
@@ -108,7 +108,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Create Sphere (Qaud Surface Mesh)",
+        "Name": "CreateLambertSphereSurface",
         "Number_Filters": 6,
         "Version": 6
     }
