@@ -63,7 +63,7 @@ cmake_minimum_required(VERSION 3.6.0)
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
-# 
+#
 project(DREAM3DProj VERSION 6.4.0.0)
 set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 
@@ -123,7 +123,7 @@ if(NOT EXISTS "${CMP_SOURCE_DIR}")
                     ERROR_VARIABLE git_error
                     WORKING_DIRECTORY ${DREAM3D_PARENT} )
   endif()
-  # One last check. If it does not exist at this point then we simply Abort CMake 
+  # One last check. If it does not exist at this point then we simply Abort CMake
   if(NOT EXISTS "${CMP_SOURCE_DIR}")
     message(FATAL_ERROR "CMP_SOURCE_DIR does not exist. We attempted to clone it from the GitHub repo but that also seemed\
       to fail. SIMPLView can not proceed without the CMP directory. Please ask a SIMPL developer for more\
@@ -170,7 +170,7 @@ if(NOT EXISTS "${SIMPLViewProj_SOURCE_DIR}")
     # message(STATUS "did_run: ${did_run}")
     # message(STATUS "git_error: ${git_error}")
   endif()
-  # One last check. If it does not exist at this point then we simply Abort CMake 
+  # One last check. If it does not exist at this point then we simply Abort CMake
   if(NOT EXISTS "${SIMPLViewProj_SOURCE_DIR}")
     message(FATAL_ERROR "SIMPLViewProj_SOURCE_DIR does not exist. We attempted to clone it from the GitHub repo but that also seemed\
       to fail. SIMPLView can not proceed without the SIMPLViewProj_SOURCE_DIR directory. Please ask a SIMPL developer for more\
@@ -635,7 +635,6 @@ message(STATUS "* CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
 message(STATUS "* SIMPLProj_SOURCE_DIR: ${SIMPLProj_SOURCE_DIR}")
 message(STATUS "* SIMPLViewProj_SOURCE_DIR: ${SIMPLViewProj_SOURCE_DIR}")
 message(STATUS "* BrandedSIMPLView_DIR: ${BrandedSIMPLView_DIR}")
-message(STATUS "* Boost (${Boost_VERSION}) ${BOOST_ROOT}")
 message(STATUS "* Eigen (${EIGEN_VERSION}) ${EIGEN_INSTALL}")
 message(STATUS "* HDF5 (${HDF5_VERSION}) ${HDF5_INSTALL}")
 message(STATUS "* ITK (${ITK_VERSION}) ${ITK_DIR}")
@@ -644,7 +643,7 @@ message(STATUS "* Qwt (${QWT_VERSION}) ${QWT_INSTALL}")
 message(STATUS "* TBB (${TBB_VERSION}) ${TBB_INSTALL_DIR}")
 message(STATUS "* -------------- Plugins ------------------------------------------------------")
 foreach(d3dPlugin ${DREAM3D_ALL_PLUGINS})
-message(STATUS "*   ${d3dPlugin}: [${DREAM3D_BUILD_PLUGIN_${d3dPlugin}}]")
+  message(STATUS "*   ${d3dPlugin}: [${DREAM3D_BUILD_PLUGIN_${d3dPlugin}}]")
 endforeach()
 message(STATUS "*******************************************************************************")
 
