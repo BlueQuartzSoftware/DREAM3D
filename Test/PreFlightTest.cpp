@@ -39,28 +39,28 @@
 #include <string>
 #include <vector>
 
-#include <QtCore/QtDebug>
 #include <QtCore/QCoreApplication>
-#include <QtCore/QObject>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QMetaProperty>
+#include <QtCore/QObject>
 #include <QtCore/QSettings>
 #include <QtCore/QString>
-#include <QtCore/QMetaProperty>
+#include <QtCore/QtDebug>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Observer.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
+#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
-#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/SIMPLibFilters.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "DREAM3DTestFileLocations.h"
 
@@ -109,36 +109,45 @@ void RemoveTestFiles()
 #define PASS 0
 #define FAIL_IS_PASS 1
 
-#define MAKE_FILTER_TEST(name, condition)\
-  void name##_PreFlightTest() {\
-    int err = 0;\
-    VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
-    std::vector<AbstractFilter::Pointer> pipeline;\
-    name::Pointer filter = name::New();\
-    pipeline.push_back(filter);\
-    int preflightError = 0;\
-    QStringstream ss;\
-    ss << "------------------------------------------------" << std::endl;\
-    ss << "Starting Preflight test for " << #name << std::endl;\
-    for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\
-      (*filter)->setVoxelDataContainer(m.get());\
-      setCurrentFilter(*filter);\
-      (*filter)->preflight();\
-      err = (*filter)->getErrorCondition();\
-      if(err < 0) {\
-        preflightError |= err;\
-        ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
-        std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();\
-        for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
-          ss << (*iter).generateErrorString();\
-        }\
-      }\
-    }\
-    std::cout << ss.str() << std::endl;\
-    if (condition) { DREAM3D_REQUIRE_NE(preflightError, 0);}\
-    else { DREAM3D_REQUIRE_EQUAL(preflightError, 0);  }\
+#define MAKE_FILTER_TEST(name, condition)                                                                                                                                                              \
+  void name##_PreFlightTest()                                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    int err = 0;                                                                                                                                                                                       \
+    VoxelDataContainer::Pointer m = VoxelDataContainer::New();                                                                                                                                         \
+    std::vector<AbstractFilter::Pointer> pipeline;                                                                                                                                                     \
+    name::Pointer filter = name::New();                                                                                                                                                                \
+    pipeline.push_back(filter);                                                                                                                                                                        \
+    int preflightError = 0;                                                                                                                                                                            \
+    QStringstream ss;                                                                                                                                                                                  \
+    ss << "------------------------------------------------" << std::endl;                                                                                                                             \
+    ss << "Starting Preflight test for " << #name << std::endl;                                                                                                                                        \
+    for(std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)                                                                                  \
+    {                                                                                                                                                                                                  \
+      (*filter)->setVoxelDataContainer(m.get());                                                                                                                                                       \
+      setCurrentFilter(*filter);                                                                                                                                                                       \
+      (*filter)->preflight();                                                                                                                                                                          \
+      err = (*filter)->getErrorCondition();                                                                                                                                                            \
+      if(err < 0)                                                                                                                                                                                      \
+      {                                                                                                                                                                                                \
+        preflightError |= err;                                                                                                                                                                         \
+        ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;                                                                                                 \
+        std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();                                                                                                                           \
+        for(std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter)                                                                                                      \
+        {                                                                                                                                                                                              \
+          ss << (*iter).generateErrorString();                                                                                                                                                         \
+        }                                                                                                                                                                                              \
+      }                                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
+    std::cout << ss.str() << std::endl;                                                                                                                                                                \
+    if(condition)                                                                                                                                                                                      \
+    {                                                                                                                                                                                                  \
+      DREAM3D_REQUIRE_NE(preflightError, 0);                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
+    else                                                                                                                                                                                               \
+    {                                                                                                                                                                                                  \
+      DREAM3D_REQUIRE_EQUAL(preflightError, 0);                                                                                                                                                        \
+    }                                                                                                                                                                                                  \
   }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -148,7 +157,7 @@ void GenerateCopyCode()
   qDebug() << "-------------- GenerateCopyCode ------------------------------";
 
   FilterManager* fm = FilterManager::Instance();
-  //QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  // QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
   while(iter.hasNext())
@@ -157,8 +166,6 @@ void GenerateCopyCode()
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
     const QMetaObject* meta = filter->metaObject();
-
-
 
     std::string cn = filter->getNameOfClass().toStdString();
     std::cout << cn << "::Pointer " << cn << "::newFilterInstance(bool copyFilterParameters)" << std::endl;
@@ -173,17 +180,16 @@ void GenerateCopyCode()
     }
     std::cout << "*/" << std::endl;
 
-
     std::cout << "  " << cn << "::Pointer filter = " << cn << "::New();" << std::endl;
     std::cout << "  if(true == copyFilterParameters)\n  {" << std::endl;
 
     QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
-    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    for(QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter)
     {
       FilterParameter* option = (*iter).get();
-      QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
+      QByteArray normType = QString("%1").arg(option->getPropertyName()).toLatin1();
       int index = meta->indexOfProperty(normType);
-      if (index < 0)
+      if(index < 0)
       {
         std::cout << "#error Filter: " << filter->getNameOfClass().toStdString() << "  Missing Property: " << option->getPropertyName().toStdString() << std::endl;
       }
@@ -192,8 +198,8 @@ void GenerateCopyCode()
     }
     if(options.size() != properties.count())
     {
-      std::cout << "#error The number of Q_PROPERITES " << properties.count() <<
-                " does not match the number of FilterParameters " << options.size() << " created in the setupFilterParameters() function." << std::endl;
+      std::cout << "#error The number of Q_PROPERITES " << properties.count() << " does not match the number of FilterParameters " << options.size()
+                << " created in the setupFilterParameters() function." << std::endl;
     }
     std::cout << "  }" << std::endl;
     std::cout << "  return filter;" << std::endl;
@@ -201,10 +207,7 @@ void GenerateCopyCode()
   }
 }
 
-
 #define PROPERTY_NAME_AS_CHAR option->getPropertyName().toLatin1().constData()
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -214,7 +217,7 @@ void verifyFilterParameters()
   qDebug() << "-------------- verifyFilterParameters ------------------------------";
 
   FilterManager* fm = FilterManager::Instance();
-  //QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  // QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
   while(iter.hasNext())
@@ -223,27 +226,27 @@ void verifyFilterParameters()
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
     const QMetaObject* meta = filter->metaObject();
-//    qDebug() << filter->getNameOfClass() << "Default Values";
+    //    qDebug() << filter->getNameOfClass() << "Default Values";
     QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
-    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    for(QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter)
     {
       FilterParameter* option = (*iter).get();
-      if (option->getHumanLabel().compare("Required Information") == 0
-          || option->getHumanLabel().compare("Created Information") == 0
-          || option->getHumanLabel().compare("Optional Information") == 0)
-      { continue; }
+      if(option->getHumanLabel().compare("Required Information") == 0 || option->getHumanLabel().compare("Created Information") == 0 || option->getHumanLabel().compare("Optional Information") == 0)
+      {
+        continue;
+      }
 
       if(nullptr != dynamic_cast<SeparatorFilterParameter*>(option))
       {
         continue;
       }
-      QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
+      QByteArray normType = QString("%1").arg(option->getPropertyName()).toLatin1();
       int index = meta->indexOfProperty(normType);
-      if (index < 0)
+      if(index < 0)
       {
-        qDebug() << "Filter: " << filter->getNameOfClass() << "  Missing Property: " << option->getHumanLabel() << "  "  << option->getPropertyName();
+        qDebug() << "Filter: " << filter->getNameOfClass() << "  Missing Property: " << option->getHumanLabel() << "  " << option->getPropertyName();
       }
-//      qDebug() << "    " << option->getHumanLabel() << "::" << filter->property(PROPERTY_NAME_AS_CHAR);
+      //      qDebug() << "    " << option->getHumanLabel() << "::" << filter->property(PROPERTY_NAME_AS_CHAR);
     }
 
     // If something is wrong with the newFilterInstance then the next line will assert
@@ -270,7 +273,7 @@ void verifySignals()
     const QMetaObject* meta = filter->metaObject();
     int count = meta->methodCount();
     int index = meta->indexOfSignal(normType);
-    if (index < 0)
+    if(index < 0)
     {
       qDebug() << "Filter: " << iter.key() << "  Method Count: " << count;
       qDebug() << "==>  Signal void updateFilterParameters(AbstractFilter* filter) does not exist";
@@ -309,12 +312,9 @@ void verifyPreflightEmitsProperly()
     iter.next();
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
-    filter->connect(filter.get(), SIGNAL(preflightAboutToExecute()),
-                    &p, SLOT(beforePreflight()) );
-    filter->connect(filter.get(), SIGNAL(preflightExecuted()),
-                    &p, SLOT(afterPreflight()) );
-    filter->connect(filter.get(), SIGNAL(updateFilterParameters(AbstractFilter*) ),
-                    &p, SLOT(filterNeedsInputParameters(AbstractFilter*)) );
+    filter->connect(filter.get(), SIGNAL(preflightAboutToExecute()), &p, SLOT(beforePreflight()));
+    filter->connect(filter.get(), SIGNAL(preflightExecuted()), &p, SLOT(afterPreflight()));
+    filter->connect(filter.get(), SIGNAL(updateFilterParameters(AbstractFilter*)), &p, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
     filter->preflight();
 
@@ -332,13 +332,13 @@ void verifyPreflightEmitsProperly()
     {
       ss << filter->getNameOfClass() << " Missing emit updateFilterParameters()";
     }
-    if (filter->getInPreflight() == true)
+    if(filter->getInPreflight() == true)
     {
       ss << filter->getNameOfClass() << " Bool 'InPreflight' was NOT set correctly at end of 'preflight()'";
     }
     if(buf.isEmpty() == false)
     {
-      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )
+      DREAM3D_TEST_THROW_EXCEPTION(buf.toStdString())
     }
   }
 }
@@ -388,7 +388,7 @@ void TestPreflight(bool dataContainer = false, bool attributeMatrix = false, boo
   FilterManager::Collection factories = fm->getFactories();
   FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
   int err = 0;
-  while (factoryMapIter != factories.constEnd())
+  while(factoryMapIter != factories.constEnd())
   {
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
     if(factory.get() != nullptr)
@@ -397,14 +397,13 @@ void TestPreflight(bool dataContainer = false, bool attributeMatrix = false, boo
 
       pipeline->pushBack(filter);
       pipeline->preflightPipeline();
-      
-      //DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
+
+      // DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
       err = pipeline->getErrorCondition();
       // An error condition GREATER than ZERO is an anomoly and should be looked at.
-      if (err > 0)
+      if(err > 0)
       {
-        qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass()
-                 << " Error Condition = " << filter->getErrorCondition();
+        qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass() << " Error Condition = " << filter->getErrorCondition();
       }
       pipeline->popBack();
     }
@@ -422,20 +421,19 @@ void TestUniqueHumanLabels()
   FilterManager::Collection factories = fm->getFactories();
   FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
   QMap<QString, AbstractFilter::Pointer> filterMap;
-  while (factoryMapIter != factories.constEnd())
+  while(factoryMapIter != factories.constEnd())
   {
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
-    if (factory.get() != nullptr)
+    if(factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
-      if (filter.get() != nullptr)
+      if(filter.get() != nullptr)
       {
         QString name = filter->getHumanLabel();
-        if (filterMap.contains(name))
+        if(filterMap.contains(name))
         {
           AbstractFilter::Pointer other = filterMap.value(name);
-          qDebug() << "Filters in class names '" << filter->getNameOfClass() << "' and '" << other->getNameOfClass()
-                   << "' have the same human label, and this is not allowed.";
+          qDebug() << "Filters in class names '" << filter->getNameOfClass() << "' and '" << other->getNameOfClass() << "' have the same human label, and this is not allowed.";
           DREAM3D_REQUIRE_EQUAL(0, 1)
         }
         else
@@ -448,7 +446,6 @@ void TestUniqueHumanLabels()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -459,13 +456,13 @@ void TestUncategorizedFilterParameters()
   FilterManager::Collection factories = fm->getFactories();
   FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
   QMap<QString, AbstractFilter::Pointer> filterMap;
-  while (factoryMapIter != factories.constEnd())
+  while(factoryMapIter != factories.constEnd())
   {
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
-    if (factory.get() != nullptr)
+    if(factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
-      if (filter.get() != nullptr)
+      if(filter.get() != nullptr)
       {
         QVector<FilterParameter::Pointer> parameters = filter->getFilterParameters();
         foreach(FilterParameter::Pointer fp, parameters)
@@ -499,7 +496,8 @@ void TestNewInstanceAvailable()
     AbstractFilter::Pointer copy = filter->newFilterInstance(true);
     if(nullptr == copy.get())
     {
-      std::cout << "Filter: '" << filter->getNameOfClass().toStdString() << "' from Library/Plugin '" << filter->getCompiledLibraryName().toStdString() << " has not implemented the newInstance() function" << std::endl;
+      std::cout << "Filter: '" << filter->getNameOfClass().toStdString() << "' from Library/Plugin '" << filter->getCompiledLibraryName().toStdString()
+                << " has not implemented the newInstance() function" << std::endl;
     }
     DREAM3D_REQUIRED_PTR(copy.get(), !=, nullptr)
   }
@@ -515,21 +513,18 @@ void PrintFilterInfo()
 
   FilterManager::Collection factories = fm->getFactories();
   FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
-  while (factoryMapIter != factories.constEnd())
+  while(factoryMapIter != factories.constEnd())
   {
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
     if(factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
 
-      std::cout << filter->getNameOfClass().toStdString() << "\t"
-                << filter->getCompiledLibraryName().toStdString() << "\t"
-                << filter->getHumanLabel().toStdString() << std::endl;
+      std::cout << filter->getNameOfClass().toStdString() << "\t" << filter->getCompiledLibraryName().toStdString() << "\t" << filter->getHumanLabel().toStdString() << std::endl;
     }
     factoryMapIter++;
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -543,7 +538,6 @@ int main(int argc, char** argv)
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("PreflightTest");
 
-
   // Load all the plugins and
   // Register all the filters including trying to load those from Plugins
   FilterManager* fm = FilterManager::Instance();
@@ -556,7 +550,7 @@ int main(int argc, char** argv)
   QMetaObjectUtilities::RegisterMetaTypes();
 
   //// These functions are just to verify that the filters have certain signals and properties available.
-//  verifyPreflightEmitsProperly();
+  //  verifyPreflightEmitsProperly();
   verifySignals();
   verifyFilterParameters();
 
@@ -564,17 +558,16 @@ int main(int argc, char** argv)
 
   QString outputFilePath = QString("%1/AllFiltersPipelineNew.json").arg(UnitTest::TestTempDir);
   writeAllFilters(outputFilePath);
-  DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
-  DREAM3D_REGISTER_TEST( TestPreflight() )
-  DREAM3D_REGISTER_TEST( TestPreflight(true) )
-  DREAM3D_REGISTER_TEST( TestPreflight(true, true) )
-  DREAM3D_REGISTER_TEST( TestPreflight(true, true, true) )
-  DREAM3D_REGISTER_TEST( TestUniqueHumanLabels() )
-  DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
-  DREAM3D_REGISTER_TEST( TestUncategorizedFilterParameters() )
+  DREAM3D_REGISTER_TEST(verifyPreflightEmitsProperly())
+  DREAM3D_REGISTER_TEST(TestPreflight())
+  DREAM3D_REGISTER_TEST(TestPreflight(true))
+  DREAM3D_REGISTER_TEST(TestPreflight(true, true))
+  DREAM3D_REGISTER_TEST(TestPreflight(true, true, true))
+  DREAM3D_REGISTER_TEST(TestUniqueHumanLabels())
+  DREAM3D_REGISTER_TEST(TestNewInstanceAvailable())
+  DREAM3D_REGISTER_TEST(TestUncategorizedFilterParameters())
   PRINT_TEST_SUMMARY();
 
-//  GenerateCopyCode();
+  //  GenerateCopyCode();
   return err;
 }
-

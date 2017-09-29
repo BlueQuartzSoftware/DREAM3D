@@ -35,14 +35,14 @@
 
 #include "LaueOps.h"
 
+#include <chrono>
 #include <limits>
 #include <random>
-#include <chrono>
 
 #include <QtCore/QDateTime>
 
+#include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/Utilities/ColorTable.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 

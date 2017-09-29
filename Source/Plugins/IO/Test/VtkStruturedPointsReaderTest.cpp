@@ -37,15 +37,15 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "IOTestFileLocations.h"
 
@@ -197,7 +197,7 @@ public:
     dims[2] -= 1;
     total = dims[0] * dims[1] * dims[2];
     fprintf(f, "\n");
-    fprintf(f, "CELL_DATA %lu\n",  static_cast<unsigned long>(total));
+    fprintf(f, "CELL_DATA %lu\n", static_cast<unsigned long>(total));
     WriteScalars<quint8>(f, "unsigned_char", "Data_uint8", dims, binary);
     WriteScalars<qint8>(f, "char", "Data_int8", dims, binary);
     WriteScalars<quint16>(f, "unsigned_short", "Data_uint16", dims, binary);

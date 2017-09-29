@@ -42,8 +42,8 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "OrientationLib/Texture/Texture.hpp"
@@ -98,7 +98,6 @@ public:
     return err;
   }
 
-
   /**
   * @brief GenLogNormalPlotData Generates Log Normal plot data that is normalized based on the "size" argument.
   * @param avg The Average
@@ -113,8 +112,7 @@ public:
    f(x) = w*\frac{1}{x\sigma\sqrt{2\pi}}e^{-\frac{(ln(x) - \mu)^2}{2\sigma^2}}
   * @return
   */
-  template <typename Vector>
-  static int GenLogNormalPlotData(float mu, float sigma, Vector& x, Vector& y, int size, float minCutOff = 5.0f, float maxCutOff = 5.0f)
+  template <typename Vector> static int GenLogNormalPlotData(float mu, float sigma, Vector& x, Vector& y, int size, float minCutOff = 5.0f, float maxCutOff = 5.0f)
   {
     int err = 0;
     float max, min;
@@ -206,8 +204,7 @@ public:
    * @param binsizes Type that adheres to the QVector API. Will be resized to numsizebins and filled with the lower value of each bin.
    * @return
    */
-  template <typename J, typename Vector>
-  static int GenCutOff(J mu, J sigma, J minCutOff, J maxCutOff, J binstep, Vector& x, Vector& y, J yMax, int& numSizeBins, Vector& binSizes)
+  template <typename J, typename Vector> static int GenCutOff(J mu, J sigma, J minCutOff, J maxCutOff, J binstep, Vector& x, Vector& y, J yMax, int& numSizeBins, Vector& binSizes)
   {
     J max, min;
     numSizeBins = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, binstep, max, min);

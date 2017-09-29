@@ -36,16 +36,15 @@
 #ifndef _emmpmwidget_h_
 #define _emmpmwidget_h_
 
-
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 #include <QtWidgets/QWidget>
 
 #include "SVWidgetsLib/QtSupport/QtSFaderWidget.h"
 
-#include "SIMPLib/Common/AbstractFilter.h"
-#include "SIMPLib/FilterParameters/DataContainerReaderFilterParameter.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
+#include "SIMPLib/FilterParameters/DataContainerReaderFilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
@@ -62,63 +61,60 @@ class DynamicTableData;
 */
 class EMMPMWidget : public FilterParameterWidget, private Ui::EMMPMWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    EMMPMWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
+public:
+  /**
+  * @brief Constructor
+  * @param parameter The FilterParameter object that this widget represents
+  * @param filter The instance of the filter that this parameter is a part of
+  * @param parent The parent QWidget for this Widget
+  */
+  EMMPMWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
-    /**
-     * @brief EMMPMWidget
-     * @param parent
-     */
-    EMMPMWidget(QWidget* parent = nullptr);
+  /**
+   * @brief EMMPMWidget
+   * @param parent
+   */
+  EMMPMWidget(QWidget* parent = nullptr);
 
-    virtual ~EMMPMWidget();
+  virtual ~EMMPMWidget();
 
-    void initialize(FilterParameter* parameter, AbstractFilter* filter = nullptr);
+  void initialize(FilterParameter* parameter, AbstractFilter* filter = nullptr);
 
-    /**
-    * @brief This method does additional GUI widget connections
-    */
-    void setupGui();
+  /**
+  * @brief This method does additional GUI widget connections
+  */
+  void setupGui();
 
-    void setFilter(AbstractFilter* value);
-    AbstractFilter* getFilter() const;
+  void setFilter(AbstractFilter* value);
+  AbstractFilter* getFilter() const;
 
-    void setFilterParameter(FilterParameter* value);
-    FilterParameter* getFilterParameter() const;
+  void setFilterParameter(FilterParameter* value);
+  FilterParameter* getFilterParameter() const;
 
-  public slots:
-    void beforePreflight();
-    void afterPreflight();
-    void filterNeedsInputParameters(AbstractFilter* filter);
+public slots:
+  void beforePreflight();
+  void afterPreflight();
+  void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void on_tableWidget_cellChanged(int row, int column);
-    void on_m_NumClasses_valueChanged(int i);
-    void on_enableManualInit_toggled(bool checked);
+  void on_tableWidget_cellChanged(int row, int column);
+  void on_m_NumClasses_valueChanged(int i);
+  void on_enableManualInit_toggled(bool checked);
 
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
+signals:
+  void errorSettingFilterParameter(const QString& msg);
+  void parametersChanged();
 
-  private:
-    EMMPMFilter*   m_Filter;
-    EMMPMFilterParameter*  m_FilterParameter;
-    bool m_DidCausePreflight;
+private:
+  EMMPMFilter* m_Filter;
+  EMMPMFilterParameter* m_FilterParameter;
+  bool m_DidCausePreflight;
 
-    DynamicTableData getDynamicTableData(QTableWidget* tableWidget);
+  DynamicTableData getDynamicTableData(QTableWidget* tableWidget);
 
-    EMMPMWidget(const EMMPMWidget&); // Copy Constructor Not Implemented
-    void operator=(const EMMPMWidget&); // Operator '=' Not Implemented
-
+  EMMPMWidget(const EMMPMWidget&);    // Copy Constructor Not Implemented
+  void operator=(const EMMPMWidget&); // Operator '=' Not Implemented
 };
 
 #endif /* _emmpmwidget_h_ */
-
-

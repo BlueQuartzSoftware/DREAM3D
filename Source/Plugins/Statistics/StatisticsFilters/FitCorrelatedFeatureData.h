@@ -33,18 +33,17 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _fitcorrelatedfeaturedata_h_
 #define _fitcorrelatedfeaturedata_h_
 
 #include <QtCore/QString>
 #include <set>
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
@@ -61,142 +60,141 @@
  */
 class FitCorrelatedFeatureData : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(FitCorrelatedFeatureData)
-    SIMPL_STATIC_NEW_MACRO(FitCorrelatedFeatureData)
-    SIMPL_TYPE_MACRO_SUPER(FitCorrelatedFeatureData, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(FitCorrelatedFeatureData)
+  SIMPL_STATIC_NEW_MACRO(FitCorrelatedFeatureData)
+  SIMPL_TYPE_MACRO_SUPER(FitCorrelatedFeatureData, AbstractFilter)
 
-    virtual ~FitCorrelatedFeatureData();
+  virtual ~FitCorrelatedFeatureData();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CorrelatedFeatureArrayPath)
-    Q_PROPERTY(DataArrayPath CorrelatedFeatureArrayPath READ getCorrelatedFeatureArrayPath WRITE setCorrelatedFeatureArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+  Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CorrelatedFeatureArrayPath)
+  Q_PROPERTY(DataArrayPath CorrelatedFeatureArrayPath READ getCorrelatedFeatureArrayPath WRITE setCorrelatedFeatureArrayPath)
 
-    SIMPL_FILTER_PARAMETER(unsigned int, DistributionType)
-    Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
-    SIMPL_FILTER_PARAMETER(int, NumberOfCorrelatedBins)
-    Q_PROPERTY(int NumberOfCorrelatedBins READ getNumberOfCorrelatedBins WRITE setNumberOfCorrelatedBins)
-    SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
-    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
+  SIMPL_FILTER_PARAMETER(unsigned int, DistributionType)
+  Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
+  SIMPL_FILTER_PARAMETER(int, NumberOfCorrelatedBins)
+  Q_PROPERTY(int NumberOfCorrelatedBins READ getNumberOfCorrelatedBins WRITE setNumberOfCorrelatedBins)
+  SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+  Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  /**
+  * @brief This returns the group that the filter belonds to. You can select
+  * a different group if you want. The string returned here will be displayed
+  * in the GUI for the filter
+  */
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
-    Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArrayPath)
-    Q_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArrayPath)
+  Q_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    FitCorrelatedFeatureData();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  FitCorrelatedFeatureData();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+private:
+  DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+  DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-    DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-
-    FitCorrelatedFeatureData(const FitCorrelatedFeatureData&); // Copy Constructor Not Implemented
-    void operator=(const FitCorrelatedFeatureData&); // Operator '=' Not Implemented
+  FitCorrelatedFeatureData(const FitCorrelatedFeatureData&); // Copy Constructor Not Implemented
+  void operator=(const FitCorrelatedFeatureData&);           // Operator '=' Not Implemented
 };
 
 #endif /* FitCorrelatedFeatureData_H_ */

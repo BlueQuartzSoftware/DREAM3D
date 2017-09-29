@@ -33,11 +33,9 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
-
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 
 #include "OrientationLibTestFileLocations.h"
-
 
 // -----------------------------------------------------------------------------
 //  Use test framework
@@ -46,9 +44,6 @@ int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
 
-
   PRINT_TEST_SUMMARY();
   return err;
 }
-
-

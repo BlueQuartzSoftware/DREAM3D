@@ -33,243 +33,241 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _vtkstructuredpointsreader_h_
 #define _vtkstructuredpointsreader_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The VtkStructuredPointsReader class. See [Filter documentation](@ref vtkstructuredpointsreader) for details.
  */
 class VtkStructuredPointsReader : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(VtkStructuredPointsReader)
-    SIMPL_STATIC_NEW_MACRO(VtkStructuredPointsReader)
-    SIMPL_TYPE_MACRO_SUPER(VtkStructuredPointsReader, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(VtkStructuredPointsReader)
+  SIMPL_STATIC_NEW_MACRO(VtkStructuredPointsReader)
+  SIMPL_TYPE_MACRO_SUPER(VtkStructuredPointsReader, AbstractFilter)
 
-    virtual ~VtkStructuredPointsReader();
+  virtual ~VtkStructuredPointsReader();
 
-    SIMPL_FILTER_PARAMETER(bool, ReadCellData)
-    Q_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
+  SIMPL_FILTER_PARAMETER(bool, ReadCellData)
+  Q_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
 
-    SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
-    Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
+  Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(bool, ReadPointData)
-    Q_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
+  SIMPL_FILTER_PARAMETER(bool, ReadPointData)
+  Q_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
 
-    SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
-    Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
+  Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
-    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    SIMPL_INSTANCE_STRING_PROPERTY(Comment)
-    SIMPL_INSTANCE_STRING_PROPERTY(DatasetType)
-    SIMPL_INSTANCE_PROPERTY(bool, FileIsBinary)
+  SIMPL_INSTANCE_STRING_PROPERTY(Comment)
+  SIMPL_INSTANCE_STRING_PROPERTY(DatasetType)
+  SIMPL_INSTANCE_PROPERTY(bool, FileIsBinary)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
+
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
+
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
+
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
+
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
+
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
+
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
+
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
+
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
+
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
+
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
+
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
+
+protected:
+  VtkStructuredPointsReader();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
+
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
+
+  /**
+   * @brief readHeader Reads the .vtk file header ; CURRENTLY NOT IMPLEMENTED
+   * @return Integer error value
+   */
+  int32_t readHeader();
+
+  /**
+   * @brief readFile Handles the main reading of the .vtk file
+   * @return Integer error value
+   */
+  virtual int32_t readFile();
+
+  /**
+   * @brief readData Reads a section of data from the .vtk file
+   * @param instream Incoming file stream
+   */
+  virtual void readData(std::istream& instream);
+
+  /**
+   * @brief parseCoordinateLine Parses a line representing coordinates
+   * @param input Incoming line to parse
+   * @param value Coordinate value
+   * @return Integer error value
+   */
+  int32_t parseCoordinateLine(const char* input, size_t& value);
+
+  /**
+    * @brief parseByteSize Parses the byte size from a data set declaration line
+    * @param text Line to parse
+    * @return Integer error value
     */
-    virtual const QString getBrandingString();
+  size_t parseByteSize(QString text);
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief readLine Reads a line from the .vtk file
+   * @param in Incoming file stream
+   * @param result Char pointer to store line
+   * @param length Length of line
+   * @return Integer error value
+   */
+  int32_t readLine(std::istream& in, char* result, size_t length);
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief readString Reas a string from the .vtk file
+   * @param in Incoming file stream
+   * @param result Char pointer to store string
+   * @param length Length of string
+   * @return Integer error value
+   */
+  int32_t readString(std::istream& in, char* result, size_t length);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief lowerCase Converts a string to lower case
+   * @param str Incoming string to convert
+   * @param len Length of string
+   * @return Integer error value
+   */
+  char* lowerCase(char* str, const size_t len);
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief readDataTypeSection Determines the type of data to be read from the .vtk file
+   * @param in Incoming file stream
+   * @param numPts Number of points to read
+   * @param nextKeyWord Keyword for data type
+   * @return Integer error value
+   */
+  int32_t readDataTypeSection(std::istream& in, int numPts, const std::string& nextKeyWord);
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief readScalarData Reads scalar data attribute types
+   * @param in Incoming file stream
+   * @return Integer error value
+   */
+  int32_t readScalarData(std::istream& in, int numPts);
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief readVectorData Reads vector data attribute types
+   * @param in Incoming file stream
+   * @param numPts Number of points
+   * @return Integer error value
+   */
+  int32_t readVectorData(std::istream& in, int numPts);
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief DecodeString Decodes a binary string from the .vtk file
+   * @param resname Resulting decoded string
+   * @param name Binary string to decode
+   * @return Integer error value
+   */
+  int32_t DecodeString(char* resname, const char* name);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+private:
+  AttributeMatrix::Pointer m_CurrentAttrMat;
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
-
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
-
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
-
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
-
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
-
-  protected:
-    VtkStructuredPointsReader();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
-
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
-
-
-    /**
-     * @brief readHeader Reads the .vtk file header ; CURRENTLY NOT IMPLEMENTED
-     * @return Integer error value
-     */
-    int32_t readHeader();
-
-    /**
-     * @brief readFile Handles the main reading of the .vtk file
-     * @return Integer error value
-     */
-    virtual int32_t readFile();
-
-    /**
-     * @brief readData Reads a section of data from the .vtk file
-     * @param instream Incoming file stream
-     */
-    virtual void readData(std::istream& instream);
-
-    /**
-     * @brief parseCoordinateLine Parses a line representing coordinates
-     * @param input Incoming line to parse
-     * @param value Coordinate value
-     * @return Integer error value
-     */
-    int32_t parseCoordinateLine(const char* input, size_t& value);
-
-    /**
-      * @brief parseByteSize Parses the byte size from a data set declaration line
-      * @param text Line to parse
-      * @return Integer error value
-      */
-    size_t parseByteSize(QString text);
-
-    /**
-     * @brief readLine Reads a line from the .vtk file
-     * @param in Incoming file stream
-     * @param result Char pointer to store line
-     * @param length Length of line
-     * @return Integer error value
-     */
-    int32_t readLine(std::istream& in, char* result, size_t length);
-
-    /**
-     * @brief readString Reas a string from the .vtk file
-     * @param in Incoming file stream
-     * @param result Char pointer to store string
-     * @param length Length of string
-     * @return Integer error value
-     */
-    int32_t readString(std::istream& in, char* result, size_t length);
-
-    /**
-     * @brief lowerCase Converts a string to lower case
-     * @param str Incoming string to convert
-     * @param len Length of string
-     * @return Integer error value
-     */
-    char* lowerCase(char* str, const size_t len);
-
-    /**
-     * @brief readDataTypeSection Determines the type of data to be read from the .vtk file
-     * @param in Incoming file stream
-     * @param numPts Number of points to read
-     * @param nextKeyWord Keyword for data type
-     * @return Integer error value
-     */
-    int32_t readDataTypeSection(std::istream& in, int numPts, const std::string& nextKeyWord);
-
-    /**
-     * @brief readScalarData Reads scalar data attribute types
-     * @param in Incoming file stream
-     * @return Integer error value
-     */
-    int32_t readScalarData(std::istream& in, int numPts);
-
-    /**
-     * @brief readVectorData Reads vector data attribute types
-     * @param in Incoming file stream
-     * @param numPts Number of points
-     * @return Integer error value
-     */
-    int32_t readVectorData(std::istream& in, int numPts);
-
-    /**
-     * @brief DecodeString Decodes a binary string from the .vtk file
-     * @param resname Resulting decoded string
-     * @param name Binary string to decode
-     * @return Integer error value
-     */
-    int32_t DecodeString(char* resname, const char* name);
-
-  private:
-    AttributeMatrix::Pointer m_CurrentAttrMat;
-
-    VtkStructuredPointsReader(const VtkStructuredPointsReader&); // Copy Constructor Not Implemented
-    void operator=(const VtkStructuredPointsReader&); // Operator '=' Not Implemented
+  VtkStructuredPointsReader(const VtkStructuredPointsReader&); // Copy Constructor Not Implemented
+  void operator=(const VtkStructuredPointsReader&);            // Operator '=' Not Implemented
 };
 
 #endif /* VtkStructuredPointsReader_H_ */

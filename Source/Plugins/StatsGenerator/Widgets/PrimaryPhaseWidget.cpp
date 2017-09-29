@@ -48,10 +48,10 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
@@ -60,12 +60,12 @@
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
-#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
+#include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h"
+#include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
-#include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h"
-#include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h"
+#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGAbstractTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
@@ -94,7 +94,6 @@ PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent)
 PrimaryPhaseWidget::~PrimaryPhaseWidget()
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -131,7 +130,6 @@ void PrimaryPhaseWidget::on_m_NeighborBtn_clicked(bool b)
   Q_UNUSED(b)
   plotToolbox->setCurrentIndex(3);
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -202,7 +200,6 @@ void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int in
       // Perform any cancellation actions if the user canceled the dialog box
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -462,7 +459,6 @@ void PrimaryPhaseWidget::setupGui()
 
   connect(m_FeatureSizeDistWidget, SIGNAL(userEnteredValidData(bool)), m_GenerateDefaultData, SLOT(setEnabled(bool)));
 
-
   m_Omega3Btn->setChecked(true);
   m_DistButtonGroup.addButton(m_Omega3Btn);
   m_DistButtonGroup.addButton(m_BOverABtn);
@@ -546,7 +542,7 @@ void PrimaryPhaseWidget::dataWasEdited()
 {
   setTabsPlotTabsEnabled(true);
   m_GenerateDefaultData->setEnabled(false);
-  //this->tabWidget->setTabEnabled(0, false);
+  // this->tabWidget->setTabEnabled(0, false);
 }
 
 // -----------------------------------------------------------------------------
@@ -583,7 +579,6 @@ void PrimaryPhaseWidget::updatePlots()
     QMap<QString, QVector<float>> data;
     data[AbstractMicrostructurePreset::kBinNumbers] = binSizes;
     QVector<QColor> colors;
-
 
     getMicroPreset()->initializeOmega3TableModel(data, colors);
     m_Omega3Plot->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
@@ -632,7 +627,6 @@ void PrimaryPhaseWidget::updatePlots()
         tmodel->setTableData(binSizes, colData, colors);
       }
     }
-
 
     progress.setValue(2);
     progress.setLabelText("[2/3] Calculating ODF Data ...");
@@ -707,7 +701,7 @@ void PrimaryPhaseWidget::on_m_ResetDataBtn_clicked()
 
   setDataHasBeenGenerated(true); // Set this boolean to true so that data generation is triggered
   m_ResetData = true;
-  updatePlots();  // Regenerate all the default data
+  updatePlots(); // Regenerate all the default data
   emit dataChanged();
   m_ResetData = false;
 }
@@ -921,7 +915,6 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   qApp->processEvents();
   // Set the ODF Data
   m_ODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
-
 
   emit progressText(QString("Extracting Axis ODF Distribution Values"));
   qApp->processEvents();

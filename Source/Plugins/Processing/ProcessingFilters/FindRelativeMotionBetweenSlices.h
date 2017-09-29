@@ -33,153 +33,151 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _findrelativemotionbetweenslices_h_
 #define _findrelativemotionbetweenslices_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The FindRelativeMotionBetweenSlices class. See [Filter documentation](@ref findrelativemotionbetweenslices) for details.
  */
 class FindRelativeMotionBetweenSlices : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(FindRelativeMotionBetweenSlices)
-    SIMPL_STATIC_NEW_MACRO(FindRelativeMotionBetweenSlices)
-    SIMPL_TYPE_MACRO_SUPER(FindRelativeMotionBetweenSlices, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(FindRelativeMotionBetweenSlices)
+  SIMPL_STATIC_NEW_MACRO(FindRelativeMotionBetweenSlices)
+  SIMPL_TYPE_MACRO_SUPER(FindRelativeMotionBetweenSlices, AbstractFilter)
 
-    virtual ~FindRelativeMotionBetweenSlices();
+  virtual ~FindRelativeMotionBetweenSlices();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+  Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-    SIMPL_FILTER_PARAMETER(unsigned int, Plane)
-    Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
+  SIMPL_FILTER_PARAMETER(unsigned int, Plane)
+  Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
-    SIMPL_FILTER_PARAMETER(int, PSize1)
-    Q_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1)
+  SIMPL_FILTER_PARAMETER(int, PSize1)
+  Q_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1)
 
-    SIMPL_FILTER_PARAMETER(int, PSize2)
-    Q_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2)
+  SIMPL_FILTER_PARAMETER(int, PSize2)
+  Q_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2)
 
-    SIMPL_FILTER_PARAMETER(int, SSize1)
-    Q_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1)
+  SIMPL_FILTER_PARAMETER(int, SSize1)
+  Q_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1)
 
-    SIMPL_FILTER_PARAMETER(int, SSize2)
-    Q_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2)
+  SIMPL_FILTER_PARAMETER(int, SSize2)
+  Q_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2)
 
-    SIMPL_FILTER_PARAMETER(int, SliceStep)
-    Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep)
+  SIMPL_FILTER_PARAMETER(int, SliceStep)
+  Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep)
 
-    SIMPL_FILTER_PARAMETER(QString, MotionDirectionArrayName)
-    Q_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
+  SIMPL_FILTER_PARAMETER(QString, MotionDirectionArrayName)
+  Q_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    FindRelativeMotionBetweenSlices();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  FindRelativeMotionBetweenSlices();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+private:
+  DEFINE_IDATAARRAY_VARIABLE(InData)
 
-  private:
-    DEFINE_IDATAARRAY_VARIABLE(InData)
+  DEFINE_DATAARRAY_VARIABLE(float, MotionDirection)
 
-    DEFINE_DATAARRAY_VARIABLE(float, MotionDirection)
-
-    FindRelativeMotionBetweenSlices(const FindRelativeMotionBetweenSlices&); // Copy Constructor Not Implemented
-    void operator=(const FindRelativeMotionBetweenSlices&); // Operator '=' Not Implemented
+  FindRelativeMotionBetweenSlices(const FindRelativeMotionBetweenSlices&); // Copy Constructor Not Implemented
+  void operator=(const FindRelativeMotionBetweenSlices&);                  // Operator '=' Not Implemented
 };
 
 #endif /* FindRelativeMotionBetweenSlices_H_ */

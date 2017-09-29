@@ -49,17 +49,16 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 
@@ -575,7 +574,7 @@ bool InitializeSyntheticVolumeWidget::verifyPathExists(QString outFilePath, QLin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolumeWidget::setInputFilePath(QString val) 
+void InitializeSyntheticVolumeWidget::setInputFilePath(QString val)
 {
   m_InputFile->setText(val);
 }
@@ -583,7 +582,7 @@ void InitializeSyntheticVolumeWidget::setInputFilePath(QString val)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString InitializeSyntheticVolumeWidget::getInputFilePath() 
+QString InitializeSyntheticVolumeWidget::getInputFilePath()
 {
   return m_InputFile->text();
 }

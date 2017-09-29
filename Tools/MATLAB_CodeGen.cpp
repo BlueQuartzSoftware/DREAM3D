@@ -33,28 +33,25 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include <iostream>
 
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
-
 #include <QtCore/QCoreApplication>
-#include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QMetaProperty>
+#include <QtCore/QString>
 
 // DREAM3DLib includes
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/SIMPLibVersion.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -71,21 +68,20 @@ void GenerateCodeForFilter(const QString& outDir, AbstractFilter::Pointer filter
   f.open(QFile::WriteOnly);
   QTextStream out(&f);
 
-
   QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
 
   out << "function [ Filter_Parts ] = " << filterClassName << '\n';
 
   int i = 1;
-  for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  for(QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter)
   {
     SeparatorFilterParameter::Pointer sepFiltParam = SeparatorFilterParameter::New();
     FilterParameter* option = (*iter).get();
-    if (option->getHumanLabel().compare("Required Information") == 0
-        || option->getHumanLabel().compare("Created Information") == 0
-        || option->getHumanLabel().compare("Optional Information") == 0
-        || option->getWidgetType().compare(sepFiltParam->getWidgetType()) == 0)
-    { continue; }
+    if(option->getHumanLabel().compare("Required Information") == 0 || option->getHumanLabel().compare("Created Information") == 0 || option->getHumanLabel().compare("Optional Information") == 0 ||
+       option->getWidgetType().compare(sepFiltParam->getWidgetType()) == 0)
+    {
+      continue;
+    }
 
     // creates a working MATLAB m-file function per file per filter
     out << "Filter_Parts{1}{" << i << "} = '" << option->getPropertyName() << "';\n"
@@ -98,7 +94,6 @@ void GenerateCodeForFilter(const QString& outDir, AbstractFilter::Pointer filter
   f.close();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -108,7 +103,6 @@ void GenerateMatlabCode(const QString& outDir)
   // Sanity check to make sure we have our output directory:
   QDir dir(outDir);
   dir.mkpath(".");
-
 
   // Get the FilterManager which will have a list of ALL of our
   FilterManager* fm = FilterManager::Instance();
@@ -123,9 +117,7 @@ void GenerateMatlabCode(const QString& outDir)
 
     GenerateCodeForFilter(outDir, filter);
   }
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -145,32 +137,28 @@ int main(int argc, char* argv[])
     // Handle program options passed on command line.
     TCLAP::CmdLine cmd("PhToHDF5", ' ', SIMPLib::Version::Complete().toStdString());
 
-    TCLAP::ValueArg<std::string> outputDirArg( "o", "outputDirectory", "Output Directory", true, "", "Output Directory");
+    TCLAP::ValueArg<std::string> outputDirArg("o", "outputDirectory", "Output Directory", true, "", "Output Directory");
     cmd.add(outputDirArg);
 
     // Parse the argv array.
     cmd.parse(argc, argv);
-    if (argc == 1)
+    if(argc == 1)
     {
       qDebug() << "PhToHDF5 program was not provided any arguments. Use the --help argument to show the help listing.";
       return EXIT_FAILURE;
     }
 
-
     QString outDir = QString::fromStdString(outputDirArg.getValue());
-
 
     // Register all the filters including trying to load those from Plugins
     FilterManager* fm = FilterManager::Instance();
     SIMPLibPluginLoader::LoadPluginFilters(fm);
 
-
     // Send progress messages from PipelineBuilder to this object for display
     qRegisterMetaType<PipelineMessage>();
 
     GenerateMatlabCode(outDir);
-  }
-  catch (TCLAP::ArgException& e) // catch any exceptions
+  } catch(TCLAP::ArgException& e) // catch any exceptions
   {
     std::cerr << " error: " << e.error() << " for arg " << e.argId();
     return EXIT_FAILURE;

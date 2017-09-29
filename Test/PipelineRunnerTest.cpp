@@ -33,10 +33,9 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 // C Includes
-#include <stdlib.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #ifdef _MSC_VER
 #include <direct.h>
@@ -47,31 +46,30 @@
 // C++ Includes
 #include <iostream>
 
-
 // Qt Includes
-#include <QtCore/QtDebug>
 #include <QtCore/QCoreApplication>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QStringListIterator>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QSettings>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QStringListIterator>
+#include <QtCore/QtDebug>
 
 // DREAM3DLib includes
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterPipeline.h"
-#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
-#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/FilterParameters/H5FilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Utilities/TestObserver.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "PipelineRunnerTest.h"
 
@@ -92,50 +90,47 @@ void ExecutePipeline(const QString& pipelineFile)
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
-      QString ext = fi.completeSuffix();
+  QString ext = fi.completeSuffix();
 
   // Use the static method to read the Pipeline file and return a Filter Pipeline
   FilterPipeline::Pointer pipeline;
-  if (ext == "dream3d")
+  if(ext == "dream3d")
   {
     H5FilterParametersReader::Pointer dream3dReader = H5FilterParametersReader::New();
     pipeline = dream3dReader->readPipelineFromFile(pipelineFile);
   }
-  else if (ext == "json")
+  else if(ext == "json")
   {
     JsonFilterParametersReader::Pointer jsonReader = JsonFilterParametersReader::New();
     pipeline = jsonReader->readPipelineFromFile(pipelineFile);
   }
 
-  if (nullptr == pipeline.get())
+  if(nullptr == pipeline.get())
   {
     std::cout << "An error occurred trying to read the pipeline file. Exiting now." << std::endl;
     err = EXIT_FAILURE;
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
-
-      TestObserver obs; // Create an Observer to report errors/progress from the executing pipeline
+  TestObserver obs; // Create an Observer to report errors/progress from the executing pipeline
   pipeline->addMessageReceiver(&obs);
   // Preflight the pipeline
   err = pipeline->preflightPipeline();
-  if (err < 0)
+  if(err < 0)
   {
     std::cout << "Errors preflighting the pipeline. Exiting Now." << std::endl;
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
-      // Now actually execute the pipeline
-      pipeline->execute();
+  // Now actually execute the pipeline
+  pipeline->execute();
   err = pipeline->getErrorCondition();
-  if (err < 0)
+  if(err < 0)
   {
     std::cout << "Error Condition of Pipeline: " << err << std::endl;
     err = EXIT_FAILURE;
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
-
-
 }
 
 #define OVERWRITE_SOURCE_FILE 1
@@ -154,11 +149,11 @@ void writeOutput(bool didReplace, QStringList& outLines, QString filename)
     QFile hOut(tmpPath);
 #endif
     hOut.open(QFile::WriteOnly);
-    QTextStream stream( &hOut );
+    QTextStream stream(&hOut);
     stream << outLines.join("\n");
     hOut.close();
 
-    //qDebug() << "Saved File " << fi2.absoluteFilePath();
+    // qDebug() << "Saved File " << fi2.absoluteFilePath();
   }
 }
 
@@ -177,34 +172,31 @@ QString AdjustOutputDirectory(const QString& pipelineFile)
   contents = source.readAll();
   source.close();
 
-
   QString searchString = QString::fromLatin1("Data/Output/");
   QStringList outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
 
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
-    if( line.contains(QString("Data/")) == true && line.contains(searchString) == false )
+    if(line.contains(QString("Data/")) == true && line.contains(searchString) == false)
     {
       line = line.replace(QString("Data/"), getDream3dDataDir() + "/Data/");
     }
 
-    if(line.contains(searchString) )
+    if(line.contains(searchString))
     {
       line = line.replace(searchString, getTestTempDirectory());
     }
 
     outLines.push_back(line);
-
   }
 
   QString outFile = getTestTempDirectory() + fi.fileName();
 
   writeOutput(true, outLines, outFile);
-
 
   return outFile;
 }
@@ -212,7 +204,7 @@ QString AdjustOutputDirectory(const QString& pipelineFile)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main (int argc, char*  argv[])
+int main(int argc, char* argv[])
 {
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
@@ -230,7 +222,6 @@ int main (int argc, char*  argv[])
 #endif
 #endif
 
-
   QDir dir;
   dir.mkpath(getTestTempDirectory());
 
@@ -240,7 +231,6 @@ int main (int argc, char*  argv[])
 
   // Send progress messages from PipelineBuilder to this object for display
   QMetaObjectUtilities::RegisterMetaTypes();
-
 
   int err = 0;
   // Read in the contents of the PipelineList file which contains all the Pipelines that we want
@@ -261,16 +251,19 @@ int main (int argc, char*  argv[])
   // Iterate over all the entries in the file and process each pipeline. Note that the order of the
   // pipelines will probably matter
   int testNum = 0;
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString pipelineFile = sourceLines.next();
     pipelineFile = pipelineFile.trimmed();
-    if(pipelineFile.isEmpty()) { continue; }
+    if(pipelineFile.isEmpty())
+    {
+      continue;
+    }
     try
     {
       QFileInfo fi(pipelineFile);
 
-      //pipelineFile = AdjustOutputDirectory(pipelineFile);
+      // pipelineFile = AdjustOutputDirectory(pipelineFile);
 
       SIMPL::unittest::CurrentMethod = fi.fileName().toStdString();
       SIMPL::unittest::numTests++;
@@ -282,8 +275,7 @@ int main (int argc, char*  argv[])
       TestPassed(fi.fileName().toStdString());
       std::cout << "}," << std::endl;
       SIMPL::unittest::CurrentMethod = "";
-    }
-    catch (TestException& e)
+    } catch(TestException& e)
     {
       TestFailed(SIMPL::unittest::CurrentMethod);
       std::cout << e.what() << std::endl;
@@ -296,4 +288,3 @@ int main (int argc, char*  argv[])
 
   return err;
 }
-

@@ -41,11 +41,11 @@
 
 #include <QtCore/QObject>
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The StatsGeneratorFilter class. See [Filter documentation](@ref statsgeneratorfilter) for details.
@@ -54,165 +54,164 @@ class StatsGeneratorFilter : public AbstractFilter
 {
   Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(StatsGeneratorFilter)
-    SIMPL_STATIC_NEW_MACRO(StatsGeneratorFilter)
-    SIMPL_TYPE_MACRO_SUPER(StatsGeneratorFilter, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(StatsGeneratorFilter)
+  SIMPL_STATIC_NEW_MACRO(StatsGeneratorFilter)
+  SIMPL_TYPE_MACRO_SUPER(StatsGeneratorFilter, AbstractFilter)
 
-    virtual ~StatsGeneratorFilter();
+  virtual ~StatsGeneratorFilter();
 
-    SIMPL_FILTER_PARAMETER(QString, StatsGeneratorDataContainerName)
-    Q_PROPERTY(QString StatsGeneratorDataContainerName READ getStatsGeneratorDataContainerName WRITE setStatsGeneratorDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, StatsGeneratorDataContainerName)
+  Q_PROPERTY(QString StatsGeneratorDataContainerName READ getStatsGeneratorDataContainerName WRITE setStatsGeneratorDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, StatsDataArrayName)
-    Q_PROPERTY(QString StatsDataArrayName READ getStatsDataArrayName WRITE setStatsDataArrayName)
+  SIMPL_FILTER_PARAMETER(QString, StatsDataArrayName)
+  Q_PROPERTY(QString StatsDataArrayName READ getStatsDataArrayName WRITE setStatsDataArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
-    Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+  SIMPL_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+  Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
-    Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+  Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, PhaseNamesArrayName)
-    Q_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, PhaseNamesArrayName)
+  Q_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
 
-    SIMPL_FILTER_PARAMETER(StatsDataArray::Pointer, StatsDataArray)
-    Q_PROPERTY(StatsDataArray::Pointer StatsDataArray READ getStatsDataArray WRITE setStatsDataArray)
+  SIMPL_FILTER_PARAMETER(StatsDataArray::Pointer, StatsDataArray)
+  Q_PROPERTY(StatsDataArray::Pointer StatsDataArray READ getStatsDataArray WRITE setStatsDataArray)
 
-    SIMPL_FILTER_PARAMETER(UInt32ArrayType::Pointer, CrystalStructures)
-    Q_PROPERTY(UInt32ArrayType::Pointer CrystalStructures READ getCrystalStructures WRITE setCrystalStructures)
+  SIMPL_FILTER_PARAMETER(UInt32ArrayType::Pointer, CrystalStructures)
+  Q_PROPERTY(UInt32ArrayType::Pointer CrystalStructures READ getCrystalStructures WRITE setCrystalStructures)
 
-    SIMPL_FILTER_PARAMETER(UInt32ArrayType::Pointer, PhaseTypes)
-    Q_PROPERTY(UInt32ArrayType::Pointer PhaseTypes READ getPhaseTypes WRITE setPhaseTypes)
+  SIMPL_FILTER_PARAMETER(UInt32ArrayType::Pointer, PhaseTypes)
+  Q_PROPERTY(UInt32ArrayType::Pointer PhaseTypes READ getPhaseTypes WRITE setPhaseTypes)
 
-    SIMPL_FILTER_PARAMETER(StringDataArray::Pointer, PhaseNames)
-    Q_PROPERTY(StringDataArray::Pointer PhaseNames READ getPhaseNames WRITE setPhaseNames)
+  SIMPL_FILTER_PARAMETER(StringDataArray::Pointer, PhaseNames)
+  Q_PROPERTY(StringDataArray::Pointer PhaseNames READ getPhaseNames WRITE setPhaseNames)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, Path)
-    Q_PROPERTY(DataArrayPath Path READ getPath WRITE setPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, Path)
+  Q_PROPERTY(DataArrayPath Path READ getPath WRITE setPath)
 
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters
+   * @param obj
+   */
+  virtual void readFilterParameters(QJsonObject& obj);
 
-    /**
-     * @brief readFilterParameters
-     * @param obj
-     */
-    virtual void readFilterParameters(QJsonObject &obj);
+  /**
+  * @brief writeFilterParametersToJson Writes the filter parameters to a file
+  * @param root The root json object
+  */
+  virtual void writeFilterParameters(QJsonObject& obj);
 
-    /**
-    * @brief writeFilterParametersToJson Writes the filter parameters to a file
-    * @param root The root json object
-    */
-    virtual void writeFilterParameters(QJsonObject &obj);
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+protected:
+  StatsGeneratorFilter();
 
-  protected:
-    StatsGeneratorFilter();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief readArray
+   * @param arrayName
+   * @param jsonKey
+   * @return
+   */
+  void readArray(const QJsonObject& jsonRoot, size_t numTuples);
 
-    /**
-     * @brief readArray
-     * @param arrayName
-     * @param jsonKey
-     * @return
-     */
-    void readArray(const QJsonObject& jsonRoot, size_t numTuples);
-
-  private:
-    StatsGeneratorFilter(const StatsGeneratorFilter&); // Copy Constructor Not Implemented
-    void operator=(const StatsGeneratorFilter&); // Operator '=' Not Implemented
+private:
+  StatsGeneratorFilter(const StatsGeneratorFilter&); // Copy Constructor Not Implemented
+  void operator=(const StatsGeneratorFilter&);       // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

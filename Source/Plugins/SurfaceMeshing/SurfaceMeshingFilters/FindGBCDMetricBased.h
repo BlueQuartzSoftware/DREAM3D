@@ -49,10 +49,10 @@
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -206,7 +206,7 @@ private:
   static const double k_BallVolumesM3M[];
 
   FindGBCDMetricBased(const FindGBCDMetricBased&); // Copy Constructor Not Implemented
-  void operator=(const FindGBCDMetricBased&); // Operator '=' Not Implemented
+  void operator=(const FindGBCDMetricBased&);      // Operator '=' Not Implemented
 };
 
 #endif /* _FindGBCD_MetricBased_H_ */

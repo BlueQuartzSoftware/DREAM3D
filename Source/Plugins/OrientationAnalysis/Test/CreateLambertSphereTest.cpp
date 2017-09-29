@@ -5,17 +5,17 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
-#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 
 #include "OrientationAnalysisTestFileLocations.h"
 
@@ -98,14 +98,8 @@ public:
     error = filter->getErrorCondition();
     DREAM3D_REQUIRE(error < 0)
 
-    QStringList props = {"QuadDataContainerName",
-        "TriangleDataContainerName",
-        "EdgeDataContainerName",
-        "VertexDataContainerName",
-        "VertexAttributeMatrixName",
-        "EdgeAttributeMatrixName",
-        "FaceAttributeMatrixName"
-    };
+    QStringList props = {"QuadDataContainerName",     "TriangleDataContainerName", "EdgeDataContainerName",  "VertexDataContainerName",
+                         "VertexAttributeMatrixName", "EdgeAttributeMatrixName",   "FaceAttributeMatrixName"};
     foreach(QString prop, props)
     {
       // Reset the filter by creating a new one
@@ -126,12 +120,12 @@ public:
     * "Filter_Human_Label": "Write DREAM.3D Data File",
     */
 
-    //Observer obs;
+    // Observer obs;
 
     JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
     FilterPipeline::Pointer pipeline = reader->readPipelineFromFile(UnitTest::CreateLambertSphereTest::PipelineFile);
     DREAM3D_REQUIRE_VALID_POINTER(pipeline.get());
-    //pipeline->addMessageReceiver(&obs);
+    // pipeline->addMessageReceiver(&obs);
 
     FilterPipeline::FilterContainerType filters = pipeline->getFilterContainer();
     filter = filters[0];

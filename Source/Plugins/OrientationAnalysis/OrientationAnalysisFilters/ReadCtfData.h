@@ -36,10 +36,10 @@
 #ifndef _readctfdata_h_
 #define _readctfdata_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "EbsdLib/HKL/CtfReader.h"
 
@@ -68,183 +68,183 @@ class ReadCtfDataPrivate;
  */
 class ReadCtfData : public AbstractFilter
 {
-    Q_OBJECT
-    Q_DECLARE_PRIVATE(ReadCtfData)
+  Q_OBJECT
+  Q_DECLARE_PRIVATE(ReadCtfData)
 
-  public:
-    SIMPL_SHARED_POINTERS(ReadCtfData)
-    SIMPL_STATIC_NEW_MACRO(ReadCtfData)
-    SIMPL_TYPE_MACRO_SUPER(ReadCtfData, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(ReadCtfData)
+  SIMPL_STATIC_NEW_MACRO(ReadCtfData)
+  SIMPL_TYPE_MACRO_SUPER(ReadCtfData, AbstractFilter)
 
-    virtual ~ReadCtfData();
+  virtual ~ReadCtfData();
 
-    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
+  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(bool, FileWasRead)
-    Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+  SIMPL_FILTER_PARAMETER(bool, FileWasRead)
+  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-    SIMPL_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+  SIMPL_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
 
-    SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+  SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-    /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
-    SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+  /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
+  SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
 
-    SIMPL_INSTANCE_PROPERTY(int, Manufacturer)
+  SIMPL_INSTANCE_PROPERTY(int, Manufacturer)
 
-    SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+  SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
 
-    SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
 
-    SIMPL_PIMPL_PROPERTY_DECL(Ctf_Private_Data, Data)
+  SIMPL_PIMPL_PROPERTY_DECL(Ctf_Private_Data, Data)
 
-    Q_PROPERTY(Ctf_Private_Data Data READ getData WRITE setData)
+  Q_PROPERTY(Ctf_Private_Data Data READ getData WRITE setData)
 
-  public slots:
-    /**
-    * @brief flushCache Resets the cache file state
-    */
-    void flushCache();
+public slots:
+  /**
+  * @brief flushCache Resets the cache file state
+  */
+  void flushCache();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    ReadCtfData();
+protected:
+  ReadCtfData();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-    * @brief copyRawEbsdData Reads the Ang file and puts the data into the data container
-    * @param reader CtfReader instance pointer
-    * @param tDims Tuple dimensions
-    * @param cDims Component dimensions
-    */
-    void copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims);
+  /**
+  * @brief copyRawEbsdData Reads the Ang file and puts the data into the data container
+  * @param reader CtfReader instance pointer
+  * @param tDims Tuple dimensions
+  * @param cDims Component dimensions
+  */
+  void copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims);
 
-    /**
-    * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
-    * and precipitate fractions from the EBSD file.
-    * @param reader CtfReader instance pointer
-    * @return Integer error value
-    */
-    int32_t loadMaterialInfo(CtfReader* reader);
+  /**
+  * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
+  * and precipitate fractions from the EBSD file.
+  * @param reader CtfReader instance pointer
+  * @return Integer error value
+  */
+  int32_t loadMaterialInfo(CtfReader* reader);
 
-    /**
-    * @brief readDataFile Reads the Ctf file
-    * @param reader CtfReader instance pointer
-    * @param m DataContainer instance pointer
-    * @param tDims Tuple dimensions
-    */
-    void readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, CTF_READ_FLAG flag);
+  /**
+  * @brief readDataFile Reads the Ctf file
+  * @param reader CtfReader instance pointer
+  * @param m DataContainer instance pointer
+  * @param tDims Tuple dimensions
+  */
+  void readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, CTF_READ_FLAG flag);
 
-  private:
-    QScopedPointer<ReadCtfDataPrivate> const d_ptr;
+private:
+  QScopedPointer<ReadCtfDataPrivate> const d_ptr;
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
-    ReadCtfData(const ReadCtfData&); // Copy Constructor Not Implemented
-    void operator=(const ReadCtfData&); // Operator '=' Not Implemented
+  ReadCtfData(const ReadCtfData&);    // Copy Constructor Not Implemented
+  void operator=(const ReadCtfData&); // Operator '=' Not Implemented
 };
 
 Q_DECLARE_METATYPE(Ctf_Private_Data)

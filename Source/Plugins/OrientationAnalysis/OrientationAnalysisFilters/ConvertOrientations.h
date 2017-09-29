@@ -36,10 +36,10 @@
 #ifndef _convertorientations_h_
 #define _convertorientations_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -48,126 +48,124 @@
  */
 class ConvertOrientations : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(ConvertOrientations)
-    SIMPL_STATIC_NEW_MACRO(ConvertOrientations)
-    SIMPL_TYPE_MACRO_SUPER(ConvertOrientations, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(ConvertOrientations)
+  SIMPL_STATIC_NEW_MACRO(ConvertOrientations)
+  SIMPL_TYPE_MACRO_SUPER(ConvertOrientations, AbstractFilter)
 
-    virtual ~ConvertOrientations();
+  virtual ~ConvertOrientations();
 
-    SIMPL_FILTER_PARAMETER(int, InputType)
-    Q_PROPERTY(int InputType READ getInputType WRITE setInputType)
+  SIMPL_FILTER_PARAMETER(int, InputType)
+  Q_PROPERTY(int InputType READ getInputType WRITE setInputType)
 
-    SIMPL_FILTER_PARAMETER(int, OutputType)
-    Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
+  SIMPL_FILTER_PARAMETER(int, OutputType)
+  Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, InputOrientationArrayPath)
-    Q_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, InputOrientationArrayPath)
+  Q_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, OutputOrientationArrayName)
-    Q_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
+  SIMPL_FILTER_PARAMETER(QString, OutputOrientationArrayName)
+  Q_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    ConvertOrientations();
+protected:
+  ConvertOrientations();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-
-  private:
-
-    ConvertOrientations(const ConvertOrientations&); // Copy Constructor Not Implemented
-    void operator=(const ConvertOrientations&); // Operator '=' Not Implemented
+private:
+  ConvertOrientations(const ConvertOrientations&); // Copy Constructor Not Implemented
+  void operator=(const ConvertOrientations&);      // Operator '=' Not Implemented
 };
 
 #endif /* ConvertOrientations_H_ */

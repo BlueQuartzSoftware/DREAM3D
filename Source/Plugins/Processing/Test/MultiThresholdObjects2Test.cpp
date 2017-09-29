@@ -36,20 +36,20 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 
-#include "SIMPLib/Common/ComparisonInputsAdvanced.h"
-#include "SIMPLib/Common/ComparisonValue.h"
-#include "SIMPLib/Common/ComparisonSet.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/ComparisonInputsAdvanced.h"
+#include "SIMPLib/Filtering/ComparisonSet.h"
+#include "SIMPLib/Filtering/ComparisonValue.h"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 class MultiThresholdObjects2Test
 {
@@ -91,7 +91,7 @@ public:
     // Set up geometry for tuples, a cuboid with dimensions 20, 10, 1
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     vdc->setGeometry(image);
-    size_t dims[1] = { 20 };
+    size_t dims[1] = {20};
     image->setDimensions(dims);
 
     QVector<size_t> tDims(1, 0);
@@ -106,14 +106,14 @@ public:
 
     // Fill the float array with {.01,.02,.03,.04,.05,.06,.07,.08,.09,.10,.11,.12,.13,.14,.15.,16,.17,.18,.19,.20}
     // Fill the int array with { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19 }
-    for (size_t i = 0; i < 20; i++)
+    for(size_t i = 0; i < 20; i++)
     {
       fnum += 0.01f;
-      dataf->setValue(i, fnum);  // float array
+      dataf->setValue(i, fnum); // float array
       datai->setValue(i, inum); // int array
       inum += 1;
     }
-    am->addAttributeArray(dataf->getName(), dataf);   // float array
+    am->addAttributeArray(dataf->getName(), dataf); // float array
     am->addAttributeArray(datai->getName(), datai); // int array
     vdc->addAttributeMatrix(am->getName(), am);
     dca->addDataContainer(vdc);
@@ -122,7 +122,7 @@ public:
     QString filtName = "MultiThresholdObjects2";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    if (nullptr != filterFactory.get())
+    if(nullptr != filterFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has
       // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -142,8 +142,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template<typename T>
-  void ComparisonValueTest(AbstractFilter::Pointer filter, DataArray<T>* dataArray, SIMPL::Comparison::Enumeration comparisonOperator, T value, QString outputName)
+  template <typename T> void ComparisonValueTest(AbstractFilter::Pointer filter, DataArray<T>* dataArray, SIMPL::Comparison::Enumeration comparisonOperator, T value, QString outputName)
   {
     QString dataContainerName = filter->getDataContainerArray()->getDataContainerNames().at(0);
 
@@ -164,28 +163,28 @@ public:
     propWasSet = filter->setProperty("SelectedThresholds", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    //var.setValue(SIMPL::GeneralData::ThresholdArray + QString::number(thresholdOffset));
+    // var.setValue(SIMPL::GeneralData::ThresholdArray + QString::number(thresholdOffset));
     var.setValue(outputName);
     propWasSet = filter->setProperty("DestinationArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
 
     DataArrayPath path = DataArrayPath(dataContainerName, SIMPL::Defaults::CellAttributeMatrixName, outputName);
-    IDataArray::Pointer thresholdArray = filter->getDataContainerArray()->getDataContainer(path.getDataContainerName())->
-      getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
+    IDataArray::Pointer thresholdArray =
+        filter->getDataContainerArray()->getDataContainer(path.getDataContainerName())->getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
     DataArray<bool>* inputArray = DataArray<bool>::SafePointerDownCast(thresholdArray.get());
     bool* inputArrayPtr = inputArray->getPointer(0); // pointer for threshold array created from the filter for the float array
 
-                                                     // For the comparison value of 0.1, the threshold array elements 0 to 9 should be false and 10 through 19 should be true
-    
+    // For the comparison value of 0.1, the threshold array elements 0 to 9 should be false and 10 through 19 should be true
+
     T* dataArrayPtr = dataArray->getPointer(0);
     int numElements = dataArray->getSize();
     int compOperator = compVal->getCompOperator();
-    for (size_t i = 0; i < numElements; i++)
+    for(size_t i = 0; i < numElements; i++)
     {
-      switch (compOperator)
+      switch(compOperator)
       {
       case SIMPL::Comparison::Operator_GreaterThan:
         DREAM3D_REQUIRE_EQUAL((dataArrayPtr[i] > value), inputArrayPtr[i])
@@ -208,8 +207,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template<typename T>
-  void ComparisonValueTestAll(AbstractFilter::Pointer filter, DataArray<T>* dataArray, T comparisonValue, QString outputName)
+  template <typename T> void ComparisonValueTestAll(AbstractFilter::Pointer filter, DataArray<T>* dataArray, T comparisonValue, QString outputName)
   {
     ComparisonValueTest(filter, dataArray, SIMPL::Comparison::Operator_GreaterThan, comparisonValue, outputName + QString::number(0));
 
@@ -240,22 +238,22 @@ public:
     propWasSet = filter->setProperty("SelectedThresholds", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      var.setValue(outputName);
+    var.setValue(outputName);
     propWasSet = filter->setProperty("DestinationArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
 
     DataArrayPath path = DataArrayPath(dataContainerName, SIMPL::Defaults::CellAttributeMatrixName, outputName);
-    IDataArray::Pointer thresholdArray = filter->getDataContainerArray()->getDataContainer(path.getDataContainerName())->
-      getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
+    IDataArray::Pointer thresholdArray =
+        filter->getDataContainerArray()->getDataContainer(path.getDataContainerName())->getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
     DataArray<bool>* inputArray = DataArray<bool>::SafePointerDownCast(thresholdArray.get());
     bool* inputArrayPtr = inputArray->getPointer(0); // pointer for threshold array created from the filter for the float array
 
-                                                     // For the comparison value of 0.1, the threshold array elements 0 to 9 should be false and 10 through 19 should be true
+    // For the comparison value of 0.1, the threshold array elements 0 to 9 should be false and 10 through 19 should be true
     size_t numElements = inputArray->getSize();
-    for (size_t i = 0; i < numElements; i++)
+    for(size_t i = 0; i < numElements; i++)
     {
       DREAM3D_REQUIRE_EQUAL(inputArrayPtr[i], expectedResults[i])
     }
@@ -290,11 +288,11 @@ public:
 
     DataArrayPath path = DataArrayPath("dc", "CellData", "TestArrayInt");
     IDataArray::Pointer idatai = filter->getDataContainerArray()->getDataContainer(path)->getAttributeMatrix(path)->getAttributeArray(path.getDataArrayName());
-    //DataArray<int>* datai = DataArray<int>::SafePointerDownCast(idatai.get());
-    
+    // DataArray<int>* datai = DataArray<int>::SafePointerDownCast(idatai.get());
+
     // Check AND / OR operators
     ComparisonSet::Pointer compSet = ComparisonSet::New();
-    
+
     ComparisonValue::Pointer comp0 = ComparisonValue::New();
     comp0->setCompOperator(SIMPL::Comparison::Operator_GreaterThan);
     comp0->setCompValue(5);
@@ -314,11 +312,11 @@ public:
     comp2->setCompOperator(SIMPL::Comparison::Operator_Equal);
     comp2->setCompValue(2);
     compSet->addComparison(comp2);
-    
-    bool expectedOutput[] = { false, false, true, false, false,         // 0, 1, 2, 3, 4
-                            false, true, true, true, true,             // 5, 6, 7, 8, 9
-                            false, false, false, false, false,         // 10, 11, 12, 13, 14
-                            false, false, false, false, false };       // 15, 16, 17, 18, 19
+
+    bool expectedOutput[] = {false, false, true,  false, false,  // 0, 1, 2, 3, 4
+                             false, true,  true,  true,  true,   // 5, 6, 7, 8, 9
+                             false, false, false, false, false,  // 10, 11, 12, 13, 14
+                             false, false, false, false, false}; // 15, 16, 17, 18, 19
 
     ComparisonSetTest(filter, compSet, SIMPL::GeneralData::ThresholdArray + QString::number(1), expectedOutput);
 
@@ -327,15 +325,12 @@ public:
     comp0->setUnionOperator(SIMPL::Union::Operator_Or);
     compSet2->addComparison(comp0);
 
-    bool expectedOutput2[] = { false, false, false, false, false,
-                               false, true, true, true, true,
-                               true, true, true, true, true,
-                               true, true, true, true, true };
+    bool expectedOutput2[] = {false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 
     ComparisonSetTest(filter, compSet2, SIMPL::GeneralData::ThresholdArray + QString::number(2), expectedOutput2);
 
     // Invert ComparisonSet
-    for (int i = 0; i < 20; i++)
+    for(int i = 0; i < 20; i++)
     {
       expectedOutput[i] = !expectedOutput[i];
     }
@@ -358,5 +353,5 @@ public:
 
 private:
   MultiThresholdObjects2Test(const MultiThresholdObjects2Test&); // Copy Constructor Not Implemented
-  void operator=(const MultiThresholdObjects2Test&);            // Operator '=' Not Implemented
+  void operator=(const MultiThresholdObjects2Test&);             // Operator '=' Not Implemented
 };

@@ -33,176 +33,174 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _findfeatureclustering_h_
 #define _findfeatureclustering_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The FindFeatureClustering class. See [Filter documentation](@ref findfeatureclustering) for details.
  */
 class FindFeatureClustering : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(FindFeatureClustering)
-    SIMPL_STATIC_NEW_MACRO(FindFeatureClustering)
-    SIMPL_TYPE_MACRO_SUPER(FindFeatureClustering, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(FindFeatureClustering)
+  SIMPL_STATIC_NEW_MACRO(FindFeatureClustering)
+  SIMPL_TYPE_MACRO_SUPER(FindFeatureClustering, AbstractFilter)
 
-    virtual ~FindFeatureClustering();
+  virtual ~FindFeatureClustering();
 
-    SIMPL_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+  SIMPL_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
 
-    SIMPL_FILTER_PARAMETER(int, NumberOfBins)
-    Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
+  SIMPL_FILTER_PARAMETER(int, NumberOfBins)
+  Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
-    SIMPL_FILTER_PARAMETER(int, PhaseNumber)
-    Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+  SIMPL_FILTER_PARAMETER(int, PhaseNumber)
+  Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
+  Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
-    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
+  SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+  Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
-    Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
-    Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
-    Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, ClusteringListArrayName)
-    Q_PROPERTY(QString ClusteringListArrayName READ getClusteringListArrayName WRITE setClusteringListArrayName)
+  SIMPL_FILTER_PARAMETER(QString, ClusteringListArrayName)
+  Q_PROPERTY(QString ClusteringListArrayName READ getClusteringListArrayName WRITE setClusteringListArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
-    Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
+  SIMPL_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
+  Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, MaxMinArrayName)
-    Q_PROPERTY(QString MaxMinArrayName READ getMaxMinArrayName WRITE setMaxMinArrayName)
+  SIMPL_FILTER_PARAMETER(QString, MaxMinArrayName)
+  Q_PROPERTY(QString MaxMinArrayName READ getMaxMinArrayName WRITE setMaxMinArrayName)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    FindFeatureClustering();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  FindFeatureClustering();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  /**
+   * @brief find_clustering Determines the Feature clustering
+   */
+  void find_clustering();
 
-    /**
-     * @brief find_clustering Determines the Feature clustering
-     */
-    void find_clustering();
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+  DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+  DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
+  DEFINE_DATAARRAY_VARIABLE(float, MaxMinArray)
+  DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
-    DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-    DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
-    DEFINE_DATAARRAY_VARIABLE(float, MaxMinArray)
-    DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+  NeighborList<float>::WeakPointer m_ClusteringList;
+  std::vector<float> m_RandomCentroids;
 
-    NeighborList<float>::WeakPointer m_ClusteringList;
-    std::vector<float> m_RandomCentroids;
-
-    FindFeatureClustering(const FindFeatureClustering&); // Copy Constructor Not Implemented
-    void operator=(const FindFeatureClustering&); // Operator '=' Not Implemented
+  FindFeatureClustering(const FindFeatureClustering&); // Copy Constructor Not Implemented
+  void operator=(const FindFeatureClustering&);        // Operator '=' Not Implemented
 };
 
 #endif /* FindFeatureClustering_H_ */

@@ -33,14 +33,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _quicksurfacemesh_h_
 #define _quicksurfacemesh_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -49,162 +48,162 @@
  */
 class QuickSurfaceMesh : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(QuickSurfaceMesh)
-    SIMPL_STATIC_NEW_MACRO(QuickSurfaceMesh)
-    SIMPL_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(QuickSurfaceMesh)
+  SIMPL_STATIC_NEW_MACRO(QuickSurfaceMesh)
+  SIMPL_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
 
-    virtual ~QuickSurfaceMesh();
-  
-    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
-    Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+  virtual ~QuickSurfaceMesh();
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+  Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
-    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
-    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+  Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
-    Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+  Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
-    Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
-    Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
+  Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
-    Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
+  Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  SIMPL_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
+  Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-  protected:
-    QuickSurfaceMesh();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+protected:
+  QuickSurfaceMesh();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-    DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
-  
-    std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
-    std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-     * @brief getGridCoordinates
-     * @param grid
-     * @param x
-     * @param y
-     * @param z
-     * @param coords
-     */
-    void getGridCoordinates(IGeometryGrid::Pointer grid, size_t x, size_t y, size_t z, float* coords);
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
+  DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
 
-    /**
-     * @brief updateFaceInstancePointers Updates raw Face pointers
-     */
-    void updateFaceInstancePointers();
+  std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
+  std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;
 
-    /**
-     * @brief updateVertexInstancePointers Updates raw Vertex pointers
-     */
-    void updateVertexInstancePointers();
+  /**
+   * @brief getGridCoordinates
+   * @param grid
+   * @param x
+   * @param y
+   * @param z
+   * @param coords
+   */
+  void getGridCoordinates(IGeometryGrid::Pointer grid, size_t x, size_t y, size_t z, float* coords);
 
-    QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const QuickSurfaceMesh&); // Operator '=' Not Implemented
+  /**
+   * @brief updateFaceInstancePointers Updates raw Face pointers
+   */
+  void updateFaceInstancePointers();
+
+  /**
+   * @brief updateVertexInstancePointers Updates raw Vertex pointers
+   */
+  void updateVertexInstancePointers();
+
+  QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
+  void operator=(const QuickSurfaceMesh&);   // Operator '=' Not Implemented
 };
 
 #endif /* QuickSurfaceMesh_H_ */

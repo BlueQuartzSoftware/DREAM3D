@@ -48,28 +48,26 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
-
 #include "StatsGenerator/StatsGeneratorConstants.h"
-#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
-#include "StatsGenerator/Widgets/StatsGenRDFWidget.h"
 #include "StatsGenerator/Widgets/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Widgets/Presets/PrecipitateEquiaxedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrecipitateRolledPreset.h"
+#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
+#include "StatsGenerator/Widgets/StatsGenRDFWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGAbstractTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
-
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot_curve.h>
@@ -121,10 +119,9 @@ void PrecipitatePhaseWidget::setupGui()
   getMicrostructurePresetCombo()->setCurrentIndex(0);
   getMicrostructurePresetCombo()->blockSignals(false);
 
-
   removeNeighborsPlotWidget();
 
-  if (!m_RdfPlot)
+  if(!m_RdfPlot)
   {
     QWidget* rdfTab;
     QHBoxLayout* horizontalLayout_2;
@@ -195,90 +192,89 @@ void PrecipitatePhaseWidget::updatePlots()
     getFeatureSizeWidget()->plotSizeDistribution();
 
     // Now that we have bins and feature sizes, push those to the other plot widgets
-       // Setup Each Plot Widget
-       // The MicroPreset class will set the distribution for each of the plots
-       QwtArray<float> binSizes = getFeatureSizeWidget()->getBinSizes();
-       QMap<QString, QVector<float>> data;
-       data[AbstractMicrostructurePreset::kBinNumbers] = binSizes;
-       QVector<QColor> colors;
+    // Setup Each Plot Widget
+    // The MicroPreset class will set the distribution for each of the plots
+    QwtArray<float> binSizes = getFeatureSizeWidget()->getBinSizes();
+    QMap<QString, QVector<float>> data;
+    data[AbstractMicrostructurePreset::kBinNumbers] = binSizes;
+    QVector<QColor> colors;
 
-       getMicroPreset()->initializeOmega3TableModel(data, colors);
-       getOmega3PlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
-       SGAbstractTableModel* tmodel = getOmega3PlotWidget()->tableModel();
-       if(tmodel)
-       {
-         QVector<QVector<float>> colData;
-         colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
-         colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
-         tmodel->setTableData(binSizes, colData, colors);
-       }
+    getMicroPreset()->initializeOmega3TableModel(data, colors);
+    getOmega3PlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
+    SGAbstractTableModel* tmodel = getOmega3PlotWidget()->tableModel();
+    if(tmodel)
+    {
+      QVector<QVector<float>> colData;
+      colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+      colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+      tmodel->setTableData(binSizes, colData, colors);
+    }
 
-       getMicroPreset()->initializeBOverATableModel(data, colors);
-       getBOverAPlotPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
-       tmodel = getBOverAPlotPlotWidget()->tableModel();
-       if(tmodel)
-       {
-         QVector<QVector<float>> colData;
-         colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
-         colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
-         tmodel->setTableData(binSizes, colData, colors);
-       }
+    getMicroPreset()->initializeBOverATableModel(data, colors);
+    getBOverAPlotPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
+    tmodel = getBOverAPlotPlotWidget()->tableModel();
+    if(tmodel)
+    {
+      QVector<QVector<float>> colData;
+      colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+      colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+      tmodel->setTableData(binSizes, colData, colors);
+    }
 
-       getMicroPreset()->initializeCOverATableModel(data, colors);
-       getCOverAPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
-       tmodel = getCOverAPlotWidget()->tableModel();
-       if(tmodel)
-       {
-         QVector<QVector<float>> colData;
-         colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
-         colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
-         tmodel->setTableData(binSizes, colData, colors);
-       }
+    getMicroPreset()->initializeCOverATableModel(data, colors);
+    getCOverAPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
+    tmodel = getCOverAPlotWidget()->tableModel();
+    if(tmodel)
+    {
+      QVector<QVector<float>> colData;
+      colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
+      colData.push_back(data[AbstractMicrostructurePreset::kBeta]);
+      tmodel->setTableData(binSizes, colData, colors);
+    }
 #if 0
        // Get any presets for the ODF/AxisODF/MDF also
        getMicroPreset()->initializeODFTableModel(getODFWidget());
        getMicroPreset()->initializeAxisODFTableModel(getAxisODFWidget());
        getMicroPreset()->initializeMDFTableModel(getODFWidget()->getMDFWidget());
 #else
-       // Get any presets for the ODF/AxisODF/MDF also
-       getMicroPreset()->initializeODFTableModel(data);
-       SGODFTableModel* model = getODFWidget()->tableModel();
-       if(model)
-       {
-         model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
-                             data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
-       }
+    // Get any presets for the ODF/AxisODF/MDF also
+    getMicroPreset()->initializeODFTableModel(data);
+    SGODFTableModel* model = getODFWidget()->tableModel();
+    if(model)
+    {
+      model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                          data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+    }
 
-       getMicroPreset()->initializeAxisODFTableModel(data);
-       model = getAxisODFWidget()->tableModel();
-       if(model)
-       {
-         model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
-                             data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
-       }
+    getMicroPreset()->initializeAxisODFTableModel(data);
+    model = getAxisODFWidget()->tableModel();
+    if(model)
+    {
+      model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
+                          data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
+    }
 
-       // getMicroPreset()->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
-       getMicroPreset()->initializeMDFTableModel(data);
-       SGMDFTableModel* mdfModel = (getODFWidget()->getMDFWidget()->tableModel());
-       if(mdfModel)
-       {
-         mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
-       }
+    // getMicroPreset()->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
+    getMicroPreset()->initializeMDFTableModel(data);
+    SGMDFTableModel* mdfModel = (getODFWidget()->getMDFWidget()->tableModel());
+    if(mdfModel)
+    {
+      mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
+    }
 #endif
-       progress.setValue(2);
-       progress.setLabelText("[2/4] Calculating ODF Data ...");
-       getODFWidget()->updatePlots();
+    progress.setValue(2);
+    progress.setLabelText("[2/4] Calculating ODF Data ...");
+    getODFWidget()->updatePlots();
 
-       progress.setValue(3);
-       progress.setLabelText("[3/4] Calculating Axis ODF Data ...");
-       getAxisODFWidget()->updatePlots();
+    progress.setValue(3);
+    progress.setLabelText("[3/4] Calculating Axis ODF Data ...");
+    getAxisODFWidget()->updatePlots();
 
-       progress.setValue(4);
-       progress.setLabelText("[4/4] Calculating RDF Data ...");
-       m_RdfPlot->updatePlots();
+    progress.setValue(4);
+    progress.setLabelText("[4/4] Calculating RDF Data ...");
+    m_RdfPlot->updatePlots();
 
-       setTabsPlotTabsEnabled(true);
-
+    setTabsPlotTabsEnabled(true);
   }
 }
 
@@ -433,7 +429,6 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   }
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
   PrecipitateStatsData* precipitateStatsData = PrecipitateStatsData::SafePointerDownCast(statsData.get());
-
 
   QString phaseName = statsData->getName();
   if(phaseName.isEmpty())

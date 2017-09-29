@@ -33,20 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _findorientationfieldcurl_h_
 #define _findorientationfieldcurl_h_
 
-#include <vector>
 #include <QtCore/QString>
+#include <vector>
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @class FindOrientationFieldCurl FindOrientationFieldCurl.h DREAM3DLib/GenericFilters/FindOrientationFieldCurl.h
@@ -57,135 +56,134 @@
  */
 class FindOrientationFieldCurl : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(FindOrientationFieldCurl)
-    SIMPL_STATIC_NEW_MACRO(FindOrientationFieldCurl)
-    SIMPL_TYPE_MACRO_SUPER(FindOrientationFieldCurl, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(FindOrientationFieldCurl)
+  SIMPL_STATIC_NEW_MACRO(FindOrientationFieldCurl)
+  SIMPL_TYPE_MACRO_SUPER(FindOrientationFieldCurl, AbstractFilter)
 
-    virtual ~FindOrientationFieldCurl();
+  virtual ~FindOrientationFieldCurl();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-    Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, DislocationTensorsArrayName)
-    Q_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, DislocationTensorsArrayName)
+  Q_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
 
-    SIMPL_FILTER_PARAMETER(IntVec3_t, CurlSize)
-    Q_PROPERTY(IntVec3_t CurlSize READ getCurlSize WRITE setCurlSize)
+  SIMPL_FILTER_PARAMETER(IntVec3_t, CurlSize)
+  Q_PROPERTY(IntVec3_t CurlSize READ getCurlSize WRITE setCurlSize)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    FindOrientationFieldCurl();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  FindOrientationFieldCurl();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+private:
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
-  private:
-    QVector<LaueOps::Pointer> m_OrientationOps;
+  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+  DEFINE_DATAARRAY_VARIABLE(float, DislocationTensors)
+  DEFINE_DATAARRAY_VARIABLE(float, Quats)
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(float, DislocationTensors)
-    DEFINE_DATAARRAY_VARIABLE(float, Quats)
+  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-
-    FindOrientationFieldCurl(const FindOrientationFieldCurl&); // Copy Constructor Not Implemented
-    void operator=(const FindOrientationFieldCurl&); // Operator '=' Not Implemented
+  FindOrientationFieldCurl(const FindOrientationFieldCurl&); // Copy Constructor Not Implemented
+  void operator=(const FindOrientationFieldCurl&);           // Operator '=' Not Implemented
 };
 
 #endif /* FindOrientationFieldCurl_H_ */

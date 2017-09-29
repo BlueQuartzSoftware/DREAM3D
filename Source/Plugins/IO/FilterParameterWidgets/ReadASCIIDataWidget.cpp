@@ -41,19 +41,17 @@
 
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
 
-#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "FilterParameters/ReadASCIIDataFilterParameter.h"
 
-#include "IO/IOFilters/util/ASCIIWizardData.hpp"
 #include "IO/IOFilters/ReadASCIIData.h"
+#include "IO/IOFilters/util/ASCIIWizardData.hpp"
 
 #include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
 #include "Widgets/ImportASCIIDataWizard/DataFormatPage.h"
 #include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
 #include "Widgets/ImportASCIIDataWizard/LineCounterObject.h"
-
-
 
 // Initialize private static member variable
 QString ReadASCIIDataWidget::m_OpenDialogLastFilePath = "";
@@ -83,11 +81,11 @@ ReadASCIIDataWidget::ReadASCIIDataWidget(FilterParameter* parameter, AbstractFil
 // -----------------------------------------------------------------------------
 ReadASCIIDataWidget::~ReadASCIIDataWidget()
 {
-    if(nullptr != m_ImportWizard)
-      m_ImportWizard->deleteLater();
+  if(nullptr != m_ImportWizard)
+    m_ImportWizard->deleteLater();
 
-    if(nullptr != m_LineCounter)
-       m_LineCounter->deleteLater();
+  if(nullptr != m_LineCounter)
+    m_LineCounter->deleteLater();
 }
 
 // -----------------------------------------------------------------------------
@@ -445,7 +443,7 @@ void ReadASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     data.dataHeaders = m_ImportWizard->getHeaders();
     data.headerIsCustom = data.dataHeaders.size() > 0 ? true : false;
     data.headerLine = data.headerIsCustom ? -1 : m_ImportWizard->getBeginningLineNum() - 1;
-//        data.headerUsesDefaults =
+    //        data.headerUsesDefaults =
     data.numberOfLines = numOfLines;
     data.beginIndex = m_ImportWizard->getBeginningLineNum();
     data.dataTypes = m_ImportWizard->getDataTypes();

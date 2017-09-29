@@ -33,26 +33,23 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-
 #include <iostream>
 
-
 #include <QtCore/QCoreApplication>
-#include <QtCore/QString>
+#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QMetaProperty>
+#include <QtCore/QString>
 #include <QtCore/QTextStream>
-#include <QtCore/QDebug>
 #include <QtCore/QUuid>
 
 // DREAM3DLib includes
 //#include "SIMPLib/SIMPLib.h"
 //#include "SIMPLib/SIMPLibVersion.h"
 //#include "SIMPLib/Plugin/PluginManager.h"
-//#include "SIMPLib/Common/FilterManager.h"
-//#include "SIMPLib/Common/FilterFactory.hpp"
+//#include "SIMPLib/Filtering/FilterManager.h"
+//#include "SIMPLib/Filtering/FilterFactory.hpp"
 
 //#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 //#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
@@ -60,7 +57,6 @@
 #include "Tools/ToolConfiguration.h"
 
 #define OVERWRITE_SOURCE_FILE 1
-
 
 // -----------------------------------------------------------------------------
 //
@@ -85,7 +81,7 @@ void writeOutput(bool didReplace, QStringList& outLines, QString filename)
     QFile hOut(tmpPath);
 #endif
     hOut.open(QFile::WriteOnly);
-    QTextStream stream( &hOut );
+    QTextStream stream(&hOut);
     stream << outLines.join("\n");
     hOut.close();
 
@@ -108,7 +104,7 @@ void writeOutput(bool didReplace, QVector<QString>& outLines, QString filename)
     QFile hOut(tmpPath);
 #endif
     hOut.open(QFile::WriteOnly);
-    QTextStream stream( &hOut );
+    QTextStream stream(&hOut);
     for(qint32 i = 0; i < outLines.size() - 1; i++)
     {
       stream << outLines[i] << "\n";
@@ -118,7 +114,6 @@ void writeOutput(bool didReplace, QVector<QString>& outLines, QString filename)
     qDebug() << "Saved File " << fi2.absoluteFilePath();
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -131,7 +126,7 @@ void checkConstructorForSetupFilterParameters(QStringListIterator& sourceLines, 
   {
     QString line = sourceLines.next();
     outLines.push_back(line);
-    if(line.contains("{") )
+    if(line.contains("{"))
     {
       break;
     }
@@ -145,9 +140,9 @@ void checkConstructorForSetupFilterParameters(QStringListIterator& sourceLines, 
 
     if(line.contains("}"))
     {
-      if (foundFunction == false )
+      if(foundFunction == false)
       {
-        outLines.push_back(QString("  setupFilterParameters();") );
+        outLines.push_back(QString("  setupFilterParameters();"));
       }
       outLines.push_back(line);
       break;
@@ -184,15 +179,14 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     source.close();
   }
 
-
-  //QStringList names;
+  // QStringList names;
   bool found = false;
   int lineNum = 1;
   QString searchString = var;
 
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
-  //Look for raw pointers FIRST otherwise we get the wrong line.
+  // Look for raw pointers FIRST otherwise we get the wrong line.
   if(found == false && isPointer == true)
   {
     searchString = var;
@@ -200,13 +194,13 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     sourceLines.toFront(); // reset the iterator to the beginning
 
     lineNum = 1;
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) && line.contains("DEFINE_DATAARRAY_VARIABLE") )
+      if(line.contains(searchString) && line.contains("DEFINE_DATAARRAY_VARIABLE"))
       {
         int index = line.indexOf(var); // Verify we actually found the whole word
-        if(line.at(index - 1).isSpace() )
+        if(line.at(index - 1).isSpace())
         {
           line = sourceLines.next();
           found = true;
@@ -217,7 +211,6 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     }
   }
 
-
   if(found == false && isPointer == true)
   {
     searchString = var;
@@ -225,10 +218,10 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     sourceLines.toFront(); // reset the iterator to the beginning
 
     lineNum = 1;
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) && line.contains("DEFINE_DATAARRAY_VARIABLE") )
+      if(line.contains(searchString) && line.contains("DEFINE_DATAARRAY_VARIABLE"))
       {
         line = sourceLines.next();
         found = true;
@@ -242,10 +235,10 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
   list = contents.split(QRegExp("\\n"));
   sourceLines.toFront(); // reset the iterator to the beginning
   lineNum = 1;
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
-    if(line.contains(searchString) )
+    if(line.contains(searchString))
     {
       int offset = line.indexOf(searchString);
       int size = searchString.size();
@@ -254,7 +247,7 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
       {
         continue;
       }
-      if(line.contains("Q_PROPERTY") )
+      if(line.contains("Q_PROPERTY"))
       {
         continue;
       }
@@ -275,13 +268,13 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     sourceLines.toFront(); // reset the iterator to the beginning
 
     lineNum = 1;
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) && line.contains("DEFINE_DATAARRAY_VARIABLE") )
+      if(line.contains(searchString) && line.contains("DEFINE_DATAARRAY_VARIABLE"))
       {
         int index = line.indexOf(searchString); // Verify we actually found the whole word
-        if(index > -1 && line.at(index - 1).isSpace() )
+        if(index > -1 && line.at(index - 1).isSpace())
         {
           line = sourceLines.next();
           found = true;
@@ -292,7 +285,10 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     }
   }
 
-  if(found == false) { lineNum = -1; }
+  if(found == false)
+  {
+    lineNum = -1;
+  }
 
   return (float)lineNum;
 }
@@ -309,7 +305,7 @@ void fixInitializerList(QStringListIterator& sourceLines, QStringList& outLines,
   while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
-    if(line.contains("{") )
+    if(line.contains("{"))
     {
       break;
     }
@@ -317,7 +313,7 @@ void fixInitializerList(QStringListIterator& sourceLines, QStringList& outLines,
     int offset = line.indexOf("m_");
     int offset2 = line.indexOf("(");
     QString var = line.mid(offset + 2, offset2 - offset - 2);
-    if(line.contains("(nullptr)") )
+    if(line.contains("(nullptr)"))
     {
       isPointer = true;
     }
@@ -330,17 +326,24 @@ void fixInitializerList(QStringListIterator& sourceLines, QStringList& outLines,
     qDebug() << "index: " << index << "   var:" << var;
   }
 
-  //qDebug() << "--------------------------------";
+  // qDebug() << "--------------------------------";
   QMapIterator<float, QString> i(orderedInitList);
-  while (i.hasNext())
+  while(i.hasNext())
   {
     i.next();
     QString line = i.value();
-    if(line.trimmed().isEmpty()) { continue; } // Eat the blank line
+    if(line.trimmed().isEmpty())
+    {
+      continue;
+    } // Eat the blank line
     if(i.hasNext() && line.endsWith(",") == false)
-    { line = line + ",";}
-    if(i.hasNext() == false && line.endsWith(",") )
-    { line = line.mid(0, line.size() - 1 ); }
+    {
+      line = line + ",";
+    }
+    if(i.hasNext() == false && line.endsWith(","))
+    {
+      line = line.mid(0, line.size() - 1);
+    }
     outLines.push_back(line);
     qDebug() << "index: " << i.key() << "   line:" << line;
   }
@@ -647,7 +650,6 @@ void FindFiltersWithMultipleDataArrayPaths(AbstractFilter::Pointer filter)
 }
 #endif
 
-
 #if 0
 // -----------------------------------------------------------------------------
 //
@@ -712,7 +714,7 @@ bool ReplaceIncludeGuard(const QString& hFile)
   QFileInfo fi(hFile);
   {
     // Read the Source File
-    if (fi.suffix().compare("h") != 0)
+    if(fi.suffix().compare("h") != 0)
     {
       return false;
     }
@@ -722,7 +724,6 @@ bool ReplaceIncludeGuard(const QString& hFile)
     contents = source.readAll();
     source.close();
   }
-
 
   QStringList names;
   bool didReplace = false;
@@ -735,10 +736,10 @@ bool ReplaceIncludeGuard(const QString& hFile)
   QString body;
 
   int index = 0;
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
-    if(line.contains(searchString) )
+    if(line.contains(searchString))
     {
       outLines.push_back(replaceString);
       outLines.push_back("#define _" + fi.baseName().toLower() + "_h_");
@@ -755,7 +756,6 @@ bool ReplaceIncludeGuard(const QString& hFile)
   index++;
   return didReplace;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -784,7 +784,6 @@ void ReplaceLicenseText(QString absPath)
 
   QVector<int> lines(0);
 
-
   QString searchString = "/* ============================================================================";
   QString searchString2 = "* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */";
   QString searchString4 = " * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */";
@@ -803,12 +802,11 @@ void ReplaceLicenseText(QString absPath)
 
   bool hasOldLicense = false;
 
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
-
-    if(hasLicense == true && (line.startsWith(searchString2) || line.startsWith(searchString4)) )
+    if(hasLicense == true && (line.startsWith(searchString2) || line.startsWith(searchString4)))
     {
       hasLicense = false;
 
@@ -855,10 +853,10 @@ void ReplaceLicenseText(QString absPath)
       continue;
     }
 
-
-    if (hasLicense == true && line.startsWith(" *"))
+    if(hasLicense == true && line.startsWith(" *"))
     {
-      if(line.contains(searchStrin3)) {
+      if(line.contains(searchStrin3))
+      {
         hasOldLicense = true;
       }
       continue;
@@ -870,9 +868,11 @@ void ReplaceLicenseText(QString absPath)
   }
 
   qDebug() << "Updating License: " << absPath;
-  if (hasOldLicense) { writeOutput(didReplace, outLines, absPath); }
+  if(hasOldLicense)
+  {
+    writeOutput(didReplace, outLines, absPath);
+  }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -882,9 +882,9 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
 
   QStringList filters;
   filters.append("*.h");
- // filters.append("*.cpp");
+  // filters.append("*.cpp");
   filters.append("*.hpp");
-//  filters.append("*.in");
+  //  filters.append("*.in");
 
   qDebug() << currentDir;
 
@@ -894,11 +894,11 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
   }
   // Get a list of all the directories
   QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-  if ( dirList.size() > 0 )
+  if(dirList.size() > 0)
   {
     foreach(QFileInfo fi, dirList)
     {
-      ReplaceLicenseCodeRecursively( QDir( fi.absoluteFilePath() ));   // Recursive call
+      ReplaceLicenseCodeRecursively(QDir(fi.absoluteFilePath())); // Recursive call
     }
   }
 
@@ -906,11 +906,10 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
   foreach(QFileInfo itemInfo, itemList)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
-    //ReplaceLicenseText(itemFilePath);
+    // ReplaceLicenseText(itemFilePath);
     ReplaceIncludeGuard(itemFilePath);
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -922,10 +921,10 @@ void ReplaceMacros(QString absPath)
   {
     // Read the Source File
     QFileInfo fi(absPath);
-//        if (fi.baseName().compare("CombineAttributeArrays") != 0)
-//        {
-//          return;
-//        }
+    //        if (fi.baseName().compare("CombineAttributeArrays") != 0)
+    //        {
+    //          return;
+    //        }
     filterName = fi.baseName();
     QFile source(absPath);
     source.open(QFile::ReadOnly);
@@ -940,9 +939,8 @@ void ReplaceMacros(QString absPath)
 
   QVector<int> lines(0);
 
-
   QString searchString = "SIMPL_FILTER_PARAMETER";
-  QString replaceString  = "SIMPL_INSTANCE_PROPERTY_DECL";
+  QString replaceString = "SIMPL_INSTANCE_PROPERTY_DECL";
   QString cppReplaceString = "SIMPL_INSTANCE_PROPERTY_DEF";
 
   QString instanceString = "SIMPL_INSTANCE_PROPERTY";
@@ -952,7 +950,7 @@ void ReplaceMacros(QString absPath)
   QStringListIterator sourceLines(list);
   QStringList includes;
 
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
@@ -977,29 +975,26 @@ void ReplaceMacros(QString absPath)
       cppCodeLines << cppCode;
     }
 
-     outLines.push_back(line);
+    outLines.push_back(line);
   }
 
   writeOutput(didReplace, outLines, absPath);
 
   if(cppCodeLines.isEmpty() == false)
   {
-      absPath.replace(".h", ".cpp");
-      QFile source(absPath);
-      source.open(QFile::ReadOnly);
-      contents = source.readAll();
-      source.close();
+    absPath.replace(".h", ".cpp");
+    QFile source(absPath);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
 
-      outLines.clear();
-      lines.clear();
-      QStringList list = contents.split(QRegExp("\\n"));
-      list.append(cppCodeLines.join("\n"));
-      writeOutput(didReplace, list, absPath);
+    outLines.clear();
+    lines.clear();
+    QStringList list = contents.split(QRegExp("\\n"));
+    list.append(cppCodeLines.join("\n"));
+    writeOutput(didReplace, list, absPath);
   }
-
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -1011,10 +1006,10 @@ void UpdateMarkdownImageNames(QString absPath)
   {
     // Read the Source File
     QFileInfo fi(absPath);
-//        if (fi.baseName().compare("InitializeSyntheticVolume") != 0)
-//        {
-//          return;
-//        }
+    //        if (fi.baseName().compare("InitializeSyntheticVolume") != 0)
+    //        {
+    //          return;
+    //        }
     filterName = fi.baseName();
     QFile source(absPath);
     source.open(QFile::ReadOnly);
@@ -1022,13 +1017,12 @@ void UpdateMarkdownImageNames(QString absPath)
     source.close();
   }
 
-  //qDebug() << absPath;
+  // qDebug() << absPath;
 
   QStringList names;
   bool didReplace = false;
 
   QVector<int> lines(0);
-
 
   QString searchString = "![";
 
@@ -1037,58 +1031,56 @@ void UpdateMarkdownImageNames(QString absPath)
   QStringListIterator sourceLines(list);
   QStringList includes;
 
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
     if(line.contains(searchString))
     {
-     //hou qDebug() << line;
+      // hou qDebug() << line;
       QStringList imageLinks = line.split("![");
       foreach(QString chunk, imageLinks)
       {
-        //qDebug() << chunk;
-        
+        // qDebug() << chunk;
+
         int rightParenIdx = chunk.lastIndexOf(')');
         // Look for the last ')' character which _should_ be the end of the image tag
         if(rightParenIdx > -1)
         {
-            // Now look for the '(' character which _should_ be the start of the tag.
-            int leftParenIdx = chunk.lastIndexOf('(');
-            if(leftParenIdx > -1)
+          // Now look for the '(' character which _should_ be the start of the tag.
+          int leftParenIdx = chunk.lastIndexOf('(');
+          if(leftParenIdx > -1)
+          {
+            QString path = chunk.mid(leftParenIdx + 1, rightParenIdx - leftParenIdx - 1);
+            // qDebug() << path;
+
+            QFileInfo fi2(absPath);
+            QString imagePath = fi2.path() + QDir::separator() + path;
+            // qDebug() << imagePath;
+            QStringList filters;
+            QFileInfo fi3(imagePath);
+            QDir currentDir(fi3.path());
+            QFileInfoList itemList = currentDir.entryInfoList(filters);
+            foreach(QFileInfo itemInfo, itemList)
             {
-              QString path = chunk.mid(leftParenIdx + 1, rightParenIdx - leftParenIdx - 1);
-              //qDebug() << path;
-              
-              QFileInfo fi2(absPath);
-              QString imagePath = fi2.path() + QDir::separator() + path;
-              //qDebug() << imagePath;
-              QStringList filters;
-              QFileInfo fi3(imagePath);
-              QDir currentDir(fi3.path());
-              QFileInfoList itemList = currentDir.entryInfoList(filters);
-              foreach(QFileInfo itemInfo, itemList)
+              //                qDebug() << itemInfo.fileName().toLower();
+              //                qDebug() << fi3.fileName().toLower();
+              QString filename_lowercase = itemInfo.fileName().toLower();
+              if(filename_lowercase.compare(fi3.fileName().toLower(), Qt::CaseSensitive) == 0)
               {
-//                qDebug() << itemInfo.fileName().toLower();
-//                qDebug() << fi3.fileName().toLower();
-                QString filename_lowercase = itemInfo.fileName().toLower();
-                if(filename_lowercase.compare(fi3.fileName().toLower(), Qt::CaseSensitive) == 0)
+                // the filenames are the same if converted to all lower case. Now lets see
+                // if they are the same if no conversion is performed.
+                if(itemInfo.fileName().compare(fi3.fileName(), Qt::CaseSensitive) != 0)
                 {
-                  // the filenames are the same if converted to all lower case. Now lets see
-                  // if they are the same if no conversion is performed.
-                  if(itemInfo.fileName().compare(fi3.fileName(), Qt::CaseSensitive) != 0)
-                  {
-                    // The filenames are different so we need to correct this
-                    line = line.replace(fi3.fileName(), itemInfo.fileName());
-                    didReplace = true;
-                    qDebug() << "Replacing filename .... ";
-                  }
+                  // The filenames are different so we need to correct this
+                  line = line.replace(fi3.fileName(), itemInfo.fileName());
+                  didReplace = true;
+                  qDebug() << "Replacing filename .... ";
                 }
-                
               }
             }
+          }
         }
-       
       }
     }
     outLines.push_back(line);
@@ -1097,8 +1089,6 @@ void UpdateMarkdownImageNames(QString absPath)
   writeOutput(didReplace, outLines, absPath);
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1106,7 +1096,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 {
 
   QStringList filters;
-  //filters.append("*.cpp");
+  // filters.append("*.cpp");
   filters.append("*.md");
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
@@ -1115,11 +1105,11 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   }
   // Get a list of all the directories
   QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-  if ( dirList.size() > 0 )
+  if(dirList.size() > 0)
   {
     foreach(QFileInfo fi, dirList)
     {
-      ReplaceGrepSearchesRecursively( QDir( fi.absoluteFilePath() ));   // Recursive call
+      ReplaceGrepSearchesRecursively(QDir(fi.absoluteFilePath())); // Recursive call
     }
   }
 
@@ -1138,14 +1128,13 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
 
-  //QUuid(uint l, ushort w1, ushort w2, uchar b1, uchar b2, uchar b3, uchar b4, uchar b5, uchar b6, uchar b7, uchar b8)
+  // QUuid(uint l, ushort w1, ushort w2, uchar b1, uchar b2, uchar b3, uchar b4, uchar b5, uchar b6, uchar b7, uchar b8)
   uint l = 100;
   ushort w1 = 200;
   ushort w2 = 300;
@@ -1168,8 +1157,6 @@ int main(int argc, char* argv[])
   p1 = QUuid::createUuidV5(uuid, path1);
   qDebug() << p1;
 
-
-
   Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
@@ -1177,7 +1164,7 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("FilterParameterTool");
 
-  //std::cout << "FilterParameterTool Starting. Version " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
+// std::cout << "FilterParameterTool Starting. Version " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
 
 #if 0
   // Register all the filters including trying to load those from Plugins
@@ -1191,11 +1178,11 @@ int main(int argc, char* argv[])
 //  GenerateMarkDownDocs();
   GenerateFilterParametersCode();
 #else
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Source" ) );
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL" ) );
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView" ) );
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins" ) );
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins"));
 
 #endif
   return 0;

@@ -37,7 +37,6 @@
 
 #include <chrono>
 
-
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -47,7 +46,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1

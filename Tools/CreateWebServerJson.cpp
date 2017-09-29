@@ -1,34 +1,30 @@
 
 
-
-
 #include <QtCore/QCoreApplication>
-#include <QtCore/QFile>
-#include <QtCore/QDir>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonObject>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QSet>
 #include <QtCore/QDate>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QSet>
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLView/SIMPLViewVersion.h"
 
 #include "ToolConfiguration.h"
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void WriteWebServerJSON(const QString& filePath)
 {
-
 
   // Register all the filters including trying to load those from Plugins
   FilterManager* fm = FilterManager::Instance();
@@ -38,7 +34,6 @@ void WriteWebServerJSON(const QString& filePath)
 
   // Send progress messages from PipelineBuilder to this object for display
   QMetaObjectUtilities::RegisterMetaTypes();
-
 
   // Write our File Version and DREAM3D Version strings
   QJsonObject meta;
@@ -52,7 +47,6 @@ void WriteWebServerJSON(const QString& filePath)
   meta["Download WebSite"] = "http://dream3d.bluequartz.net/?page_id=32";
   QJsonObject m_Root;
   m_Root["DREAM3D"] = meta;
-
 
   QJsonArray plugArray;
 
@@ -69,16 +63,12 @@ void WriteWebServerJSON(const QString& filePath)
 
   QJsonDocument doc(m_Root);
   QFile outputFile(filePath);
-  if (outputFile.open(QIODevice::WriteOnly))
+  if(outputFile.open(QIODevice::WriteOnly))
   {
     outputFile.write(doc.toJson());
     outputFile.close();
   }
-
 }
-
-
-
 
 // -----------------------------------------------------------------------------
 //  Use test framework
@@ -99,12 +89,7 @@ int main(int argc, char** argv)
 
   WriteWebServerJSON(filePath);
 
-
   int err = EXIT_SUCCESS;
-
 
   return err;
 }
-
-
-

@@ -33,167 +33,166 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _findsizes_h_
 #define _findsizes_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The FindSizes class. See [Filter documentation](@ref findsizes) for details.
  */
 class FindSizes : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(FindSizes)
-    SIMPL_STATIC_NEW_MACRO(FindSizes)
-    SIMPL_TYPE_MACRO_SUPER(FindSizes, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(FindSizes)
+  SIMPL_STATIC_NEW_MACRO(FindSizes)
+  SIMPL_TYPE_MACRO_SUPER(FindSizes, AbstractFilter)
 
-    virtual ~FindSizes();
+  virtual ~FindSizes();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+  Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
-    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
+  Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
-    Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
+  SIMPL_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
+  Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, NumElementsArrayName)
-    Q_PROPERTY(QString NumElementsArrayName READ getNumElementsArrayName WRITE setNumElementsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, NumElementsArrayName)
+  Q_PROPERTY(QString NumElementsArrayName READ getNumElementsArrayName WRITE setNumElementsArrayName)
 
-    SIMPL_FILTER_PARAMETER(bool, SaveElementSizes)
-    Q_PROPERTY(bool SaveElementSizes READ getSaveElementSizes WRITE setSaveElementSizes)
+  SIMPL_FILTER_PARAMETER(bool, SaveElementSizes)
+  Q_PROPERTY(bool SaveElementSizes READ getSaveElementSizes WRITE setSaveElementSizes)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    FindSizes();
+protected:
+  FindSizes();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-     * @brief findSizes Determines the size of each Feature independent of geometry
-     * @param igeom
-     */
-    void findSizes(IGeometry::Pointer igeom);
+  /**
+   * @brief findSizes Determines the size of each Feature independent of geometry
+   * @param igeom
+   */
+  void findSizes(IGeometry::Pointer igeom);
 
-    /**
-     * @brief findSizesImage Specialization for determining Feature sizes on ImageGeometries
-     * @param image
-     */
-    void findSizesImage(ImageGeom::Pointer image);
+  /**
+   * @brief findSizesImage Specialization for determining Feature sizes on ImageGeometries
+   * @param image
+   */
+  void findSizesImage(ImageGeom::Pointer image);
 
-    /**
-     * @brief findSizesUnstructured Determines the size of each Feature for non-ImageGeometries
-     * @param igeom
-     */
-    void findSizesUnstructured(IGeometry::Pointer igeom);
+  /**
+   * @brief findSizesUnstructured Determines the size of each Feature for non-ImageGeometries
+   * @param igeom
+   */
+  void findSizesUnstructured(IGeometry::Pointer igeom);
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(float, Volumes)
-    DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, NumElements)
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  DEFINE_DATAARRAY_VARIABLE(float, Volumes)
+  DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, NumElements)
 
-    FindSizes(const FindSizes&); // Copy Constructor Not Implemented
-    void operator=(const FindSizes&); // Operator '=' Not Implemented
+  FindSizes(const FindSizes&);      // Copy Constructor Not Implemented
+  void operator=(const FindSizes&); // Operator '=' Not Implemented
 };
 
 #endif /* FINDSIZES_H_ */

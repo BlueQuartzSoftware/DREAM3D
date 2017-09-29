@@ -36,48 +36,53 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Common/FilterPipeline.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshingTestFileLocations.h"
 
 class FindTriangleGeomShapesTest
 {
 
-  public:
-    FindTriangleGeomShapesTest() {}
-    virtual ~FindTriangleGeomShapesTest() {}
+public:
+  FindTriangleGeomShapesTest()
+  {
+  }
+  virtual ~FindTriangleGeomShapesTest()
+  {
+  }
 
-#define DREAM3D_CLOSE_ENOUGH(L, R, eps)\
-  if (false == SIMPLibMath::closeEnough<>(L, R, eps) ) {  \
-    QString buf;\
-    QTextStream ss(&buf);\
-    ss << "Your test required the following\n            '";\
-    ss << "SIMPLibMath::closeEnough<>(" << #L << ", " << #R << ", " << #eps << "'\n             but this condition was not met with eps=" << eps << "\n";\
-    ss << "             " << L << "==" << R;\
-    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
-
+#define DREAM3D_CLOSE_ENOUGH(L, R, eps)                                                                                                                                                                \
+  if(false == SIMPLibMath::closeEnough<>(L, R, eps))                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    QString buf;                                                                                                                                                                                       \
+    QTextStream ss(&buf);                                                                                                                                                                              \
+    ss << "Your test required the following\n            '";                                                                                                                                           \
+    ss << "SIMPLibMath::closeEnough<>(" << #L << ", " << #R << ", " << #eps << "'\n             but this condition was not met with eps=" << eps << "\n";                                              \
+    ss << "             " << L << "==" << R;                                                                                                                                                           \
+    DREAM3D_TEST_THROW_EXCEPTION(buf.toStdString())                                                                                                                                                    \
+  }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   void RemoveTestFiles()
   {
-  #if REMOVE_TEST_FILES
+#if REMOVE_TEST_FILES
     QFile::remove(UnitTest::FindTriangleGeomShapesTest::TestFile1);
     QFile::remove(UnitTest::FindTriangleGeomShapesTest::TestFile2);
-  #endif
+#endif
   }
 
   // -----------------------------------------------------------------------------
@@ -90,7 +95,7 @@ class FindTriangleGeomShapesTest
     FilterManager* fm = FilterManager::Instance();
     QString filtName = "FindTriangleGeomShapes";
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    if (nullptr == filterFactory.get())
+    if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
       ss << "The FindTriangleGeomShapesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the SurfaceMeshing Plugin";
@@ -99,7 +104,7 @@ class FindTriangleGeomShapesTest
 
     filtName = "QuickSurfaceMesh";
     filterFactory = fm->getFactoryForFilter(filtName);
-    if (nullptr == filterFactory.get())
+    if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
       ss << "The FindTriangleGeomShapesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the SurfaceMeshing Plugin";
@@ -108,7 +113,7 @@ class FindTriangleGeomShapesTest
 
     filtName = "FindTriangleGeomCentroids";
     filterFactory = fm->getFactoryForFilter(filtName);
-    if (nullptr == filterFactory.get())
+    if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
       ss << "The FindTriangleGeomShapesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the SurfaceMeshing Plugin";
@@ -117,7 +122,7 @@ class FindTriangleGeomShapesTest
 
     filtName = "FindTriangleGeomSizes";
     filterFactory = fm->getFactoryForFilter(filtName);
-    if (nullptr == filterFactory.get())
+    if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
       ss << "The FindTriangleGeomShapesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the SurfaceMeshing Plugin";
@@ -137,11 +142,11 @@ class FindTriangleGeomShapesTest
     dca->addDataContainer(idc);
 
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
-    size_t dims[3] = { 256, 128, 64 };
+    size_t dims[3] = {256, 128, 64};
     image->setDimensions(dims);
     idc->setGeometry(image);
 
-    QVector<size_t> tDims = { 256, 128, 64 };
+    QVector<size_t> tDims = {256, 128, 64};
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     idc->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMat);
 
@@ -295,17 +300,14 @@ class FindTriangleGeomShapesTest
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+    DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-    DREAM3D_REGISTER_TEST( TestFindTriangleGeomShapesTest() )
+    DREAM3D_REGISTER_TEST(TestFindTriangleGeomShapesTest())
 
-    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-  private:
-    FindTriangleGeomShapesTest(const FindTriangleGeomShapesTest&); // Copy Constructor Not Implemented
-    void operator=(const FindTriangleGeomShapesTest&); // Operator '=' Not Implemented
-
-
+private:
+  FindTriangleGeomShapesTest(const FindTriangleGeomShapesTest&); // Copy Constructor Not Implemented
+  void operator=(const FindTriangleGeomShapesTest&);             // Operator '=' Not Implemented
 };
-

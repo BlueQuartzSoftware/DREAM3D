@@ -36,11 +36,11 @@
 #include "CreateEnsembleInfo.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/ThresholdFilterHelper.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/Filtering/ThresholdFilterHelper.h"
 
 #include "OrientationAnalysis/FilterParameters/EnsembleInfoFilterParameter.h"
 

@@ -33,12 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
+#include <QtCore/QFileInfo>
 #include <QtGui/QImage>
 
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib.h"
 #include "OrientationLib/LaueOps/CubicLowOps.h"
@@ -55,102 +55,101 @@
 
 #include "OrientationLibTestFileLocations.h"
 
-
 #define IMAGE_WIDTH 512
 #define IMAGE_HEIGHT 512
 
-
 class IPFLegendTest
 {
-  public:
-    IPFLegendTest(){}
-    virtual ~IPFLegendTest(){}
+public:
+  IPFLegendTest()
+  {
+  }
+  virtual ~IPFLegendTest()
+  {
+  }
 
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int getImageSize()
+  {
+    return IMAGE_HEIGHT;
+  }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    int getImageSize() { return IMAGE_HEIGHT; }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void RemoveTestFiles()
-    {
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void RemoveTestFiles()
+  {
 #if REMOVE_TEST_FILES
-      // QFile::remove();
+// QFile::remove();
 #endif
-    }
+  }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void SaveImage(UInt8ArrayType::Pointer rgbaImage, const QString outputFile)
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void SaveImage(UInt8ArrayType::Pointer rgbaImage, const QString outputFile)
+  {
+    QRgb* rgba = reinterpret_cast<QRgb*>(rgbaImage->getPointer(0));
+
+    QImage image(getImageSize(), getImageSize(), QImage::Format_ARGB32_Premultiplied);
+
+    int32_t xDim = getImageSize();
+    int32_t yDim = getImageSize();
+    size_t idx = 0;
+
+    for(int32_t y = 0; y < yDim; ++y)
     {
-      QRgb* rgba = reinterpret_cast<QRgb*>(rgbaImage->getPointer(0));
-
-      QImage image(getImageSize(), getImageSize(), QImage::Format_ARGB32_Premultiplied);
-
-      int32_t xDim = getImageSize();
-      int32_t yDim = getImageSize();
-      size_t idx = 0;
-
-      for (int32_t y = 0; y < yDim; ++y)
+      for(int32_t x = 0; x < xDim; ++x)
       {
-        for (int32_t x = 0; x < xDim; ++x)
-        {
-          idx = (y * xDim) + x;
-          image.setPixel(x, y, rgba[idx]);
-        }
+        idx = (y * xDim) + x;
+        image.setPixel(x, y, rgba[idx]);
       }
-
-      QFileInfo fi(outputFile);
-      QDir parent(fi.absolutePath());
-      if (parent.exists() == false)
-      {
-        parent.mkpath(fi.absolutePath());
-      }
-
-      bool saved = image.save(outputFile);
-      DREAM3D_REQUIRE(saved == true)
     }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    template<class LaueOpsType>
-    void TestIPFLegend(const QString outputFile)
+    QFileInfo fi(outputFile);
+    QDir parent(fi.absolutePath());
+    if(parent.exists() == false)
     {
-      LaueOpsType ops;
-      UInt8ArrayType::Pointer image = ops.generateIPFTriangleLegend(IMAGE_WIDTH);
-
-      SaveImage(image, outputFile);
+      parent.mkpath(fi.absolutePath());
     }
 
+    bool saved = image.save(outputFile);
+    DREAM3D_REQUIRE(saved == true)
+  }
 
-    void operator()()
-    {
-      int err = EXIT_SUCCESS;
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  template <class LaueOpsType> void TestIPFLegend(const QString outputFile)
+  {
+    LaueOpsType ops;
+    UInt8ArrayType::Pointer image = ops.generateIPFTriangleLegend(IMAGE_WIDTH);
 
-      //DREAM3D_REGISTER_TEST( TestIPFLegend<CubicLowOps>(UnitTest::IPFLegendTest::CubicLowFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<CubicOps>(UnitTest::IPFLegendTest::CubicHighFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalLowOps>(UnitTest::IPFLegendTest::HexagonalLowFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<HexagonalOps>(UnitTest::IPFLegendTest::HexagonalHighFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<MonoclinicOps>(UnitTest::IPFLegendTest::MonoclinicFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<OrthoRhombicOps>(UnitTest::IPFLegendTest::OrthorhombicFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalLowOps>(UnitTest::IPFLegendTest::TetragonalLowFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<TetragonalOps>(UnitTest::IPFLegendTest::TetragonalHighFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<TriclinicOps>(UnitTest::IPFLegendTest::TriclinicFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalLowOps>(UnitTest::IPFLegendTest::TrignonalLowFile ) )
-      DREAM3D_REGISTER_TEST( TestIPFLegend<TrigonalOps>(UnitTest::IPFLegendTest::TrignonalHighFile ) )
+    SaveImage(image, outputFile);
+  }
 
+  void operator()()
+  {
+    int err = EXIT_SUCCESS;
 
+    // DREAM3D_REGISTER_TEST( TestIPFLegend<CubicLowOps>(UnitTest::IPFLegendTest::CubicLowFile ) )
+    DREAM3D_REGISTER_TEST(TestIPFLegend<CubicOps>(UnitTest::IPFLegendTest::CubicHighFile))
+    DREAM3D_REGISTER_TEST(TestIPFLegend<HexagonalLowOps>(UnitTest::IPFLegendTest::HexagonalLowFile))
+    DREAM3D_REGISTER_TEST(TestIPFLegend<HexagonalOps>(UnitTest::IPFLegendTest::HexagonalHighFile))
+    DREAM3D_REGISTER_TEST(TestIPFLegend<MonoclinicOps>(UnitTest::IPFLegendTest::MonoclinicFile))
+    DREAM3D_REGISTER_TEST(TestIPFLegend<OrthoRhombicOps>(UnitTest::IPFLegendTest::OrthorhombicFile))
+    DREAM3D_REGISTER_TEST(TestIPFLegend<TetragonalLowOps>(UnitTest::IPFLegendTest::TetragonalLowFile))
+    DREAM3D_REGISTER_TEST(TestIPFLegend<TetragonalOps>(UnitTest::IPFLegendTest::TetragonalHighFile))
+    DREAM3D_REGISTER_TEST(TestIPFLegend<TriclinicOps>(UnitTest::IPFLegendTest::TriclinicFile))
+    DREAM3D_REGISTER_TEST(TestIPFLegend<TrigonalLowOps>(UnitTest::IPFLegendTest::TrignonalLowFile))
+    DREAM3D_REGISTER_TEST(TestIPFLegend<TrigonalOps>(UnitTest::IPFLegendTest::TrignonalHighFile))
 
-      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    }
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
+  }
 
-  private:
-    IPFLegendTest(const IPFLegendTest&); // Copy Constructor Not Implemented
-    void operator=(const IPFLegendTest&); // Operator '=' Not Implemented
+private:
+  IPFLegendTest(const IPFLegendTest&);  // Copy Constructor Not Implemented
+  void operator=(const IPFLegendTest&); // Operator '=' Not Implemented
 };
-

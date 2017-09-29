@@ -35,8 +35,8 @@
 
 #include "CAxisSegmentFeatures.h"
 
-#include <random>
 #include <chrono>
+#include <random>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -48,7 +48,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"

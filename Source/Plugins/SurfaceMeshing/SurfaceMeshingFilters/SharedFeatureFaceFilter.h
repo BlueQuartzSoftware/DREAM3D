@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _sharedfeaturefacefilter_h_
 #define _sharedfeaturefacefilter_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -48,113 +47,112 @@
  */
 class SharedFeatureFaceFilter : public SurfaceMeshFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(SharedFeatureFaceFilter)
-    SIMPL_STATIC_NEW_MACRO(SharedFeatureFaceFilter)
-    SIMPL_TYPE_MACRO_SUPER(SharedFeatureFaceFilter, SurfaceMeshFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(SharedFeatureFaceFilter)
+  SIMPL_STATIC_NEW_MACRO(SharedFeatureFaceFilter)
+  SIMPL_TYPE_MACRO_SUPER(SharedFeatureFaceFilter, SurfaceMeshFilter)
 
-    virtual ~SharedFeatureFaceFilter();
+  virtual ~SharedFeatureFaceFilter();
 
-    typedef QVector<int32_t> FaceIds_t;
-    typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
+  typedef QVector<int32_t> FaceIds_t;
+  typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
-    SIMPL_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
-    Q_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
+  Q_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
-    Q_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
+  Q_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceLabelsArrayName)
-    Q_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceLabelsArrayName)
+  Q_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceNumTrianglesArrayName)
-    Q_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceNumTrianglesArrayName)
+  Q_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  protected:
-    SharedFeatureFaceFilter();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  SharedFeatureFaceFilter();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
-
-    SharedFeatureFaceFilter(const SharedFeatureFaceFilter&); // Copy Constructor Not Implemented
-    void operator=(const SharedFeatureFaceFilter&); // Operator '=' Not Implemented
+  SharedFeatureFaceFilter(const SharedFeatureFaceFilter&); // Copy Constructor Not Implemented
+  void operator=(const SharedFeatureFaceFilter&);          // Operator '=' Not Implemented
 };
 
 #endif /* _FeatureFaceFilter_H_ */

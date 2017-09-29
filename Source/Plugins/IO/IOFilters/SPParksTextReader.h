@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _spparkstextreader_h_
 #define _spparkstextreader_h_
 
@@ -43,164 +42,164 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/HKL/DataParser.hpp"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The SPParksTextReader class. See [Filter documentation](@ref spparkstextreader) for details.
  */
 class SPParksTextReader : public FileReader
 {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(SPParksTextReader)
-    SIMPL_STATIC_NEW_MACRO(SPParksTextReader)
-    SIMPL_TYPE_MACRO_SUPER(SPParksTextReader, FileReader)
+public:
+  SIMPL_SHARED_POINTERS(SPParksTextReader)
+  SIMPL_STATIC_NEW_MACRO(SPParksTextReader)
+  SIMPL_TYPE_MACRO_SUPER(SPParksTextReader, FileReader)
 
-    virtual ~SPParksTextReader();
+  virtual ~SPParksTextReader();
 
-    SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
-    Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
+  Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
-    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
+  Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
-    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
+  Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-    SIMPL_FILTER_PARAMETER(bool, OneBasedArrays)
-    Q_PROPERTY(bool OneBasedArrays READ getOneBasedArrays WRITE setOneBasedArrays)
+  SIMPL_FILTER_PARAMETER(bool, OneBasedArrays)
+  Q_PROPERTY(bool OneBasedArrays READ getOneBasedArrays WRITE setOneBasedArrays)
 
-    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  protected:
-    SPParksTextReader();
+protected:
+  SPParksTextReader();
 
-    /**
-     * @brief readHeader Reimplemented from @see FileReader class
-     */
-    virtual int32_t readHeader();
+  /**
+   * @brief readHeader Reimplemented from @see FileReader class
+   */
+  virtual int32_t readHeader();
 
-    /**
-     * @brief readFile Reimplemented from @see FileReader class
-     */
-    virtual int32_t readFile();
+  /**
+   * @brief readFile Reimplemented from @see FileReader class
+   */
+  virtual int32_t readFile();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-     * @brief updateCellInstancePointers Updates raw cell pointers
-     */
-    void updateCellInstancePointers();
+  /**
+   * @brief updateCellInstancePointers Updates raw cell pointers
+   */
+  void updateCellInstancePointers();
 
-    /**
-     * @brief getPointerType Returns the enumeration type of the incoming data
-     * @param featureName Name of incoming data
-     * @return Enumeration type
-     */
-    Ebsd::NumType getPointerType(const QString& featureName);
+  /**
+   * @brief getPointerType Returns the enumeration type of the incoming data
+   * @param featureName Name of incoming data
+   * @return Enumeration type
+   */
+  Ebsd::NumType getPointerType(const QString& featureName);
 
-    /**
-     * @brief getTypeSize Returns the size in bytes of the incoming data
-     * @param featureName Name of incoming data
-     * @return Integer number of bytes
-     */
-    int32_t getTypeSize(const QString& featureName);
+  /**
+   * @brief getTypeSize Returns the size in bytes of the incoming data
+   * @param featureName Name of incoming data
+   * @return Integer number of bytes
+   */
+  int32_t getTypeSize(const QString& featureName);
 
-    /**
-     * @brief parseDataLine Reads a line of data from the .dump file
-     * @param line Line of data to read
-     * @param dims Dimensional offset
-     * @param xCol X coordinate
-     * @param yCol Y coordinate
-     * @param zCol Z coordinate
-     */
-    void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol);
+  /**
+   * @brief parseDataLine Reads a line of data from the .dump file
+   * @param line Line of data to read
+   * @param dims Dimensional offset
+   * @param xCol X coordinate
+   * @param yCol Y coordinate
+   * @param zCol Z coordinate
+   */
+  void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol);
 
-  private:
-    QFile m_InStream;
-    QMap<QString, DataParser::Pointer> m_NamePointerMap;
+private:
+  QFile m_InStream;
+  QMap<QString, DataParser::Pointer> m_NamePointerMap;
 
-    SPParksTextReader(const SPParksTextReader&); // Copy Constructor Not Implemented
-    void operator=(const SPParksTextReader&); // Operator '=' Not Implemented
+  SPParksTextReader(const SPParksTextReader&); // Copy Constructor Not Implemented
+  void operator=(const SPParksTextReader&);    // Operator '=' Not Implemented
 };
 
 #endif /* _SPParksTextReader_H_ */

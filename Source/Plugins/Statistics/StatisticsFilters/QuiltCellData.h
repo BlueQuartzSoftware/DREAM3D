@@ -33,17 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _quiltcelldata_h_
 #define _quiltcelldata_h_
 
 #include <QtCore/QString>
 #include <set>
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -57,134 +56,133 @@
  */
 class QuiltCellData : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(QuiltCellData)
-    SIMPL_STATIC_NEW_MACRO(QuiltCellData)
-    SIMPL_TYPE_MACRO_SUPER(QuiltCellData, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(QuiltCellData)
+  SIMPL_STATIC_NEW_MACRO(QuiltCellData)
+  SIMPL_TYPE_MACRO_SUPER(QuiltCellData, AbstractFilter)
 
-    virtual ~QuiltCellData();
+  virtual ~QuiltCellData();
 
-    // What Cell Array do they want to work on
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
+  // What Cell Array do they want to work on
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+  Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
-    SIMPL_FILTER_PARAMETER(IntVec3_t, QuiltStep)
-    Q_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep)
-    SIMPL_FILTER_PARAMETER(IntVec3_t, PatchSize)
-    Q_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize)
+  SIMPL_FILTER_PARAMETER(IntVec3_t, QuiltStep)
+  Q_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep)
+  SIMPL_FILTER_PARAMETER(IntVec3_t, PatchSize)
+  Q_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize)
 
-    // The user selects a new DataContainerName
-    SIMPL_FILTER_PARAMETER(QString, OutputDataContainerName)
-    Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
-    // Name the new AttributeMatrix that will get created
-    SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
-    Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
-    // Give the created data array a name
-    SIMPL_FILTER_PARAMETER(QString, OutputArrayName)
-    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
+  // The user selects a new DataContainerName
+  SIMPL_FILTER_PARAMETER(QString, OutputDataContainerName)
+  Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
+  // Name the new AttributeMatrix that will get created
+  SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
+  Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
+  // Give the created data array a name
+  SIMPL_FILTER_PARAMETER(QString, OutputArrayName)
+  Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    QuiltCellData();
+protected:
+  QuiltCellData();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+private:
+  DEFINE_DATAARRAY_VARIABLE(float, OutputArray)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(float, OutputArray)
-
-    QuiltCellData(const QuiltCellData&); // Copy Constructor Not Implemented
-    void operator=(const QuiltCellData&); // Operator '=' Not Implemented
+  QuiltCellData(const QuiltCellData&);  // Copy Constructor Not Implemented
+  void operator=(const QuiltCellData&); // Operator '=' Not Implemented
 };
 
 #endif /* QuiltCellData_H_ */

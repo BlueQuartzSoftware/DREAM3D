@@ -45,10 +45,10 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
@@ -129,8 +129,7 @@ int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool pr
     else
     {
       retErr = -1000;
-      QString msg = QString("MatrixPhaseWidget tried to cast a StatsData pointer with name %1 to a MatrixStatsData but failed in the process.\nError code %2")
-      .arg(statsData->getName()).arg(retErr);
+      QString msg = QString("MatrixPhaseWidget tried to cast a StatsData pointer with name %1 to a MatrixStatsData but failed in the process.\nError code %2").arg(statsData->getName()).arg(retErr);
       QMessageBox::critical(this, QString("MatrixPhaseWidget: Gather StatsData Error"), msg, QMessageBox::Ok);
     }
   }

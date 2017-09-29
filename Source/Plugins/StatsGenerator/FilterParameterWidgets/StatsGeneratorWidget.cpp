@@ -59,9 +59,9 @@
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
 
-#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
 
 #include "StatsGenerator/FilterParameters/StatsGeneratorFilterParameter.h"
 #include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorFilter.h"
@@ -156,7 +156,7 @@ void StatsGeneratorWidget::setupGui()
       }
       StatsData::Pointer statsData = sda->getStatsData(phase);
 
-      if (phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Boundary))
+      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Boundary))
       {
         progress.setLabelText("Opening Boundaray Phase...");
         BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
@@ -164,7 +164,7 @@ void StatsGeneratorWidget::setupGui()
         phaseTabs->addTab(w, w->getTabTitle());
         connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
-      else if (phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix))
+      else if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix))
       {
         progress.setLabelText("Opening Matrix Phase...");
         MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
@@ -172,7 +172,7 @@ void StatsGeneratorWidget::setupGui()
         phaseTabs->addTab(w, w->getTabTitle());
         connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
-      if (phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
+      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
       {
         progress.setLabelText("Opening Precipitate Phase...");
         PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
@@ -180,7 +180,7 @@ void StatsGeneratorWidget::setupGui()
         phaseTabs->addTab(w, w->getTabTitle());
         connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
-      if (phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
+      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
       {
         progress.setLabelText("Opening Primary Phase...");
         PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
@@ -189,7 +189,7 @@ void StatsGeneratorWidget::setupGui()
         phaseTabs->addTab(w, w->getTabTitle());
         connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
       }
-      if (phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
+      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
       {
         progress.setLabelText("Opening Transformation Phase...");
         TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
@@ -256,7 +256,6 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
     statsGenFilter->setCrystalStructures(crystalStructures);
     statsGenFilter->setPhaseTypes(phaseTypes);
     statsGenFilter->setPhaseNames(phaseNames);
-
   }
 }
 
@@ -476,7 +475,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
     TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(sgwidget);
     if(tpw)
     {
-     // dialog.setParentPhase(tpw->getParentPhase());
+      // dialog.setParentPhase(tpw->getParentPhase());
     }
   }
   else if(dialog.getPhaseType() == PhaseType::Type::Matrix)
@@ -501,7 +500,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       QString cName = ppw->getComboString();
       setWindowModified(true);
       emit parametersChanged();
-      //ppw->updatePlots();
+      // ppw->updatePlots();
     }
     if(dialog.getPhaseType() == PhaseType::Type::Precipitate)
     {
@@ -515,7 +514,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       QString cName = ppw->getComboString();
       setWindowModified(true);
       emit parametersChanged();
-      //ppw->updatePlots();
+      // ppw->updatePlots();
     }
     if(dialog.getPhaseType() == PhaseType::Type::Transformation)
     {
@@ -523,13 +522,13 @@ void StatsGeneratorWidget::on_editPhase_clicked()
       tpw->setCrystalStructure(dialog.getCrystalStructure());
       tpw->setPhaseFraction(dialog.getPhaseFraction());
       tpw->setPhaseType(dialog.getPhaseType());
-      //tpw->setParentPhase(dialog.getParentPhase());
+      // tpw->setParentPhase(dialog.getParentPhase());
       tpw->setPhaseName(dialog.getPhaseName());
       phaseTabs->setTabText(phaseTabs->currentIndex(), dialog.getPhaseName());
       QString cName = tpw->getComboString();
       setWindowModified(true);
       emit parametersChanged();
-      //tpw->updatePlots();
+      // tpw->updatePlots();
     }
     if(dialog.getPhaseType() == PhaseType::Type::Matrix)
     {
@@ -920,35 +919,35 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
       return;
     }
 
-    if (phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Boundary))
+    if(phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Boundary))
     {
       progress.setLabelText("Opening Boundaray Phase...");
       BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
-    else if (phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix))
+    else if(phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix))
     {
       progress.setLabelText("Opening Matrix Phase...");
       MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
-    if (phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
+    if(phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
       progress.setLabelText("Opening Precipitate Phase...");
       PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
-    if (phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
+    if(phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
       progress.setLabelText("Opening Primary Phase...");
       PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
-    if (phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
+    if(phaseTypes[phase] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
       progress.setLabelText("Opening Transformation Phase...");
       TransformationPhaseWidget* w = new TransformationPhaseWidget(this);

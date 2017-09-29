@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _segmentfeatures_h_
 #define _segmentfeatures_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -50,126 +49,125 @@
  */
 class SegmentFeatures : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(SegmentFeatures)
-    SIMPL_STATIC_NEW_MACRO(SegmentFeatures)
-    SIMPL_TYPE_MACRO_SUPER(SegmentFeatures, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(SegmentFeatures)
+  SIMPL_STATIC_NEW_MACRO(SegmentFeatures)
+  SIMPL_TYPE_MACRO_SUPER(SegmentFeatures, AbstractFilter)
 
-    virtual ~SegmentFeatures();
+  virtual ~SegmentFeatures();
 
-    SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
+  SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+protected:
+  SegmentFeatures();
 
-  protected:
-    SegmentFeatures();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief getSeed Initializes a new seed from which to start the burn algorithm
+   * @param gnum Feature Id to initialize seed
+   * @return Integer Seed index
+   */
+  virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
 
-    /**
-     * @brief getSeed Initializes a new seed from which to start the burn algorithm
-     * @param gnum Feature Id to initialize seed
-     * @return Integer Seed index
-     */
-    virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
+  /**
+   * @brief determineGrouping Determines if a neighbor should be added to the growing seed
+   * @param referencepoint Point of growing seed
+   * @param neighborpoint Point to be compared for adding
+   * @param gnum Feature Id of growing seed
+   * @return Boolean check for whether the neighbor was added to the seed
+   */
+  virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
-    /**
-     * @brief determineGrouping Determines if a neighbor should be added to the growing seed
-     * @param referencepoint Point of growing seed
-     * @param neighborpoint Point to be compared for adding
-     * @param gnum Feature Id of growing seed
-     * @return Boolean check for whether the neighbor was added to the seed
-     */
-    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
-
-  private:
-    SegmentFeatures(const SegmentFeatures&); // Copy Constructor Not Implemented
-    void operator=(const SegmentFeatures&); // Operator '=' Not Implemented
+private:
+  SegmentFeatures(const SegmentFeatures&); // Copy Constructor Not Implemented
+  void operator=(const SegmentFeatures&);  // Operator '=' Not Implemented
 };
 
 #endif /* SegmentFeatures_H_ */

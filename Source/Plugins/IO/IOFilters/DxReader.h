@@ -33,17 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _dxreader_h_
 #define _dxreader_h_
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 // our PIMPL private class
 class DxReaderPrivate;
@@ -53,143 +52,142 @@ class DxReaderPrivate;
  */
 class DxReader : public FileReader
 {
-    Q_OBJECT
-    Q_DECLARE_PRIVATE(DxReader)
-  public:
-    SIMPL_SHARED_POINTERS(DxReader)
-    SIMPL_STATIC_NEW_MACRO(DxReader)
-    SIMPL_TYPE_MACRO_SUPER(DxReader, FileReader)
+  Q_OBJECT
+  Q_DECLARE_PRIVATE(DxReader)
+public:
+  SIMPL_SHARED_POINTERS(DxReader)
+  SIMPL_STATIC_NEW_MACRO(DxReader)
+  SIMPL_TYPE_MACRO_SUPER(DxReader, FileReader)
 
-    virtual ~DxReader();
+  virtual ~DxReader();
 
-    SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
-    Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
+  Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
-    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
+  Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
-    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
+  Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-    SIMPL_FILTER_PARAMETER(bool, FileWasRead)
-    Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+  SIMPL_FILTER_PARAMETER(bool, FileWasRead)
+  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    SIMPL_PIMPL_PROPERTY_DECL(QVector<size_t>, Dims)
-    SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-    SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  SIMPL_PIMPL_PROPERTY_DECL(QVector<size_t>, Dims)
+  SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  public slots:
-    /**
-     * @brief flushCache Clears the input file cache
-     */
-    void flushCache();
+public slots:
+  /**
+   * @brief flushCache Clears the input file cache
+   */
+  void flushCache();
 
-  protected:
-    DxReader();
+protected:
+  DxReader();
 
-    /**
-     * @brief readHeader Reimplemented from @see FileReader class
-     */
-    virtual int32_t readHeader();
+  /**
+   * @brief readHeader Reimplemented from @see FileReader class
+   */
+  virtual int32_t readHeader();
 
-    /**
-     * @brief readFile Reimplemented from @see FileReader class
-     */
-    virtual int32_t readFile();
+  /**
+   * @brief readFile Reimplemented from @see FileReader class
+   */
+  virtual int32_t readFile();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-     * @brief updateCellInstancePointers Updates raw cell pointers
-     */
-    void updateCellInstancePointers();
+  /**
+   * @brief updateCellInstancePointers Updates raw cell pointers
+   */
+  void updateCellInstancePointers();
 
-  private:
-    QScopedPointer<DxReaderPrivate> const d_ptr;
+private:
+  QScopedPointer<DxReaderPrivate> const d_ptr;
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    size_t m_Dims[3];
-    QFile  m_InStream;
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  size_t m_Dims[3];
+  QFile m_InStream;
 
-    DxReader(const DxReader&); // Copy Constructor Not Implemented
-    void operator=(const DxReader&); // Operator '=' Not Implemented
-
+  DxReader(const DxReader&);       // Copy Constructor Not Implemented
+  void operator=(const DxReader&); // Operator '=' Not Implemented
 };
 
 #endif /* DxReader_H_ */

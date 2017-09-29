@@ -35,8 +35,8 @@
 
 #include "MergeTwins.h"
 
-#include <random>
 #include <chrono>
+#include <random>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -44,7 +44,7 @@
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"

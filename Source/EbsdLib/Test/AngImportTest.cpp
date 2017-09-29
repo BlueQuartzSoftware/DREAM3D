@@ -33,8 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-
 #include <string.h>
 
 #include <QtCore/QDir>
@@ -42,7 +40,6 @@
 #include <QtCore/QtDebug>
 
 #include "EbsdLib/EbsdLib.h"
-
 
 #if EbsdLib_HDF5_SUPPORT
 #include "H5Support/H5Lite.h"
@@ -52,7 +49,7 @@
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
 
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 
 #include "EbsdLib/Test/EbsdLibTestFileLocations.h"
 

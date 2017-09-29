@@ -33,152 +33,150 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _removeflaggedfeatures_h_
 #define _removeflaggedfeatures_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The RemoveFlaggedFeatures class. See [Filter documentation](@ref removeflaggedfeatures) for details.
  */
 class RemoveFlaggedFeatures : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(RemoveFlaggedFeatures)
-    SIMPL_STATIC_NEW_MACRO(RemoveFlaggedFeatures)
-    SIMPL_TYPE_MACRO_SUPER(RemoveFlaggedFeatures, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(RemoveFlaggedFeatures)
+  SIMPL_STATIC_NEW_MACRO(RemoveFlaggedFeatures)
+  SIMPL_TYPE_MACRO_SUPER(RemoveFlaggedFeatures, AbstractFilter)
 
-    virtual ~RemoveFlaggedFeatures();
+  virtual ~RemoveFlaggedFeatures();
 
-    SIMPL_FILTER_PARAMETER(bool, FillRemovedFeatures)
-    Q_PROPERTY(bool FillRemovedFeatures READ getFillRemovedFeatures WRITE setFillRemovedFeatures)
+  SIMPL_FILTER_PARAMETER(bool, FillRemovedFeatures)
+  Q_PROPERTY(bool FillRemovedFeatures READ getFillRemovedFeatures WRITE setFillRemovedFeatures)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FlaggedFeaturesArrayPath)
-    Q_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FlaggedFeaturesArrayPath)
+  Q_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    RemoveFlaggedFeatures();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  RemoveFlaggedFeatures();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  /**
+   * @brief assign_badpoints Coarsens those Features remaining in the structure after removing any flagged Features.
+   * The coarsening is intended to fill gaps left by the removed Features and proceeds via an isotropic growth process.
+   */
+  void assign_badpoints();
 
-    /**
-     * @brief assign_badpoints Coarsens those Features remaining in the structure after removing any flagged Features.
-     * The coarsening is intended to fill gaps left by the removed Features and proceeds via an isotropic growth process.
-     */
-    void assign_badpoints();
+  /**
+   * @brief remove_flaggedfeatures Assigns a boolean value to Features dependent upon whether they meet
+   * the supplied criterion for the minimum size.
+   * @return QVector<bool> A vector of boolean values whose length is the number of Features.
+   */
+  QVector<bool> remove_flaggedfeatures();
 
-    /**
-     * @brief remove_flaggedfeatures Assigns a boolean value to Features dependent upon whether they meet
-     * the supplied criterion for the minimum size.
-     * @return QVector<bool> A vector of boolean values whose length is the number of Features.
-     */
-    QVector<bool> remove_flaggedfeatures();
+private:
+  int32_t* m_Neighbors;
 
-  private:
-    int32_t* m_Neighbors;
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  DEFINE_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
-
-    RemoveFlaggedFeatures(const RemoveFlaggedFeatures&); // Copy Constructor Not Implemented
-    void operator=(const RemoveFlaggedFeatures&); // Operator '=' Not Implemented
+  RemoveFlaggedFeatures(const RemoveFlaggedFeatures&); // Copy Constructor Not Implemented
+  void operator=(const RemoveFlaggedFeatures&);        // Operator '=' Not Implemented
 };
 
 #endif /* RemoveFlaggedFeatures_H_ */

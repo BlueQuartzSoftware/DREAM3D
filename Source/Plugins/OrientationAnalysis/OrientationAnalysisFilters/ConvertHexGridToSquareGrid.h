@@ -36,166 +36,162 @@
 #ifndef _converthexgridtosquaregrid_h_
 #define _converthexgridtosquaregrid_h_
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
+#if defined(_MSC_VER)
+#define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
 #endif
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The ConvertHexGridToSquareGrid class. See [Filter documentation](@ref converthexgridtosquaregrid) for details.
  */
 class ConvertHexGridToSquareGrid : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(ConvertHexGridToSquareGrid)
-    SIMPL_STATIC_NEW_MACRO(ConvertHexGridToSquareGrid)
-    SIMPL_TYPE_MACRO_SUPER(ConvertHexGridToSquareGrid, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(ConvertHexGridToSquareGrid)
+  SIMPL_STATIC_NEW_MACRO(ConvertHexGridToSquareGrid)
+  SIMPL_TYPE_MACRO_SUPER(ConvertHexGridToSquareGrid, AbstractFilter)
 
-    virtual ~ConvertHexGridToSquareGrid();
+  virtual ~ConvertHexGridToSquareGrid();
 
-    SIMPL_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+  SIMPL_INSTANCE_PROPERTY(int64_t, ZStartIndex)
 
-    SIMPL_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+  SIMPL_INSTANCE_PROPERTY(int64_t, ZEndIndex)
 
-    SIMPL_INSTANCE_PROPERTY(float, XResolution)
+  SIMPL_INSTANCE_PROPERTY(float, XResolution)
 
-    SIMPL_INSTANCE_PROPERTY(float, YResolution)
+  SIMPL_INSTANCE_PROPERTY(float, YResolution)
 
-    SIMPL_FILTER_PARAMETER(QString, InputPath)
+  SIMPL_FILTER_PARAMETER(QString, InputPath)
 
-    SIMPL_FILTER_PARAMETER(QString, OutputPath)
+  SIMPL_FILTER_PARAMETER(QString, OutputPath)
 
-    SIMPL_FILTER_PARAMETER(QString, OutputPrefix)
+  SIMPL_FILTER_PARAMETER(QString, OutputPrefix)
 
-    SIMPL_FILTER_PARAMETER(QString, FilePrefix)
+  SIMPL_FILTER_PARAMETER(QString, FilePrefix)
 
-    SIMPL_FILTER_PARAMETER(QString, FileSuffix)
+  SIMPL_FILTER_PARAMETER(QString, FileSuffix)
 
-    SIMPL_FILTER_PARAMETER(QString, FileExtension)
+  SIMPL_FILTER_PARAMETER(QString, FileExtension)
 
-    SIMPL_FILTER_PARAMETER(int, PaddingDigits)
+  SIMPL_FILTER_PARAMETER(int, PaddingDigits)
 
-    SIMPL_INSTANCE_PROPERTY(int, NumCols)
+  SIMPL_INSTANCE_PROPERTY(int, NumCols)
 
-    SIMPL_INSTANCE_PROPERTY(int, NumRows)
+  SIMPL_INSTANCE_PROPERTY(int, NumRows)
 
-    SIMPL_INSTANCE_PROPERTY(bool, HeaderIsComplete)
+  SIMPL_INSTANCE_PROPERTY(bool, HeaderIsComplete)
 
+  SIMPL_FILTER_PARAMETER(int, HexGridStack)
+  Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
 
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    SIMPL_FILTER_PARAMETER(int, HexGridStack)
-    Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+protected:
+  ConvertHexGridToSquareGrid();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-  protected:
-    ConvertHexGridToSquareGrid();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+private:
+  /**
+   * @brief modifyAngHeaderLine Modifies a single line of the header section of the TSL .ang file if necessary
+   * @param buf The line to possibly modify
+   * @return
+   */
+  QString modifyAngHeaderLine(QString& buf);
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
-
-
-  private:
-
-    /**
-     * @brief modifyAngHeaderLine Modifies a single line of the header section of the TSL .ang file if necessary
-     * @param buf The line to possibly modify
-     * @return
-     */
-    QString modifyAngHeaderLine(QString& buf);
-
-    ConvertHexGridToSquareGrid(const ConvertHexGridToSquareGrid&); // Copy Constructor Not Implemented
-    void operator=(const ConvertHexGridToSquareGrid&); // Operator '=' Not Implemented
+  ConvertHexGridToSquareGrid(const ConvertHexGridToSquareGrid&); // Copy Constructor Not Implemented
+  void operator=(const ConvertHexGridToSquareGrid&);             // Operator '=' Not Implemented
 };
 
 #endif /* ConvertHexGridToSquareGrid_H_ */

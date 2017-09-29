@@ -36,42 +36,42 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/Geometry/RectGridGeom.h"
-#include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/EdgeGeom.h"
-#include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/QuadGeom.h"
+#include "SIMPLib/Geometry/RectGridGeom.h"
 #include "SIMPLib/Geometry/TetrahedralGeom.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "StatisticsTestFileLocations.h"
 
-#define SET_PROPERTIES_AND_CHECK(filter, featureIdsPath, featureAttrMatPath, errVal)\
-  var.setValue(featureIdsPath);\
-  propWasSet = filter->setProperty("FeatureIdsArrayPath", var);\
-  if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property FeatureIdsArrayPath";\
-  }\
-  var.setValue(featureAttrMatPath);\
-  propWasSet = filter->setProperty("FeatureAttributeMatrixName", var);\
-  if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property FeatureAttributeMatrixName";\
-  }\
-  filter->execute();\
-  err = filter->getErrorCondition();\
+#define SET_PROPERTIES_AND_CHECK(filter, featureIdsPath, featureAttrMatPath, errVal)                                                                                                                   \
+  var.setValue(featureIdsPath);                                                                                                                                                                        \
+  propWasSet = filter->setProperty("FeatureIdsArrayPath", var);                                                                                                                                        \
+  if(false == propWasSet)                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    qDebug() << "Unable to set property FeatureIdsArrayPath";                                                                                                                                          \
+  }                                                                                                                                                                                                    \
+  var.setValue(featureAttrMatPath);                                                                                                                                                                    \
+  propWasSet = filter->setProperty("FeatureAttributeMatrixName", var);                                                                                                                                 \
+  if(false == propWasSet)                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    qDebug() << "Unable to set property FeatureAttributeMatrixName";                                                                                                                                   \
+  }                                                                                                                                                                                                    \
+  filter->execute();                                                                                                                                                                                   \
+  err = filter->getErrorCondition();                                                                                                                                                                   \
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
 class FindSizesTest
@@ -293,35 +293,40 @@ public:
     tDims[0] = 2;
     AttributeMatrix::Pointer vertex_AttrMat = AttributeMatrix::New(tDims, "VertexData", AttributeMatrix::Type::Vertex);
     Int32ArrayType::Pointer vertex_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
-    vertex_fIDs->initializeWithValue(1);;
+    vertex_fIDs->initializeWithValue(1);
+    ;
     vertex_fIDs->setValue(1, 2);
     vertex_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, vertex_fIDs);
     vertex_DC->addAttributeMatrix("VertexData", vertex_AttrMat);
 
     AttributeMatrix::Pointer edge_AttrMat = AttributeMatrix::New(tDims, "EdgeData", AttributeMatrix::Type::Edge);
     Int32ArrayType::Pointer edge_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
-    edge_fIDs->initializeWithValue(1);;
+    edge_fIDs->initializeWithValue(1);
+    ;
     edge_fIDs->setValue(1, 2);
     edge_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, edge_fIDs);
     edge_DC->addAttributeMatrix("EdgeData", edge_AttrMat);
 
     AttributeMatrix::Pointer tri_AttrMat = AttributeMatrix::New(tDims, "TriData", AttributeMatrix::Type::Face);
     Int32ArrayType::Pointer tri_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
-    tri_fIDs->initializeWithValue(1);;
+    tri_fIDs->initializeWithValue(1);
+    ;
     tri_fIDs->setValue(1, 2);
     tri_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, tri_fIDs);
     triangle_DC->addAttributeMatrix("TriData", tri_AttrMat);
 
     AttributeMatrix::Pointer quad_AttrMat = AttributeMatrix::New(tDims, "QuadData", AttributeMatrix::Type::Face);
     Int32ArrayType::Pointer quad_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
-    quad_fIDs->initializeWithValue(1);;
+    quad_fIDs->initializeWithValue(1);
+    ;
     quad_fIDs->setValue(1, 2);
     quad_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, quad_fIDs);
     quad_DC->addAttributeMatrix("QuadData", quad_AttrMat);
 
     AttributeMatrix::Pointer tet_AttrMat = AttributeMatrix::New(tDims, "TetData", AttributeMatrix::Type::Face);
     Int32ArrayType::Pointer tet_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
-    tet_fIDs->initializeWithValue(1);;
+    tet_fIDs->initializeWithValue(1);
+    ;
     tet_fIDs->setValue(1, 2);
     tet_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, tet_fIDs);
     tet_DC->addAttributeMatrix("TetData", tet_AttrMat);
@@ -471,6 +476,6 @@ public:
   }
 
 private:
-  FindSizesTest(const FindSizesTest&); // Copy Constructor Not Implemented
-  void operator=(const FindSizesTest&);        // Operator '=' Not Implemented
+  FindSizesTest(const FindSizesTest&);  // Copy Constructor Not Implemented
+  void operator=(const FindSizesTest&); // Operator '=' Not Implemented
 };

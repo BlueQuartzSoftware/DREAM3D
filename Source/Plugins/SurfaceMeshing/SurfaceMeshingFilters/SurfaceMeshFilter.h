@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _surfacemeshfilter_h_
 #define _surfacemeshfilter_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -50,43 +49,43 @@
  */
 class SurfaceMeshFilter : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(SurfaceMeshFilter)
-    SIMPL_STATIC_NEW_MACRO(SurfaceMeshFilter)
-    SIMPL_TYPE_MACRO_SUPER(SurfaceMeshFilter, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(SurfaceMeshFilter)
+  SIMPL_STATIC_NEW_MACRO(SurfaceMeshFilter)
+  SIMPL_TYPE_MACRO_SUPER(SurfaceMeshFilter, AbstractFilter)
 
-    virtual ~SurfaceMeshFilter();
+  virtual ~SurfaceMeshFilter();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    SurfaceMeshFilter();
+protected:
+  SurfaceMeshFilter();
 
-  private:
-    SurfaceMeshFilter(const SurfaceMeshFilter&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshFilter&); // Operator '=' Not Implemented
+private:
+  SurfaceMeshFilter(const SurfaceMeshFilter&); // Copy Constructor Not Implemented
+  void operator=(const SurfaceMeshFilter&);    // Operator '=' Not Implemented
 };
 
 #endif /* _SurfaceMeshFilter_H_ */

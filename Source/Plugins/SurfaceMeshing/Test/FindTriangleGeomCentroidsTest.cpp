@@ -36,37 +36,40 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Common/FilterPipeline.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshingTestFileLocations.h"
 
 class FindTriangleGeomCentroidsTest
 {
 
-  public:
-    FindTriangleGeomCentroidsTest() {}
-    virtual ~FindTriangleGeomCentroidsTest() {}
-
+public:
+  FindTriangleGeomCentroidsTest()
+  {
+  }
+  virtual ~FindTriangleGeomCentroidsTest()
+  {
+  }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   void RemoveTestFiles()
   {
-  #if REMOVE_TEST_FILES
+#if REMOVE_TEST_FILES
     QFile::remove(UnitTest::FindTriangleGeomCentroidsTest::TestFile1);
     QFile::remove(UnitTest::FindTriangleGeomCentroidsTest::TestFile2);
-  #endif
+#endif
   }
 
   // -----------------------------------------------------------------------------
@@ -78,7 +81,7 @@ class FindTriangleGeomCentroidsTest
     QString filtName = "FindTriangleGeomCentroids";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    if (nullptr == filterFactory.get())
+    if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
       ss << "The SurfaceMeshing Requires the use of the " << filtName.toStdString() << " filter which is found in the SurfaceMeshing Plugin";
@@ -106,36 +109,36 @@ class FindTriangleGeomCentroidsTest
     int64_t* tris = triangle->getTriPointer(0);
 
     vertices[3 * 0 + 0] = -1.0f;
-    vertices[3 * 0 + 1] =  0.0f;
-    vertices[3 * 0 + 2] =  0.0f;
+    vertices[3 * 0 + 1] = 0.0f;
+    vertices[3 * 0 + 2] = 0.0f;
 
     vertices[3 * 1 + 0] = -1.0f;
-    vertices[3 * 1 + 1] =  0.0f;
-    vertices[3 * 1 + 2] =  1.0f;
+    vertices[3 * 1 + 1] = 0.0f;
+    vertices[3 * 1 + 2] = 1.0f;
 
     vertices[3 * 2 + 0] = -1.0f;
-    vertices[3 * 2 + 1] =  1.0f;
-    vertices[3 * 2 + 2] =  1.0f;
+    vertices[3 * 2 + 1] = 1.0f;
+    vertices[3 * 2 + 2] = 1.0f;
 
     vertices[3 * 3 + 0] = -1.0f;
-    vertices[3 * 3 + 1] =  1.0f;
-    vertices[3 * 3 + 2] =  0.0f;
+    vertices[3 * 3 + 1] = 1.0f;
+    vertices[3 * 3 + 2] = 0.0f;
 
-    vertices[3 * 4 + 0] =  2.0f;
-    vertices[3 * 4 + 1] =  0.0f;
-    vertices[3 * 4 + 2] =  0.0f;
+    vertices[3 * 4 + 0] = 2.0f;
+    vertices[3 * 4 + 1] = 0.0f;
+    vertices[3 * 4 + 2] = 0.0f;
 
-    vertices[3 * 5 + 0] =  2.0f;
-    vertices[3 * 5 + 1] =  0.0f;
-    vertices[3 * 5 + 2] =  1.0f;
+    vertices[3 * 5 + 0] = 2.0f;
+    vertices[3 * 5 + 1] = 0.0f;
+    vertices[3 * 5 + 2] = 1.0f;
 
-    vertices[3 * 6 + 0] =  2.0f;
-    vertices[3 * 6 + 1] =  1.0f;
-    vertices[3 * 6 + 2] =  1.0f;
+    vertices[3 * 6 + 0] = 2.0f;
+    vertices[3 * 6 + 1] = 1.0f;
+    vertices[3 * 6 + 2] = 1.0f;
 
-    vertices[3 * 7 + 0] =  2.0f;
-    vertices[3 * 7 + 1] =  1.0f;
-    vertices[3 * 7 + 2] =  0.0f;
+    vertices[3 * 7 + 0] = 2.0f;
+    vertices[3 * 7 + 1] = 1.0f;
+    vertices[3 * 7 + 2] = 0.0f;
 
     tris[3 * 0 + 0] = 0;
     tris[3 * 0 + 1] = 1;
@@ -198,39 +201,39 @@ class FindTriangleGeomCentroidsTest
     int32_t* faceLabelsPtr = faceLabels->getPointer(0);
 
     faceLabelsPtr[2 * 0 + 0] = -1;
-    faceLabelsPtr[2 * 0 + 1] =  1;
+    faceLabelsPtr[2 * 0 + 1] = 1;
 
     faceLabelsPtr[2 * 1 + 0] = -1;
-    faceLabelsPtr[2 * 1 + 1] =  1;
+    faceLabelsPtr[2 * 1 + 1] = 1;
 
-    faceLabelsPtr[2 * 2 + 0] =  1;
+    faceLabelsPtr[2 * 2 + 0] = 1;
     faceLabelsPtr[2 * 2 + 1] = -1;
 
     faceLabelsPtr[2 * 3 + 0] = -1;
-    faceLabelsPtr[2 * 3 + 1] =  1;
+    faceLabelsPtr[2 * 3 + 1] = 1;
 
-    faceLabelsPtr[2 * 4 + 0] =  1;
+    faceLabelsPtr[2 * 4 + 0] = 1;
     faceLabelsPtr[2 * 4 + 1] = -1;
 
     faceLabelsPtr[2 * 5 + 0] = -1;
-    faceLabelsPtr[2 * 5 + 1] =  1;
+    faceLabelsPtr[2 * 5 + 1] = 1;
 
-    faceLabelsPtr[2 * 6 + 0] =  1;
+    faceLabelsPtr[2 * 6 + 0] = 1;
     faceLabelsPtr[2 * 6 + 1] = -1;
 
-    faceLabelsPtr[2 * 7 + 0] =  1;
+    faceLabelsPtr[2 * 7 + 0] = 1;
     faceLabelsPtr[2 * 7 + 1] = -1;
 
-    faceLabelsPtr[2 * 8 + 0] =  1;
+    faceLabelsPtr[2 * 8 + 0] = 1;
     faceLabelsPtr[2 * 8 + 1] = -1;
 
-    faceLabelsPtr[2 * 9 + 0] =  1;
+    faceLabelsPtr[2 * 9 + 0] = 1;
     faceLabelsPtr[2 * 9 + 1] = -1;
 
-    faceLabelsPtr[2 * 10 + 0] =  1;
+    faceLabelsPtr[2 * 10 + 0] = 1;
     faceLabelsPtr[2 * 10 + 1] = -1;
 
-    faceLabelsPtr[2 * 11 + 0] =  1;
+    faceLabelsPtr[2 * 11 + 0] = 1;
     faceLabelsPtr[2 * 11 + 1] = -1;
 
     QString filtName = "FindTriangleGeomCentroids";
@@ -284,17 +287,14 @@ class FindTriangleGeomCentroidsTest
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+    DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-    DREAM3D_REGISTER_TEST( TestFindTriangleGeomCentroidsTest() )
+    DREAM3D_REGISTER_TEST(TestFindTriangleGeomCentroidsTest())
 
-    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-  private:
-    FindTriangleGeomCentroidsTest(const FindTriangleGeomCentroidsTest&); // Copy Constructor Not Implemented
-    void operator=(const FindTriangleGeomCentroidsTest&); // Operator '=' Not Implemented
-
-
+private:
+  FindTriangleGeomCentroidsTest(const FindTriangleGeomCentroidsTest&); // Copy Constructor Not Implemented
+  void operator=(const FindTriangleGeomCentroidsTest&);                // Operator '=' Not Implemented
 };
-

@@ -33,23 +33,20 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include <iostream>
 
-
 #include <QtCore/QCoreApplication>
-#include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QMetaProperty>
+#include <QtCore/QString>
 
 // DREAM3DLib includes
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/SIMPLibVersion.h"
 
-
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
 
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
@@ -77,7 +74,7 @@ void writeOutput(bool didReplace, QStringList& outLines, QString filename)
     QFile hOut(tmpPath);
 #endif
     hOut.open(QFile::WriteOnly);
-    QTextStream stream( &hOut );
+    QTextStream stream(&hOut);
     stream << outLines.join("\n");
     hOut.close();
 
@@ -97,7 +94,7 @@ QString createReplacementDataCheck(QStringList& outLines, QString& line, QString
 
   int offset = line.indexOf(">(");
   offset = offset + 2;
-  offset = line.indexOf(',', offset) + 1; // Find the first comma of the argument list
+  offset = line.indexOf(',', offset) + 1;      // Find the first comma of the argument list
   int offset2 = line.indexOf(',', offset + 1); // find the next comma. This should bracket the 2nd argument
   QString arg = line.mid(offset, (offset2 - offset)).trimmed();
   QString arrayName = arg;
@@ -105,17 +102,16 @@ QString createReplacementDataCheck(QStringList& outLines, QString& line, QString
   offset = arg.indexOf("ArrayName");
   arg = arg.mid(0, offset);
   offset = arg.indexOf('.');
-  if (offset > 0)
+  if(offset > 0)
   {
     arg = arg.mid(0, offset);
   }
   qDebug() << arg;
 
-
   // Extract out the entire argument as a string
   offset = line.indexOf(">(") + 1;
   QString right = line.mid(offset);
-  right.replace(arrayName, "get" + arg + "ArrayPath()" );
+  right.replace(arrayName, "get" + arg + "ArrayPath()");
   QStringList tokens = right.split(',');
   right = tokens[0] + "," + tokens[1] + "," + tokens[3];
 
@@ -146,7 +142,6 @@ QString createReplacementReader(QStringList& outLines, QString name)
   return "";
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -169,12 +164,12 @@ QString createNewFilterInstance(QStringListIterator& sourceLines, QStringList& o
 
   line = sourceLines.next();
   // Eat up the comment block
-  if(line.contains("/*") )
+  if(line.contains("/*"))
   {
-    while(sourceLines.hasNext() )
+    while(sourceLines.hasNext())
     {
       QString ll = sourceLines.next().trimmed();
-      if(ll.startsWith("*/") )
+      if(ll.startsWith("*/"))
       {
         line = sourceLines.next();
         break;
@@ -219,15 +214,13 @@ QString createConstructorEntries(QStringListIterator& sourceLines, QStringList& 
   QString line = sourceLines.next();
   // Eat up the entries already there
 
-  while(line.contains(",") )
+  while(line.contains(","))
   {
     outLines.push_back(line);
     line = sourceLines.next();
   }
 
   outLines.push_back(line + ",");
-
-
 
   QString str;
   QTextStream out(&str);
@@ -253,7 +246,7 @@ QString updateHeader(QStringList& outLines, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
+bool fixFile(AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
 {
   QString contents;
   {
@@ -276,12 +269,12 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   QStringList outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
-    if(line.contains(searchString) ) // we found the filter parameter section
+    if(line.contains(searchString)) // we found the filter parameter section
     {
-      names.push_back(createReplacementDataCheck(outLines, line, searchString) );
+      names.push_back(createReplacementDataCheck(outLines, line, searchString));
       didReplace = true;
     }
     else
@@ -289,7 +282,6 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
       outLines.push_back(line);
     }
   }
-
 
   // Remove Duplicates
   names.removeDuplicates();
@@ -300,10 +292,10 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   list = outLines;
   sourceLines = QStringListIterator(list);
   outLines.clear();
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
-    if(line.contains(searchString) )
+    if(line.contains(searchString))
     {
       outLines.push_back(line);
       didReplace = true;
@@ -322,19 +314,28 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     sourceLines = QStringListIterator(list);
     outLines.clear();
     int index = 0;
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) )
+      if(line.contains(searchString))
       {
         outLines.push_back(line);
-        while(sourceLines.hasNext() )
+        while(sourceLines.hasNext())
         {
           line = sourceLines.next();
-          if(line.contains("{") ) { index++; }
-          if(line.contains("}") ) { index--; }
+          if(line.contains("{"))
+          {
+            index++;
+          }
+          if(line.contains("}"))
+          {
+            index--;
+          }
           outLines.push_back(line);
-          if (index == 0) { break; }
+          if(index == 0)
+          {
+            break;
+          }
         }
 
         outLines.push_back(QString("// -----------------------------------------------------------------------------"));
@@ -355,7 +356,6 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     }
   }
 
-
   int index = 0;
   foreach(QString name, names)
   {
@@ -363,10 +363,10 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     list = outLines;
     sourceLines = QStringListIterator(list);
     outLines.clear();
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
+      if(line.contains(searchString)) // we found the filter parameter section
       {
         outLines.push_back(line);
         createReplacementReader(outLines, name);
@@ -382,10 +382,10 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     list = outLines;
     sourceLines = QStringListIterator(list);
     outLines.clear();
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
+      if(line.contains(searchString)) // we found the filter parameter section
       {
         outLines.push_back(line);
         createReplacementWriter(outLines, name);
@@ -397,15 +397,14 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
       }
     }
 
-
     searchString = "newFilterInstance(bool copyFilterParameters)";
     list = outLines;
     sourceLines = QStringListIterator(list);
     outLines.clear();
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
+      if(line.contains(searchString)) // we found the filter parameter section
       {
         outLines.push_back(line);
         createNewFilterInstance(sourceLines, outLines, name);
@@ -421,10 +420,10 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     list = outLines;
     sourceLines = QStringListIterator(list);
     outLines.clear();
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
+      if(line.contains(searchString)) // we found the filter parameter section
       {
         createSetupFilterParameters(sourceLines, outLines, name, index);
         outLines.push_back(line);
@@ -440,10 +439,10 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     list = outLines;
     sourceLines = QStringListIterator(list);
     outLines.clear();
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
+      if(line.contains(searchString)) // we found the filter parameter section
       {
         outLines.push_back(line);
         createConstructorEntries(sourceLines, outLines, name);
@@ -458,7 +457,6 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     writeOutput(didReplace, outLines, cppFile);
     index++;
   }
-
 
   index = 0;
   foreach(QString name, names)
@@ -478,13 +476,14 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
       source.close();
     }
     searchString = "virtual const QString getCompiledLibraryName()";
-    list = contents.split(QRegExp("\\n"));;
+    list = contents.split(QRegExp("\\n"));
+    ;
     sourceLines = QStringListIterator(list);
     outLines.clear();
-    while (sourceLines.hasNext())
+    while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
+      if(line.contains(searchString)) // we found the filter parameter section
       {
         updateHeader(outLines, name);
         didReplace = true;
@@ -496,16 +495,16 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
       }
     }
 
-    if (foundSetupFilterParameters == false && index == 0)
+    if(foundSetupFilterParameters == false && index == 0)
     {
       searchString = "virtual const QString getHumanLabel()";
       list = outLines;
       sourceLines = QStringListIterator(list);
       outLines.clear();
-      while (sourceLines.hasNext())
+      while(sourceLines.hasNext())
       {
         QString line = sourceLines.next();
-        if(line.contains(searchString) )
+        if(line.contains(searchString))
         {
           outLines.push_back(line);
           outLines.push_back("");
@@ -547,9 +546,17 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 
   prefix = prefix + "Plugins/";
   QStringList libs;
-  libs << "DDDAnalysisToolbox" << "ImageIO" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
+  libs << "DDDAnalysisToolbox"
+       << "ImageIO"
+       << "OrientationAnalysis"
+       << "Processing"
+       << "Reconstruction"
+       << "Sampling"
+       << "Statistics"
+       << "SurfaceMeshing"
+       << "SyntheticBuilding";
 
-  for (int i = 0; i < libs.size(); ++i)
+  for(int i = 0; i < libs.size(); ++i)
   {
     QString path = prefix + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
     //  std::cout << "****" << path.toStdString() << std::endl;
@@ -584,12 +591,7 @@ void GenerateFilterParametersCode()
 
     fixFile(filter, h, cpp);
   }
-
 }
-
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -601,27 +603,23 @@ void LoopOnFilters()
 
   FilterManager::CollectionIterator i(factories);
   int count = 0;
-  while (i.hasNext())
+  while(i.hasNext())
   {
     i.next();
     std::cout << ++count << ": " << i.key().toStdString() << ": " << std::endl;
 
-    //std::cout << "  public:" << std::endl;
+    // std::cout << "  public:" << std::endl;
     IFilterFactory::Pointer factory = i.value();
     AbstractFilter::Pointer filter = factory->create();
-    //if (filter->getGroupName().compare(SIMPL::FilterGroups::StatisticsFilters) == 0)
+    // if (filter->getGroupName().compare(SIMPL::FilterGroups::StatisticsFilters) == 0)
     // if(filter->getNameOfClass().compare("FindSchmids") == 0)
     {
       //   std::cout << "" << filter->getGroupName().toStdString() << "Filters/" << filter->getNameOfClass().toStdString() << ".cpp" << std::endl;
       QString cpp = findPath(filter->getGroupName(), filter->getNameOfClass(), ".cpp");
       std::cout << filter << " " << cpp.toStdString() << std::endl;
     }
-
   }
-
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -637,11 +635,9 @@ int main(int argc, char* argv[])
 
   std::cout << "FilterParameterTool Starting. Version " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
 
-
   // Register all the filters including trying to load those from Plugins
   FilterManager::Pointer fm = FilterManager::Instance();
   SIMPLibPluginLoader::LoadPluginFilters(fm.get());
-
 
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();

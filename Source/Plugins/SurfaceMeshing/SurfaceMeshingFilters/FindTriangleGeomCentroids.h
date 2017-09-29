@@ -36,9 +36,9 @@
 #ifndef _findtrianglegeomcentroids_h_
 #define _findtrianglegeomcentroids_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The FindTriangleGeomCentroids class. See [Filter documentation](@ref findtrianglegeomcentroids) for details.
@@ -47,118 +47,118 @@ class FindTriangleGeomCentroids : public AbstractFilter
 {
   Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(FindTriangleGeomCentroids)
-    SIMPL_STATIC_NEW_MACRO(FindTriangleGeomCentroids)
-    SIMPL_TYPE_MACRO_SUPER(FindTriangleGeomCentroids, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(FindTriangleGeomCentroids)
+  SIMPL_STATIC_NEW_MACRO(FindTriangleGeomCentroids)
+  SIMPL_TYPE_MACRO_SUPER(FindTriangleGeomCentroids, AbstractFilter)
 
-    virtual ~FindTriangleGeomCentroids();
-	
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+  virtual ~FindTriangleGeomCentroids();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
-    Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+  Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, CentroidsArrayName)
-    Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
+  Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  SIMPL_FILTER_PARAMETER(QString, CentroidsArrayName)
+  Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-  protected:
-    FindTriangleGeomCentroids();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-    /**
-    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-    */
-    void dataCheck();
+protected:
+  FindTriangleGeomCentroids();
 
-    /**
-    * @brief Initializes all the private instance variables.
-    */
-    void initialize();
+  /**
+  * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+  */
+  void dataCheck();
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+  /**
+  * @brief Initializes all the private instance variables.
+  */
+  void initialize();
 
-    FindTriangleGeomCentroids(const FindTriangleGeomCentroids&); // Copy Constructor Not Implemented
-    void operator=(const FindTriangleGeomCentroids&); // Operator '=' Not Implemented
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
+  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+
+  FindTriangleGeomCentroids(const FindTriangleGeomCentroids&); // Copy Constructor Not Implemented
+  void operator=(const FindTriangleGeomCentroids&);            // Operator '=' Not Implemented
 };
 
 #endif /* _findtrianglegeomcentroids_h_ */

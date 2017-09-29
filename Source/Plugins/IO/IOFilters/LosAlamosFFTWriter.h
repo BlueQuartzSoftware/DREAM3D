@@ -33,122 +33,120 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _losalamosfftwriter_h_
 #define _losalamosfftwriter_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileWriter.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The LosAlamosFFTWriter class. See [Filter documentation](@ref losalamosfftwriter) for details.
  */
-class  LosAlamosFFTWriter : public FileWriter
+class LosAlamosFFTWriter : public FileWriter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(LosAlamosFFTWriter)
-    SIMPL_STATIC_NEW_MACRO(LosAlamosFFTWriter)
-    SIMPL_TYPE_MACRO_SUPER(LosAlamosFFTWriter, FileWriter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(LosAlamosFFTWriter)
+  SIMPL_STATIC_NEW_MACRO(LosAlamosFFTWriter)
+  SIMPL_TYPE_MACRO_SUPER(LosAlamosFFTWriter, FileWriter)
 
-    virtual ~LosAlamosFFTWriter();
+  virtual ~LosAlamosFFTWriter();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
-    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  protected:
-    LosAlamosFFTWriter();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  LosAlamosFFTWriter();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  /**
+   * @brief writeHeader Reimplemented from @see FileReader class
+   */
+  virtual int32_t writeHeader();
 
-    /**
-     * @brief writeHeader Reimplemented from @see FileReader class
-     */
-    virtual int32_t writeHeader();
+  /**
+   * @brief writeFile Reimplemented from @see FileReader class
+   */
+  virtual int32_t writeFile();
 
-    /**
-     * @brief writeFile Reimplemented from @see FileReader class
-     */
-    virtual int32_t writeFile();
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-
-    LosAlamosFFTWriter(const LosAlamosFFTWriter&); // Copy Constructor Not Implemented
-    void operator=(const LosAlamosFFTWriter&); // Operator '=' Not Implemented
+  LosAlamosFFTWriter(const LosAlamosFFTWriter&); // Copy Constructor Not Implemented
+  void operator=(const LosAlamosFFTWriter&);     // Operator '=' Not Implemented
 };
 
 #endif /* _LosAlamosFFTWriter_H_ */

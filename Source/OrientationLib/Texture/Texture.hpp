@@ -43,8 +43,8 @@
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalOps.h"

@@ -5,16 +5,16 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationAnalysisTestFileLocations.h"
 
@@ -72,7 +72,7 @@ public:
      *
      * SIMPLib provides some macros that will throw exceptions when a test fails
      * and thus report that during testing. These macros are located in the
-     * SIMPLib/Utilities/UnitTestSupport.hpp file. Some examples are:
+     * SIMPLib/Common/UnitTestSupport.hpp file. Some examples are:
      *
      * SIMPLib_REQUIRE_EQUAL(foo, 0)
      * This means that if the variable foo is NOT equal to Zero then test will fail

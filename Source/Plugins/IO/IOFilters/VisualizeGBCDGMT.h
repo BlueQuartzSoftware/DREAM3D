@@ -33,17 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _visualizegbcdgmt_h_
 #define _visualizegbcdgmt_h_
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -52,141 +51,140 @@
  */
 class VisualizeGBCDGMT : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(VisualizeGBCDGMT)
-    SIMPL_STATIC_NEW_MACRO(VisualizeGBCDGMT)
-    SIMPL_TYPE_MACRO_SUPER(VisualizeGBCDGMT, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(VisualizeGBCDGMT)
+  SIMPL_STATIC_NEW_MACRO(VisualizeGBCDGMT)
+  SIMPL_TYPE_MACRO_SUPER(VisualizeGBCDGMT, AbstractFilter)
 
-    virtual ~VisualizeGBCDGMT();
+  virtual ~VisualizeGBCDGMT();
 
-    SIMPL_FILTER_PARAMETER(QString, OutputFile)
-    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
-    Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
+  SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
+  Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
 
-    SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
-    Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
+  SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+  Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
-    Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
+  Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    VisualizeGBCDGMT();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  VisualizeGBCDGMT();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  /**
+   * @brief getSquareCoord Computes the square based coordinate based on the incoming normal
+   * @param xstl1_norm1 Incoming normal
+   * @param sqCoord Computed square coordinate
+   * @return Boolean value for whether coordinate lies in the norther hemisphere
+   */
+  bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
 
-    /**
-     * @brief getSquareCoord Computes the square based coordinate based on the incoming normal
-     * @param xstl1_norm1 Incoming normal
-     * @param sqCoord Computed square coordinate
-     * @return Boolean value for whether coordinate lies in the norther hemisphere
-     */
-    bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
+private:
+  DEFINE_DATAARRAY_VARIABLE(double, GBCD)
+  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(double, GBCD)
-    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+  QVector<LaueOps::Pointer> m_OrientationOps;
+  QVector<float> gmtValues;
 
-    QVector<LaueOps::Pointer> m_OrientationOps;
-    QVector<float> gmtValues;
-
-    VisualizeGBCDGMT(const VisualizeGBCDGMT&); // Copy Constructor Not Implemented
-    void operator=(const VisualizeGBCDGMT&); // Operator '=' Not Implemented
+  VisualizeGBCDGMT(const VisualizeGBCDGMT&); // Copy Constructor Not Implemented
+  void operator=(const VisualizeGBCDGMT&);   // Operator '=' Not Implemented
 };
 
 #endif /* _VisualizeGBCDGMT_H_ */

@@ -37,10 +37,10 @@
 #define _packprimaryphases_h_
 
 #include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ShapeOps/ShapeOps.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -235,7 +235,6 @@ signals:
   void preflightExecuted();
 
 protected:
-
   PackPrimaryPhases();
 
   /**

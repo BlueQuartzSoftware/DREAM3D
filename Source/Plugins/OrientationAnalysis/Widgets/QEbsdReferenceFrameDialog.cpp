@@ -55,13 +55,13 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 
-#include "SIMPLib/Common/AbstractFilter.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/CoreFilters/GenerateColorTable.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLib.h"
 

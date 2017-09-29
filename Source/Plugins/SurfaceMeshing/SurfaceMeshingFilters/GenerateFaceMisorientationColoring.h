@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _generatefacemisorientationcoloring_h_
 #define _generatefacemisorientationcoloring_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -48,111 +47,111 @@
  */
 class GenerateFaceMisorientationColoring : public SurfaceMeshFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(GenerateFaceMisorientationColoring)
-    SIMPL_STATIC_NEW_MACRO(GenerateFaceMisorientationColoring)
-    SIMPL_TYPE_MACRO_SUPER(GenerateFaceMisorientationColoring, SurfaceMeshFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(GenerateFaceMisorientationColoring)
+  SIMPL_STATIC_NEW_MACRO(GenerateFaceMisorientationColoring)
+  SIMPL_TYPE_MACRO_SUPER(GenerateFaceMisorientationColoring, SurfaceMeshFilter)
 
-    virtual ~GenerateFaceMisorientationColoring();
+  virtual ~GenerateFaceMisorientationColoring();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-    Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFaceMisorientationColorsArrayName)
-    Q_PROPERTY(QString SurfaceMeshFaceMisorientationColorsArrayName READ getSurfaceMeshFaceMisorientationColorsArrayName WRITE setSurfaceMeshFaceMisorientationColorsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFaceMisorientationColorsArrayName)
+  Q_PROPERTY(QString SurfaceMeshFaceMisorientationColorsArrayName READ getSurfaceMeshFaceMisorientationColorsArrayName WRITE setSurfaceMeshFaceMisorientationColorsArrayName)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  protected:
-    GenerateFaceMisorientationColoring();
+protected:
+  GenerateFaceMisorientationColoring();
 
-    /**
-     * @brief dataCheckSurfaceMesh Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheckSurfaceMesh();
+  /**
+   * @brief dataCheckSurfaceMesh Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheckSurfaceMesh();
 
-    /**
-     * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheckVoxel();
+  /**
+   * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheckVoxel();
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshFaceMisorientationColors)
+  DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshFaceMisorientationColors)
 
-    GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&); // Copy Constructor Not Implemented
-    void operator=(const GenerateFaceMisorientationColoring&); // Operator '=' Not Implemented
+  GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&); // Copy Constructor Not Implemented
+  void operator=(const GenerateFaceMisorientationColoring&);                     // Operator '=' Not Implemented
 };
 
 #endif /* _GenerateFaceMisorientationColoring_H_ */

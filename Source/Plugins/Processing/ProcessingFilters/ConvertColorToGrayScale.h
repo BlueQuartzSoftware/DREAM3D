@@ -33,156 +33,151 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _ConvertColorToGrayScale_h_
 #define _ConvertColorToGrayScale_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 /**
  * @brief The ConvertColorToGrayScale class. See [Filter documentation](@ref ConvertColorToGrayScale) for details.
  */
 class ConvertColorToGrayScale : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(ConvertColorToGrayScale)
-    SIMPL_STATIC_NEW_MACRO(ConvertColorToGrayScale)
-    SIMPL_TYPE_MACRO_SUPER(ConvertColorToGrayScale, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(ConvertColorToGrayScale)
+  SIMPL_STATIC_NEW_MACRO(ConvertColorToGrayScale)
+  SIMPL_TYPE_MACRO_SUPER(ConvertColorToGrayScale, AbstractFilter)
 
-    virtual ~ConvertColorToGrayScale();
+  virtual ~ConvertColorToGrayScale();
 
-    using EnumType = unsigned int;
-    enum class ConversionType : EnumType
-    {
-        Luminosity = 0,
-        Average = 1,
-        Lightness = 2,
-        SingleChannel = 3
-    };
+  using EnumType = unsigned int;
+  enum class ConversionType : EnumType
+  {
+    Luminosity = 0,
+    Average = 1,
+    Lightness = 2,
+    SingleChannel = 3
+  };
 
-    SIMPL_FILTER_PARAMETER(int, ConversionAlgorithm)
-    Q_PROPERTY(int ConversionAlgorithm READ getConversionAlgorithm WRITE setConversionAlgorithm)
+  SIMPL_FILTER_PARAMETER(int, ConversionAlgorithm)
+  Q_PROPERTY(int ConversionAlgorithm READ getConversionAlgorithm WRITE setConversionAlgorithm)
 
-    SIMPL_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
-    Q_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
+  Q_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
 
-    SIMPL_FILTER_PARAMETER(int, ColorChannel)
-    Q_PROPERTY(int ColorChannel READ getColorChannel WRITE setColorChannel)
+  SIMPL_FILTER_PARAMETER(int, ColorChannel)
+  Q_PROPERTY(int ColorChannel READ getColorChannel WRITE setColorChannel)
 
-    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
-    Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
+  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
+  Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
 
+  SIMPL_FILTER_PARAMETER(bool, CreateNewAttributeMatrix)
+  Q_PROPERTY(bool CreateNewAttributeMatrix READ getCreateNewAttributeMatrix WRITE setCreateNewAttributeMatrix)
 
-    SIMPL_FILTER_PARAMETER(bool, CreateNewAttributeMatrix)
-    Q_PROPERTY(bool CreateNewAttributeMatrix READ getCreateNewAttributeMatrix WRITE setCreateNewAttributeMatrix)
+  SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
+  Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
-    Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, OutputArrayPrefix)
+  Q_PROPERTY(QString OutputArrayPrefix READ getOutputArrayPrefix WRITE setOutputArrayPrefix)
 
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    SIMPL_FILTER_PARAMETER(QString, OutputArrayPrefix)
-    Q_PROPERTY(QString OutputArrayPrefix READ getOutputArrayPrefix WRITE setOutputArrayPrefix)
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+protected:
+  ConvertColorToGrayScale();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+private:
+  QVector<DataArrayPath> m_OutputArrayPaths;
 
-  protected:
-    ConvertColorToGrayScale();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
-
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
-
-
-  private:
-    QVector<DataArrayPath> m_OutputArrayPaths;
-
-    ConvertColorToGrayScale(const ConvertColorToGrayScale&); // Copy Constructor Not Implemented
-    void operator=(const ConvertColorToGrayScale&); // Operator '=' Not Implemented
+  ConvertColorToGrayScale(const ConvertColorToGrayScale&); // Copy Constructor Not Implemented
+  void operator=(const ConvertColorToGrayScale&);          // Operator '=' Not Implemented
 };
 
 #endif /* ConvertColorToGrayScale_H_ */

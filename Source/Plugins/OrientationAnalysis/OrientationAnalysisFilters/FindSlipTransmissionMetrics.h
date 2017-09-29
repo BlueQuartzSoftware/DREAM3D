@@ -33,14 +33,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _findsliptransmissionmetrics_h_
 #define _findsliptransmissionmetrics_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -49,148 +48,147 @@
  */
 class FindSlipTransmissionMetrics : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(FindSlipTransmissionMetrics)
-    SIMPL_STATIC_NEW_MACRO(FindSlipTransmissionMetrics)
-    SIMPL_TYPE_MACRO_SUPER(FindSlipTransmissionMetrics, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(FindSlipTransmissionMetrics)
+  SIMPL_STATIC_NEW_MACRO(FindSlipTransmissionMetrics)
+  SIMPL_TYPE_MACRO_SUPER(FindSlipTransmissionMetrics, AbstractFilter)
 
-    virtual ~FindSlipTransmissionMetrics();
+  virtual ~FindSlipTransmissionMetrics();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
-    Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, F1ListArrayName)
-    Q_PROPERTY(QString F1ListArrayName READ getF1ListArrayName WRITE setF1ListArrayName)
+  SIMPL_FILTER_PARAMETER(QString, F1ListArrayName)
+  Q_PROPERTY(QString F1ListArrayName READ getF1ListArrayName WRITE setF1ListArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, F1sptListArrayName)
-    Q_PROPERTY(QString F1sptListArrayName READ getF1sptListArrayName WRITE setF1sptListArrayName)
+  SIMPL_FILTER_PARAMETER(QString, F1sptListArrayName)
+  Q_PROPERTY(QString F1sptListArrayName READ getF1sptListArrayName WRITE setF1sptListArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, F7ListArrayName)
-    Q_PROPERTY(QString F7ListArrayName READ getF7ListArrayName WRITE setF7ListArrayName)
+  SIMPL_FILTER_PARAMETER(QString, F7ListArrayName)
+  Q_PROPERTY(QString F7ListArrayName READ getF7ListArrayName WRITE setF7ListArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, mPrimeListArrayName)
-    Q_PROPERTY(QString mPrimeListArrayName READ getmPrimeListArrayName WRITE setmPrimeListArrayName)
+  SIMPL_FILTER_PARAMETER(QString, mPrimeListArrayName)
+  Q_PROPERTY(QString mPrimeListArrayName READ getmPrimeListArrayName WRITE setmPrimeListArrayName)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-    Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    FindSlipTransmissionMetrics();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  FindSlipTransmissionMetrics();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+private:
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
-  private:
-    QVector<LaueOps::Pointer> m_OrientationOps;
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  NeighborList<float>::WeakPointer m_F1List;
+  NeighborList<float>::WeakPointer m_F1sptList;
+  NeighborList<float>::WeakPointer m_F7List;
+  NeighborList<float>::WeakPointer m_mPrimeList;
+  NeighborList<int32_t>::WeakPointer m_NeighborList;
 
-    NeighborList<float>::WeakPointer m_F1List;
-    NeighborList<float>::WeakPointer m_F1sptList;
-    NeighborList<float>::WeakPointer m_F7List;
-    NeighborList<float>::WeakPointer m_mPrimeList;
-    NeighborList<int32_t>::WeakPointer m_NeighborList;
-
-    FindSlipTransmissionMetrics(const FindSlipTransmissionMetrics&); // Copy Constructor Not Implemented
-    void operator=(const FindSlipTransmissionMetrics&); // Operator '=' Not Implemented
+  FindSlipTransmissionMetrics(const FindSlipTransmissionMetrics&); // Copy Constructor Not Implemented
+  void operator=(const FindSlipTransmissionMetrics&);              // Operator '=' Not Implemented
 };
 
 #endif /* FindSlipTransmissionMetrics_H_ */

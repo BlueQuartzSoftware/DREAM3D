@@ -33,16 +33,15 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _matchcrystallography_h_
 #define _matchcrystallography_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
-#include "OrientationLib/LaueOps/LaueOps.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -52,262 +51,261 @@
  */
 class MatchCrystallography : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(MatchCrystallography)
-    SIMPL_STATIC_NEW_MACRO(MatchCrystallography)
-    SIMPL_TYPE_MACRO_SUPER(MatchCrystallography, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(MatchCrystallography)
+  SIMPL_STATIC_NEW_MACRO(MatchCrystallography)
+  SIMPL_TYPE_MACRO_SUPER(MatchCrystallography, AbstractFilter)
 
-    virtual ~MatchCrystallography();
+  virtual ~MatchCrystallography();
 
-    // Input data from the StatsGenerator Data Container (or something equivalent)
-    SIMPL_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
-    Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
+  // Input data from the StatsGenerator Data Container (or something equivalent)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+  Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
-    Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
+  Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
 
-    // Input data from the Synthetic Data Container (or something equivalent)
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  // Input data from the Synthetic Data Container (or something equivalent)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+  Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
-    Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
-    Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
+  Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
-    Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+  Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
-    // Created Data Arrays
-    SIMPL_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
-    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+  // Created Data Arrays
+  SIMPL_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+  Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
-    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
+  Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
-    Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
+  Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, AvgQuatsArrayName)
-    Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, AvgQuatsArrayName)
+  Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
 
-    SIMPL_FILTER_PARAMETER(int, MaxIterations)
-    Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
+  SIMPL_FILTER_PARAMETER(int, MaxIterations)
+  Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    MatchCrystallography();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  MatchCrystallography();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  /**
+   * @brief initializeArrays Initializes the ODF and MDF arrays for each Ensemble
+   * @param ensem Ensemble index to initialize
+   */
+  void initializeArrays(size_t ensem);
 
-    /**
-     * @brief initializeArrays Initializes the ODF and MDF arrays for each Ensemble
-     * @param ensem Ensemble index to initialize
-     */
-    void initializeArrays(size_t ensem);
+  /**
+   * @brief determine_volumes Determines the unbiased volume for each Ensemble
+   */
+  void determine_volumes();
 
-    /**
-     * @brief determine_volumes Determines the unbiased volume for each Ensemble
-     */
-    void determine_volumes();
+  /**
+   * @brief determine_boundary_areas Determines the total Feature surface area
+   * for each Ensemble
+   */
+  void determine_boundary_areas();
 
-    /**
-     * @brief determine_boundary_areas Determines the total Feature surface area
-     * for each Ensemble
-     */
-    void determine_boundary_areas();
+  /**
+   * @brief assign_eulers Randomly samples orientation space to assign orientations to
+   * each Feature based on the incoming statistics
+   * @param ensem Ensemble index of the current phase
+   */
+  void assign_eulers(size_t ensem);
 
-    /**
-     * @brief assign_eulers Randomly samples orientation space to assign orientations to
-     * each Feature based on the incoming statistics
-     * @param ensem Ensemble index of the current phase
-     */
-    void assign_eulers(size_t ensem);
+  /**
+   * @brief pick_euler Picks a random bin from the incoming orientation statistics
+   * @param random Key random value to compare for sampling
+   * @param numbins Number of possible bins to sample
+   * @return Integer value for bin index
+   */
+  int32_t pick_euler(float random, int32_t numbins);
 
-    /**
-     * @brief pick_euler Picks a random bin from the incoming orientation statistics
-     * @param random Key random value to compare for sampling
-     * @param numbins Number of possible bins to sample
-     * @return Integer value for bin index
-     */
-    int32_t pick_euler(float random, int32_t numbins);
+  /**
+   * @brief MC_LoopBody1 Determines the misorientation change after performing a swap
+   * @param feature Feature Id of Feature that has been swapped
+   * @param ensem Ensemble index of the current phase
+   * @param j Neighbor index for the Feature
+   * @param neighsurfarea Surface area for the Feature neighbor
+   * @param sym Crystal structure index
+   * @param q1 Quaterions for the Feature
+   * @param q2 Quaterions for the Feature neighbor
+   */
+  void MC_LoopBody1(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, QuatF& q1, QuatF& q2);
 
-    /**
-     * @brief MC_LoopBody1 Determines the misorientation change after performing a swap
-     * @param feature Feature Id of Feature that has been swapped
-     * @param ensem Ensemble index of the current phase
-     * @param j Neighbor index for the Feature
-     * @param neighsurfarea Surface area for the Feature neighbor
-     * @param sym Crystal structure index
-     * @param q1 Quaterions for the Feature
-     * @param q2 Quaterions for the Feature neighbor
-     */
-    void MC_LoopBody1(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, QuatF& q1, QuatF& q2);
+  /**
+   * @brief MC_LoopBody2 Reinserts the swapped orientation if the swap did not improve the fit
+   * @param feature Feature Id of the Feature that has been swapped
+   * @param phase Ensemble index of the current phase
+   * @param j Neighbor index for the Feature
+   * @param neighsurfarea Surface area for the Feature neighbor
+   * @param sym Crystal structure index
+   * @param q1 Quaternions for the Feature
+   * @param q2 Quaternions for the Feature neighbor
+   */
+  void MC_LoopBody2(int32_t feature, size_t phase, size_t j, float neighsurfarea, uint32_t sym, QuatF& q1, QuatF& q2);
 
-    /**
-     * @brief MC_LoopBody2 Reinserts the swapped orientation if the swap did not improve the fit
-     * @param feature Feature Id of the Feature that has been swapped
-     * @param phase Ensemble index of the current phase
-     * @param j Neighbor index for the Feature
-     * @param neighsurfarea Surface area for the Feature neighbor
-     * @param sym Crystal structure index
-     * @param q1 Quaternions for the Feature
-     * @param q2 Quaternions for the Feature neighbor
-     */
-    void MC_LoopBody2(int32_t feature, size_t phase, size_t j, float neighsurfarea, uint32_t sym, QuatF& q1, QuatF& q2);
+  /**
+   * @brief matchCrystallography Swaps orientations for Features unitl convergence to
+   * the input statistics
+   * @param ensem Ensemble index of the current phase
+   */
+  void matchCrystallography(size_t ensem);
 
-    /**
-     * @brief matchCrystallography Swaps orientations for Features unitl convergence to
-     * the input statistics
-     * @param ensem Ensemble index of the current phase
-     */
-    void matchCrystallography(size_t ensem);
+  /**
+   * @brief measure_misorientations Determines the misorientations between each Feature
+   * @param ensem Ensemle index of the current phase
+   */
+  void measure_misorientations(size_t ensem);
 
-    /**
-     * @brief measure_misorientations Determines the misorientations between each Feature
-     * @param ensem Ensemle index of the current phase
-     */
-    void measure_misorientations(size_t ensem);
+private:
+  // Cell Data
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
-  private:
-    // Cell Data
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+  // Feature Data
+  DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  DEFINE_DATAARRAY_VARIABLE(float, Volumes)
+  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+  DEFINE_DATAARRAY_VARIABLE(uint32_t, SyntheticCrystalStructures)
+  NeighborList<int32_t>::WeakPointer m_NeighborList;
+  NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
-    // Feature Data
-    DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_DATAARRAY_VARIABLE(float, Volumes)
-    DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, SyntheticCrystalStructures)
-    NeighborList<int32_t>::WeakPointer m_NeighborList;
-    NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
+  // Ensemble Data
+  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
+  StatsDataArray::WeakPointer m_StatsDataArray;
 
-    //Ensemble Data
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
-    StatsDataArray::WeakPointer m_StatsDataArray;
+  // All other private instance variables
+  float m_MdfChange;
+  float m_OdfChange;
 
-    // All other private instance variables
-    float m_MdfChange;
-    float m_OdfChange;
+  std::vector<float> m_UnbiasedVolume;
+  std::vector<float> m_TotalSurfaceArea;
 
-    std::vector<float> m_UnbiasedVolume;
-    std::vector<float> m_TotalSurfaceArea;
+  FloatArrayType::Pointer m_ActualOdf;
+  FloatArrayType::Pointer m_SimOdf;
+  FloatArrayType::Pointer m_ActualMdf;
+  FloatArrayType::Pointer m_SimMdf;
 
-    FloatArrayType::Pointer m_ActualOdf;
-    FloatArrayType::Pointer m_SimOdf;
-    FloatArrayType::Pointer m_ActualMdf;
-    FloatArrayType::Pointer m_SimMdf;
+  std::vector<std::vector<float>> m_MisorientationLists;
 
-    std::vector<std::vector<float> > m_MisorientationLists;
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
-    QVector<LaueOps::Pointer> m_OrientationOps;
-
-    MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
-    void operator=(const MatchCrystallography&); // Operator '=' Not Implemented
+  MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
+  void operator=(const MatchCrystallography&);       // Operator '=' Not Implemented
 };
 
 #endif /* MATCHCRYSTALLOGRAPHY_H_ */

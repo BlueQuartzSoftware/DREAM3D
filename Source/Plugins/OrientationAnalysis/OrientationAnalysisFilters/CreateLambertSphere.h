@@ -32,8 +32,8 @@
 #ifndef _createLambertSphere_H_
 #define _createLambertSphere_H_
 
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/SIMPLib.h"
@@ -72,19 +72,17 @@ public:
   SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
   Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-
   SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
   SIMPL_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
   Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
 
-
   SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-//  SIMPL_FILTER_PARAMETER(QString, ImageFaceDataArrayName)
-//  Q_PROPERTY(QString ImageFaceDataArrayName READ getImageFaceDataArrayName WRITE setImageFaceDataArrayName)
+  //  SIMPL_FILTER_PARAMETER(QString, ImageFaceDataArrayName)
+  //  Q_PROPERTY(QString ImageFaceDataArrayName READ getImageFaceDataArrayName WRITE setImageFaceDataArrayName)
 
   SIMPL_FILTER_PARAMETER(bool, CreateVertexGeometry)
   Q_PROPERTY(bool CreateVertexGeometry READ getCreateVertexGeometry WRITE setCreateVertexGeometry)
@@ -218,14 +216,14 @@ protected:
 
 private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
-  
-  //DEFINE_DATAARRAY_VARIABLE(uint8_t, VertexData)
+
+  // DEFINE_DATAARRAY_VARIABLE(uint8_t, VertexData)
   DEFINE_DATAARRAY_VARIABLE(uint8_t, EdgeData)
   DEFINE_DATAARRAY_VARIABLE(uint8_t, TriangleFaceData)
   DEFINE_DATAARRAY_VARIABLE(uint8_t, QuadFaceData)
-  
+
   SharedVertexList::Pointer m_Vertices;
-  
+
   QString m_VertexDataName;
   QString m_EdgeDataName;
   QString m_TriangleDataName;

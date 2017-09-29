@@ -33,14 +33,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _samplesurfacemeshspecifiedpoints_h_
 #define _samplesurfacemeshspecifiedpoints_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
@@ -49,117 +48,116 @@
  */
 class SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
-    SIMPL_STATIC_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)
-    SIMPL_TYPE_MACRO_SUPER(SampleSurfaceMeshSpecifiedPoints, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
+  SIMPL_STATIC_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)
+  SIMPL_TYPE_MACRO_SUPER(SampleSurfaceMeshSpecifiedPoints, AbstractFilter)
 
-    virtual ~SampleSurfaceMeshSpecifiedPoints();
+  virtual ~SampleSurfaceMeshSpecifiedPoints();
 
-    SIMPL_FILTER_PARAMETER(QString, InputFilePath)
-    Q_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
+  SIMPL_FILTER_PARAMETER(QString, InputFilePath)
+  Q_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
 
-    SIMPL_FILTER_PARAMETER(QString, OutputFilePath)
-    Q_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
+  SIMPL_FILTER_PARAMETER(QString, OutputFilePath)
+  Q_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
-    virtual void execute();
+  /**
+  * @brief execute Reimplemented from @see AbstractFilter class
+  */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  protected:
-    SampleSurfaceMeshSpecifiedPoints();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  SampleSurfaceMeshSpecifiedPoints();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  /**
+   * @brief generate_points Reimplemented from @see SampleSurfaceMesh class
+   * @return VertexGeom object
+   */
+  virtual VertexGeom::Pointer generate_points();
 
-    /**
-     * @brief generate_points Reimplemented from @see SampleSurfaceMesh class
-     * @return VertexGeom object
-     */
-    virtual VertexGeom::Pointer generate_points();
+  /**
+   * @brief assign_points Reimplemented from @see SampleSurfaceMesh class
+   * @param iArray Sampled Feature Ids from superclass
+   */
+  virtual void assign_points(Int32ArrayType::Pointer iArray);
 
-    /**
-     * @brief assign_points Reimplemented from @see SampleSurfaceMesh class
-     * @param iArray Sampled Feature Ids from superclass
-     */
-    virtual void assign_points(Int32ArrayType::Pointer iArray);
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  // number of specified points
+  int64_t m_NumPoints;
 
-    // number of specified points
-    int64_t m_NumPoints;
+  /**
+   * @brief updateVertexInstancePointers Updates raw Vertex pointers
+   */
+  void updateVertexInstancePointers();
 
-    /**
-     * @brief updateVertexInstancePointers Updates raw Vertex pointers
-     */
-    void updateVertexInstancePointers();
-
-    SampleSurfaceMeshSpecifiedPoints(const SampleSurfaceMeshSpecifiedPoints&); // Copy Constructor Not Implemented
-    void operator=(const SampleSurfaceMeshSpecifiedPoints&); // Operator '=' Not Implemented
+  SampleSurfaceMeshSpecifiedPoints(const SampleSurfaceMeshSpecifiedPoints&); // Copy Constructor Not Implemented
+  void operator=(const SampleSurfaceMeshSpecifiedPoints&);                   // Operator '=' Not Implemented
 };
 
 #endif /* _SampleSurfaceMeshSpecifiedPoints_H_ */

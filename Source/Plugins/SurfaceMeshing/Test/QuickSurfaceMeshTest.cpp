@@ -36,38 +36,38 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/RectGridGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "SurfaceMeshingTestFileLocations.h"
 
-#define SET_PROPERTIES_AND_CHECK(filter, featureIdsPath, surfMeshName, errVal)\
-  var.setValue(featureIdsPath);\
-  propWasSet = filter->setProperty("FeatureIdsArrayPath", var);\
-  if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property FeatureIdsArrayPath";\
-  }\
-  var.setValue(surfMeshName);\
-  propWasSet = filter->setProperty("SurfaceDataContainerName", var);\
-  if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property SurfaceDataContainerName";\
-  }\
-  filter->execute();\
-  err = filter->getErrorCondition();\
+#define SET_PROPERTIES_AND_CHECK(filter, featureIdsPath, surfMeshName, errVal)                                                                                                                         \
+  var.setValue(featureIdsPath);                                                                                                                                                                        \
+  propWasSet = filter->setProperty("FeatureIdsArrayPath", var);                                                                                                                                        \
+  if(false == propWasSet)                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    qDebug() << "Unable to set property FeatureIdsArrayPath";                                                                                                                                          \
+  }                                                                                                                                                                                                    \
+  var.setValue(surfMeshName);                                                                                                                                                                          \
+  propWasSet = filter->setProperty("SurfaceDataContainerName", var);                                                                                                                                   \
+  if(false == propWasSet)                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    qDebug() << "Unable to set property SurfaceDataContainerName";                                                                                                                                     \
+  }                                                                                                                                                                                                    \
+  filter->execute();                                                                                                                                                                                   \
+  err = filter->getErrorCondition();                                                                                                                                                                   \
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
 class QuickSurfaceMeshTest
@@ -541,5 +541,5 @@ public:
 
 private:
   QuickSurfaceMeshTest(const QuickSurfaceMeshTest&); // Copy Constructor Not Implemented
-  void operator=(const QuickSurfaceMeshTest&);        // Operator '=' Not Implemented
+  void operator=(const QuickSurfaceMeshTest&);       // Operator '=' Not Implemented
 };

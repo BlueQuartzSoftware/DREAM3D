@@ -38,16 +38,16 @@
 
 #include <QtGui/QImage>
 
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "EMMPMTestFileLocations.h"
 
@@ -109,20 +109,20 @@ public:
       }
     }
 
+    {
+      // Now instantiate the ItkReadImage Filter from the FilterManager
+      m_ImageProcessingPluginLoaded = 1; // Assume it loaded.
+      QString filtName = m_ReadImageFilterName;
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      if(nullptr == filterFactory.get())
       {
-          // Now instantiate the ItkReadImage Filter from the FilterManager
-          m_ImageProcessingPluginLoaded = 1; // Assume it loaded.
-          QString filtName = m_ReadImageFilterName;
-          FilterManager* fm = FilterManager::Instance();
-          IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-          if(nullptr == filterFactory.get())
-          {
-              std::stringstream ss;
-              ss << "Unable to initialize the " << m_ReadImageFilterName.toStdString() << " while executing the EMMPMSegmentationTest.";
-              std::cout << ss.str() << std::endl;
-              m_ImageProcessingPluginLoaded = 0; // Plugin or filter not available.
-          }
+        std::stringstream ss;
+        ss << "Unable to initialize the " << m_ReadImageFilterName.toStdString() << " while executing the EMMPMSegmentationTest.";
+        std::cout << ss.str() << std::endl;
+        m_ImageProcessingPluginLoaded = 0; // Plugin or filter not available.
       }
+    }
 
     return 0;
   }
@@ -173,7 +173,6 @@ public:
       // horribly gone wrong in which case the system is going to come down quickly after this.
       AbstractFilter::Pointer filter = filterFactory->create();
 
-
       QVariant var;
       bool propWasSet;
 
@@ -190,7 +189,6 @@ public:
       var.setValue(outputAttributeMatrixName);
       propWasSet = filter->setProperty("OutputAttributeMatrixName", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
 
       pipeline->pushBack(filter);
     }
@@ -277,18 +275,17 @@ public:
     QImage inputImage(h, w, QImage::Format_ARGB32);
     for(int i = 0; i < h; i++)
     {
-        for (int j = 0; j < w;j++)
-        {
-            inputImage.setPixel(i, j, 0xAA);
-        }
+      for(int j = 0; j < w; j++)
+      {
+        inputImage.setPixel(i, j, 0xAA);
+      }
     }
     bool saveResult = inputImage.save(UnitTest::EMMPMSegmentationTest::TestFile);
     DREAM3D_REQUIRE_EQUAL(saveResult, true)
 
-
     FilterPipeline::Pointer pipeline = FilterPipeline::New();
-//    Observer observer;
-//    pipeline->addMessageReceiver(&observer);
+    //    Observer observer;
+    //    pipeline->addMessageReceiver(&observer);
 
     {
 
@@ -304,7 +301,7 @@ public:
 
     {
       createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-      //createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray", "GrayScaleCellData");
+      // createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray", "GrayScaleCellData");
       createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), DataArrayPath("ImageDataContainer", "CellData", "Test"));
 
       pipeline->execute();
@@ -356,22 +353,20 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-void operator()()
-{
-
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST(TestFilterAvailability());
-  if (m_ImageProcessingPluginLoaded)
+  void operator()()
   {
+
+    int err = EXIT_SUCCESS;
+    DREAM3D_REGISTER_TEST(TestFilterAvailability());
+    if(m_ImageProcessingPluginLoaded)
+    {
       DREAM3D_REGISTER_TEST(TestEMMPMSegmentation())
       DREAM3D_REGISTER_TEST(TestMultiEMMPMSegmentation())
+    }
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
-  DREAM3D_REGISTER_TEST(RemoveTestFiles())
-
-}
 
 private:
-
   int m_ImageProcessingPluginLoaded = 0;
   QString m_ReadImageFilterName = QString("ItkReadImage");
 

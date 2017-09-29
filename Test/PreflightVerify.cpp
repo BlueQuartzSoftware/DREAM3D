@@ -1,25 +1,20 @@
 #include "PreflightVerify.h"
 
-
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
-
-
 
 //#include "moc_PreflightVerify.cpp"
 
-PreflightVerify::PreflightVerify(QObject* parent) :
-  QObject(parent),
-  m_widgetChanged(false),
-  m_beforePreflight(false),
-  m_afterPreflight(false),
-  m_filterNeedsInputParameters(false)
+PreflightVerify::PreflightVerify(QObject* parent)
+: QObject(parent)
+, m_widgetChanged(false)
+, m_beforePreflight(false)
+, m_afterPreflight(false)
+, m_filterNeedsInputParameters(false)
 {
-
 }
 PreflightVerify::~PreflightVerify()
 {
-
 }
 
 void PreflightVerify::widgetChanged(const QString& msg)
@@ -41,5 +36,3 @@ void PreflightVerify::filterNeedsInputParameters(AbstractFilter* filter)
 {
   m_filterNeedsInputParameters = true;
 }
-
-

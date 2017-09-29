@@ -54,8 +54,8 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -199,9 +199,9 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Precipitates", HavePrecips, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitate Input File", PrecipInputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.txt", "Text File"));
   linkedProps.clear();
-//  linkedProps << "CsvOutputFile";
-//  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
-//  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
+  //  linkedProps << "CsvOutputFile";
+  //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
+  //  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
@@ -1786,9 +1786,9 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
       if(m_PeriodicBoundaries == true)
       {
         // Perform mod arithmetic to ensure we are within the packing points range
-		col = col % m_XPoints;
-		row = row % m_YPoints;
-		plane = plane % m_ZPoints;
+        col = col % m_XPoints;
+        row = row % m_YPoints;
+        plane = plane % m_ZPoints;
 
         if(col < 0)
         {

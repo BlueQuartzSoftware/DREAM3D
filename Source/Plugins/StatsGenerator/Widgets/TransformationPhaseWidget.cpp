@@ -49,21 +49,21 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
-#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
+#include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/TableModels/SGAbstractTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"

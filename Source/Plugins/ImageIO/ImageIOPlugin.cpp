@@ -38,9 +38,9 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
 
 #include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/ImageIOVersion.h"

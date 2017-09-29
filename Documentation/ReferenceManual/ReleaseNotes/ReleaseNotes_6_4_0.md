@@ -33,13 +33,23 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + DREAM3D Issue #732: When reading STL files parse the header bytes to look for keywords that would identify the file as being from Magic's Materialise software
 + DREAM3D Issue #733: AlignSections (List) filter will not read from DREAM.3D generated Alignment files
 + DREAM3D Issue #737: ConvertOrientationData was not properly checking input arrays for the correct number of components
++ Updating human labels on the example pipelines
++ Fix potential crashing bug in Convert Orientations filter
++ Add options to create all types of Geometries in the Create Lambert Sphere filter
++ Fix image paths in the Initialize Synthetic Volume filter documentation.
++ Fix crashing bug in MinNeighbors and MinSize filters under rare conditions
+
+
 
 ### Fixed SIMPLView Issues ###
 
 + SIMPLView Issue #17: Failure to check existence of file may lead to application crash
++ SIMPLView Issue #112: SIMPLView now checks for the SIMPL_PLUGIN_PATH environment variable to load plugins
+
 
 ### Fixed SIMPL Issues ###
 
++ SIMPL Issue #127: ImportASCIIData filter failes due to use of ASCIIDataModel as a Singleton design.
 + SIMPL Issue #123: Fix inconsistent types in the H5Lite library
 + SIMPL Issue: Array calculator will fail for some types of arrays
 + SIMPL Issue #118: Fix FileListInfoWidget internationalization decode issue.
@@ -166,4 +176,3 @@ Releases are now built against the following libraries:
 + Eigen 3.2.9
 + ITK 4.11.1
 + TBB tbb44_20160526oss
-

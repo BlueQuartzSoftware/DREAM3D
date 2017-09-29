@@ -33,17 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _visualizegbcdpolefigure_h_
 #define _visualizegbcdpolefigure_h_
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -52,154 +51,153 @@
  */
 class VisualizeGBCDPoleFigure : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(VisualizeGBCDPoleFigure)
-    SIMPL_STATIC_NEW_MACRO(VisualizeGBCDPoleFigure)
-    SIMPL_TYPE_MACRO_SUPER(VisualizeGBCDPoleFigure, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(VisualizeGBCDPoleFigure)
+  SIMPL_STATIC_NEW_MACRO(VisualizeGBCDPoleFigure)
+  SIMPL_TYPE_MACRO_SUPER(VisualizeGBCDPoleFigure, AbstractFilter)
 
-    virtual ~VisualizeGBCDPoleFigure();
+  virtual ~VisualizeGBCDPoleFigure();
 
-    SIMPL_FILTER_PARAMETER(QString, OutputFile)
-    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
-    Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
+  SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
+  Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
 
-    SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
-    Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
+  SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+  Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
-    Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
+  Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    VisualizeGBCDPoleFigure();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  VisualizeGBCDPoleFigure();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  /**
+   * @brief getSquareCoord Computes the square based coordinate based on the incoming normal
+   * @param xstl1_norm1 Incoming normal
+   * @param sqCoord Computed square coordinate
+   * @return Boolean value for whether coordinate lies in the norther hemisphere
+   */
+  bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
 
-    /**
-     * @brief getSquareCoord Computes the square based coordinate based on the incoming normal
-     * @param xstl1_norm1 Incoming normal
-     * @param sqCoord Computed square coordinate
-     * @return Boolean value for whether coordinate lies in the norther hemisphere
-     */
-    bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
+private:
+  DEFINE_DATAARRAY_VARIABLE(double, GBCD)
+  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(double, GBCD)
-    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
-    QVector<LaueOps::Pointer> m_OrientationOps;
+  /**
+   * @brief writeCoords Writes a set of Axis coordinates to that are needed
+   * for a Rectilinear Grid based data set to a VTK file
+   * @param f File instance pointer
+   * @param axis The name of the axis that is being written
+   * @param type The type of primitive being written (float, int, ...)
+   * @param npoints The total number of points in the array
+   * @param min The minimum value of the axis
+   * @param max The maximum value of the axis
+   * @param step The step value between each point on the axis.
+   * @return Integer error value
+   */
+  int32_t writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
 
-    /**
-     * @brief writeCoords Writes a set of Axis coordinates to that are needed
-     * for a Rectilinear Grid based data set to a VTK file
-     * @param f File instance pointer
-     * @param axis The name of the axis that is being written
-     * @param type The type of primitive being written (float, int, ...)
-     * @param npoints The total number of points in the array
-     * @param min The minimum value of the axis
-     * @param max The maximum value of the axis
-     * @param step The step value between each point on the axis.
-     * @return Integer error value
-     */
-    int32_t writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
-
-    VisualizeGBCDPoleFigure(const VisualizeGBCDPoleFigure&); // Copy Constructor Not Implemented
-    void operator=(const VisualizeGBCDPoleFigure&); // Operator '=' Not Implemented
+  VisualizeGBCDPoleFigure(const VisualizeGBCDPoleFigure&); // Copy Constructor Not Implemented
+  void operator=(const VisualizeGBCDPoleFigure&);          // Operator '=' Not Implemented
 };
 
 #endif /* _VisualizeGBCDPoleFigure_H_ */

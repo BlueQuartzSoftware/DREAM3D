@@ -37,22 +37,21 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/FilterFactory.hpp"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "StatisticsTestFileLocations.h"
-
 
 const DataArrayPath k_FeatureIdsArrayPath = DataArrayPath("TestDataContainer1", "TestAttributeMatrix1", "FeatureIds");
 
@@ -125,16 +124,9 @@ public:
     DREAM3D_REQUIRE(err >= 0);
     featureIds->initializeWithValue(1);
 
-
     std::vector<int32_t> features = {
-      1,1,1,3,3,3,4,4,4,0,
-      1,1,1,3,3,3,4,4,4,0,
-      1,1,1,3,3,3,4,4,4,0,
-      2,2,2,3,3,3,5,5,5,0,
-      2,2,2,3,3,3,5,5,5,0,
-      2,2,2,3,3,3,5,5,5,0,
+        1, 1, 1, 3, 3, 3, 4, 4, 4, 0, 1, 1, 1, 3, 3, 3, 4, 4, 4, 0, 1, 1, 1, 3, 3, 3, 4, 4, 4, 0, 2, 2, 2, 3, 3, 3, 5, 5, 5, 0, 2, 2, 2, 3, 3, 3, 5, 5, 5, 0, 2, 2, 2, 3, 3, 3, 5, 5, 5, 0,
     };
-
 
     for(size_t i = 0; i < featureIds->getNumberOfTuples(); i++)
     {
@@ -153,29 +145,19 @@ public:
 
     Int32ArrayType::Pointer int32Array = am->getAttributeArrayAs<Int32ArrayType>("GBManhattanDistance");
 
-    std::vector<int32_t> GBManhattan = {
-    2, 1, 0, 0, 1, 0, 0, 1, 0, -1,
-    1, 1, 0, 0, 1, 0, 0, 1, 0, -1,
-    0, 0, 0, 0, 1, 0, 0, 0, 0, -1,
-    0, 0, 0, 0, 1, 0, 0, 0, 0, -1,
-    1, 1, 0, 0, 1, 0, 0, 1, 0, -1,
-    2, 1, 0, 0, 1, 0, 0, 1, 0, -1};
+    std::vector<int32_t> GBManhattan = {2, 1, 0, 0, 1, 0, 0, 1, 0, -1, 1, 1, 0, 0, 1, 0, 0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1,
+                                        0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 1, 1, 0, 0, 1, 0, 0, 1, 0, -1, 2, 1, 0, 0, 1, 0, 0, 1, 0, -1};
 
     for(size_t i = 0; i < int32Array->getNumberOfTuples(); i++)
     {
-       int32_t computedValue = int32Array->getValue(i);
-       int32_t refValue = GBManhattan[i];
-       DREAM3D_REQUIRE_EQUAL(computedValue, refValue);
+      int32_t computedValue = int32Array->getValue(i);
+      int32_t refValue = GBManhattan[i];
+      DREAM3D_REQUIRE_EQUAL(computedValue, refValue);
     }
 
     int32Array = am->getAttributeArrayAs<Int32ArrayType>("TJManhattanDistance");
-    std::vector<int32_t> TJManhattan = {
-    4, 3, 2, 3, 4, 3, 2, 3, 2, -1,
-    3, 2, 1, 2, 3, 2, 1, 2, 1, -1,
-    2, 1, 0, 1, 2, 1, 0, 1, 0, -1,
-    2, 1, 0, 1, 2, 1, 0, 1, 0, -1,
-    3, 2, 1, 2, 3, 2, 1, 2, 1, -1,
-    4, 3, 2, 3, 4, 3, 2, 3, 2, -1};
+    std::vector<int32_t> TJManhattan = {4, 3, 2, 3, 4, 3, 2, 3, 2, -1, 3, 2, 1, 2, 3, 2, 1, 2, 1, -1, 2, 1, 0, 1, 2, 1, 0, 1, 0, -1,
+                                        2, 1, 0, 1, 2, 1, 0, 1, 0, -1, 3, 2, 1, 2, 3, 2, 1, 2, 1, -1, 4, 3, 2, 3, 4, 3, 2, 3, 2, -1};
 
     for(size_t i = 0; i < int32Array->getNumberOfTuples(); i++)
     {
@@ -185,13 +167,8 @@ public:
     }
 
     int32Array = am->getAttributeArrayAs<Int32ArrayType>("QPManhattanDistance");
-    std::vector<int32_t> QPManhattan = {
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1};
+    std::vector<int32_t> QPManhattan = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+                                        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
     for(size_t i = 0; i < int32Array->getNumberOfTuples(); i++)
     {
       int32_t computedValue = int32Array->getValue(i);
@@ -199,17 +176,11 @@ public:
       DREAM3D_REQUIRE_EQUAL(computedValue, refValue);
     }
 
-
-
     FloatArrayType::Pointer floatArray = am->getAttributeArrayAs<FloatArrayType>("GBEuclideanDistance");
 
-    std::vector<float> GBEuclidean = {
-    4.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-    2.0f, 2.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    2.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-    2.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0};
+    std::vector<float> GBEuclidean = {4.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 2.0f, 2.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 2.0f, 0.0f, 0.0f,
+                                      0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                                      2.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 2.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0};
 
     for(size_t i = 0; i < floatArray->getNumberOfTuples(); i++)
     {
@@ -220,12 +191,9 @@ public:
 
     floatArray = am->getAttributeArrayAs<FloatArrayType>("TJEuclideanDistance");
     std::vector<float> TJEuclidean = {
-    4.472136f,  4.1231055f, 4.0f, 4.1231055f, 4.472136f,  4.1231055f, 4.0f, 4.1231055f, 4.0f, 0.0f,
-    2.828427f,  2.236068f,  2.0f, 2.236068f,  2.828427f,  2.236068f,  2.0f, 2.236068f,  2.0f, 0.0f,
-    2.0f, 1.0f, 0.0f, 1.0f, 2.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-    2.0f, 1.0f, 0.0f, 1.0f, 2.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-    2.828427f,  2.236068f,  2.0f, 2.236068f,  2.828427f,  2.236068f,  2.0f, 2.236068f,  2.0f, 0.0f,
-    4.472136f,  4.1231055f, 4.0f, 4.1231055f, 4.472136f,  4.1231055f, 4.0f, 4.1231055f, 4.0f, 0.0};
+        4.472136f, 4.1231055f, 4.0f, 4.1231055f, 4.472136f, 4.1231055f, 4.0f, 4.1231055f, 4.0f, 0.0f, 2.828427f, 2.236068f,  2.0f, 2.236068f,  2.828427f, 2.236068f,  2.0f, 2.236068f,  2.0f, 0.0f,
+        2.0f,      1.0f,       0.0f, 1.0f,       2.0f,      1.0f,       0.0f, 1.0f,       0.0f, 0.0f, 2.0f,      1.0f,       0.0f, 1.0f,       2.0f,      1.0f,       0.0f, 1.0f,       0.0f, 0.0f,
+        2.828427f, 2.236068f,  2.0f, 2.236068f,  2.828427f, 2.236068f,  2.0f, 2.236068f,  2.0f, 0.0f, 4.472136f, 4.1231055f, 4.0f, 4.1231055f, 4.472136f, 4.1231055f, 4.0f, 4.1231055f, 4.0f, 0.0};
 
     for(size_t i = 0; i < floatArray->getNumberOfTuples(); i++)
     {
@@ -235,13 +203,9 @@ public:
     }
 
     floatArray = am->getAttributeArrayAs<FloatArrayType>("QPEuclideanDistance");
-    std::vector<float> QPEuclidean = {
-    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
-    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
-    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
-    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
-    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0f,
-    -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  -1.0f,  0.0};
+    std::vector<float> QPEuclidean = {-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0f,
+                                      -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0f,
+                                      -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0};
 
     for(size_t i = 0; i < floatArray->getNumberOfTuples(); i++)
     {
@@ -286,7 +250,6 @@ public:
     err = filter->setProperty("CalcManhattanDist", var);
     DREAM3D_REQUIRE(err >= 0);
 
-
     var.setValue(true);
     err = filter->setProperty("DoTripleLines", var);
     DREAM3D_REQUIRE(err >= 0);
@@ -303,7 +266,6 @@ public:
 
     filter->execute();
     DREAM3D_REQUIRE(filter->getErrorCondition() >= 0);
-
 
     //-------------------------------------------
     boundaryArrayName = "GBManhattanDistance";
@@ -329,10 +291,8 @@ public:
     err = filter->setProperty("QPDistancesArrayName", var);
     DREAM3D_REQUIRE(err >= 0);
 
-
     filter->execute();
     DREAM3D_REQUIRE(filter->getErrorCondition() >= 0);
-
 
     DataContainerWriter::Pointer writer = DataContainerWriter::New();
     writer->setOutputFile(UnitTest::StatisticsTempDir + QDir::separator() + "FindEuclideanDistMap.dream3d");
@@ -340,7 +300,6 @@ public:
 
     writer->execute();
     DREAM3D_REQUIRE(writer->getErrorCondition() >= 0);
-
 
     err = validateResults(dca);
 

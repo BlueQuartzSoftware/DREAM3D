@@ -33,16 +33,15 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _calculatetrianglegroupcurvatures_h_
 #define _calculatetrianglegroupcurvatures_h_
 
 #include <set>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/SIMPLib.h"
 /**
  * @brief The CalculateTriangleGroupCurvatures class calculates the curvature values for a group of triangles
  * where each triangle in the group will have the 2 Principal Curvature values computed and optionally
@@ -50,57 +49,47 @@
  */
 class CalculateTriangleGroupCurvatures
 {
-  public:
-    CalculateTriangleGroupCurvatures(int64_t nring,
-                                     std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting,
-                                     DoubleArrayType::Pointer principleCurvature1,
-                                     DoubleArrayType::Pointer principleCurvature2,
-                                     DoubleArrayType::Pointer principleDirection1,
-                                     DoubleArrayType::Pointer principleDirection2,
-                                     DoubleArrayType::Pointer gaussianCurvature,
-                                     DoubleArrayType::Pointer meanCurvature,
-                                     TriangleGeom::Pointer trianglesGeom,
-                                     DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
-                                     DataArray<double>::Pointer surfaceMeshFaceNormals,
-                                     DataArray<double>::Pointer surfaceMeshTriangleCentroids,
-                                     AbstractFilter* parent);
+public:
+  CalculateTriangleGroupCurvatures(int64_t nring, std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting, DoubleArrayType::Pointer principleCurvature1,
+                                   DoubleArrayType::Pointer principleCurvature2, DoubleArrayType::Pointer principleDirection1, DoubleArrayType::Pointer principleDirection2,
+                                   DoubleArrayType::Pointer gaussianCurvature, DoubleArrayType::Pointer meanCurvature, TriangleGeom::Pointer trianglesGeom,
+                                   DataArray<int32_t>::Pointer surfaceMeshFaceLabels, DataArray<double>::Pointer surfaceMeshFaceNormals, DataArray<double>::Pointer surfaceMeshTriangleCentroids,
+                                   AbstractFilter* parent);
 
-    virtual ~CalculateTriangleGroupCurvatures();
+  virtual ~CalculateTriangleGroupCurvatures();
 
-    void operator()() const;
+  void operator()() const;
 
-    typedef std::set<int64_t> UniqueFaceIds_t;
+  typedef std::set<int64_t> UniqueFaceIds_t;
 
-  protected:
-    CalculateTriangleGroupCurvatures();
+protected:
+  CalculateTriangleGroupCurvatures();
 
-    /**
-     * @brief extractPatchData Extracts out the needed data values from the global arrays
-     * @param triId The seed triangle Id
-     * @param triPatch The group of triangles being used
-     * @param data The data to extract from
-     * @param name The name of the data array being used
-     * @return Shared pointer to the extracted data
-     */
-    DataArray<double>::Pointer extractPatchData(int64_t triId, UniqueFaceIds_t& triPatch,
-                                                double* data,
-                                                const QString& name) const;
+  /**
+   * @brief extractPatchData Extracts out the needed data values from the global arrays
+   * @param triId The seed triangle Id
+   * @param triPatch The group of triangles being used
+   * @param data The data to extract from
+   * @param name The name of the data array being used
+   * @return Shared pointer to the extracted data
+   */
+  DataArray<double>::Pointer extractPatchData(int64_t triId, UniqueFaceIds_t& triPatch, double* data, const QString& name) const;
 
-  private:
-    int64_t m_NRing;
-    std::vector<int64_t> m_TriangleIds;
-    bool m_UseNormalsForCurveFitting;
-    DoubleArrayType::Pointer m_PrincipleCurvature1;
-    DoubleArrayType::Pointer m_PrincipleCurvature2;
-    DoubleArrayType::Pointer m_PrincipleDirection1;
-    DoubleArrayType::Pointer m_PrincipleDirection2;
-    DoubleArrayType::Pointer m_GaussianCurvature;
-    DoubleArrayType::Pointer m_MeanCurvature;
-    TriangleGeom::Pointer m_TrianglesPtr;
-    DataArray<int32_t>::Pointer m_SurfaceMeshFaceLabels;
-    DataArray<double>::Pointer m_SurfaceMeshFaceNormals;
-    DataArray<double>::Pointer m_SurfaceMeshTriangleCentroids;
-    AbstractFilter* m_ParentFilter;
+private:
+  int64_t m_NRing;
+  std::vector<int64_t> m_TriangleIds;
+  bool m_UseNormalsForCurveFitting;
+  DoubleArrayType::Pointer m_PrincipleCurvature1;
+  DoubleArrayType::Pointer m_PrincipleCurvature2;
+  DoubleArrayType::Pointer m_PrincipleDirection1;
+  DoubleArrayType::Pointer m_PrincipleDirection2;
+  DoubleArrayType::Pointer m_GaussianCurvature;
+  DoubleArrayType::Pointer m_MeanCurvature;
+  TriangleGeom::Pointer m_TrianglesPtr;
+  DataArray<int32_t>::Pointer m_SurfaceMeshFaceLabels;
+  DataArray<double>::Pointer m_SurfaceMeshFaceNormals;
+  DataArray<double>::Pointer m_SurfaceMeshTriangleCentroids;
+  AbstractFilter* m_ParentFilter;
 };
 
 #endif /* _CalculateTriangleGroupCurvatures_H_ */

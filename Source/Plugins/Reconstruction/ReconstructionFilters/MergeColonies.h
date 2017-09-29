@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _mergecolonies_h_
 #define _mergecolonies_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -50,178 +49,177 @@
  */
 class MergeColonies : public GroupFeatures
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(MergeColonies)
-    SIMPL_STATIC_NEW_MACRO(MergeColonies)
-    SIMPL_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(MergeColonies)
+  SIMPL_STATIC_NEW_MACRO(MergeColonies)
+  SIMPL_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter)
 
-    virtual ~MergeColonies();
+  virtual ~MergeColonies();
 
-    SIMPL_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
-    Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
+  Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-    Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, CellParentIdsArrayName)
-    Q_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, CellParentIdsArrayName)
+  Q_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, GlobAlphaArrayName)
-    Q_PROPERTY(QString GlobAlphaArrayName READ getGlobAlphaArrayName WRITE setGlobAlphaArrayName)
+  SIMPL_FILTER_PARAMETER(QString, GlobAlphaArrayName)
+  Q_PROPERTY(QString GlobAlphaArrayName READ getGlobAlphaArrayName WRITE setGlobAlphaArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
-    Q_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
+  SIMPL_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
+  Q_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
-    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+  SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
+  Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
-    SIMPL_FILTER_PARAMETER(float, AxisTolerance)
-    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
+  SIMPL_FILTER_PARAMETER(float, AxisTolerance)
+  Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
 
-    SIMPL_FILTER_PARAMETER(float, AngleTolerance)
-    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
+  SIMPL_FILTER_PARAMETER(float, AngleTolerance)
+  Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
 
-    SIMPL_INSTANCE_PROPERTY(bool, RandomizeParentIds)
+  SIMPL_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
-    SIMPL_FILTER_PARAMETER(bool, IdentifyGlobAlpha)
-    Q_PROPERTY(bool IdentifyGlobAlpha READ getIdentifyGlobAlpha WRITE setIdentifyGlobAlpha)
+  SIMPL_FILTER_PARAMETER(bool, IdentifyGlobAlpha)
+  Q_PROPERTY(bool IdentifyGlobAlpha READ getIdentifyGlobAlpha WRITE setIdentifyGlobAlpha)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  protected:
-    MergeColonies();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  MergeColonies();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  /**
+   * @brief getSeed Reimplemented from @see GroupFeatures class
+   */
+  virtual int32_t getSeed(int32_t newFid);
 
-    /**
-     * @brief getSeed Reimplemented from @see GroupFeatures class
-     */
-    virtual int32_t getSeed(int32_t newFid);
+  /**
+   * @brief determineGrouping Reimplemented from @see GroupFeatures class
+   */
+  virtual bool determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
 
-    /**
-     * @brief determineGrouping Reimplemented from @see GroupFeatures class
-     */
-    virtual bool determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
+  /**
+   * @brief check_for_burgers Checks the Burgers vector between two quaternions
+   * @param betaQuat Beta quaterion
+   * @param alphaQuat Alpha quaternion
+   * @return Boolean vector check
+   */
+  bool check_for_burgers(QuatF betaQuat, QuatF alphaQuat);
 
-    /**
-     * @brief check_for_burgers Checks the Burgers vector between two quaternions
-     * @param betaQuat Beta quaterion
-     * @param alphaQuat Alpha quaternion
-     * @return Boolean vector check
-     */
-    bool check_for_burgers(QuatF betaQuat, QuatF alphaQuat);
+  /**
+   * @brief characterize_colonies Characterizes colonies; CURRENTLY NOT IMPLEMENTED
+   */
+  void characterize_colonies();
 
-    /**
-     * @brief characterize_colonies Characterizes colonies; CURRENTLY NOT IMPLEMENTED
-     */
-    void characterize_colonies();
+  /**
+   * @brief identify_globAlpha Identifies regions of glob alpha
+   */
+  void identify_globAlpha();
 
-    /**
-     * @brief identify_globAlpha Identifies regions of glob alpha
-     */
-    void identify_globAlpha();
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, CellParentIds)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, GlobAlpha)
+  DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellParentIds)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, GlobAlpha)
-    DEFINE_DATAARRAY_VARIABLE(bool, Active)
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
-    QVector<LaueOps::Pointer> m_OrientationOps;
+  float m_AxisToleranceRad;
 
-    float m_AxisToleranceRad;
+  /**
+   * @brief updateFeatureInstancePointers Updates raw Feature pointers
+   */
+  void updateFeatureInstancePointers();
 
-    /**
-     * @brief updateFeatureInstancePointers Updates raw Feature pointers
-     */
-    void updateFeatureInstancePointers();
-
-    MergeColonies(const MergeColonies&); // Copy Constructor Not Implemented
-    void operator=(const MergeColonies&); // Operator '=' Not Implemented
+  MergeColonies(const MergeColonies&);  // Copy Constructor Not Implemented
+  void operator=(const MergeColonies&); // Operator '=' Not Implemented
 };
 
 #endif /* MergeColonies_H_ */

@@ -8,7 +8,7 @@ set(PLUGIN_NAME "StatsGenerator")
 set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
-include(${SIMPLProj_SOURCE_DIR}/Test/SIMPLTestFunctions.cmake)
+include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/SIMPLTestFunctions.cmake)
 
 include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 include_directories(${${PLUGIN_NAME}_BINARY_DIR})
@@ -73,7 +73,7 @@ endforeach()
 
 STRING(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors}   )
 
-configure_file(${SIMPLProj_SOURCE_DIR}/Test/TestMain.cpp.in
+configure_file(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/TestMain.cpp.in
                ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp @ONLY)
 
 

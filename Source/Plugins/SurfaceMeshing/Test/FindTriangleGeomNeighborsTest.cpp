@@ -36,38 +36,41 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
-#include "SIMPLib/Common/FilterPipeline.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshingTestFileLocations.h"
 
 class FindTriangleGeomNeighborsTest
 {
 
-  public:
-    FindTriangleGeomNeighborsTest() {}
-    virtual ~FindTriangleGeomNeighborsTest() {}
-
+public:
+  FindTriangleGeomNeighborsTest()
+  {
+  }
+  virtual ~FindTriangleGeomNeighborsTest()
+  {
+  }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   void RemoveTestFiles()
   {
-  #if REMOVE_TEST_FILES
+#if REMOVE_TEST_FILES
     QFile::remove(UnitTest::FindTriangleGeomNeighborsTest::TestFile1);
     QFile::remove(UnitTest::FindTriangleGeomNeighborsTest::TestFile2);
-  #endif
+#endif
   }
 
   // -----------------------------------------------------------------------------
@@ -79,7 +82,7 @@ class FindTriangleGeomNeighborsTest
     QString filtName = "FindTriangleGeomNeighbors";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    if (nullptr == filterFactory.get())
+    if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
       ss << "The SurfaceMeshing Requires the use of the " << filtName.toStdString() << " filter which is found in the SurfaceMeshing Plugin";
@@ -108,68 +111,68 @@ class FindTriangleGeomNeighborsTest
 
     // Define 16 vertex coordinates
     vertices[3 * 0 + 0] = -1.0f;
-    vertices[3 * 0 + 1] =  0.0f;
-    vertices[3 * 0 + 2] =  0.0f;
+    vertices[3 * 0 + 1] = 0.0f;
+    vertices[3 * 0 + 2] = 0.0f;
 
     vertices[3 * 1 + 0] = -1.0f;
-    vertices[3 * 1 + 1] =  0.0f;
-    vertices[3 * 1 + 2] =  1.0f;
+    vertices[3 * 1 + 1] = 0.0f;
+    vertices[3 * 1 + 2] = 1.0f;
 
     vertices[3 * 2 + 0] = -1.0f;
-    vertices[3 * 2 + 1] =  1.0f;
-    vertices[3 * 2 + 2] =  1.0f;
+    vertices[3 * 2 + 1] = 1.0f;
+    vertices[3 * 2 + 2] = 1.0f;
 
     vertices[3 * 3 + 0] = -1.0f;
-    vertices[3 * 3 + 1] =  1.0f;
-    vertices[3 * 3 + 2] =  0.0f;
+    vertices[3 * 3 + 1] = 1.0f;
+    vertices[3 * 3 + 2] = 0.0f;
 
-    vertices[3 * 4 + 0] =  2.0f;
-    vertices[3 * 4 + 1] =  0.0f;
-    vertices[3 * 4 + 2] =  0.0f;
+    vertices[3 * 4 + 0] = 2.0f;
+    vertices[3 * 4 + 1] = 0.0f;
+    vertices[3 * 4 + 2] = 0.0f;
 
-    vertices[3 * 5 + 0] =  2.0f;
-    vertices[3 * 5 + 1] =  0.0f;
-    vertices[3 * 5 + 2] =  1.0f;
+    vertices[3 * 5 + 0] = 2.0f;
+    vertices[3 * 5 + 1] = 0.0f;
+    vertices[3 * 5 + 2] = 1.0f;
 
-    vertices[3 * 6 + 0] =  2.0f;
-    vertices[3 * 6 + 1] =  1.0f;
-    vertices[3 * 6 + 2] =  1.0f;
+    vertices[3 * 6 + 0] = 2.0f;
+    vertices[3 * 6 + 1] = 1.0f;
+    vertices[3 * 6 + 2] = 1.0f;
 
-    vertices[3 * 7 + 0] =  2.0f;
-    vertices[3 * 7 + 1] =  1.0f;
-    vertices[3 * 7 + 2] =  0.0f;
+    vertices[3 * 7 + 0] = 2.0f;
+    vertices[3 * 7 + 1] = 1.0f;
+    vertices[3 * 7 + 2] = 0.0f;
 
-    vertices[3 * 8 + 0] =  0.0f;
-    vertices[3 * 8 + 1] =  0.0f;
-    vertices[3 * 8 + 2] =  0.0f;
+    vertices[3 * 8 + 0] = 0.0f;
+    vertices[3 * 8 + 1] = 0.0f;
+    vertices[3 * 8 + 2] = 0.0f;
 
-    vertices[3 * 9 + 0] =  0.0f;
-    vertices[3 * 9 + 1] =  0.0f;
-    vertices[3 * 9 + 2] =  1.0f;
+    vertices[3 * 9 + 0] = 0.0f;
+    vertices[3 * 9 + 1] = 0.0f;
+    vertices[3 * 9 + 2] = 1.0f;
 
-    vertices[3 * 10 + 0] =  0.0f;
-    vertices[3 * 10 + 1] =  1.0f;
-    vertices[3 * 10 + 2] =  1.0f;
+    vertices[3 * 10 + 0] = 0.0f;
+    vertices[3 * 10 + 1] = 1.0f;
+    vertices[3 * 10 + 2] = 1.0f;
 
-    vertices[3 * 11 + 0] =  0.0f;
-    vertices[3 * 11 + 1] =  1.0f;
-    vertices[3 * 11 + 2] =  0.0f;
+    vertices[3 * 11 + 0] = 0.0f;
+    vertices[3 * 11 + 1] = 1.0f;
+    vertices[3 * 11 + 2] = 0.0f;
 
-    vertices[3 * 12 + 0] =  1.0f;
-    vertices[3 * 12 + 1] =  0.0f;
-    vertices[3 * 12 + 2] =  0.0f;
+    vertices[3 * 12 + 0] = 1.0f;
+    vertices[3 * 12 + 1] = 0.0f;
+    vertices[3 * 12 + 2] = 0.0f;
 
-    vertices[3 * 13 + 0] =  1.0f;
-    vertices[3 * 13 + 1] =  0.0f;
-    vertices[3 * 13 + 2] =  1.0f;
+    vertices[3 * 13 + 0] = 1.0f;
+    vertices[3 * 13 + 1] = 0.0f;
+    vertices[3 * 13 + 2] = 1.0f;
 
-    vertices[3 * 14 + 0] =  1.0f;
-    vertices[3 * 14 + 1] =  1.0f;
-    vertices[3 * 14 + 2] =  1.0f;
+    vertices[3 * 14 + 0] = 1.0f;
+    vertices[3 * 14 + 1] = 1.0f;
+    vertices[3 * 14 + 2] = 1.0f;
 
-    vertices[3 * 15 + 0] =  1.0f;
-    vertices[3 * 15 + 1] =  1.0f;
-    vertices[3 * 15 + 2] =  0.0f;
+    vertices[3 * 15 + 0] = 1.0f;
+    vertices[3 * 15 + 1] = 1.0f;
+    vertices[3 * 15 + 2] = 0.0f;
 
     // Define 32 triangles
     tris[3 * 0 + 0] = 0;
@@ -312,88 +315,88 @@ class FindTriangleGeomNeighborsTest
     int32_t* faceLabelsPtr = faceLabels->getPointer(0);
 
     faceLabelsPtr[2 * 0 + 0] = -1;
-    faceLabelsPtr[2 * 0 + 1] =  1;
+    faceLabelsPtr[2 * 0 + 1] = 1;
 
     faceLabelsPtr[2 * 1 + 0] = -1;
-    faceLabelsPtr[2 * 1 + 1] =  1;
+    faceLabelsPtr[2 * 1 + 1] = 1;
 
     faceLabelsPtr[2 * 2 + 0] = -1;
-    faceLabelsPtr[2 * 2 + 1] =  1;
+    faceLabelsPtr[2 * 2 + 1] = 1;
 
     faceLabelsPtr[2 * 3 + 0] = -1;
-    faceLabelsPtr[2 * 3 + 1] =  1;
+    faceLabelsPtr[2 * 3 + 1] = 1;
 
     faceLabelsPtr[2 * 4 + 0] = -1;
-    faceLabelsPtr[2 * 4 + 1] =  2;
+    faceLabelsPtr[2 * 4 + 1] = 2;
 
     faceLabelsPtr[2 * 5 + 0] = -1;
-    faceLabelsPtr[2 * 5 + 1] =  2;
+    faceLabelsPtr[2 * 5 + 1] = 2;
 
     faceLabelsPtr[2 * 6 + 0] = -1;
-    faceLabelsPtr[2 * 6 + 1] =  3;
+    faceLabelsPtr[2 * 6 + 1] = 3;
 
     faceLabelsPtr[2 * 7 + 0] = -1;
-    faceLabelsPtr[2 * 7 + 1] =  3;
+    faceLabelsPtr[2 * 7 + 1] = 3;
 
     faceLabelsPtr[2 * 8 + 0] = -1;
-    faceLabelsPtr[2 * 8 + 1] =  3;
+    faceLabelsPtr[2 * 8 + 1] = 3;
 
     faceLabelsPtr[2 * 9 + 0] = -1;
-    faceLabelsPtr[2 * 9 + 1] =  3;
+    faceLabelsPtr[2 * 9 + 1] = 3;
 
     faceLabelsPtr[2 * 10 + 0] = -1;
-    faceLabelsPtr[2 * 10 + 1] =  3;
+    faceLabelsPtr[2 * 10 + 1] = 3;
 
     faceLabelsPtr[2 * 11 + 0] = -1;
-    faceLabelsPtr[2 * 11 + 1] =  3;
+    faceLabelsPtr[2 * 11 + 1] = 3;
 
     faceLabelsPtr[2 * 12 + 0] = -1;
-    faceLabelsPtr[2 * 12 + 1] =  2;
+    faceLabelsPtr[2 * 12 + 1] = 2;
 
     faceLabelsPtr[2 * 13 + 0] = -1;
-    faceLabelsPtr[2 * 13 + 1] =  2;
+    faceLabelsPtr[2 * 13 + 1] = 2;
 
     faceLabelsPtr[2 * 14 + 0] = -1;
-    faceLabelsPtr[2 * 14 + 1] =  1;
+    faceLabelsPtr[2 * 14 + 1] = 1;
 
     faceLabelsPtr[2 * 15 + 0] = -1;
-    faceLabelsPtr[2 * 15 + 1] =  1;
+    faceLabelsPtr[2 * 15 + 1] = 1;
 
     faceLabelsPtr[2 * 16 + 0] = -1;
-    faceLabelsPtr[2 * 16 + 1] =  1;
+    faceLabelsPtr[2 * 16 + 1] = 1;
 
     faceLabelsPtr[2 * 17 + 0] = -1;
-    faceLabelsPtr[2 * 17 + 1] =  1;
+    faceLabelsPtr[2 * 17 + 1] = 1;
 
     faceLabelsPtr[2 * 18 + 0] = -1;
-    faceLabelsPtr[2 * 18 + 1] =  2;
+    faceLabelsPtr[2 * 18 + 1] = 2;
 
     faceLabelsPtr[2 * 19 + 0] = -1;
-    faceLabelsPtr[2 * 19 + 1] =  2;
+    faceLabelsPtr[2 * 19 + 1] = 2;
 
     faceLabelsPtr[2 * 20 + 0] = -1;
-    faceLabelsPtr[2 * 20 + 1] =  3;
+    faceLabelsPtr[2 * 20 + 1] = 3;
 
     faceLabelsPtr[2 * 21 + 0] = -1;
-    faceLabelsPtr[2 * 21 + 1] =  3;
+    faceLabelsPtr[2 * 21 + 1] = 3;
 
     faceLabelsPtr[2 * 22 + 0] = -1;
-    faceLabelsPtr[2 * 22 + 1] =  1;
+    faceLabelsPtr[2 * 22 + 1] = 1;
 
     faceLabelsPtr[2 * 23 + 0] = -1;
-    faceLabelsPtr[2 * 23 + 1] =  1;
+    faceLabelsPtr[2 * 23 + 1] = 1;
 
     faceLabelsPtr[2 * 24 + 0] = -1;
-    faceLabelsPtr[2 * 24 + 1] =  2;
+    faceLabelsPtr[2 * 24 + 1] = 2;
 
     faceLabelsPtr[2 * 25 + 0] = -1;
-    faceLabelsPtr[2 * 25 + 1] =  2;
+    faceLabelsPtr[2 * 25 + 1] = 2;
 
     faceLabelsPtr[2 * 26 + 0] = -1;
-    faceLabelsPtr[2 * 26 + 1] =  3;
+    faceLabelsPtr[2 * 26 + 1] = 3;
 
     faceLabelsPtr[2 * 27 + 0] = -1;
-    faceLabelsPtr[2 * 27 + 1] =  3;
+    faceLabelsPtr[2 * 27 + 1] = 3;
 
     faceLabelsPtr[2 * 28 + 0] = 1;
     faceLabelsPtr[2 * 28 + 1] = 2;
@@ -472,17 +475,14 @@ class FindTriangleGeomNeighborsTest
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+    DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-    DREAM3D_REGISTER_TEST( TestFindTriangleGeomNeighborsTest() )
+    DREAM3D_REGISTER_TEST(TestFindTriangleGeomNeighborsTest())
 
-    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-  private:
-    FindTriangleGeomNeighborsTest(const FindTriangleGeomNeighborsTest&); // Copy Constructor Not Implemented
-    void operator=(const FindTriangleGeomNeighborsTest&); // Operator '=' Not Implemented
-
-
+private:
+  FindTriangleGeomNeighborsTest(const FindTriangleGeomNeighborsTest&); // Copy Constructor Not Implemented
+  void operator=(const FindTriangleGeomNeighborsTest&);                // Operator '=' Not Implemented
 };
-

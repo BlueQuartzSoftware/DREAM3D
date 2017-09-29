@@ -33,15 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _readedaxh5data_h_
 #define _readedaxh5data_h_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "EbsdLib/TSL/AngPhase.h"
 
@@ -58,211 +57,209 @@ class ReadEdaxH5DataPrivate;
  */
 class ReadEdaxH5Data : public AbstractFilter
 {
-    Q_OBJECT
-    Q_DECLARE_PRIVATE(ReadEdaxH5Data)
+  Q_OBJECT
+  Q_DECLARE_PRIVATE(ReadEdaxH5Data)
 
-  public:
-    SIMPL_SHARED_POINTERS(ReadEdaxH5Data)
-    SIMPL_STATIC_NEW_MACRO(ReadEdaxH5Data)
-    SIMPL_TYPE_MACRO_SUPER(ReadEdaxH5Data, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(ReadEdaxH5Data)
+  SIMPL_STATIC_NEW_MACRO(ReadEdaxH5Data)
+  SIMPL_TYPE_MACRO_SUPER(ReadEdaxH5Data, AbstractFilter)
 
-    virtual ~ReadEdaxH5Data();
+  virtual ~ReadEdaxH5Data();
 
-    SIMPL_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    SIMPL_FILTER_PARAMETER(QStringList, SelectedScanNames)
-    Q_PROPERTY(QStringList SelectedScanNames READ getSelectedScanNames WRITE setSelectedScanNames)
+  SIMPL_FILTER_PARAMETER(QStringList, SelectedScanNames)
+  Q_PROPERTY(QStringList SelectedScanNames READ getSelectedScanNames WRITE setSelectedScanNames)
 
-    SIMPL_FILTER_PARAMETER(int, NumberOfScans)
-    Q_PROPERTY(int NumberOfScans READ getNumberOfScans WRITE setNumberOfScans)
+  SIMPL_FILTER_PARAMETER(int, NumberOfScans)
+  Q_PROPERTY(int NumberOfScans READ getNumberOfScans WRITE setNumberOfScans)
 
-    SIMPL_FILTER_PARAMETER(double, ZSpacing)
-    Q_PROPERTY(double ZSpacing READ getZSpacing WRITE setZSpacing)
+  SIMPL_FILTER_PARAMETER(double, ZSpacing)
+  Q_PROPERTY(double ZSpacing READ getZSpacing WRITE setZSpacing)
 
-    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
-    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
+  Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
-    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
+  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(bool, ReadPatternData)
-    Q_PROPERTY(bool ReadPatternData READ getReadPatternData WRITE setReadPatternData)
+  SIMPL_FILTER_PARAMETER(bool, ReadPatternData)
+  Q_PROPERTY(bool ReadPatternData READ getReadPatternData WRITE setReadPatternData)
 
-    SIMPL_FILTER_PARAMETER(bool, FileWasRead)
-    Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+  SIMPL_FILTER_PARAMETER(bool, FileWasRead)
+  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-    SIMPL_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+  SIMPL_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
 
-    SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+  SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
+
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
+
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
+
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
+
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
+
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
+
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
+
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+
+  /**
+  * @brief execute Reimplemented from @see AbstractFilter class
+  */
+  virtual void execute();
+
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
+
+  /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
+  SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+
+  SIMPL_INSTANCE_PROPERTY(int, Manufacturer)
+
+  typedef QMap<QString, IDataArray::Pointer> IDataArrayMap;
+
+  SIMPL_INSTANCE_PROPERTY(IDataArrayMap, EbsdArrayMap)
+
+  SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+
+  SIMPL_PIMPL_PROPERTY_DECL(Ang_Private_Data, Data)
+
+  Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
+
+  SIMPL_PIMPL_PROPERTY_DECL(QStringList, FileScanNames)
+  Q_PROPERTY(QStringList FileScanNames READ getFileScanNames WRITE setFileScanNames)
+
+  SIMPL_PIMPL_PROPERTY_DECL(QVector<int>, PatternDims)
+  Q_PROPERTY(QVector<int> PatternDims READ getPatternDims WRITE setPatternDims)
+
+signals:
+  /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
      */
-    virtual const QString getCompiledLibraryName();
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
-
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
+  /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
      */
-    virtual const QString getFilterVersion();
+  void parametersChanged();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+  /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
      */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  void preflightAboutToExecute();
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
+  /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
      */
-    virtual const QString getGroupName();
+  void preflightExecuted();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+public slots:
+  /**
+   * @brief flushCache Resets the cache file state
+   */
+  void flushCache();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+protected:
+  ReadEdaxH5Data();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+  * @brief copyRawEbsdData Reads the H5OIM file and puts the data into the data container
+  * @param reader H5OIMReader instance pointer
+  * @param tDims Tuple dimensions
+  * @param cDims Component dimensions
+  * @param index Current slice index
+  */
+  void copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims, int index);
 
-    /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
-    virtual void execute();
+  /**
+  * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
+  * and precipitate fractions from the EBSD file
+  * @param reader H5OIMReader instance pointer
+  * @return Integer error value
+  */
+  int32_t loadMaterialInfo(H5OIMReader* reader);
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+   * @brief readDataFile Reads the H5OIM file
+   * @param reader H5OIMReader instance pointer
+   * @param m DataContainer instance pointer
+   * @param tDims Tuple dimensions
+   */
+  void readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, const QString& scanName, ANG_READ_FLAG flag);
 
-    /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
-    SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+private:
+  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+  DEFINE_DATAARRAY_VARIABLE(uint8_t, CellPatternData)
+  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
-    SIMPL_INSTANCE_PROPERTY(int, Manufacturer)
+  QScopedPointer<ReadEdaxH5DataPrivate> const d_ptr;
 
-    typedef QMap<QString, IDataArray::Pointer> IDataArrayMap;
-
-    SIMPL_INSTANCE_PROPERTY(IDataArrayMap, EbsdArrayMap)
-
-    SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-
-    SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
-
-    SIMPL_PIMPL_PROPERTY_DECL(Ang_Private_Data, Data)
-
-    Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
-
-    SIMPL_PIMPL_PROPERTY_DECL(QStringList, FileScanNames)
-    Q_PROPERTY(QStringList FileScanNames READ getFileScanNames WRITE setFileScanNames)
-
-    SIMPL_PIMPL_PROPERTY_DECL(QVector<int>, PatternDims)
-    Q_PROPERTY(QVector<int> PatternDims READ getPatternDims WRITE setPatternDims)
-
-  signals:
-    /**
-       * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-       * be pushed from a user-facing control (such as a widget)
-       * @param filter Filter instance pointer
-       */
-    void updateFilterParameters(AbstractFilter* filter);
-
-    /**
-       * @brief parametersChanged Emitted when any Filter parameter is changed internally
-       */
-    void parametersChanged();
-
-    /**
-       * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-       */
-    void preflightAboutToExecute();
-
-    /**
-       * @brief preflightExecuted Emitted just after calling dataCheck()
-       */
-    void preflightExecuted();
-
-  public slots:
-    /**
-     * @brief flushCache Resets the cache file state
-     */
-    void flushCache();
-
-  protected:
-    ReadEdaxH5Data();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
-
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
-
-
-    /**
-    * @brief copyRawEbsdData Reads the H5OIM file and puts the data into the data container
-    * @param reader H5OIMReader instance pointer
-    * @param tDims Tuple dimensions
-    * @param cDims Component dimensions
-    * @param index Current slice index
-    */
-    void copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims, int index);
-
-    /**
-    * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
-    * and precipitate fractions from the EBSD file
-    * @param reader H5OIMReader instance pointer
-    * @return Integer error value
-    */
-    int32_t loadMaterialInfo(H5OIMReader* reader);
-
-    /**
-     * @brief readDataFile Reads the H5OIM file
-     * @param reader H5OIMReader instance pointer
-     * @param m DataContainer instance pointer
-     * @param tDims Tuple dimensions
-     */
-    void readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, const QString &scanName, ANG_READ_FLAG flag);
-
-
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_DATAARRAY_VARIABLE(uint8_t, CellPatternData)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
-
-    QScopedPointer<ReadEdaxH5DataPrivate> const d_ptr;
-
-    ReadEdaxH5Data(const ReadEdaxH5Data&); // Copy Constructor Not Implemented
-    void operator=(const ReadEdaxH5Data&); // Operator '=' Not Implemented
+  ReadEdaxH5Data(const ReadEdaxH5Data&); // Copy Constructor Not Implemented
+  void operator=(const ReadEdaxH5Data&); // Operator '=' Not Implemented
 };
 
 #endif /* _ReadEdaxH5Data_H_ */

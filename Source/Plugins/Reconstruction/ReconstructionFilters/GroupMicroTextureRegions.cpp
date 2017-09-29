@@ -47,7 +47,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 

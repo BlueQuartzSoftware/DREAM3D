@@ -33,20 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _correlatevalueswithvectordirection_h_
 #define _correlatevalueswithvectordirection_h_
 
-#include <vector>
 #include <QtCore/QString>
+#include <vector>
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
-#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -59,147 +58,146 @@
  */
 class CorrelateValuesWithVectorDirection : public AbstractFilter
 {
-    Q_OBJECT
-  public:
-    SIMPL_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
-    SIMPL_STATIC_NEW_MACRO(CorrelateValuesWithVectorDirection)
-    SIMPL_TYPE_MACRO_SUPER(CorrelateValuesWithVectorDirection, AbstractFilter)
+  Q_OBJECT
+public:
+  SIMPL_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
+  SIMPL_STATIC_NEW_MACRO(CorrelateValuesWithVectorDirection)
+  SIMPL_TYPE_MACRO_SUPER(CorrelateValuesWithVectorDirection, AbstractFilter)
 
-    virtual ~CorrelateValuesWithVectorDirection();
+  virtual ~CorrelateValuesWithVectorDirection();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CorrelatedDataArrayPath)
-    Q_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
-    SIMPL_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
-    Q_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, CorrelatedDataArrayPath)
+  Q_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
+  Q_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 
-    SIMPL_INSTANCE_STRING_PROPERTY(Logfile)
+  SIMPL_INSTANCE_STRING_PROPERTY(Logfile)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    CorrelateValuesWithVectorDirection();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  CorrelateValuesWithVectorDirection();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
+  void makeLambertProjection(size_t numComps);
+  int determineSquareCoordsandBin(float xyz[3]);
+  void determineXYZCoords(float sqCoords[2], float xyz[3]);
+  void writeLambertProjection(size_t numComps);
+  void writePFStats(size_t numComps);
+  void createSterographicProjections(size_t numComps);
 
-    void makeLambertProjection(size_t numComps);
-    int determineSquareCoordsandBin(float xyz[3]);
-    void determineXYZCoords(float sqCoords[2], float xyz[3]);
-    void writeLambertProjection(size_t numComps);
-    void writePFStats(size_t numComps);
-    void createSterographicProjections(size_t numComps);
+private:
+  DEFINE_DATAARRAY_VARIABLE(float, VectorData)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(float, VectorData)
+  DoubleArrayType::Pointer m_LambertProj;
 
-    DoubleArrayType::Pointer m_LambertProj;
+  float m_MaxCoord;
+  int m_Dimension;
+  float m_StepSize;
 
-    float m_MaxCoord;
-    int m_Dimension;
-    float m_StepSize;
+  /**
+   * @brief This function writes a set of Axis coordinates to that are needed
+   * for a Rectilinear Grid based data set.
+   * @param f The "C" FILE* pointer to the file being written to.
+   * @param axis The name of the Axis that is being written
+   * @param type The type of primitive being written (float, int, ...)
+   * @param npoints The total number of points in the array
+   * @param min The minimum value of the axis
+   * @param max The maximum value of the axis
+   * @param step The step value between each point on the axis.
+   */
+  int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
 
-    /**
-     * @brief This function writes a set of Axis coordinates to that are needed
-     * for a Rectilinear Grid based data set.
-     * @param f The "C" FILE* pointer to the file being written to.
-     * @param axis The name of the Axis that is being written
-     * @param type The type of primitive being written (float, int, ...)
-     * @param npoints The total number of points in the array
-     * @param min The minimum value of the axis
-     * @param max The maximum value of the axis
-     * @param step The step value between each point on the axis.
-     */
-    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
-
-    CorrelateValuesWithVectorDirection(const CorrelateValuesWithVectorDirection&); // Copy Constructor Not Implemented
-    void operator=(const CorrelateValuesWithVectorDirection&); // Operator '=' Not Implemented
+  CorrelateValuesWithVectorDirection(const CorrelateValuesWithVectorDirection&); // Copy Constructor Not Implemented
+  void operator=(const CorrelateValuesWithVectorDirection&);                     // Operator '=' Not Implemented
 };
 
 #endif /* CorrelateValuesWithVectorDirection_H_ */

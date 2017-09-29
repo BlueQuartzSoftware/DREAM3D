@@ -45,7 +45,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Math/SIMPLibRandom.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -113,14 +113,12 @@ void CropImageGeometry::setupFilterParameters()
               << "FeatureIdsArrayPath";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Renumber Features", RenumberFeatures, FilterParameter::Parameter, CropImageGeometry, linkedProps));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, CropImageGeometry, req));
   }
-  //parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
+  // parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req =
-        AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, CropImageGeometry, req));
   }
   setFilterParameters(parameters);
@@ -328,8 +326,7 @@ void CropImageGeometry::dataCheck()
     }
     else
     {
-      QString ss =
-          QObject::tr("The DataArray '%1' which defines the Feature Ids to renumber is invalid. Does it exist? Is it the correct type?").arg(getFeatureIdsArrayPath().serialize("/"));
+      QString ss = QObject::tr("The DataArray '%1' which defines the Feature Ids to renumber is invalid. Does it exist? Is it the correct type?").arg(getFeatureIdsArrayPath().serialize("/"));
       setErrorCondition(-55500);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -337,8 +334,8 @@ void CropImageGeometry::dataCheck()
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getPrereqAttributeMatrix<AbstractFilter>(nullptr, getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), -56);
     if(nullptr == cellFeatureAttrMat.get())
     {
-      QString ss =
-          QObject::tr("The AttributeMatrix '%1' is invalid. Does it exist? Is it the correct type?. The AttributeMatrix defines where the segmented features are stored.").arg(getCellFeatureAttributeMatrixPath().serialize("/"));
+      QString ss = QObject::tr("The AttributeMatrix '%1' is invalid. Does it exist? Is it the correct type?. The AttributeMatrix defines where the segmented features are stored.")
+                       .arg(getCellFeatureAttributeMatrixPath().serialize("/"));
       setErrorCondition(-55501);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
