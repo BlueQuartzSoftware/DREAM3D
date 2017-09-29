@@ -33,27 +33,27 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _primaryrolledpresetdialog_h_
-#define _primaryrolledpresetdialog_h_
+#ifndef _RolledPresetDialog_h_
+#define _RolledPresetDialog_h_
 
 #include <QtWidgets/QDialog>
 
 class QLineEdit;
 
 /**
- * @class PrimaryRolledPresetDialog PrimaryRolledPresetDialog.h StatsGenerator/Presets/Dialogs/PrimaryRolledPresetDialog.h
+ * @class RolledPresetDialog RolledPresetDialog.h StatsGenerator/Presets/Dialogs/RolledPresetDialog.h
  * @brief This class is a QDialog subclass that allows the user to input values
  * that effect the generation of a default set of statistics.
  *
  * @date May 12, 2011
  * @version 1.0
  */
-class PrimaryRolledPresetDialog : public QDialog
+class RolledPresetDialog : public QDialog
 {
     Q_OBJECT
   public:
-    PrimaryRolledPresetDialog(QWidget* parent = nullptr);
-    virtual ~PrimaryRolledPresetDialog();
+    RolledPresetDialog(QWidget* parent = nullptr);
+    virtual ~RolledPresetDialog();
 
     float getA();
     float getB();
@@ -73,9 +73,9 @@ class PrimaryRolledPresetDialog : public QDialog
     QLineEdit* C;
 
 
-    PrimaryRolledPresetDialog(const PrimaryRolledPresetDialog&); // Copy Constructor Not Implemented
-    void operator=(const PrimaryRolledPresetDialog&); // Operator '=' Not Implemented
+    RolledPresetDialog(const RolledPresetDialog&); // Copy Constructor Not Implemented
+    void operator=(const RolledPresetDialog&); // Operator '=' Not Implemented
 };
 
-#endif /* PrimaryRolledPresetDialog_H_ */
+#endif /* RolledPresetDialog_H_ */
 
