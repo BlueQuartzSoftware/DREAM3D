@@ -306,7 +306,7 @@ const QString FindAvgCAxes::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindAvgCAxes::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

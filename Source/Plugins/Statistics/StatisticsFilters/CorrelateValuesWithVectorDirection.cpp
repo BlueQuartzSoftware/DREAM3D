@@ -754,7 +754,7 @@ const QString CorrelateValuesWithVectorDirection::getGroupName()
 // -----------------------------------------------------------------------------
 const QString CorrelateValuesWithVectorDirection::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

@@ -565,7 +565,7 @@ const QString FindTwinBoundarySchmidFactors::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindTwinBoundarySchmidFactors::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

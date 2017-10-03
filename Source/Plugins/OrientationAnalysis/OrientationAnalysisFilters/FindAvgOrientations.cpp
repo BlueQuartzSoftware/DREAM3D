@@ -337,7 +337,7 @@ const QString FindAvgOrientations::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindAvgOrientations::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

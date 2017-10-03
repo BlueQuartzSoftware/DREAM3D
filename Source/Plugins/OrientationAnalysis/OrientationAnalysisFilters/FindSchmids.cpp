@@ -423,7 +423,7 @@ const QString FindSchmids::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindSchmids::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

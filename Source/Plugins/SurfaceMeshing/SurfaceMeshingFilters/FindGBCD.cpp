@@ -856,7 +856,7 @@ const QString FindGBCD::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindGBCD::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------
