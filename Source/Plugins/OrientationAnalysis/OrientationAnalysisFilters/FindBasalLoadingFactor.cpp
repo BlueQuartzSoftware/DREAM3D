@@ -263,7 +263,7 @@ const QString FindBasalLoadingFactor::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindBasalLoadingFactor::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

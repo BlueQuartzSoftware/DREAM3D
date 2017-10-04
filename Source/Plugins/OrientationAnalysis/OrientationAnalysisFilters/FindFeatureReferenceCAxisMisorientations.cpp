@@ -416,7 +416,7 @@ const QString FindFeatureReferenceCAxisMisorientations::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

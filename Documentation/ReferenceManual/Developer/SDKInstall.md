@@ -96,7 +96,6 @@ DREAM.3D depends on several 3rd party libraries to be installed and ready to lin
 | CMake | 3.5.1 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
 | Doxygen | 1.8.11 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |
 | HDF5 | 1.8.16 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |
-| Boost | 1.60.0 | [http://www.boost.org](http://www.boost.org) |
 | Eigen | 3.2.9 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |
 | Intel Threading Building Blocks | tbb44\_20160526oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |
 | Qt | 5.6.2 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. Visual Studio uses should get Qt 5.6.2 at the minimum.  |

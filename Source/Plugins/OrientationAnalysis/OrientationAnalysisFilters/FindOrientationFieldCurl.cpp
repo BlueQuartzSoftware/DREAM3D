@@ -540,7 +540,7 @@ const QString FindOrientationFieldCurl::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

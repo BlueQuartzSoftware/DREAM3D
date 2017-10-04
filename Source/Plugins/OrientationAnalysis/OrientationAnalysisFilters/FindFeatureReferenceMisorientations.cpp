@@ -448,7 +448,7 @@ const QString FindFeatureReferenceMisorientations::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindFeatureReferenceMisorientations::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

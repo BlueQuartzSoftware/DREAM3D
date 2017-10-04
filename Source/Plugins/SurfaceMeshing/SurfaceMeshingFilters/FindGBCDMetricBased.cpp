@@ -1153,7 +1153,7 @@ const QString FindGBCDMetricBased::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindGBCDMetricBased::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

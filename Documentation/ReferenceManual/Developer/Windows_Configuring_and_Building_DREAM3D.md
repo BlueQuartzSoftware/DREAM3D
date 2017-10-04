@@ -69,14 +69,14 @@ Open the **DREAM3D_SDK.cmake** file in the **DREAM3D_SDK** folder.  Check that t
 Make sure **Use default native compilers** is checked.
 ![](Images/Win_Generator.png)
 
-8. When the configuration is finished, make sure that **CMAKE_BUILD_TYPE** is set to *Debug*.
+8. When the configuration is finished, make sure that **BUILD_TYPE** is set to *Debug*.
 
 9. Press the **Configure** button in CMake again.  You may need to click **Configure** a few times until all the red highlights are gone.
 ![](Images/Win_CmakeAfterConfig.png)
 
 10. Press the **Generate** button in CMake to generate the build files.
 
-11. Repeat steps 1-10, except use path *C:\\[YOUR-USER-FOLDER]\\Workspace\\Builds\\DREAM3D-Build\\Release* for step 2 and set **CMAKE_BUILD_TYPE** to *Release* in step 9.
+11. Repeat steps 1-10, except use path *C:\\[YOUR-USER-FOLDER]\\Workspace\\Builds\\DREAM3D-Build\\Release* for step 2 and set **BUILD_TYPE** to *Release* in step 9.
 
 ## Building DREAM.3D ##
 Once you have configured DREAM.3D, simply build DREAM.3D in your preferred IDE, or open the Windows Command Line and build DREAM.3D without an IDE.
