@@ -308,7 +308,7 @@
             <number>10000</number>
            </property>
            <property name="value">
-            <number>32</number>
+            <number>64</number>
            </property>
           </widget>
          </item>
@@ -900,9 +900,6 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
-  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
-  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
   <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
