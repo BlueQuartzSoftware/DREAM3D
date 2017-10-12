@@ -3,23 +3,42 @@
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "6.4.510",
+        "FilterVersion": "6.4.167",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Import Oxford Instr. EBSD Data (.ctf)",
         "Filter_Name": "ReadCtfData",
         "InputFile": "Data/Textured_Copper/Cugrid_after 2nd_15kv_2kx_2.ctf"
     },
     "1": {
+        "CellAttributeMatrixPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.167",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Sample Reference Frame",
+        "Filter_Name": "RotateSampleRefFrame",
+        "RotationAngle": 180,
+        "RotationAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        }
+    },
+    "2": {
         "CellEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "EulerAngles",
             "Data Container Name": "ImageDataContainer"
         },
         "ConversionType": 0,
-        "FilterVersion": "6.4.510",
+        "FilterVersion": "6.4.167",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Convert Angles to Degrees or Radians",
         "Filter_Name": "ChangeAngleRepresentation"
     },
-    "2": {
+    "3": {
         "CellAttributeMatrixPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "",
@@ -35,23 +54,25 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.510",
+        "FilterVersion": "6.4.167",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Crop Geometry (Image)",
         "Filter_Name": "CropImageGeometry",
         "NewDataContainerName": "NewImageDataContainer",
         "RenumberFeatures": 0,
         "SaveAsNewDataContainer": 0,
         "UpdateOrigin": 1,
-        "XMax": 61,
-        "XMin": 0,
+        "XMax": 549,
+        "XMin": 488,
         "YMax": 399,
         "YMin": 0,
         "ZMax": 0,
         "ZMin": 0
     },
-    "3": {
+    "4": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.4.510",
+        "FilterVersion": "1.0.165",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -64,7 +85,7 @@
             }
         ]
     },
-    "4": {
+    "5": {
         "CellEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "EulerAngles",
@@ -81,7 +102,8 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.510",
+        "FilterVersion": "6.4.167",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -96,9 +118,10 @@
         },
         "UseGoodVoxels": 1
     },
-    "5": {
+    "6": {
         "FileName": "Data/Output/TexturedCopper/IPF_Unexposed.png",
-        "FilterVersion": "1.0.360",
+        "FilterVersion": "1.0.366",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Writer",
         "Filter_Name": "ITKImageWriter",
         "ImageArrayPath": {
@@ -107,7 +130,7 @@
             "Data Container Name": "ImageDataContainer"
         }
     },
-    "6": {
+    "7": {
         "CellEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "EulerAngles",
@@ -123,7 +146,8 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.510",
+        "FilterVersion": "6.4.167",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Export Pole Figure Images",
         "Filter_Name": "WritePoleFigure",
         "GoodVoxelsArrayPath": {
@@ -137,11 +161,12 @@
         "ImageSize": 512,
         "LambertSize": 32,
         "NumColors": 32,
-        "OutputPath": "Data/Output/TexturedCopper"
+        "OutputPath": "Data/Output/TexturedCopper",
+        "UseGoodVoxels": 0
     },
     "PipelineBuilder": {
-        "Name": "Textured Copper [Unexposed]",
-        "Number_Filters": 7,
+        "Name": "TxCopper_Unexposed",
+        "Number_Filters": 8,
         "Version": 6
     }
 }
