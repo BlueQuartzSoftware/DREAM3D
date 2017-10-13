@@ -19,7 +19,8 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + Import EBSD Orientation Files: Fallback to CI or Bands if generating IPF Color fails
 + Filters can not be temporarily disabled in the pipeline view.
 + ThresholdObjects filters moved to SIMPL Core from DREAM3D repo.
-+ 
++ Renamed SPParksWriter to SPParksSitesWriter
++ Renamed SPParksReader to SPParksDumpReader
 
 ### Fixed DREAM3D Issues ###
 
@@ -33,6 +34,9 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + DREAM3D Issue #732: When reading STL files parse the header bytes to look for keywords that would identify the file as being from Magic's Materialise software
 + DREAM3D Issue #733: AlignSections (List) filter will not read from DREAM.3D generated Alignment files
 + DREAM3D Issue #737: ConvertOrientationData was not properly checking input arrays for the correct number of components
++ DREAM3D Issue #748: Only write an ODF angle file if there are valid angles.
++ DREAM3D Issue #748: Change default number of Lambert squares to 64.
++ DREAM3D Issue #748: Example pipelines; rotate the sample reference frame before processing the data
 
 ### Fixed SIMPLView Issues ###
 
