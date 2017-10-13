@@ -43,17 +43,17 @@
 #include "SIMPLib/CoreFilters/FileWriter.h"
 
 /**
- * @brief The SPParksWriter class. See [Filter documentation](@ref spparkswriter) for details.
+ * @brief The SPParksSitesWriter class. See [Filter documentation](@ref spparkswriter) for details.
  */
-class SPParksWriter : public FileWriter
+class SPParksSitesWriter : public FileWriter
 {
     Q_OBJECT
   public:
-    SIMPL_SHARED_POINTERS(SPParksWriter)
-    SIMPL_STATIC_NEW_MACRO(SPParksWriter)
-    SIMPL_TYPE_MACRO_SUPER(SPParksWriter, FileWriter)
+    SIMPL_SHARED_POINTERS(SPParksSitesWriter)
+    SIMPL_STATIC_NEW_MACRO(SPParksSitesWriter)
+    SIMPL_TYPE_MACRO_SUPER(SPParksSitesWriter, FileWriter)
 
-    virtual ~SPParksWriter();
+    virtual ~SPParksSitesWriter();
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -113,7 +113,7 @@ class SPParksWriter : public FileWriter
     virtual void preflight();
 
   protected:
-    SPParksWriter();
+    SPParksSitesWriter();
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -138,8 +138,8 @@ class SPParksWriter : public FileWriter
   private:
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    SPParksWriter(const SPParksWriter&); // Copy Constructor Not Implemented
-    void operator=(const SPParksWriter&); // Operator '=' Not Implemented
+    SPParksSitesWriter(const SPParksSitesWriter&); // Copy Constructor Not Implemented
+    void operator=(const SPParksSitesWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _SPParksWriter_H_ */
+#endif /* _SPParksSitesWriter_H_ */
