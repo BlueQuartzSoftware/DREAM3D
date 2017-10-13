@@ -30,8 +30,8 @@ set(_PublicFilters
   PhReader
   PhWriter
   ReadStlFile
-  SPParksTextReader
-  SPParksWriter
+  SPParksDumpReader
+  SPParksSitesWriter
   VisualizeGBCDGMT
   VisualizeGBCDPoleFigure
   VtkRectilinearGridWriter

@@ -651,5 +651,5 @@ const QString SPParksTextReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getHumanLabel()
 {
-  return "Import SPParks Text File";
+  return "Import SPParks Dump File";
 }
