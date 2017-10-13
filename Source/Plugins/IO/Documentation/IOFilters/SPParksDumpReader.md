@@ -1,4 +1,4 @@
-Read SPParks Dump File {#spparkstextreader}
+Read SPParks Dump File {#spparksdumpreader}
 =============
 
 ## Group (Subgroup) ##
