@@ -44,6 +44,8 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ### Fixed SIMPL Issues ###
 
++ SIMPL Issue #137: Allow creation of Boolean types in ImportASCIIDataArray filter.
++ SIMPL Issue #136: Allow conversion to Boolean types in ConvertData Filter.
 + SIMPL Issue #130: Natively paint the PipelineFilterWidget instead of relying on CSS.
 + SIMPL Issue #123: Fix inconsistent types in the H5Lite library
 + SIMPL Issue: Array calculator will fail for some types of arrays
