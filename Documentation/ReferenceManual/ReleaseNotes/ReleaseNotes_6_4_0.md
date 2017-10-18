@@ -15,6 +15,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ### New Filters ###
 
++ Read dataset from HDF5 file. (DREAM3D Issue #190)
 + Create Ensemble Info (Issue #724)
 + Import EBSD Orientation Files: Fallback to CI or Bands if generating IPF Color fails
 + Filters can not be temporarily disabled in the pipeline view.
@@ -41,6 +42,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 ### Fixed SIMPLView Issues ###
 
 + SIMPLView Issue #17: Failure to check existence of file may lead to application crash
++ SIMPLView Issue #749: When loading a new pipeline file if there are no errors or warnings close the various dock widgets.
 
 ### Fixed SIMPL Issues ###
 
