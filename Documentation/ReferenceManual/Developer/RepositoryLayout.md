@@ -18,7 +18,7 @@ As we discuss the various repositories, we are going to start from the very bott
 
 The SIMPL repo holds the base SIMPLib and H5Support libraries that are the foundation of all the other projects. SIMPL allows the developer to utilize the "DREAM.3D" file format, read and write DREAM.3D files, create **DataContainers**, **AttributeMatrix**, **DataArrays**, and **Geometries**. In addition SIMPLib also has the plugin loading mechanism which allows the developer to create external plugins of their own specialized filters. In order to execute custom pipelines the SIMPL repo also includes the **PipelineRunner** application which is a command line driven program that can run pipelines based on the input from a pipeline file. In the figure below the yellow shapes represent libraries and applications built by the SIMPL repository where-as the purple colored shapes represent dependent libraries.
 
-![SIMPL Repository](images/SIMPL_Repo.png)
+![SIMPL Repository](Images/SIMPL_Repo.png)
 
 ---
 

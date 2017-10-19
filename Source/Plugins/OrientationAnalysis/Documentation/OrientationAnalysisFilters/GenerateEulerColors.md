@@ -19,12 +19,12 @@ Given the set of Euler Angles (0.43765, 0.265830, 5.583250) would result in RGB 
 
 ------------------
 
-![Example Data Set using Euler Colors](images/EulerColor_1.png)
+![Example Data Set using Euler Colors](Images/EulerColor_1.png)
 @image latex EulerColor_1.png " " width=6in 
 
 -------------------
 
-![Example Data Set using IPF Colors](images/IPFColor_1.png)
+![Example Data Set using IPF Colors](Images/IPFColor_1.png)
 @image latex IPFColor_1.png " " width=6in 
 
 -------------------

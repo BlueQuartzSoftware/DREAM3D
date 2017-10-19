@@ -9,12 +9,12 @@ This **Filter** will read a single .h5 file into a new **Data Container** with a
 
 | User interface before entering a proper "Z Spacing" value and selecting which scans to include. |
 |-------|
-|![](images/ReadEDAXH5_1.png)|
+|![](Images/ReadEDAXH5_1.png)|
 
 
 | User interface AFTER setting the "Z Spacing" and selecting files.  |
 |-------|
-|![](images/ReadEDAXH5_2.png)|
+|![](Images/ReadEDAXH5_2.png)|
 
 
 ## Notes About Reference Frames ##

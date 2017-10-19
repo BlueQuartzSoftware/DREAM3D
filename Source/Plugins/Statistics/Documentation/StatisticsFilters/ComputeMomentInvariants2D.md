@@ -12,10 +12,10 @@ This **Filter** computes the 2D Omega-1 and Omega 2 values from the _Central Mom
 
 See below figure from [1] that can help the user classify objects.
 
-![Example appllication of filter to identify elliptical particales (red) which are differentiated from non-elliptical particals (purple)](images/ComputeMomentInvariants_Fig1.png)
+![Example appllication of filter to identify elliptical particales (red) which are differentiated from non-elliptical particals (purple)](Images/ComputeMomentInvariants_Fig1.png)
 
 
-![Example appllication of filter to identify elliptical particales (red) which are differentiated from non-elliptical particals (purple)](images/ComputeMomentInvariants2D.png)
+![Example appllication of filter to identify elliptical particales (red) which are differentiated from non-elliptical particals (purple)](Images/ComputeMomentInvariants2D.png)
 
 
 

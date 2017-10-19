@@ -17,12 +17,12 @@ This **Filter** is a **Utility** that allows the user to compute alternate repre
 
 To use the utility, simply drag the filter into the pipeline area and start entering values for a representation. The other representations will be instantly calculated as shown in figure 1 below. **The Axis-Angle and Rodrigues vectors are automatically normalized for the user.**
 
-![Figure 1: Orientation Utility where the user has entered an Axis-Angle representation.](images/OrientationUtility_1.png)
+![Figure 1: Orientation Utility where the user has entered an Axis-Angle representation.](Images/OrientationUtility_1.png)
 
 
 If the user enters invalid values for a representation, an error message will be displayed and all input fields will be marked with the **NaN** symbol as show in figure 2 below.
 
-![Figure 2: User has entered an out of range angle for the Axis-Angle pair.](images/OrientationUtility_2.png)
+![Figure 2: User has entered an out of range angle for the Axis-Angle pair.](Images/OrientationUtility_2.png)
 
 
 ## References ##
