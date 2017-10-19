@@ -430,10 +430,15 @@ configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
 
 # --------------------------------------------------------------------
 # Generate install rules for the text files
-install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
-        DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}"
-        COMPONENT Applications)
-
+if(APPLE)
+  install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
+          DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources"
+          COMPONENT Applications)
+else()
+  install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
+          DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}"
+          COMPONENT Applications)
+endif()
 # Include some directories for the compiler
 include_directories(${PROJECT_BINARY_DIR})
 
@@ -561,12 +566,16 @@ set_target_properties(PrebuiltPipelinesCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 # Make Sure this target as part of the DREAM3D Build
 # add_dependencies(DREAM3D PrebuiltPipelinesCopy)
 
-#- This installs all the help files. Note that we assume a flat directory structure
-#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
-#- folder and NOT in any subfolders beyond that.
-install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-        DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}
-        COMPONENT Applications )
+#- This installs all the prebuilt pipeline files.
+if(APPLE)
+  install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+          DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}/Resources
+          COMPONENT Applications )
+else()
+  install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+          DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}
+          COMPONENT Applications )
+endif()
 
 #-------------------------------------------------------------------------------
 # Copy the Data Folder to the build directory
