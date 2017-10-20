@@ -25,6 +25,7 @@ set(_PublicFilters
   CreateEnsembleInfo
   CreateLambertSphere
   EbsdToH5Ebsd
+  EMsoftSO3Sampler
   EnsembleInfoReader
   FindAvgCAxes
   FindAvgOrientations
