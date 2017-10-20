@@ -21,7 +21,7 @@ Sampling mode 2 does the same as mode 2, but now the inside of the starting cube
 
 Detailed information on the cubochoric rotation representation can be found in the following paper: D. Rosca, A. Morawiec, and M. De Graef. **"A new method of constructing a grid in the space of 3D rotations and its applications to texture analysis,"** _Modeling and Simulations in Materials Science and Engineering **22**, 075013 (2014)._
 
-Details on the misorientation sampling approach can be found in the following paper: S. Singh and M. De Graef, **"Orientation sampling for dictionary-based diffraction pattern indexing methods,"** submitted to _MSMSE (2016)_.
+Details on the misorientation sampling approach can be found in the following paper: S. Singh and M. De Graef, **"Orientation sampling for dictionary-based diffraction pattern indexing methods"** submitted to _MSMSE (2016)_.
 
 ## Point group identifiers ##
 Crystallographic point groups are identified by an integer from 1 to 32 according to the International Tables for Crystallography (Volume A). The valid numbers, along with the corresponding Hermann-Mauguin point group symbols, are listed here, along with the point group symbol between double quotation marks, the corresponding rotation group and its order M (in bold face):
