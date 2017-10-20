@@ -20,7 +20,7 @@ This **Filter** will generate _inverse pole figure_ (IPF) colors for cubic, hexa
 -----
 
 ![IPF Color Triangle](Images/IPFFilterLegend.png)
-@image latex Images/IPFFilterLegend.tif "IPF Color Triangle" width=6in
+@image latex Images/IPFFilterLegend.png "IPF Color Triangle" width=6in
 
 -----
 
