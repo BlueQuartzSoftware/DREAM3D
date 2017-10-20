@@ -239,9 +239,8 @@ set(SIMPLView_VERSION_SRC_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${
 # into a single known location
 get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
 if("${DREAM3DDocRoot}" STREQUAL "")
-  set_property(GLOBAL PROPERTY DREAM3DDocRoot "${DREAM3DProj_BINARY_DIR}")
+  set_property(GLOBAL PROPERTY DREAM3DDocRoot "${DREAM3DProj_BINARY_DIR}/Documentation")
   get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
-  file(WRITE "${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList" "")
 endif()
 
 
@@ -511,6 +510,7 @@ endif()
 # Should we build the documentation using DOxygen
 option(SIMPL_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
 if(SIMPL_BUILD_DOCUMENTATION)
+  
   set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
   set(DOX_GENERATE_RTF "NO")

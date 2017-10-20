@@ -27,6 +27,13 @@ function(DREAM3D_COMPILE_PLUGIN)
         get_property(PluginNumFilters GLOBAL PROPERTY PluginNumFilters)
 
         if(${PluginNumFilters} GREATER -1)
+          get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
+          add_custom_target(${PLUG_PLUGIN_NAME}_DOC_FOLDER_COPY ALL
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${PLUG_PLUGIN_SOURCE_DIR}/Documentation/${PLUG_PLUGIN_NAME}Filters/"
+            "${DREAM3DDocRoot}/ReferenceManual/Filters/${PLUG_PLUGIN_NAME}_Filters/"
+            COMMENT "${PLUG_PLUGIN_NAME}: Copying Documentation to build directory")
+          set_target_properties(${PLUG_PLUGIN_NAME}_DOC_FOLDER_COPY PROPERTIES FOLDER ZZ_COPY_FILES)
+
           message(STATUS "${PLUG_PLUGIN_NAME} [ENABLED] ${PluginNumFilters} Filters")
           #- Now set up the dependency between the main application and each of the plugins so that
           #- things like Visual Studio are forced to rebuild the plugins when launching
