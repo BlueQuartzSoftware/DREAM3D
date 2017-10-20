@@ -15,6 +15,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ### New Filters ###
 
++ SO3Sampler allows regular sampling of orienation angles. (DREAM3D Issue #751)
 + Read dataset from HDF5 file. (DREAM3D Issue #190)
 + Create Ensemble Info (Issue #724)
 + Import EBSD Orientation Files: Fallback to CI or Bands if generating IPF Color fails
@@ -25,6 +26,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ### Fixed DREAM3D Issues ###
 
++ DREAM3D Issue #750: 3DStereographic Coordinates filter was giving erroneous results.
 + DREAM3D Issue #714: Fix bug when reading ODF angle files with a comma as a delimiter and spaces in the data line
 + DREAM3D Issue #716: Write StatsGen ODF Angle File does not create output path directories
 + DREAM3D Issue #718: GenerateIPF Colors filter does not validate phase data and will cause unexpected results or crashes.
