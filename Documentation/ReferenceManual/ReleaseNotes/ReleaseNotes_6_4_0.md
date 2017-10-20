@@ -40,6 +40,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + DREAM3D Issue #748: Only write an ODF angle file if there are valid angles.
 + DREAM3D Issue #748: Change default number of Lambert squares to 64.
 + DREAM3D Issue #748: Example pipelines; rotate the sample reference frame before processing the data
++ EbsdLib: Added more verbose error message when parsing .ang files that do not conform to the expected numeric types.
 
 ### Fixed SIMPLView Issues ###
 
