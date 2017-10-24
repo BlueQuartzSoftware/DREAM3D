@@ -18,7 +18,7 @@ This **Filter** generates a new orientation representation (see Data Layout Tabl
 | Axis Angle                 | 4 | 3 | ( \[x, y, z\], Angle) |
 | Rodrigues Vectors          | 4 | 4 | *Internally DREAM.3D keeps a 4th component* |
 | Homochoric                 | 3 | 5 |  |
-| Cubochoric                 | 3 | 5 |  |
+| Cubochoric                 | 3 | 6 |  |
 
 
 
