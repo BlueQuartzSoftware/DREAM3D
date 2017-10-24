@@ -90,4 +90,14 @@ namespace UnitTest
 }
 
 
+namespace UnitTest
+{
+    namespace GenerateFZQuaternionsTest
+    {
+      const QString TestFile1("@TEST_TEMP_DIR@/GenerateFZQuaternionsTest1.dream3d");
+      const QString TestFile2("@OrientationAnalysis_TEST_DATA_DIR@/GenerateFZQuaternionsTest2.dream3d");
+    }
+}
+
+
 #endif

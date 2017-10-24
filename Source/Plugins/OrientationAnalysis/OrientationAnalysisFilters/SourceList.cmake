@@ -54,6 +54,7 @@ set(_PublicFilters
   WriteStatsGenOdfAngleFile
   OrientationUtility
   Stereographic3D
+  GenerateFZQuaternions
 )
 
 
