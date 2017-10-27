@@ -179,9 +179,9 @@ add_library(${PROJECT_NAME} ${LIB_TYPE} ${EMMPMLib_PROJECT_SRCS})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 
-if(WIN32)
-  Target_ADD_DEFINITIONS("-DEMMPMLib_BUILT_AS_DYNAMIC_LIB")
-endif(WIN32)
+if(WIN32 AND BUILD_SHARED_LIBS)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC "-DEMMPMLib_BUILT_AS_DYNAMIC_LIB")
+endif()
 #-- Configure Target Specific Include Directories
 get_filename_component(TARGET_BINARY_DIR_PARENT ${${PROJECT_NAME}_BINARY_DIR} PATH)
 get_filename_component(TARGET_SOURCE_DIR_PARENT ${${PROJECT_NAME}_SOURCE_DIR} PATH)

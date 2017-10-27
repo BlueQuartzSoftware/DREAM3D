@@ -223,7 +223,7 @@ if(APPLE)
 endif(APPLE)
 
 if(WIN32 AND BUILD_SHARED_LIBS)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE "-DOrientationLib_BUILT_AS_DYNAMIC_LIB")
+	target_compile_definitions(${PROJECT_NAME} PUBLIC "-DOrientationLib_BUILT_AS_DYNAMIC_LIB")
 endif()
   
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
