@@ -38,7 +38,7 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
 
 #------------------------------------------------------------------------------
-# Include this file from the SIMPL Project
+# Include this file from the CMP Project
 include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
 
 
