@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2017 BlueQuartz Softwae, LLC
+ * Copyright (c) 2017 BlueQuartz Software, LLC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,

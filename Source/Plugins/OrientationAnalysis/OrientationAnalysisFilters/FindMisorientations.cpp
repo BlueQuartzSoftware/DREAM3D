@@ -363,7 +363,7 @@ const QString FindMisorientations::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindMisorientations::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

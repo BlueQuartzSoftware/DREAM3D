@@ -58,7 +58,6 @@
 
 // DREAM3DLib includes
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/FilterParameters/H5FilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
@@ -70,6 +69,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Utilities/TestObserver.h"
+#include "UnitTestSupport.hpp"
 
 #include "PipelineRunnerTest.h"
 

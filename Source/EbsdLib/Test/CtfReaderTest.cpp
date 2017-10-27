@@ -40,7 +40,7 @@
 
 #include "EbsdLib/HKL/CtfReader.h"
 
-#include "SIMPLib/Common/UnitTestSupport.hpp"
+#include "UnitTestSupport.hpp"
 
 #include "EbsdLib/Test/EbsdLibTestFileLocations.h"
 

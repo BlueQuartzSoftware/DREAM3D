@@ -314,7 +314,7 @@ const QString CreateEnsembleInfo::getGroupName()
 // -----------------------------------------------------------------------------
 const QString CreateEnsembleInfo::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::AlignmentFilters;
+  return SIMPL::FilterSubGroups::GenerationFilters;
 }
 
 // -----------------------------------------------------------------------------

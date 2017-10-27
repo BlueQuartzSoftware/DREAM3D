@@ -245,7 +245,7 @@ const QString FindCAxisLocations::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindCAxisLocations::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

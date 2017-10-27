@@ -41,19 +41,19 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
 #------------------------------------------------------------------------------
 # Include this file from the SIMPL Project
-include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/SIMPLTestFunctions.cmake)
-
-include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
-include_directories(${${PLUGIN_NAME}_BINARY_DIR})
-
+include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
 
 set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Test/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
+configure_file(${${PLUGIN_NAME}Test_SOURCE_DIR}/TestFileLocations.h.in
+               ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
 
-configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h.in
-               ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
+configure_file(${SIMPLProj_SOURCE_DIR}/Resources/UnitTestSupport.hpp
+               ${${PLUGIN_NAME}Test_BINARY_DIR}/UnitTestSupport.hpp COPYONLY IMMEDIATE)
+
+
 
 
 set(OrientationLib_Link_Libs Qt5::Core H5Support SIMPLib OrientationLib)
@@ -90,7 +90,7 @@ foreach(name  ${TEST_NAMES})
   string(CONCAT
     FilterTestIncludes
     ${FilterTestIncludes}
-    "#include \"${name}.cpp\"\n"
+    "#include \"${${PLUGIN_NAME}Test_SOURCE_DIR}/${name}Test.cpp\"\n"
     )
 
   string(CONCAT
@@ -114,7 +114,11 @@ endforeach()
 AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
   SOURCES ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
   FOLDER "${PLUGIN_NAME}Plugin/Test"
-  LINK_LIBRARIES ${OrientationLib_Link_Libs})
+  LINK_LIBRARIES ${OrientationLib_Link_Libs}
+  INCLUDE_DIRS
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Test
+    ${${PLUGIN_NAME}_BINARY_DIR}/Test
+  )
 
 if(MSVC)
   set_source_files_properties(${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)

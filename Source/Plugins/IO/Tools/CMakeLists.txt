@@ -53,10 +53,6 @@ function(COMPILE_TOOL)
     set(multiValueArgs SOURCES LINK_LIBRARIES)
     cmake_parse_arguments(D3DTOOL "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    if( ${D3DTOOL_DEFINITION} )
-    add_definitions(-D${DEFINITION})
-    endif()
-
     BuildToolBundle(
         TARGET ${D3DTOOL_TARGET}
         SOURCES ${D3DTOOL_SOURCES}
@@ -72,6 +68,10 @@ function(COMPILE_TOOL)
         SOLUTION_FOLDER "Tools"
     )
 
+    if( ${D3DTOOL_DEFINITION} )
+        target_compile_definitions(${D3DTOOL_TARGET} PRIVATE -D${D3DTOOL_DEFINITION})
+    endif()
+    
 endfunction()
 
 if(0)

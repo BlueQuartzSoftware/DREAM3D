@@ -94,7 +94,7 @@ function(ADD_DOXYGEN_TARGETS)
     add_custom_target(${DOX_PROJECT_NAME}
               COMMAND ${DOXYGEN_EXECUTABLE} ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE}
               SOURCES ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE} )
-    SET_TARGET_PROPERTIES(${DOX_PROJECT_NAME} PROPERTIES FOLDER DocumentationTargets)
+    set_target_properties(${DOX_PROJECT_NAME} PROPERTIES FOLDER DocumentationTargets)
 
 
 #-- If we are generating PDF output then we need to make a few passes on the PDF to make sure things

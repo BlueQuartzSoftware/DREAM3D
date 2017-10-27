@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2016 BlueQuartz Softwae, LLC
+ * Copyright (c) 2016 BlueQuartz Software, LLC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -72,27 +72,37 @@ public:
   void convert(size_t start, size_t end) const
   {
 
-    size_t index = 0;
-
     for(size_t i = start; i < end; i++)
     {
+      size_t coordIndex = i * 3;
+      size_t quatIndex = i * 4;
       if(m_Filter->getCancel())
       {
         return;
       }
-      index = i * 3;
-      if(m_Quats[index + 3] <= -1.0)
+      if(m_Quats[quatIndex + 3] <= -1.0f)
       {
         m_Filter->setCancel(true);
-        QString ss = QObject::tr("The scalar value of a quaterion was <= -1.0. The value was").arg(m_Quats[index + 3]);
+        QString ss = QObject::tr("The scalar value of a quaterion was <= -1.0. The value was %1").arg(m_Quats[quatIndex + 3]);
         m_Filter->setErrorCondition(-95000);
         m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
         return;
       }
+      if(m_Quats[quatIndex + 3] != 0.0f)
+      {
+        float q_x = m_Quats[quatIndex + 0];
+        float q_y = m_Quats[quatIndex + 1];
+        float q_z = m_Quats[quatIndex + 2];
+        float q_w = m_Quats[quatIndex + 3];
 
-      m_Coordinates[index + 0] = m_Quats[index + 0] / (1.0 + m_Quats[index + 3]);
-      m_Coordinates[index + 1] = m_Quats[index + 1] / (1.0 + m_Quats[index + 3]);
-      m_Coordinates[index + 2] = m_Quats[index + 2] / (1.0 + m_Quats[index + 3]);
+        q_x = q_x / (1.0f + q_w);
+        q_y = q_y / (1.0f + q_w);
+        q_z = q_z / (1.0f + q_w);
+
+        m_Coordinates[coordIndex + 0] = q_x;
+        m_Coordinates[coordIndex + 1] = q_y;
+        m_Coordinates[coordIndex + 2] = q_z;
+      }
     }
   }
 
@@ -144,8 +154,7 @@ void Stereographic3D::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::Any, IGeometry::Type::Any);
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, Stereographic3D, req));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));

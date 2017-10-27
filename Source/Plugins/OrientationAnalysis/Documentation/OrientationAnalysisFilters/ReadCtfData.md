@@ -38,7 +38,7 @@ The user also may want to assign un-indexed pixels to be ignored by flagging the
 
 | Figure 1 |
 |--------|
-| ![](images/Hexagonal_Axis_Alignment.png) |
+| ![](Images/Hexagonal_Axis_Alignment.png) |
 | **Figure 1:** showing TSL and Oxford Instr. conventions. EDAX/TSL is in **Green**. Oxford Inst. is in **Red** |
 
 

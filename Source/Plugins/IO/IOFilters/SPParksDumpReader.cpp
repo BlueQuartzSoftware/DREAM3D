@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SPParksTextReader.h"
+#include "SPParksDumpReader.h"
 
 #include <QtCore/QFileInfo>
 
@@ -51,12 +51,12 @@
 #include "IO/IOVersion.h"
 
 // Include the MOC generated file for this class
-#include "moc_SPParksTextReader.cpp"
+#include "moc_SPParksDumpReader.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SPParksTextReader::SPParksTextReader()
+SPParksDumpReader::SPParksDumpReader()
 : FileReader()
 , m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
@@ -78,33 +78,33 @@ SPParksTextReader::SPParksTextReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SPParksTextReader::~SPParksTextReader()
+SPParksDumpReader::~SPParksDumpReader()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksTextReader::setupFilterParameters()
+void SPParksDumpReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, SPParksTextReader, "*.dump", "SPParks Dump File"));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, SPParksTextReader));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, SPParksDumpReader, "*.dump", "SPParks Dump File"));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, SPParksDumpReader));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, SPParksTextReader));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, SPParksDumpReader));
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("One Based Arrays", OneBasedArrays, FilterParameter::Parameter, SPParksTextReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, SPParksTextReader));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("One Based Arrays", OneBasedArrays, FilterParameter::Parameter, SPParksDumpReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, SPParksDumpReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, SPParksTextReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, SPParksTextReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, SPParksDumpReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, SPParksDumpReader));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksTextReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void SPParksDumpReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName()));
@@ -120,7 +120,7 @@ void SPParksTextReader::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksTextReader::updateCellInstancePointers()
+void SPParksDumpReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
   setWarningCondition(0);
@@ -132,7 +132,7 @@ void SPParksTextReader::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksTextReader::initialize()
+void SPParksDumpReader::initialize()
 {
   m_NamePointerMap.clear();
   if(m_InStream.isOpen())
@@ -144,7 +144,7 @@ void SPParksTextReader::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksTextReader::dataCheck()
+void SPParksDumpReader::dataCheck()
 {
   setErrorCondition(0);
   setWarningCondition(0);
@@ -214,7 +214,7 @@ void SPParksTextReader::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksTextReader::preflight()
+void SPParksDumpReader::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true);              // Set the fact that we are preflighting.
@@ -228,7 +228,7 @@ void SPParksTextReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksTextReader::execute()
+void SPParksDumpReader::execute()
 {
   int32_t err = 0;
   setErrorCondition(0);
@@ -259,7 +259,7 @@ void SPParksTextReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t SPParksTextReader::readHeader()
+int32_t SPParksDumpReader::readHeader()
 {
   /*
   ITEM: TIMESTEP
@@ -326,7 +326,7 @@ int32_t SPParksTextReader::readHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t SPParksTextReader::readFile()
+int32_t SPParksDumpReader::readFile()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
   // The readHeader() function should have set the dimensions correctly
@@ -453,7 +453,7 @@ int32_t SPParksTextReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol)
+void SPParksDumpReader::parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol)
 {
   // Filter the line to convert European command style decimals to US/UK style points
   for(qint32 c = 0; c < line.size(); ++c)
@@ -501,7 +501,7 @@ void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType SPParksTextReader::getPointerType(const QString& featureName)
+Ebsd::NumType SPParksDumpReader::getPointerType(const QString& featureName)
 {
   // text fields = id or site or x or y or z or
   //                  energy or propensity or iN or dN
@@ -550,7 +550,7 @@ Ebsd::NumType SPParksTextReader::getPointerType(const QString& featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t SPParksTextReader::getTypeSize(const QString& featureName)
+int32_t SPParksDumpReader::getTypeSize(const QString& featureName)
 {
   if(featureName.compare("id") == 0)
   {
@@ -594,9 +594,9 @@ int32_t SPParksTextReader::getTypeSize(const QString& featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SPParksTextReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer SPParksDumpReader::newFilterInstance(bool copyFilterParameters)
 {
-  SPParksTextReader::Pointer filter = SPParksTextReader::New();
+  SPParksDumpReader::Pointer filter = SPParksDumpReader::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -607,7 +607,7 @@ AbstractFilter::Pointer SPParksTextReader::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksTextReader::getCompiledLibraryName()
+const QString SPParksDumpReader::getCompiledLibraryName()
 {
   return IOConstants::IOBaseName;
 }
@@ -615,7 +615,7 @@ const QString SPParksTextReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksTextReader::getBrandingString()
+const QString SPParksDumpReader::getBrandingString()
 {
   return "IO";
 }
@@ -623,7 +623,7 @@ const QString SPParksTextReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksTextReader::getFilterVersion()
+const QString SPParksDumpReader::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
@@ -633,7 +633,7 @@ const QString SPParksTextReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksTextReader::getGroupName()
+const QString SPParksDumpReader::getGroupName()
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -641,7 +641,7 @@ const QString SPParksTextReader::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksTextReader::getSubGroupName()
+const QString SPParksDumpReader::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -649,7 +649,7 @@ const QString SPParksTextReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksTextReader::getHumanLabel()
+const QString SPParksDumpReader::getHumanLabel()
 {
-  return "Import SPParks Text File";
+  return "Import SPParks Dump File";
 }

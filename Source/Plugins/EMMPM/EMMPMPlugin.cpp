@@ -7,7 +7,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
-#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 

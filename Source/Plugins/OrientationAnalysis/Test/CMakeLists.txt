@@ -39,25 +39,28 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
 #------------------------------------------------------------------------------
 # Include this file from the SIMPL Project
-include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/SIMPLTestFunctions.cmake)
+include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
 
-include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
-include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Test)
-include_directories(${EbsdLibTest_BINARY_DIR})
+
 
 set(TEST_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 set(${PLUGIN_NAME}_TEST_DATA_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Data )
 
-configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
-               ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
+configure_file(${${PLUGIN_NAME}Test_SOURCE_DIR}/TestFileLocations.h.in
+               ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
+
+configure_file(${SIMPLProj_SOURCE_DIR}/Resources/UnitTestSupport.hpp
+               ${${PLUGIN_NAME}Test_BINARY_DIR}/UnitTestSupport.hpp COPYONLY IMMEDIATE)
+
 
 #------------------------------------------------------------------------------
 # List all the source files here. They will NOT be compiled but instead
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
+  GenerateFZQuaternionsTest
   Stereographic3DTest
   AngCachingTest
   CtfCachingTest
@@ -112,11 +115,7 @@ AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
   FOLDER "${PLUGIN_NAME}Plugin/Test"
   LINK_LIBRARIES Qt5::Core Qt5::Gui H5Support SIMPLib OrientationLib)
 
-target_include_directories(${PLUGIN_NAME}UnitTest
-                          PUBLIC ${PLUGINS_SOURCE_DIR}
-                          PUBLIC ${PLUGINS_BINARY_DIR}
-                          PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test
-)
+
 
 if(MSVC)
   set_source_files_properties(${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)

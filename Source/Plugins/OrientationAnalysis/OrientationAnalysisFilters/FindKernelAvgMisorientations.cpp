@@ -383,7 +383,7 @@ const QString FindKernelAvgMisorientations::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindKernelAvgMisorientations::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

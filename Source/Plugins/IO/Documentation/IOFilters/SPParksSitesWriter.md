@@ -1,4 +1,4 @@
-Write SPParks File (Feature Ids) {#spparkswriter}
+Write SPParks Sites Format {#spparkssiteswriter}
 ============
 
 ## Group (Subgroup) ##
@@ -7,13 +7,14 @@ IO (Output)
 ## Description ##
 This **Filter** writes to a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/).
 
-+ The "Values" section is a pair of numbers where the first number is the site ID and the second
- number is the actual value of the **Feature** Id at that site.
++ The "Values" section is a pair of numbers where the first number is the site ID and the second number is the actual value of the **Feature** Id at that site.
 + LINE 4 evidently must be what is shown in the example file.
 + LINE 3 is the total number of **Cells**.
-+ LINES 5, 6 and 7 are the dimensions of the volume. 
++ LINES 5, 6 and 7 are the dimensions of the volume.
 
-More information can be found at the [SPParks web site.](http://spparks.sandia.gov/doc/read_sites.html "SPParks Web Site")
+More information can be found at the [SPParks web site.](http://spparks.sandia.gov/doc/read_sites.html) or [http://spparks.sandia.gov/doc/dump.html](http://spparks.sandia.gov/doc/dump.html)
+
+**This filter will write an SPParks _Sites_ file format**
 
 ## Example Output ##
 

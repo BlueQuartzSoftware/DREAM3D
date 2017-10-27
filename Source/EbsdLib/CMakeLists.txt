@@ -78,15 +78,11 @@ INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 set(EbsdLib_BUILT_AS_DYNAMIC_LIB)
 if(BUILD_SHARED_LIBS)
 	set(EbsdLib_BUILT_AS_DYNAMIC_LIB 1)
-	if(WIN32)
-		ADD_DEFINITIONS("-DEbsdLib_BUILT_AS_DYNAMIC_LIB")
-	endif(WIN32)
 endif(BUILD_SHARED_LIBS)
 
 
 # Look for our Prerequisite Libraries
 if(NOT DEFINED DREAM3DProj_BINARY_DIR)
-	
 	
 	# ---------- Find and Use the Qt5 Libraries -----------------------
 	include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
@@ -137,14 +133,6 @@ INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
                ${EbsdLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
-
-# Setup the Include Directories
-include_directories(${PROJECT_CODE_DIR} 
-  ${EbsdLib_BINARY_DIR}
-  ${EbsdLib_SOURCE_DIR}/..
-  ${SIMPLProj_SOURCE_DIR}/Source
-  ${SIMPLProj_BINARY_DIR}
-  )
 
 #-- Include all the Source Files
 include( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
@@ -210,6 +198,22 @@ set(EbsdLib_PROJECT_SRCS
 
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${EbsdLib_PROJECT_SRCS})
+#-- Configure Target Specific Include Directories
+get_filename_component(TARGET_BINARY_DIR_PARENT ${${PROJECT_NAME}_BINARY_DIR} PATH)
+get_filename_component(TARGET_SOURCE_DIR_PARENT ${${PROJECT_NAME}_SOURCE_DIR} PATH)
+
+target_include_directories(${PROJECT_NAME} 
+                          PUBLIC 
+                            ${TARGET_BINARY_DIR_PARENT}
+                            ${TARGET_SOURCE_DIR_PARENT}
+                            # ${SIMPLProj_SOURCE_DIR}/Source
+                            # ${SIMPLProj_BINARY_DIR}
+                            # ${PROJECT_CODE_DIR} 
+                            # ${EbsdLib_BINARY_DIR}
+                            # ${EbsdLib_SOURCE_DIR}/..
+                            # ${SIMPLProj_SOURCE_DIR}/Source
+                            # ${SIMPLProj_BINARY_DIR}
+)
 
 set(EBSDLib_LINK_LIBRARIES "")
 if(${EbsdLib_ENABLE_HDF5})
@@ -217,6 +221,7 @@ if(${EbsdLib_ENABLE_HDF5})
 		${EBSDLib_LINK_LIBRARIES}
 		  H5Support
 		)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE -DEbsdLib_HAVE_HDF5)
 endif()
 
 if(QT5_FOUND)
@@ -226,9 +231,13 @@ if(QT5_FOUND)
 		)
 endif()
 
+if(WIN32 AND BUILD_SHARED_LIBS)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE "-DEbsdLib_BUILT_AS_DYNAMIC_LIB")
+endif()
+	
+LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 target_link_libraries(${PROJECT_NAME} ${EBSDLib_LINK_LIBRARIES})
 
-LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")
 set(lib_install_dir "lib")

@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SPParksWriter.h"
+#include "SPParksSitesWriter.h"
 #include <fstream>
 
 #include <QtCore/QDateTime>
@@ -51,12 +51,12 @@
 #include "IO/IOVersion.h"
 
 // Include the MOC generated file for this class
-#include "moc_SPParksWriter.cpp"
+#include "moc_SPParksSitesWriter.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SPParksWriter::SPParksWriter()
+SPParksSitesWriter::SPParksSitesWriter()
 : FileWriter()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FeatureIds(nullptr)
@@ -67,22 +67,21 @@ SPParksWriter::SPParksWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SPParksWriter::~SPParksWriter()
+SPParksSitesWriter::~SPParksSitesWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksWriter::setupFilterParameters()
+void SPParksSitesWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, SPParksWriter, "*.spparks", "SPParks Sites File"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, SPParksSitesWriter, "*.spparks", "SPParks Sites File"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, SPParksWriter, req));
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, SPParksSitesWriter, req));
   }
   setFilterParameters(parameters);
 }
@@ -90,7 +89,7 @@ void SPParksWriter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void SPParksSitesWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
@@ -101,14 +100,14 @@ void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksWriter::initialize()
+void SPParksSitesWriter::initialize()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksWriter::dataCheck()
+void SPParksSitesWriter::dataCheck()
 {
   setErrorCondition(0);
   setWarningCondition(0);
@@ -127,7 +126,7 @@ void SPParksWriter::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksWriter::preflight()
+void SPParksSitesWriter::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -140,7 +139,7 @@ void SPParksWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t SPParksWriter::writeHeader()
+int32_t SPParksSitesWriter::writeHeader()
 {
   setErrorCondition(0);
   setWarningCondition(0);
@@ -192,7 +191,7 @@ int32_t SPParksWriter::writeHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t SPParksWriter::writeFile()
+int32_t SPParksSitesWriter::writeFile()
 {
   setErrorCondition(0);
   setWarningCondition(0);
@@ -266,9 +265,9 @@ int32_t SPParksWriter::writeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SPParksWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer SPParksSitesWriter::newFilterInstance(bool copyFilterParameters)
 {
-  SPParksWriter::Pointer filter = SPParksWriter::New();
+  SPParksSitesWriter::Pointer filter = SPParksSitesWriter::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -279,7 +278,7 @@ AbstractFilter::Pointer SPParksWriter::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksWriter::getCompiledLibraryName()
+const QString SPParksSitesWriter::getCompiledLibraryName()
 {
   return IOConstants::IOBaseName;
 }
@@ -287,7 +286,7 @@ const QString SPParksWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksWriter::getBrandingString()
+const QString SPParksSitesWriter::getBrandingString()
 {
   return "IO";
 }
@@ -295,7 +294,7 @@ const QString SPParksWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksWriter::getFilterVersion()
+const QString SPParksSitesWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
@@ -305,7 +304,7 @@ const QString SPParksWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksWriter::getGroupName()
+const QString SPParksSitesWriter::getGroupName()
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -313,7 +312,7 @@ const QString SPParksWriter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksWriter::getSubGroupName()
+const QString SPParksSitesWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -321,7 +320,7 @@ const QString SPParksWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksWriter::getHumanLabel()
+const QString SPParksSitesWriter::getHumanLabel()
 {
-  return "Export SPParks Sites (Feature Ids)";
+  return "Export SPParks Sites File";
 }

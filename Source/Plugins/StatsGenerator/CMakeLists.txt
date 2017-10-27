@@ -97,16 +97,7 @@ set(RegisterKnownFiltersFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/
 #-- Compute some directories
 get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
 get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)
-#--------------------------
-include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLProj_BINARY_DIR})
-include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SVWidgetsLib/Widgets)
-include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SVWidgetsLib/QtSupport)
-include_directories( ${HDF5_INCLUDE_DIR} )
-include_directories( ${PROJECT_CODE_DIR} )
 
-include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLViewProj_BINARY_DIR})
 
 # ******************************************************************************
 # Create our custom executable that will generate most of our QFilterWidget
@@ -165,7 +156,7 @@ set(${PLUGIN_NAME}_GEN_HDRS
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT5_WRAP_CPP( ${PLUGIN_NAME}_Generated_MOC_SRCS ${${PLUGIN_NAME}_MOC_HDRS} )
+QT5_WRAP_CPP( ${PLUGIN_NAME}_Generated_MOC_SRCS ${${PLUGIN_NAME}_MOC_HDRS} OPTIONS -I ${SIMPLProj_SOURCE_DIR}/Source)
 set_source_files_properties( ${${PLUGIN_NAME}_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 set_source_files_properties( ${${PLUGIN_NAME}_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 
@@ -239,6 +230,37 @@ if(NOT MSVC)
 endif()
 
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
+
+set_target_properties(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
+#-------------------------------
+#
+target_include_directories(${PLUGIN_NAME}
+                            PUBLIC
+                              ${${PLUGIN_NAME}_BINARY_DIR}
+                              ${${PLUGIN_NAME}_SOURCE_DIR}
+                              ${PLUGINS_SOURCE_DIR}
+                              ${PLUGINS_BINARY_DIR}
+                              ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters
+)
+#-------------------------------
+#
+target_include_directories(${PLUGIN_NAME}
+                      PUBLIC
+                        ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets
+                        ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets
+                        ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets
+                        ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets/Delegates
+                        ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets/Presets
+                        ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets/Presets/Dialogs
+                        ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets/TableModels
+                        ${QWT_INCLUDE_DIR}
+)
+
+
+# --------------------------------------------------------------------
+# Set some additional properties of the plugin like its output name
+PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
+                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 target_link_libraries(${PLUGIN_NAME}
                     Qt5::Core
                     SIMPLib
@@ -249,32 +271,6 @@ target_link_libraries(${PLUGIN_NAME}
                     OrientationLib
                     ${QWT_LIBRARY}
                     )
-SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
-target_include_directories(${PLUGIN_NAME}
-                      PUBLIC ${${PLUGIN_NAME}_BINARY_DIR}
-                      PUBLIC ${${PLUGIN_NAME}_SOURCE_DIR}
-                      PUBLIC ${PLUGINS_SOURCE_DIR}
-                      PUBLIC ${PLUGINS_BINARY_DIR}
-                      PUBLIC ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test
-                      PUBLIC ${PLUGINS_SOURCE_DIR}/${PLUGIN_NAME}/Widgets
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets
-                      PUBLIC ${PLUGINS_SOURCE_DIR}/${PLUGIN_NAME}/Widgets/Delegates
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets/Delegates
-                      PUBLIC ${PLUGINS_SOURCE_DIR}/${PLUGIN_NAME}/Widgets/TableModels
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets/TableModels
-                      PUBLIC ${PLUGINS_SOURCE_DIR}/${PLUGIN_NAME}/Widgets/Presets/Dialogs
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets/Presets/Dialogs
-)
-qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)
-
-# --------------------------------------------------------------------
-# Set some additional properties of the plugin like its output name
-PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
-                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
-
 
 # --------------------------------------------------------------------
 # Put back the output directory

@@ -54,8 +54,6 @@ set(${PLUGIN_NAME}_Widgets_SRCS
 
   )
 
-include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets )
-
 cmp_IDE_SOURCE_PROPERTIES( "Widgets" "${${PLUGIN_NAME}_Widgets_MOC_HDRS};${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGIN_NAME}_Widgets_SRCS}" "0")
 
 cmp_IDE_GENERATED_PROPERTIES("Widgets/UI_Files" "${${PLUGIN_NAME}_Widgets_UIS}" "")

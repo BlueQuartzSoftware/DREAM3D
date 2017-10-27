@@ -50,7 +50,6 @@ set(HKL_HDRS
 )
 
 if(EbsdLib_ENABLE_HDF5)
-    add_definitions(-DEbsdLib_HAVE_HDF5)
     set(HKL_SRCS ${HKL_SRCS}
         ${EbsdLib_SOURCE_DIR}/HKL/H5CtfImporter.cpp
         ${EbsdLib_SOURCE_DIR}/HKL/H5CtfReader.cpp
@@ -61,8 +60,8 @@ if(EbsdLib_ENABLE_HDF5)
         ${EbsdLib_SOURCE_DIR}/HKL/H5CtfReader.h
         ${EbsdLib_SOURCE_DIR}/HKL/H5CtfVolumeReader.h
     )
-    set(EbsdLib_HDF5_SUPPORT 1)
 endif()
+
 cmp_IDE_SOURCE_PROPERTIES( "HKL" "${HKL_HDRS}" "${HKL_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 if( ${EbsdLib_INSTALL_FILES} EQUAL 1 )

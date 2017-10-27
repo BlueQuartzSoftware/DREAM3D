@@ -1,0 +1,32 @@
+site_name: DREAM.3D
+theme: 'windmill'
+repo_url: https://github.com/bluequartzsoftware/dream3d/
+docs_dir: ReferenceManual
+site_dir: '${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D'
+use_directory_urls: false
+# theme_dir: theme
+# pages:
+
+#Extensions
+# Options
+# extra:
+#   logo: 'logo.png'
+#   palette:
+#     primary: 'indigo'
+#     accent: 'indigo'
+#   font:
+#     text: 'Roboto'
+#     code: 'Roboto Mono'
+#   social:
+#     - type: 'github'
+#       link: 'https://github.com/john-doe'
+#     - type: 'twitter'
+#       link: 'https://twitter.com/john-doe'
+#     - type: 'linkedin'
+#       link: 'https://linkedin.com/in/john-doe'
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite(guess_lang=false)
+  - toc(permalink=true)

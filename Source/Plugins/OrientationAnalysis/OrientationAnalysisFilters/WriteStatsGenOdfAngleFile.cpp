@@ -300,8 +300,16 @@ void WriteStatsGenOdfAngleFile::execute()
 
   for(std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
   {
-    QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
+    // Dry run to figure out how many lines we are going to have
+    int32_t lineCount = determineOutputLineCount(totalPoints, *iter);
+    if(lineCount == 0)
+    {
+      QString ss = QObject::tr("No valid data for phase '%1'. No ODF Angle file written for phase.").arg(*iter);
+      notifyWarningMessage(getHumanLabel(), ss, 0);
+      continue;
+    }
 
+    QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
     notifyStatusMessage(getHumanLabel(), ss);
 
     QString absFilePath = absPath + "/" + fname + "_Phase_" + QString::number(*iter) + "." + suffix;
@@ -316,9 +324,6 @@ void WriteStatsGenOdfAngleFile::execute()
     }
 
     QTextStream out(&file);
-
-    // Dry run to figure out how many lines we are going to have
-    int32_t lineCount = determineOutputLineCount(totalPoints, *iter);
 
     int err = writeOutputFile(out, lineCount, totalPoints, *iter);
     if(err < 0)

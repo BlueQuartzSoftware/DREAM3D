@@ -49,7 +49,7 @@
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
 
-#include "SIMPLib/Common/UnitTestSupport.hpp"
+#include "UnitTestSupport.hpp"
 
 #include "EbsdLib/Test/EbsdLibTestFileLocations.h"
 

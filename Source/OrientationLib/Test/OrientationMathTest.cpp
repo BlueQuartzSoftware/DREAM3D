@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SIMPLib/Common/UnitTestSupport.hpp"
+#include "UnitTestSupport.hpp"
 
 #include "OrientationLibTestFileLocations.h"
 

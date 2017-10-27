@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2015 BlueQuartz Softwae, LLC
+ * Copyright (c) 2015 BlueQuartz Software, LLC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
@@ -46,6 +45,7 @@
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/TestObserver.h"
+#include "UnitTestSupport.hpp"
 
 #include "OrientationLib/IO/AngleFileLoader.h"
 

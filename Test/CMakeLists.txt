@@ -11,11 +11,9 @@
 set(DREAM3DTest_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Test)
 set(DREAM3DTest_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/Test)
 
-include_directories(${DREAM3DTest_SOURCE_DIR})
-
 #------------------------------------------------------------------------------
 # Include this file from the SIMPL Project
-include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/SIMPLTestFunctions.cmake)
+include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
 
 set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp)
 # Make sure the directory is created during CMake time
@@ -25,14 +23,23 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
                ${DREAM3DTest_BINARY_DIR}/DREAM3DTestFileLocations.h @ONLY IMMEDIATE)
 
-include_directories(${DREAM3DTest_BINARY_DIR})
-include_directories(${SIMPLProj_SOURCE_DIR}/Source)
-include_directories(${SIMPLProj_BINARY_DIR})
+
+configure_file(${SIMPLProj_SOURCE_DIR}/Resources/UnitTestSupport.hpp
+               ${DREAM3DTest_BINARY_DIR}/UnitTestSupport.hpp COPYONLY IMMEDIATE)
+
 
 AddSIMPLUnitTest(TESTNAME FilterParameterCallbackExample
-                   SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterParameterCallbackExample.cpp
-                   FOLDER "DREAM3D UnitTests"
-                   LINK_LIBRARIES Qt5::Core H5Support SIMPLib  )
+                  SOURCES 
+                    ${DREAM3DTest_SOURCE_DIR}/FilterParameterCallbackExample.cpp
+                  FOLDER 
+                    "DREAM3D UnitTests"
+                  LINK_LIBRARIES 
+                    Qt5::Core H5Support SIMPLib  
+                  INCLUDE_DIRS
+                    ${DREAM3DTest_BINARY_DIR}
+                    ${SIMPLProj_SOURCE_DIR}/Source
+                    ${SIMPLProj_BINARY_DIR}
+                   )
 
 
 
@@ -44,9 +51,16 @@ set(PreFlightTest_SOURCES ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp
                           ${PreflightVerify_MOC}
                           )
 AddSIMPLUnitTest(TESTNAME PreFlightTest
-                   SOURCES ${PreFlightTest_SOURCES}
-                   FOLDER "DREAM3D UnitTests"
-                   LINK_LIBRARIES Qt5::Core H5Support SIMPLib  )
+                  SOURCES ${PreFlightTest_SOURCES}
+                  FOLDER 
+                    "DREAM3D UnitTests"
+                  LINK_LIBRARIES 
+                    Qt5::Core H5Support SIMPLib  
+                  INCLUDE_DIRS
+                    ${DREAM3DTest_BINARY_DIR}
+                    ${SIMPLProj_SOURCE_DIR}/Source
+                    ${SIMPLProj_BINARY_DIR}
+                   )
 
 #----------------------------------------------------------------------------
 # Here we are trying to get something together that will run all the PrebuiltPipelines
@@ -96,6 +110,11 @@ configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
 
 add_executable(PipelineRunnerTest
                 ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
+target_include_directories(PipelineRunnerTest 
+                            PUBLIC
+                              ${DREAM3DTest_BINARY_DIR}
+                              ${SIMPLProj_SOURCE_DIR}/Source
+                              ${SIMPLProj_BINARY_DIR})
 target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib SIMPLib)
 set_target_properties(PipelineRunnerTest PROPERTIES FOLDER "DREAM3D UnitTests")
 add_test(NAME PipelineRunnerTest

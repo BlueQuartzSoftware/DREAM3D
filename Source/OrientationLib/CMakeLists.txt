@@ -78,9 +78,6 @@ INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 set(OrientationLib_BUILT_AS_DYNAMIC_LIB 0)
 if(BUILD_SHARED_LIBS)
   set(OrientationLib_BUILT_AS_DYNAMIC_LIB 1)
-  if(WIN32)
-    ADD_DEFINITIONS("-DOrientationLib_BUILT_AS_DYNAMIC_LIB")
-  endif(WIN32)
 endif(BUILD_SHARED_LIBS)
 
 
@@ -139,14 +136,6 @@ set(OrientationLib_Generated_CMP_SRCS
   )
 cmp_IDE_GENERATED_PROPERTIES("Generated" "${OrientationLib_Generated_CMP_SRCS}" "")
 
-# Setup the Include Directories
-include_directories(${PROJECT_CODE_DIR}
-  ${OrientationLib_BINARY_DIR}
-  ${OrientationLib_BINARY_DIR}/..
-  ${OrientationLib_SOURCE_DIR}/..
-  ${SIMPLProj_SOURCE_DIR}/Source
-  ${SIMPLProj_BINARY_DIR}
-  )
 
 #-- Include all the Source Files
 include( ${OrientationLib_SOURCE_DIR}/LaueOps/SourceList.cmake)
@@ -195,6 +184,21 @@ set(OrientationLib_PROJECT_SRCS
 
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${OrientationLib_PROJECT_SRCS})
+#-- Configure Target Specific Include Directories
+get_filename_component(TARGET_BINARY_DIR_PARENT ${${PROJECT_NAME}_BINARY_DIR} PATH)
+get_filename_component(TARGET_SOURCE_DIR_PARENT ${${PROJECT_NAME}_SOURCE_DIR} PATH)
+
+target_include_directories(${PROJECT_NAME} 
+                          PUBLIC 
+                            ${TARGET_BINARY_DIR_PARENT}
+                            ${TARGET_SOURCE_DIR_PARENT}
+                            ${PROJECT_CODE_DIR}
+                            # ${OrientationLib_BINARY_DIR}
+                            # ${OrientationLib_BINARY_DIR}/..
+                            # ${OrientationLib_SOURCE_DIR}/..
+                            # ${SIMPLProj_SOURCE_DIR}/Source
+                            # ${SIMPLProj_BINARY_DIR}
+)
 
 set(OrientationLib_LINK_LIBRARIES "")
 if(${OrientationLib_ENABLE_HDF5})
@@ -218,9 +222,13 @@ if(APPLE)
   include_directories("-FvecLib")
 endif(APPLE)
 
+if(WIN32 AND BUILD_SHARED_LIBS)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE "-DOrientationLib_BUILT_AS_DYNAMIC_LIB")
+endif()
+  
+LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 target_link_libraries(${PROJECT_NAME} SIMPLib ${OrientationLib_LINK_LIBRARIES} ${LAPACK_LIB})
 
-LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")
 set(lib_install_dir "lib")

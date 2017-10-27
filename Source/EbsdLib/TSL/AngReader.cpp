@@ -451,7 +451,7 @@ void AngReader::readData(QFile& in, QByteArray& buf)
     {
       ss.string()->clear();
 
-      ss << "Error parsing the data line.\n"
+      ss << "Error parsing the data line (Numeric conversion). Error code is " << getErrorCode() << " and occurred at data column " << m_ErrorColumn << " (Zero Based)\n"
          << buf << "\n*** Header information ***\nRows=" << numRows << " EvenCols=" << nEvenCols << " OddCols=" << nOddCols << "  Calculated Data Points: " << totalDataPoints
          << "\n***Parsing Position ***\nCurrent Row: " << yChange << "  Current Column Index: " << col << "  Current Data Point Count: " << counter << "\n";
       setErrorMessage(*(ss.string()));
@@ -663,6 +663,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
    * Some TSL ang files do NOT have all 10 columns. Assume these are lacking the last
    * 2 columns and all the other columns are the same as above.
    */
+  m_ErrorColumn = 0;
   float p1 = 0.0f, p = 0.0f, p2 = 0.0f, x = -1.0f, y = -1.0f, iqual = -1.0f, conf = -1.0f, semSignal = -1.0f, fit = -1.0f;
   int ph = 0;
   size_t offset = 0;
@@ -675,6 +676,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     if(!ok)
     {
       setErrorCode(-2501);
+      m_ErrorColumn = 0;
     }
     m_Phi1[offset] = p1;
   }
@@ -684,6 +686,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     if(!ok)
     {
       setErrorCode(-2502);
+      m_ErrorColumn = 1;
     }
     m_Phi[offset] = p;
   }
@@ -693,6 +696,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     if(!ok)
     {
       setErrorCode(-2503);
+      m_ErrorColumn = 2;
     }
     m_Phi2[offset] = p2;
   }
@@ -702,6 +706,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     if(!ok)
     {
       setErrorCode(-2504);
+      m_ErrorColumn = 3;
     }
     m_X[offset] = x;
   }
@@ -711,6 +716,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     if(!ok)
     {
       setErrorCode(-2505);
+      m_ErrorColumn = 4;
     }
     m_Y[offset] = y;
   }
@@ -720,6 +726,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     if(!ok)
     {
       setErrorCode(-2506);
+      m_ErrorColumn = 5;
     }
     m_Iq[offset] = iqual;
   }
@@ -729,6 +736,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     if(!ok)
     {
       setErrorCode(-2507);
+      m_ErrorColumn = 6;
     }
     m_Ci[offset] = conf;
   }
@@ -738,6 +746,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
     if(!ok)
     {
       setErrorCode(-2508);
+      m_ErrorColumn = 7;
     }
     m_PhaseData[offset] = ph;
   }
@@ -745,11 +754,21 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
   if(tokens.size() >= 9)
   {
     semSignal = tokens[8].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCode(-2509);
+      m_ErrorColumn = 8;
+    }
     m_SEMSignal[offset] = semSignal;
   }
   if(tokens.size() >= 10)
   {
     fit = tokens[9].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCode(-2510);
+      m_ErrorColumn = 9;
+    }
     m_Fit[offset] = fit;
   }
 }

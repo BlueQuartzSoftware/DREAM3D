@@ -239,9 +239,8 @@ set(SIMPLView_VERSION_SRC_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLView/SIMPLView/${
 # into a single known location
 get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
 if("${DREAM3DDocRoot}" STREQUAL "")
-  set_property(GLOBAL PROPERTY DREAM3DDocRoot "${DREAM3DProj_BINARY_DIR}")
+  set_property(GLOBAL PROPERTY DREAM3DDocRoot "${DREAM3DProj_BINARY_DIR}/Documentation")
   get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
-  file(WRITE "${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList" "")
 endif()
 
 
@@ -378,7 +377,7 @@ option(SIMPL_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms" ON)
 if(SIMPL_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
     if(TBB_FOUND)
-        include_directories(${TBB_INCLUDE_DIRS} )
+        #include_directories(${TBB_INCLUDE_DIRS} )
         CMP_COPY_DEPENDENT_LIBRARIES("tbb;tbb_malloc")
         # Append the locations of the TBB libraries to our Library Search Paths
         list(APPEND CMP_LIB_SEARCH_DIRS ${TBB_BINARY_DIR} ${TBB_LIBRARY_DIR} )
@@ -397,7 +396,7 @@ set(SIMPLib_USE_EIGEN "")
 Find_Package(Eigen REQUIRED)
 if(EIGEN_FOUND)
   #message(STATUS "Found Eigen Library")
-  include_directories( ${EIGEN_INCLUDE_DIRS} )
+  #include_directories( ${EIGEN_INCLUDE_DIRS} )
   set(SIMPLib_USE_EIGEN "1")
 else()
   message(WARNING "The Eigen Library is required for some algorithms to execute. These algorithms will be disabled.")
@@ -430,47 +429,17 @@ configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
 
 # --------------------------------------------------------------------
 # Generate install rules for the text files
-install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
-        DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}"
-        COMPONENT Applications)
-
+if(APPLE)
+  install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
+          DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources"
+          COMPONENT Applications)
+else()
+  install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
+          DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}"
+          COMPONENT Applications)
+endif()
 # Include some directories for the compiler
-include_directories(${PROJECT_BINARY_DIR})
-
-# --------------------------------------------------------------------
-# Add in some compiler definitions
-# --------------------------------------------------------------------
-if( CMAKE_BUILD_TYPE MATCHES Debug )
-  ADD_DEFINITIONS(-DDEBUG)
-ENDif( CMAKE_BUILD_TYPE MATCHES Debug )
-
-if(NOT MSVC)
- # ADD_DEFINITIONS(-Wall)
-endif()
-
-# On linux we need to set this because some of the libraries are Static
-# and some are shared.
-if( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" AND NOT MSVC )
-  ADD_DEFINITIONS(-fPIC)
-ENDif()
-
-# --------------------------------------------------------------------
-# If was are using GCC, make the compiler messages on a single line
-if(CMAKE_COMPILER_IS_GNUCC)
-  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0")
-ENDif(CMAKE_COMPILER_IS_GNUCC)
-if(CMAKE_COMPILER_IS_GNUCXX)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
-ENDif(CMAKE_COMPILER_IS_GNUCXX)
-
-if(MSVC)
- add_definitions(-D_CRT_SECURE_NO_WARNINGS)
- add_definitions(-D_SCL_SECURE_NO_WARNINGS)
- option(SIMPL_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
-endif()
-
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
-include_directories(${PROJECT_BINARY_DIR})
+#include_directories(${PROJECT_BINARY_DIR})
 
 # -----------------------------------------------------------------------
 # -- Build the EbsdLib Library
@@ -486,7 +455,6 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib ${PROJECT_BINA
 set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
 
 #- Add in the Main DREAM.3D Application
-#add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
 set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 
 #-------------------------------------------------------------------------------
@@ -506,6 +474,7 @@ endif()
 # Should we build the documentation using DOxygen
 option(SIMPL_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
 if(SIMPL_BUILD_DOCUMENTATION)
+  
   set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
   set(DOX_GENERATE_RTF "NO")
@@ -561,12 +530,16 @@ set_target_properties(PrebuiltPipelinesCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 # Make Sure this target as part of the DREAM3D Build
 # add_dependencies(DREAM3D PrebuiltPipelinesCopy)
 
-#- This installs all the help files. Note that we assume a flat directory structure
-#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
-#- folder and NOT in any subfolders beyond that.
-install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-        DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}
-        COMPONENT Applications )
+#- This installs all the prebuilt pipeline files.
+if(APPLE)
+  install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+          DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}/Resources
+          COMPONENT Applications )
+else()
+  install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+          DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}
+          COMPONENT Applications )
+endif()
 
 #-------------------------------------------------------------------------------
 # Copy the Data Folder to the build directory

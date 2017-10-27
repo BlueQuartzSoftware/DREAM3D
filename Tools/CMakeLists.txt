@@ -64,21 +64,13 @@ ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
 
 
 configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
-                ${DREAM3DTools_BINARY_DIR}/ToolConfiguration.h)
-
-include_directories(${DREAM3DTest_BINARY_DIR})
-include_directories(${SIMPLProj_SOURCE_DIR}/Source)
-include_directories(${SIMPLProj_BINARY_DIR})
-include_directories(${SIMPLViewProj_BINARY_DIR})
-include_directories(${SIMPLViewProj_BINARY_DIR}/Applications/SIMPLView)
+                ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h)
 
 # ---------- Find HDF5 Headers/Libraries -----------------------
 # HDF5 now comes with everything that is needed for CMake to load
 # up the targets (Exported) that it needs. We just need to find where
 # HDF5 is installed.
 include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
-include_directories(${HDF5_INCLUDE_DIRS}) # Covers 1.8.15
-include_directories(${HDF5_INCLUDE_DIR}) # Covers 1.8.16
 
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
@@ -89,10 +81,6 @@ function(COMPILE_TOOL)
     set(oneValueArgs TARGET DEBUG_EXTENSION BINARY_DIR COMPONENT INSTALL_DEST DEFINITION)
     set(multiValueArgs SOURCES LINK_LIBRARIES)
     cmake_parse_arguments(D3DTOOL "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-
-    if( ${D3DTOOL_DEFINITION} )
-        add_definitions(-D${DEFINITION})
-    endif()
 
     BuildToolBundle(
         TARGET ${D3DTOOL_TARGET}
@@ -108,6 +96,19 @@ function(COMPILE_TOOL)
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
         SOLUTION_FOLDER "Tools"
     )
+    target_include_directories(${D3DTOOL_TARGET}
+                                PUBLIC
+                                  ${SIMPLProj_SOURCE_DIR}/Source
+                                  ${SIMPLProj_BINARY_DIR}
+                                  # ${SIMPLViewProj_BINARY_DIR}
+                                  ${SIMPLViewProj_BINARY_DIR}
+                                  ${D3DTOOL_BINARY_DIR}
+                                  ${HDF5_INCLUDE_DIR}
+                                  )
+
+    if( ${D3DTOOL_DEFINITION} )
+        target_compile_definitions(${D3DTOOL_TARGET} PRIVATE -D${D3DTOOL_DEFINITION})
+    endif()
 
 endfunction()
 

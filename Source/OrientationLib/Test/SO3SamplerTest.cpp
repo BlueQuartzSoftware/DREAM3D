@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2015 BlueQuartz Softwae, LLC
+ * Copyright (c) 2015 BlueQuartz Software, LLC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,9 +30,9 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/SIMPLib.h"
+#include "UnitTestSupport.hpp"
 
 #include "OrientationLibTestFileLocations.h"
 

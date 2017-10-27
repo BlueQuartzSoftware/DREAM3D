@@ -38,9 +38,8 @@
 #include <iostream>
 
 #include <QtWidgets/QAbstractItemDelegate>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QStyleOptionComboBox>
-
-#include "SIMPLView/SIMPLViewApplication.h"
 
 #include "StatsGenerator/Widgets/Delegates/SGMDFItemDelegate.h"
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
@@ -147,7 +146,7 @@ QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
     QFontMetrics fontMetrics(data(index, Qt::FontRole).value<QFont>());
     comboBox.fontMetrics = fontMetrics;
     QSize size(fontMetrics.width(contents.text()), fontMetrics.height());
-    return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
+    return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   else if(role == Qt::TextAlignmentRole)
   {

@@ -67,9 +67,6 @@ set(${PLUGIN_NAME}_Parameters_SRCS
   ${${PLUGIN_NAME}_Parameters_Generated_MOC_SRCS}
 )
 
-# -- Add the binary directory for this subdirectory to the include path which is where the moc files are generated
-include_directories( ${EMMPM_BINARY_DIR}/${SUBDIR_NAME})
-
 
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${${PLUGIN_NAME}_Parameters_HDRS}

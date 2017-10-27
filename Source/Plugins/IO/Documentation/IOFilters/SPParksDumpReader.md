@@ -1,39 +1,31 @@
-Read SPParks Text File {#spparkstextreader}
+Read SPParks Dump File {#spparksdumpreader}
 =============
 
 ## Group (Subgroup) ##
 IO (Input)
 
 ## Description ##
-This **Filter** reads from a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/). The information in the file defines an **Image Geometry** with a set of **Feature** Ids.
+This **Filter** reads from a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/). The information in the file defines an **Image Geometry** with a set of **Feature** Ids. More information can be found at the [SPParks Dump file web site.](http://spparks.sandia.gov/doc/dump.html)
 
-+ The "Values" section is a pair of numbers where the first number is the site Id and the second
- number is the actual value of the **Feature** Id at that site.
-+ LINE 4 evidently must be what is shown in the example file.
-+ LINE 3 is the total number of **Cells**.
-+ LINES 5, 6 and 7 are the dimensions of the volume. 
-
-More information can be found at the [SPParks web site.](http://spparks.sandia.gov/doc/read_sites.html "SPParks Web Site")
- 
+** This filter will read from a _DUMP_ file from a SPParks simulation.**
 ## Example Input ##
 
-    [LINE 1] -
-    [LINE 2] 3 dimension
-    [LINE 3] 8000000 sites
-    [LINE 4] 26 max neighbors
-    [LINE 5] 0 200 xlo xhi
-    [LINE 6] 0 200 ylo yhi
-    [LINE 7] 0 200 zlo zhi
-    [LINE 8]
-    [LINE 9] Values
-    [LINE 10]
-    1 944
-    2 944
-    3 944
-    4 944
-    5 509
-    6 509
-    7 509
+    [LINE 1] ITEM: TIMESTEP
+    [LINE 2] 210    21000.6
+    [LINE 3] ITEM: NUMBER OF ATOMS
+    [LINE 4] 106480
+    [LINE 5] ITEM: BOX BOUNDS
+    [LINE 6] 0.5 44.5
+    [LINE 7] 0.5 44.5
+    [LINE 8] 0.5 55.5
+    [LINE 9] ITEM: ATOMS id type x y z
+    1 944 54 23 1
+    2 944 54 24 2
+    3 944 54 25 3
+    4 944 54 26 4
+    5 944 54 27 5
+    6 944 54 28 6
+    7 944 54 29 7
     …..
 
 
@@ -42,7 +34,7 @@ More information can be found at the [SPParks web site.](http://spparks.sandia.g
 |------|------| ----------- |
 | Input File | File Path | The input .dump file path |
 | Origin | float (3x) | The location in space of the (0, 0, 0) coordinate |
-| Resolution | float (3x) | Theresolution values (dx, dy, dz) |
+| Resolution | float (3x) | The resolution values (dx, dy, dz) |
 | One Based Arrays | bool | Whether the origin starts at (1, 1, 1) |
 
 ## Required Geometry ##

@@ -15,14 +15,18 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ### New Filters ###
 
++ SO3Sampler allows regular sampling of orienation angles. (DREAM3D Issue #751)
++ Read dataset from HDF5 file. (DREAM3D Issue #190)
 + Create Ensemble Info (Issue #724)
 + Import EBSD Orientation Files: Fallback to CI or Bands if generating IPF Color fails
 + Filters can not be temporarily disabled in the pipeline view.
 + ThresholdObjects filters moved to SIMPL Core from DREAM3D repo.
-+ 
++ Renamed SPParksWriter to SPParksSitesWriter
++ Renamed SPParksReader to SPParksDumpReader
 
 ### Fixed DREAM3D Issues ###
 
++ DREAM3D Issue #750: 3DStereographic Coordinates filter was giving erroneous results.
 + DREAM3D Issue #714: Fix bug when reading ODF angle files with a comma as a delimiter and spaces in the data line
 + DREAM3D Issue #716: Write StatsGen ODF Angle File does not create output path directories
 + DREAM3D Issue #718: GenerateIPF Colors filter does not validate phase data and will cause unexpected results or crashes.
@@ -33,23 +37,21 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + DREAM3D Issue #732: When reading STL files parse the header bytes to look for keywords that would identify the file as being from Magic's Materialise software
 + DREAM3D Issue #733: AlignSections (List) filter will not read from DREAM.3D generated Alignment files
 + DREAM3D Issue #737: ConvertOrientationData was not properly checking input arrays for the correct number of components
-+ Updating human labels on the example pipelines
-+ Fix potential crashing bug in Convert Orientations filter
-+ Add options to create all types of Geometries in the Create Lambert Sphere filter
-+ Fix image paths in the Initialize Synthetic Volume filter documentation.
-+ Fix crashing bug in MinNeighbors and MinSize filters under rare conditions
-
-
++ DREAM3D Issue #748: Only write an ODF angle file if there are valid angles.
++ DREAM3D Issue #748: Change default number of Lambert squares to 64.
++ DREAM3D Issue #748: Example pipelines; rotate the sample reference frame before processing the data
++ EbsdLib: Added more verbose error message when parsing .ang files that do not conform to the expected numeric types.
 
 ### Fixed SIMPLView Issues ###
 
 + SIMPLView Issue #17: Failure to check existence of file may lead to application crash
-+ SIMPLView Issue #112: SIMPLView now checks for the SIMPL_PLUGIN_PATH environment variable to load plugins
-
++ SIMPLView Issue #749: When loading a new pipeline file if there are no errors or warnings close the various dock widgets.
 
 ### Fixed SIMPL Issues ###
 
-+ SIMPL Issue #127: ImportASCIIData filter failes due to use of ASCIIDataModel as a Singleton design.
++ SIMPL Issue #137: Allow creation of Boolean types in ImportASCIIDataArray filter.
++ SIMPL Issue #136: Allow conversion to Boolean types in ConvertData Filter.
++ SIMPL Issue #130: Natively paint the PipelineFilterWidget instead of relying on CSS.
 + SIMPL Issue #123: Fix inconsistent types in the H5Lite library
 + SIMPL Issue: Array calculator will fail for some types of arrays
 + SIMPL Issue #118: Fix FileListInfoWidget internationalization decode issue.

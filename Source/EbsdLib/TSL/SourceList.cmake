@@ -49,7 +49,6 @@ set(TSL_HDRS
 )
 
 if(EbsdLib_ENABLE_HDF5)
-    add_definitions(-DEbsdLib_HAVE_HDF5)
     set(TSL_SRCS ${TSL_SRCS}
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngImporter.cpp
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngReader.cpp
@@ -62,8 +61,8 @@ if(EbsdLib_ENABLE_HDF5)
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngVolumeReader.h
         ${EbsdLib_SOURCE_DIR}/TSL/H5OIMReader.h
     )
-    set(EbsdLib_HDF5_SUPPORT 1)
 endif()
+
 cmp_IDE_SOURCE_PROPERTIES( "TSL" "${TSL_HDRS}" "${TSL_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 if( ${EbsdLib_INSTALL_FILES} EQUAL 1 )

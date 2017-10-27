@@ -41,13 +41,13 @@
 #include <QtCore/QVector>
 
 #include "SIMPLib/Common/Observer.h"
-#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "UnitTestSupport.hpp"
 
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"

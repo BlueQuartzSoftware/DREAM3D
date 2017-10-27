@@ -146,7 +146,7 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
 
   private:
     AngPhase::Pointer   m_CurrentPhase;
-
+    int m_ErrorColumn = 0;
 
     void readData(QFile& in, QByteArray& buf);
 

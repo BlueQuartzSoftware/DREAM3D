@@ -44,8 +44,6 @@ set(${PLUGIN_NAME}_Widgets_SRCS
   ${${PLUGIN_NAME}_Widgets_SRCS}
 )
 
-include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets )
-
 # Organize the Source files for things like Visual Studio and Xcode
 cmp_IDE_SOURCE_PROPERTIES( "Widgets" "${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGIN_NAME}_Widgets_SRCS}" "0")
 

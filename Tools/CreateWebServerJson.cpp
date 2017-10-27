@@ -18,7 +18,7 @@
 
 #include "SIMPLView/SIMPLViewVersion.h"
 
-#include "ToolConfiguration.h"
+#include "DREAM3DToolsConfiguration.h"
 
 // -----------------------------------------------------------------------------
 //

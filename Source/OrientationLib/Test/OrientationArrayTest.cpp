@@ -19,13 +19,13 @@
 
 #include <QtCore/QVector>
 
-#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Math/ArrayHelpers.hpp"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/SIMPLib.h"
+#include "UnitTestSupport.hpp"
 
 using namespace SIMPLib::Constants;
 

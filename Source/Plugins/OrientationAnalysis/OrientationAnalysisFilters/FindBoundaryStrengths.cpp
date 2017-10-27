@@ -411,7 +411,7 @@ const QString FindBoundaryStrengths::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindBoundaryStrengths::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

@@ -529,7 +529,7 @@ const QString FindTwinBoundaries::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindTwinBoundaries::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

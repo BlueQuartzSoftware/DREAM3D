@@ -396,7 +396,7 @@ const QString FindLocalAverageCAxisMisalignments::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindLocalAverageCAxisMisalignments::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

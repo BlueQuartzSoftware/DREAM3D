@@ -39,9 +39,9 @@
 #include <iostream>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/SIMPLib.h"
+#include "UnitTestSupport.hpp"
 
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/OrientationLib.h"

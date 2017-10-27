@@ -37,8 +37,8 @@
 #include <QtCore/QFileInfo>
 #include <QtGui/QImage>
 
-#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/SIMPLib.h"
+#include "UnitTestSupport.hpp"
 
 #include "OrientationLib.h"
 #include "OrientationLib/LaueOps/CubicLowOps.h"

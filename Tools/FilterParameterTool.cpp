@@ -47,14 +47,14 @@
 // DREAM3DLib includes
 //#include "SIMPLib/SIMPLib.h"
 //#include "SIMPLib/SIMPLibVersion.h"
-//#include "SIMPLib/Plugin/PluginManager.h"
+//#include "SIMPLib/Plugin/PluginManager.h"∂
 //#include "SIMPLib/Filtering/FilterManager.h"
 //#include "SIMPLib/Filtering/FilterFactory.hpp"
 
 //#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 //#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 
-#include "Tools/ToolConfiguration.h"
+#include "DREAM3DToolsConfiguration.h"
 
 #define OVERWRITE_SOURCE_FILE 1
 

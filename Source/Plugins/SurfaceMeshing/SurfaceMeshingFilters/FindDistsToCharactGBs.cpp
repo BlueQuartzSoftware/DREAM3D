@@ -590,7 +590,7 @@ const QString FindDistsToCharactGBs::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindDistsToCharactGBs::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

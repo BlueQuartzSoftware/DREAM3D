@@ -167,7 +167,7 @@ QVariant EnsembleInfoTableModel::data(const QModelIndex& index, qint32 role) con
     // FIXME: Is this size correct? Can we get a more accurate size without using QApplication
     return size;
 
-    // return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
+    // return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   else if(role == Qt::TextAlignmentRole)
   {

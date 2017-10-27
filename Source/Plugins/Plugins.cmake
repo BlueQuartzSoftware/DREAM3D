@@ -27,6 +27,13 @@ function(DREAM3D_COMPILE_PLUGIN)
         get_property(PluginNumFilters GLOBAL PROPERTY PluginNumFilters)
 
         if(${PluginNumFilters} GREATER -1)
+          get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
+          add_custom_target(${PLUG_PLUGIN_NAME}_DOC_FOLDER_COPY ALL
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${PLUG_PLUGIN_SOURCE_DIR}/Documentation/${PLUG_PLUGIN_NAME}Filters/"
+            "${DREAM3DDocRoot}/ReferenceManual/Filters/${PLUG_PLUGIN_NAME}_Filters/"
+            COMMENT "${PLUG_PLUGIN_NAME}: Copying Documentation to build directory")
+          set_target_properties(${PLUG_PLUGIN_NAME}_DOC_FOLDER_COPY PROPERTIES FOLDER ZZ_COPY_FILES)
+
           message(STATUS "${PLUG_PLUGIN_NAME} [ENABLED] ${PluginNumFilters} Filters")
           #- Now set up the dependency between the main application and each of the plugins so that
           #- things like Visual Studio are forced to rebuild the plugins when launching
@@ -78,15 +85,11 @@ function(DREAM3D_ADD_PLUGINS)
             set(pluginSearchDir ${DREAM3DProj_SOURCE_DIR}/ExternalProjects/Plugins/${d3dPlugin})
             if(EXISTS ${pluginSearchDir})
                 set(${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
-                #include_directories( ${pluginSearchDir} )
-                #include_directories(${DREAM3D_PARENT_DIR})
                 message(STATUS "Plugin: Defining ${d3dPlugin}_SOURCE_DIR to ${${d3dPlugin}_SOURCE_DIR}")
             endif()
             set(pluginSearchDir ${DREAM3D_PARENT_DIR}/DREAM3D_Plugins/${d3dPlugin})
             if(EXISTS ${pluginSearchDir})
                 set(${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
-                #include_directories(${DREAM3D_PARENT_DIR}/DREAM3D_Plugins)
-                #include_directories( ${pluginSearchDir} )
                 message(STATUS "Plugin: Defining ${d3dPlugin}_SOURCE_DIR to ${${d3dPlugin}_SOURCE_DIR}")
             endif()
           endif()
@@ -138,8 +141,6 @@ set(DREAM3D_BASE_PLUGINS
 )
 
 get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)
-# include_directories(${DREAM3D_PARENT_DIR}/DREAM3D_Plugins)
-# include_directories(${DREAM3D_PARENT_DIR})
 set(DREAM3D_ALL_PLUGINS ${DREAM3D_BASE_PLUGINS} ${DREAM3D_EXTRA_PLUGINS} )
 
 message(STATUS "*******************************************************")

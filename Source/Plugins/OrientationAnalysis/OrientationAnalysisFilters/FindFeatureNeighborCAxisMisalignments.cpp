@@ -401,7 +401,7 @@ const QString FindFeatureNeighborCAxisMisalignments::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindFeatureNeighborCAxisMisalignments::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

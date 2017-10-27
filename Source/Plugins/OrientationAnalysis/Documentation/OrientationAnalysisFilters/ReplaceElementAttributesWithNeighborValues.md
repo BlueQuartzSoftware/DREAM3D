@@ -30,13 +30,13 @@ Using these values says that for every cell that has a confidence index < 0.1 it
 
 | Original Data |  | After Running Filter | True Data |
 |----------| ----------| ----------| ----------|
-| ![Original Data](images/NeighborReplace_No_Cleanup_2.png) |  |![Text](images/NeighborReplace_After_Cleanup_2.png) | ![Text](images/NeighborReplace_Exemplar.bmp) |
+| ![Original Data](Images/NeighborReplace_No_Cleanup_2.png) |  |![Text](Images/NeighborReplace_After_Cleanup_2.png) | ![Text](Images/NeighborReplace_Exemplar.bmp) |
 
 **Example of Too Much Replacement**
 
 | Original Data | Threshold CI < 0.1 | After Running Filter | True Data |
 |----------| ----------| ----------| ----------|
-| ![Original Data](images/NeighborReplace_No_Cleanup.png) | ![Original Data. Black pixels have Confidence Index < 0.1](images/NeighborReplace_No_Cleanup_Mask.png) |![Text](images/NeighborReplace_After_Cleanup.png) | ![Text](images/NeighborReplace_Exemplar.bmp) |
+| ![Original Data](Images/NeighborReplace_No_Cleanup.png) | ![Original Data. Black pixels have Confidence Index < 0.1](Images/NeighborReplace_No_Cleanup_Mask.png) |![Text](Images/NeighborReplace_After_Cleanup.png) | ![Text](Images/NeighborReplace_Exemplar.bmp) |
 
 Note how in the above use of the filter the grain morphology is substantially changed from the exemplar data. Except for very large grains being similar most of the fine grains and twins are **NOT** reproduced from the original.
 
@@ -56,7 +56,7 @@ Oxford Instruments and Bruker CTF data files do not include a "Confidence Index"
 
 | Original Data | After Running Filter |
 |----------| ----------|
-| ![Original Data](images/NeighborReplace_CTF_Before.png) | ![](images/NeighborReplace_CTF_After.png)  |
+| ![Original Data](Images/NeighborReplace_CTF_Before.png) | ![](Images/NeighborReplace_CTF_After.png)  |
 
 Note the large areas of unindexed pixels in the original image (black pixels) and how they are all filled in. The filter can act much like a generic "flood fill" image processing algorithm if used improperly.
 

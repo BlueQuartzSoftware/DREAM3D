@@ -374,7 +374,7 @@ const QString FindSlipTransmissionMetrics::getGroupName()
 // -----------------------------------------------------------------------------
 const QString FindSlipTransmissionMetrics::getSubGroupName()
 {
-  return SIMPL::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
 
 // -----------------------------------------------------------------------------

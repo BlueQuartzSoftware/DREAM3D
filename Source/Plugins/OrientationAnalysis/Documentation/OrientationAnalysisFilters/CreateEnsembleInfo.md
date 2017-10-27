@@ -2,7 +2,7 @@ Create Ensemble Info {#createensembleinfo}
 =============
 
 ## Group (Subgroup) ##
-Processing (Alignment)
+Processing (Generation)
 
 ## Description ##
 This **Filter** reads in information about the crystal structure and phase types of all the **Features** that are contained in a **Cell** based volume. These values are needed to allow the calculation of statistics on the volume, if they have not already been provided by some other means. Each row in the table lists the __Crystal Structure__, __Phase Type__, and __Phase Name__. The proper values for the crystal structure and phase type come from internal constants within DREAM.3D and are listed here:

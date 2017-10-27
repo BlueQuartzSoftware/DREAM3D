@@ -44,7 +44,7 @@
 #include "EbsdLib/TSL/H5OIMReader.h"
 #include "EbsdLib/Test/EbsdLibTestFileLocations.h"
 
-#include "SIMPLib/Common/UnitTestSupport.hpp"
+#include "UnitTestSupport.hpp"
 
 class EdaxOIMReaderTest
 {

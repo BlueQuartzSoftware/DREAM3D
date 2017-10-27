@@ -87,9 +87,6 @@ INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 set(EMMPMLib_BUILT_AS_DYNAMIC_LIB 0)
 if(BUILD_SHARED_LIBS)
   set(EMMPMLib_BUILT_AS_DYNAMIC_LIB 1)
-  if(WIN32)
-    ADD_DEFINITIONS("-DEMMPMLib_BUILT_AS_DYNAMIC_LIB")
-  endif(WIN32)
 endif(BUILD_SHARED_LIBS)
 
 
@@ -142,11 +139,6 @@ endif()
 # Setup the Include Directories
 # NOTE that we are using the Plugin's CMake variables because we want to be
 # able to use an include path like #include "EMMPMLib/foo.h"
-include_directories(${EMMPM_SOURCE_DIR})
-include_directories(${EMMPM_BINARY_DIR})
-include_directories(${SIMPLProj_SOURCE_DIR}/Source)
-include_directories(${SIMPLProj_BINARY_DIR})
-
 
 #-- Include all the Source Files
 include( ${EMMPMLib_SOURCE_DIR}/Common/SourceList.cmake)
@@ -184,9 +176,23 @@ set(EMMPMLib_PROJECT_SRCS
 
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${EMMPMLib_PROJECT_SRCS})
-target_link_libraries(${PROJECT_NAME} Qt5::Core ${TBB_LIBRARIES} SIMPLib)
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
+
+if(WIN32)
+  Target_ADD_DEFINITIONS("-DEMMPMLib_BUILT_AS_DYNAMIC_LIB")
+endif(WIN32)
+#-- Configure Target Specific Include Directories
+get_filename_component(TARGET_BINARY_DIR_PARENT ${${PROJECT_NAME}_BINARY_DIR} PATH)
+get_filename_component(TARGET_SOURCE_DIR_PARENT ${${PROJECT_NAME}_SOURCE_DIR} PATH)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${TARGET_BINARY_DIR_PARENT})
+target_include_directories(${PROJECT_NAME} PUBLIC ${TARGET_SOURCE_DIR_PARENT})
+target_include_directories(${PROJECT_NAME} PUBLIC ${TBB_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${EIGEN_INCLUDE_DIRS} )
+CMP_MODULE_INCLUDE_DIRS (TARGET ${PROJECT_NAME} LIBVARS HDF5 Qt5Core Qt5Network)
+
+target_link_libraries(${PROJECT_NAME} Qt5::Core ${TBB_LIBRARIES} SIMPLib)
 
 
 set(install_dir "bin")

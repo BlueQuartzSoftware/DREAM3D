@@ -11,7 +11,7 @@ This **Filter** is useful since most DREAM.3D routines for analyzing Ebsd data r
 
 -----
 
-![Convert Hexagonal Grid User Interface](images/ConvertHexToSquareGUI.png)
+![Convert Hexagonal Grid User Interface](Images/ConvertHexToSquareGUI.png)
 
 -----
 

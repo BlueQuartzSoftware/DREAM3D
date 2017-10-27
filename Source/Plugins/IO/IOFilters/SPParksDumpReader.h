@@ -49,18 +49,18 @@
 #include "SIMPLib/SIMPLib.h"
 
 /**
- * @brief The SPParksTextReader class. See [Filter documentation](@ref spparkstextreader) for details.
+ * @brief The SPParksDumpReader class. See [Filter documentation](@ref spparkstextreader) for details.
  */
-class SPParksTextReader : public FileReader
+class SPParksDumpReader : public FileReader
 {
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(SPParksTextReader)
-  SIMPL_STATIC_NEW_MACRO(SPParksTextReader)
-  SIMPL_TYPE_MACRO_SUPER(SPParksTextReader, FileReader)
+  SIMPL_SHARED_POINTERS(SPParksDumpReader)
+  SIMPL_STATIC_NEW_MACRO(SPParksDumpReader)
+  SIMPL_TYPE_MACRO_SUPER(SPParksDumpReader, FileReader)
 
-  virtual ~SPParksTextReader();
+  virtual ~SPParksDumpReader();
 
   SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
   Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
@@ -143,7 +143,7 @@ public:
   virtual void preflight();
 
 protected:
-  SPParksTextReader();
+  SPParksDumpReader();
 
   /**
    * @brief readHeader Reimplemented from @see FileReader class
@@ -198,8 +198,8 @@ private:
   QFile m_InStream;
   QMap<QString, DataParser::Pointer> m_NamePointerMap;
 
-  SPParksTextReader(const SPParksTextReader&); // Copy Constructor Not Implemented
-  void operator=(const SPParksTextReader&);    // Operator '=' Not Implemented
+  SPParksDumpReader(const SPParksDumpReader&); // Copy Constructor Not Implemented
+  void operator=(const SPParksDumpReader&);    // Operator '=' Not Implemented
 };
 
-#endif /* _SPParksTextReader_H_ */
+#endif /* _SPParksDumpReader_H_ */

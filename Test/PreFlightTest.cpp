@@ -49,7 +49,6 @@
 #include <QtCore/QtDebug>
 
 #include "SIMPLib/Common/Observer.h"
-#include "SIMPLib/Common/UnitTestSupport.hpp"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -61,6 +60,7 @@
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/SIMPLibFilters.h"
+#include "UnitTestSupport.hpp"
 
 #include "DREAM3DTestFileLocations.h"
 
