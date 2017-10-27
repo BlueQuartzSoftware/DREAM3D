@@ -64,7 +64,8 @@
 #include "StatsGenerator/Widgets/Presets/PrimaryEquiaxedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
-#include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h"
+#include "StatsGenerator/Widgets/Presets/PrecipitateRolledPreset.h"
+#include "StatsGenerator/Widgets/Presets/Dialogs/RolledPresetDialog.h"
 #include "StatsGenerator/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h"
 #include "StatsGenerator/Widgets/TableModels/SGAbstractTableModel.h"
 #include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
@@ -156,9 +157,9 @@ void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int in
 
   AbstractMicrostructurePreset::Pointer absPreset = getMicroPreset();
 
-  if(std::dynamic_pointer_cast<PrimaryRolledPreset>(absPreset))
+  if(std::dynamic_pointer_cast<PrimaryRolledPreset>(absPreset) || std::dynamic_pointer_cast<PrecipitateRolledPreset>(absPreset))
   {
-    PrimaryRolledPresetDialog d(nullptr);
+    RolledPresetDialog d(nullptr);
     bool keepGoing = true;
     while(keepGoing)
     {

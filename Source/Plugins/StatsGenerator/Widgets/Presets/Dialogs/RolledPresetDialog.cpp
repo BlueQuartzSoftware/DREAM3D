@@ -32,7 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "PrimaryRolledPresetDialog.h"
+#include "RolledPresetDialog.h"
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialogButtonBox>
@@ -45,12 +45,12 @@
 #include "SVWidgetsLib/QtSupport/QtSStyles.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_PrimaryRolledPresetDialog.cpp"
+#include "moc_RolledPresetDialog.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryRolledPresetDialog::PrimaryRolledPresetDialog(QWidget* parent)
+RolledPresetDialog::RolledPresetDialog(QWidget* parent)
 : QDialog(parent)
 {
   setupGui();
@@ -59,14 +59,14 @@ PrimaryRolledPresetDialog::PrimaryRolledPresetDialog(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryRolledPresetDialog::~PrimaryRolledPresetDialog()
+RolledPresetDialog::~RolledPresetDialog()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryRolledPresetDialog::setupGui()
+void RolledPresetDialog::setupGui()
 {
 
   QVBoxLayout* verticalLayout_2 = new QVBoxLayout(this);
@@ -147,7 +147,7 @@ void PrimaryRolledPresetDialog::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryRolledPresetDialog::checkInputs(const QString& text)
+void RolledPresetDialog::checkInputs(const QString& text)
 {
   float a = getA();
   float b = getB();
@@ -169,7 +169,7 @@ void PrimaryRolledPresetDialog::checkInputs(const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PrimaryRolledPresetDialog::getA()
+float RolledPresetDialog::getA()
 {
   bool ok = false;
   float d = A->text().toFloat(&ok);
@@ -181,7 +181,7 @@ float PrimaryRolledPresetDialog::getA()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PrimaryRolledPresetDialog::getB()
+float RolledPresetDialog::getB()
 {
   bool ok = false;
   float d = B->text().toFloat(&ok);
@@ -193,7 +193,7 @@ float PrimaryRolledPresetDialog::getB()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PrimaryRolledPresetDialog::getC()
+float RolledPresetDialog::getC()
 {
   bool ok = false;
   float d = C->text().toFloat(&ok);

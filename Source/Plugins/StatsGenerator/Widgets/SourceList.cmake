@@ -115,13 +115,11 @@ set(StatsGenerator_PRESETS_HDRS
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Presets" "${StatsGenerator_PRESETS_HDRS};${StatsGenerator_PRESETS_MOC_HDRS}" "${StatsGenerator_PRESETS_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(StatsGenerator_DIALOGS_SRCS
-  ${StatsGenerator_SOURCE_DIR}/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.cpp
-  ${StatsGenerator_SOURCE_DIR}/Widgets/Presets/Dialogs/PrecipitateRolledPresetDialog.cpp
+  ${StatsGenerator_SOURCE_DIR}/Widgets/Presets/Dialogs/RolledPresetDialog.cpp
   ${StatsGenerator_SOURCE_DIR}/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.cpp
 )
 set(StatsGenerator_DIALOGS_MOC_HDRS
-  ${StatsGenerator_SOURCE_DIR}/Widgets/Presets/Dialogs/PrimaryRolledPresetDialog.h
-  ${StatsGenerator_SOURCE_DIR}/Widgets/Presets/Dialogs/PrecipitateRolledPresetDialog.h
+  ${StatsGenerator_SOURCE_DIR}/Widgets/Presets/Dialogs/RolledPresetDialog.h
   ${StatsGenerator_SOURCE_DIR}/Widgets/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Presets/Dialogs" "${StatsGenerator_DIALOGS_MOC_HDRS}" "${StatsGenerator_DIALOGS_SRCS}" ${PROJECT_INSTALL_HEADERS})
