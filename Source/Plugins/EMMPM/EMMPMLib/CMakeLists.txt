@@ -176,6 +176,7 @@ set(EMMPMLib_PROJECT_SRCS
 
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${EMMPMLib_PROJECT_SRCS})
+CMP_AddDefinitions(TARGET ${PROJECT_NAME})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 set_target_properties( ${PROJECT_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 

@@ -233,6 +233,7 @@ get_filename_component(TARGET_BINARY_DIR_PARENT ${${PLUGIN_NAME}_BINARY_DIR} PAT
 get_filename_component(TARGET_SOURCE_DIR_PARENT ${${PLUGIN_NAME}_SOURCE_DIR} PATH)
 
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
+CMP_AddDefinitions(TARGET ${PLUGIN_NAME})
 set_target_properties(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 #-------------------------------
 #

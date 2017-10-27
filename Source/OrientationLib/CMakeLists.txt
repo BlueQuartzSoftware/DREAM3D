@@ -184,6 +184,7 @@ set(OrientationLib_PROJECT_SRCS
 
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${OrientationLib_PROJECT_SRCS})
+CMP_AddDefinitions(TARGET ${PROJECT_NAME})
 #-- Configure Target Specific Include Directories
 get_filename_component(TARGET_BINARY_DIR_PARENT ${${PROJECT_NAME}_BINARY_DIR} PATH)
 get_filename_component(TARGET_SOURCE_DIR_PARENT ${${PROJECT_NAME}_SOURCE_DIR} PATH)

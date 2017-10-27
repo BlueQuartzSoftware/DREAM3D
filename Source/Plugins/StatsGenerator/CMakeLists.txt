@@ -230,7 +230,7 @@ if(NOT MSVC)
 endif()
 
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
-
+CMP_AddDefinitions(TARGET ${PLUGIN_NAME})
 set_target_properties(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 #-------------------------------
 #
