@@ -95,7 +95,7 @@ protected slots:
 
   virtual void on_m_ResetDataBtn_clicked();
 
-  void on_microstructurePresetCombo_currentIndexChanged(int index);
+  virtual void on_microstructurePresetCombo_currentIndexChanged(int index);
 
   void dataWasEdited();
 

@@ -169,10 +169,21 @@ void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int in
         if(a >= b && b >= c)
         {
           // The user clicked the OK button so transfer the values from the dialog into this class
-          PrimaryRolledPreset::Pointer presetPtr = std::dynamic_pointer_cast<PrimaryRolledPreset>(absPreset);
-          presetPtr->setAspectRatio1(d.getA() / d.getB());
-          presetPtr->setAspectRatio2(d.getA() / d.getC());
-          keepGoing = false;
+          QString presetName = absPreset->getName();
+          if(presetName.compare("Primary Rolled") == 0)
+          {
+            PrimaryRolledPreset::Pointer presetPtr = std::dynamic_pointer_cast<PrimaryRolledPreset>(absPreset);
+            presetPtr->setAspectRatio1(d.getA() / d.getB());
+            presetPtr->setAspectRatio2(d.getA() / d.getC());
+            keepGoing = false;
+          }
+          if(presetName.compare("Precipitate Rolled") == 0)
+          {
+            PrecipitateRolledPreset::Pointer presetPtr = std::dynamic_pointer_cast<PrecipitateRolledPreset>(absPreset);
+            presetPtr->setAspectRatio1(d.getA() / d.getB());
+            presetPtr->setAspectRatio2(d.getA() / d.getC());
+            keepGoing = false;
+          }
         }
         else
         {
