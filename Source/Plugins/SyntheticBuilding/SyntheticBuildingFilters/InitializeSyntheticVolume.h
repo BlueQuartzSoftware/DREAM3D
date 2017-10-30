@@ -93,6 +93,9 @@ public:
   QString getEstimatedPrimaryFeatures();
   Q_PROPERTY(QString EstimatedPrimaryFeatures READ getEstimatedPrimaryFeatures)
 
+  QString getBoxDimensions();
+  Q_PROPERTY(QString BoxDimensions READ getBoxDimensions)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */

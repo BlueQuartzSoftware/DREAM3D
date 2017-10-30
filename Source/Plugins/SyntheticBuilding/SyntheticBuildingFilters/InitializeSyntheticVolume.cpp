@@ -166,6 +166,10 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume));
 
+  param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Box Size in Length Units", BoxDimensions, FilterParameter::Parameter, InitializeSyntheticVolume);
+  param->setReadOnly(true);
+  parameters.push_back(param);
+
   setFilterParameters(parameters);
 }
 
@@ -491,6 +495,21 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
 QString InitializeSyntheticVolume::getEstimatedPrimaryFeatures()
 {
   return m_EstimatedPrimaryFeatures;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString InitializeSyntheticVolume::getBoxDimensions()
+{
+  QString desc;
+  QTextStream ss(&desc);
+
+  ss << "X Range: " << m_Origin.x << " to " << (m_Origin.x + (m_Dimensions.x * m_Resolution.x)) << " (Delta: " << (m_Dimensions.x * m_Resolution.x) << ")\n";
+  ss << "Y Range: " << m_Origin.y << " to " << (m_Origin.y + (m_Dimensions.y * m_Resolution.y)) << " (Delta: " << (m_Dimensions.y * m_Resolution.y) << ")\n";
+  ss << "Z Range: " << m_Origin.z << " to " << (m_Origin.z + (m_Dimensions.z * m_Resolution.z)) << " (Delta: " << (m_Dimensions.z * m_Resolution.z) << ")";
+
+  return desc;
 }
 
 // -----------------------------------------------------------------------------
