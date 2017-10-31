@@ -167,7 +167,15 @@ void ModifiedLambertProjection::initializeSquares(int dims, float sphereRadius)
 // -----------------------------------------------------------------------------
 int ModifiedLambertProjection::writeHDF5Data(hid_t groupId)
 {
-  int err = 0;
+  int err = -1;
+  #if 0
+  QVector<size_t> dims = { static_cast<size_t>(m_Dimension), static_cast<size_t>(m_Dimension), 1};
+  err = m_NorthSquare->writeH5Data(groupId, dims);
+  std::cout << "Err: " << err << std::endl;
+  err = m_SouthSquare->writeH5Data(groupId, dims);
+  std::cout << "Err: " << err << std::endl;
+  #endif
+
   return err;
 }
 
@@ -176,7 +184,7 @@ int ModifiedLambertProjection::writeHDF5Data(hid_t groupId)
 // -----------------------------------------------------------------------------
 int ModifiedLambertProjection::readHDF5Data(hid_t groupId)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
