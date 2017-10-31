@@ -270,7 +270,7 @@ void QuiltCellData::preflight()
 template <typename T> float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t zc, IntVec3_t pSize, int64_t xDim, int64_t yDim, int64_t zDim)
 {
   float value = 0.0;
-  DataArray<T>* cellArray = DataArray<T>::SafePointerDownCast(inputData.get());
+  typename DataArray<T>::Pointer cellArray = std::dynamic_pointer_cast<DataArray<T>>(inputData);
   if(nullptr == cellArray)
   {
     return 0.0;

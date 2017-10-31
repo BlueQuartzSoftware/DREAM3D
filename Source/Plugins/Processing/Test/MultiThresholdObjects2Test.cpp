@@ -174,7 +174,7 @@ public:
     DataArrayPath path = DataArrayPath(dataContainerName, SIMPL::Defaults::CellAttributeMatrixName, outputName);
     IDataArray::Pointer thresholdArray =
         filter->getDataContainerArray()->getDataContainer(path.getDataContainerName())->getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
-    DataArray<bool>* inputArray = DataArray<bool>::SafePointerDownCast(thresholdArray.get());
+    DataArray<bool>::Pointer inputArray = std::dynamic_pointer_cast<DataArray<bool>>(thresholdArray);
     bool* inputArrayPtr = inputArray->getPointer(0); // pointer for threshold array created from the filter for the float array
 
     // For the comparison value of 0.1, the threshold array elements 0 to 9 should be false and 10 through 19 should be true
@@ -248,7 +248,7 @@ public:
     DataArrayPath path = DataArrayPath(dataContainerName, SIMPL::Defaults::CellAttributeMatrixName, outputName);
     IDataArray::Pointer thresholdArray =
         filter->getDataContainerArray()->getDataContainer(path.getDataContainerName())->getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
-    DataArray<bool>* inputArray = DataArray<bool>::SafePointerDownCast(thresholdArray.get());
+    DataArray<bool>::Pointer inputArray = std::dynamic_pointer_cast<DataArray<bool>>(thresholdArray);
     bool* inputArrayPtr = inputArray->getPointer(0); // pointer for threshold array created from the filter for the float array
 
     // For the comparison value of 0.1, the threshold array elements 0 to 9 should be false and 10 through 19 should be true
@@ -268,12 +268,12 @@ public:
 
     DataArrayPath path = DataArrayPath("dc", "CellData", "TestArrayFloat");
     IDataArray::Pointer idataf = filter->getDataContainerArray()->getDataContainer(path)->getAttributeMatrix(path)->getAttributeArray(path.getDataArrayName());
-    DataArray<float>* dataf = DataArray<float>::SafePointerDownCast(idataf.get());
+    DataArray<float>::Pointer dataf = std::dynamic_pointer_cast<DataArray<float>>(idataf);
     ComparisonValueTestAll(filter, dataf, 0.1f, "FloatComparison");
 
     path.setDataArrayName("TestArrayInt");
     IDataArray::Pointer idatai = filter->getDataContainerArray()->getDataContainer(path)->getAttributeMatrix(path)->getAttributeArray(path.getDataArrayName());
-    DataArray<int>* datai = DataArray<int>::SafePointerDownCast(idatai.get());
+    DataArray<int>::Pointer datai = std::dynamic_pointer_cast<DataArray<int>>(idatai);
     ComparisonValueTestAll(filter, datai, 10, "IntComparison");
 
     return 1;
@@ -288,7 +288,7 @@ public:
 
     DataArrayPath path = DataArrayPath("dc", "CellData", "TestArrayInt");
     IDataArray::Pointer idatai = filter->getDataContainerArray()->getDataContainer(path)->getAttributeMatrix(path)->getAttributeArray(path.getDataArrayName());
-    // DataArray<int>* datai = DataArray<int>::SafePointerDownCast(idatai.get());
+    // DataArray<int>::Pointer datai = std::dynamic_pointer_cast<DataArray<int>>(idatai);
 
     // Check AND / OR operators
     ComparisonSet::Pointer compSet = ComparisonSet::New();

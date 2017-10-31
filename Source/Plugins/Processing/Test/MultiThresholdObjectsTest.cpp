@@ -152,7 +152,7 @@ public:
 
       DataArrayPath path = DataArrayPath("dc1", SIMPL::Defaults::CellAttributeMatrixName, SIMPL::GeneralData::ThresholdArray);
       IDataArray::Pointer thresholdArray = vdc->getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
-      DataArray<bool>* inputArray = DataArray<bool>::SafePointerDownCast(thresholdArray.get());
+      DataArray<bool>::Pointer inputArray = std::dynamic_pointer_cast<DataArray<bool>>(thresholdArray);
       bool* inputArrayPtr = inputArray->getPointer(0); // pointer for threshold array created from the filter for the float array
 
       // For the comparison value of 0.1, the threshold array elements 0 to 9 should be false and 10 through 19 should be true
@@ -187,7 +187,7 @@ public:
 
       DataArrayPath path1 = DataArrayPath("dc1", SIMPL::Defaults::CellAttributeMatrixName, "ThresholdArray1");
       IDataArray::Pointer thresholdArray1 = vdc->getAttributeMatrix(path1.getAttributeMatrixName())->getAttributeArray(path1.getDataArrayName());
-      DataArray<bool>* inputArray1 = DataArray<bool>::SafePointerDownCast(thresholdArray1.get());
+      DataArray<bool>::Pointer inputArray1 = std::dynamic_pointer_cast<DataArray<bool>>(thresholdArray1);
       bool* inputArrayPtr1 = inputArray1->getPointer(0); // pointer for threshold array created from the filter for the int array
 
       // For the comparison value of 15, the threshold array elements 0 to 15 should be false and 16 through 19 should be true

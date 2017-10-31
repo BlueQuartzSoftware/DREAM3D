@@ -1135,7 +1135,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       if(nullptr == pp)
       {
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
@@ -1195,7 +1195,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   for(size_t i = 0; i < numPrimaryPhases; i++)
   {
     phase = m_PrimaryPhases[i];
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
     m_FeatureSizeDist[i].resize(40);
     m_SimFeatureSizeDist[i].resize(40);
     m_FeatureSizeDistStep[i] = static_cast<float>(((2 * pp->getMaxFeatureDiameter()) - (pp->getMinFeatureDiameter() / 2.0f)) / m_FeatureSizeDist[i].size());
@@ -1348,7 +1348,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   for(size_t i = 0; i < numPrimaryPhases; i++)
   {
     phase = m_PrimaryPhases[i];
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
     m_NeighborDist[i].resize(pp->getBinNumbers()->getSize());
     m_SimNeighborDist[i].resize(pp->getBinNumbers()->getSize());
     VectorOfFloatArray Neighdist = pp->getFeatureSize_Neighbors();
@@ -1775,7 +1775,7 @@ void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint3
   float vol = 0.0f;
   bool volgood = false;
   float fourThirdsPiOverEight = static_cast<float>(((4.0f / 3.0f) * (SIMPLib::Constants::k_Pi)) / 8.0f);
-  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+  PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
   float avg = GSdist[0]->getValue(0);
   float stdev = GSdist[1]->getValue(0);
@@ -1996,7 +1996,7 @@ float PackPrimaryPhases::checkNeighborhoodError(int32_t gadd, int32_t gremove)
   for(size_t iter = 0; iter < numPhases; ++iter)
   {
     phase = m_PrimaryPhases[iter];
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
     VectOfVectFloat_t& curSimNeighborDist = m_SimNeighborDist[iter];
     size_t curSImNeighborDist_Size = curSimNeighborDist.size();
     float oneOverNeighborDistStep = 1.0f / m_NeighborDistStep[iter];
@@ -2195,7 +2195,7 @@ float PackPrimaryPhases::checkSizeDistError(Feature_t* feature)
   for(size_t iter = 0; iter < featureSizeDist_Size; ++iter)
   {
     phase = m_PrimaryPhases[iter];
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
     count = 0;
     std::vector<float>& curFeatureSizeDist = m_FeatureSizeDist[iter];
     std::vector<float>::size_type curFeatureSizeDistSize = curFeatureSizeDist.size();
@@ -3079,7 +3079,7 @@ void PackPrimaryPhases::cleanupFeatures()
     touchessurface = false;
     if(checked[i] == false && m_FeatureIds[i] > m_FirstPrimaryFeature)
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[m_CellPhases[i]]);
       minsize = static_cast<float>(pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * k_PiOver6);
       minsize = static_cast<float>(int32_t(minsize / (resConst)));
       currentvlist.push_back(i);
@@ -3275,7 +3275,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
   DataArray<uint32_t>* phaseType = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
   iPtr = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(SIMPL::EnsembleData::Statistics);
-  StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
+  StatsDataArray::Pointer statsDataArrayPtr = std::dynamic_pointer_cast<StatsDataArray>(iPtr);
   if(nullptr == statsDataArrayPtr)
   {
     return 1;
@@ -3295,7 +3295,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
   {
     if(phaseType->getValue(i) == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       primaryPhasesLocal.push_back(i);
       primaryPhaseFractionsLocal.push_back(pp->getPhaseFraction());
       totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
@@ -3324,7 +3324,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
     {
       volgood = 0;
       phase = primaryPhasesLocal[j];
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
       while(volgood == false)
       {
         volgood = true;

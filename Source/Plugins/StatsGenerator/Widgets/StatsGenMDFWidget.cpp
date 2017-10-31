@@ -407,17 +407,17 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
   VectorOfFloatArray arrays;
   if(phaseType == PhaseType::Type::Primary)
   {
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+    PrimaryStatsData* pp = dynamic_cast<PrimaryStatsData*>(statsData);
     arrays = pp->getMDF_Weights();
   }
   if(phaseType == PhaseType::Type::Precipitate)
   {
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+    PrecipitateStatsData* pp = dynamic_cast<PrecipitateStatsData*>(statsData);
     arrays = pp->getMDF_Weights();
   }
   if(phaseType == PhaseType::Type::Transformation)
   {
-    TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+    TransformationStatsData* tp = dynamic_cast<TransformationStatsData*>(statsData);
     arrays = tp->getMDF_Weights();
   }
 

@@ -575,7 +575,7 @@ void QEbsdReferenceFrameDialog::generateImageRGB(IDataArray::Pointer dataArray, 
     return;
   }
 
-  UInt8ArrayType* rgbArray = UInt8ArrayType::SafePointerDownCast(dataArray.get());
+  UInt8ArrayType::Pointer rgbArray = std::dynamic_pointer_cast<UInt8ArrayType>(dataArray);
   uint8_t* generatedColors = rgbArray->getPointer(0);
 
   for(size_t y = 0; y < dims[1]; ++y)

@@ -325,7 +325,7 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
   Q_UNUSED(index)
   if(phaseType == PhaseType::Type::Precipitate)
   {
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+    PrecipitateStatsData* pp = dynamic_cast<PrecipitateStatsData*>(statsData);
     //    arrays = pp->getMDF_Weights();
     RdfData::Pointer rdf = pp->getRadialDistFunction();
     if(nullptr != rdf.get())

@@ -729,12 +729,12 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix))
     {
-      MatrixStatsData* pp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
+      MatrixStatsData::Pointer pp = std::dynamic_pointer_cast<MatrixStatsData>(statsDataArray[i]);
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       pp->setFeatureSizeDistribution(sizedist[i]);
@@ -747,7 +747,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       pp->setFeatureSizeDistribution(sizedist[i]);
@@ -760,7 +760,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       tp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       tp->setFeatureSizeDistribution(sizedist[i]);
@@ -801,7 +801,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       boveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->getSize());
       coveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->getSize());
       bvalues[i].resize(pp->getBinNumbers()->getSize());
@@ -811,7 +811,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       boveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->getSize());
       coveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->getSize());
       bvalues[i].resize(pp->getBinNumbers()->getSize());
@@ -821,7 +821,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       boveras[i] = tp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, tp->getBinNumbers()->getSize());
       coveras[i] = tp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, tp->getBinNumbers()->getSize());
       bvalues[i].resize(tp->getBinNumbers()->getSize());
@@ -847,7 +847,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
       pp->setFeatureSize_BOverA(boveras[i]);
@@ -855,7 +855,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
       pp->setFeatureSize_BOverA(boveras[i]);
@@ -863,7 +863,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
       tp->setFeatureSize_BOverA(boveras[i]);
@@ -895,7 +895,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       omega3s[i] = pp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, pp->getBinNumbers()->getSize());
       values[i].resize(pp->getBinNumbers()->getSize());
       mindiams[i] = pp->getMinFeatureDiameter();
@@ -903,7 +903,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       omega3s[i] = pp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, pp->getBinNumbers()->getSize());
       values[i].resize(pp->getBinNumbers()->getSize());
       mindiams[i] = pp->getMinFeatureDiameter();
@@ -911,7 +911,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       omega3s[i] = tp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, tp->getBinNumbers()->getSize());
       values[i].resize(tp->getBinNumbers()->getSize());
       mindiams[i] = tp->getMinFeatureDiameter();
@@ -934,19 +934,19 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
       pp->setFeatureSize_Omegas(omega3s[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
       pp->setFeatureSize_Omegas(omega3s[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
       tp->setFeatureSize_Omegas(omega3s[i]);
     }
@@ -976,7 +976,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, pp->getBinNumbers()->getSize());
       values[i].resize(pp->getBinNumbers()->getSize());
       mindiams[i] = pp->getMinFeatureDiameter();
@@ -984,7 +984,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, pp->getBinNumbers()->getSize());
       values[i].resize(pp->getBinNumbers()->getSize());
       mindiams[i] = pp->getMinFeatureDiameter();
@@ -992,7 +992,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       neighborhoods[i] = tp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, tp->getBinNumbers()->getSize());
       values[i].resize(tp->getBinNumbers()->getSize());
       mindiams[i] = tp->getMinFeatureDiameter();
@@ -1016,19 +1016,19 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
       pp->setFeatureSize_Neighbors(neighborhoods[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
       pp->setFeatureSize_Clustering(neighborhoods[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
       tp->setFeatureSize_Neighbors(neighborhoods[i]);
     }
@@ -1097,17 +1097,17 @@ void GenerateEnsembleStatistics::gatherODFStats()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       pp->setODF(eulerodf[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       pp->setODF(eulerodf[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       tp->setODF(eulerodf[i]);
     }
   }
@@ -1202,19 +1202,19 @@ void GenerateEnsembleStatistics::gatherMDFStats()
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       pp->setMisorientationBins(misobin[i]);
       pp->setBoundaryArea(totalSurfaceArea[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       pp->setMisorientationBins(misobin[i]);
       pp->setBoundaryArea(totalSurfaceArea[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       tp->setMisorientationBins(misobin[i]);
       tp->setBoundaryArea(totalSurfaceArea[i]);
     }
@@ -1267,17 +1267,17 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       pp->setAxisOrientation(axisodf[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       pp->setAxisOrientation(axisodf[i]);
     }
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
     {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsDataArray[i]);
       tp->setAxisOrientation(axisodf[i]);
     }
   }
@@ -1313,7 +1313,7 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
       rdfData->setMaxDistance(m_MaxMinRadialDistFunc[i * 2]);
       rdfData->setMinDistance(m_MaxMinRadialDistFunc[i * 2 + 1]);
 
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       if(nullptr == pp)
       {
         Q_ASSERT_X(nullptr != pp, "StatsDataArray could not be down-cast to a PrecipitatesStatsDataArray", "");
@@ -1365,7 +1365,7 @@ void GenerateEnsembleStatistics::calculatePPTBoundaryFrac()
         }
       }
       PPTBoundaryFrac[k] = (float)boundaryPPT[k] / (float)totalNumPPT[k];
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[k].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[k]);
       pp->setPrecipBoundaryFraction(PPTBoundaryFrac[k]);
     }
   }

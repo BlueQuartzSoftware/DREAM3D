@@ -349,11 +349,11 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
   StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
   phaseNameArray->setValue(getPhaseIndex(), getPhaseName());
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
+  StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics));
   if(nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
-    PrecipitateStatsData* precipitateStatsData = PrecipitateStatsData::SafePointerDownCast(statsData.get());
+    PrecipitateStatsData::Pointer precipitateStatsData = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
 
     precipitateStatsData->setPhaseFraction(calcPhaseFraction);
     precipitateStatsData->setPrecipBoundaryFraction(m_PptFraction);
@@ -396,9 +396,9 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
       precipitateStatsData->setRadialDistFunction(data);
     }
 
-    getODFWidget()->getOrientationData(precipitateStatsData, PhaseType::Type::Precipitate, preflight);
+    getODFWidget()->getOrientationData(precipitateStatsData.get(), PhaseType::Type::Precipitate, preflight);
 
-    err = getAxisODFWidget()->getOrientationData(precipitateStatsData, PhaseType::Type::Precipitate, preflight);
+    err = getAxisODFWidget()->getOrientationData(precipitateStatsData.get(), PhaseType::Type::Precipitate, preflight);
   }
   return retErr;
 }
@@ -422,13 +422,13 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   setPhaseType(static_cast<PhaseType::Type>(attributeArray[index]));
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
+  StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(iDataArray);
   if(statsDataArray == nullptr)
   {
     return;
   }
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
-  PrecipitateStatsData* precipitateStatsData = PrecipitateStatsData::SafePointerDownCast(statsData.get());
+  PrecipitateStatsData::Pointer precipitateStatsData = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
 
   QString phaseName = statsData->getName();
   if(phaseName.isEmpty())
@@ -457,7 +457,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   }
   emit progressText(QString("Extracting Size Distribution Values"));
   qApp->processEvents();
-  getFeatureSizeWidget()->extractStatsData(precipitateStatsData, index);
+  getFeatureSizeWidget()->extractStatsData(precipitateStatsData.get(), index);
 
   float mu = getFeatureSizeWidget()->getMu();
   float sigma = getFeatureSizeWidget()->getSigma();
@@ -480,17 +480,17 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   getCOverAPlotWidget()->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_COverA());
   getCOverAPlotWidget()->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_RdfPlot->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
+  m_RdfPlot->extractStatsData(index, precipitateStatsData.get(), PhaseType::Type::Precipitate);
 
   emit progressText(QString("Extracting ODF Distribution Values"));
   qApp->processEvents();
   // Set the ODF Data
-  getODFWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
+  getODFWidget()->extractStatsData(index, precipitateStatsData.get(), PhaseType::Type::Precipitate);
 
   emit progressText(QString("Extracting Axis ODF Distribution Values"));
   qApp->processEvents();
   // Set the Axis ODF Data
-  getAxisODFWidget()->extractStatsData(index, precipitateStatsData, PhaseType::Type::Precipitate);
+  getAxisODFWidget()->extractStatsData(index, precipitateStatsData.get(), PhaseType::Type::Precipitate);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

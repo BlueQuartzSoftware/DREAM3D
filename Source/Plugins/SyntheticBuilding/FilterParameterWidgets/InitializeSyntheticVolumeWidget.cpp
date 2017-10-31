@@ -267,7 +267,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
     return;
   }
   // Get the Phases
-  DataArray<uint32_t>* phases = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
+  UInt32ArrayType::Pointer phases = std::dynamic_pointer_cast<UInt32ArrayType>(iPtr);
 
   int size = static_cast<int>(phases->getNumberOfTuples());
   QVector<QString> shapeTypeStrings;
@@ -464,7 +464,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
   DataArray<uint32_t>* phaseType = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
   iPtr = m_DataContainer->getCellEnsembleData(SIMPL::EnsembleData::Statistics);
-  StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
+  StatsDataArray::Pointer statsDataArrayPtr = std::dynamic_pointer_cast<StatsDataArray>(iPtr);
   if(nullptr == statsDataArrayPtr)
   {
     return -1;
@@ -485,7 +485,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
   {
     if(phaseType->GetValue(i) == SIMPL::PhaseType::Primary)
     {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[i]);
       primaryphases.push_back(i);
       primaryphasefractions.push_back(pp->getPhaseFraction());
       totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
@@ -510,7 +510,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
     {
       volgood = 0;
       phase = primaryphases[j];
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
       while (volgood == 0)
       {
         volgood = 1;

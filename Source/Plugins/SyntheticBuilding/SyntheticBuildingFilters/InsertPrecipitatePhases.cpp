@@ -818,7 +818,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
       if(nullptr == pp)
       {
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get()  "
@@ -868,7 +868,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   for(size_t i = 0; i < m_PrecipitatePhases.size(); i++)
   {
     phase = m_PrecipitatePhases[i];
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[phase]);
     m_FeatureSizeDist[i].resize(40);
     m_SimFeatureSizeDist[i].resize(40);
     m_FeatureSizeDistStep[i] = static_cast<float>(((2.0f * pp->getMaxFeatureDiameter()) - (pp->getMinFeatureDiameter() / 2.0f)) / m_FeatureSizeDist[i].size());
@@ -965,7 +965,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     {
       if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
       {
-        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+        PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[i]);
         RdfData::Pointer rdfTarget = pp->getRadialDistFunction();
 
         const std::vector<float>& freqs = rdfTarget->getFrequencies();
@@ -1181,7 +1181,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
+    PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[m_FeaturePhases[i]]);
     precipboundaryfraction = pp->getPrecipBoundaryFraction();
     random = static_cast<float>(rg.genrand_res53());
 
@@ -1382,7 +1382,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         }
         m_Seed++;
 
-        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[randomfeature]].get());
+        PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[m_FeaturePhases[randomfeature]]);
         if(nullptr == pp)
         {
           continue;
@@ -1543,7 +1543,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
   float vol = 0.0f;
   bool volgood = false;
   float fourThirdsPi = static_cast<float>((4.0f / 3.0f) * (SIMPLib::Constants::k_Pi));
-  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+  PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[phase]);
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
   float avg = GSdist[0]->getValue(0);
   float stdev = GSdist[1]->getValue(0);
@@ -2204,7 +2204,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip_t* precip)
   for(size_t iter = 0; iter < featureSizeDist_Size; ++iter)
   {
     phase = m_PrecipitatePhases[iter];
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[phase]);
     count = 0;
     std::vector<float>& curFeatureSizeDist = m_FeatureSizeDist[iter];
     std::vector<float>::size_type curFeatureSizeDistSize = curFeatureSizeDist.size();

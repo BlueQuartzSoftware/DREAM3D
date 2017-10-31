@@ -119,11 +119,11 @@ int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool 
   StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
   phaseNameArray->setValue(getPhaseIndex(), getPhaseName());
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
-  if(nullptr != statsDataArray)
+  StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics));
+  if(nullptr != statsDataArray.get())
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
-    BoundaryStatsData* boundaryStatsData = BoundaryStatsData::SafePointerDownCast(statsData.get());
+    BoundaryStatsData::Pointer boundaryStatsData = std::dynamic_pointer_cast<BoundaryStatsData>(statsData);
 
     boundaryStatsData->setPhaseFraction(calcPhaseFraction);
     statsData->setName(getPhaseName());
@@ -148,13 +148,13 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
   setPhaseType(static_cast<PhaseType::Type>(attributeArray[index]));
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
+  StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(iDataArray);
   if(statsDataArray == nullptr)
   {
     return;
   }
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
-  BoundaryStatsData* boundaryStatsData = BoundaryStatsData::SafePointerDownCast(statsData.get());
+  BoundaryStatsData::Pointer boundaryStatsData = std::dynamic_pointer_cast<BoundaryStatsData>(statsData);
 
   QString phaseName = statsData->getName();
   if(phaseName.isEmpty())

@@ -248,8 +248,8 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
   distributionAnalysis.push_back(LogNormalOps::New());
   distributionAnalysis.push_back(PowerLawOps::New());
 
-  DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
-  if(nullptr == featureArray)
+  typename DataArray<T>::Pointer featureArray = std::dynamic_pointer_cast<DataArray<T>>(inputData);
+  if(nullptr == featureArray.get())
   {
     return;
   }

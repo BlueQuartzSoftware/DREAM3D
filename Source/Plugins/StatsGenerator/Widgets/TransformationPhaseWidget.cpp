@@ -751,11 +751,12 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
   StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
   phaseNameArray->setValue(getPhaseIndex(), getPhaseName());
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
+  StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics));
   if(nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
-    TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
+    TransformationStatsData::Pointer transformationStatsData = std::dynamic_pointer_cast<TransformationStatsData>(statsData);
+
     statsData->setName(getPhaseName());
 
     transformationStatsData->setPhaseFraction(calcPhaseFraction);
@@ -793,9 +794,9 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat,
       transformationStatsData->setFeatureSize_COverA(data);
       transformationStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
-    m_ODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::Transformation, preflight);
+    m_ODFWidget->getOrientationData(transformationStatsData.get(), PhaseType::Type::Transformation, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(transformationStatsData, PhaseType::Type::Transformation, preflight);
+    err = m_AxisODFWidget->getOrientationData(transformationStatsData.get(), PhaseType::Type::Transformation, preflight);
   }
   return retErr;
 }
@@ -823,14 +824,14 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_PhaseType = static_cast<PhaseType::Type>(attributeArray[index]);
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
+  StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(iDataArray);
 
   if(statsDataArray == nullptr)
   {
     return;
   }
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
-  TransformationStatsData* transformationStatsData = TransformationStatsData::SafePointerDownCast(statsData.get());
+  TransformationStatsData::Pointer transformationStatsData = std::dynamic_pointer_cast<TransformationStatsData>(statsData);
 
   QString phaseName = statsData->getName();
   if(phaseName.isEmpty())
@@ -909,10 +910,10 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::Transformation);
+  m_ODFWidget->extractStatsData(index, transformationStatsData.get(), PhaseType::Type::Transformation);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, transformationStatsData, PhaseType::Type::Transformation);
+  m_AxisODFWidget->extractStatsData(index, transformationStatsData.get(), PhaseType::Type::Transformation);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

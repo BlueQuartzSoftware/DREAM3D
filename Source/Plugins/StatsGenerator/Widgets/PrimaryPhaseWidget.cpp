@@ -751,18 +751,18 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
   StringDataArray::Pointer phaseNameArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
   phaseNameArray->setValue(getPhaseIndex(), getPhaseName());
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
+  StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics));
   if(nullptr != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(getPhaseIndex());
-    PrimaryStatsData* primaryStatsData = PrimaryStatsData::SafePointerDownCast(statsData.get());
+    PrimaryStatsData::Pointer primaryStatsData = std::dynamic_pointer_cast<PrimaryStatsData>(statsData);
 
     float calcPhaseFraction = getPhaseFraction() / getTotalPhaseFraction();
 
     primaryStatsData->setPhaseFraction(calcPhaseFraction);
     statsData->setName(getPhaseName());
 
-    err = m_FeatureSizeDistWidget->getStatisticsData(primaryStatsData);
+    err = m_FeatureSizeDistWidget->getStatisticsData(primaryStatsData.get());
 
     // Now that we have bins and feature sizes, push those to the other plot widgets
     {
@@ -787,9 +787,9 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
       primaryStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
     }
 
-    m_ODFWidget->getOrientationData(primaryStatsData, PhaseType::Type::Primary, preflight);
+    m_ODFWidget->getOrientationData(primaryStatsData.get(), PhaseType::Type::Primary, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(primaryStatsData, PhaseType::Type::Primary, preflight);
+    err = m_AxisODFWidget->getOrientationData(primaryStatsData.get(), PhaseType::Type::Primary, preflight);
   }
   return retErr;
 }
@@ -812,13 +812,13 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   setPhaseType(static_cast<PhaseType::Type>(attributeArray[index]));
 
   iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
+  StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(iDataArray);
   if(statsDataArray == nullptr)
   {
     return;
   }
   StatsData::Pointer statsData = statsDataArray->getStatsData(index);
-  PrimaryStatsData* primaryStatsData = PrimaryStatsData::SafePointerDownCast(statsData.get());
+  PrimaryStatsData::Pointer primaryStatsData = std::dynamic_pointer_cast<PrimaryStatsData>(statsData);
 
   setPhaseFraction(primaryStatsData->getPhaseFraction());
 
@@ -885,7 +885,7 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
     qbins[i] = bins->getValue(i);
   }
 
-  m_FeatureSizeDistWidget->extractStatsData(primaryStatsData, index);
+  m_FeatureSizeDistWidget->extractStatsData(primaryStatsData.get(), index);
   emit progressText(QString("Extracting Size Distribution Values"));
   qApp->processEvents();
 
@@ -925,12 +925,12 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   emit progressText(QString("Extracting ODF Distribution Values"));
   qApp->processEvents();
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
+  m_ODFWidget->extractStatsData(index, primaryStatsData.get(), PhaseType::Type::Primary);
 
   emit progressText(QString("Extracting Axis ODF Distribution Values"));
   qApp->processEvents();
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, primaryStatsData, PhaseType::Type::Primary);
+  m_AxisODFWidget->extractStatsData(index, primaryStatsData.get(), PhaseType::Type::Primary);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

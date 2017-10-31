@@ -173,17 +173,17 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
   VectorOfFloatArray arrays;
   if(phaseType == PhaseType::Type::Primary)
   {
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+    PrimaryStatsData* pp = dynamic_cast<PrimaryStatsData*>(statsData);
     arrays = pp->getODF_Weights();
   }
   if(phaseType == PhaseType::Type::Precipitate)
   {
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+    PrecipitateStatsData* pp = dynamic_cast<PrecipitateStatsData*>(statsData);
     arrays = pp->getODF_Weights();
   }
   if(phaseType == PhaseType::Type::Transformation)
   {
-    TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+    TransformationStatsData* tp = dynamic_cast<TransformationStatsData*>(statsData);
     arrays = tp->getODF_Weights();
   }
   if(arrays.size() > 0)

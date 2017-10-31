@@ -198,7 +198,7 @@ void FindFeatureHistogram::preflight()
 // -----------------------------------------------------------------------------
 template <typename T> void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_t* eIds, int NumberOfBins, bool removeBiasedFeatures, bool* biasedFeatures)
 {
-  DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
+  typename DataArray<T>::Pointer featureArray = std::dynamic_pointer_cast<DataArray<T>>(inputData);
   if(nullptr == featureArray)
   {
     return;

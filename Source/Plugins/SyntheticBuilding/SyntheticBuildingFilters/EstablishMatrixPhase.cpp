@@ -391,7 +391,7 @@ void EstablishMatrixPhase::establish_matrix()
   {
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix))
     {
-      MatrixStatsData* mp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
+      MatrixStatsData::Pointer mp = std::dynamic_pointer_cast<MatrixStatsData>(statsDataArray[i]);
       if(nullptr == mp)
       {
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a MatrixStatsData* "

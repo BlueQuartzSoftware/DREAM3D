@@ -173,15 +173,16 @@ void CorrelateValuesWithVectorDirection::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> void addToLambert(IDataArray::Pointer correlatedData, size_t bin, size_t point, double* m_LambertProjection)
+template <typename T> 
+void addToLambert(IDataArray::Pointer correlatedData, size_t bin, size_t point, double* m_LambertProjection)
 {
-  DataArray<T>* correlatedArray = DataArray<T>::SafePointerDownCast(correlatedData.get());
+  typename DataArray<T>::Pointer correlatedArray = std::dynamic_pointer_cast<DataArray<T>>(correlatedData);
   if(nullptr == correlatedArray)
   {
     return;
   }
 
-  size_t numComps = correlatedArray->getNumberOfComponents();
+  int numComps = correlatedArray->getNumberOfComponents();
   T* m_CorrelatedData = correlatedArray->getPointer(0);
 
   for(int j = 0; j < numComps; j++)
