@@ -100,6 +100,12 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+  QString getOldBoxDimensions();
+  Q_PROPERTY(QString OldBoxDimensions READ getOldBoxDimensions)
+  
+  QString getNewBoxDimensions();
+  Q_PROPERTY(QString NewBoxDimensions READ getNewBoxDimensions)
+  
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -197,7 +203,15 @@ protected:
 
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-
+  
+  IntVec3_t m_OldDimensions ;
+  FloatVec3_t m_OldResolution;
+  FloatVec3_t m_OldOrigin;
+  
+  IntVec3_t m_NewDimensions;
+  FloatVec3_t m_NewResolution;
+  FloatVec3_t m_NewOrigin;
+  
   CropImageGeometry(const CropImageGeometry&); // Copy Constructor Not Implemented
   void operator=(const CropImageGeometry&);    // Operator '=' Not Implemented
 };
