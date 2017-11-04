@@ -11,7 +11,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.4.XX ##
+## Version 6.4.197 ##
 
 ### New Filters ###
 

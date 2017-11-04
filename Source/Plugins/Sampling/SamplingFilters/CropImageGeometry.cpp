@@ -186,7 +186,6 @@ void CropImageGeometry::dataCheck()
     return;
   }
 
-  
   m_OldDimensions = getCurrentVolumeDataContainerDimensions();
   m_OldResolution = getCurrentVolumeDataContainerResolutions();
   image->getOrigin(m_OldOrigin.x, m_OldOrigin.y, m_OldOrigin.z);
@@ -196,12 +195,6 @@ void CropImageGeometry::dataCheck()
 
   if(m_SaveAsNewDataContainer == true)
   {
-//    float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
-//    size_t dx = 0, dy = 0, dz = 0;
-//    image->getOrigin(ox, oy, oz);
-//    image->getResolution(rx, ry, rz);
-//    image->getDimensions(dx, dy, dz);
-
     destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
     if(nullptr == destCellDataContainer.get() || getErrorCondition() < 0)
     {
@@ -310,21 +303,9 @@ void CropImageGeometry::dataCheck()
 
   if(m_UpdateOrigin == true)
   {
-//    float resolution[3] = {0.0f, 0.0f, 0.0f};
-//    destCellDataContainer->getGeometryAs<ImageGeom>()->getResolution(resolution);
-
-//    float origin[3] = {0.0f, 0.0f, 0.0f};
-//    destCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(origin);
-
-//    origin[0] = m_XMin * resolution[0] + oldOrigin[0];
-//    origin[1] = m_YMin * resolution[1] + oldOrigin[1];
-//    origin[2] = m_ZMin * resolution[2] + oldOrigin[2];
-
     m_NewOrigin.x = getXMin() * m_NewResolution.x + m_OldOrigin.x;
     m_NewOrigin.y = getYMin() * m_NewResolution.y + m_OldOrigin.y;
     m_NewOrigin.z = getZMin() * m_NewResolution.z + m_OldOrigin.z;
-
-//    destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(origin);
   }
   else
   {
