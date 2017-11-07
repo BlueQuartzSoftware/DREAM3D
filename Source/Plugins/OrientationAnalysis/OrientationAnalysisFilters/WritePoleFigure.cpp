@@ -463,9 +463,9 @@ void WritePoleFigure::execute()
       notifyWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::Tetragonal_High:
-      //  figures = makePoleFigures<TetragonalOps>(config);
-      setWarningCondition(-1010);
-      notifyWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
+      figures = makePoleFigures<TetragonalOps>(config);
+    //  setWarningCondition(-1010);
+    //  notifyWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::Tetragonal_Low:
       //  figures = makePoleFigures<TetragonalLowOps>(config);
