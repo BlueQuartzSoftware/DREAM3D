@@ -5,6 +5,7 @@
 *.ang binary
 *.dream3d binary
 *.bat text eol=crlf
+*.scpt binary
 
 # Custom for Visual Studio
 *.cs     diff=csharp
