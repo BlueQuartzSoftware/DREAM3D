@@ -466,7 +466,29 @@ include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 # Figure out here if we are going to build the command line tools
 option(SIMPL_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
 if( SIMPL_BUILD_CLI_TOOLS )
-    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
+  add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
+
+  if(TARGET PipelineRunner AND APPLE)
+    set(QAB_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/Tools)
+    set(QAB_TARGET "PipelineRunner")
+    set(QAB_COMPONENT Applications)
+    set(osx_app_name "PipelineRunner")
+
+    set(OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT
+                        "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_CompleteTool.cmake")
+    set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
+                        "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_OptimizeTool.sh")
+
+    set(PROJECT_INSTALL_DIR "bin")
+    configure_file( "${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.cmake.in"
+                    "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
+
+    configure_file("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.sh.in"
+                    "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
+
+    install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
+
+  endif()
 endif()
 
 
