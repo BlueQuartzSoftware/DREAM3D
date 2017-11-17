@@ -473,6 +473,9 @@ if( SIMPL_BUILD_CLI_TOOLS )
     set(QAB_TARGET "PipelineRunner")
     set(QAB_COMPONENT Applications)
     set(osx_app_name "PipelineRunner")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+      set(osx_app_name "PipelineRunner_debug")
+    endif()
 
     set(OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT
                         "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_CompleteTool.cmake")
