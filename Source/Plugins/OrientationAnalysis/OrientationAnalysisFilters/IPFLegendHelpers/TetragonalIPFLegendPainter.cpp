@@ -142,7 +142,7 @@ QImage TetragonalIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, 
   fontHeight = metrics.height();
   painter.drawText(10, imageSize.height() + fontHeight * 3, label);
 
-  label = QString("[010]");
+  label = QString("[110]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
   painter.drawText(0.707106781186548 * pImageWidth, fontHeight * 2 + 0.707106781186548 * imageSize.height(), label);

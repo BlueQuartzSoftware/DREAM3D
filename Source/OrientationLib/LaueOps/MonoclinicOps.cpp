@@ -757,9 +757,9 @@ SIMPL::Rgb MonoclinicOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> MonoclinicOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QString label0("Monoclinic <001>");
-  QString label1("Monoclinic <100>");
-  QString label2("Monoclinic <010>");
+  QString label0 = QString("%1 <001>").arg(getSymmetryName());
+  QString label1 = QString("%1 <100>").arg(getSymmetryName());
+  QString label2 = QString("%1 <010>").arg(getSymmetryName());
   if(config.labels.size() > 0) { label0 = config.labels.at(0); }
   if(config.labels.size() > 1) { label1 = config.labels.at(1); }
   if(config.labels.size() > 2) { label2 = config.labels.at(2); }

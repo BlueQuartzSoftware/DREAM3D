@@ -137,12 +137,12 @@ QImage OrthorhombicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight
   painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
   // Draw the [111] label in the Upper Right corner
-  QString label("[100]");
+  QString label("[010]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
   painter.drawText(10, imageSize.height() + fontHeight * 3, label);
 
-  label = QString("[010]");
+  label = QString("[100]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth - (fontWidth * 1.05), fontHeight * 2, label);

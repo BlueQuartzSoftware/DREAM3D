@@ -101,7 +101,7 @@ int writeVtkFile(FloatArrayType* xyz, const QString& filename)
 UInt8ArrayType::Pointer PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const QString& name, double min, double max)
 {
   QVector<size_t> dims(1, 4);
-  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(width * height, dims, name);
+  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(static_cast<size_t>(width * height), dims, name);
   PoleFigureConfiguration_t config;
   config.imageDim = width;
   config.numColors = nColors;
@@ -124,8 +124,8 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
   int halfWidth = width / 2;
   int halfHeight = height / 2;
 
-  float xres = 2.0 / (float)(width);
-  float yres = 2.0 / (float)(height);
+  float xres = 2.0f / static_cast<float>(width);
+  float yres = 2.0f / static_cast<float>(height);
   float xtmp, ytmp;
 
   float max = static_cast<float>(config.maxScale);
@@ -136,7 +136,7 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
   uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
   int numColors = config.numColors;
-  QVector<float> colors(numColors * 3, 0.0);
+  QVector<float> colors(numColors * 3, 0.0f);
   SIMPLColorTable::GetColorTable(config.numColors, colors);
 
   float r = 0.0, g = 0.0, b = 0.0;
@@ -149,8 +149,8 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
   {
     for (int64_t x = 0; x < width; x++)
     {
-      xtmp = float(x - halfWidth) * xres + (xres * 0.5);
-      ytmp = float(y - halfHeight) * yres + (yres * 0.5);
+      xtmp = float(x - halfWidth) * xres + (xres * 0.5f);
+      ytmp = float(y - halfHeight) * yres + (yres * 0.5f);
       idx = (width * y) + x;
       if( ( xtmp * xtmp + ytmp * ytmp) <= 1.0) // Inside the circle
       {
@@ -173,7 +173,7 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
           g = colors[3 * bin + 1];
           b = colors[3 * bin + 2];
         }
-        rgbaPtr[idx] = RgbColor::dRgb(r * 255, g * 255, b * 255, 255);
+        rgbaPtr[idx] = RgbColor::dRgb(static_cast<int>(r) * 255, static_cast<int>(g) * 255, static_cast<int>(b) * 255, 255);
       }
       else // Outside the Circle - Set pixel to White
       {
@@ -192,8 +192,7 @@ void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lam
                                                  DoubleArrayType::Pointer& intensity1010,
                                                  DoubleArrayType::Pointer& intensity1120)
 {
-  int numOrientations = eulers->getNumberOfTuples();
-
+  size_t numOrientations = eulers->getNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for HEX ONLY, <0001> Family
@@ -255,8 +254,7 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
                                                    DoubleArrayType::Pointer& intensity010,
                                                    DoubleArrayType::Pointer& intensity001)
 {
-  int numOrientations = eulers->getNumberOfTuples();
-
+  size_t numOrientations = eulers->getNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for ORTHO ONLY, <100> Family
@@ -308,4 +306,26 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
   poleFigurePtr->setName("PoleFigure_<001>");
   intensity001.swap(poleFigurePtr);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+GeneratePoleFigureRgbaImageImpl::GeneratePoleFigureRgbaImageImpl()
+{
+}
+
+GeneratePoleFigureRgbaImageImpl::GeneratePoleFigureRgbaImageImpl(DoubleArrayType* intensity, PoleFigureConfiguration_t* config, UInt8ArrayType* rgba)
+: m_Intensity(intensity)
+, m_Config(config)
+, m_Rgba(rgba)
+{
+}
+GeneratePoleFigureRgbaImageImpl::~GeneratePoleFigureRgbaImageImpl()
+{
+}
+
+void GeneratePoleFigureRgbaImageImpl::operator()() const
+{
+  PoleFigureUtilities::CreateColorImage(m_Intensity, *m_Config, m_Rgba);
 }

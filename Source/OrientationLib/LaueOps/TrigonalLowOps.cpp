@@ -611,7 +611,6 @@ namespace Detail
 // -----------------------------------------------------------------------------
 void TrigonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111)
 {
-  Q_ASSERT(false);
   size_t nOrientations = eulers->getNumberOfTuples();
 
   // Sanity Check the size of the arrays
@@ -789,9 +788,9 @@ SIMPL::Rgb TrigonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QString label0("Trigonal Low <0001>");
-  QString label1("Trigonal Low <-1-120>");
-  QString label2("Trigonal Low <2-1-10>");
+  QString label0 = QString("%1 <0001>").arg(getSymmetryName());
+  QString label1 = QString("%1 <-1-120>").arg(getSymmetryName());
+  QString label2 = QString("%1 <2-1-10>").arg(getSymmetryName());
   if(config.labels.size() > 0) { label0 = config.labels.at(0); }
   if(config.labels.size() > 1) { label1 = config.labels.at(1); }
   if(config.labels.size() > 2) { label2 = config.labels.at(2); }

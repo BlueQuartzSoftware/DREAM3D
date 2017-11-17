@@ -142,12 +142,13 @@ QImage TriclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, Q
   fontHeight = metrics.height();
   painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 2, label);
 
-  label = QString("Center || [010]");
+  label = QString("Center || [001]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
   painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight * 2.75 + imageSize.height(), label);
 
   label = ops->getSymmetryName();
+  label = label.replace("-", "_");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
   int x = pImageWidth/2 - fontWidth/2;

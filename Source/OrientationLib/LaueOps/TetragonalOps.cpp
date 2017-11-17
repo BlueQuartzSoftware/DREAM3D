@@ -634,7 +634,6 @@ namespace Detail
 // -----------------------------------------------------------------------------
 void TetragonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111)
 {
-  Q_ASSERT(false);
   size_t nOrientations = eulers->getNumberOfTuples();
 
   // Sanity Check the size of the arrays
@@ -814,9 +813,9 @@ SIMPL::Rgb TetragonalOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QString label0("Tetragonal <001>");
-  QString label1("Tetragonal <100>");
-  QString label2("Tetragonal <110>");
+  QString label0 = QString("%1 <001>").arg(getSymmetryName());
+  QString label1 = QString("%1 <100>").arg(getSymmetryName());
+  QString label2 = QString("%1 <110>").arg(getSymmetryName());
   if(config.labels.size() > 0) { label0 = config.labels.at(0); }
   if(config.labels.size() > 1) { label1 = config.labels.at(1); }
   if(config.labels.size() > 2) { label2 = config.labels.at(2); }

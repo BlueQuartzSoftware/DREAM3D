@@ -136,23 +136,25 @@ QImage TrigonalLowIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight,
   qint32 penWidth = 2;
   painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
-  // Draw the [111] label in the Upper Right corner
-  QString label("[100]");
+  QString label("[1120]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
-  painter.drawText(0.25f*pImageWidth - fontWidth*1.10f, 0.8660254 * imageSize.height()/2.0f + fontHeight * 2.0f, label);
+  label = QString("[_1_120]");
+  paintSymmetryDirection(label, &metrics, &painter, 10, imageSize.height() / 2.0f + fontHeight * 2.0f);
 
-  label = QString("[010]");
+  label = QString("[2110]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
-  painter.drawText(pImageWidth - (fontWidth * 1.05), fontHeight * 2, label);
+  label = QString("[2_1_10]");
+  paintSymmetryDirection(label, &metrics, &painter, imageSize.width() - fontWidth + xMargin, fontHeight * 2);
 
-  label = QString("[001]");
+  label = QString("[0001]");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
-  painter.drawText(pImageWidth/2 - fontWidth/2, fontHeight*2, label);
+  paintSymmetryDirection(label, &metrics, &painter, pImageWidth / 2 - fontWidth / 2, fontHeight * 2);
 
-  label = QString("Trigonal -_3");
+  label = ops->getSymmetryName();
+  label = label.replace("-", "_");
   fontWidth = metrics.width(label);
   fontHeight = metrics.height();
   int x = pImageWidth/2 - fontWidth/2;

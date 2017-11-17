@@ -58,15 +58,16 @@
  */
 typedef struct
 {
-  FloatArrayType* eulers; ///<* The Euler Angles (in Radians) to use for the pole figure
-  int imageDim; ///<* The height/width of the generated pole figure
-  int lambertDim; ///<* The dimensions in voxels of the Lambert Square used for interpolation
-  int numColors; ///<* The number of colors to use in the Pole figure
-  double minScale; ///<* The minimum scale of the Pole Figure
-  double maxScale; ///<* The maximum scale of the Pole Figure
-  float sphereRadius; ///<* The radius of the Sphere to compute XYZ coords. Should ALWAYS be 1.0
-  QVector<QString> labels; ///<* The labels for each of the 3 Pole Figures
+  FloatArrayType* eulers;      ///<* The Euler Angles (in Radians) to use for the pole figure
+  int imageDim;                ///<* The height/width of the generated pole figure
+  int lambertDim;              ///<* The dimensions in voxels of the Lambert Square used for interpolation
+  int numColors;               ///<* The number of colors to use in the Pole figure
+  double minScale;             ///<* The minimum scale of the Pole Figure
+  double maxScale;             ///<* The maximum scale of the Pole Figure
+  float sphereRadius;          ///<* The radius of the Sphere to compute XYZ coords. Should ALWAYS be 1.0
+  QVector<QString> labels;     ///<* The labels for each of the 3 Pole Figures
   QVector<unsigned int> order; ///<* The order that the pole figures should appear in.
+  QString phaseName;           ///<* The Names of the phase
 } PoleFigureConfiguration_t;
 
 /**
@@ -148,19 +149,13 @@ class OrientationLib_EXPORT PoleFigureUtilities
 class GeneratePoleFigureRgbaImageImpl
 {
   public:
-    GeneratePoleFigureRgbaImageImpl(DoubleArrayType* intensity, PoleFigureConfiguration_t* config, UInt8ArrayType* rgba) :
-      m_Intensity(intensity),
-      m_Config(config),
-      m_Rgba(rgba)
-    {}
-    virtual ~GeneratePoleFigureRgbaImageImpl() {}
+    GeneratePoleFigureRgbaImageImpl(DoubleArrayType* intensity, PoleFigureConfiguration_t* config, UInt8ArrayType* rgba);
+    virtual ~GeneratePoleFigureRgbaImageImpl();
 
-    void operator()() const
-    {
-      PoleFigureUtilities::CreateColorImage(m_Intensity, *m_Config, m_Rgba);
-    }
+    void operator()() const;
+
   protected:
-    GeneratePoleFigureRgbaImageImpl() {}
+    GeneratePoleFigureRgbaImageImpl();
 
   private:
     DoubleArrayType*    m_Intensity;
