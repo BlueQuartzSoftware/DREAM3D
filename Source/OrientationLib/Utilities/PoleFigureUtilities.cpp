@@ -139,7 +139,7 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
   QVector<float> colors(numColors * 3, 0.0f);
   SIMPLColorTable::GetColorTable(config.numColors, colors);
 
-  float r = 0.0, g = 0.0, b = 0.0;
+  float r = 0.0f, g = 0.0f, b = 0.0f;
 
   double* dataPtr = data->getPointer(0);
   size_t idx = 0;
@@ -173,7 +173,8 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
           g = colors[3 * bin + 1];
           b = colors[3 * bin + 2];
         }
-        rgbaPtr[idx] = RgbColor::dRgb(static_cast<int>(r) * 255, static_cast<int>(g) * 255, static_cast<int>(b) * 255, 255);
+
+        rgbaPtr[idx] = RgbColor::dRgb(static_cast<int>(r * 255.0f), static_cast<int>(g * 255.0f), static_cast<int>(b * 255.0f), 255);
       }
       else // Outside the Circle - Set pixel to White
       {
