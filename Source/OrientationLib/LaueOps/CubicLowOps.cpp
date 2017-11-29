@@ -1111,10 +1111,10 @@ QVector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureConfi
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
-  tbb::task_group* g = new tbb::task_group;
 
   if(doParallel == true)
   {
+    tbb::task_group* g = new tbb::task_group;
     g->run(ComputeStereographicProjection(xyz001.get(), &config, intensity001.get()));
     g->run(ComputeStereographicProjection(xyz011.get(), &config, intensity011.get()));
     g->run(ComputeStereographicProjection(xyz111.get(), &config, intensity111.get()));
@@ -1206,7 +1206,7 @@ QVector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureConfi
 
   if(doParallel == true)
   {
-    g = new tbb::task_group;
+    tbb::task_group* g = new tbb::task_group;
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
