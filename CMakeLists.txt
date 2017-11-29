@@ -430,14 +430,16 @@ configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
 # --------------------------------------------------------------------
 # Generate install rules for the text files
 if(APPLE)
-  install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
-          DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources"
-          COMPONENT Applications)
+  set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources")
 else()
-  install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
-          DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}"
-          COMPONENT Applications)
+  set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}")
 endif()
+install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
+        DESTINATION "${INSTALL_DESTINATION}"
+        COMPONENT Applications)
+
+
+
 # Include some directories for the compiler
 #include_directories(${PROJECT_BINARY_DIR})
 
@@ -557,14 +559,14 @@ set_target_properties(PrebuiltPipelinesCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
 #- This installs all the prebuilt pipeline files.
 if(APPLE)
-  install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-          DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}/Resources
-          COMPONENT Applications )
+  set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources")
 else()
-  install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-          DESTINATION ${DREAM3D_PACKAGE_DEST_PREFIX}
-          COMPONENT Applications )
+  set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}")
 endif()
+install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+        DESTINATION ${INSTALL_DESTINATION}
+        COMPONENT Applications )
+
 
 #-------------------------------------------------------------------------------
 # Copy the Data Folder to the build directory
@@ -591,12 +593,19 @@ set(SYNTHETIC_STATS_FILES
 
 #- This installs all the Data files during a "make install" or "make package"
 list(GET SYNTHETIC_STATS_FILES 0 data_file)
+
 if(EXISTS ${data_file})
+  if(APPLE)
+    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Data")
+  else()
+    set(INSTALL_DESTINATION "Data")
+  endif()
+
   install(FILES ${SYNTHETIC_STATS_FILES}
-          DESTINATION Data/
+          DESTINATION ${INSTALL_DESTINATION}
           COMPONENT Applications )
   install(DIRECTORY ${DREAM3D_DATA_DIR}/Data/SmallIN100 ${DREAM3D_DATA_DIR}/Data/Image ${DREAM3D_DATA_DIR}/Data/Textured_Copper
-          DESTINATION Data/
+          DESTINATION ${INSTALL_DESTINATION}
           COMPONENT Applications)
 endif()
 
