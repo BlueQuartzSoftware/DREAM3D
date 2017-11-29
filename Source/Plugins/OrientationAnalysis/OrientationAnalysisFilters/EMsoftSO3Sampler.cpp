@@ -370,6 +370,10 @@ void EMsoftSO3Sampler::execute()
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         Dc += Dn;
       }
+      if(getCancel())
+      {
+        break;
+      }
     }
   }
 
@@ -429,6 +433,10 @@ void EMsoftSO3Sampler::execute()
             Dg += 1;
           }
         }
+        if(getCancel())
+        {
+          break;
+        }
       }
       // y-z  planes
       for(int j = -Np; j <= Np; j++)
@@ -455,6 +463,10 @@ void EMsoftSO3Sampler::execute()
             Dg += 1;
           }
         }
+        if(getCancel())
+        {
+          break;
+        }
       }
       // finally the x-z  planes
       for(int i = -Np + 1; i <= Np - 1; i++)
@@ -480,6 +492,10 @@ void EMsoftSO3Sampler::execute()
             FZlist.push_back(rod);
             Dg += 1;
           }
+        }
+        if(getCancel())
+        {
+          break;
         }
       }
 
