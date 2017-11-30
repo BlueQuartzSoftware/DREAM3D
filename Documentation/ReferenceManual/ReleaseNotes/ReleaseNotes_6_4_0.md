@@ -11,6 +11,33 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.4.xxx ##
+
+### New Filters ###
+
++ DREAM3D Issue #752: Add filter to reduce orientations to their fundamental zone. 
+
+### Fixed DREAM3D Issues ###
+
++ Fixing bug where choosing the Precipitate Rolled Preset in StatsGenerator would not display a dialog box.
++ DREAM3D Issue #755: Implement a read only preflight updated value that states the range and delta for
+each axis in synthetic volume. This allows better feedback to the user that they
+are hitting specific size targets that they have in mind.
++ Add information parameter that shows the size of the image geometry in real length units.
++ Enable  pole figures that were disabled due to no way to verify the results. Results have been verified by an outside source.
++ Fix and improve labels on the IPF Legends.
++ Fix memory leak when multi-threading in the LaueOps classes.
++ Add cancel checks for the EMsoftSO3Sampler filter
++ 
+
+### Fixed SIMPLView Issues ###
+
+
+### Fixed SIMPL Issues ###
+
++ Modernizing the CMake codes to use target specific properties where possible instead of global properties
++ Removing SafePointerDowncast and other old school C++ codes and updating to newer C++ 11/14 standards instead.
+
 ## Version 6.4.197 ##
 
 ### New Filters ###
