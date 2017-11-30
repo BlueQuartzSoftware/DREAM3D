@@ -109,8 +109,8 @@ public:
   SIMPL_FILTER_PARAMETER(int, GenerationAlgorithm)
   Q_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
 
-  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
-  Q_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
+//  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
+//  Q_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -221,6 +221,7 @@ protected:
   void writeImage(QImage image, QString label);
 
 private:
+  bool m_UseDiscreteHeatMap = false;
   DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)

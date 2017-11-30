@@ -140,7 +140,7 @@ void WritePoleFigure::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Lambert Image Size (Pixels)", LambertSize, FilterParameter::Parameter, WritePoleFigure, 0));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Colors", NumColors, FilterParameter::Parameter, WritePoleFigure, 0));
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Generate Color Heat Map Style", UseDiscreteHeatMap, FilterParameter::Parameter, WritePoleFigure, 1));
+  // parameters.push_back(SIMPL_NEW_BOOL_FP("Generate Color Heat Map Style", UseDiscreteHeatMap, FilterParameter::Parameter, WritePoleFigure, 1));
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -473,7 +473,7 @@ void WritePoleFigure::execute()
       config.discrete = true;
     }
 
-    config.discreteHeatMap = getUseDiscreteHeatMap();
+    config.discreteHeatMap = m_UseDiscreteHeatMap;
 
     QString label("Phase_");
     label.append(QString::number(phase));
