@@ -39,10 +39,12 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -87,6 +89,8 @@ WritePoleFigure::WritePoleFigure()
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_UseGoodVoxels(false)
+, m_GenerationAlgorithm(0)
+, m_UseDiscreteHeatMap(false)
 , m_CellEulerAngles(nullptr)
 , m_CellPhases(nullptr)
 , m_CrystalStructures(nullptr)
@@ -110,6 +114,35 @@ void WritePoleFigure::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Pole Figure Type");
+    parameter->setPropertyName("GenerationAlgorithm");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(WritePoleFigure, this, GenerationAlgorithm));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(WritePoleFigure, this, GenerationAlgorithm));
+
+    parameter->setDefaultValue(0);
+
+    QVector<QString> choices;
+    choices.push_back("Lambert Square");
+    choices.push_back("Discrete");
+
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "LambertSize"
+                << "NumColors"
+                << "UseDiscreteHeatMap";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lambert Image Size (Pixels)", LambertSize, FilterParameter::Parameter, WritePoleFigure, 0));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Colors", NumColors, FilterParameter::Parameter, WritePoleFigure, 0));
+
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Generate Color Heat Map Style", UseDiscreteHeatMap, FilterParameter::Parameter, WritePoleFigure, 1));
+
+  {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
     parameter->setPropertyName("ImageFormat");
@@ -124,8 +157,6 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lambert Image Size (Pixels)", LambertSize, FilterParameter::Parameter, WritePoleFigure));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Colors", NumColors, FilterParameter::Parameter, WritePoleFigure));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Layout");
@@ -141,9 +172,11 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(SIMPL_NEW_STRING_FP("Image Prefix", ImagePrefix, FilterParameter::Parameter, WritePoleFigure));
+
   parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, WritePoleFigure));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image Prefix", ImagePrefix, FilterParameter::Parameter, WritePoleFigure));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Image Size (Square Pixels)", ImageSize, FilterParameter::Parameter, WritePoleFigure));
+
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, WritePoleFigure, linkedProps));
 
@@ -431,6 +464,16 @@ void WritePoleFigure::execute()
     config.imageDim = getImageSize();
     config.lambertDim = getLambertSize();
     config.numColors = getNumColors();
+    if(static_cast<WritePoleFigure::Algorithm>(getGenerationAlgorithm()) == WritePoleFigure::Algorithm::LambertProjection)
+    {
+      config.discrete = false;
+    }
+    else
+    {
+      config.discrete = true;
+    }
+
+    config.discreteHeatMap = getUseDiscreteHeatMap();
 
     QString label("Phase_");
     label.append(QString::number(phase));

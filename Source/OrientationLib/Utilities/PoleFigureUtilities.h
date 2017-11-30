@@ -65,6 +65,9 @@ typedef struct
   double minScale;             ///<* The minimum scale of the Pole Figure
   double maxScale;             ///<* The maximum scale of the Pole Figure
   float sphereRadius;          ///<* The radius of the Sphere to compute XYZ coords. Should ALWAYS be 1.0
+  bool discrete;               ///<* Should the Pole Figure be generated as a discrete plot
+  bool discreteHeatMap;        ///<* Should the discrete be colored via a heat map style coloring
+  QString colorMap;            ///<* Name of the ColorMap to use
   QVector<QString> labels;     ///<* The labels for each of the 3 Pole Figures
   QVector<unsigned int> order; ///<* The order that the pole figures should appear in.
   QString phaseName;           ///<* The Names of the phase
@@ -158,9 +161,9 @@ class GeneratePoleFigureRgbaImageImpl
     GeneratePoleFigureRgbaImageImpl();
 
   private:
-    DoubleArrayType*    m_Intensity;
-    PoleFigureConfiguration_t* m_Config;
-    UInt8ArrayType* m_Rgba;
+    DoubleArrayType* m_Intensity = nullptr;
+    PoleFigureConfiguration_t* m_Config = nullptr;
+    UInt8ArrayType* m_Rgba = nullptr;
 };
 
 

@@ -53,6 +53,23 @@ public:
 
   virtual ~WritePoleFigure();
 
+  enum ImageFormatType
+  {
+    TifImageType = 0,
+    BmpImageType = 1,
+    PngImageType = 2,
+    JpgImageType = 3
+  };
+
+  using EnumType = int;
+
+  enum class Algorithm : EnumType
+  {
+    LambertProjection = 0, //!<
+    Discrete = 1,          //!<
+    Unknown = 2,           //!
+  };
+
   SIMPL_FILTER_PARAMETER(QString, ImagePrefix)
   Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
 
@@ -74,14 +91,6 @@ public:
   SIMPL_FILTER_PARAMETER(int, ImageLayout)
   Q_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
 
-  enum ImageFormatType
-  {
-    TifImageType = 0,
-    BmpImageType = 1,
-    PngImageType = 2,
-    JpgImageType = 3
-  };
-
   SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
@@ -96,6 +105,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+
+  SIMPL_FILTER_PARAMETER(int, GenerationAlgorithm)
+  Q_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
+
+  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
+  Q_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

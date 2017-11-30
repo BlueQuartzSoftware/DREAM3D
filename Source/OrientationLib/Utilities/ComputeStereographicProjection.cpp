@@ -31,8 +31,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ComputeStereographicProjection.h"
 
-#if 0
+#if 1
+#include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
+
 #endif
 
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
@@ -40,37 +42,77 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComputeStereographicProjection::ComputeStereographicProjection(FloatArrayType* xyzCoords, PoleFigureConfiguration_t* config, DoubleArrayType* intensity) :
-  m_XYZCoords(xyzCoords),
-  m_Config(config),
-  m_Intensity(intensity)
+ComputeStereographicProjection::ComputeStereographicProjection(FloatArrayType* xyzCoords, PoleFigureConfiguration_t* config, DoubleArrayType* intensity)
+: m_XYZCoords(xyzCoords)
+, m_Config(config)
+, m_Intensity(intensity)
 {
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComputeStereographicProjection::~ComputeStereographicProjection() {}
+ComputeStereographicProjection::~ComputeStereographicProjection()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ComputeStereographicProjection::operator()() const
 {
-  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::LambertBallToSquare(m_XYZCoords, m_Config->lambertDim, m_Config->sphereRadius);
-  lambert->normalizeSquaresToMRD();
-  
-  #if 0
-  int dim = lambert->getDimension();
-  QString filename = QString("/tmp/Lambert-%1.h5").arg(dim).arg(m_Config->);
-  hid_t file_id = H5Utilities::createFile(filename.toStdString());
-  lambert->writeHDF5Data(file_id);
-  H5Fclose(file_id);
-  #endif 
+  m_Intensity->resize(static_cast<size_t>(m_Config->imageDim * m_Config->imageDim));
+  m_Intensity->initializeWithZeros();
 
-  m_Intensity->resize(m_Config->imageDim * m_Config->imageDim);
-  lambert->createStereographicProjection(m_Config->imageDim, m_Intensity);
+  if(m_Config->discrete)
+  {
+    int halfDim = m_Config->imageDim / 2;
+    double* intensity = m_Intensity->getPointer(0);
+    size_t numCoords = m_XYZCoords->getNumberOfTuples();
+    float* xyzPtr = m_XYZCoords->getPointer(0);
+    for(size_t i = 0; i < numCoords; i++)
+    {
+      if(xyzPtr[i * 3 + 2] < 0.0f)
+      {
+        xyzPtr[i * 3 + 2] *= -1.0f;
+      }
+      float x = xyzPtr[i * 3] / (1 + xyzPtr[i * 3 + 2]);
+      float y = xyzPtr[i * 3 + 1] / (1 + xyzPtr[i * 3 + 2]);
+
+      int xCoord = static_cast<int>(x * (halfDim - 1)) + halfDim;
+      int yCoord = static_cast<int>(y * (halfDim - 1)) + halfDim;
+
+      size_t index = static_cast<size_t>((yCoord * m_Config->imageDim) + xCoord);
+
+      intensity[index]++;
+    }
+
+    for(size_t i = 0; i < numCoords; i++)
+    {
+    }
+#if 0
+    // This chunk is here for some debugging....
+    int dim = m_Config->imageDim;
+    QString filename = QString("/tmp/Discrete-%1-%2.h5").arg(m_Intensity->getName()).arg(dim);
+    hid_t file_id = H5Utilities::createFile(filename.toStdString());
+    hsize_t dims[2];
+    dims[0] = dim;
+    dims[1] = dim;
+    H5Lite::writePointerDataset(file_id, "Discrete", 2, dims, intensity);
+    H5Fclose(file_id);
+#endif
+  }
+  else
+  {
+    ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::LambertBallToSquare(m_XYZCoords, m_Config->lambertDim, m_Config->sphereRadius);
+    lambert->normalizeSquaresToMRD();
+#if 0
+    int dim = lambert->getDimension();
+    QString filename = QString("/tmp/Lambert-%1.h5").arg(dim).arg(m_Config->);
+    hid_t file_id = H5Utilities::createFile(filename.toStdString());
+    lambert->writeHDF5Data(file_id);
+    H5Fclose(file_id);
+#endif
+    lambert->createStereographicProjection(m_Config->imageDim, m_Intensity);
+  }
 }
-
-

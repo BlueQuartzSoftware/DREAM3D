@@ -366,7 +366,7 @@ void EMsoftSO3Sampler::execute()
       // report on status of computation
       if(Di > Dc)
       {
-        QString ss = QString("Euler angle triplets tested: %1 of %2; triplets inside Rodrigues fundamental zone: %3 ").arg(QString::number(Di), QString::number(Totp), QString::number(Dg));
+        QString ss = QString("Euler Angles | Tested: %1 of %2 | Inside RFZ: %3 ").arg(QString::number(Di), QString::number(Totp), QString::number(Dg));
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         Dc += Dn;
       }
@@ -502,7 +502,7 @@ void EMsoftSO3Sampler::execute()
       // report on status of computation
       if(Dg > Dc)
       {
-        QString ss = QString("Euler angle triplets generated: %1 out of %2").arg(QString::number(Dg), QString::number(Totp));
+        QString ss = QString("Euler Angles | Generated: %1 / %2").arg(QString::number(Dg), QString::number(Totp));
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         Dc += Dn;
       }
@@ -539,7 +539,7 @@ void EMsoftSO3Sampler::execute()
         // report on status of computation
         if(Dg > Dc)
         {
-          QString ss = QString("Euler angle triplets generated: %1 out of %2").arg(QString::number(Dg), QString::number(Totp));
+          QString ss = QString("Euler Angles | Generated: %1 / %2").arg(QString::number(Dg), QString::number(Totp));
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
           Dc += Dn;
         }

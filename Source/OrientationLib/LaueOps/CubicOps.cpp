@@ -649,9 +649,9 @@ FOrientArrayType CubicOps::getMDFFZRod(FOrientArrayType rod)
   n2 = ax[1], n3 = ax[2], w = ax[3];
 
   FZw = w;
-  n1 = fabs(n1);
-  n2 = fabs(n2);
-  n3 = fabs(n3);
+  n1 = std::fabs(n1);
+  n2 = std::fabs(n2);
+  n3 = std::fabs(n3);
   if(n1 > n2)
   {
     if(n1 > n3)
@@ -851,27 +851,27 @@ void CubicOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float an
   float loadz = load[2];
 
   float mag = loadx * loadx + loady * loady + loadz * loadz;
-  mag = sqrt(mag);
+  mag = std::sqrt(mag);
   theta1 = (loadx + loady + loadz) / (mag * 1.732f);
-  theta1 = fabs(theta1);
+  theta1 = std::fabs(theta1);
   theta2 = (loadx + loady - loadz) / (mag * 1.732f);
-  theta2 = fabs(theta2);
+  theta2 = std::fabs(theta2);
   theta3 = (loadx - loady + loadz) / (mag * 1.732f);
-  theta3 = fabs(theta3);
+  theta3 = std::fabs(theta3);
   theta4 = (-loadx + loady + loadz) / (mag * 1.732f);
-  theta4 = fabs(theta4);
+  theta4 = std::fabs(theta4);
   lambda1 = (loadx + loady) / (mag * 1.414f);
-  lambda1 = fabs(lambda1);
+  lambda1 = std::fabs(lambda1);
   lambda2 = (loadx + loadz) / (mag * 1.414f);
-  lambda2 = fabs(lambda2);
+  lambda2 = std::fabs(lambda2);
   lambda3 = (loadx - loady) / (mag * 1.414f);
-  lambda3 = fabs(lambda3);
+  lambda3 = std::fabs(lambda3);
   lambda4 = (loadx - loadz) / (mag * 1.414f);
-  lambda4 = fabs(lambda4);
+  lambda4 = std::fabs(lambda4);
   lambda5 = (loady + loadz) / (mag * 1.414f);
-  lambda5 = fabs(lambda5);
+  lambda5 = std::fabs(lambda5);
   lambda6 = (loady - loadz) / (mag * 1.414f);
-  lambda6 = fabs(lambda6);
+  lambda6 = std::fabs(lambda6);
   schmid1 = theta1 * lambda6;
   schmid2 = theta1 * lambda4;
   schmid3 = theta1 * lambda3;
@@ -884,51 +884,87 @@ void CubicOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float an
   schmid10 = theta4 * lambda1;
   schmid11 = theta4 * lambda2;
   schmid12 = theta4 * lambda6;
-  schmidfactor = schmid1, slipsys = 0, angleComps[0] = theta1, angleComps[1] = lambda6;
+  schmidfactor = schmid1;
+  slipsys = 0;
+  angleComps[0] = theta1;
+  angleComps[1] = lambda6;
 
   if (schmid2 > schmidfactor)
   {
-    schmidfactor = schmid2, slipsys = 1, angleComps[0] = theta1, angleComps[1] = lambda4;
+    schmidfactor = schmid2;
+    slipsys = 1;
+    angleComps[0] = theta1;
+    angleComps[1] = lambda4;
   }
   if (schmid3 > schmidfactor)
   {
-    schmidfactor = schmid3, slipsys = 2, angleComps[0] = theta1, angleComps[1] = lambda3;
+    schmidfactor = schmid3;
+    slipsys = 2;
+    angleComps[0] = theta1;
+    angleComps[1] = lambda3;
   }
   if (schmid4 > schmidfactor)
   {
-    schmidfactor = schmid4, slipsys = 3, angleComps[0] = theta2, angleComps[1] = lambda3;
+    schmidfactor = schmid4;
+    slipsys = 3;
+    angleComps[0] = theta2;
+    angleComps[1] = lambda3;
   }
   if (schmid5 > schmidfactor)
   {
-    schmidfactor = schmid5, slipsys = 4, angleComps[0] = theta2, angleComps[1] = lambda2;
+    schmidfactor = schmid5;
+    slipsys = 4;
+    angleComps[0] = theta2;
+    angleComps[1] = lambda2;
   }
   if (schmid6 > schmidfactor)
   {
-    schmidfactor = schmid6, slipsys = 5, angleComps[0] = theta2, angleComps[1] = lambda5;
+    schmidfactor = schmid6;
+    slipsys = 5;
+    angleComps[0] = theta2;
+    angleComps[1] = lambda5;
   }
   if (schmid7 > schmidfactor)
   {
-    schmidfactor = schmid7, slipsys = 6, angleComps[0] = theta3, angleComps[1] = lambda1;
+    schmidfactor = schmid7;
+    slipsys = 6;
+    angleComps[0] = theta3;
+    angleComps[1] = lambda1;
   }
   if (schmid8 > schmidfactor)
   {
-    schmidfactor = schmid8, slipsys = 7, angleComps[0] = theta3, angleComps[1] = lambda5;
+    schmidfactor = schmid8;
+    slipsys = 7;
+    angleComps[0] = theta3;
+    angleComps[1] = lambda5;
   }
   if (schmid9 > schmidfactor)
   {
-    schmidfactor = schmid9, slipsys = 8, angleComps[0] = theta3, angleComps[1] = lambda4;
+    schmidfactor = schmid9;
+    slipsys = 8;
+    angleComps[0] = theta3;
+    angleComps[1] = lambda4;
   }
   if (schmid10 > schmidfactor)
   {
-    schmidfactor = schmid10, slipsys = 9, angleComps[0] = theta4, angleComps[1] = lambda1;
+    schmidfactor = schmid10;
+    slipsys = 9;
+    angleComps[0] = theta4;
+    angleComps[1] = lambda1;
   }
   if (schmid11 > schmidfactor)
   {
-    schmidfactor = schmid11, slipsys = 10, angleComps[0] = theta4, angleComps[1] = lambda2;
+    schmidfactor = schmid11;
+    slipsys = 10;
+    angleComps[0] = theta4;
+    angleComps[1] = lambda2;
   }
   if (schmid12 > schmidfactor)
   {
-    schmidfactor = schmid12, slipsys = 11, angleComps[0] = theta4, angleComps[1] = lambda6;
+    schmidfactor = schmid12;
+    slipsys = 11;
+    angleComps[0] = theta4;
+    angleComps[1] = lambda6;
   }
 }
 
@@ -940,9 +976,9 @@ void CubicOps::getSchmidFactorAndSS(float load[3], float plane[3], float directi
   angleComps[1] = 0;
 
   //compute mags
-  float loadMag = sqrt( load[0] * load[0] + load[1] * load[1] + load[2] * load[2] );
-  float planeMag = sqrt( plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2] );
-  float directionMag = sqrt( direction[0] * direction[0] + direction[1] * direction[1] + direction[2] * direction[2] );
+  float loadMag = std::sqrt(load[0] * load[0] + load[1] * load[1] + load[2] * load[2]);
+  float planeMag = std::sqrt(plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2]);
+  float directionMag = std::sqrt(direction[0] * direction[0] + direction[1] * direction[1] + direction[2] * direction[2]);
   planeMag *= loadMag;
   directionMag *= loadMag;
 
@@ -964,16 +1000,16 @@ void CubicOps::getSchmidFactorAndSS(float load[3], float plane[3], float directi
       slipDirection[1] = CubicMatSym[i][1][0] * direction[0] + CubicMatSym[i][1][1] * direction[1] + CubicMatSym[i][1][2] * direction[2];
       slipDirection[2] = CubicMatSym[i][2][0] * direction[0] + CubicMatSym[i][2][1] * direction[1] + CubicMatSym[i][2][2] * direction[2];
 
-      float cosPhi = fabs( load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2] ) / planeMag;
-      float cosLambda = fabs( load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2] ) / directionMag;
+      float cosPhi = std::fabs(load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2]) / planeMag;
+      float cosLambda = std::fabs(load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2]) / directionMag;
 
       float schmid = cosPhi * cosLambda;
       if(schmid > schmidfactor)
       {
         schmidfactor = schmid;
         slipsys = i;
-        angleComps[0] = acos(cosPhi);
-        angleComps[1] = acos(cosLambda);
+        angleComps[0] = std::acos(cosPhi);
+        angleComps[1] = std::acos(cosLambda);
       }
     }
   }
@@ -1011,8 +1047,8 @@ void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
-    planeComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
+    directionComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor)
     {
@@ -1044,8 +1080,8 @@ void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
     MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
     MatrixMath::Normalize3x1(hkl2);
     MatrixMath::Normalize3x1(uvw2);
-    directionComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
-    planeComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
+    directionComponent2 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
+    planeComponent2 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
     schmidFactor2 = directionComponent2 * planeComponent2;
     if(schmidFactor2 > maxSchmidFactor)
     {
@@ -1063,8 +1099,8 @@ void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
   MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
   MatrixMath::Normalize3x1(hkl2);
   MatrixMath::Normalize3x1(uvw2);
-  planeMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(hkl1, hkl2));
-  directionMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
+  planeMisalignment = std::fabs(GeometryMath::CosThetaBetweenVectors(hkl1, hkl2));
+  directionMisalignment = std::fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
   mPrime = planeMisalignment * directionMisalignment;
 }
 
@@ -1107,8 +1143,8 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
-    planeComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
+    directionComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -1129,10 +1165,10 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
         MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        // directionComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
-        // planeComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
-        //schmidFactor2 = directionComponent2 * planeComponent2;
-        directionMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
+        // directionComponent2 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
+        // planeComponent2 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
+        // schmidFactor2 = directionComponent2 * planeComponent2;
+        directionMisalignment = std::fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F1 = schmidFactor1 * directionComponent1 * totalDirectionMisalignment;
@@ -1191,8 +1227,8 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
-    planeComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
+    directionComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -1214,11 +1250,11 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
         MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        //directionComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
-        //planeComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
+        // directionComponent2 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
+        // planeComponent2 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
         // schmidFactor2 = directionComponent2 * planeComponent2;
-        directionMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
-        planeMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(hkl1, hkl2));
+        directionMisalignment = std::fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
+        planeMisalignment = std::fabs(GeometryMath::CosThetaBetweenVectors(hkl1, hkl2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
         totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
       }
@@ -1273,8 +1309,8 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
     MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
-    planeComponent1 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
+    directionComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -1295,10 +1331,10 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
         MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        //directionComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
-        //planeComponent2 = fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
-        //schmidFactor2 = directionComponent2 * planeComponent2;
-        directionMisalignment = fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
+        // directionComponent2 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw2));
+        // planeComponent2 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl2));
+        // schmidFactor2 = directionComponent2 * planeComponent2;
+        directionMisalignment = std::fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F7 = directionComponent1 * directionComponent1 * totalDirectionMisalignment;
@@ -1696,8 +1732,8 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
     {
       p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
     }
-    chi = acos(p[2]);
-    eta = atan2(p[1], p[0]);
+    chi = std::acos(p[2]);
+    eta = std::atan2(p[1], p[0]);
     if(inUnitTriangle(eta, chi) == false)
     {
       continue;
@@ -1714,23 +1750,23 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
   float chiMax;
   if(etaDeg > 45.0)
   {
-    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * SIMPLib::Constants::k_Pi - eta) * tanf(0.5 * SIMPLib::Constants::k_Pi - eta)));
+    chiMax = std::sqrt(1.0 / (2.0 + tanf(0.5 * SIMPLib::Constants::k_Pi - eta) * tanf(0.5 * SIMPLib::Constants::k_Pi - eta)));
   }
   else
   {
-    chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta)));
+    chiMax = std::sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta)));
   }
   SIMPLibMath::boundF(chiMax, -1.0f, 1.0f);
-  chiMax = acos(chiMax);
+  chiMax = std::acos(chiMax);
 
   _rgb[0] = 1.0 - chi / chiMax;
-  _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
+  _rgb[2] = std::fabs(etaDeg - etaMin) / (etaMax - etaMin);
   _rgb[1] = 1 - _rgb[2];
   _rgb[1] *= chi / chiMax;
   _rgb[2] *= chi / chiMax;
-  _rgb[0] = sqrt(_rgb[0]);
-  _rgb[1] = sqrt(_rgb[1]);
-  _rgb[2] = sqrt(_rgb[2]);
+  _rgb[0] = std::sqrt(_rgb[0]);
+  _rgb[1] = std::sqrt(_rgb[1]);
+  _rgb[2] = std::sqrt(_rgb[2]);
 
   float max = _rgb[0];
   if (_rgb[1] > max)
@@ -1796,12 +1832,12 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   // Generate the coords on the sphere **** Parallelized
   generateSphereCoordsFromEulers(config.eulers, xyz001.get(), xyz011.get(), xyz111.get());
 
-
   // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
   // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
+
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
@@ -1878,16 +1914,16 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   config.maxScale = max;
 
   dims[0] = 4;
-  UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label0);
-  UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
-  UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
+  UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label0);
+  UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label1);
+  UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label2);
 
   QVector<UInt8ArrayType::Pointer> poleFigures(3);
   if(config.order.size() == 3)
   {
-    poleFigures[config.order[0]] = image001;
-    poleFigures[config.order[1]] = image011;
-    poleFigures[config.order[2]] = image111;
+    poleFigures[static_cast<int>(config.order[0])] = image001;
+    poleFigures[static_cast<int>(config.order[1])] = image011;
+    poleFigures[static_cast<int>(config.order[2])] = image111;
   }
   else
   {
@@ -2009,9 +2045,9 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
       else
       {
         //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
-        cd[0] = fabs(x1);
-        cd[1] = fabs(y1);
-        cd[2] = fabs(z1);
+        cd[0] = std::fabs(x1);
+        cd[1] = std::fabs(y1);
+        cd[2] = std::fabs(z1);
 
         // Sort the cd array from smallest to largest
         _TripletSort(cd[0], cd[1], cd[2], cd);
@@ -2042,9 +2078,9 @@ SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& re
 
   //get disorientation
   w = getMisoQuat(q1, q2, n1, n2, n3);
-  n1 = fabs(n1);
-  n2 = fabs(n2);
-  n3 = fabs(n3);
+  n1 = std::fabs(n1);
+  n2 = std::fabs(n2);
+  n3 = std::fabs(n3);
 
   _TripletSort(n1, n2, n3, z, y, x);
 
@@ -2081,8 +2117,8 @@ SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& re
 
   //eq c9.6
   k = atan2(-x4, y4);
-  x5 = x4 * (sin(k) + fabs(cos(k)));
-  y5 = y4 * (sin(k) + fabs(cos(k)));
+  x5 = x4 * (sin(k) + std::fabs(cos(k)));
+  y5 = y4 * (sin(k) + std::fabs(cos(k)));
   z5 = z4;
 
   //eq c9.7
@@ -2890,7 +2926,7 @@ std::vector< std::pair<double, double> > CubicOps::rodri2pair(std::vector<double
     {
       rad++;
     }
-    k = 2 * (1 - fabs(x1 / rad));
+    k = 2 * (1 - std::fabs(x1 / rad));
     if(k < 0)
     {
       k = 0;

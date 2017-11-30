@@ -494,8 +494,10 @@ QImage PoleFigureImageUtilities::Create3ImagePoleFigure(UInt8ArrayType* i0, UInt
   painter.drawImage(pos1, img0); // Draw the first image in the upper Left
   painter.drawImage(pos2, img1); // Draw the second image in the upper right
   painter.drawImage(pos3, img2); // Draw the third image in the lower Left
-  painter.drawImage(pos4, scalarBar); // Draw the Scalar Bar
-
+  if((config.discrete && config.discreteHeatMap) || config.discrete == false)
+  {
+    painter.drawImage(pos4, scalarBar); // Draw the Scalar Bar
+  }
   painter.end();
   // Scale the image down to 225 pixels
   return pImage;

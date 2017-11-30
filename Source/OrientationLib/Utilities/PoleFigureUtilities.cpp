@@ -109,6 +109,8 @@ UInt8ArrayType::Pointer PoleFigureUtilities::CreateColorImage(DoubleArrayType* d
   config.minScale = min;
   config.maxScale = max;
   config.sphereRadius = 1.0;
+  config.discrete = false;
+  config.discreteHeatMap = false;
   PoleFigureUtilities::CreateColorImage(data, config, image.get());
   return image;
 }
@@ -166,6 +168,17 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
           r = 0x00;
           b = 0x00;
           g = 0x00;
+        }
+        else if(!config.discreteHeatMap && config.discrete)
+        {
+          float frgb = 1.0f;
+          if(value > 0.0)
+          {
+            frgb = 0.0f;
+          }
+          r = frgb;
+          b = frgb;
+          g = frgb;
         }
         else
         {
