@@ -2634,7 +2634,7 @@ void InsertPrecipitatePhases::assign_voxels()
   }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
-  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
   // need to update pointers after resize, but do not need to run full data
   // check because pointers are still valid
   updateFeatureInstancePointers();

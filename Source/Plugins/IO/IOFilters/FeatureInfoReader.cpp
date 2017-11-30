@@ -378,7 +378,7 @@ int32_t FeatureInfoReader::readFile()
     {
       activeObjects[m_FeatureIds[i]] = true;
     }
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

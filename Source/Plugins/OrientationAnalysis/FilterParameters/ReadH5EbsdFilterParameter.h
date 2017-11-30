@@ -40,46 +40,56 @@
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
 
+/**
+ * @brief The ReadH5EbsdFilterParameter class
+ */
 class ReadH5EbsdFilterParameter : public FilterParameter
 {
 public:
   SIMPL_SHARED_POINTERS(ReadH5EbsdFilterParameter)
-    SIMPL_STATIC_NEW_MACRO(ReadH5EbsdFilterParameter)
-    SIMPL_TYPE_MACRO(ReadH5EbsdFilterParameter)
+  SIMPL_STATIC_NEW_MACRO(ReadH5EbsdFilterParameter)
+  SIMPL_TYPE_MACRO(ReadH5EbsdFilterParameter)
 
-  static Pointer New(const QString& humanLabel, const QString& propertyName,
-                     const QVariant& defaultValue, Category category,
-                     ReadH5Ebsd* filter,
-                     const QString& fileExtension = QString(""),
-                     const QString& fileType = QString(""),
-                     int groupIndex = -1);
+  static Pointer New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, ReadH5Ebsd* filter, const QString& fileExtension = QString(""),
+                     const QString& fileType = QString(""), int groupIndex = -1);
 
   virtual ~ReadH5EbsdFilterParameter();
 
+  /**
+  *
+  */
   SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
+ 
+  /**
+  *
+  */ 
   SIMPL_INSTANCE_STRING_PROPERTY(FileType)
+  
+  /**
+  *
+  */  
   SIMPL_INSTANCE_PROPERTY(ReadH5Ebsd*, Filter)
 
   QString getWidgetType();
-
+  
   /**
-   * @brief readJson
-   * @return
-   */
-  void readJson(const QJsonObject &json);
-
+ * @brief readJson
+ * @return
+ */
+  void readJson(const QJsonObject& json);
+  
   /**
-   * @brief writeJson
-   * @return
-   */
-  void writeJson(QJsonObject &json);
+ * @brief writeJson
+ * @return
+ */
+  void writeJson(QJsonObject& json);
 
 protected:
   ReadH5EbsdFilterParameter();
 
 private:
   ReadH5EbsdFilterParameter(const ReadH5EbsdFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ReadH5EbsdFilterParameter&); // Operator '=' Not Implemented
+  void operator=(const ReadH5EbsdFilterParameter&);            // Operator '=' Not Implemented
 };
 
 #endif /* _ImportVectorImageStackFilterParameter_H_ */

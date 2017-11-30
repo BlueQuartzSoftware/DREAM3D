@@ -2819,7 +2819,7 @@ void PackPrimaryPhases::assignVoxels()
   }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
-  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
   // need to update pointers after removing inactive objects
   updateFeatureInstancePointers();
   totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
@@ -3224,7 +3224,7 @@ void PackPrimaryPhases::cleanupFeatures()
   }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
-  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
   updateFeatureInstancePointers();
 
   for(size_t i = 0; i < totalPoints; i++)

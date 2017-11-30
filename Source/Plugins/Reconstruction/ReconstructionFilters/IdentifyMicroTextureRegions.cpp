@@ -673,7 +673,7 @@ void IdentifyMicroTextureRegions::execute()
   }
   tempPath.update("_INTERNAL_USE_ONLY_PatchDataContainer(Temp)", "_INTERNAL_USE_ONLY_PatchFeatureData", "_INTERNAL_USE_ONLY_Active");
   AttributeMatrix::Pointer patchFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(tempPath);
-  patchFeatureAttrMat->removeInactiveObjects(activeObjects, m_PatchIdsPtr.lock());
+  patchFeatureAttrMat->removeInactiveObjects(activeObjects, m_PatchIdsPtr.lock().get());
 
   // Resize the feature attribute matrix for the MTRs to the number identified from SegmentFeatures(Vector) after filtering for size
   tDims.resize(1);

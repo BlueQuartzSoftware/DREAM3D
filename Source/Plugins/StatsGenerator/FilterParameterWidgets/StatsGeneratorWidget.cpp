@@ -50,6 +50,7 @@
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "SIMPLib/DataArrays/StatsDataArray.h"

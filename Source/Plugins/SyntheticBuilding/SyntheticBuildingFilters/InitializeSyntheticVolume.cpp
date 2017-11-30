@@ -37,6 +37,10 @@
 
 #include <QtCore/QFileInfo>
 
+#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"

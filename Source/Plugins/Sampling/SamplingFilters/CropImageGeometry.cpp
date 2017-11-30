@@ -368,7 +368,7 @@ void CropImageGeometry::dataCheck()
     }
 
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
   }
 }
 
@@ -578,7 +578,7 @@ void CropImageGeometry::execute()
         return;
       }
     }
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
   }
 
   if(m_UpdateOrigin == true)

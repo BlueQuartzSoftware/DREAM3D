@@ -280,7 +280,7 @@ void ChangeResolution::preflight()
     if(nullptr != cellFeatureAttrMat.get())
     {
       QVector<bool> activeObjects(cellFeatureAttrMat->getNumberOfTuples(), true);
-      cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+      cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
     }
   }
   emit preflightExecuted();
@@ -435,7 +435,7 @@ void ChangeResolution::execute()
     {
       activeObjects[fIds[i]] = true;
     }
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, featureIds);
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, featureIds.get());
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
