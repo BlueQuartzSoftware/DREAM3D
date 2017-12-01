@@ -393,16 +393,16 @@ void EnsembleInfoTableModel::getTableData(QVector<int>& crystalStructures, QVect
   QVector<int> phases;
   QVector<QString> names;
 
-  int count = m_EnsembleInfo.size();
-  EnsembleInfo::CrystalStructureType* crystalStructurePtr = m_EnsembleInfo.getCrystalStructureArray()->getPointer(0);
-  PhaseType::EnumType* phaseTypePtr = m_EnsembleInfo.getPhaseTypeArray()->getPointer(0);
-  StringDataArray::Pointer phaseNamePtr = m_EnsembleInfo.getPhaseNameArray();
+  size_t count = m_EnsembleInfo.size();
+  std::vector<EnsembleInfo::CrystalStructure> srcXtals = m_EnsembleInfo.getCrystalStructureArray();
+  std::vector<PhaseType::Type> srcPhaseTypes = m_EnsembleInfo.getPhaseTypeArray();
+  std::vector<QString> srcPhaseNames = m_EnsembleInfo.getPhaseNameArray();
 
-  for(int i = 0; i < count; i++)
+  for(size_t i = 0; i < count; i++)
   {
-    structures.push_back(static_cast<int>(crystalStructurePtr[i]));
-    phases.push_back(static_cast<int>(phaseTypePtr[i]));
-    names.push_back(phaseNamePtr->getValue(i));
+    structures.push_back(static_cast<int>(srcXtals[i]));
+    phases.push_back(static_cast<int>(srcPhaseTypes[i]));
+    names.push_back(srcPhaseNames[i]);
   }
 
   crystalStructures = structures;

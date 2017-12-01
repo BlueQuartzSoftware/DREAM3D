@@ -100,8 +100,8 @@ void EnsembleInfoFilterParameter::readJson(const QJsonObject& json)
 
       if(ensembleObj["CrystalStructure"].isDouble() && ensembleObj["PhaseType"].isDouble() && ensembleObj["PhaseName"].isString())
       {
-        EnsembleInfo::CrystalStructureType crystalStructure = ensembleObj["CrystalStructure"].toInt();
-        PhaseType::EnumType phaseType = ensembleObj["PhaseType"].toInt();
+        EnsembleInfo::CrystalStructure crystalStructure = static_cast<EnsembleInfo::CrystalStructure>(ensembleObj["CrystalStructure"].toInt());
+        PhaseType::Type phaseType = static_cast<PhaseType::Type>(ensembleObj["PhaseType"].toInt());
         QString phaseName = ensembleObj["PhaseName"].toString();
 
         inputs.addValues(static_cast<EnsembleInfo::CrystalStructure>(crystalStructure), static_cast<PhaseType::Type>(phaseType), phaseName);

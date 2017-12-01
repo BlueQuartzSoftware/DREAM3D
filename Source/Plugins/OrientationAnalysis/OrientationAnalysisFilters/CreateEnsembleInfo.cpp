@@ -164,7 +164,7 @@ void CreateEnsembleInfo::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName());
-  m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(
+  m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter, uint32_t>(
       this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_PhaseTypesPtr.lock().get())                                             /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -205,7 +205,7 @@ void CreateEnsembleInfo::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer cellensembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
 
-  int32_t numPhases = m_Ensemble.size();
+  size_t numPhases = m_Ensemble.size();
 
   if(0 == numPhases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
   {
@@ -215,14 +215,14 @@ void CreateEnsembleInfo::execute()
     return;
   }
 
-  DataArray<EnsembleInfo::CrystalStructureType>::Pointer crystalStructures = m_Ensemble.getCrystalStructureArray();
-  DataArray<PhaseType::EnumType>::Pointer phaseTypes = m_Ensemble.getPhaseTypeArray();
-  StringDataArray::Pointer phaseNames = m_Ensemble.getPhaseNameArray();
+  std::vector<EnsembleInfo::CrystalStructure> crystalStructures = m_Ensemble.getCrystalStructureArray();
+  std::vector<PhaseType::Type> phaseTypes = m_Ensemble.getPhaseTypeArray();
+  std::vector<QString> phaseNames = m_Ensemble.getPhaseNameArray();
 
   for(int i = 0; i < numPhases; i++)
   {
     // Crystal Structure
-    uint32_t crystalStructure = crystalStructures->getValue(i);
+    uint32_t crystalStructure = static_cast<uint32_t>(crystalStructures[i]);
     if(crystalStructure == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
       QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(crystalStructure);
@@ -234,7 +234,7 @@ void CreateEnsembleInfo::execute()
     m_CrystalStructures[i + 1] = crystalStructure;
 
     // Phase Type
-    uint32_t phaseType = phaseTypes->getValue(i);
+    uint32_t phaseType = static_cast<uint32_t>(phaseTypes[i]);
     if(static_cast<PhaseType::Type>(phaseType) == PhaseType::Type::Unknown)
     {
       QString ss = QObject::tr("Incorrect phase type '%1'").arg(phaseType); // The phase type name was not found in the lookup table
@@ -246,7 +246,7 @@ void CreateEnsembleInfo::execute()
     m_PhaseTypes[i + 1] = phaseType;
 
     // Phase Name
-    QString phaseName = phaseNames->getValue(i);
+    QString phaseName = phaseNames[i];
     if(phaseName.isEmpty())
     {
       QString ss = QObject::tr("Phase name cannot be empty'"); // The phase name was not found
