@@ -42,7 +42,7 @@
 
 #include "StatsGenerator/Widgets/Delegates/SGODFItemDelegate.h"
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_SGODFTableModel.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -57,9 +57,7 @@ SGODFTableModel::SGODFTableModel(QObject* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGODFTableModel::~SGODFTableModel()
-{
-}
+SGODFTableModel::~SGODFTableModel() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -244,7 +244,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
   ReadCtfData(const ReadCtfData&);    // Copy Constructor Not Implemented
-  void operator=(const ReadCtfData&); // Operator '=' Not Implemented
+  void operator=(const ReadCtfData&) = delete; // Operator '=' Not Implemented
 };
 
 Q_DECLARE_METATYPE(Ctf_Private_Data)

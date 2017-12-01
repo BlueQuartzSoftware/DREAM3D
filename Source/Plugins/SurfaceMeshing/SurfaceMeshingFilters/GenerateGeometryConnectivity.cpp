@@ -43,9 +43,6 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_GenerateGeometryConnectivity.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -61,9 +58,7 @@ GenerateGeometryConnectivity::GenerateGeometryConnectivity()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateGeometryConnectivity::~GenerateGeometryConnectivity()
-{
-}
+GenerateGeometryConnectivity::~GenerateGeometryConnectivity() = default;
 
 // -----------------------------------------------------------------------------
 //

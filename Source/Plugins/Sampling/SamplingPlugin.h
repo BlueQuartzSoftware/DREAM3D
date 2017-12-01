@@ -136,8 +136,8 @@ class SamplingPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    SamplingPlugin(const SamplingPlugin&); // Copy Constructor Not Implemented
-    void operator=(const SamplingPlugin&); // Operator '=' Not Implemented
+    SamplingPlugin(const SamplingPlugin&) = delete; // Copy Constructor Not Implemented
+    void operator=(const SamplingPlugin&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _Sampling_H_ */

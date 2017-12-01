@@ -133,13 +133,13 @@ cmp_IDE_GENERATED_PROPERTIES("${PLUGIN_NAME}/Widgets/UI_Files" "${${PLUGIN_NAME}
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT5_WRAP_CPP( StatsGenerator_Generated_MOC_SRCS
-        ${${PLUGIN_NAME}_Widgets_HDRS}
-        ${StatsGenerator_TABLEMODEL_MOC_HDRS}
-        ${StatsGenerator_PRESETS_MOC_HDRS}
-        ${StatsGenerator_DIALOGS_MOC_HDRS}
-        ${StatsGenerator_DELEGATE_MOC_HDRS}
-)
+# QT5_WRAP_CPP( StatsGenerator_Generated_MOC_SRCS
+#         ${${PLUGIN_NAME}_Widgets_HDRS}
+#         ${StatsGenerator_TABLEMODEL_MOC_HDRS}
+#         ${StatsGenerator_PRESETS_MOC_HDRS}
+#         ${StatsGenerator_DIALOGS_MOC_HDRS}
+#         ${StatsGenerator_DELEGATE_MOC_HDRS}
+# )
 set_source_files_properties( ${StatsGenerator_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 set_source_files_properties( ${StatsGenerator_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 

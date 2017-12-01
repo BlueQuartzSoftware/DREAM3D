@@ -45,7 +45,6 @@
 #include "SVWidgetsLib/QtSupport/QtSStyles.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_RolledPresetDialog.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -59,9 +58,7 @@ RolledPresetDialog::RolledPresetDialog(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RolledPresetDialog::~RolledPresetDialog()
-{
-}
+RolledPresetDialog::~RolledPresetDialog() = default;
 
 // -----------------------------------------------------------------------------
 //

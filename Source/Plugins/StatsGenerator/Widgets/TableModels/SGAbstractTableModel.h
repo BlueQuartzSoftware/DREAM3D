@@ -221,10 +221,8 @@ class SGAbstractTableModel : public QAbstractTableModel
 
 
   private:
-
-    SGAbstractTableModel(const SGAbstractTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGAbstractTableModel&); // Operator '=' Not Implemented
-
+    SGAbstractTableModel(const SGAbstractTableModel&) = delete; // Copy Constructor Not Implemented
+    void operator=(const SGAbstractTableModel&) = delete;       // Operator '=' Not Implemented
 };
 
 #endif /* SGABSTRACTTABLEMODEL_H_ */

@@ -53,8 +53,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-#include "moc_CreateLambertSphere.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -81,9 +79,7 @@ CreateLambertSphere::CreateLambertSphere()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CreateLambertSphere::~CreateLambertSphere()
-{
-}
+CreateLambertSphere::~CreateLambertSphere() = default;
 
 // -----------------------------------------------------------------------------
 //

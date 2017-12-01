@@ -527,7 +527,7 @@ private:
    */
   void appendToExistingAttributeMatrix(QList<IDataArray::Pointer> incomingArrays);
 
-  InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented
+  InsertPrecipitatePhases(const InsertPrecipitatePhases&) = delete; // Copy Constructor Not Implemented
   void operator=(const InsertPrecipitatePhases&);          // Operator '=' Not Implemented
 };
 

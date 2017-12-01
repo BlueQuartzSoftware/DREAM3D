@@ -46,9 +46,7 @@ EbsdToH5EbsdFilterParameter::EbsdToH5EbsdFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdToH5EbsdFilterParameter::~EbsdToH5EbsdFilterParameter()
-{
-}
+EbsdToH5EbsdFilterParameter::~EbsdToH5EbsdFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //

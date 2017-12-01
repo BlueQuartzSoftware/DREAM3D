@@ -50,9 +50,6 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FitFeatureData.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,7 +61,6 @@ FitFeatureData::FitFeatureData()
 , m_FeaturePhasesArrayPath("", "", "")
 , m_BiasedFeaturesArrayPath("", "", "")
 , m_NewEnsembleArrayArray("", "", "")
-, m_InDataArray(nullptr)
 , m_BiasedFeatures(nullptr)
 , m_FeaturePhases(nullptr)
 , m_NewEnsembleArray(nullptr)
@@ -75,9 +71,7 @@ FitFeatureData::FitFeatureData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FitFeatureData::~FitFeatureData()
-{
-}
+FitFeatureData::~FitFeatureData() = default;
 
 // -----------------------------------------------------------------------------
 //

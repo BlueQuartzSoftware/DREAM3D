@@ -151,7 +151,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
 
-  SharedFeatureFaceFilter(const SharedFeatureFaceFilter&); // Copy Constructor Not Implemented
+  SharedFeatureFaceFilter(const SharedFeatureFaceFilter&) = delete; // Copy Constructor Not Implemented
   void operator=(const SharedFeatureFaceFilter&);          // Operator '=' Not Implemented
 };
 

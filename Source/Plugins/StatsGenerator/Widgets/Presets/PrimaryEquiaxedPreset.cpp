@@ -49,9 +49,7 @@ PrimaryEquiaxedPreset::PrimaryEquiaxedPreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryEquiaxedPreset::~PrimaryEquiaxedPreset()
-{
-}
+PrimaryEquiaxedPreset::~PrimaryEquiaxedPreset() = default;
 
 // -----------------------------------------------------------------------------
 //

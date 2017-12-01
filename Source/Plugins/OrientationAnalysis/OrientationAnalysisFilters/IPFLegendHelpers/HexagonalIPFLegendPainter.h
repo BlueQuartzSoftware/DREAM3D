@@ -53,7 +53,7 @@ protected:
   QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
 private:
-  HexagonalIPFLegendPainter(const HexagonalIPFLegendPainter&); // Copy Constructor Not Implemented
+  HexagonalIPFLegendPainter(const HexagonalIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
   void operator=(const HexagonalIPFLegendPainter&);            // Operator '=' Not Implemented
 };
 

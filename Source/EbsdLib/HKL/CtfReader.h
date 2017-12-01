@@ -214,8 +214,8 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     */
     int parseDataLine(QByteArray& line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
 
-    CtfReader(const CtfReader&); // Copy Constructor Not Implemented
-    void operator=(const CtfReader&); // Operator '=' Not Implemented
+    CtfReader(const CtfReader&) = delete;      // Copy Constructor Not Implemented
+    void operator=(const CtfReader&) = delete; // Operator '=' Not Implemented
 };
 
 

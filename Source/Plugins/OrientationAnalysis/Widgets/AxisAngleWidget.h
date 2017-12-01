@@ -60,8 +60,8 @@ class AxisAngleWidget : public OrientationWidget, private Ui::AxisAngleWidget
 
     QVector<double> getValues();
 
-    AxisAngleWidget(const AxisAngleWidget&); // Copy Constructor Not Implemented
-    void operator=(const AxisAngleWidget&); // Operator '=' Not Implemented
+    AxisAngleWidget(const AxisAngleWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const AxisAngleWidget&) = delete;  // Operator '=' Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

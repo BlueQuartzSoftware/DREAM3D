@@ -49,9 +49,6 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_NodesTrianglesToStl.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -68,9 +65,7 @@ NodesTrianglesToStl::NodesTrianglesToStl()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NodesTrianglesToStl::~NodesTrianglesToStl()
-{
-}
+NodesTrianglesToStl::~NodesTrianglesToStl() = default;
 
 // -----------------------------------------------------------------------------
 //

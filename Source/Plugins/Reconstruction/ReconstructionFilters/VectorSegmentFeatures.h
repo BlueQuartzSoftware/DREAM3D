@@ -191,7 +191,7 @@ private:
    */
   void updateFeatureInstancePointers();
 
-  VectorSegmentFeatures(const VectorSegmentFeatures&); // Copy Constructor Not Implemented
+  VectorSegmentFeatures(const VectorSegmentFeatures&) = delete; // Copy Constructor Not Implemented
   void operator=(const VectorSegmentFeatures&);        // Operator '=' Not Implemented
 };
 

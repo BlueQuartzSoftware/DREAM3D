@@ -132,8 +132,8 @@ class SGLogNormalTableModel : public SGAbstractTableModel
     QVector<float> m_StdDev;
     QVector<QColor> m_Colors;
 
-    SGLogNormalTableModel(const SGLogNormalTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGLogNormalTableModel&); // Operator '=' Not Implemented
+    SGLogNormalTableModel(const SGLogNormalTableModel&) = delete; // Copy Constructor Not Implemented
+    void operator=(const SGLogNormalTableModel&) = delete;        // Operator '=' Not Implemented
 };
 
 #endif /* _SG_LOG_NORMAL_TABLEMODEL_H_ */

@@ -162,7 +162,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(float, CAxisLocations)
 
-  FindCAxisLocations(const FindCAxisLocations&); // Copy Constructor Not Implemented
+  FindCAxisLocations(const FindCAxisLocations&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindCAxisLocations&);     // Operator '=' Not Implemented
 };
 

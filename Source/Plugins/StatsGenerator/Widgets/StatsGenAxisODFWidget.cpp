@@ -80,7 +80,6 @@
 #define COLOR_POLE_FIGURES 1
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_StatsGenAxisODFWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

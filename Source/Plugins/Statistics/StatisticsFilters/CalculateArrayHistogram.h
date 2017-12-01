@@ -194,7 +194,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(double, NewDataArray)
 
-  CalculateArrayHistogram(const CalculateArrayHistogram&); // Copy Constructor Not Implemented
+  CalculateArrayHistogram(const CalculateArrayHistogram&) = delete; // Copy Constructor Not Implemented
   void operator=(const CalculateArrayHistogram&);          // Operator '=' Not Implemented
 };
 

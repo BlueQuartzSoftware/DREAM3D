@@ -176,7 +176,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(float, MotionDirection)
 
-  FindRelativeMotionBetweenSlices(const FindRelativeMotionBetweenSlices&); // Copy Constructor Not Implemented
+  FindRelativeMotionBetweenSlices(const FindRelativeMotionBetweenSlices&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindRelativeMotionBetweenSlices&);                  // Operator '=' Not Implemented
 };
 

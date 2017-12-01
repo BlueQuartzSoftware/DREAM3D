@@ -13,9 +13,6 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_ComputeFeatureRect.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -31,9 +28,7 @@ ComputeFeatureRect::ComputeFeatureRect()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComputeFeatureRect::~ComputeFeatureRect()
-{
-}
+ComputeFeatureRect::~ComputeFeatureRect() = default;
 
 // -----------------------------------------------------------------------------
 //

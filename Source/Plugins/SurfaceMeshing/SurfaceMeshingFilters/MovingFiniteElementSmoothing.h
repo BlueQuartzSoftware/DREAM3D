@@ -145,8 +145,8 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
   private:
     DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
 
-    MovingFiniteElementSmoothing(const MovingFiniteElementSmoothing&); // Copy Constructor Not Implemented
-    void operator=(const MovingFiniteElementSmoothing&); // Operator '=' Not Implemented
+    MovingFiniteElementSmoothing(const MovingFiniteElementSmoothing&) = delete; // Copy Constructor Not Implemented
+    void operator=(const MovingFiniteElementSmoothing&) = delete;               // Operator '=' Not Implemented
 };
 
 #endif /* _MovingFiniteElementSmoothing_H_ */

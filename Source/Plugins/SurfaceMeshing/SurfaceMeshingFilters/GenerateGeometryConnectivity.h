@@ -136,7 +136,7 @@ protected:
   void initialize();
 
 private:
-  GenerateGeometryConnectivity(const GenerateGeometryConnectivity&); // Copy Constructor Not Implemented
+  GenerateGeometryConnectivity(const GenerateGeometryConnectivity&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateGeometryConnectivity&);               // Operator '=' Not Implemented
 };
 

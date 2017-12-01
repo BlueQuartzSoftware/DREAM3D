@@ -75,7 +75,6 @@
 #include <qwt_plot_marker.h>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_PrimaryPhaseWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -91,9 +90,7 @@ PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryPhaseWidget::~PrimaryPhaseWidget()
-{
-}
+PrimaryPhaseWidget::~PrimaryPhaseWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

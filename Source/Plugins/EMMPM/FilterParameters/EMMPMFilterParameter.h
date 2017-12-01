@@ -100,9 +100,8 @@ class EMMPMFilterParameter : public FilterParameter
     EMMPMFilterParameter();
 
   private:
-
-    EMMPMFilterParameter(const EMMPMFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const EMMPMFilterParameter&); // Operator '=' Not Implemented
+    EMMPMFilterParameter(const EMMPMFilterParameter&) = delete; // Copy Constructor Not Implemented
+    void operator=(const EMMPMFilterParameter&) = delete;       // Operator '=' Not Implemented
 };
 
 #endif /* _emmpmfilterparameter_h_ */

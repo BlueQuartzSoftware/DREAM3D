@@ -58,7 +58,6 @@
 #include <qwt_plot_marker.h>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_MatrixPhaseWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -77,9 +76,7 @@ MatrixPhaseWidget::MatrixPhaseWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MatrixPhaseWidget::~MatrixPhaseWidget()
-{
-}
+MatrixPhaseWidget::~MatrixPhaseWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

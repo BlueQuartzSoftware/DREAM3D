@@ -42,7 +42,7 @@
 
 #include "StatsGenerator/Widgets/Delegates/SGPowerLawItemDelegate.h"
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_SGPowerLawTableModel.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -57,9 +57,7 @@ SGPowerLawTableModel::SGPowerLawTableModel(QObject* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGPowerLawTableModel::~SGPowerLawTableModel()
-{
-}
+SGPowerLawTableModel::~SGPowerLawTableModel() = default;
 
 // -----------------------------------------------------------------------------
 //

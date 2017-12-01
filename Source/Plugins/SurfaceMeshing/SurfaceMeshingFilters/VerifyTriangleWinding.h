@@ -157,8 +157,8 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
 
     bool m_DoNodeFaceConnectivityFilter;
 
-    VerifyTriangleWinding(const VerifyTriangleWinding&); // Copy Constructor Not Implemented
-    void operator=(const VerifyTriangleWinding&); // Operator '=' Not Implemented
+    VerifyTriangleWinding(const VerifyTriangleWinding&) = delete; // Copy Constructor Not Implemented
+    void operator=(const VerifyTriangleWinding&) = delete;        // Operator '=' Not Implemented
 };
 
 #endif /* _VerifyTriangleWinding_H_ */

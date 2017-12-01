@@ -45,7 +45,6 @@
 #include "ImageIO/ImageIOVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_ImageIOPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -64,9 +63,7 @@ ImageIOPlugin::ImageIOPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImageIOPlugin::~ImageIOPlugin()
-{
-}
+ImageIOPlugin::~ImageIOPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

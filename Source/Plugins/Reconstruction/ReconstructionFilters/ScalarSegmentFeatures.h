@@ -194,7 +194,7 @@ private:
    */
   void updateFeatureInstancePointers();
 
-  ScalarSegmentFeatures(const ScalarSegmentFeatures&); // Copy Constructor Not Implemented
+  ScalarSegmentFeatures(const ScalarSegmentFeatures&) = delete; // Copy Constructor Not Implemented
   void operator=(const ScalarSegmentFeatures&);        // Operator '=' Not Implemented
 };
 

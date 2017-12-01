@@ -89,9 +89,8 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
     MorphFilter();
 
   private:
-    MorphFilter(const MorphFilter&); // Copy Constructor Not Implemented
-    void operator=(const MorphFilter&); // Operator '=' Not Implemented
-
+    MorphFilter(const MorphFilter&) = delete;    // Copy Constructor Not Implemented
+    void operator=(const MorphFilter&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _MORPHFILT_H_ */

@@ -49,8 +49,6 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-#include "moc_RegularGridSampleSurfaceMesh.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -78,9 +76,7 @@ RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RegularGridSampleSurfaceMesh::~RegularGridSampleSurfaceMesh()
-{
-}
+RegularGridSampleSurfaceMesh::~RegularGridSampleSurfaceMesh() = default;
 
 // -----------------------------------------------------------------------------
 //

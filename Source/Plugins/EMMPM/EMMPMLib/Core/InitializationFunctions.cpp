@@ -59,9 +59,7 @@ InitializationFunction::InitializationFunction()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InitializationFunction::~InitializationFunction()
-{
-}
+InitializationFunction::~InitializationFunction() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -80,9 +78,7 @@ BasicInitialization::BasicInitialization()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BasicInitialization::~BasicInitialization()
-{
-}
+BasicInitialization::~BasicInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -155,9 +151,7 @@ UserDefinedAreasInitialization::UserDefinedAreasInitialization()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UserDefinedAreasInitialization::~UserDefinedAreasInitialization()
-{
-}
+UserDefinedAreasInitialization::~UserDefinedAreasInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -219,9 +213,7 @@ XtArrayInitialization::XtArrayInitialization()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-XtArrayInitialization::~XtArrayInitialization()
-{
-}
+XtArrayInitialization::~XtArrayInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -258,9 +250,7 @@ GradientVariablesInitialization::GradientVariablesInitialization()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GradientVariablesInitialization::~GradientVariablesInitialization()
-{
-}
+GradientVariablesInitialization::~GradientVariablesInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -373,9 +363,7 @@ CurvatureInitialization::CurvatureInitialization()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CurvatureInitialization::~CurvatureInitialization()
-{
-}
+CurvatureInitialization::~CurvatureInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //

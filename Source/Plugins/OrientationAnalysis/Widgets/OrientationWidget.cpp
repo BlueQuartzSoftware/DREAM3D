@@ -47,9 +47,7 @@ OrientationWidget::OrientationWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationWidget::~OrientationWidget()
-{
-}
+OrientationWidget::~OrientationWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

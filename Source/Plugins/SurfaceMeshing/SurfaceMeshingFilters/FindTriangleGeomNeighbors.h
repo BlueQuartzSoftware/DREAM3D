@@ -161,7 +161,7 @@ private:
 
   NeighborList<int32_t>::WeakPointer m_NeighborList;
 
-  FindTriangleGeomNeighbors(const FindTriangleGeomNeighbors&); // Copy Constructor Not Implemented
+  FindTriangleGeomNeighbors(const FindTriangleGeomNeighbors&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindTriangleGeomNeighbors&);            // Operator '=' Not Implemented
 };
 

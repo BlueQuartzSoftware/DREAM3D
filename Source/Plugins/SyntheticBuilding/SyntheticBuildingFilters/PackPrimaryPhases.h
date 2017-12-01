@@ -498,7 +498,7 @@ private:
    */
   void updateFeatureInstancePointers();
 
-  PackPrimaryPhases(const PackPrimaryPhases&); // Copy Constructor Not Implemented
+  PackPrimaryPhases(const PackPrimaryPhases&) = delete; // Copy Constructor Not Implemented
   void operator=(const PackPrimaryPhases&);    // Operator '=' Not Implemented
 };
 

@@ -132,7 +132,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleAreas)
 
-  TriangleAreaFilter(const TriangleAreaFilter&); // Copy Constructor Not Implemented
+  TriangleAreaFilter(const TriangleAreaFilter&) = delete; // Copy Constructor Not Implemented
   void operator=(const TriangleAreaFilter&);     // Operator '=' Not Implemented
 };
 

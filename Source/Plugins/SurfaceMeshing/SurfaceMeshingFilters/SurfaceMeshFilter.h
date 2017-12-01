@@ -84,7 +84,7 @@ protected:
   SurfaceMeshFilter();
 
 private:
-  SurfaceMeshFilter(const SurfaceMeshFilter&); // Copy Constructor Not Implemented
+  SurfaceMeshFilter(const SurfaceMeshFilter&) = delete; // Copy Constructor Not Implemented
   void operator=(const SurfaceMeshFilter&);    // Operator '=' Not Implemented
 };
 

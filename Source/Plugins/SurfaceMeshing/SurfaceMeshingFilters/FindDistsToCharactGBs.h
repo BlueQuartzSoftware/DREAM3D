@@ -175,7 +175,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(double, DistToSymmetric)
   DEFINE_DATAARRAY_VARIABLE(double, DistTo180Tilt)
 
-  FindDistsToCharactGBs(const FindDistsToCharactGBs&); // Copy Constructor Not Implemented
+  FindDistsToCharactGBs(const FindDistsToCharactGBs&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindDistsToCharactGBs&);        // Operator '=' Not Implemented
 };
 

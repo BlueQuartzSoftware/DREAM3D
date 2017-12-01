@@ -239,7 +239,7 @@ private:
   EMMPM_Data::Pointer m_Data;
 
   EMMPMFilter(const EMMPMFilter&);    // Copy Constructor Not Implemented
-  void operator=(const EMMPMFilter&); // Operator '=' Not Implemented
+  void operator=(const EMMPMFilter&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _EMMPMFilter_H_ */

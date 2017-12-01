@@ -56,9 +56,6 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_GroupMicroTextureRegions.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -97,9 +94,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GroupMicroTextureRegions::~GroupMicroTextureRegions()
-{
-}
+GroupMicroTextureRegions::~GroupMicroTextureRegions() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -77,9 +77,7 @@ ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertHexGridToSquareGridWidget::~ConvertHexGridToSquareGridWidget()
-{
-}
+ConvertHexGridToSquareGridWidget::~ConvertHexGridToSquareGridWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

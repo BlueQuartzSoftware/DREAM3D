@@ -227,7 +227,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
-  WritePoleFigure(const WritePoleFigure&); // Copy Constructor Not Implemented
+  WritePoleFigure(const WritePoleFigure&) = delete; // Copy Constructor Not Implemented
   void operator=(const WritePoleFigure&);  // Operator '=' Not Implemented
 };
 

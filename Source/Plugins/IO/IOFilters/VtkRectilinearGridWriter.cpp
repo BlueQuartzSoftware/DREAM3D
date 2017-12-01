@@ -208,9 +208,6 @@ template <typename T> void WriteDataArray(AbstractFilter* filter, FILE* f, IData
 }
 }
 
-// Include the MOC generated file for this class
-#include "moc_VtkRectilinearGridWriter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -225,9 +222,7 @@ VtkRectilinearGridWriter::VtkRectilinearGridWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VtkRectilinearGridWriter::~VtkRectilinearGridWriter()
-{
-}
+VtkRectilinearGridWriter::~VtkRectilinearGridWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

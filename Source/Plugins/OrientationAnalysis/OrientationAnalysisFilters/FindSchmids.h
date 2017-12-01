@@ -203,7 +203,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, SlipSystems)
 
   FindSchmids(const FindSchmids&);    // Copy Constructor Not Implemented
-  void operator=(const FindSchmids&); // Operator '=' Not Implemented
+  void operator=(const FindSchmids&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* FindSchmids_H_ */

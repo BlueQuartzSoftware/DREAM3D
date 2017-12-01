@@ -210,7 +210,7 @@ protected:
   void readArray(const QJsonObject& jsonRoot, size_t numTuples);
 
 private:
-  StatsGeneratorFilter(const StatsGeneratorFilter&); // Copy Constructor Not Implemented
+  StatsGeneratorFilter(const StatsGeneratorFilter&) = delete; // Copy Constructor Not Implemented
   void operator=(const StatsGeneratorFilter&);       // Operator '=' Not Implemented
 };
 

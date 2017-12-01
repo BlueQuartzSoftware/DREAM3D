@@ -32,9 +32,6 @@
 #include "StatsGenerator/Widgets/Presets/PrimaryRecrystallizedPreset.h"
 #include "StatsGenerator/Widgets/Presets/PrimaryRolledPreset.h"
 
-// Include the MOC generated file for this class
-#include "moc_GeneratePrimaryStatsData.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -63,9 +60,7 @@ GeneratePrimaryStatsData::GeneratePrimaryStatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GeneratePrimaryStatsData::~GeneratePrimaryStatsData()
-{
-}
+GeneratePrimaryStatsData::~GeneratePrimaryStatsData() = default;
 
 // -----------------------------------------------------------------------------
 //

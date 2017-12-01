@@ -52,9 +52,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindFeatureNeighborCAxisMisalignments.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -83,9 +80,7 @@ FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureNeighborCAxisMisalignments::~FindFeatureNeighborCAxisMisalignments()
-{
-}
+FindFeatureNeighborCAxisMisalignments::~FindFeatureNeighborCAxisMisalignments() = default;
 
 // -----------------------------------------------------------------------------
 //

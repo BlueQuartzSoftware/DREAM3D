@@ -48,8 +48,6 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
-#include "moc_QuickSurfaceMesh.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -73,9 +71,7 @@ QuickSurfaceMesh::QuickSurfaceMesh()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QuickSurfaceMesh::~QuickSurfaceMesh()
-{
-}
+QuickSurfaceMesh::~QuickSurfaceMesh() = default;
 
 // -----------------------------------------------------------------------------
 //

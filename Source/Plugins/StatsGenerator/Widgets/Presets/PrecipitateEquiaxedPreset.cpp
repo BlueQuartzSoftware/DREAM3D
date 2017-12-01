@@ -49,9 +49,7 @@ PrecipitateEquiaxedPreset::PrecipitateEquiaxedPreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrecipitateEquiaxedPreset::~PrecipitateEquiaxedPreset()
-{
-}
+PrecipitateEquiaxedPreset::~PrecipitateEquiaxedPreset() = default;
 
 // -----------------------------------------------------------------------------
 //

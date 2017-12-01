@@ -63,8 +63,8 @@ class EulerWidget : public OrientationWidget, private Ui::EulerWidget
     QVector<double> toDegrees(QVector<double> data);
     QVector<double> toRadians(QVector<double> data);
 
-    EulerWidget(const EulerWidget&); // Copy Constructor Not Implemented
-    void operator=(const EulerWidget&); // Operator '=' Not Implemented
+    EulerWidget(const EulerWidget&) = delete;    // Copy Constructor Not Implemented
+    void operator=(const EulerWidget&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

@@ -42,9 +42,6 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_SegmentFeatures.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -57,9 +54,7 @@ SegmentFeatures::SegmentFeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SegmentFeatures::~SegmentFeatures()
-{
-}
+SegmentFeatures::~SegmentFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

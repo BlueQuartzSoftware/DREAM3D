@@ -156,7 +156,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, Quats)
   DEFINE_DATAARRAY_VARIABLE(float, CellCoordinates)
 
-  Stereographic3D(const Stereographic3D&); // Copy Constructor Not Implemented
+  Stereographic3D(const Stereographic3D&) = delete; // Copy Constructor Not Implemented
   void operator=(const Stereographic3D&);  // Operator '=' Not Implemented
 };
 

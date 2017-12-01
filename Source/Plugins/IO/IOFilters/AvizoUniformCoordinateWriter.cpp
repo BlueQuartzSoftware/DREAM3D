@@ -51,9 +51,6 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-// Include the MOC generated file for this class
-#include "moc_AvizoUniformCoordinateWriter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -72,9 +69,7 @@ AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AvizoUniformCoordinateWriter::~AvizoUniformCoordinateWriter()
-{
-}
+AvizoUniformCoordinateWriter::~AvizoUniformCoordinateWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

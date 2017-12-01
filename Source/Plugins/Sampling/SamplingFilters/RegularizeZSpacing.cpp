@@ -48,9 +48,6 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_RegularizeZSpacing.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -66,9 +63,7 @@ RegularizeZSpacing::RegularizeZSpacing()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RegularizeZSpacing::~RegularizeZSpacing()
-{
-}
+RegularizeZSpacing::~RegularizeZSpacing() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -166,8 +166,8 @@ class ReconstructionPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    ReconstructionPlugin(const ReconstructionPlugin&); // Copy Constructor Not Implemented
-    void operator=(const ReconstructionPlugin&); // Operator '=' Not Implemented
+    ReconstructionPlugin(const ReconstructionPlugin&) = delete; // Copy Constructor Not Implemented
+    void operator=(const ReconstructionPlugin&) = delete;       // Operator '=' Not Implemented
 };
 
 #endif /* _Reconstruction_H_ */

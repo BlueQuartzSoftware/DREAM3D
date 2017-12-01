@@ -164,7 +164,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
   DEFINE_DATAARRAY_VARIABLE(ShapeType::EnumType, ShapeTypes)
 
-  EstablishShapeTypes(const EstablishShapeTypes&); // Copy Constructor Not Implemented
+  EstablishShapeTypes(const EstablishShapeTypes&) = delete; // Copy Constructor Not Implemented
   void operator=(const EstablishShapeTypes&);      // Operator '=' Not Implemented
 };
 

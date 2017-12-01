@@ -84,9 +84,8 @@ class StatsGeneratorUtilities
     StatsGeneratorUtilities();
 
   private:
-    StatsGeneratorUtilities(const StatsGeneratorUtilities&); // Copy Constructor Not Implemented
-    void operator=(const StatsGeneratorUtilities&); // Operator '=' Not Implemented
-
+    StatsGeneratorUtilities(const StatsGeneratorUtilities&) = delete; // Copy Constructor Not Implemented
+    void operator=(const StatsGeneratorUtilities&) = delete;          // Operator '=' Not Implemented
 };
 
 

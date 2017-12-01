@@ -45,9 +45,6 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_EstablishShapeTypes.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,9 +61,7 @@ EstablishShapeTypes::EstablishShapeTypes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EstablishShapeTypes::~EstablishShapeTypes()
-{
-}
+EstablishShapeTypes::~EstablishShapeTypes() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -47,7 +47,6 @@
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_EMsoftSO3Sampler.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -78,9 +77,7 @@ EMsoftSO3Sampler::EMsoftSO3Sampler()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EMsoftSO3Sampler::~EMsoftSO3Sampler()
-{
-}
+EMsoftSO3Sampler::~EMsoftSO3Sampler() = default;
 
 // -----------------------------------------------------------------------------
 //

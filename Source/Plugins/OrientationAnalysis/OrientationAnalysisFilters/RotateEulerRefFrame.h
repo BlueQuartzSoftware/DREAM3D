@@ -160,7 +160,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
-  RotateEulerRefFrame(const RotateEulerRefFrame&); // Copy Constructor Not Implemented
+  RotateEulerRefFrame(const RotateEulerRefFrame&) = delete; // Copy Constructor Not Implemented
   void operator=(const RotateEulerRefFrame&);      // Operator '=' Not Implemented
 };
 

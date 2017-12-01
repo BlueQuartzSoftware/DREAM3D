@@ -180,7 +180,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
-  GenerateEulerColors(const GenerateEulerColors&); // Copy Constructor Not Implemented
+  GenerateEulerColors(const GenerateEulerColors&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateEulerColors&);      // Operator '=' Not Implemented
 };
 

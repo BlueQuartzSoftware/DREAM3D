@@ -89,9 +89,6 @@ private:
   float convFactor;
 };
 
-// Include the MOC generated file for this class
-#include "moc_ChangeAngleRepresentation.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -107,9 +104,7 @@ ChangeAngleRepresentation::ChangeAngleRepresentation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChangeAngleRepresentation::~ChangeAngleRepresentation()
-{
-}
+ChangeAngleRepresentation::~ChangeAngleRepresentation() = default;
 
 // -----------------------------------------------------------------------------
 //

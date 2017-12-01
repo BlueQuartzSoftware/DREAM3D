@@ -48,9 +48,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_Stereographic3D.cpp"
-
 /**
  * @brief The GenerateCoordinatesImpl class implements a threaded algorithm that computes the IPF
  * colors for each element in a geometry
@@ -133,9 +130,7 @@ Stereographic3D::Stereographic3D()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Stereographic3D::~Stereographic3D()
-{
-}
+Stereographic3D::~Stereographic3D() = default;
 
 // -----------------------------------------------------------------------------
 //

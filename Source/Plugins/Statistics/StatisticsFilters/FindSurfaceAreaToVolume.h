@@ -162,7 +162,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(float, SurfaceAreaVolumeRatio)
 
-  FindSurfaceAreaToVolume(const FindSurfaceAreaToVolume&); // Copy Constructor Not Implemented
+  FindSurfaceAreaToVolume(const FindSurfaceAreaToVolume&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindSurfaceAreaToVolume&);          // Operator '=' Not Implemented
 };
 

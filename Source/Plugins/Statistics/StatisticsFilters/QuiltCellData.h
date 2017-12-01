@@ -182,7 +182,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, OutputArray)
 
   QuiltCellData(const QuiltCellData&);  // Copy Constructor Not Implemented
-  void operator=(const QuiltCellData&); // Operator '=' Not Implemented
+  void operator=(const QuiltCellData&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* QuiltCellData_H_ */

@@ -196,7 +196,7 @@ private:
    */
   int32_t writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
 
-  VisualizeGBCDPoleFigure(const VisualizeGBCDPoleFigure&); // Copy Constructor Not Implemented
+  VisualizeGBCDPoleFigure(const VisualizeGBCDPoleFigure&) = delete; // Copy Constructor Not Implemented
   void operator=(const VisualizeGBCDPoleFigure&);          // Operator '=' Not Implemented
 };
 

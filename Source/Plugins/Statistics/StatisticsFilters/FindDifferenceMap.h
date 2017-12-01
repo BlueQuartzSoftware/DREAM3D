@@ -131,7 +131,7 @@ private:
   DEFINE_IDATAARRAY_VARIABLE(SecondInputArray)
   DEFINE_IDATAARRAY_VARIABLE(DifferenceMap)
 
-  FindDifferenceMap(const FindDifferenceMap&); // Copy Constructor Not Implemented
+  FindDifferenceMap(const FindDifferenceMap&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindDifferenceMap&);    // Operator '=' Not Implemented
 };
 

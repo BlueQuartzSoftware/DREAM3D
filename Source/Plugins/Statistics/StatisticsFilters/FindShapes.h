@@ -217,7 +217,7 @@ private:
   double m_ScaleFactor;
 
   FindShapes(const FindShapes&);     // Copy Constructor Not Implemented
-  void operator=(const FindShapes&); // Operator '=' Not Implemented
+  void operator=(const FindShapes&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* FINDSHAPES_H_ */

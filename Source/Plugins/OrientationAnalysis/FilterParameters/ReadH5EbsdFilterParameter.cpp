@@ -49,9 +49,7 @@ ReadH5EbsdFilterParameter::ReadH5EbsdFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadH5EbsdFilterParameter::~ReadH5EbsdFilterParameter()
-{
-}
+ReadH5EbsdFilterParameter::~ReadH5EbsdFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //

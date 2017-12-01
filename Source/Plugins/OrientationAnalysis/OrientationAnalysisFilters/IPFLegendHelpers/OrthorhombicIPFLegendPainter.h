@@ -53,7 +53,7 @@ protected:
   QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
 private:
-  OrthorhombicIPFLegendPainter(const OrthorhombicIPFLegendPainter&); // Copy Constructor Not Implemented
+  OrthorhombicIPFLegendPainter(const OrthorhombicIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
   void operator=(const OrthorhombicIPFLegendPainter&);               // Operator '=' Not Implemented
 };
 

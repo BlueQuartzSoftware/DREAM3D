@@ -60,9 +60,6 @@
 #include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TrigonalIPFLegendPainter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/IPFLegendHelpers/TrigonalLowIPFLegendPainter.h"
 
-// Include the MOC generated file for this class
-#include "moc_WriteIPFStandardTriangle.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,9 +74,7 @@ WriteIPFStandardTriangle::WriteIPFStandardTriangle()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteIPFStandardTriangle::~WriteIPFStandardTriangle()
-{
-}
+WriteIPFStandardTriangle::~WriteIPFStandardTriangle() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -266,7 +266,7 @@ protected:
 private:
   AttributeMatrix::Pointer m_CurrentAttrMat;
 
-  VtkStructuredPointsReader(const VtkStructuredPointsReader&); // Copy Constructor Not Implemented
+  VtkStructuredPointsReader(const VtkStructuredPointsReader&) = delete; // Copy Constructor Not Implemented
   void operator=(const VtkStructuredPointsReader&);            // Operator '=' Not Implemented
 };
 

@@ -72,9 +72,6 @@
     notifyErrorMessage(getHumanLabel(), ss, errCond);                                                                                                                                                  \
   }
 
-// Include the MOC generated file for this class
-#include "moc_InitializeSyntheticVolume.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -110,9 +107,7 @@ InitializeSyntheticVolume::InitializeSyntheticVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InitializeSyntheticVolume::~InitializeSyntheticVolume()
-{
-}
+InitializeSyntheticVolume::~InitializeSyntheticVolume() = default;
 
 // -----------------------------------------------------------------------------
 //

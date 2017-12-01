@@ -132,7 +132,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleDihedralAngles)
 
-  TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&); // Copy Constructor Not Implemented
+  TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&) = delete; // Copy Constructor Not Implemented
   void operator=(const TriangleDihedralAngleFilter&);              // Operator '=' Not Implemented
 };
 

@@ -45,9 +45,6 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindVolFractions.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,9 +61,7 @@ FindVolFractions::FindVolFractions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindVolFractions::~FindVolFractions()
-{
-}
+FindVolFractions::~FindVolFractions() = default;
 
 // -----------------------------------------------------------------------------
 //

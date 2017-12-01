@@ -183,8 +183,8 @@ class OrientationLib_EXPORT CubicLowOps : public LaueOps
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
   private:
-    CubicLowOps(const CubicLowOps&); // Copy Constructor Not Implemented
-    void operator=(const CubicLowOps&); // Operator '=' Not Implemented
+    CubicLowOps(const CubicLowOps&) = delete;    // Copy Constructor Not Implemented
+    void operator=(const CubicLowOps&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* CubicLowOPS_H_ */

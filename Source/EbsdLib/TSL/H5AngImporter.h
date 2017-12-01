@@ -131,8 +131,8 @@ class EbsdLib_EXPORT H5AngImporter : public EbsdImporter
     float yRes;
     int   m_FileVersion;
 
-    H5AngImporter(const H5AngImporter&); // Copy Constructor Not Implemented
-    void operator=(const H5AngImporter&); // Operator '=' Not Implemented
+    H5AngImporter(const H5AngImporter&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const H5AngImporter&) = delete; // Operator '=' Not Implemented
 };
 
 

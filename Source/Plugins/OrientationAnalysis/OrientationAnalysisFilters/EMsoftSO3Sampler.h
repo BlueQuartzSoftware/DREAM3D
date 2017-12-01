@@ -234,7 +234,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(float, EulerAngles)
 
-  EMsoftSO3Sampler(const EMsoftSO3Sampler&); // Copy Constructor Not Implemented
+  EMsoftSO3Sampler(const EMsoftSO3Sampler&) = delete; // Copy Constructor Not Implemented
   void operator=(const EMsoftSO3Sampler&);   // Operator '=' Not Implemented
 };
 

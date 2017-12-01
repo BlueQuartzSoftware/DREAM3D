@@ -63,7 +63,7 @@ public:
   void paintSymmetryDirection(const QString& text, QFontMetrics* metrics, QPainter* painter, int x, int y);
 
 private:
-  IPFLegendPainter(const IPFLegendPainter&); // Copy Constructor Not Implemented
+  IPFLegendPainter(const IPFLegendPainter&) = delete; // Copy Constructor Not Implemented
   void operator=(const IPFLegendPainter&);    // Operator '=' Not Implemented
 };
 

@@ -164,7 +164,7 @@ protected:
   void initialize();
 
 private:
-  ConvertOrientations(const ConvertOrientations&); // Copy Constructor Not Implemented
+  ConvertOrientations(const ConvertOrientations&) = delete; // Copy Constructor Not Implemented
   void operator=(const ConvertOrientations&);      // Operator '=' Not Implemented
 };
 

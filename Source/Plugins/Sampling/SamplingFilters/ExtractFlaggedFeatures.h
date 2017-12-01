@@ -165,7 +165,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   DEFINE_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
 
-  ExtractFlaggedFeatures(const ExtractFlaggedFeatures&); // Copy Constructor Not Implemented
+  ExtractFlaggedFeatures(const ExtractFlaggedFeatures&) = delete; // Copy Constructor Not Implemented
   void operator=(const ExtractFlaggedFeatures&);         // Operator '=' Not Implemented
 };
 

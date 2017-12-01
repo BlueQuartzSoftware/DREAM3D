@@ -178,7 +178,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-  NeighborOrientationCorrelation(const NeighborOrientationCorrelation&); // Copy Constructor Not Implemented
+  NeighborOrientationCorrelation(const NeighborOrientationCorrelation&) = delete; // Copy Constructor Not Implemented
   void operator=(const NeighborOrientationCorrelation&);                 // Operator '=' Not Implemented
 };
 

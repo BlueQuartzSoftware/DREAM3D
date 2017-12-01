@@ -48,9 +48,6 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_LosAlamosFFTWriter.cpp"
-
 #define LLU_CAST(arg) static_cast<unsigned long long int>(arg)
 
 // -----------------------------------------------------------------------------
@@ -71,9 +68,7 @@ LosAlamosFFTWriter::LosAlamosFFTWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LosAlamosFFTWriter::~LosAlamosFFTWriter()
-{
-}
+LosAlamosFFTWriter::~LosAlamosFFTWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

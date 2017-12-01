@@ -53,7 +53,7 @@ protected:
   QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
 private:
-  MonoclinicIPFLegendPainter(const MonoclinicIPFLegendPainter&); // Copy Constructor Not Implemented
+  MonoclinicIPFLegendPainter(const MonoclinicIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
   void operator=(const MonoclinicIPFLegendPainter&);             // Operator '=' Not Implemented
 };
 

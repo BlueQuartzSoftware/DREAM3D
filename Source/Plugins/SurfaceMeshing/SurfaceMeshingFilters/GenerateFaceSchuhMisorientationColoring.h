@@ -164,8 +164,8 @@ class GenerateFaceSchuhMisorientationColoring : public SurfaceMeshFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    GenerateFaceSchuhMisorientationColoring(const GenerateFaceSchuhMisorientationColoring&); // Copy Constructor Not Implemented
-    void operator=(const GenerateFaceSchuhMisorientationColoring&); // Operator '=' Not Implemented
+    GenerateFaceSchuhMisorientationColoring(const GenerateFaceSchuhMisorientationColoring&) = delete; // Copy Constructor Not Implemented
+    void operator=(const GenerateFaceSchuhMisorientationColoring&) = delete;                          // Operator '=' Not Implemented
 };
 
 #endif /* _GenerateFaceSchuhMisorientationColoring_H_ */

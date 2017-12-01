@@ -173,7 +173,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, MicroTextureRegionFractionOccupied)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  FindMicroTextureRegions(const FindMicroTextureRegions&); // Copy Constructor Not Implemented
+  FindMicroTextureRegions(const FindMicroTextureRegions&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindMicroTextureRegions&);          // Operator '=' Not Implemented
 };
 

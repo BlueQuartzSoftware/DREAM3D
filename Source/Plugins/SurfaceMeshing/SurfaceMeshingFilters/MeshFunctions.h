@@ -70,8 +70,8 @@ class NodeFunctions
     NodeFunctions() {}
 
   private:
-    NodeFunctions(const NodeFunctions&); // Copy Constructor Not Implemented
-    void operator=(const NodeFunctions&); // Operator '=' Not Implemented
+    NodeFunctions(const NodeFunctions&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const NodeFunctions&) = delete; // Operator '=' Not Implemented
 };
 
 /**
@@ -94,8 +94,8 @@ class EdgeFunctions
     EdgeFunctions() {}
 
   private:
-    EdgeFunctions(const EdgeFunctions&); // Copy Constructor Not Implemented
-    void operator=(const EdgeFunctions&); // Operator '=' Not Implemented
+    EdgeFunctions(const EdgeFunctions&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const EdgeFunctions&) = delete; // Operator '=' Not Implemented
 };
 
 
@@ -238,9 +238,8 @@ class TriangleFunctions
     TriangleFunctions() {}
 
   private:
-    TriangleFunctions(const TriangleFunctions&); // Copy Constructor Not Implemented
-    void operator=(const TriangleFunctions&); // Operator '=' Not Implemented
-
+    TriangleFunctions(const TriangleFunctions&) = delete; // Copy Constructor Not Implemented
+    void operator=(const TriangleFunctions&) = delete;    // Operator '=' Not Implemented
 };
 
 #endif /* _MeshFunctions_H_ */

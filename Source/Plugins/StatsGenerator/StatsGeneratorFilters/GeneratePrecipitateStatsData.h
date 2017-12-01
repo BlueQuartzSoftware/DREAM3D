@@ -201,7 +201,7 @@ private:
   QString m_NumberOfBins;
   QString m_FeatureESD;
 
-  GeneratePrecipitateStatsData(const GeneratePrecipitateStatsData&); // Copy Constructor Not Implemented
+  GeneratePrecipitateStatsData(const GeneratePrecipitateStatsData&) = delete; // Copy Constructor Not Implemented
   void operator=(const GeneratePrecipitateStatsData&);               // Operator '=' Not Implemented
 };
 

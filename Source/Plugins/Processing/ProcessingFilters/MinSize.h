@@ -187,7 +187,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
 
   MinSize(const MinSize&);        // Copy Constructor Not Implemented
-  void operator=(const MinSize&); // Operator '=' Not Implemented
+  void operator=(const MinSize&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* MinSize_H_ */

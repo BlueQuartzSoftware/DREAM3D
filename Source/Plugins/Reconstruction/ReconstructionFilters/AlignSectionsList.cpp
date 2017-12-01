@@ -48,7 +48,7 @@
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
-#include "moc_AlignSectionsList.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,9 +64,7 @@ AlignSectionsList::AlignSectionsList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsList::~AlignSectionsList()
-{
-}
+AlignSectionsList::~AlignSectionsList() = default;
 
 // -----------------------------------------------------------------------------
 //

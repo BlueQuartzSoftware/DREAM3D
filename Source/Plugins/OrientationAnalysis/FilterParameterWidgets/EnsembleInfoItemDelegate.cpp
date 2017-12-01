@@ -48,7 +48,7 @@
 #include "EnsembleInfoTableModel.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-//#include "moc_EnsembleInfoItemDelegate.cpp"
+//
 
 // -----------------------------------------------------------------------------
 //
@@ -66,9 +66,7 @@ EnsembleInfoItemDelegate::EnsembleInfoItemDelegate(int numPhases, QObject* paren
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EnsembleInfoItemDelegate::~EnsembleInfoItemDelegate()
-{
-}
+EnsembleInfoItemDelegate::~EnsembleInfoItemDelegate() = default;
 
 // -----------------------------------------------------------------------------
 //

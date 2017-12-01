@@ -143,8 +143,8 @@ class SGBetaTableModel : public SGAbstractTableModel
     QVector<float> m_Beta;
     QVector<QColor> m_Colors;
 
-    SGBetaTableModel(const SGBetaTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGBetaTableModel&); // Operator '=' Not Implemented
+    SGBetaTableModel(const SGBetaTableModel&) = delete; // Copy Constructor Not Implemented
+    void operator=(const SGBetaTableModel&) = delete;   // Operator '=' Not Implemented
 };
 
 #endif /* _SG_BETA_TABLEMODEL_H_ */

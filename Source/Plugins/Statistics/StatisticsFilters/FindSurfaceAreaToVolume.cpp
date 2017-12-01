@@ -45,9 +45,6 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindSurfaceAreaToVolume.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -66,9 +63,7 @@ FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSurfaceAreaToVolume::~FindSurfaceAreaToVolume()
-{
-}
+FindSurfaceAreaToVolume::~FindSurfaceAreaToVolume() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

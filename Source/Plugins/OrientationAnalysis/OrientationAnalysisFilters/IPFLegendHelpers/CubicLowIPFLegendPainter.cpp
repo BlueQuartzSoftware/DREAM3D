@@ -46,9 +46,7 @@ CubicLowIPFLegendPainter::CubicLowIPFLegendPainter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CubicLowIPFLegendPainter::~CubicLowIPFLegendPainter()
-{
-}
+CubicLowIPFLegendPainter::~CubicLowIPFLegendPainter() = default;
 
 // -----------------------------------------------------------------------------
 //

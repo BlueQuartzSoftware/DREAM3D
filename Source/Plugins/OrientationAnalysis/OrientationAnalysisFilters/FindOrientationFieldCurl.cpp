@@ -111,9 +111,6 @@ private:
   QVector<LaueOps::Pointer> m_OrientationOps;
 };
 
-// Include the MOC generated file for this class
-#include "moc_FindOrientationFieldCurl.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -140,9 +137,7 @@ FindOrientationFieldCurl::FindOrientationFieldCurl()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindOrientationFieldCurl::~FindOrientationFieldCurl()
-{
-}
+FindOrientationFieldCurl::~FindOrientationFieldCurl() = default;
 
 // -----------------------------------------------------------------------------
 //

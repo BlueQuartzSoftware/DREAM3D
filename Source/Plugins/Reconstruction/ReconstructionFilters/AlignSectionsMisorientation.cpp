@@ -49,7 +49,7 @@
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
-#include "moc_AlignSectionsMisorientation.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,9 +77,7 @@ AlignSectionsMisorientation::AlignSectionsMisorientation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsMisorientation::~AlignSectionsMisorientation()
-{
-}
+AlignSectionsMisorientation::~AlignSectionsMisorientation() = default;
 
 // -----------------------------------------------------------------------------
 //

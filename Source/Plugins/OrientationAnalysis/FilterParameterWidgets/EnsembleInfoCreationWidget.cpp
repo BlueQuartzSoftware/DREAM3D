@@ -46,7 +46,7 @@
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
 
 // Include the MOC generated file for this class
-//#include "moc_EnsembleInfoCreationWidget.cpp"
+//
 
 // -----------------------------------------------------------------------------
 //
@@ -67,9 +67,7 @@ EnsembleInfoCreationWidget::EnsembleInfoCreationWidget(FilterParameter* paramete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EnsembleInfoCreationWidget::~EnsembleInfoCreationWidget()
-{
-}
+EnsembleInfoCreationWidget::~EnsembleInfoCreationWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

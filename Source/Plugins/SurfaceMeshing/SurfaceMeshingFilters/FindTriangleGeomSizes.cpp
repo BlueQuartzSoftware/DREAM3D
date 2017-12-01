@@ -49,9 +49,6 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindTriangleGeomSizes.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -70,9 +67,7 @@ FindTriangleGeomSizes::FindTriangleGeomSizes() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTriangleGeomSizes::~FindTriangleGeomSizes()
-{
-}
+FindTriangleGeomSizes::~FindTriangleGeomSizes() = default;
 
 // -----------------------------------------------------------------------------
 //

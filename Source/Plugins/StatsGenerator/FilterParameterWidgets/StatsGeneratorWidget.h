@@ -132,8 +132,8 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     StatsGeneratorFilter*          m_Filter;
 
     QString m_OpenDialogLastFilePath; // Must be last in the list
-    StatsGeneratorWidget(const StatsGeneratorWidget&); // Copy Constructor Not Implemented
-    void operator=(const StatsGeneratorWidget&); // Operator '=' Not Implemented
+    StatsGeneratorWidget(const StatsGeneratorWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const StatsGeneratorWidget&) = delete;       // Operator '=' Not Implemented
 };
 
 #endif /* _statsGeneratorWidget_h_ */

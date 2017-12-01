@@ -54,9 +54,7 @@ StatsGeneratorUtilities::StatsGeneratorUtilities()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorUtilities::~StatsGeneratorUtilities()
-{
-}
+StatsGeneratorUtilities::~StatsGeneratorUtilities() = default;
 
 // -----------------------------------------------------------------------------
 //

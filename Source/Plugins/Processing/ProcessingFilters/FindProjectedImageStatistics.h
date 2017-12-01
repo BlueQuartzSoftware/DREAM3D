@@ -177,7 +177,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageStd)
   DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageVar)
 
-  FindProjectedImageStatistics(const FindProjectedImageStatistics&); // Copy Constructor Not Implemented
+  FindProjectedImageStatistics(const FindProjectedImageStatistics&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindProjectedImageStatistics&);               // Operator '=' Not Implemented
 };
 

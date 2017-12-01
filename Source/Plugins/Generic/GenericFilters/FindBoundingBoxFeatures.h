@@ -178,7 +178,7 @@ private:
    */
   void find_boundingboxfeatures2D();
 
-  FindBoundingBoxFeatures(const FindBoundingBoxFeatures&); // Copy Constructor Not Implemented
+  FindBoundingBoxFeatures(const FindBoundingBoxFeatures&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindBoundingBoxFeatures&);          // Operator '=' Not Implemented
 };
 

@@ -114,7 +114,7 @@ private:
   DynamicTableData getDynamicTableData(QTableWidget* tableWidget);
 
   EMMPMWidget(const EMMPMWidget&);    // Copy Constructor Not Implemented
-  void operator=(const EMMPMWidget&); // Operator '=' Not Implemented
+  void operator=(const EMMPMWidget&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _emmpmwidget_h_ */

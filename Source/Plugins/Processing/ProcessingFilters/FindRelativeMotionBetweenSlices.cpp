@@ -124,9 +124,6 @@ private:
   size_t m_NumSearchPoints;
 };
 
-// Include the MOC generated file for this class
-#include "moc_FindRelativeMotionBetweenSlices.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -149,9 +146,7 @@ FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindRelativeMotionBetweenSlices::~FindRelativeMotionBetweenSlices()
-{
-}
+FindRelativeMotionBetweenSlices::~FindRelativeMotionBetweenSlices() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -193,7 +193,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  AvizoRectilinearCoordinateWriter(const AvizoRectilinearCoordinateWriter&); // Copy Constructor Not Implemented
+  AvizoRectilinearCoordinateWriter(const AvizoRectilinearCoordinateWriter&) = delete; // Copy Constructor Not Implemented
   void operator=(const AvizoRectilinearCoordinateWriter&);                   // Operator '=' Not Implemented
 };
 

@@ -46,9 +46,6 @@
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
-// Include the MOC generated file for this class
-#include "moc_ConvertOrientations.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -63,9 +60,7 @@ ConvertOrientations::ConvertOrientations()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertOrientations::~ConvertOrientations()
-{
-}
+ConvertOrientations::~ConvertOrientations() = default;
 
 // -----------------------------------------------------------------------------
 //

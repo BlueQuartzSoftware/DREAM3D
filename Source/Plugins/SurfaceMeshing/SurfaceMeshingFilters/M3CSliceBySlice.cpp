@@ -296,9 +296,6 @@ private:
   void operator=(const FeatureChecker&); // Operator '=' Not Implemented
 };
 
-// Include the MOC generated file for this class
-#include "moc_M3CSliceBySlice.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -320,9 +317,7 @@ M3CSliceBySlice::M3CSliceBySlice()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-M3CSliceBySlice::~M3CSliceBySlice()
-{
-}
+M3CSliceBySlice::~M3CSliceBySlice() = default;
 
 // -----------------------------------------------------------------------------
 //

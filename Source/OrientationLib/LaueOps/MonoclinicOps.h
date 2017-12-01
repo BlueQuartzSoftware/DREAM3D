@@ -182,8 +182,8 @@ class OrientationLib_EXPORT MonoclinicOps : public LaueOps
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
   private:
-    MonoclinicOps(const MonoclinicOps&); // Copy Constructor Not Implemented
-    void operator=(const MonoclinicOps&); // Operator '=' Not Implemented
+    MonoclinicOps(const MonoclinicOps&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const MonoclinicOps&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* MonoclinicOPS_H_ */

@@ -169,7 +169,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
   DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
 
-  GBCDTriangleDumper(const GBCDTriangleDumper&); // Copy Constructor Not Implemented
+  GBCDTriangleDumper(const GBCDTriangleDumper&) = delete; // Copy Constructor Not Implemented
   void operator=(const GBCDTriangleDumper&);     // Operator '=' Not Implemented
 };
 

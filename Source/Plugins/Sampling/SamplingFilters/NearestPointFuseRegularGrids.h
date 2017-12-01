@@ -154,7 +154,7 @@ protected:
   void initialize();
 
 private:
-  NearestPointFuseRegularGrids(const NearestPointFuseRegularGrids&); // Copy Constructor Not Implemented
+  NearestPointFuseRegularGrids(const NearestPointFuseRegularGrids&) = delete; // Copy Constructor Not Implemented
   void operator=(const NearestPointFuseRegularGrids&);               // Operator '=' Not Implemented
 };
 

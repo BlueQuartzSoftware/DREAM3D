@@ -46,9 +46,7 @@ TexturePreset::TexturePreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TexturePreset::~TexturePreset()
-{
-}
+TexturePreset::~TexturePreset() = default;
 
 #define ADD_NEW_TEXTURE(name, xtal, e1, e2, e3)\
   textures.push_back(TexturePreset::New(xtal, name, e1, e2, e3));

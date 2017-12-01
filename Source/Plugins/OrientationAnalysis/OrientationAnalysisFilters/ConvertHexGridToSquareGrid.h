@@ -190,7 +190,7 @@ private:
    */
   QString modifyAngHeaderLine(QString& buf);
 
-  ConvertHexGridToSquareGrid(const ConvertHexGridToSquareGrid&); // Copy Constructor Not Implemented
+  ConvertHexGridToSquareGrid(const ConvertHexGridToSquareGrid&) = delete; // Copy Constructor Not Implemented
   void operator=(const ConvertHexGridToSquareGrid&);             // Operator '=' Not Implemented
 };
 

@@ -220,7 +220,7 @@ private:
    */
   void updateFeatureInstancePointers();
 
-  EstablishMatrixPhase(const EstablishMatrixPhase&); // Copy Constructor Not Implemented
+  EstablishMatrixPhase(const EstablishMatrixPhase&) = delete; // Copy Constructor Not Implemented
   void operator=(const EstablishMatrixPhase&);       // Operator '=' Not Implemented
 };
 

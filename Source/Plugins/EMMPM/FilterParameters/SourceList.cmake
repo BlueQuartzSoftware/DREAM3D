@@ -40,7 +40,7 @@ set(${PLUGIN_NAME}_Parameters_Moc_HDRS
 
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-QT5_WRAP_CPP( ${PLUGIN_NAME}_Parameters_Generated_MOC_SRCS ${${PLUGIN_NAME}_Parameters_Moc_HDRS})
+# QT5_WRAP_CPP( ${PLUGIN_NAME}_Parameters_Generated_MOC_SRCS ${${PLUGIN_NAME}_Parameters_Moc_HDRS})
 set_source_files_properties( ${${PLUGIN_NAME}_Parameters_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 set_source_files_properties( ${${PLUGIN_NAME}_Parameters_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 

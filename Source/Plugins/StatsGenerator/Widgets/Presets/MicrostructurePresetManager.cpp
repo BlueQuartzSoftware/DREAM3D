@@ -46,9 +46,7 @@ MicrostructurePresetManager::MicrostructurePresetManager()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MicrostructurePresetManager::~MicrostructurePresetManager()
-{
-}
+MicrostructurePresetManager::~MicrostructurePresetManager() = default;
 
 // -----------------------------------------------------------------------------
 //

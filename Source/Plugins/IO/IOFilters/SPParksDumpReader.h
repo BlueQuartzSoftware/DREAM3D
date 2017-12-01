@@ -198,7 +198,7 @@ private:
   QFile m_InStream;
   QMap<QString, DataParser::Pointer> m_NamePointerMap;
 
-  SPParksDumpReader(const SPParksDumpReader&); // Copy Constructor Not Implemented
+  SPParksDumpReader(const SPParksDumpReader&) = delete; // Copy Constructor Not Implemented
   void operator=(const SPParksDumpReader&);    // Operator '=' Not Implemented
 };
 

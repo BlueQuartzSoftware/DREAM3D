@@ -72,9 +72,6 @@
 
 #define WRITE_EULERS_TEXT_FILE 1
 
-// Include the MOC generated file for this class
-#include "moc_WriteStatsGenOdfAngleFile.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -96,9 +93,7 @@ WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WriteStatsGenOdfAngleFile::~WriteStatsGenOdfAngleFile()
-{
-}
+WriteStatsGenOdfAngleFile::~WriteStatsGenOdfAngleFile() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -45,9 +45,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindEllipsoidError.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,9 +74,7 @@ FindEllipsoidError::FindEllipsoidError()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindEllipsoidError::~FindEllipsoidError()
-{
-}
+FindEllipsoidError::~FindEllipsoidError() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

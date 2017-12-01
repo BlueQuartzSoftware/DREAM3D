@@ -231,9 +231,6 @@ public:
 private:
 };
 
-// Include the MOC generated file for this class
-#include "moc_PackPrimaryPhases.cpp"
-
 const QString PrimaryPhaseSyntheticShapeParametersName("Synthetic Shape Parameters (Primary Phase)");
 
 // -----------------------------------------------------------------------------
@@ -295,9 +292,7 @@ PackPrimaryPhases::PackPrimaryPhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PackPrimaryPhases::~PackPrimaryPhases()
-{
-}
+PackPrimaryPhases::~PackPrimaryPhases() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -47,9 +47,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindBoundaryStrengths.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -84,9 +81,7 @@ FindBoundaryStrengths::FindBoundaryStrengths()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundaryStrengths::~FindBoundaryStrengths()
-{
-}
+FindBoundaryStrengths::~FindBoundaryStrengths() = default;
 
 // -----------------------------------------------------------------------------
 //

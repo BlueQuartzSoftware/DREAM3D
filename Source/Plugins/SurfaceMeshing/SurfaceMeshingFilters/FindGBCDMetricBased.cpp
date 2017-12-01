@@ -69,9 +69,6 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-// Include the MOC generated file for this class
-#include "moc_FindGBCDMetricBased.cpp"
-
 const float FindGBCDMetricBased::k_ResolutionChoices[FindGBCDMetricBased::k_NumberResolutionChoices][2] = {{3.0f, 7.0f}, {5.0f, 5.0f}, {5.0f, 7.0f}, {5.0f, 8.0f},
                                                                                                            {6.0f, 7.0f}, {7.0f, 7.0f}, {8.0f, 8.0f}}; // { for misorient., for planes }
 
@@ -447,9 +444,7 @@ FindGBCDMetricBased::FindGBCDMetricBased()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGBCDMetricBased::~FindGBCDMetricBased()
-{
-}
+FindGBCDMetricBased::~FindGBCDMetricBased() = default;
 
 // -----------------------------------------------------------------------------
 //

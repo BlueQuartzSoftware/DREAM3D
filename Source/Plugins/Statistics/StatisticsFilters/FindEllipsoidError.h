@@ -198,7 +198,7 @@ private:
 
   double m_ScaleFator;
 
-  FindEllipsoidError(const FindEllipsoidError&); // Copy Constructor Not Implemented
+  FindEllipsoidError(const FindEllipsoidError&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindEllipsoidError&);     // Operator '=' Not Implemented
 };
 

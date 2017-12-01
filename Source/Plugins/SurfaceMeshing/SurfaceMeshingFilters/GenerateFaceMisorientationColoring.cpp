@@ -162,9 +162,6 @@ public:
 #endif
 };
 
-// Include the MOC generated file for this class
-#include "moc_GenerateFaceMisorientationColoring.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -187,9 +184,7 @@ GenerateFaceMisorientationColoring::GenerateFaceMisorientationColoring()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateFaceMisorientationColoring::~GenerateFaceMisorientationColoring()
-{
-}
+GenerateFaceMisorientationColoring::~GenerateFaceMisorientationColoring() = default;
 
 // -----------------------------------------------------------------------------
 //

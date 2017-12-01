@@ -84,7 +84,6 @@
   qDebug() << "  Line: " << __LINE__ << "\n";
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_StatsGenPlotWidget.cpp"
 
 namespace UIA
 {
@@ -104,7 +103,6 @@ StatsGenPlotWidget::StatsGenPlotWidget(QWidget* parent)
 , m_PhaseIndex(-1)
 , m_DistributionType(SIMPL::DistributionType::UnknownDistributionType)
 , m_TableModel(nullptr)
-, m_grid(nullptr)
 , m_StatsType(SIMPL::StatisticsType::UnknownStatisticsGroup)
 , m_UserUpdatedData(false)
 , m_TableViewWidget(nullptr)

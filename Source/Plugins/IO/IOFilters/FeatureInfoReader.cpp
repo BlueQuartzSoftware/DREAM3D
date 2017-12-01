@@ -52,9 +52,6 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FeatureInfoReader.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -82,9 +79,7 @@ FeatureInfoReader::FeatureInfoReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FeatureInfoReader::~FeatureInfoReader()
-{
-}
+FeatureInfoReader::~FeatureInfoReader() = default;
 
 // -----------------------------------------------------------------------------
 //

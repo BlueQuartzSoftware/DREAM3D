@@ -57,7 +57,7 @@ set(OrientationLib_Utilities_SRCS
   ${OrientationLib_SOURCE_DIR}/Utilities/ComputeStereographicProjection.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/LambertUtilities.cpp
 )
-QT5_WRAP_CPP( OrientationLib_Generated_MOC_SRCS ${OrientationLib_Utilities_MOC_HDRS} )
+# QT5_WRAP_CPP( OrientationLib_Generated_MOC_SRCS ${OrientationLib_Utilities_MOC_HDRS} )
 set_source_files_properties( ${OrientationLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 set_source_files_properties( ${OrientationLib_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 

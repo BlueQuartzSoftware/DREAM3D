@@ -193,7 +193,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  AvizoUniformCoordinateWriter(const AvizoUniformCoordinateWriter&); // Copy Constructor Not Implemented
+  AvizoUniformCoordinateWriter(const AvizoUniformCoordinateWriter&) = delete; // Copy Constructor Not Implemented
   void operator=(const AvizoUniformCoordinateWriter&);               // Operator '=' Not Implemented
 };
 

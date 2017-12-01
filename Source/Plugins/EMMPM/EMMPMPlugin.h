@@ -136,8 +136,8 @@ class EMMPMPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    EMMPMPlugin(const EMMPMPlugin&); // Copy Constructor Not Implemented
-    void operator=(const EMMPMPlugin&); // Operator '=' Not Implemented
+    EMMPMPlugin(const EMMPMPlugin&) = delete;    // Copy Constructor Not Implemented
+    void operator=(const EMMPMPlugin&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _EMMPM_H_ */

@@ -167,8 +167,8 @@ class SyntheticBuildingPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    SyntheticBuildingPlugin(const SyntheticBuildingPlugin&); // Copy Constructor Not Implemented
-    void operator=(const SyntheticBuildingPlugin&); // Operator '=' Not Implemented
+    SyntheticBuildingPlugin(const SyntheticBuildingPlugin&) = delete; // Copy Constructor Not Implemented
+    void operator=(const SyntheticBuildingPlugin&) = delete;          // Operator '=' Not Implemented
 };
 
 #endif /* _SyntheticBuilding_H_ */

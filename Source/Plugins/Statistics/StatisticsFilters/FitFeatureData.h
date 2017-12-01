@@ -171,14 +171,14 @@ protected:
   void initialize();
 
 private:
-  DEFINE_IDATAARRAY_VARIABLE(InDataArray)
+  IDataArray::WeakPointer m_InDataArrayPtr;
   DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
   DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
 
-  FitFeatureData(const FitFeatureData&); // Copy Constructor Not Implemented
-  void operator=(const FitFeatureData&); // Operator '=' Not Implemented
+  FitFeatureData(const FitFeatureData&) = delete; // Copy Constructor Not Implemented
+  void operator=(const FitFeatureData&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* FitFeatureData_H_ */

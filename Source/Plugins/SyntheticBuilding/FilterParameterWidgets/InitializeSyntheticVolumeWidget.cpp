@@ -89,9 +89,7 @@ InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InitializeSyntheticVolumeWidget::~InitializeSyntheticVolumeWidget()
-{
-}
+InitializeSyntheticVolumeWidget::~InitializeSyntheticVolumeWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

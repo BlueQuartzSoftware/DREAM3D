@@ -173,8 +173,8 @@ class VASPReader : public FileReader
     QVector<int> atomNumbers;
     int totalAtoms;
 
-    VASPReader(const VASPReader&); // Copy Constructor Not Implemented
-    void operator=(const VASPReader&); // Operator '=' Not Implemented
+    VASPReader(const VASPReader&) = delete;     // Copy Constructor Not Implemented
+    void operator=(const VASPReader&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* VASPReader_H_ */

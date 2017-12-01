@@ -45,9 +45,6 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_NearestPointFuseRegularGrids.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -62,9 +59,7 @@ NearestPointFuseRegularGrids::NearestPointFuseRegularGrids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NearestPointFuseRegularGrids::~NearestPointFuseRegularGrids()
-{
-}
+NearestPointFuseRegularGrids::~NearestPointFuseRegularGrids() = default;
 
 // -----------------------------------------------------------------------------
 //

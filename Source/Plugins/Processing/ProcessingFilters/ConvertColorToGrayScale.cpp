@@ -232,9 +232,6 @@ private:
   int32_t m_Channel;
 };
 
-// Include the MOC generated file for this class
-#include "moc_ConvertColorToGrayScale.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -257,9 +254,7 @@ ConvertColorToGrayScale::ConvertColorToGrayScale()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertColorToGrayScale::~ConvertColorToGrayScale()
-{
-}
+ConvertColorToGrayScale::~ConvertColorToGrayScale() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -43,12 +43,11 @@ AddSIMPLUnitTest(TESTNAME FilterParameterCallbackExample
 
 
 
-QT5_WRAP_CPP( PreflightVerify_MOC  "${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h")
+## QT5_WRAP_CPP( PreflightVerify_MOC  "${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h")
 #set_source_files_properties(${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h PROPERTIES HEADER_FILE_ONLY TRUE)
 set(PreFlightTest_SOURCES ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp
                           ${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h
                           ${DREAM3DTest_SOURCE_DIR}/PreflightVerify.cpp
-                          ${PreflightVerify_MOC}
                           )
 AddSIMPLUnitTest(TESTNAME PreFlightTest
                   SOURCES ${PreFlightTest_SOURCES}

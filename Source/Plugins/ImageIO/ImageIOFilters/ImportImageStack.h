@@ -186,7 +186,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
 
-  ImportImageStack(const ImportImageStack&); // Copy Constructor Not Implemented
+  ImportImageStack(const ImportImageStack&) = delete; // Copy Constructor Not Implemented
   void operator=(const ImportImageStack&);   // Operator '=' Not Implemented
 };
 

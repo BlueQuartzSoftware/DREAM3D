@@ -93,9 +93,6 @@ public:
 #endif
 };
 
-// Include the MOC generated file for this class
-#include "moc_ReverseTriangleWinding.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -109,9 +106,7 @@ ReverseTriangleWinding::ReverseTriangleWinding()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReverseTriangleWinding::~ReverseTriangleWinding()
-{
-}
+ReverseTriangleWinding::~ReverseTriangleWinding() = default;
 
 // -----------------------------------------------------------------------------
 //

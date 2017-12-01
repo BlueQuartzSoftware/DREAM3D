@@ -364,8 +364,8 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     QString m_Name;
     bool m_IsAllocated;
 
-    ModifiedLambertProjectionArray(const ModifiedLambertProjectionArray&); // Copy Constructor Not Implemented
-    void operator=(const ModifiedLambertProjectionArray&); // Operator '=' Not Implemented
+    ModifiedLambertProjectionArray(const ModifiedLambertProjectionArray&) = delete; // Copy Constructor Not Implemented
+    void operator=(const ModifiedLambertProjectionArray&) = delete;                 // Operator '=' Not Implemented
 };
 
 #endif /* _ModifiedLambertProjectionArray_H_ */

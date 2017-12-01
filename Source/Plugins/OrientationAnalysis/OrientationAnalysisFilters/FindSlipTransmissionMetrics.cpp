@@ -44,9 +44,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindSlipTransmissionMetrics.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -78,9 +75,7 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSlipTransmissionMetrics::~FindSlipTransmissionMetrics()
-{
-}
+FindSlipTransmissionMetrics::~FindSlipTransmissionMetrics() = default;
 
 // -----------------------------------------------------------------------------
 //

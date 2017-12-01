@@ -170,7 +170,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, BasalLoadingFactor)
   DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
 
-  FindBasalLoadingFactor(const FindBasalLoadingFactor&); // Copy Constructor Not Implemented
+  FindBasalLoadingFactor(const FindBasalLoadingFactor&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindBasalLoadingFactor&);         // Operator '=' Not Implemented
 };
 

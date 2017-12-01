@@ -44,9 +44,6 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindNumFeatures.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -63,9 +60,7 @@ FindNumFeatures::FindNumFeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNumFeatures::~FindNumFeatures()
-{
-}
+FindNumFeatures::~FindNumFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

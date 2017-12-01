@@ -50,8 +50,6 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-#include "moc_UncertainRegularGridSampleSurfaceMesh.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -82,9 +80,7 @@ UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UncertainRegularGridSampleSurfaceMesh::~UncertainRegularGridSampleSurfaceMesh()
-{
-}
+UncertainRegularGridSampleSurfaceMesh::~UncertainRegularGridSampleSurfaceMesh() = default;
 
 // -----------------------------------------------------------------------------
 //

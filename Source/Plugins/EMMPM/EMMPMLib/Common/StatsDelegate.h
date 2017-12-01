@@ -62,8 +62,8 @@ class EMMPMLib_EXPORT StatsDelegate
     StatsDelegate();
 
   private:
-    StatsDelegate(const StatsDelegate&); // Copy Constructor Not Implemented
-    void operator=(const StatsDelegate&); // Operator '=' Not Implemented
+    StatsDelegate(const StatsDelegate&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const StatsDelegate&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* STATSDELEGATE_H_ */

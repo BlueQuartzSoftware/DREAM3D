@@ -140,7 +140,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
   DxWriter(const DxWriter&);       // Copy Constructor Not Implemented
-  void operator=(const DxWriter&); // Operator '=' Not Implemented
+  void operator=(const DxWriter&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* DxWriter_H_ */

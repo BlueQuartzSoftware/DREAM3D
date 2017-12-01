@@ -25,9 +25,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_GenerateFZQuaternions.cpp"
-
 /**
  * @brief The GenerateFZQuatsImpl class implements a threaded algorithm that computes the IPF
  * colors for each element in a geometry
@@ -139,9 +136,7 @@ GenerateFZQuaternions::GenerateFZQuaternions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateFZQuaternions::~GenerateFZQuaternions()
-{
-}
+GenerateFZQuaternions::~GenerateFZQuaternions() = default;
 
 // -----------------------------------------------------------------------------
 //

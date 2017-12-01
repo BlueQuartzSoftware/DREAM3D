@@ -51,9 +51,6 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-// Include the MOC generated file for this class
-#include "moc_SineParamsSegmentFeatures.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -78,9 +75,7 @@ SineParamsSegmentFeatures::SineParamsSegmentFeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SineParamsSegmentFeatures::~SineParamsSegmentFeatures()
-{
-}
+SineParamsSegmentFeatures::~SineParamsSegmentFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

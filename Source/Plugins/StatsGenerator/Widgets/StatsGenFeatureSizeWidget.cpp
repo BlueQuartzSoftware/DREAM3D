@@ -72,7 +72,6 @@
 #include <qwt_symbol.h>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_StatsGenFeatureSizeWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -89,9 +88,7 @@ StatsGenFeatureSizeWidget::StatsGenFeatureSizeWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenFeatureSizeWidget::~StatsGenFeatureSizeWidget()
-{
-}
+StatsGenFeatureSizeWidget::~StatsGenFeatureSizeWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

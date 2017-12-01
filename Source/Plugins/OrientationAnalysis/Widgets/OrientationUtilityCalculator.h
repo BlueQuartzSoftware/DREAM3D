@@ -66,8 +66,8 @@ class OrientationUtilityCalculator : public QWidget
     OrientationConverter<double>::OrientationType               m_InputType;
     bool                                                        m_HasErrors;
 
-    OrientationUtilityCalculator(const OrientationUtilityCalculator&); // Copy Constructor Not Implemented
-    void operator=(const OrientationUtilityCalculator&); // Operator '=' Not Implemented
+    OrientationUtilityCalculator(const OrientationUtilityCalculator&) = delete; // Copy Constructor Not Implemented
+    void operator=(const OrientationUtilityCalculator&) = delete;               // Operator '=' Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

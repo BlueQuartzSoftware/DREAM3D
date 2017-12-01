@@ -196,7 +196,7 @@ private:
 
   void appendSamplPtsFixedAzimuth(QVector<float>* xVec, QVector<float>* yVec, QVector<float>* zVec, double phi, double minTheta, double maxTheta, double step);
 
-  FindGBPDMetricBased(const FindGBPDMetricBased&); // Copy Constructor Not Implemented
+  FindGBPDMetricBased(const FindGBPDMetricBased&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindGBPDMetricBased&);      // Operator '=' Not Implemented
 };
 

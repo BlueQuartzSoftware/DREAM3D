@@ -69,7 +69,6 @@
 #include "StatsGenerator/Widgets/TableModels/SGMDFTableModel.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_StatsGenRDFWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

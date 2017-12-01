@@ -176,7 +176,7 @@ protected:
 private:
   QVector<DataArrayPath> m_OutputArrayPaths;
 
-  ConvertColorToGrayScale(const ConvertColorToGrayScale&); // Copy Constructor Not Implemented
+  ConvertColorToGrayScale(const ConvertColorToGrayScale&) = delete; // Copy Constructor Not Implemented
   void operator=(const ConvertColorToGrayScale&);          // Operator '=' Not Implemented
 };
 

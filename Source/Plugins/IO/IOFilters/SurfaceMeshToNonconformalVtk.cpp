@@ -50,9 +50,6 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_SurfaceMeshToNonconformalVtk.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -71,9 +68,7 @@ SurfaceMeshToNonconformalVtk::SurfaceMeshToNonconformalVtk()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshToNonconformalVtk::~SurfaceMeshToNonconformalVtk()
-{
-}
+SurfaceMeshToNonconformalVtk::~SurfaceMeshToNonconformalVtk() = default;
 
 // -----------------------------------------------------------------------------
 //

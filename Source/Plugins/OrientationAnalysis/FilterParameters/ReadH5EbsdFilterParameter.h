@@ -88,7 +88,7 @@ protected:
   ReadH5EbsdFilterParameter();
 
 private:
-  ReadH5EbsdFilterParameter(const ReadH5EbsdFilterParameter&); // Copy Constructor Not Implemented
+  ReadH5EbsdFilterParameter(const ReadH5EbsdFilterParameter&) = delete; // Copy Constructor Not Implemented
   void operator=(const ReadH5EbsdFilterParameter&);            // Operator '=' Not Implemented
 };
 

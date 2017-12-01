@@ -97,8 +97,8 @@ class EbsdLib_EXPORT CtfPhase
     void convertEuropeanDecimals(QByteArray& line);
 
   private:
-    CtfPhase(const CtfPhase&); // Copy Constructor Not Implemented
-    void operator=(const CtfPhase&); // Operator '=' Not Implemented
+    CtfPhase(const CtfPhase&) = delete;       // Copy Constructor Not Implemented
+    void operator=(const CtfPhase&) = delete; // Operator '=' Not Implemented
 };
 #endif /* _CTFPHASE_H_ */
 

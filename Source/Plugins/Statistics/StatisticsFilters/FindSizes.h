@@ -192,7 +192,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumElements)
 
   FindSizes(const FindSizes&);      // Copy Constructor Not Implemented
-  void operator=(const FindSizes&); // Operator '=' Not Implemented
+  void operator=(const FindSizes&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* FINDSIZES_H_ */

@@ -45,9 +45,6 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_RemoveFlaggedFeatures.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -66,9 +63,7 @@ RemoveFlaggedFeatures::RemoveFlaggedFeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RemoveFlaggedFeatures::~RemoveFlaggedFeatures()
-{
-}
+RemoveFlaggedFeatures::~RemoveFlaggedFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

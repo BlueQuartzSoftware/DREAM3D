@@ -32,4 +32,4 @@ cmp_IDE_SOURCE_PROPERTIES( "EMMPMLib/Core" "${EMMPMLib_Core_Moc_HDRS};${EMMPMLib
 
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-QT5_WRAP_CPP( EMMPMLib_Core_Generated_MOC_SRCS ${EMMPMLib_Core_Moc_HDRS})
+# QT5_WRAP_CPP( EMMPMLib_Core_Generated_MOC_SRCS ${EMMPMLib_Core_Moc_HDRS})

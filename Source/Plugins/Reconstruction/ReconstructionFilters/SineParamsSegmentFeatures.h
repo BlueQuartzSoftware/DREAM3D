@@ -196,7 +196,7 @@ private:
 
   bool m_MissingGoodVoxels;
 
-  SineParamsSegmentFeatures(const SineParamsSegmentFeatures&); // Copy Constructor Not Implemented
+  SineParamsSegmentFeatures(const SineParamsSegmentFeatures&) = delete; // Copy Constructor Not Implemented
   void operator=(const SineParamsSegmentFeatures&);            // Operator '=' Not Implemented
 };
 

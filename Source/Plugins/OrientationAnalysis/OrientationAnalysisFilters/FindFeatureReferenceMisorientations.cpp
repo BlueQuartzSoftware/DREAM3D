@@ -48,9 +48,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindFeatureReferenceMisorientations.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -81,9 +78,7 @@ FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureReferenceMisorientations::~FindFeatureReferenceMisorientations()
-{
-}
+FindFeatureReferenceMisorientations::~FindFeatureReferenceMisorientations() = default;
 
 // -----------------------------------------------------------------------------
 //

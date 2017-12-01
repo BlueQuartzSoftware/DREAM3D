@@ -166,7 +166,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(float, LargestCrossSections)
 
-  FindLargestCrossSections(const FindLargestCrossSections&); // Copy Constructor Not Implemented
+  FindLargestCrossSections(const FindLargestCrossSections&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindLargestCrossSections&);           // Operator '=' Not Implemented
 };
 

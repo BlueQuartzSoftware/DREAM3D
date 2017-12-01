@@ -50,9 +50,6 @@
 
 #define TRI_ELEMENT_TYPE "SFM3D3"
 
-// Include the MOC generated file for this class
-#include "moc_AbaqusSurfaceMeshWriter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -68,9 +65,7 @@ AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbaqusSurfaceMeshWriter::~AbaqusSurfaceMeshWriter()
-{
-}
+AbaqusSurfaceMeshWriter::~AbaqusSurfaceMeshWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

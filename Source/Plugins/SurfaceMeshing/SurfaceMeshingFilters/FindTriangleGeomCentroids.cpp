@@ -49,9 +49,6 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindTriangleGeomCentroids.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -69,9 +66,7 @@ FindTriangleGeomCentroids::FindTriangleGeomCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTriangleGeomCentroids::~FindTriangleGeomCentroids()
-{
-}
+FindTriangleGeomCentroids::~FindTriangleGeomCentroids() = default;
 
 // -----------------------------------------------------------------------------
 //

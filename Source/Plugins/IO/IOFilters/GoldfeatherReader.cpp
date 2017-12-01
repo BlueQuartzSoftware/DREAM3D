@@ -68,9 +68,6 @@ private:
   void operator=(const ScopedFileMonitor&);    // Operator '=' Not Implemented
 };
 
-// Include the MOC generated file for this class
-#include "moc_GoldfeatherReader.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -94,9 +91,7 @@ GoldfeatherReader::GoldfeatherReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GoldfeatherReader::~GoldfeatherReader()
-{
-}
+GoldfeatherReader::~GoldfeatherReader() = default;
 
 // -----------------------------------------------------------------------------
 //

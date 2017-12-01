@@ -164,7 +164,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
   DEFINE_DATAARRAY_VARIABLE(uint8_t, CellVectorColors)
 
-  GenerateVectorColors(const GenerateVectorColors&); // Copy Constructor Not Implemented
+  GenerateVectorColors(const GenerateVectorColors&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateVectorColors&);       // Operator '=' Not Implemented
 };
 

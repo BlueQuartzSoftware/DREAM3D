@@ -48,9 +48,6 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_ChangeResolution.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -74,9 +71,7 @@ ChangeResolution::ChangeResolution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChangeResolution::~ChangeResolution()
-{
-}
+ChangeResolution::~ChangeResolution() = default;
 
 // -----------------------------------------------------------------------------
 //

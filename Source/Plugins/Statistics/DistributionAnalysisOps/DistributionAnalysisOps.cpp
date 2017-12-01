@@ -48,9 +48,7 @@ DistributionAnalysisOps::DistributionAnalysisOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DistributionAnalysisOps::~DistributionAnalysisOps()
-{
-}
+DistributionAnalysisOps::~DistributionAnalysisOps() = default;
 
 // -----------------------------------------------------------------------------
 //

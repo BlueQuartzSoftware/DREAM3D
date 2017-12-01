@@ -173,7 +173,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  ErodeDilateBadData(const ErodeDilateBadData&); // Copy Constructor Not Implemented
+  ErodeDilateBadData(const ErodeDilateBadData&) = delete; // Copy Constructor Not Implemented
   void operator=(const ErodeDilateBadData&);     // Operator '=' Not Implemented
 };
 

@@ -186,9 +186,8 @@ class ConvertHexGridToSquareGridWidget : public FilterParameterWidget, private U
 
     bool m_DidCausePreflight;
 
-
-    ConvertHexGridToSquareGridWidget(const ConvertHexGridToSquareGridWidget&); // Copy Constructor Not Implemented
-    void operator=(const ConvertHexGridToSquareGridWidget&); // Operator '=' Not Implemented
+    ConvertHexGridToSquareGridWidget(const ConvertHexGridToSquareGridWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const ConvertHexGridToSquareGridWidget&) = delete;                   // Operator '=' Not Implemented
 };
 
 #endif /* EbsdImportWIDGET_H_ */

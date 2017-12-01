@@ -84,7 +84,7 @@ private:
   QStringList m_PhaseTypeList;
   int m_NumberOfPhases;
 
-  EnsembleInfoItemDelegate(const EnsembleInfoItemDelegate&); // Copy Constructor Not Implemented
+  EnsembleInfoItemDelegate(const EnsembleInfoItemDelegate&) = delete; // Copy Constructor Not Implemented
   void operator=(const EnsembleInfoItemDelegate&);           // Operator '=' Not Implemented
 };
 

@@ -166,8 +166,8 @@ class GenericPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    GenericPlugin(const GenericPlugin&); // Copy Constructor Not Implemented
-    void operator=(const GenericPlugin&); // Operator '=' Not Implemented
+    GenericPlugin(const GenericPlugin&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const GenericPlugin&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _Generic_H_ */

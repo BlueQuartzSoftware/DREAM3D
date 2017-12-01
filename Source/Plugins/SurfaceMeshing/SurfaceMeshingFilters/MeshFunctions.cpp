@@ -43,9 +43,7 @@
 NodeFunctions::NodeFunctions()
 {
 }
-NodeFunctions::~NodeFunctions()
-{
-}
+NodeFunctions::~NodeFunctions() = default;
 
 double NodeFunctions::Distance(Node& n0, Node& n1)
 {
@@ -69,9 +67,7 @@ int NodeFunctions::type(Node& n)
 EdgeFunctions::EdgeFunctions()
 {
 }
-EdgeFunctions::~EdgeFunctions()
-{
-}
+EdgeFunctions::~EdgeFunctions() = default;
 
 double EdgeFunctions::Length(StructArray<Node>::Pointer nodes, Segment* e)
 {
@@ -86,9 +82,7 @@ double EdgeFunctions::Length(StructArray<Node>::Pointer nodes, Segment* e)
 TriangleFunctions::TriangleFunctions()
 {
 }
-TriangleFunctions::~TriangleFunctions()
-{
-}
+TriangleFunctions::~TriangleFunctions() = default;
 
 double TriangleFunctions::area(Node& n0, Node& n1, Node& n2)
 {

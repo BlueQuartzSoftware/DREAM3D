@@ -142,7 +142,7 @@ protected:
   EnsembleInfoFilterParameter();
 
 private:
-  EnsembleInfoFilterParameter(const EnsembleInfoFilterParameter&); // Copy Constructor Not Implemented
+  EnsembleInfoFilterParameter(const EnsembleInfoFilterParameter&) = delete; // Copy Constructor Not Implemented
   void operator=(const EnsembleInfoFilterParameter&);              // Operator '=' Not Implemented
 };
 

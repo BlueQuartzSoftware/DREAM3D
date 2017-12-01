@@ -70,8 +70,8 @@ class OrientationWidget : public QWidget
     void updateAngleMeasurement(bool isRadians);
 
   private:
-    OrientationWidget(const OrientationWidget&); // Copy Constructor Not Implemented
-    void operator=(const OrientationWidget&); // Operator '=' Not Implemented
+    OrientationWidget(const OrientationWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const OrientationWidget&) = delete;    // Operator '=' Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

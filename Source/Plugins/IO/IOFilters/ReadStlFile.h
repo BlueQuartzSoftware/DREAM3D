@@ -186,7 +186,7 @@ private:
   void eliminate_duplicate_nodes();
 
   ReadStlFile(const ReadStlFile&);    // Copy Constructor Not Implemented
-  void operator=(const ReadStlFile&); // Operator '=' Not Implemented
+  void operator=(const ReadStlFile&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _ReadStlFile_H_ */

@@ -196,7 +196,7 @@ private:
    */
   int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
 
-  CorrelateValuesWithVectorDirection(const CorrelateValuesWithVectorDirection&); // Copy Constructor Not Implemented
+  CorrelateValuesWithVectorDirection(const CorrelateValuesWithVectorDirection&) = delete; // Copy Constructor Not Implemented
   void operator=(const CorrelateValuesWithVectorDirection&);                     // Operator '=' Not Implemented
 };
 

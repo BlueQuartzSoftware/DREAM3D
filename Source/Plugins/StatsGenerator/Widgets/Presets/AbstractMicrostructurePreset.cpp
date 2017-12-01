@@ -65,9 +65,7 @@ AbstractMicrostructurePreset::AbstractMicrostructurePreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePreset::~AbstractMicrostructurePreset()
-{
-}
+AbstractMicrostructurePreset::~AbstractMicrostructurePreset() = default;
 
 // -----------------------------------------------------------------------------
 //

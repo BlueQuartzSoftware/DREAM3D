@@ -45,9 +45,6 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindAvgScalarValueForFeatures.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -67,9 +64,7 @@ FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindAvgScalarValueForFeatures::~FindAvgScalarValueForFeatures()
-{
-}
+FindAvgScalarValueForFeatures::~FindAvgScalarValueForFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

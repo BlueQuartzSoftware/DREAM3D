@@ -49,9 +49,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_CreateEnsembleInfo.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -72,9 +69,7 @@ CreateEnsembleInfo::CreateEnsembleInfo()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CreateEnsembleInfo::~CreateEnsembleInfo()
-{
-}
+CreateEnsembleInfo::~CreateEnsembleInfo() = default;
 
 // -----------------------------------------------------------------------------
 //

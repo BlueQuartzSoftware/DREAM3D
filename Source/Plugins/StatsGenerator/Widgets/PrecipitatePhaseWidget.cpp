@@ -74,7 +74,6 @@
 #include <qwt_plot_marker.h>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_PrecipitatePhaseWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -91,9 +90,7 @@ PrecipitatePhaseWidget::PrecipitatePhaseWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrecipitatePhaseWidget::~PrecipitatePhaseWidget()
-{
-}
+PrecipitatePhaseWidget::~PrecipitatePhaseWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

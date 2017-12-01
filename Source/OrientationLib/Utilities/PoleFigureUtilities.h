@@ -139,10 +139,8 @@ class OrientationLib_EXPORT PoleFigureUtilities
 
 
   private:
-    PoleFigureUtilities(const PoleFigureUtilities&); // Copy Constructor Not Implemented
-    void operator=(const PoleFigureUtilities&); // Operator '=' Not Implemented
-
-
+    PoleFigureUtilities(const PoleFigureUtilities&) = delete; // Copy Constructor Not Implemented
+    void operator=(const PoleFigureUtilities&) = delete;      // Operator '=' Not Implemented
 };
 
 /**

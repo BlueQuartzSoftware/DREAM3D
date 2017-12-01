@@ -191,7 +191,7 @@ private:
   bool* m_HemiCheck;
 
   FindGBCD(const FindGBCD&);       // Copy Constructor Not Implemented
-  void operator=(const FindGBCD&); // Operator '=' Not Implemented
+  void operator=(const FindGBCD&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _FindGBCD_H_ */

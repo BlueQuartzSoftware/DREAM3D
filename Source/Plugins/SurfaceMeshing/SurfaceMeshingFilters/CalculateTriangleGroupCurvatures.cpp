@@ -77,9 +77,7 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int64_t nring
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateTriangleGroupCurvatures::~CalculateTriangleGroupCurvatures()
-{
-}
+CalculateTriangleGroupCurvatures::~CalculateTriangleGroupCurvatures() = default;
 
 // -----------------------------------------------------------------------------
 //

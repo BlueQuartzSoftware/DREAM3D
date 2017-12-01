@@ -183,7 +183,7 @@ private:
   NeighborList<int32_t>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_MisorientationList;
 
-  FindMisorientations(const FindMisorientations&); // Copy Constructor Not Implemented
+  FindMisorientations(const FindMisorientations&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindMisorientations&);      // Operator '=' Not Implemented
 };
 

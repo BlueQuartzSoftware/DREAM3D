@@ -69,10 +69,7 @@ H5AngImporter::H5AngImporter() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5AngImporter::~H5AngImporter()
-{
-}
-
+H5AngImporter::~H5AngImporter() = default;
 
 #define WRITE_ANG_HEADER_DATA(reader, m_msgType, prpty, key)\
   {\

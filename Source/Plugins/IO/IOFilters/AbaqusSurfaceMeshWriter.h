@@ -187,7 +187,7 @@ private:
    */
   int32_t writeFeatures(FILE* f);
 
-  AbaqusSurfaceMeshWriter(const AbaqusSurfaceMeshWriter&); // Copy Constructor Not Implemented
+  AbaqusSurfaceMeshWriter(const AbaqusSurfaceMeshWriter&) = delete; // Copy Constructor Not Implemented
   void operator=(const AbaqusSurfaceMeshWriter&);          // Operator '=' Not Implemented
 };
 

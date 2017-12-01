@@ -49,9 +49,7 @@ ImportVectorImageStackFilterParameter::ImportVectorImageStackFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::~ImportVectorImageStackFilterParameter()
-{
-}
+ImportVectorImageStackFilterParameter::~ImportVectorImageStackFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //

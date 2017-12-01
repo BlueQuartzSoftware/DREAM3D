@@ -50,9 +50,7 @@ PrecipitateRolledPreset::PrecipitateRolledPreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrecipitateRolledPreset::~PrecipitateRolledPreset()
-{
-}
+PrecipitateRolledPreset::~PrecipitateRolledPreset() = default;
 
 // -----------------------------------------------------------------------------
 //

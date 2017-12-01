@@ -58,9 +58,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_MatchCrystallography.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -113,9 +110,7 @@ MatchCrystallography::MatchCrystallography()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MatchCrystallography::~MatchCrystallography()
-{
-}
+MatchCrystallography::~MatchCrystallography() = default;
 
 // -----------------------------------------------------------------------------
 //

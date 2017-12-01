@@ -349,7 +349,7 @@ private:
 
   QVector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
 
-  GenerateEnsembleStatistics(const GenerateEnsembleStatistics&); // Copy Constructor Not Implemented
+  GenerateEnsembleStatistics(const GenerateEnsembleStatistics&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateEnsembleStatistics&);             // Operator '=' Not Implemented
 };
 

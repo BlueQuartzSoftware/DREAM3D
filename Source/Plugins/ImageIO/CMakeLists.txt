@@ -135,7 +135,7 @@ set(${PLUGIN_NAME}_GEN_HDRS
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT5_WRAP_CPP( ${PLUGIN_NAME}_Generated_MOC_SRCS ${${PLUGIN_NAME}_MOC_HDRS} OPTIONS -I ${SIMPLProj_SOURCE_DIR}/Source)
+# QT5_WRAP_CPP( ${PLUGIN_NAME}_Generated_MOC_SRCS ${${PLUGIN_NAME}_MOC_HDRS} OPTIONS -I ${SIMPLProj_SOURCE_DIR}/Source)
 set_source_files_properties( ${${PLUGIN_NAME}_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 set_source_files_properties( ${${PLUGIN_NAME}_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 

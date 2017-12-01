@@ -202,7 +202,7 @@ private:
    */
   void updateVertexInstancePointers();
 
-  QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
+  QuickSurfaceMesh(const QuickSurfaceMesh&) = delete; // Copy Constructor Not Implemented
   void operator=(const QuickSurfaceMesh&);   // Operator '=' Not Implemented
 };
 

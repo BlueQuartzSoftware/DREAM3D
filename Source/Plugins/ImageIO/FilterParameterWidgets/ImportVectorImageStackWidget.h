@@ -203,9 +203,8 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
     QString  m_CurrentText = "";
     bool     m_DidCausePreflight = false;
 
-
-    ImportVectorImageStackWidget(const ImportVectorImageStackWidget&); // Copy Constructor Not Implemented
-    void operator=(const ImportVectorImageStackWidget&); // Operator '=' Not Implemented
+    ImportVectorImageStackWidget(const ImportVectorImageStackWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const ImportVectorImageStackWidget&) = delete;               // Operator '=' Not Implemented
 };
 
 #endif /* ImportVectorImageStackWidget_H_ */

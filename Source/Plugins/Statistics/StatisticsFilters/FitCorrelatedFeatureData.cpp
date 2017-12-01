@@ -48,9 +48,6 @@
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
 #include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 
-// Include the MOC generated file for this class
-#include "moc_FitCorrelatedFeatureData.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -74,9 +71,7 @@ FitCorrelatedFeatureData::FitCorrelatedFeatureData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FitCorrelatedFeatureData::~FitCorrelatedFeatureData()
-{
-}
+FitCorrelatedFeatureData::~FitCorrelatedFeatureData() = default;
 
 // -----------------------------------------------------------------------------
 //

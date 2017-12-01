@@ -92,10 +92,8 @@ class  IOSupport : public Observable
     IOSupport();
 
   private:
-    IOSupport(const IOSupport&); // Copy Constructor Not Implemented
-    void operator=(const IOSupport&); // Operator '=' Not Implemented
-
-
+    IOSupport(const IOSupport&) = delete;      // Copy Constructor Not Implemented
+    void operator=(const IOSupport&) = delete; // Operator '=' Not Implemented
 };
 
 

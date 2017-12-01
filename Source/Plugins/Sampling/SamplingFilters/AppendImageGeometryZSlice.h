@@ -158,7 +158,7 @@ protected:
   void initialize();
 
 private:
-  AppendImageGeometryZSlice(const AppendImageGeometryZSlice&); // Copy Constructor Not Implemented
+  AppendImageGeometryZSlice(const AppendImageGeometryZSlice&) = delete; // Copy Constructor Not Implemented
   void operator=(const AppendImageGeometryZSlice&);            // Operator '=' Not Implemented
 };
 

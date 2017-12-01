@@ -49,9 +49,7 @@ PrimaryRecrystallizedPreset::PrimaryRecrystallizedPreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryRecrystallizedPreset::~PrimaryRecrystallizedPreset()
-{
-}
+PrimaryRecrystallizedPreset::~PrimaryRecrystallizedPreset() = default;
 
 // -----------------------------------------------------------------------------
 //

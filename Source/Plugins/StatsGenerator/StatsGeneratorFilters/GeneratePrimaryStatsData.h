@@ -190,7 +190,7 @@ private:
   QString m_NumberOfBins;
   QString m_FeatureESD;
 
-  GeneratePrimaryStatsData(const GeneratePrimaryStatsData&); // Copy Constructor Not Implemented
+  GeneratePrimaryStatsData(const GeneratePrimaryStatsData&) = delete; // Copy Constructor Not Implemented
   void operator=(const GeneratePrimaryStatsData&);           // Operator '=' Not Implemented
 };
 

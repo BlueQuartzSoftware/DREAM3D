@@ -239,7 +239,7 @@ protected:
 private:
   QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
 
-  VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
+  VtkRectilinearGridWriter(const VtkRectilinearGridWriter&) = delete; // Copy Constructor Not Implemented
   void operator=(const VtkRectilinearGridWriter&);           // Operator '=' Not Implemented
 
   void write(const QString& file);

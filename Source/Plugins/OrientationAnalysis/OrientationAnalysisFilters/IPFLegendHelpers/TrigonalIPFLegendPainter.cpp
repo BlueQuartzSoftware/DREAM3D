@@ -46,9 +46,7 @@ TrigonalIPFLegendPainter::TrigonalIPFLegendPainter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TrigonalIPFLegendPainter::~TrigonalIPFLegendPainter()
-{
-}
+TrigonalIPFLegendPainter::~TrigonalIPFLegendPainter() = default;
 
 // -----------------------------------------------------------------------------
 //

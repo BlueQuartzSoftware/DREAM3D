@@ -232,9 +232,6 @@ private:
   void operator=(const LabelVisitorInfo&);   // Operator '=' Not Implemented
 };
 
-// Include the MOC generated file for this class
-#include "moc_VerifyTriangleWinding.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -252,9 +249,7 @@ VerifyTriangleWinding::VerifyTriangleWinding()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VerifyTriangleWinding::~VerifyTriangleWinding()
-{
-}
+VerifyTriangleWinding::~VerifyTriangleWinding() = default;
 
 // -----------------------------------------------------------------------------
 //

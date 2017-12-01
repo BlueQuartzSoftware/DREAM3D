@@ -166,8 +166,8 @@ class IOPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    IOPlugin(const IOPlugin&); // Copy Constructor Not Implemented
-    void operator=(const IOPlugin&); // Operator '=' Not Implemented
+    IOPlugin(const IOPlugin&) = delete;       // Copy Constructor Not Implemented
+    void operator=(const IOPlugin&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _IOPlugin_H_ */

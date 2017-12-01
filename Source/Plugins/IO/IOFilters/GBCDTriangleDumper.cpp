@@ -46,9 +46,6 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_GBCDTriangleDumper.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -70,9 +67,7 @@ GBCDTriangleDumper::GBCDTriangleDumper()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GBCDTriangleDumper::~GBCDTriangleDumper()
-{
-}
+GBCDTriangleDumper::~GBCDTriangleDumper() = default;
 
 // -----------------------------------------------------------------------------
 //

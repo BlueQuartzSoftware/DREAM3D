@@ -189,7 +189,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, NewEnsembleArray)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
-  FindFeatureHistogram(const FindFeatureHistogram&); // Copy Constructor Not Implemented
+  FindFeatureHistogram(const FindFeatureHistogram&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindFeatureHistogram&);       // Operator '=' Not Implemented
 };
 

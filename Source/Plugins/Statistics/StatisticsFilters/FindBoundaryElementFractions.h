@@ -167,7 +167,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(float, BoundaryCellFractions)
 
-  FindBoundaryElementFractions(const FindBoundaryElementFractions&); // Copy Constructor Not Implemented
+  FindBoundaryElementFractions(const FindBoundaryElementFractions&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindBoundaryElementFractions&);               // Operator '=' Not Implemented
 };
 

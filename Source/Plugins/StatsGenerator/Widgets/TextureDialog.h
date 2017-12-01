@@ -82,8 +82,8 @@ class TextureDialog : public QDialog , private Ui::TextureDialog
   private:
     QVector<TexturePreset::Pointer> m_Presets;
 
-    TextureDialog(const TextureDialog&); // Copy Constructor Not Implemented
-    void operator=(const TextureDialog&); // Operator '=' Not Implemented
+    TextureDialog(const TextureDialog&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const TextureDialog&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* TEXTUREDIALOG_H_ */

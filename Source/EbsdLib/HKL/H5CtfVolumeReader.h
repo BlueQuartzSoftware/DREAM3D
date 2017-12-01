@@ -128,10 +128,8 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
   private:
     QVector<CtfPhase::Pointer> m_Phases;
 
-    H5CtfVolumeReader(const H5CtfVolumeReader&); // Copy Constructor Not Implemented
-    void operator=(const H5CtfVolumeReader&); // Operator '=' Not Implemented
-
-
+    H5CtfVolumeReader(const H5CtfVolumeReader&) = delete; // Copy Constructor Not Implemented
+    void operator=(const H5CtfVolumeReader&) = delete;    // Operator '=' Not Implemented
 
     /**
      * @brief Allocats a contiguous chunk of memory to store values from the .ang file

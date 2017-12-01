@@ -88,9 +88,7 @@ ImportVectorImageStackWidget::ImportVectorImageStackWidget(FilterParameter* para
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStackWidget::~ImportVectorImageStackWidget()
-{
-}
+ImportVectorImageStackWidget::~ImportVectorImageStackWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

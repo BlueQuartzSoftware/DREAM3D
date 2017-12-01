@@ -143,9 +143,8 @@ class PoleFigureMaker
     QVector<qint32> m_KernelWeights;
     bool m_KernelWeightsInited;
 
-
-    PoleFigureMaker(const PoleFigureMaker&); // Copy Constructor Not Implemented
-    void operator=(const PoleFigureMaker&); // Operator '=' Not Implemented
+    PoleFigureMaker(const PoleFigureMaker&) = delete; // Copy Constructor Not Implemented
+    void operator=(const PoleFigureMaker&) = delete;  // Operator '=' Not Implemented
 };
 
 

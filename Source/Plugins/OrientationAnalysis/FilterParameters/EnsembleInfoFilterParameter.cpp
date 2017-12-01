@@ -48,9 +48,7 @@ EnsembleInfoFilterParameter::EnsembleInfoFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EnsembleInfoFilterParameter::~EnsembleInfoFilterParameter()
-{
-}
+EnsembleInfoFilterParameter::~EnsembleInfoFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //

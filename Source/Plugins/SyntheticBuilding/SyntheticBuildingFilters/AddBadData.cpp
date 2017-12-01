@@ -47,9 +47,6 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_AddBadData.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -68,9 +65,7 @@ AddBadData::AddBadData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AddBadData::~AddBadData()
-{
-}
+AddBadData::~AddBadData() = default;
 
 // -----------------------------------------------------------------------------
 //

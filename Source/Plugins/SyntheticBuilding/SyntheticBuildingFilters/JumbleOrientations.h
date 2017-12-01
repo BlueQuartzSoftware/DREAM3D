@@ -170,7 +170,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
   DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
 
-  JumbleOrientations(const JumbleOrientations&); // Copy Constructor Not Implemented
+  JumbleOrientations(const JumbleOrientations&) = delete; // Copy Constructor Not Implemented
   void operator=(const JumbleOrientations&);     // Operator '=' Not Implemented
 };
 

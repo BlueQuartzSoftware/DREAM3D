@@ -166,7 +166,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, AvgCAxes)
 
   FindAvgCAxes(const FindAvgCAxes&);   // Copy Constructor Not Implemented
-  void operator=(const FindAvgCAxes&); // Operator '=' Not Implemented
+  void operator=(const FindAvgCAxes&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* FindAvgCAxes_H_ */

@@ -54,9 +54,6 @@
 #include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/ImageIOVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_ImportVectorImageStack.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -83,9 +80,7 @@ ImportVectorImageStack::ImportVectorImageStack()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStack::~ImportVectorImageStack()
-{
-}
+ImportVectorImageStack::~ImportVectorImageStack() = default;
 
 // -----------------------------------------------------------------------------
 //

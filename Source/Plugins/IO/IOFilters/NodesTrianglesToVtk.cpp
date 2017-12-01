@@ -48,9 +48,6 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_NodesTrianglesToVtk.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -68,9 +65,7 @@ NodesTrianglesToVtk::NodesTrianglesToVtk()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NodesTrianglesToVtk::~NodesTrianglesToVtk()
-{
-}
+NodesTrianglesToVtk::~NodesTrianglesToVtk() = default;
 
 // -----------------------------------------------------------------------------
 //

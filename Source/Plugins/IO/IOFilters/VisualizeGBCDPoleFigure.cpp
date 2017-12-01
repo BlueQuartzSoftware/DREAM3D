@@ -53,9 +53,6 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_VisualizeGBCDPoleFigure.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -81,9 +78,7 @@ VisualizeGBCDPoleFigure::VisualizeGBCDPoleFigure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VisualizeGBCDPoleFigure::~VisualizeGBCDPoleFigure()
-{
-}
+VisualizeGBCDPoleFigure::~VisualizeGBCDPoleFigure() = default;
 
 // -----------------------------------------------------------------------------
 //

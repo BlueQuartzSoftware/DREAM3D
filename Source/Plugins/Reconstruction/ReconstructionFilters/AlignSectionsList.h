@@ -138,7 +138,7 @@ protected:
   virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
 private:
-  AlignSectionsList(const AlignSectionsList&); // Copy Constructor Not Implemented
+  AlignSectionsList(const AlignSectionsList&) = delete; // Copy Constructor Not Implemented
   void operator=(const AlignSectionsList&);    // Operator '=' Not Implemented
 };
 

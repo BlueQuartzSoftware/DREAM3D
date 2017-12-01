@@ -156,7 +156,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
-  ChangeAngleRepresentation(const ChangeAngleRepresentation&); // Copy Constructor Not Implemented
+  ChangeAngleRepresentation(const ChangeAngleRepresentation&) = delete; // Copy Constructor Not Implemented
   void operator=(const ChangeAngleRepresentation&);            // Operator '=' Not Implemented
 };
 

@@ -135,7 +135,7 @@ private:
    */
   void generateConnectivity();
 
-  GenerateNodeTriangleConnectivity(const GenerateNodeTriangleConnectivity&); // Copy Constructor Not Implemented
+  GenerateNodeTriangleConnectivity(const GenerateNodeTriangleConnectivity&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateNodeTriangleConnectivity&);                   // Operator '=' Not Implemented
 };
 

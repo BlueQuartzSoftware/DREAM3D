@@ -66,9 +66,7 @@ ReadEdaxH5DataWidget::ReadEdaxH5DataWidget(FilterParameter* parameter, AbstractF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadEdaxH5DataWidget::~ReadEdaxH5DataWidget()
-{
-}
+ReadEdaxH5DataWidget::~ReadEdaxH5DataWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

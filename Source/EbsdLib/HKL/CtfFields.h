@@ -80,8 +80,8 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
     }
 
   private:
-    CtfFields(const CtfFields&); // Copy Constructor Not Implemented
-    void operator=(const CtfFields&); // Operator '=' Not Implemented
+    CtfFields(const CtfFields&) = delete;      // Copy Constructor Not Implemented
+    void operator=(const CtfFields&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* CTFFIELDS_H_ */

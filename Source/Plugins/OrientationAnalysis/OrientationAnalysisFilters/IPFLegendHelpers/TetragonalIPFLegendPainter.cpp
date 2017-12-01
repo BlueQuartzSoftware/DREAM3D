@@ -46,9 +46,7 @@ TetragonalIPFLegendPainter::TetragonalIPFLegendPainter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TetragonalIPFLegendPainter::~TetragonalIPFLegendPainter()
-{
-}
+TetragonalIPFLegendPainter::~TetragonalIPFLegendPainter() = default;
 
 // -----------------------------------------------------------------------------
 //

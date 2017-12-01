@@ -92,9 +92,6 @@ public:
 #endif
 };
 
-// Include the MOC generated file for this class
-#include "moc_TriangleCentroidFilter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -109,9 +106,7 @@ TriangleCentroidFilter::TriangleCentroidFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleCentroidFilter::~TriangleCentroidFilter()
-{
-}
+TriangleCentroidFilter::~TriangleCentroidFilter() = default;
 
 // -----------------------------------------------------------------------------
 //

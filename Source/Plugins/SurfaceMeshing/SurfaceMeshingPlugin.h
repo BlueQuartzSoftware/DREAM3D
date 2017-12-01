@@ -166,8 +166,8 @@ class SurfaceMeshingPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    SurfaceMeshingPlugin(const SurfaceMeshingPlugin&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshingPlugin&); // Operator '=' Not Implemented
+    SurfaceMeshingPlugin(const SurfaceMeshingPlugin&) = delete; // Copy Constructor Not Implemented
+    void operator=(const SurfaceMeshingPlugin&) = delete;       // Operator '=' Not Implemented
 };
 
 #endif /* _SurfaceMeshing_H_ */

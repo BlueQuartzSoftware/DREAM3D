@@ -47,9 +47,6 @@
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
 #include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindFeatureHistogram.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -71,9 +68,7 @@ FindFeatureHistogram::FindFeatureHistogram()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureHistogram::~FindFeatureHistogram()
-{
-}
+FindFeatureHistogram::~FindFeatureHistogram() = default;
 
 // -----------------------------------------------------------------------------
 //

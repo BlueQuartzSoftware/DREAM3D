@@ -162,8 +162,8 @@ class ImageIOPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    ImageIOPlugin(const ImageIOPlugin&); // Copy Constructor Not Implemented
-    void operator=(const ImageIOPlugin&); // Operator '=' Not Implemented
+    ImageIOPlugin(const ImageIOPlugin&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const ImageIOPlugin&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _ImageIOPlugin_H_ */

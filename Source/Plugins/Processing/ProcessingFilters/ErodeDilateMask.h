@@ -170,7 +170,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(bool, Mask)
 
-  ErodeDilateMask(const ErodeDilateMask&); // Copy Constructor Not Implemented
+  ErodeDilateMask(const ErodeDilateMask&) = delete; // Copy Constructor Not Implemented
   void operator=(const ErodeDilateMask&);  // Operator '=' Not Implemented
 };
 

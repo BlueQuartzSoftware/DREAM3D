@@ -46,9 +46,7 @@ OrthorhombicIPFLegendPainter::OrthorhombicIPFLegendPainter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrthorhombicIPFLegendPainter::~OrthorhombicIPFLegendPainter()
-{
-}
+OrthorhombicIPFLegendPainter::~OrthorhombicIPFLegendPainter() = default;
 
 // -----------------------------------------------------------------------------
 //

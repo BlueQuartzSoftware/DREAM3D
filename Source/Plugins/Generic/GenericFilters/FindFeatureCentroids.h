@@ -162,7 +162,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   DEFINE_DATAARRAY_VARIABLE(float, Centroids)
 
-  FindFeatureCentroids(const FindFeatureCentroids&); // Copy Constructor Not Implemented
+  FindFeatureCentroids(const FindFeatureCentroids&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindFeatureCentroids&);       // Operator '=' Not Implemented
 };
 

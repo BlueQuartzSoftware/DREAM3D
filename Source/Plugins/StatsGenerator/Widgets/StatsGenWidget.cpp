@@ -39,7 +39,6 @@
 #include "EbsdLib/EbsdConstants.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_StatsGenWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -61,9 +60,7 @@ StatsGenWidget::StatsGenWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenWidget::~StatsGenWidget()
-{
-}
+StatsGenWidget::~StatsGenWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

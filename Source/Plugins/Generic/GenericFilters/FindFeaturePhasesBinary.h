@@ -164,7 +164,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
-  FindFeaturePhasesBinary(const FindFeaturePhasesBinary&); // Copy Constructor Not Implemented
+  FindFeaturePhasesBinary(const FindFeaturePhasesBinary&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindFeaturePhasesBinary&);          // Operator '=' Not Implemented
 };
 

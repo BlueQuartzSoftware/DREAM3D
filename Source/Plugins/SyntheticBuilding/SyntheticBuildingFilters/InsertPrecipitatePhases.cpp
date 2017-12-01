@@ -62,9 +62,6 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_InsertPrecipitatePhases.cpp"
-
 const QString PrecipitateSyntheticShapeParametersName("Synthetic Shape Parameters (Precipitate)");
 
 // -----------------------------------------------------------------------------
@@ -124,9 +121,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InsertPrecipitatePhases::~InsertPrecipitatePhases()
-{
-}
+InsertPrecipitatePhases::~InsertPrecipitatePhases() = default;
 
 // -----------------------------------------------------------------------------
 //

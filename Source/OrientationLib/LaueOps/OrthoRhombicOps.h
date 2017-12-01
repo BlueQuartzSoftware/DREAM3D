@@ -187,8 +187,8 @@ class OrientationLib_EXPORT OrthoRhombicOps : public LaueOps
                         float& n1, float& n2, float& n3);
 
   private:
-    OrthoRhombicOps(const OrthoRhombicOps&); // Copy Constructor Not Implemented
-    void operator=(const OrthoRhombicOps&); // Operator '=' Not Implemented
+    OrthoRhombicOps(const OrthoRhombicOps&) = delete; // Copy Constructor Not Implemented
+    void operator=(const OrthoRhombicOps&) = delete;  // Operator '=' Not Implemented
 };
 
 #endif /* ORTHORHOMBICOPS_H_ */

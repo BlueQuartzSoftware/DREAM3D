@@ -37,9 +37,6 @@
 
 #include "SIMPLib/Common/ManagedPointerArray.hpp"
 
-// Include the MOC generated file for this class
-#include "moc_GenerateNodeTriangleConnectivity.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -55,9 +52,7 @@ GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateNodeTriangleConnectivity::~GenerateNodeTriangleConnectivity()
-{
-}
+GenerateNodeTriangleConnectivity::~GenerateNodeTriangleConnectivity() = default;
 
 // -----------------------------------------------------------------------------
 //

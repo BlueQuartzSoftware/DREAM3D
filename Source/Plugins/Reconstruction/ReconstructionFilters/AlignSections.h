@@ -168,7 +168,7 @@ protected:
 
 private:
   AlignSections(const AlignSections&);  // Copy Constructor Not Implemented
-  void operator=(const AlignSections&); // Operator '=' Not Implemented
+  void operator=(const AlignSections&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* ALIGNSECTIONS_H_ */

@@ -157,7 +157,7 @@ protected:
   void initialize();
 
 private:
-  RegularizeZSpacing(const RegularizeZSpacing&); // Copy Constructor Not Implemented
+  RegularizeZSpacing(const RegularizeZSpacing&) = delete; // Copy Constructor Not Implemented
   void operator=(const RegularizeZSpacing&);     // Operator '=' Not Implemented
 };
 

@@ -167,8 +167,8 @@ class ProcessingPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    ProcessingPlugin(const ProcessingPlugin&); // Copy Constructor Not Implemented
-    void operator=(const ProcessingPlugin&); // Operator '=' Not Implemented
+    ProcessingPlugin(const ProcessingPlugin&) = delete; // Copy Constructor Not Implemented
+    void operator=(const ProcessingPlugin&) = delete;   // Operator '=' Not Implemented
 };
 
 #endif /* _Processing_H_ */

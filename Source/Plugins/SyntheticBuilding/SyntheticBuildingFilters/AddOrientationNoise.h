@@ -162,7 +162,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
-  AddOrientationNoise(const AddOrientationNoise&); // Copy Constructor Not Implemented
+  AddOrientationNoise(const AddOrientationNoise&) = delete; // Copy Constructor Not Implemented
   void operator=(const AddOrientationNoise&);      // Operator '=' Not Implemented
 };
 

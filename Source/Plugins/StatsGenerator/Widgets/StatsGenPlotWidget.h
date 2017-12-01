@@ -128,7 +128,6 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
   private:
     unsigned int          m_DistributionType;
     SGAbstractTableModel* m_TableModel = nullptr;
-    QwtPlotGrid*          m_grid = nullptr;
     unsigned int          m_StatsType;
     bool                  m_UserUpdatedData;
 
@@ -137,9 +136,8 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     QTableView*             m_TableView = nullptr;
     QPoint                  m_ContextMenuPoint;
 
-
-    StatsGenPlotWidget(const StatsGenPlotWidget&); // Copy Constructor Not Implemented
-    void operator=(const StatsGenPlotWidget&); // Operator '=' Not Implemented
+    StatsGenPlotWidget(const StatsGenPlotWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const StatsGenPlotWidget&) = delete;     // Operator '=' Not Implemented
 };
 
 #endif /* _STATSGENPLOTWIDGET_H_ */

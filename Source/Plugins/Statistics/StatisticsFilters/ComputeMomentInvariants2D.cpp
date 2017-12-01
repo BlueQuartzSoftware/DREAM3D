@@ -19,9 +19,6 @@
 #include "Statistics/StatisticsFilters/util/MomentInvariants2D.h"
 #include "Statistics/StatisticsVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_ComputeMomentInvariants2D.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -42,9 +39,7 @@ ComputeMomentInvariants2D::ComputeMomentInvariants2D()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComputeMomentInvariants2D::~ComputeMomentInvariants2D()
-{
-}
+ComputeMomentInvariants2D::~ComputeMomentInvariants2D() = default;
 
 // -----------------------------------------------------------------------------
 //

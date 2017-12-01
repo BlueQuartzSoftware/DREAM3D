@@ -199,7 +199,7 @@ private:
   NeighborList<float>::WeakPointer m_ClusteringList;
   std::vector<float> m_RandomCentroids;
 
-  FindFeatureClustering(const FindFeatureClustering&); // Copy Constructor Not Implemented
+  FindFeatureClustering(const FindFeatureClustering&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindFeatureClustering&);        // Operator '=' Not Implemented
 };
 

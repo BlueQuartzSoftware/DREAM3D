@@ -46,9 +46,6 @@
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindSurfaceFeatures.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -65,9 +62,7 @@ FindSurfaceFeatures::FindSurfaceFeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindSurfaceFeatures::~FindSurfaceFeatures()
-{
-}
+FindSurfaceFeatures::~FindSurfaceFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -179,7 +179,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, CellRodriguesColors)
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
-  GenerateRodriguesColors(const GenerateRodriguesColors&); // Copy Constructor Not Implemented
+  GenerateRodriguesColors(const GenerateRodriguesColors&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateRodriguesColors&);          // Operator '=' Not Implemented
 };
 

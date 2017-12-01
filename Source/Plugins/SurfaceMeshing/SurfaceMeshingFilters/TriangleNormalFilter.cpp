@@ -105,9 +105,6 @@ public:
 #endif
 };
 
-// Include the MOC generated file for this class
-#include "moc_TriangleNormalFilter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -122,9 +119,7 @@ TriangleNormalFilter::TriangleNormalFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleNormalFilter::~TriangleNormalFilter()
-{
-}
+TriangleNormalFilter::~TriangleNormalFilter() = default;
 
 // -----------------------------------------------------------------------------
 //

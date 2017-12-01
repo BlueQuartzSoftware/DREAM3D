@@ -188,7 +188,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
-  LaplacianSmoothing(const LaplacianSmoothing&); // Copy Constructor Not Implemented
+  LaplacianSmoothing(const LaplacianSmoothing&) = delete; // Copy Constructor Not Implemented
   void operator=(const LaplacianSmoothing&);     // Operator '=' Not Implemented
 };
 

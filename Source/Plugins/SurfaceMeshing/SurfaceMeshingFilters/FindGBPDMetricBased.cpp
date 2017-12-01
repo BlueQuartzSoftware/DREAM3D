@@ -69,9 +69,6 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-// Include the MOC generated file for this class
-#include "moc_FindGBPDMetricBased.cpp"
-
 namespace GBPDMetricBased
 {
 
@@ -400,9 +397,7 @@ FindGBPDMetricBased::FindGBPDMetricBased()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGBPDMetricBased::~FindGBPDMetricBased()
-{
-}
+FindGBPDMetricBased::~FindGBPDMetricBased() = default;
 
 // -----------------------------------------------------------------------------
 //

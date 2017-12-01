@@ -159,9 +159,6 @@ public:
 #endif
 };
 
-// Include the MOC generated file for this class
-#include "moc_GenerateFaceSchuhMisorientationColoring.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -184,9 +181,7 @@ GenerateFaceSchuhMisorientationColoring::GenerateFaceSchuhMisorientationColoring
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateFaceSchuhMisorientationColoring::~GenerateFaceSchuhMisorientationColoring()
-{
-}
+GenerateFaceSchuhMisorientationColoring::~GenerateFaceSchuhMisorientationColoring() = default;
 
 // -----------------------------------------------------------------------------
 //

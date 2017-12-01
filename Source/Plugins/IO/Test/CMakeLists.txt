@@ -95,7 +95,7 @@ endif()
 configure_file(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/TestMain.cpp.in
                ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp @ONLY)
 
-QT5_WRAP_CPP( GenerateFeatureIds_MOC  "${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h")
+# QT5_WRAP_CPP( GenerateFeatureIds_MOC  "${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h")
 
 
 # Set the source files properties on each source file.

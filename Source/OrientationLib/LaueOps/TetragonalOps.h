@@ -183,8 +183,8 @@ class OrientationLib_EXPORT TetragonalOps : public LaueOps
                         float& n1, float& n2, float& n3);
 
   private:
-    TetragonalOps(const TetragonalOps&); // Copy Constructor Not Implemented
-    void operator=(const TetragonalOps&); // Operator '=' Not Implemented
+    TetragonalOps(const TetragonalOps&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const TetragonalOps&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* TetragonalOPS_H_ */

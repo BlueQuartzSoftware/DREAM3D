@@ -150,7 +150,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshFaceMisorientationColors)
 
-  GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&); // Copy Constructor Not Implemented
+  GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateFaceMisorientationColoring&);                     // Operator '=' Not Implemented
 };
 

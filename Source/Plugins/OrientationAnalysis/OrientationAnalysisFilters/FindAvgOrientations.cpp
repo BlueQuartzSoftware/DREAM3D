@@ -46,9 +46,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindAvgOrientations.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -75,9 +72,7 @@ FindAvgOrientations::FindAvgOrientations()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindAvgOrientations::~FindAvgOrientations()
-{
-}
+FindAvgOrientations::~FindAvgOrientations() = default;
 
 // -----------------------------------------------------------------------------
 //

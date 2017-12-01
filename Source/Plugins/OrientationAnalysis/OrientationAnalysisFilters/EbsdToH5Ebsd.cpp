@@ -51,9 +51,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_EbsdToH5Ebsd.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -86,9 +83,7 @@ EbsdToH5Ebsd::EbsdToH5Ebsd()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdToH5Ebsd::~EbsdToH5Ebsd()
-{
-}
+EbsdToH5Ebsd::~EbsdToH5Ebsd() = default;
 
 // -----------------------------------------------------------------------------
 //

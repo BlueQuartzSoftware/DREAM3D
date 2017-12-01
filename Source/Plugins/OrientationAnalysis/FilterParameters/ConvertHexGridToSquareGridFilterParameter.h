@@ -77,8 +77,8 @@ protected:
   ConvertHexGridToSquareGridFilterParameter();
 
 private:
-  ConvertHexGridToSquareGridFilterParameter(const ConvertHexGridToSquareGridFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ConvertHexGridToSquareGridFilterParameter&); // Operator '=' Not Implemented
+  ConvertHexGridToSquareGridFilterParameter(const ConvertHexGridToSquareGridFilterParameter&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ConvertHexGridToSquareGridFilterParameter&) = delete;                            // Operator '=' Not Implemented
 };
 
 #endif /* _ConvertHexGridToSquareGridFilterParameter_H_ */

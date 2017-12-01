@@ -178,7 +178,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(float, KernelAverageMisorientations)
 
-  FindKernelAvgMisorientations(const FindKernelAvgMisorientations&); // Copy Constructor Not Implemented
+  FindKernelAvgMisorientations(const FindKernelAvgMisorientations&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindKernelAvgMisorientations&);               // Operator '=' Not Implemented
 };
 

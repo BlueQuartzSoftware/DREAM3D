@@ -159,8 +159,8 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
-  IdentifySample(const IdentifySample&); // Copy Constructor Not Implemented
-  void operator=(const IdentifySample&); // Operator '=' Not Implemented
+  IdentifySample(const IdentifySample&) = delete; // Copy Constructor Not Implemented
+  void operator=(const IdentifySample&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* IdentifySample_H_ */

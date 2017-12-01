@@ -304,7 +304,7 @@ private:
 
   QVector<LaueOps::Pointer> m_OrientationOps;
 
-  MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
+  MatchCrystallography(const MatchCrystallography&) = delete; // Copy Constructor Not Implemented
   void operator=(const MatchCrystallography&);       // Operator '=' Not Implemented
 };
 

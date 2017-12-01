@@ -53,9 +53,6 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-// Include the MOC generated file for this class
-#include "moc_FindLocalAverageCAxisMisalignments.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -90,9 +87,7 @@ FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindLocalAverageCAxisMisalignments::~FindLocalAverageCAxisMisalignments()
-{
-}
+FindLocalAverageCAxisMisalignments::~FindLocalAverageCAxisMisalignments() = default;
 
 // -----------------------------------------------------------------------------
 //

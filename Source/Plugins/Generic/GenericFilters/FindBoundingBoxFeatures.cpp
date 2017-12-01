@@ -47,9 +47,6 @@
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindBoundingBoxFeatures.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -71,9 +68,7 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundingBoxFeatures::~FindBoundingBoxFeatures()
-{
-}
+FindBoundingBoxFeatures::~FindBoundingBoxFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

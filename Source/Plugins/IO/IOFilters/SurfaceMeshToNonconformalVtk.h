@@ -175,7 +175,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
   DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
 
-  SurfaceMeshToNonconformalVtk(const SurfaceMeshToNonconformalVtk&); // Copy Constructor Not Implemented
+  SurfaceMeshToNonconformalVtk(const SurfaceMeshToNonconformalVtk&) = delete; // Copy Constructor Not Implemented
   void operator=(const SurfaceMeshToNonconformalVtk&);               // Operator '=' Not Implemented
 };
 

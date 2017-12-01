@@ -182,7 +182,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-  FindOrientationFieldCurl(const FindOrientationFieldCurl&); // Copy Constructor Not Implemented
+  FindOrientationFieldCurl(const FindOrientationFieldCurl&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindOrientationFieldCurl&);           // Operator '=' Not Implemented
 };
 

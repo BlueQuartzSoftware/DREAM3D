@@ -48,9 +48,6 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindTriangleGeomNeighbors.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -71,9 +68,7 @@ FindTriangleGeomNeighbors::FindTriangleGeomNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTriangleGeomNeighbors::~FindTriangleGeomNeighbors()
-{
-}
+FindTriangleGeomNeighbors::~FindTriangleGeomNeighbors() = default;
 
 // -----------------------------------------------------------------------------
 //

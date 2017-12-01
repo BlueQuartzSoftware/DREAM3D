@@ -51,9 +51,6 @@
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_AbaqusHexahedronWriter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -72,9 +69,7 @@ AbaqusHexahedronWriter::AbaqusHexahedronWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbaqusHexahedronWriter::~AbaqusHexahedronWriter()
-{
-}
+AbaqusHexahedronWriter::~AbaqusHexahedronWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

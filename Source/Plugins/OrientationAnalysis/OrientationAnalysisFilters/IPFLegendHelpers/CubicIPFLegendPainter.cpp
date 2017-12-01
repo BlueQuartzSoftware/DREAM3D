@@ -46,9 +46,7 @@ CubicIPFLegendPainter::CubicIPFLegendPainter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CubicIPFLegendPainter::~CubicIPFLegendPainter()
-{
-}
+CubicIPFLegendPainter::~CubicIPFLegendPainter() = default;
 
 // -----------------------------------------------------------------------------
 //

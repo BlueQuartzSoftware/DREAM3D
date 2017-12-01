@@ -150,10 +150,8 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
     QSet<QString>         m_ArrayNames;
     bool                  m_ReadAllArrays;
 
-
-    H5EbsdVolumeReader(const H5EbsdVolumeReader&); // Copy Constructor Not Implemented
-    void operator=(const H5EbsdVolumeReader&); // Operator '=' Not Implemented
-
+    H5EbsdVolumeReader(const H5EbsdVolumeReader&) = delete; // Copy Constructor Not Implemented
+    void operator=(const H5EbsdVolumeReader&) = delete;     // Operator '=' Not Implemented
 };
 
 

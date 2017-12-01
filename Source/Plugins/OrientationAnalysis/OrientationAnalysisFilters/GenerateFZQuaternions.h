@@ -148,7 +148,7 @@ private:
   QVector<LaueOps::Pointer> m_OrientationOps;
   int32_t m_PhaseWarningCount = 0;
 
-  GenerateFZQuaternions(const GenerateFZQuaternions&); // Copy Constructor Not Implemented
+  GenerateFZQuaternions(const GenerateFZQuaternions&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateFZQuaternions&);        // Operator '=' Not Implemented
 };
 

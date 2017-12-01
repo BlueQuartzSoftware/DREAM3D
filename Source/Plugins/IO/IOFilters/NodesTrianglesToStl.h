@@ -178,7 +178,7 @@ private:
   int writeHeader(FILE* f, const QString& header, int triCount);
   int writeNumTrianglesToFile(const QString& filename, int triCount);
 
-  NodesTrianglesToStl(const NodesTrianglesToStl&); // Copy Constructor Not Implemented
+  NodesTrianglesToStl(const NodesTrianglesToStl&) = delete; // Copy Constructor Not Implemented
   void operator=(const NodesTrianglesToStl&);      // Operator '=' Not Implemented
 };
 

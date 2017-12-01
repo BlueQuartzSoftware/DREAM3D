@@ -44,9 +44,7 @@ StatsGeneratorFilterParameter::StatsGeneratorFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorFilterParameter::~StatsGeneratorFilterParameter()
-{
-}
+StatsGeneratorFilterParameter::~StatsGeneratorFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //

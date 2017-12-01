@@ -260,9 +260,6 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
 }
 }
 
-// Include the MOC generated file for this class
-#include "moc_ReplaceElementAttributesWithNeighborValues.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -279,9 +276,7 @@ ReplaceElementAttributesWithNeighborValues::ReplaceElementAttributesWithNeighbor
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReplaceElementAttributesWithNeighborValues::~ReplaceElementAttributesWithNeighborValues()
-{
-}
+ReplaceElementAttributesWithNeighborValues::~ReplaceElementAttributesWithNeighborValues() = default;
 
 // -----------------------------------------------------------------------------
 //

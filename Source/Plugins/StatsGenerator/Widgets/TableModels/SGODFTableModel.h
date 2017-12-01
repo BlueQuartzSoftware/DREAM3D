@@ -184,8 +184,8 @@ class SGODFTableModel : public QAbstractTableModel
     QVector<float> m_Weights;
     QVector<float> m_Sigmas;
 
-    SGODFTableModel(const SGODFTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGODFTableModel&); // Operator '=' Not Implemented
+    SGODFTableModel(const SGODFTableModel&) = delete; // Copy Constructor Not Implemented
+    void operator=(const SGODFTableModel&) = delete;  // Operator '=' Not Implemented
 };
 
 #endif /* _SGODFTABLEMODEL_H_ */

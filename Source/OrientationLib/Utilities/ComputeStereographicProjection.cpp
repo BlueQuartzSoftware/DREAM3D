@@ -52,9 +52,7 @@ ComputeStereographicProjection::ComputeStereographicProjection(FloatArrayType* x
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComputeStereographicProjection::~ComputeStereographicProjection()
-{
-}
+ComputeStereographicProjection::~ComputeStereographicProjection() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -111,9 +111,8 @@
 
 
     private:
-      EbsdHeaderEntry(const EbsdHeaderEntry&); // Copy Constructor Not Implemented
-      void operator=(const EbsdHeaderEntry&); // Operator '=' Not Implemented
-
+      EbsdHeaderEntry(const EbsdHeaderEntry&) = delete; // Copy Constructor Not Implemented
+      void operator=(const EbsdHeaderEntry&) = delete;  // Operator '=' Not Implemented
   };
 
 

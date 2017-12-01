@@ -162,9 +162,6 @@ public:
 private:
 };
 
-// Include the MOC generated file for this class
-#include "moc_RotateSampleRefFrame.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -184,9 +181,7 @@ RotateSampleRefFrame::RotateSampleRefFrame()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RotateSampleRefFrame::~RotateSampleRefFrame()
-{
-}
+RotateSampleRefFrame::~RotateSampleRefFrame() = default;
 
 // -----------------------------------------------------------------------------
 //

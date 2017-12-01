@@ -126,9 +126,6 @@ public:
 #endif
 };
 
-// Include the MOC generated file for this class
-#include "moc_TriangleDihedralAngleFilter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -143,9 +140,7 @@ TriangleDihedralAngleFilter::TriangleDihedralAngleFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleDihedralAngleFilter::~TriangleDihedralAngleFilter()
-{
-}
+TriangleDihedralAngleFilter::~TriangleDihedralAngleFilter() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -42,7 +42,7 @@
 
 #include "StatsGenerator/Widgets/Delegates/SGLogNormalItemDelegate.h"
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_SGLogNormalTableModel.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -56,9 +56,7 @@ SGLogNormalTableModel::SGLogNormalTableModel(QObject* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGLogNormalTableModel::~SGLogNormalTableModel()
-{
-}
+SGLogNormalTableModel::~SGLogNormalTableModel() = default;
 
 // -----------------------------------------------------------------------------
 //

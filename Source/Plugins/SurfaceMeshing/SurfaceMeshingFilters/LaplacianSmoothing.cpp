@@ -50,9 +50,6 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_LaplacianSmoothing.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -79,9 +76,7 @@ LaplacianSmoothing::LaplacianSmoothing()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LaplacianSmoothing::~LaplacianSmoothing()
-{
-}
+LaplacianSmoothing::~LaplacianSmoothing() = default;
 
 // -----------------------------------------------------------------------------
 //

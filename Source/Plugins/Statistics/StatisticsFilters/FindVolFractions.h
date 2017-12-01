@@ -158,7 +158,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(float, VolFractions)
 
-  FindVolFractions(const FindVolFractions&); // Copy Constructor Not Implemented
+  FindVolFractions(const FindVolFractions&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindVolFractions&);   // Operator '=' Not Implemented
 };
 

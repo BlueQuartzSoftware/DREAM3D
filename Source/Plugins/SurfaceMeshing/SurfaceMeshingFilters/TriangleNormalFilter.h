@@ -132,7 +132,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleNormals)
 
-  TriangleNormalFilter(const TriangleNormalFilter&); // Copy Constructor Not Implemented
+  TriangleNormalFilter(const TriangleNormalFilter&) = delete; // Copy Constructor Not Implemented
   void operator=(const TriangleNormalFilter&);       // Operator '=' Not Implemented
 };
 

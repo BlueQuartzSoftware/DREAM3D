@@ -131,8 +131,8 @@ class EMMPMLib_EXPORT EMMPMUtilities
     }
 
   private:
-    EMMPMUtilities(const EMMPMUtilities&); // Copy Constructor Not Implemented
-    void operator=(const EMMPMUtilities&); // Operator '=' Not Implemented
+    EMMPMUtilities(const EMMPMUtilities&) = delete; // Copy Constructor Not Implemented
+    void operator=(const EMMPMUtilities&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* EM_H_ */

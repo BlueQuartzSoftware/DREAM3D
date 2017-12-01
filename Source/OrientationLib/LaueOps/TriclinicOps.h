@@ -182,8 +182,8 @@ class OrientationLib_EXPORT TriclinicOps : public LaueOps
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
   private:
-    TriclinicOps(const TriclinicOps&); // Copy Constructor Not Implemented
-    void operator=(const TriclinicOps&); // Operator '=' Not Implemented
+    TriclinicOps(const TriclinicOps&) = delete;   // Copy Constructor Not Implemented
+    void operator=(const TriclinicOps&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* TriclinicOPS_H_ */

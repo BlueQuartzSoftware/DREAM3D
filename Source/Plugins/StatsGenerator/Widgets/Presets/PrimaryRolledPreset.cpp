@@ -50,9 +50,7 @@ PrimaryRolledPreset::PrimaryRolledPreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryRolledPreset::~PrimaryRolledPreset()
-{
-}
+PrimaryRolledPreset::~PrimaryRolledPreset() = default;
 
 // -----------------------------------------------------------------------------
 //

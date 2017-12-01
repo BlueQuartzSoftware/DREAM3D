@@ -71,7 +71,7 @@ protected:
   StatsGeneratorFilterParameter();
 
 private:
-  StatsGeneratorFilterParameter(const StatsGeneratorFilterParameter&); // Copy Constructor Not Implemented
+  StatsGeneratorFilterParameter(const StatsGeneratorFilterParameter&) = delete; // Copy Constructor Not Implemented
   void operator=(const StatsGeneratorFilterParameter&);                // Operator '=' Not Implemented
 };
 

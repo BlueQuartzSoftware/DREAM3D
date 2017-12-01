@@ -113,9 +113,6 @@ public:
 #endif
 };
 
-// Include the MOC generated file for this class
-#include "moc_RotateEulerRefFrame.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -135,9 +132,7 @@ RotateEulerRefFrame::RotateEulerRefFrame()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RotateEulerRefFrame::~RotateEulerRefFrame()
-{
-}
+RotateEulerRefFrame::~RotateEulerRefFrame() = default;
 
 // -----------------------------------------------------------------------------
 //

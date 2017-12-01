@@ -52,9 +52,7 @@ OrientationUtilityWidget::OrientationUtilityWidget(FilterParameter* parameter, A
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtilityWidget::~OrientationUtilityWidget()
-{
-}
+OrientationUtilityWidget::~OrientationUtilityWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

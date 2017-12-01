@@ -3,7 +3,6 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-//#include "moc_PreflightVerify.cpp"
 
 PreflightVerify::PreflightVerify(QObject* parent)
 : QObject(parent)
@@ -13,9 +12,7 @@ PreflightVerify::PreflightVerify(QObject* parent)
 , m_filterNeedsInputParameters(false)
 {
 }
-PreflightVerify::~PreflightVerify()
-{
-}
+PreflightVerify::~PreflightVerify() = default;
 
 void PreflightVerify::widgetChanged(const QString& msg)
 {

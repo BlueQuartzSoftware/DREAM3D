@@ -162,7 +162,7 @@ protected:
   void initialize();
 
 private:
-  RotateSampleRefFrame(const RotateSampleRefFrame&); // Copy Constructor Not Implemented
+  RotateSampleRefFrame(const RotateSampleRefFrame&) = delete; // Copy Constructor Not Implemented
   void operator=(const RotateSampleRefFrame&);       // Operator '=' Not Implemented
 };
 

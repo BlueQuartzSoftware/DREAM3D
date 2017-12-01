@@ -277,9 +277,6 @@ class ComputeDistanceMapImpl
     }
 };
 
-// Include the MOC generated file for this class
-#include "moc_FindEuclideanDistMap.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -310,9 +307,7 @@ FindEuclideanDistMap::FindEuclideanDistMap()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindEuclideanDistMap::~FindEuclideanDistMap()
-{
-}
+FindEuclideanDistMap::~FindEuclideanDistMap() = default;
 
 // -----------------------------------------------------------------------------
 //

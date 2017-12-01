@@ -133,7 +133,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   DEFINE_DATAARRAY_VARIABLE(uint32_t, FeatureRect)
 
-  ComputeFeatureRect(const ComputeFeatureRect&); // Copy Constructor Not Implemented
+  ComputeFeatureRect(const ComputeFeatureRect&) = delete; // Copy Constructor Not Implemented
   void operator=(const ComputeFeatureRect&);     // Operator '=' Not Implemented
 };
 

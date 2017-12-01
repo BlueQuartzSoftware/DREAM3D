@@ -87,8 +87,8 @@ class OrientationLib_EXPORT TexturePreset
     TexturePreset();
 
   private:
-    TexturePreset(const TexturePreset&); // Copy Constructor Not Implemented
-    void operator=(const TexturePreset&); // Operator '=' Not Implemented
+    TexturePreset(const TexturePreset&) = delete;  // Copy Constructor Not Implemented
+    void operator=(const TexturePreset&) = delete; // Operator '=' Not Implemented
 };
 
 
@@ -105,8 +105,8 @@ class OrientationLib_EXPORT CubicTexturePresets
     CubicTexturePresets();
 
   private:
-    CubicTexturePresets(const CubicTexturePresets&); // Copy Constructor Not Implemented
-    void operator=(const CubicTexturePresets&); // Operator '=' Not Implemented
+    CubicTexturePresets(const CubicTexturePresets&) = delete; // Copy Constructor Not Implemented
+    void operator=(const CubicTexturePresets&) = delete;      // Operator '=' Not Implemented
 };
 
 /**
@@ -122,8 +122,8 @@ class OrientationLib_EXPORT HexTexturePresets
     HexTexturePresets();
 
   private:
-    HexTexturePresets(const HexTexturePresets&); // Copy Constructor Not Implemented
-    void operator=(const HexTexturePresets&); // Operator '=' Not Implemented
+    HexTexturePresets(const HexTexturePresets&) = delete; // Copy Constructor Not Implemented
+    void operator=(const HexTexturePresets&) = delete;    // Operator '=' Not Implemented
 };
 
 #endif /* TEXTUREPRESET_H_ */

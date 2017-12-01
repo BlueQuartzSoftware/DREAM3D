@@ -173,7 +173,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented
+  ChangeResolution(const ChangeResolution&) = delete; // Copy Constructor Not Implemented
   void operator=(const ChangeResolution&);   // Operator '=' Not Implemented
 };
 

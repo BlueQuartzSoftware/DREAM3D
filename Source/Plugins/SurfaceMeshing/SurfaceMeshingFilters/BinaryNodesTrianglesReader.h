@@ -117,8 +117,8 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
 
-    BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&); // Copy Constructor Not Implemented
-    void operator=(const BinaryNodesTrianglesReader&); // Operator '=' Not Implemented
+    BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&) = delete; // Copy Constructor Not Implemented
+    void operator=(const BinaryNodesTrianglesReader&) = delete;             // Operator '=' Not Implemented
 };
 
 #endif /* _BinaryNodesTrianglesReader_H_ */

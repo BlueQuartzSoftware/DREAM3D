@@ -202,7 +202,7 @@ protected:
 private:
   QString m_EstimatedPrimaryFeatures;
 
-  InitializeSyntheticVolume(const InitializeSyntheticVolume&); // Copy Constructor Not Implemented
+  InitializeSyntheticVolume(const InitializeSyntheticVolume&) = delete; // Copy Constructor Not Implemented
   void operator=(const InitializeSyntheticVolume&);            // Operator '=' Not Implemented
 };
 

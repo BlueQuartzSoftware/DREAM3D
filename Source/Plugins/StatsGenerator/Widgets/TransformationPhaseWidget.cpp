@@ -73,7 +73,6 @@
 #include <qwt_plot_marker.h>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_TransformationPhaseWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -96,9 +95,7 @@ TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TransformationPhaseWidget::~TransformationPhaseWidget()
-{
-}
+TransformationPhaseWidget::~TransformationPhaseWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

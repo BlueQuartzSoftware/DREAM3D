@@ -165,7 +165,7 @@ protected:
   void initialize();
 
 private:
-  LammpsFileWriter(const LammpsFileWriter&); // Copy Constructor Not Implemented
+  LammpsFileWriter(const LammpsFileWriter&) = delete; // Copy Constructor Not Implemented
   void operator=(const LammpsFileWriter&);   // Operator '=' Not Implemented
 };
 

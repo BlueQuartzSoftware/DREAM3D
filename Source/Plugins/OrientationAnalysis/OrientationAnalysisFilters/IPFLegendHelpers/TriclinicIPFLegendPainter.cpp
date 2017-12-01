@@ -46,9 +46,7 @@ TriclinicIPFLegendPainter::TriclinicIPFLegendPainter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriclinicIPFLegendPainter::~TriclinicIPFLegendPainter()
-{
-}
+TriclinicIPFLegendPainter::~TriclinicIPFLegendPainter() = default;
 
 // -----------------------------------------------------------------------------
 //

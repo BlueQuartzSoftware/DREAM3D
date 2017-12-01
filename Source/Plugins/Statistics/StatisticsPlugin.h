@@ -167,8 +167,8 @@ class StatisticsPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    StatisticsPlugin(const StatisticsPlugin&); // Copy Constructor Not Implemented
-    void operator=(const StatisticsPlugin&); // Operator '=' Not Implemented
+    StatisticsPlugin(const StatisticsPlugin&) = delete; // Copy Constructor Not Implemented
+    void operator=(const StatisticsPlugin&) = delete;   // Operator '=' Not Implemented
 };
 
 #endif /* _Statistics_H_ */

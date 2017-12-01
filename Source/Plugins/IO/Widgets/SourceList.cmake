@@ -50,7 +50,7 @@ cmp_IDE_SOURCE_PROPERTIES( "Widgets" "${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGI
 # Organize the Source files for things like Visual Studio and Xcode
 cmp_IDE_GENERATED_PROPERTIES("Widgets/UI_Files" "${${PLUGIN_NAME}_Widgets_UIS}" "")
 
-QT5_WRAP_CPP( ${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_Widgets_HDRS} )
+# QT5_WRAP_CPP( ${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_Widgets_HDRS} )
 
 # --------------------------------------------------------------------
 # We are using CMake's AuotMoc feature so we do not need to wrap our .cpp files with a specific call to 'moc'

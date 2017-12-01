@@ -167,7 +167,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
-  SampleSurfaceMesh(const SampleSurfaceMesh&); // Copy Constructor Not Implemented
+  SampleSurfaceMesh(const SampleSurfaceMesh&) = delete; // Copy Constructor Not Implemented
   void operator=(const SampleSurfaceMesh&);    // Operator '=' Not Implemented
 };
 

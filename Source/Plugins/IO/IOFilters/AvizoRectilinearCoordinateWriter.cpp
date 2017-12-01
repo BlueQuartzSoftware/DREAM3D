@@ -52,9 +52,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLibVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_AvizoRectilinearCoordinateWriter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -73,9 +70,7 @@ AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AvizoRectilinearCoordinateWriter::~AvizoRectilinearCoordinateWriter()
-{
-}
+AvizoRectilinearCoordinateWriter::~AvizoRectilinearCoordinateWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

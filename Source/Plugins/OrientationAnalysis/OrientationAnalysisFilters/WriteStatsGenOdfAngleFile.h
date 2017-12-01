@@ -191,7 +191,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
-  WriteStatsGenOdfAngleFile(const WriteStatsGenOdfAngleFile&); // Copy Constructor Not Implemented
+  WriteStatsGenOdfAngleFile(const WriteStatsGenOdfAngleFile&) = delete; // Copy Constructor Not Implemented
   void operator=(const WriteStatsGenOdfAngleFile&);            // Operator '=' Not Implemented
 };
 

@@ -141,7 +141,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, Omega2)
   DEFINE_DATAARRAY_VARIABLE(float, CentralMoments)
 
-  ComputeMomentInvariants2D(const ComputeMomentInvariants2D&); // Copy Constructor Not Implemented
+  ComputeMomentInvariants2D(const ComputeMomentInvariants2D&) = delete; // Copy Constructor Not Implemented
   void operator=(const ComputeMomentInvariants2D&);            // Operator '=' Not Implemented
 };
 

@@ -175,8 +175,8 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     QSet<QString>         m_ArrayNames;
     bool                  m_ReadAllArrays;
 
-    H5AngReader(const H5AngReader&); // Copy Constructor Not Implemented
-    void operator=(const H5AngReader&); // Operator '=' Not Implemented
+    H5AngReader(const H5AngReader&) = delete;    // Copy Constructor Not Implemented
+    void operator=(const H5AngReader&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _H5ANGREADER_H_ */

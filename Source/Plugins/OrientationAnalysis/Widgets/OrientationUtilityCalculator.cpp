@@ -58,9 +58,7 @@ OrientationUtilityCalculator::OrientationUtilityCalculator(QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtilityCalculator::~OrientationUtilityCalculator()
-{
-}
+OrientationUtilityCalculator::~OrientationUtilityCalculator() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -45,7 +45,6 @@
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_OrientationAnalysisPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -65,9 +64,7 @@ OrientationAnalysisPlugin::OrientationAnalysisPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationAnalysisPlugin::~OrientationAnalysisPlugin()
-{
-}
+OrientationAnalysisPlugin::~OrientationAnalysisPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

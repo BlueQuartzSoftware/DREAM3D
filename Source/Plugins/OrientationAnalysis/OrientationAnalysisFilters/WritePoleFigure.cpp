@@ -69,9 +69,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_WritePoleFigure.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -102,9 +99,7 @@ WritePoleFigure::WritePoleFigure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WritePoleFigure::~WritePoleFigure()
-{
-}
+WritePoleFigure::~WritePoleFigure() = default;
 
 // -----------------------------------------------------------------------------
 //

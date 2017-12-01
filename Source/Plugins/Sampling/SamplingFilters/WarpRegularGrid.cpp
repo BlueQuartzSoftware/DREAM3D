@@ -50,9 +50,6 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_WarpRegularGrid.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -92,9 +89,7 @@ WarpRegularGrid::WarpRegularGrid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-WarpRegularGrid::~WarpRegularGrid()
-{
-}
+WarpRegularGrid::~WarpRegularGrid() = default;
 
 // -----------------------------------------------------------------------------
 //

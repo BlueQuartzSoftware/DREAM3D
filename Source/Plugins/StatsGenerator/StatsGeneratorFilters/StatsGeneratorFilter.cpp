@@ -59,9 +59,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_StatsGeneratorFilter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -80,9 +77,7 @@ StatsGeneratorFilter::StatsGeneratorFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorFilter::~StatsGeneratorFilter()
-{
-}
+StatsGeneratorFilter::~StatsGeneratorFilter() = default;
 
 // -----------------------------------------------------------------------------
 //

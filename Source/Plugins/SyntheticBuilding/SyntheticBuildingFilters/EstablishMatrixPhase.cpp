@@ -53,9 +53,6 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_EstablishMatrixPhase.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -91,9 +88,7 @@ EstablishMatrixPhase::EstablishMatrixPhase()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EstablishMatrixPhase::~EstablishMatrixPhase()
-{
-}
+EstablishMatrixPhase::~EstablishMatrixPhase() = default;
 
 // -----------------------------------------------------------------------------
 //

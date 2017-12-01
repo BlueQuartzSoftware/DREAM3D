@@ -173,7 +173,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
   DEFINE_STRINGARRAY_VARIABLE(PhaseNames)
 
-  CreateEnsembleInfo(const CreateEnsembleInfo&); // Copy Constructor Not Implemented
+  CreateEnsembleInfo(const CreateEnsembleInfo&) = delete; // Copy Constructor Not Implemented
   void operator=(const CreateEnsembleInfo&);     // Operator '=' Not Implemented
 };
 

@@ -68,8 +68,8 @@ class DistributionAnalysisOps
     DistributionAnalysisOps();
 
   private:
-    DistributionAnalysisOps(const DistributionAnalysisOps&); // Copy Constructor Not Implemented
-    void operator=(const DistributionAnalysisOps&); // Operator '=' Not Implemented
+    DistributionAnalysisOps(const DistributionAnalysisOps&) = delete; // Copy Constructor Not Implemented
+    void operator=(const DistributionAnalysisOps&) = delete;          // Operator '=' Not Implemented
 };
 
 #endif /* _DistributionAnalysisOps_H_ */

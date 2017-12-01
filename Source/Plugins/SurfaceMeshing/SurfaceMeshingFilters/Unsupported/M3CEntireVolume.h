@@ -203,7 +203,7 @@ private:
 
   void cleanupUnusedNodesTriangles(SurfaceMesh::M3C::Node* nodes, SurfaceMesh::M3C::Triangle* triangles);
 
-  M3CEntireVolume(const M3CEntireVolume&); // Copy Constructor Not Implemented
+  M3CEntireVolume(const M3CEntireVolume&) = delete; // Copy Constructor Not Implemented
   void operator=(const M3CEntireVolume&);  // Operator '=' Not Implemented
 };
 

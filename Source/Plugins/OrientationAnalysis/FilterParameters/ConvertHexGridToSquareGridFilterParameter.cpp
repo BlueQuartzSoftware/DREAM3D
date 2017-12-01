@@ -48,9 +48,7 @@ ConvertHexGridToSquareGridFilterParameter::ConvertHexGridToSquareGridFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ConvertHexGridToSquareGridFilterParameter::~ConvertHexGridToSquareGridFilterParameter()
-{
-}
+ConvertHexGridToSquareGridFilterParameter::~ConvertHexGridToSquareGridFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //

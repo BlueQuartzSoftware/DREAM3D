@@ -221,7 +221,7 @@ private:
 
   double m_ScaleFactor;
 
-  FindTriangleGeomShapes(const FindTriangleGeomShapes&); // Copy Constructor Not Implemented
+  FindTriangleGeomShapes(const FindTriangleGeomShapes&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindTriangleGeomShapes&);         // Operator '=' Not Implemented
 };
 

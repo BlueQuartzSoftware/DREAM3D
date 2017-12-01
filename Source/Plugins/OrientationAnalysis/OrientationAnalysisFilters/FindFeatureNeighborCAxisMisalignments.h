@@ -183,7 +183,7 @@ private:
   NeighborList<int32_t>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
 
-  FindFeatureNeighborCAxisMisalignments(const FindFeatureNeighborCAxisMisalignments&); // Copy Constructor Not Implemented
+  FindFeatureNeighborCAxisMisalignments(const FindFeatureNeighborCAxisMisalignments&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindFeatureNeighborCAxisMisalignments&);                        // Operator '=' Not Implemented
 };
 

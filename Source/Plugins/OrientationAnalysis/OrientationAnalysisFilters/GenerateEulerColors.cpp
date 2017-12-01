@@ -50,9 +50,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_GenerateEulerColors.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -75,9 +72,7 @@ GenerateEulerColors::GenerateEulerColors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateEulerColors::~GenerateEulerColors()
-{
-}
+GenerateEulerColors::~GenerateEulerColors() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -38,7 +38,6 @@
 #include <QtGui/QDoubleValidator>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_TextureDialog.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -54,9 +53,7 @@ TextureDialog::TextureDialog(unsigned int xtal, QWidget* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TextureDialog::~TextureDialog()
-{
-}
+TextureDialog::~TextureDialog() = default;
 
 // -----------------------------------------------------------------------------
 //

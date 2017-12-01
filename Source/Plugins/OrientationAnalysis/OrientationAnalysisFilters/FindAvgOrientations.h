@@ -178,7 +178,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
   DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
 
-  FindAvgOrientations(const FindAvgOrientations&); // Copy Constructor Not Implemented
+  FindAvgOrientations(const FindAvgOrientations&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindAvgOrientations&);      // Operator '=' Not Implemented
 };
 

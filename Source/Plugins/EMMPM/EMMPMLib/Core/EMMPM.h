@@ -91,8 +91,8 @@ class EMMPMLib_EXPORT EMMPM : public Observable
     EMMPM();
 
   private:
-    EMMPM(const EMMPM&); // Copy Constructor Not Implemented
-    void operator=(const EMMPM&); // Operator '=' Not Implemented
+    EMMPM(const EMMPM&) = delete;          // Copy Constructor Not Implemented
+    void operator=(const EMMPM&) = delete; // Operator '=' Not Implemented
 };
 
 

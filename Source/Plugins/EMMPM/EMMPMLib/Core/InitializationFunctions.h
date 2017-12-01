@@ -65,8 +65,8 @@ class EMMPMLib_EXPORT InitializationFunction
     InitializationFunction();
 
   private:
-    InitializationFunction(const InitializationFunction&); // Copy Constructor Not Implemented
-    void operator=(const InitializationFunction&); // Operator '=' Not Implemented
+    InitializationFunction(const InitializationFunction&) = delete; // Copy Constructor Not Implemented
+    void operator=(const InitializationFunction&) = delete;         // Operator '=' Not Implemented
 };
 
 
@@ -91,9 +91,8 @@ class EMMPMLib_EXPORT BasicInitialization : public InitializationFunction
     BasicInitialization();
 
   private:
-    BasicInitialization(const BasicInitialization&); // Copy Constructor Not Implemented
-    void operator=(const BasicInitialization&); // Operator '=' Not Implemented
-
+    BasicInitialization(const BasicInitialization&) = delete; // Copy Constructor Not Implemented
+    void operator=(const BasicInitialization&) = delete;      // Operator '=' Not Implemented
 };
 
 /**
@@ -117,9 +116,8 @@ class EMMPMLib_EXPORT UserDefinedAreasInitialization : public InitializationFunc
     UserDefinedAreasInitialization();
 
   private:
-    UserDefinedAreasInitialization(const UserDefinedAreasInitialization&); // Copy Constructor Not Implemented
-    void operator=(const UserDefinedAreasInitialization&); // Operator '=' Not Implemented
-
+    UserDefinedAreasInitialization(const UserDefinedAreasInitialization&) = delete; // Copy Constructor Not Implemented
+    void operator=(const UserDefinedAreasInitialization&) = delete;                 // Operator '=' Not Implemented
 };
 
 
@@ -144,8 +142,8 @@ class EMMPMLib_EXPORT XtArrayInitialization : public InitializationFunction
     XtArrayInitialization();
 
   private:
-    XtArrayInitialization(const XtArrayInitialization&); // Copy Constructor Not Implemented
-    void operator=(const XtArrayInitialization&); // Operator '=' Not Implemented
+    XtArrayInitialization(const XtArrayInitialization&) = delete; // Copy Constructor Not Implemented
+    void operator=(const XtArrayInitialization&) = delete;        // Operator '=' Not Implemented
 };
 
 /**
@@ -169,8 +167,8 @@ class EMMPMLib_EXPORT GradientVariablesInitialization : public InitializationFun
     GradientVariablesInitialization();
 
   private:
-    GradientVariablesInitialization(const GradientVariablesInitialization&); // Copy Constructor Not Implemented
-    void operator=(const GradientVariablesInitialization&); // Operator '=' Not Implemented
+    GradientVariablesInitialization(const GradientVariablesInitialization&) = delete; // Copy Constructor Not Implemented
+    void operator=(const GradientVariablesInitialization&) = delete;                  // Operator '=' Not Implemented
 };
 
 /**
@@ -200,8 +198,8 @@ class EMMPMLib_EXPORT CurvatureInitialization : public InitializationFunction
     CurvatureInitialization();
 
   private:
-    CurvatureInitialization(const CurvatureInitialization&); // Copy Constructor Not Implemented
-    void operator=(const CurvatureInitialization&); // Operator '=' Not Implemented
+    CurvatureInitialization(const CurvatureInitialization&) = delete; // Copy Constructor Not Implemented
+    void operator=(const CurvatureInitialization&) = delete;          // Operator '=' Not Implemented
 };
 
 

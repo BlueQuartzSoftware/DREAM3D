@@ -48,9 +48,6 @@
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindBoundaryCells.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -69,9 +66,7 @@ FindBoundaryCells::FindBoundaryCells()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindBoundaryCells::~FindBoundaryCells()
-{
-}
+FindBoundaryCells::~FindBoundaryCells() = default;
 
 // -----------------------------------------------------------------------------
 //

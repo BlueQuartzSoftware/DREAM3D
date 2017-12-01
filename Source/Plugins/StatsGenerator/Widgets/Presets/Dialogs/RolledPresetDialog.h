@@ -72,9 +72,8 @@ class RolledPresetDialog : public QDialog
     QLineEdit* B;
     QLineEdit* C;
 
-
-    RolledPresetDialog(const RolledPresetDialog&); // Copy Constructor Not Implemented
-    void operator=(const RolledPresetDialog&); // Operator '=' Not Implemented
+    RolledPresetDialog(const RolledPresetDialog&) = delete; // Copy Constructor Not Implemented
+    void operator=(const RolledPresetDialog&) = delete;     // Operator '=' Not Implemented
 };
 
 #endif /* RolledPresetDialog_H_ */

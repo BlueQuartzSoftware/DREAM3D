@@ -205,7 +205,7 @@ private:
   static const float k_ResolutionChoices[][2];
   static const double k_BallVolumesM3M[];
 
-  FindGBCDMetricBased(const FindGBCDMetricBased&); // Copy Constructor Not Implemented
+  FindGBCDMetricBased(const FindGBCDMetricBased&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindGBCDMetricBased&);      // Operator '=' Not Implemented
 };
 

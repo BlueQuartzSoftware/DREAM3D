@@ -166,8 +166,8 @@ class OrientationAnalysisPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    OrientationAnalysisPlugin(const OrientationAnalysisPlugin&); // Copy Constructor Not Implemented
-    void operator=(const OrientationAnalysisPlugin&); // Operator '=' Not Implemented
+    OrientationAnalysisPlugin(const OrientationAnalysisPlugin&) = delete; // Copy Constructor Not Implemented
+    void operator=(const OrientationAnalysisPlugin&) = delete;            // Operator '=' Not Implemented
 };
 
 #endif /* _OrientationAnalysis_H_ */

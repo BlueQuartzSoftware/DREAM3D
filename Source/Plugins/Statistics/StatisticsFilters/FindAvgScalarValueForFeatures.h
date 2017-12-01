@@ -167,7 +167,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(float, NewFeatureArray)
 
-  FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&); // Copy Constructor Not Implemented
+  FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindAvgScalarValueForFeatures&);                // Operator '=' Not Implemented
 };
 

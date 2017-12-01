@@ -48,9 +48,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindKernelAvgMisorientations.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -79,9 +76,7 @@ FindKernelAvgMisorientations::FindKernelAvgMisorientations()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindKernelAvgMisorientations::~FindKernelAvgMisorientations()
-{
-}
+FindKernelAvgMisorientations::~FindKernelAvgMisorientations() = default;
 
 // -----------------------------------------------------------------------------
 //

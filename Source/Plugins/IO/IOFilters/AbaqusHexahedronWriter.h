@@ -226,7 +226,7 @@ private:
    */
   void deleteFile(const QList<QString>& fileNames);
 
-  AbaqusHexahedronWriter(const AbaqusHexahedronWriter&); // Copy Constructor Not Implemented
+  AbaqusHexahedronWriter(const AbaqusHexahedronWriter&) = delete; // Copy Constructor Not Implemented
   void operator=(const AbaqusHexahedronWriter&);         // Operator '=' Not Implemented
 };
 

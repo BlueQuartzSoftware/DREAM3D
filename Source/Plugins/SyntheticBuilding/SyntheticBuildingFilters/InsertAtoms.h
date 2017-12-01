@@ -188,7 +188,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, AtomFeatureLabels)
 
   InsertAtoms(const InsertAtoms&);    // Copy Constructor Not Implemented
-  void operator=(const InsertAtoms&); // Operator '=' Not Implemented
+  void operator=(const InsertAtoms&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* InsertAtoms_H_ */

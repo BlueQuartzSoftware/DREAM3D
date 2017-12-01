@@ -211,8 +211,8 @@ private:
   IntVec3_t m_NewDimensions;
   FloatVec3_t m_NewResolution;
   FloatVec3_t m_NewOrigin;
-  
-  CropImageGeometry(const CropImageGeometry&); // Copy Constructor Not Implemented
+
+  CropImageGeometry(const CropImageGeometry&) = delete; // Copy Constructor Not Implemented
   void operator=(const CropImageGeometry&);    // Operator '=' Not Implemented
 };
 

@@ -53,7 +53,7 @@ protected:
   QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
 private:
-  TrigonalIPFLegendPainter(const TrigonalIPFLegendPainter&); // Copy Constructor Not Implemented
+  TrigonalIPFLegendPainter(const TrigonalIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
   void operator=(const TrigonalIPFLegendPainter&);           // Operator '=' Not Implemented
 };
 

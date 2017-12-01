@@ -192,7 +192,7 @@ private:
    */
   void dataCheckSurfaceMesh();
 
-  FindTwinBoundaries(const FindTwinBoundaries&); // Copy Constructor Not Implemented
+  FindTwinBoundaries(const FindTwinBoundaries&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindTwinBoundaries&);     // Operator '=' Not Implemented
 };
 

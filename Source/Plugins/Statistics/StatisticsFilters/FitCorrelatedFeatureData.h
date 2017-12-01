@@ -193,7 +193,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
-  FitCorrelatedFeatureData(const FitCorrelatedFeatureData&); // Copy Constructor Not Implemented
+  FitCorrelatedFeatureData(const FitCorrelatedFeatureData&) = delete; // Copy Constructor Not Implemented
   void operator=(const FitCorrelatedFeatureData&);           // Operator '=' Not Implemented
 };
 

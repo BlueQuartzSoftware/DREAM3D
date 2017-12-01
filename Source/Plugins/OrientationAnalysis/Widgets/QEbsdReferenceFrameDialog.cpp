@@ -91,9 +91,7 @@ QEbsdReferenceFrameDialog::QEbsdReferenceFrameDialog(QString filename, QWidget* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QEbsdReferenceFrameDialog::~QEbsdReferenceFrameDialog()
-{
-}
+QEbsdReferenceFrameDialog::~QEbsdReferenceFrameDialog() = default;
 
 // -----------------------------------------------------------------------------
 //

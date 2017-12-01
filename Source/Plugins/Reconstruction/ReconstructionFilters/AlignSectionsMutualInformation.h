@@ -170,7 +170,7 @@ private:
   Int32ArrayType::Pointer m_MIFeaturesPtr;
   uint64_t m_RandomSeed;
 
-  AlignSectionsMutualInformation(const AlignSectionsMutualInformation&); // Copy Constructor Not Implemented
+  AlignSectionsMutualInformation(const AlignSectionsMutualInformation&) = delete; // Copy Constructor Not Implemented
   void operator=(const AlignSectionsMutualInformation&);                 // Operator '=' Not Implemented
 };
 

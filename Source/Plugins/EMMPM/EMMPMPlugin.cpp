@@ -14,7 +14,6 @@
 #include "EMMPM/EMMPMVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_EMMPMPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -34,9 +33,7 @@ EMMPMPlugin::EMMPMPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EMMPMPlugin::~EMMPMPlugin()
-{
-}
+EMMPMPlugin::~EMMPMPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

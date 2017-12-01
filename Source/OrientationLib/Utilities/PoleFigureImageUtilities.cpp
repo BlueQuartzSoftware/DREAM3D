@@ -58,9 +58,7 @@ PoleFigureImageUtilities::PoleFigureImageUtilities() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PoleFigureImageUtilities::~PoleFigureImageUtilities()
-{
-}
+PoleFigureImageUtilities::~PoleFigureImageUtilities() = default;
 
 // -----------------------------------------------------------------------------
 //

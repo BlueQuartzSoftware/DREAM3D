@@ -218,8 +218,8 @@ private:
   */
   template <typename T> void checkInitialization(IDataArray::Pointer p);
 
-  InitializeData(const InitializeData&); // Copy Constructor Not Implemented
-  void operator=(const InitializeData&); // Operator '=' Not Implemented
+  InitializeData(const InitializeData&) = delete; // Copy Constructor Not Implemented
+  void operator=(const InitializeData&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* InitializeData_H_ */

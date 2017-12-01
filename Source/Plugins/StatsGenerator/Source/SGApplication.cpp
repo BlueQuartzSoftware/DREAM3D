@@ -41,7 +41,7 @@
 #include <QtWidgets/QDesktopWidget>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_SGApplication.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -53,9 +53,7 @@ SGApplication::SGApplication(int& argc, char** argv)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGApplication::~SGApplication()
-{
-}
+SGApplication::~SGApplication() = default;
 
 // -----------------------------------------------------------------------------
 //

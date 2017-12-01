@@ -69,7 +69,7 @@
 #include "StatsGenerator/Widgets/EditPhaseDialog.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-//#include "moc_StatsGeneratorWidget.cpp"
+//
 
 // -----------------------------------------------------------------------------
 //
@@ -92,9 +92,7 @@ StatsGeneratorWidget::StatsGeneratorWidget(FilterParameter* parameter, AbstractF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorWidget::~StatsGeneratorWidget()
-{
-}
+StatsGeneratorWidget::~StatsGeneratorWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

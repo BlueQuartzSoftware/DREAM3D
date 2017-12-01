@@ -51,9 +51,6 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_CropImageGeometry.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -80,9 +77,7 @@ CropImageGeometry::CropImageGeometry()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CropImageGeometry::~CropImageGeometry()
-{
-}
+CropImageGeometry::~CropImageGeometry() = default;
 
 // -----------------------------------------------------------------------------
 //

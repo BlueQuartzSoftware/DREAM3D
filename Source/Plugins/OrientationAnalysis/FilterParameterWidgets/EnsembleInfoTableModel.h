@@ -163,7 +163,7 @@ private:
 
   EnsembleInfo m_EnsembleInfo;
 
-  EnsembleInfoTableModel(const EnsembleInfoTableModel&); // Copy Constructor Not Implemented
+  EnsembleInfoTableModel(const EnsembleInfoTableModel&) = delete; // Copy Constructor Not Implemented
   void operator=(const EnsembleInfoTableModel&);         // Operator '=' Not Implemented
 };
 

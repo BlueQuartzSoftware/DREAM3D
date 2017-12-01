@@ -204,7 +204,7 @@ private:
    */
   void updateFeatureInstancePointers();
 
-  CAxisSegmentFeatures(const CAxisSegmentFeatures&); // Copy Constructor Not Implemented
+  CAxisSegmentFeatures(const CAxisSegmentFeatures&) = delete; // Copy Constructor Not Implemented
   void operator=(const CAxisSegmentFeatures&);       // Operator '=' Not Implemented
 };
 

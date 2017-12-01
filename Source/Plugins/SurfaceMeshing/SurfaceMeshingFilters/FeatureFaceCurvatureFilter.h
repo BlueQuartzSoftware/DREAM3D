@@ -193,8 +193,7 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleCentroids)
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
     DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
-
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshUniqueEdges)
+    DataArray<int32_t>::WeakPointer m_SurfaceMeshUniqueEdgesPtr;
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature1s)
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature2s)
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection1s)
@@ -206,9 +205,8 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     int32_t  m_TotalFeatureFaces;
     int32_t  m_CompletedFeatureFaces;
 
-
-    FeatureFaceCurvatureFilter(const FeatureFaceCurvatureFilter&); // Copy Constructor Not Implemented
-    void operator=(const FeatureFaceCurvatureFilter&); // Operator '=' Not Implemented
+    FeatureFaceCurvatureFilter(const FeatureFaceCurvatureFilter&) = delete; // Copy Constructor Not Implemented
+    void operator=(const FeatureFaceCurvatureFilter&) = delete;             // Operator '=' Not Implemented
 };
 
 #endif /* FeatureFaceCurvatureFilter_H_ */

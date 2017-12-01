@@ -45,7 +45,6 @@
 #include "Generic/GenericVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_GenericPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -66,9 +65,7 @@ GenericPlugin::GenericPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenericPlugin::~GenericPlugin()
-{
-}
+GenericPlugin::~GenericPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

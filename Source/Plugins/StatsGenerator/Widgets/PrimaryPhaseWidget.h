@@ -133,7 +133,7 @@ private:
   QButtonGroup            m_DistButtonGroup;
   bool m_ResetData = false;
 
-  PrimaryPhaseWidget(const PrimaryPhaseWidget&); // Copy Constructor Not Implemented
+  PrimaryPhaseWidget(const PrimaryPhaseWidget&) = delete; // Copy Constructor Not Implemented
   void operator=(const PrimaryPhaseWidget&);     // Operator '=' Not Implemented
 };
 

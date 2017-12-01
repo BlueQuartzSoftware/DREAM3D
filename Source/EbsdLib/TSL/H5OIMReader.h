@@ -182,8 +182,8 @@ class EbsdLib_EXPORT H5OIMReader : public AngReader
     QSet<QString>         m_ArrayNames;
     bool                  m_ReadAllArrays;
 
-    H5OIMReader(const H5OIMReader&); // Copy Constructor Not Implemented
-    void operator=(const H5OIMReader&); // Operator '=' Not Implemented
+    H5OIMReader(const H5OIMReader&) = delete;    // Copy Constructor Not Implemented
+    void operator=(const H5OIMReader&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _H5OIMReader_H_ */

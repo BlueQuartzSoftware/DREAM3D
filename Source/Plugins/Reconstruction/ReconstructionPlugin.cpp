@@ -45,7 +45,6 @@
 #include "Reconstruction/ReconstructionVersion.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_ReconstructionPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -65,9 +64,7 @@ ReconstructionPlugin::ReconstructionPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReconstructionPlugin::~ReconstructionPlugin()
-{
-}
+ReconstructionPlugin::~ReconstructionPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

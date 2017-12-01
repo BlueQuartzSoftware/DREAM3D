@@ -223,9 +223,6 @@ private:
   float m_CAxisTolerance;
 };
 
-// Include the MOC generated file for this class
-#include "moc_IdentifyMicroTextureRegions.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -260,9 +257,7 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IdentifyMicroTextureRegions::~IdentifyMicroTextureRegions()
-{
-}
+IdentifyMicroTextureRegions::~IdentifyMicroTextureRegions() = default;
 
 // -----------------------------------------------------------------------------
 //

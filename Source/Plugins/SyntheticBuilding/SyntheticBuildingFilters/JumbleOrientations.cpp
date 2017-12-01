@@ -52,9 +52,6 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_JumbleOrientations.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,9 +74,7 @@ JumbleOrientations::JumbleOrientations()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-JumbleOrientations::~JumbleOrientations()
-{
-}
+JumbleOrientations::~JumbleOrientations() = default;
 
 // -----------------------------------------------------------------------------
 //

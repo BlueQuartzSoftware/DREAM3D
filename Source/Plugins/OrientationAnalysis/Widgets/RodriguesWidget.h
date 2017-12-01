@@ -59,8 +59,8 @@ class RodriguesWidget : public OrientationWidget, private Ui::RodriguesWidget
 
     QVector<double> getValues();
 
-    RodriguesWidget(const RodriguesWidget&); // Copy Constructor Not Implemented
-    void operator=(const RodriguesWidget&); // Operator '=' Not Implemented
+    RodriguesWidget(const RodriguesWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const RodriguesWidget&) = delete;  // Operator '=' Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

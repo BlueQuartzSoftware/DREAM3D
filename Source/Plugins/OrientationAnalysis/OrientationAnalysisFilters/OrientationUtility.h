@@ -118,7 +118,7 @@ protected:
   void initialize();
 
 private:
-  OrientationUtility(const OrientationUtility&); // Copy Constructor Not Implemented
+  OrientationUtility(const OrientationUtility&) = delete; // Copy Constructor Not Implemented
   void operator=(const OrientationUtility&);     // Operator '=' Not Implemented
 };
 

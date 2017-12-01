@@ -154,7 +154,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(uint8_t, SurfaceMeshFaceIPFColors)
 
-  GenerateFaceIPFColoring(const GenerateFaceIPFColoring&); // Copy Constructor Not Implemented
+  GenerateFaceIPFColoring(const GenerateFaceIPFColoring&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateFaceIPFColoring&);          // Operator '=' Not Implemented
 };
 

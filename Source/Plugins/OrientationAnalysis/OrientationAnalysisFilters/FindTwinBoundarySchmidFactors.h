@@ -193,7 +193,7 @@ private:
    */
   void dataCheckSurfaceMesh();
 
-  FindTwinBoundarySchmidFactors(const FindTwinBoundarySchmidFactors&); // Copy Constructor Not Implemented
+  FindTwinBoundarySchmidFactors(const FindTwinBoundarySchmidFactors&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindTwinBoundarySchmidFactors&);                // Operator '=' Not Implemented
 };
 

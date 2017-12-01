@@ -51,9 +51,7 @@ ModifiedLambertProjectionArray::ModifiedLambertProjectionArray() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ModifiedLambertProjectionArray::~ModifiedLambertProjectionArray()
-{
-}
+ModifiedLambertProjectionArray::~ModifiedLambertProjectionArray() = default;
 
 // -----------------------------------------------------------------------------
 //

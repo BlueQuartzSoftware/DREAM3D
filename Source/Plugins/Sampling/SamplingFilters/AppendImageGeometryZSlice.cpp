@@ -43,9 +43,6 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_AppendImageGeometryZSlice.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -61,9 +58,7 @@ AppendImageGeometryZSlice::AppendImageGeometryZSlice()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AppendImageGeometryZSlice::~AppendImageGeometryZSlice()
-{
-}
+AppendImageGeometryZSlice::~AppendImageGeometryZSlice() = default;
 
 // -----------------------------------------------------------------------------
 //

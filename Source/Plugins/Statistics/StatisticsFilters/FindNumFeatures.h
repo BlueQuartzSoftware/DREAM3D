@@ -158,7 +158,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
-  FindNumFeatures(const FindNumFeatures&); // Copy Constructor Not Implemented
+  FindNumFeatures(const FindNumFeatures&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindNumFeatures&);  // Operator '=' Not Implemented
 };
 

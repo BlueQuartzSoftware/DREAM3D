@@ -48,7 +48,6 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
-#include "moc_AlignSectionsMutualInformation.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -78,9 +77,7 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsMutualInformation::~AlignSectionsMutualInformation()
-{
-}
+AlignSectionsMutualInformation::~AlignSectionsMutualInformation() = default;
 
 // -----------------------------------------------------------------------------
 //

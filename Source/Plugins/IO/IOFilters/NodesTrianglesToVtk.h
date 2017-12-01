@@ -181,7 +181,7 @@ protected:
 private:
   int8_t* m_NodeKind;
 
-  NodesTrianglesToVtk(const NodesTrianglesToVtk&); // Copy Constructor Not Implemented
+  NodesTrianglesToVtk(const NodesTrianglesToVtk&) = delete; // Copy Constructor Not Implemented
   void operator=(const NodesTrianglesToVtk&);      // Operator '=' Not Implemented
 };
 

@@ -117,7 +117,7 @@ private:
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  GenerateFeatureIds(const GenerateFeatureIds&); // Copy Constructor Not Implemented
+  GenerateFeatureIds(const GenerateFeatureIds&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateFeatureIds&);     // Operator '=' Not Implemented
 };
 
@@ -221,7 +221,7 @@ protected:
   }
 
 private:
-  CreateDataContainer(const CreateDataContainer&); // Copy Constructor Not Implemented
+  CreateDataContainer(const CreateDataContainer&) = delete; // Copy Constructor Not Implemented
   void operator=(const CreateDataContainer&);      // Operator '=' Not Implemented
 };
 

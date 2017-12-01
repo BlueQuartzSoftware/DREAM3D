@@ -181,9 +181,8 @@ class SGMDFTableModel : public QAbstractTableModel
     QVector<QString> m_Axis;
     QVector<float> m_Weights;
 
-
-    SGMDFTableModel(const SGMDFTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGMDFTableModel&); // Operator '=' Not Implemented
+    SGMDFTableModel(const SGMDFTableModel&) = delete; // Copy Constructor Not Implemented
+    void operator=(const SGMDFTableModel&) = delete;  // Operator '=' Not Implemented
 };
 
 #endif /* SGMDFTABLEMODEL_H_ */

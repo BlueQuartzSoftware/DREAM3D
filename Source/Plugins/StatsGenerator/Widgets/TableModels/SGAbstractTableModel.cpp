@@ -36,7 +36,6 @@
 #include "SGAbstractTableModel.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_SGAbstractTableModel.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -49,6 +48,4 @@ SGAbstractTableModel::SGAbstractTableModel(QObject* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGAbstractTableModel::~SGAbstractTableModel()
-{
-}
+SGAbstractTableModel::~SGAbstractTableModel() = default;

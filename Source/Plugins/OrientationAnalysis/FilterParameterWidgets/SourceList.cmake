@@ -90,7 +90,7 @@ cmp_IDE_GENERATED_PROPERTIES("FilterParameterWidgets/UI_Files" "${${PLUGIN_NAME}
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT5_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS} )
+# QT5_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS} )
 set_source_files_properties( ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS} PROPERTIES GENERATED TRUE)
 set_source_files_properties( ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS} PROPERTIES HEADER_FILE_ONLY TRUE)
 

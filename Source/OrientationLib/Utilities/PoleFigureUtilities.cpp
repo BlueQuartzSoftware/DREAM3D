@@ -335,9 +335,7 @@ GeneratePoleFigureRgbaImageImpl::GeneratePoleFigureRgbaImageImpl(DoubleArrayType
 , m_Rgba(rgba)
 {
 }
-GeneratePoleFigureRgbaImageImpl::~GeneratePoleFigureRgbaImageImpl()
-{
-}
+GeneratePoleFigureRgbaImageImpl::~GeneratePoleFigureRgbaImageImpl() = default;
 
 void GeneratePoleFigureRgbaImageImpl::operator()() const
 {

@@ -42,7 +42,6 @@
 #include <QtWidgets/QLineEdit>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_PrimaryRecrystallizedPresetDialog.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -56,9 +55,7 @@ PrimaryRecrystallizedPresetDialog::PrimaryRecrystallizedPresetDialog(QWidget* pa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryRecrystallizedPresetDialog::~PrimaryRecrystallizedPresetDialog()
-{
-}
+PrimaryRecrystallizedPresetDialog::~PrimaryRecrystallizedPresetDialog() = default;
 
 // -----------------------------------------------------------------------------
 //

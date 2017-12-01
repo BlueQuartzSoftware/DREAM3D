@@ -38,9 +38,8 @@ class DREAM3DFileStructure : public QObject
 
 
   private:
-    DREAM3DFileStructure(const DREAM3DFileStructure&); // Copy Constructor Not Implemented
-    void operator=(const DREAM3DFileStructure&); // Operator '=' Not Implemented
-
+    DREAM3DFileStructure(const DREAM3DFileStructure&) = delete; // Copy Constructor Not Implemented
+    void operator=(const DREAM3DFileStructure&) = delete;       // Operator '=' Not Implemented
 };
 
 #endif /* _DREAM3DFileStructure_H_ */

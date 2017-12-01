@@ -131,8 +131,8 @@ class  MicrostructurePresetManager
   private:
     AbstractMicrostructurePresetFactory::Collection  _factories;
 
-    MicrostructurePresetManager(const MicrostructurePresetManager&); // Copy Constructor Not Implemented
-    void operator=(const MicrostructurePresetManager&); // Operator '=' Not Implemented
+    MicrostructurePresetManager(const MicrostructurePresetManager&) = delete; // Copy Constructor Not Implemented
+    void operator=(const MicrostructurePresetManager&) = delete;              // Operator '=' Not Implemented
 };
 
 #endif /* MICROSTRUCTUREPRESETMANAGER_H_ */

@@ -45,9 +45,6 @@
 #include "Sampling/SamplingFilters/CropImageGeometry.h"
 #include "Sampling/SamplingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_ExtractFlaggedFeatures.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -65,9 +62,7 @@ ExtractFlaggedFeatures::ExtractFlaggedFeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExtractFlaggedFeatures::~ExtractFlaggedFeatures()
-{
-}
+ExtractFlaggedFeatures::~ExtractFlaggedFeatures() = default;
 
 // -----------------------------------------------------------------------------
 //

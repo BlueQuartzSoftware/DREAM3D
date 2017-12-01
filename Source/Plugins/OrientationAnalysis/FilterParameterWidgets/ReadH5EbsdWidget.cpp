@@ -98,9 +98,7 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadH5EbsdWidget::~ReadH5EbsdWidget()
-{
-}
+ReadH5EbsdWidget::~ReadH5EbsdWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

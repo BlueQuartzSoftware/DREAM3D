@@ -90,9 +90,8 @@ class OrientationLib_EXPORT PoleFigureImageUtilities
     QVector<qint32> m_KernelWeights;
     bool m_KernelWeightsInited;
 
-
-    PoleFigureImageUtilities(const PoleFigureImageUtilities&); // Copy Constructor Not Implemented
-    void operator=(const PoleFigureImageUtilities&); // Operator '=' Not Implemented
+    PoleFigureImageUtilities(const PoleFigureImageUtilities&) = delete; // Copy Constructor Not Implemented
+    void operator=(const PoleFigureImageUtilities&) = delete;           // Operator '=' Not Implemented
 };
 
 

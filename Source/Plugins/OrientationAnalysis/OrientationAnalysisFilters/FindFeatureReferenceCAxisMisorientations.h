@@ -182,7 +182,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, FeatureAvgCAxisMisorientations)
   DEFINE_DATAARRAY_VARIABLE(float, FeatureStdevCAxisMisorientations)
 
-  FindFeatureReferenceCAxisMisorientations(const FindFeatureReferenceCAxisMisorientations&); // Copy Constructor Not Implemented
+  FindFeatureReferenceCAxisMisorientations(const FindFeatureReferenceCAxisMisorientations&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindFeatureReferenceCAxisMisorientations&);                           // Operator '=' Not Implemented
 };
 

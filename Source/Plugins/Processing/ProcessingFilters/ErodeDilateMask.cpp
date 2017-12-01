@@ -47,9 +47,6 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_ErodeDilateMask.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -70,9 +67,7 @@ ErodeDilateMask::ErodeDilateMask()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ErodeDilateMask::~ErodeDilateMask()
-{
-}
+ErodeDilateMask::~ErodeDilateMask() = default;
 
 // -----------------------------------------------------------------------------
 //

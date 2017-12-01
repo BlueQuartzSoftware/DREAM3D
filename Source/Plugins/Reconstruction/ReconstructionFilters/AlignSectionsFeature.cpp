@@ -46,7 +46,6 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
-#include "moc_AlignSectionsFeature.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -62,9 +61,7 @@ AlignSectionsFeature::AlignSectionsFeature()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsFeature::~AlignSectionsFeature()
-{
-}
+AlignSectionsFeature::~AlignSectionsFeature() = default;
 
 // -----------------------------------------------------------------------------
 //

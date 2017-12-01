@@ -47,9 +47,6 @@
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindFeaturePhasesBinary.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -69,9 +66,7 @@ FindFeaturePhasesBinary::FindFeaturePhasesBinary()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeaturePhasesBinary::~FindFeaturePhasesBinary()
-{
-}
+FindFeaturePhasesBinary::~FindFeaturePhasesBinary() = default;
 
 // -----------------------------------------------------------------------------
 //

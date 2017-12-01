@@ -243,7 +243,7 @@ private:
    */
   float cp(float p);
 
-  CreateLambertSphere(const CreateLambertSphere&); // Copy Constructor Not Implemented
+  CreateLambertSphere(const CreateLambertSphere&) = delete; // Copy Constructor Not Implemented
   void operator=(const CreateLambertSphere&);      // Operator '=' Not Implemented
 };
 

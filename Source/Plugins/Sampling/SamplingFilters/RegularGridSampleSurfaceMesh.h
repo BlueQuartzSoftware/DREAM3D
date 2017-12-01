@@ -167,7 +167,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  RegularGridSampleSurfaceMesh(const RegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
+  RegularGridSampleSurfaceMesh(const RegularGridSampleSurfaceMesh&) = delete; // Copy Constructor Not Implemented
   void operator=(const RegularGridSampleSurfaceMesh&);               // Operator '=' Not Implemented
 };
 

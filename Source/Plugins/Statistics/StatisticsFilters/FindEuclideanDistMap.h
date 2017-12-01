@@ -207,7 +207,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, TJManhattanDistances)
   DEFINE_DATAARRAY_VARIABLE(int32_t, QPManhattanDistances)
 
-  FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented
+  FindEuclideanDistMap(const FindEuclideanDistMap&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindEuclideanDistMap&);       // Operator '=' Not Implemented
 };
 

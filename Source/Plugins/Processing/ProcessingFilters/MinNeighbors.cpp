@@ -46,9 +46,6 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_MinNeighbors.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -71,9 +68,7 @@ MinNeighbors::MinNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MinNeighbors::~MinNeighbors()
-{
-}
+MinNeighbors::~MinNeighbors() = default;
 
 // -----------------------------------------------------------------------------
 //

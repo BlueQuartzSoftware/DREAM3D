@@ -50,9 +50,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_EnsembleInfoReader.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -74,9 +71,7 @@ EnsembleInfoReader::EnsembleInfoReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EnsembleInfoReader::~EnsembleInfoReader()
-{
-}
+EnsembleInfoReader::~EnsembleInfoReader() = default;
 
 // -----------------------------------------------------------------------------
 //

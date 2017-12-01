@@ -46,9 +46,7 @@ HexagonalIPFLegendPainter::HexagonalIPFLegendPainter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HexagonalIPFLegendPainter::~HexagonalIPFLegendPainter()
-{
-}
+HexagonalIPFLegendPainter::~HexagonalIPFLegendPainter() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -112,9 +112,7 @@ Ebsd::EbsdToSampleCoordinateMapping EbsdTransform::IdentifyStandardTransformatio
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdTransform::~EbsdTransform()
-{
-}
+EbsdTransform::~EbsdTransform() = default;
 
 // -----------------------------------------------------------------------------
 //

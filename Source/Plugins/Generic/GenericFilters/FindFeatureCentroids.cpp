@@ -46,9 +46,6 @@
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindFeatureCentroids.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -65,9 +62,7 @@ FindFeatureCentroids::FindFeatureCentroids()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureCentroids::~FindFeatureCentroids()
-{
-}
+FindFeatureCentroids::~FindFeatureCentroids() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

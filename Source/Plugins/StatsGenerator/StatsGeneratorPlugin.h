@@ -138,8 +138,8 @@ class StatsGeneratorPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
-    StatsGeneratorPlugin(const StatsGeneratorPlugin&); // Copy Constructor Not Implemented
-    void operator=(const StatsGeneratorPlugin&); // Operator '=' Not Implemented
+    StatsGeneratorPlugin(const StatsGeneratorPlugin&) = delete; // Copy Constructor Not Implemented
+    void operator=(const StatsGeneratorPlugin&) = delete;       // Operator '=' Not Implemented
 };
 
 #endif /* _StatsGenerator_H_ */

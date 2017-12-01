@@ -167,7 +167,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
   DEFINE_DATAARRAY_VARIABLE(float, Volumes)
 
-  FindTriangleGeomSizes(const FindTriangleGeomSizes&); // Copy Constructor Not Implemented
+  FindTriangleGeomSizes(const FindTriangleGeomSizes&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindTriangleGeomSizes&);        // Operator '=' Not Implemented
 };
 

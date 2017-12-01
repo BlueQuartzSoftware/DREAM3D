@@ -223,8 +223,8 @@ class OrientationLib_EXPORT LaueOps
     int _calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType homochoric);
 
   private:
-    LaueOps(const LaueOps&); // Copy Constructor Not Implemented
-    void operator=(const LaueOps&); // Operator '=' Not Implemented
+    LaueOps(const LaueOps&) = delete;        // Copy Constructor Not Implemented
+    void operator=(const LaueOps&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _laueOps_H_ */

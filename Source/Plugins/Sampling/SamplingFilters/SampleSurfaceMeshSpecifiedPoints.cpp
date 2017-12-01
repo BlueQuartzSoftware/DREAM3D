@@ -46,8 +46,6 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
-#include "moc_SampleSurfaceMeshSpecifiedPoints.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,9 +62,7 @@ SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SampleSurfaceMeshSpecifiedPoints::~SampleSurfaceMeshSpecifiedPoints()
-{
-}
+SampleSurfaceMeshSpecifiedPoints::~SampleSurfaceMeshSpecifiedPoints() = default;
 
 // -----------------------------------------------------------------------------
 //

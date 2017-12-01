@@ -111,8 +111,8 @@ class StatsGenWidget : public QWidget
   protected:
 
   private:
-    StatsGenWidget(const StatsGenWidget&); // Copy Constructor Not Implemented
-    void operator=(const StatsGenWidget&); // Operator '=' Not Implemented
+    StatsGenWidget(const StatsGenWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const StatsGenWidget&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* StatsGenWidget_H_ */

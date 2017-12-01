@@ -191,7 +191,7 @@ private:
    */
   void dataCheckSurfaceMesh();
 
-  FindBoundaryStrengths(const FindBoundaryStrengths&); // Copy Constructor Not Implemented
+  FindBoundaryStrengths(const FindBoundaryStrengths&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindBoundaryStrengths&);        // Operator '=' Not Implemented
 };
 

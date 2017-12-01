@@ -187,7 +187,7 @@ private:
   NeighborList<float>::WeakPointer m_mPrimeList;
   NeighborList<int32_t>::WeakPointer m_NeighborList;
 
-  FindSlipTransmissionMetrics(const FindSlipTransmissionMetrics&); // Copy Constructor Not Implemented
+  FindSlipTransmissionMetrics(const FindSlipTransmissionMetrics&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindSlipTransmissionMetrics&);              // Operator '=' Not Implemented
 };
 

@@ -180,7 +180,7 @@ private:
 
   NeighborList<int32_t>::WeakPointer m_NeighborhoodList;
 
-  FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
+  FindNeighborhoods(const FindNeighborhoods&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindNeighborhoods&);    // Operator '=' Not Implemented
 };
 

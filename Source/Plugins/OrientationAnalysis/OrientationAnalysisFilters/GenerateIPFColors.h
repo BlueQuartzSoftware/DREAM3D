@@ -183,7 +183,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, CellIPFColors)
   int32_t m_PhaseWarningCount = 0;
 
-  GenerateIPFColors(const GenerateIPFColors&); // Copy Constructor Not Implemented
+  GenerateIPFColors(const GenerateIPFColors&) = delete; // Copy Constructor Not Implemented
   void operator=(const GenerateIPFColors&);    // Operator '=' Not Implemented
 };
 

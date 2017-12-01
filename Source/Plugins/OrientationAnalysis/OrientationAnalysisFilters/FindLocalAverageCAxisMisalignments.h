@@ -211,7 +211,7 @@ private:
   NeighborList<int>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
 
-  FindLocalAverageCAxisMisalignments(const FindLocalAverageCAxisMisalignments&); // Copy Constructor Not Implemented
+  FindLocalAverageCAxisMisalignments(const FindLocalAverageCAxisMisalignments&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindLocalAverageCAxisMisalignments&);                     // Operator '=' Not Implemented
 };
 

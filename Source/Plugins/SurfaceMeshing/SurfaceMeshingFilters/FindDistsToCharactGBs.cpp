@@ -60,9 +60,6 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-// Include the MOC generated file for this class
-#include "moc_FindDistsToCharactGBs.cpp"
-
 const double FindDistsToCharactGBs::INF_DIST = 999.0;
 
 /**
@@ -268,9 +265,7 @@ FindDistsToCharactGBs::FindDistsToCharactGBs()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindDistsToCharactGBs::~FindDistsToCharactGBs()
-{
-}
+FindDistsToCharactGBs::~FindDistsToCharactGBs() = default;
 
 // -----------------------------------------------------------------------------
 //

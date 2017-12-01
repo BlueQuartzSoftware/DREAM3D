@@ -197,7 +197,7 @@ private:
   int32_t writeNumTrianglesToFile(const QString& filename, int32_t triCount);
 
   WriteStlFile(const WriteStlFile&);   // Copy Constructor Not Implemented
-  void operator=(const WriteStlFile&); // Operator '=' Not Implemented
+  void operator=(const WriteStlFile&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _WriteStlFile_H_ */

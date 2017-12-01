@@ -190,7 +190,7 @@ protected:
   void determine_warped_coordinates(float x, float y, float& newX, float& newY);
 
 private:
-  WarpRegularGrid(const WarpRegularGrid&); // Copy Constructor Not Implemented
+  WarpRegularGrid(const WarpRegularGrid&) = delete; // Copy Constructor Not Implemented
   void operator=(const WarpRegularGrid&);  // Operator '=' Not Implemented
 };
 

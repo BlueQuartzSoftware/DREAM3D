@@ -141,8 +141,8 @@ class TransformationPhaseWidget : public StatsGenWidget, private Ui::Transformat
     QwtPlotGrid*         m_grid;
     AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
-    TransformationPhaseWidget(const TransformationPhaseWidget&); // Copy Constructor Not Implemented
-    void operator=(const TransformationPhaseWidget&); // Operator '=' Not Implemented
+    TransformationPhaseWidget(const TransformationPhaseWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const TransformationPhaseWidget&) = delete;            // Operator '=' Not Implemented
 };
 
 #endif /* TransformationPhaseWidget_H_ */

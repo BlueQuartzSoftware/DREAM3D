@@ -183,7 +183,7 @@ private:
   QVector<LaueOps::Pointer> m_OrientationOps;
   QVector<float> gmtValues;
 
-  VisualizeGBCDGMT(const VisualizeGBCDGMT&); // Copy Constructor Not Implemented
+  VisualizeGBCDGMT(const VisualizeGBCDGMT&) = delete; // Copy Constructor Not Implemented
   void operator=(const VisualizeGBCDGMT&);   // Operator '=' Not Implemented
 };
 

@@ -46,9 +46,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_BadDataNeighborOrientationCheck.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -72,9 +69,7 @@ BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BadDataNeighborOrientationCheck::~BadDataNeighborOrientationCheck()
-{
-}
+BadDataNeighborOrientationCheck::~BadDataNeighborOrientationCheck() = default;
 
 // -----------------------------------------------------------------------------
 //

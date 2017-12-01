@@ -201,9 +201,6 @@ public:
 #endif
 };
 
-// Include the MOC generated file for this class
-#include "moc_GenerateFaceIPFColoring.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -228,9 +225,7 @@ GenerateFaceIPFColoring::GenerateFaceIPFColoring()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateFaceIPFColoring::~GenerateFaceIPFColoring()
-{
-}
+GenerateFaceIPFColoring::~GenerateFaceIPFColoring() = default;
 
 // -----------------------------------------------------------------------------
 //

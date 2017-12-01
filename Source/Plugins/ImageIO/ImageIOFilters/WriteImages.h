@@ -197,7 +197,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, Colors)
 
   WriteImages(const WriteImages&);    // Copy Constructor Not Implemented
-  void operator=(const WriteImages&); // Operator '=' Not Implemented
+  void operator=(const WriteImages&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _WriteImages_H_ */

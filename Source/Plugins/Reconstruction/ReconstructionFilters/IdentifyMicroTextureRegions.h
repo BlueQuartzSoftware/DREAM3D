@@ -224,7 +224,7 @@ private:
    */
   void updateFeatureInstancePointers();
 
-  IdentifyMicroTextureRegions(const IdentifyMicroTextureRegions&); // Copy Constructor Not Implemented
+  IdentifyMicroTextureRegions(const IdentifyMicroTextureRegions&) = delete; // Copy Constructor Not Implemented
   void operator=(const IdentifyMicroTextureRegions&);              // Operator '=' Not Implemented
 };
 

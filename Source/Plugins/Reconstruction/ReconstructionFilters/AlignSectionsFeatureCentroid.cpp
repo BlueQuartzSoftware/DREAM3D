@@ -48,7 +48,6 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
-#include "moc_AlignSectionsFeatureCentroid.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -66,9 +65,7 @@ AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsFeatureCentroid::~AlignSectionsFeatureCentroid()
-{
-}
+AlignSectionsFeatureCentroid::~AlignSectionsFeatureCentroid() = default;
 
 // -----------------------------------------------------------------------------
 //

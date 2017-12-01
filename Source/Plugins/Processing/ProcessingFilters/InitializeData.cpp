@@ -53,9 +53,6 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_InitializeData.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -88,9 +85,7 @@ InitializeData::InitializeData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InitializeData::~InitializeData()
-{
-}
+InitializeData::~InitializeData() = default;
 
 // -----------------------------------------------------------------------------
 //

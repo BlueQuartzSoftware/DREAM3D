@@ -224,7 +224,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
   ReadAngData(const ReadAngData&);    // Copy Constructor Not Implemented
-  void operator=(const ReadAngData&); // Operator '=' Not Implemented
+  void operator=(const ReadAngData&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _ReadAngData_H_ */

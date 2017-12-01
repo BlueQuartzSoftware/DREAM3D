@@ -98,8 +98,8 @@ class EMMPMLib_EXPORT EMMPMInputParser
     char* copyFilenameToNewCharBuffer( const std::string& fname);
 
   private:
-    EMMPMInputParser(const EMMPMInputParser&); // Copy Constructor Not Implemented
-    void operator=(const EMMPMInputParser&); // Operator '=' Not Implemented
+    EMMPMInputParser(const EMMPMInputParser&) = delete; // Copy Constructor Not Implemented
+    void operator=(const EMMPMInputParser&) = delete;   // Operator '=' Not Implemented
 };
 
 #endif /* _EMMPMINPUTPARSER_H_ */

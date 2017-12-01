@@ -43,9 +43,6 @@
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
-// Include the MOC generated file for this class
-#include "moc_CorrelateValuesWithVectorDirection.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -66,9 +63,7 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CorrelateValuesWithVectorDirection::~CorrelateValuesWithVectorDirection()
-{
-}
+CorrelateValuesWithVectorDirection::~CorrelateValuesWithVectorDirection() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -190,7 +190,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
 
   MinNeighbors(const MinNeighbors&);   // Copy Constructor Not Implemented
-  void operator=(const MinNeighbors&); // Operator '=' Not Implemented
+  void operator=(const MinNeighbors&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* MinNeighbors_H_ */

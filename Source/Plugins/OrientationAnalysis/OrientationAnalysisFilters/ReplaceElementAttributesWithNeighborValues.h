@@ -161,7 +161,7 @@ protected:
 private:
   DEFINE_IDATAARRAY_VARIABLE(InArray)
 
-  ReplaceElementAttributesWithNeighborValues(const ReplaceElementAttributesWithNeighborValues&); // Copy Constructor Not Implemented
+  ReplaceElementAttributesWithNeighborValues(const ReplaceElementAttributesWithNeighborValues&) = delete; // Copy Constructor Not Implemented
   void operator=(const ReplaceElementAttributesWithNeighborValues&);                             // Operator '=' Not Implemented
 };
 

@@ -157,7 +157,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
   DEFINE_DATAARRAY_VARIABLE(float, Centroids)
 
-  FindTriangleGeomCentroids(const FindTriangleGeomCentroids&); // Copy Constructor Not Implemented
+  FindTriangleGeomCentroids(const FindTriangleGeomCentroids&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindTriangleGeomCentroids&);            // Operator '=' Not Implemented
 };
 

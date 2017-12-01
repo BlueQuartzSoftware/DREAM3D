@@ -46,9 +46,7 @@ MonoclinicIPFLegendPainter::MonoclinicIPFLegendPainter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MonoclinicIPFLegendPainter::~MonoclinicIPFLegendPainter()
-{
-}
+MonoclinicIPFLegendPainter::~MonoclinicIPFLegendPainter() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -48,9 +48,6 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-// Include the MOC generated file for this class
-#include "moc_FindFeatureReferenceCAxisMisorientations.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,9 +74,7 @@ FindFeatureReferenceCAxisMisorientations::FindFeatureReferenceCAxisMisorientatio
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureReferenceCAxisMisorientations::~FindFeatureReferenceCAxisMisorientations()
-{
-}
+FindFeatureReferenceCAxisMisorientations::~FindFeatureReferenceCAxisMisorientations() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

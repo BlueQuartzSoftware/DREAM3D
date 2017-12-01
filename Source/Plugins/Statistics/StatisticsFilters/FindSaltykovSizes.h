@@ -197,7 +197,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
   DEFINE_DATAARRAY_VARIABLE(float, SaltykovEquivalentDiameters)
 
-  FindSaltykovSizes(const FindSaltykovSizes&); // Copy Constructor Not Implemented
+  FindSaltykovSizes(const FindSaltykovSizes&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindSaltykovSizes&);    // Operator '=' Not Implemented
 };
 

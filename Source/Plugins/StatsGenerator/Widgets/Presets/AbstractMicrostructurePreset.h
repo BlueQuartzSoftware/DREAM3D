@@ -158,8 +158,8 @@ class  AbstractMicrostructurePreset
     AbstractMicrostructurePreset();
 
   private:
-    AbstractMicrostructurePreset(const AbstractMicrostructurePreset&); // Copy Constructor Not Implemented
-    void operator=(const AbstractMicrostructurePreset&); // Operator '=' Not Implemented
+    AbstractMicrostructurePreset(const AbstractMicrostructurePreset&) = delete; // Copy Constructor Not Implemented
+    void operator=(const AbstractMicrostructurePreset&) = delete;               // Operator '=' Not Implemented
 };
 
 #endif /* MICROSTRUCTUREPRESET_H_ */

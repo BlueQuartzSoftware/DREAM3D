@@ -42,7 +42,7 @@
 
 #include "StatsGenerator/Widgets/Delegates/SGBetaItemDelegate.h"
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_SGBetaTableModel.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -56,9 +56,7 @@ SGBetaTableModel::SGBetaTableModel(QObject* parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGBetaTableModel::~SGBetaTableModel()
-{
-}
+SGBetaTableModel::~SGBetaTableModel() = default;
 
 // -----------------------------------------------------------------------------
 //

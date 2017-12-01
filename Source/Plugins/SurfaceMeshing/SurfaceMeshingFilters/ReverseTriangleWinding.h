@@ -130,7 +130,7 @@ protected:
   void initialize();
 
 private:
-  ReverseTriangleWinding(const ReverseTriangleWinding&); // Copy Constructor Not Implemented
+  ReverseTriangleWinding(const ReverseTriangleWinding&) = delete; // Copy Constructor Not Implemented
   void operator=(const ReverseTriangleWinding&);         // Operator '=' Not Implemented
 };
 

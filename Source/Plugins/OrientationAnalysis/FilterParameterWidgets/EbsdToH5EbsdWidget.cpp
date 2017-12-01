@@ -110,9 +110,7 @@ EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdToH5EbsdWidget::~EbsdToH5EbsdWidget()
-{
-}
+EbsdToH5EbsdWidget::~EbsdToH5EbsdWidget() = default;
 
 // -----------------------------------------------------------------------------
 //

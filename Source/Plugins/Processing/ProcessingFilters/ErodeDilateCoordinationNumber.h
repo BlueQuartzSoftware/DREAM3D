@@ -161,7 +161,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  ErodeDilateCoordinationNumber(const ErodeDilateCoordinationNumber&); // Copy Constructor Not Implemented
+  ErodeDilateCoordinationNumber(const ErodeDilateCoordinationNumber&) = delete; // Copy Constructor Not Implemented
   void operator=(const ErodeDilateCoordinationNumber&);                // Operator '=' Not Implemented
 };
 

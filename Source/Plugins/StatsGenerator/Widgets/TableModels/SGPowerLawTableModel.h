@@ -138,8 +138,8 @@ class SGPowerLawTableModel : public SGAbstractTableModel
     QVector<float> m_Beta;
     QVector<QColor> m_Colors;
 
-    SGPowerLawTableModel(const SGPowerLawTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGPowerLawTableModel&); // Operator '=' Not Implemented
+    SGPowerLawTableModel(const SGPowerLawTableModel&) = delete; // Copy Constructor Not Implemented
+    void operator=(const SGPowerLawTableModel&) = delete;       // Operator '=' Not Implemented
 };
 
 #endif /* _SG_POWER_LAW_TABLEMODEL_H_ */

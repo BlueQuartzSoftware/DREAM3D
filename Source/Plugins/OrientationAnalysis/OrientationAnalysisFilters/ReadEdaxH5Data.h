@@ -258,8 +258,8 @@ private:
 
   QScopedPointer<ReadEdaxH5DataPrivate> const d_ptr;
 
-  ReadEdaxH5Data(const ReadEdaxH5Data&); // Copy Constructor Not Implemented
-  void operator=(const ReadEdaxH5Data&); // Operator '=' Not Implemented
+  ReadEdaxH5Data(const ReadEdaxH5Data&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ReadEdaxH5Data&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _ReadEdaxH5Data_H_ */

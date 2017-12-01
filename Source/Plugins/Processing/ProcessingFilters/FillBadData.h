@@ -167,7 +167,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
 
   FillBadData(const FillBadData&);    // Copy Constructor Not Implemented
-  void operator=(const FillBadData&); // Operator '=' Not Implemented
+  void operator=(const FillBadData&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* FillBadData_H_ */

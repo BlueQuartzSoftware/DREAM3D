@@ -177,7 +177,7 @@ protected:
 
 private:
   EbsdToH5Ebsd(const EbsdToH5Ebsd&);   // Copy Constructor Not Implemented
-  void operator=(const EbsdToH5Ebsd&); // Operator '=' Not Implemented
+  void operator=(const EbsdToH5Ebsd&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* EbsdToH5Ebsd_H_ */

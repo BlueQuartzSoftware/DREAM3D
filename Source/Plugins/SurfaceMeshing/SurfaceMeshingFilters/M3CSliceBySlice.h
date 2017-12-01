@@ -341,7 +341,7 @@ private:
 
   void dataCheck();
 
-  M3CSliceBySlice(const M3CSliceBySlice&); // Copy Constructor Not Implemented
+  M3CSliceBySlice(const M3CSliceBySlice&) = delete; // Copy Constructor Not Implemented
   void operator=(const M3CSliceBySlice&);  // Operator '=' Not Implemented
 };
 

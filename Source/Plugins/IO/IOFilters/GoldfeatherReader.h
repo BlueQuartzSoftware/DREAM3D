@@ -191,7 +191,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
-  GoldfeatherReader(const GoldfeatherReader&); // Copy Constructor Not Implemented
+  GoldfeatherReader(const GoldfeatherReader&) = delete; // Copy Constructor Not Implemented
   void operator=(const GoldfeatherReader&);    // Operator '=' Not Implemented
 };
 

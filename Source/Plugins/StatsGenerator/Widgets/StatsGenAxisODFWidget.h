@@ -131,8 +131,8 @@ class StatsGenAxisODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     QButtonGroup            m_ODFGroup;
     QString                 m_OpenDialogLastDirectory; // Must be last in the list
 
-    StatsGenAxisODFWidget(const StatsGenAxisODFWidget&); // Copy Constructor Not Implemented
-    void operator=(const StatsGenAxisODFWidget&); // Operator '=' Not Implemented
+    StatsGenAxisODFWidget(const StatsGenAxisODFWidget&) = delete; // Copy Constructor Not Implemented
+    void operator=(const StatsGenAxisODFWidget&) = delete;        // Operator '=' Not Implemented
 };
 
 #endif /* _SG_AXIS_ODFWIDGET_H_ */

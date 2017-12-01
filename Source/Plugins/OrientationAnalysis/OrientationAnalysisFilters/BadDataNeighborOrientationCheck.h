@@ -175,7 +175,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-  BadDataNeighborOrientationCheck(const BadDataNeighborOrientationCheck&); // Copy Constructor Not Implemented
+  BadDataNeighborOrientationCheck(const BadDataNeighborOrientationCheck&) = delete; // Copy Constructor Not Implemented
   void operator=(const BadDataNeighborOrientationCheck&);                  // Operator '=' Not Implemented
 };
 

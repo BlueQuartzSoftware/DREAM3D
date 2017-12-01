@@ -162,7 +162,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
-  FindFeaturePhases(const FindFeaturePhases&); // Copy Constructor Not Implemented
+  FindFeaturePhases(const FindFeaturePhases&) = delete; // Copy Constructor Not Implemented
   void operator=(const FindFeaturePhases&);    // Operator '=' Not Implemented
 };
 

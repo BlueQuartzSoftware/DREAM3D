@@ -73,8 +73,8 @@ protected:
   ImportVectorImageStackFilterParameter();
 
 private:
-  ImportVectorImageStackFilterParameter(const ImportVectorImageStackFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ImportVectorImageStackFilterParameter&); // Operator '=' Not Implemented
+  ImportVectorImageStackFilterParameter(const ImportVectorImageStackFilterParameter&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ImportVectorImageStackFilterParameter&) = delete;                        // Operator '=' Not Implemented
 };
 
 #endif /* _ImportVectorImageStackFilterParameter_H_ */
