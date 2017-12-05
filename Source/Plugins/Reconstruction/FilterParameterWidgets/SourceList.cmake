@@ -72,8 +72,13 @@ cmp_IDE_GENERATED_PROPERTIES("FilterParameterWidgets/UI_Files" "${${PLUGIN_NAME}
 set_source_files_properties( ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # --------------------------------------------------------------------
-# Continue on with our Qt4 section
+# Wrap UI files so they are AUTO UIC'ed
 QT5_WRAP_UI( ${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS ${${PLUGIN_NAME}_ParameterWidgets_UIS} )
+foreach(h ${${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS})
+  set_property(SOURCE ${h} PROPERTY SKIP_AUTOMOC ON)
+endforeach()
+
+
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs

@@ -62,6 +62,10 @@ cmp_IDE_GENERATED_PROPERTIES("Widgets/UI_Files" "${${PLUGIN_NAME}_Widgets_UIS}" 
 # --------------------------------------------------------------------
 # -- Run UIC on the necessary files
 QT5_WRAP_UI( ${PLUGIN_NAME}_Widgets_Generated_UI_HDRS ${${PLUGIN_NAME}_Widgets_UIS} )
+foreach(h ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS})
+  set_property(SOURCE ${h} PROPERTY SKIP_AUTOMOC ON)
+endforeach()
+
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs

@@ -51,8 +51,12 @@ set_source_files_properties( ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS} PROPER
 # QT5_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
 
 # --------------------------------------------------------------------
-# Continue on with our Qt4 section
+# Wrap UI files so they are AUTO UIC'ed
 QT5_WRAP_UI( ${PLUGIN_NAME}_Widgets_Generated_UI_HDRS ${${PLUGIN_NAME}_Widgets_UIS} )
+foreach(h ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS})
+  set_property(SOURCE ${h} PROPERTY SKIP_AUTOMOC ON)
+endforeach()
+
 
 # --------------------------------------------------------------------
 #-- Put the Qt generated files into their own group for IDEs
