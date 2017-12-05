@@ -30,6 +30,8 @@
 
 #include "EMsoftSO3Sampler.h"
 
+#include <cmath>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
@@ -629,15 +631,15 @@ bool EMsoftSO3Sampler::IsinsideFZ(double* rod, int FZtype, int FZorder)
     insideFZ = insideCyclicFZ(rod, FZorder); // infinity is checked inside this function
     break;
   case OrientationAnalysisConstants::DihedralType:
-    if(!isinf(rod[3]))
+    if(!std::isinf(rod[3]))
       insideFZ = insideDihedralFZ(rod, FZorder);
     break;
   case OrientationAnalysisConstants::TetrahedralType:
-    if(!isinf(rod[3]))
+    if(!std::isinf(rod[3]))
       insideFZ = insideCubicFZ(rod, OrientationAnalysisConstants::TetrahedralType);
     break;
   case OrientationAnalysisConstants::OctahedralType:
-    if(!isinf(rod[3]))
+    if(!std::isinf(rod[3]))
       insideFZ = insideCubicFZ(rod, OrientationAnalysisConstants::OctahedralType);
     break;
   default:
@@ -655,7 +657,7 @@ bool EMsoftSO3Sampler::insideCyclicFZ(double* rod, int order)
 
   bool insideFZ = false;
 
-  if(!isinf(rod[3]))
+  if(! std::isinf(rod[3]))
   {
     // check the z-component vs. tan(pi/2n)
     insideFZ = fabs(rod[2] * rod[3]) <= LPs::BP[order - 1];
