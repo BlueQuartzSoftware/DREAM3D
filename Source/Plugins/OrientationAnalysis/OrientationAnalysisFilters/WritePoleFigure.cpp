@@ -124,8 +124,7 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setChoices(choices);
     QStringList linkedProps;
     linkedProps << "LambertSize"
-                << "NumColors"
-                << "UseDiscreteHeatMap";
+                << "NumColors";
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Parameter);
