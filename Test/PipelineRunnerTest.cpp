@@ -115,14 +115,17 @@ void ExecutePipeline(const QString& pipelineFile)
   TestObserver obs; // Create an Observer to report errors/progress from the executing pipeline
   pipeline->addMessageReceiver(&obs);
   // Preflight the pipeline
+  std::cout << "PREFLIGHT PIPELINE STARTING ============================================" << std::endl;
   err = pipeline->preflightPipeline();
   if(err < 0)
   {
     std::cout << "Errors preflighting the pipeline. Exiting Now." << std::endl;
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
+  std::cout << "PREFLIGHT PIPELINE COMPLETE ============================================" << std::endl;
 
   // Now actually execute the pipeline
+  std::cout << "EXECUTING PIPELINE STARTING ============================================" << std::endl;
   pipeline->execute();
   err = pipeline->getErrorCondition();
   if(err < 0)
@@ -131,6 +134,8 @@ void ExecutePipeline(const QString& pipelineFile)
     err = EXIT_FAILURE;
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
+  std::cout << "EXECUTING PIPELINE COMPLETE ============================================" << std::endl;
+
 }
 
 #define OVERWRITE_SOURCE_FILE 1
