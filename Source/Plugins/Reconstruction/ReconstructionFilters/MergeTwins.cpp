@@ -401,11 +401,13 @@ void MergeTwins::execute()
   }
   numParents += 1;
 
-  notifyStatusMessage(getHumanLabel(), "Characterizing Twins");
+  notifyStatusMessage(getHumanLabel(), "Characterizing Twins Starting");
   characterize_twins();
+  notifyStatusMessage(getHumanLabel(), "Characterizing Twins Complete");
 
   if(true == m_RandomizeParentIds)
   {
+    notifyStatusMessage(getHumanLabel(), "Randomizing Parent Ids....");
     // Generate all the numbers up front
     const int32_t rangeMin = 1;
     const int32_t rangeMax = numParents - 1;
@@ -424,22 +426,22 @@ void MergeTwins::execute()
       parentIdSet.insert(pid[i]);
     }
 
-    int32_t r = 0;
-    int32_t temp = 0;
-
+    notifyStatusMessage(getHumanLabel(), "Shuffle elements ....");
     //--- Shuffle elements by randomly exchanging each with one other.
-    for(int32_t i = 1; i < numParents; i++)
+    for(size_t i = 1; i < static_cast<size_t>(numParents); i++)
     {
-      r = distribution(generator); // Random remaining position.
-      if(r >= numParents)
-      {
-        continue;
-      }
-      temp = pid[i];
-      pid[i] = pid[r];
-      pid[r] = temp;
+	  size_t r = static_cast<size_t>(distribution(generator)); // Random remaining position.
+	  int32_t pid_i = rndNumbers->getValue(i);
+	  if (r >= numParents)
+	  {
+		  continue;
+	  }
+	  int32_t pid_r = rndNumbers->getValue(r);
+      rndNumbers->setValue(i, pid_r);
+	  rndNumbers->setValue(r, pid_i);
     }
 
+    notifyStatusMessage(getHumanLabel(), "Adjusting Feature Ids Array....");
     // Now adjust all the Feature Id values for each Voxel
     for(size_t i = 0; i < totalPoints; ++i)
     {
