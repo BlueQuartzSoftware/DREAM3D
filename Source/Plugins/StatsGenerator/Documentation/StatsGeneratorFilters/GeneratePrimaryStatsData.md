@@ -36,7 +36,7 @@ If the use wishes to have a more interactive environment in which to explore the
 | PhaseName | String | Name of the Phase |
 | PhaseIndex | int | Index of the Phase (One based) |
 | CrystalSymmetry | int | 1 ~ 11 that represents the Crystal Symmetry |
-| MicroPresetModel | int | Preset Model ( 0|Equiaxed, 1|Rolled, 2|Recrystallized) |
+| MicroPresetModel | int | Preset Model ( 0:Equiaxed, 1:Rolled, 2:Recrystallized) |
 | PhaseFraction | double | The fraction of phase in the synthetic volume |
 | Mu | double | The average value of the lognormal grain size distribution. Note that this is the average value of log(ESD).  This value is in the same arbitrary units of length, but is not the average **Feature** size|
 | Sigma | double | The standard deviation of the lognormal grain size distribution.  Note that this is not the standard deviation of the actual **Feature** size distribution, but of the log(ESD) values.  This value controls the length of the "tails" of the distribution
@@ -54,13 +54,12 @@ If the use wishes to have a more interactive environment in which to explore the
 
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
 
-| Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|------|----------------------|-------------|
-
+Not Applicable
 
 ## Created Objects ##
 

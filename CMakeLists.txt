@@ -41,6 +41,35 @@ if(NOT "${DREAM3D_SDK}" STREQUAL "")
     #message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
     set_property(GLOBAL PROPERTY DREAM3D_SDK_STATUS_PRINTED TRUE)
   endif()
+else()
+  message(STATUS "You have elected to NOT set a DREAM3D_SDK CMake variable. You will")
+  message(STATUS "need to point to the various dependecies that DREAM.3D requires for")
+  message(STATUS "building. They currently are:")
+  message(STATUS "----------------------------------------------------------------------------")
+  message(STATUS "Eigen Version 3.2.9. Set EIGEN_INSTALL variable to the root directory of the")
+  message(STATUS "Eigen installation.")
+  message(STATUS "")
+  message(STATUS "----------------------------------------------------------------------------")
+  message(STATUS "HDF5 Version 1.8.19. Set HDF5_DIR variable to the directory where the ")
+  message(STATUS "hdf5-config.cmake. This is usually located in the HDF5_ROOT/share/cmake ")
+  message(STATUS "directory.")
+  message(STATUS "") 
+  message(STATUS "----------------------------------------------------------------------------")
+  message(STATUS "ITK Version 4.12.0. Set ITK_DIR variable to the directory where ")
+  message(STATUS "ITKConfig.cmake is located. This is usually located in the ITK_BUILD_ROOT/")  
+  message(STATUS " directory")
+  message(STATUS "")
+  message(STATUS "----------------------------------------------------------------------------")
+  message(STATUS "Qt Version 5.9.3. Set Qt5_DIR variable to the directory where Qt5Config.cmake")
+  message(STATUS "is located. This is usually located in the Qt5_INSTAL/QT_VERSION/BUILD_TOOLSET/lib/cmake/Qt5")
+  message(STATUS "")
+  message(STATUS "----------------------------------------------------------------------------")
+  message(STATUS "Qwt Version 6.1.3. Set QWT_INSTALL variable to the root directory where Qwt ")
+  message(STATUS "is installed.")
+  message(STATUS "")
+  message(STATUS "----------------------------------------------------------------------------")
+  message(STATUS "TBB Version 2018_20171205. Set TBB_ROOT variable to the root directory where TBB")
+  message(STATUS "is installed.")
 endif()
 
 # Request C++11 standard, using new CMake variables.
@@ -609,25 +638,11 @@ if(EXISTS ${data_file})
           COMPONENT Applications)
 endif()
 
-#-- This is example code that loops over all the DocGroups and each .md BUILD_WITH_INSTALL_RPATH
-#-- the filter DocGroup
-if (0)
-  get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
-  foreach(DocGroup ${DREAM3DDoc_GROUPS})
-    #message(STATUS "  DocGroup: ${DocGroup}" )
-    get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup})
-    foreach(docListItem ${DocGroupList})
-      #message(STATUS "    ${docListItem}")
-    endforeach()
-  endforeach()
-endif()
-
-
-#----------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
 # After we are all done, then update the LibrarySearchDirs.txt file
 file(APPEND "${SIMPLibSearchDirs}" "${CMP_LIB_SEARCH_DIRS};")
 
-#----------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
 # Print out a Summary Section:
 
 message(STATUS "*******************************************************************************")

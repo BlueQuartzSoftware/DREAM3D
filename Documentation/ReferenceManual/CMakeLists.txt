@@ -7,7 +7,48 @@
 # -----------------------------------------------------------------------------
 
 set(DREAM3D_USE_DOXYGEN ON)
-set(DREAM3D_USE_MKDOCS OFF)
+set(DREAM3D_USE_MKDOCS ON)
+
+#-- This is example code that loops over all the DocGroups and each .md BUILD_WITH_INSTALL_RPATH
+#-- the filter DocGroup
+set(PluginIndexMD "${DREAM3DDocRoot}/ReferenceManual/PluginIndex.md")
+file(WRITE "${PluginIndexMD}" "# Filter Index #\n\n")
+get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
+foreach(DocGroup ${DREAM3DDoc_GROUPS})
+  #message(STATUS "  DocGroup: ${${DocGroup}_SOURCE_DIR}" )
+  file(APPEND ${PluginIndexMD} "## ${DocGroup} ##\n\n")
+  #file(APPEND ${PluginIndexMD} "## ${${DocGroup}_SOURCE_DIR} ##\n\n")
+
+  get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup}Filters)
+  foreach(docListItem ${DocGroupList})
+    #message(STATUS "    ${docListItem}")
+    if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
+
+      string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters" tempstring ${${DocGroup}_SOURCE_DIR})
+
+      string(REPLACE "${tempstring}" "Plugins" tempstring ${docListItem})
+      string(REPLACE "Filters" "" tempstring ${tempstring})
+
+      string(REPLACE "Plugins/${DocGroup}/" "" filterName ${tempstring})
+      string(REPLACE ".md" "" filterName ${filterName})
+      string(REPLACE ".md" ".html" tempstring ${tempstring})
+
+      file(APPEND ${PluginIndexMD} "+ [${filterName}](${tempstring})\n")
+    else()
+
+      string(REPLACE "${${DocGroup}_SOURCE_DIR}/Documentation/" "" tempstring ${docListItem})
+      string(REPLACE "Filters" "" tempstring ${tempstring})
+
+      string(REPLACE "${DocGroup}/" "" filterName ${tempstring})
+      string(REPLACE ".md" "" filterName ${filterName})
+      string(REPLACE ".md" ".html" tempstring ${tempstring})
+
+      file(APPEND ${PluginIndexMD} "+ [${filterName}](Plugins/${tempstring})\n")
+    endif()
+  endforeach()
+  file(APPEND ${PluginIndexMD} "\n")
+endforeach()
+
 
 # -----------------------------------------------------------------------------
 # Use MKDOCS to build the docs
