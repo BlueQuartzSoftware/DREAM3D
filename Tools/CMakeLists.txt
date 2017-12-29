@@ -1,5 +1,5 @@
 PROJECT( DREAM3DTools )
-cmake_minimum_required(VERSION 3.6.0)
+cmake_minimum_required(VERSION 3.8.0)
 
 # --------------------------------------------------------------------
 # Setup the install rules for the various platforms
