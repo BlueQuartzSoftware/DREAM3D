@@ -207,7 +207,7 @@ if(SIMPL_DISCOUNT_DOCUMENTATION)
 
     add_executable(GenerateHTMLDocs
       ${DREAM3DProj_SOURCE_DIR}/Documentation/Tools/GenerateHTMLDocs.cpp 
-      ${DREAM3DProj_BINARY_DIR}/Documentation/Tools/${PROJECT_NAME}Configuration.h
+      ${DREAM3DProj_BINARY_DIR}/Documentation/ReferenceManual/DocToolsConfiguration.h
     )
     target_include_directories(GenerateHTMLDocs INTERFACE  discount::libmarkdown)
     target_link_libraries(GenerateHTMLDocs Qt5::Core discount::libmarkdown SIMPLib)
