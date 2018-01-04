@@ -12,8 +12,8 @@
 namespace StatsGeneratorConstants
 {
   const QString StatsGeneratorPluginFile("StatsGeneratorPlugin");
-  const QString StatsGeneratorPluginDisplayName("StatsGeneratorPlugin");
-  const QString StatsGeneratorBaseName("StatsGeneratorPlugin");
+  const QString StatsGeneratorPluginDisplayName("StatsGenerator Plugin");
+  const QString StatsGeneratorBaseName("StatsGenerator");
 
   namespace FilterGroups
   {

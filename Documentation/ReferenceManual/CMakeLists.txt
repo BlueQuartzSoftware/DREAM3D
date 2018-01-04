@@ -1,160 +1,287 @@
-#--////////////////////////////////////////////////////////////////////////////
-#-- Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-#-- All rights reserved.
-#-- BSD License: http://www.opensource.org/licenses/bsd-license.html
-#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
-#--////////////////////////////////////////////////////////////////////////////
-# -----------------------------------------------------------------------------
+set(RefManual_Docs_AuxiliaryTools
+    DevHelper
+    PipelineRunner
+  )
 
-set(DREAM3D_USE_DOXYGEN ON)
-set(DREAM3D_USE_MKDOCS ON)
+set(RefManual_Docs_Developer
+    CodeGuidelines
+    CompilerSuite
+    CreatingAFilter
+    Linux_Configuring_and_Building_DREAM3D
+    OSX_Configuring_and_Building_DREAM3D
+    RepositoryLayout
+    SDKInstall
+    SourceDownload
+    Windows_Configuring_and_Building_DREAM3D
+    WritingAFilter
+  )
 
-#-- This is example code that loops over all the DocGroups and each .md BUILD_WITH_INSTALL_RPATH
-#-- the filter DocGroup
-set(PluginIndexMD "${DREAM3DDocRoot}/ReferenceManual/PluginIndex.md")
-file(WRITE "${PluginIndexMD}" "# Filter Index #\n\n")
-get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
-foreach(DocGroup ${DREAM3DDoc_GROUPS})
-  #message(STATUS "  DocGroup: ${${DocGroup}_SOURCE_DIR}" )
-  file(APPEND ${PluginIndexMD} "## ${DocGroup} ##\n\n")
-  #file(APPEND ${PluginIndexMD} "## ${${DocGroup}_SOURCE_DIR} ##\n\n")
+set(RefManual_Docs_ReleaseNotes
+    ReleaseNotes_6_0_0
+    ReleaseNotes_6_1_0
+    ReleaseNotes_6_2_0
+    ReleaseNotes_6_3_0
+    ReleaseNotes_6_4_0
+  )
 
-  get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup}Filters)
-  foreach(docListItem ${DocGroupList})
-    #message(STATUS "    ${docListItem}")
-    if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
+set(RefManual_Docs_SupportedFileFormats
+    H5EbsdFile
+    MiscFileFormats
+    NativeDREAM3DFileFormat
+    XdmfForVisualization
+  )
 
-      string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters" tempstring ${${DocGroup}_SOURCE_DIR})
+set(RefManual_Docs_Tutorials
+    CroppingData
+    EBSDReconstruction
+    SurfaceMeshing
+    SyntheticSinglePhase 
+  )
 
-      string(REPLACE "${tempstring}" "Plugins" tempstring ${docListItem})
-      string(REPLACE "Filters" "" tempstring ${tempstring})
+set(RefManual_Docs_UsingDREAM3D
+    Acknowledgements
+    Contributors
+    CreatingPipeline
+    DataStructure
+    ImportExportPipelines
+    UserInterface
+  )
 
-      string(REPLACE "Plugins/${DocGroup}/" "" filterName ${tempstring})
-      string(REPLACE ".md" "" filterName ${filterName})
-      string(REPLACE ".md" ".html" tempstring ${tempstring})
+set(RefManual_Groups 
+      AuxiliaryTools 
+      Developer 
+      ReleaseNotes 
+      SupportedFileFormats 
+      Tutorials 
+      UsingDREAM3D
+    )
 
-      file(APPEND ${PluginIndexMD} "+ [${filterName}](${tempstring})\n")
-    else()
 
-      string(REPLACE "${${DocGroup}_SOURCE_DIR}/Documentation/" "" tempstring ${docListItem})
-      string(REPLACE "Filters" "" tempstring ${tempstring})
+# ------------------------------------------------------------------------------
+# This is an experimental tool that will convert all the markdown documents to
+# html with styling provided by CSS. This is an experimental way of removing the
+# DOxygen generated docs with it's insecure jquery.js file.
+option(SIMPL_DISCOUNT_DOCUMENTATION "Use Discount to generate the Documentation" OFF)
+if(SIMPL_DISCOUNT_DOCUMENTATION)
 
-      string(REPLACE "${DocGroup}/" "" filterName ${tempstring})
-      string(REPLACE ".md" "" filterName ${filterName})
-      string(REPLACE ".md" ".html" tempstring ${tempstring})
+  find_package(discount)
+  if(discount_FOUND)
+    message(STATUS "Discount Markdown->HTML library found.")
 
-      file(APPEND ${PluginIndexMD} "+ [${filterName}](Plugins/${tempstring})\n")
+    # -----------------------------------------------------------------------------
+    # This is example code that loops over all the DocGroups and each .md file within
+    # that group.
+    set(PluginJsonFile "${DREAM3DDocRoot}/ReferenceManual/PluginIndex.json")
+    file(WRITE "${PluginJsonFile}" "{\n")
+    file(APPEND "${PluginJsonFile}" "  \"Plugins\": {\n")
+
+    get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
+    set(NEED_COMMA_DOC_GROUP 0)
+    foreach(DocGroup ${DREAM3DDoc_GROUPS})
+      #message(STATUS "  DocGroup: ${${DocGroup}_SOURCE_DIR}" )
+      
+      if(NEED_COMMA_DOC_GROUP)
+        file(APPEND "${PluginJsonFile}" " ,\n")
+      endif()
+      if(NOT NEED_COMMA_DOC_GROUP)
+        set(NEED_COMMA_DOC_GROUP 1)
+      endif()
+      file(APPEND "${PluginJsonFile}" "  \"${DocGroup}\": { \n")
+      file(APPEND "${PluginJsonFile}" "    \"SOURCE_DIR\": \"${${DocGroup}_SOURCE_DIR}\",\n")
+      file(APPEND "${PluginJsonFile}" "    \"DOC_DIR\": \"Documentation/${DocGroup}Filters\",\n")
+      if(EXISTS "${${DocGroup}_SOURCE_DIR}/Documentation/${DocGroup}Filters/Images")
+        file(APPEND "${PluginJsonFile}" "    \"IMAGES_DIR\": \"Documentation/${DocGroup}Filters/Images\",\n")
+      endif()
+      file(APPEND "${PluginJsonFile}" "    \"FILTERS\": [\n")
+
+      get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup}Filters)
+      set(NEED_COMMA_DOC_ITEM 0)
+      foreach(docListItem ${DocGroupList})
+        if(NEED_COMMA_DOC_ITEM)
+          file(APPEND "${PluginJsonFile}" "  ,\n")
+        endif()
+        if(NOT NEED_COMMA_DOC_ITEM)
+          set(NEED_COMMA_DOC_ITEM 1)
+        endif()
+
+        if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
+          string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters" tempstring ${${DocGroup}_SOURCE_DIR})
+          string(REPLACE "${tempstring}" "Plugins" tempstring ${docListItem})
+          string(REPLACE "Filters" "" tempstring ${tempstring})
+          string(REPLACE "Plugins/${DocGroup}/" "" filterName ${tempstring})
+          string(REPLACE ".md" "" filterName ${filterName})
+          string(REPLACE ".md" ".html" tempstring ${tempstring})
+
+          file(APPEND "${PluginJsonFile}" "        \"${filterName}\"")
+        else()
+          string(REPLACE "${${DocGroup}_SOURCE_DIR}/Documentation/" "" tempstring ${docListItem})
+          string(REPLACE "Filters" "" tempstring ${tempstring})
+          string(REPLACE "${DocGroup}/" "" filterName ${tempstring})
+          string(REPLACE ".md" "" filterName ${filterName})
+          string(REPLACE ".md" ".html" tempstring ${tempstring})
+          file(APPEND "${PluginJsonFile}" "        \"${filterName}\"")
+        endif()
+      endforeach()
+      file(APPEND "${PluginJsonFile}" "    ]\n")
+      file(APPEND "${PluginJsonFile}" "\n  }")
+    endforeach()
+    file(APPEND "${PluginJsonFile}" "\n  } ,")
+    #------------------------------------------------------------------------------
+    # This section of code generates the JSON file that has everything else from the
+    # documentation set
+    file(APPEND "${PluginJsonFile}" "\n  \"ReferenceManual\": {\n")
+    set(NEED_COMMA_DOC_GROUP 0)
+    foreach(DocGroup ${RefManual_Groups})
+      if(NEED_COMMA_DOC_GROUP)
+        file(APPEND "${PluginJsonFile}" " ,\n")
+      endif()
+      if(NOT NEED_COMMA_DOC_GROUP)
+        set(NEED_COMMA_DOC_GROUP 1)
+      endif()
+      file(APPEND "${PluginJsonFile}" "    \"${DocGroup}\": { \n")
+      file(APPEND "${PluginJsonFile}" "      \"SOURCE_DIR\": \"${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual\",\n")
+      file(APPEND "${PluginJsonFile}" "      \"DOC_DIR\": \"${DocGroup}\",\n")
+      if(EXISTS "${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/${DocGroup}/Images")
+        file(APPEND "${PluginJsonFile}" "      \"IMAGES_DIR\": \"${DocGroup}/Images\",\n")
+      endif()
+      file(APPEND "${PluginJsonFile}" "      \"FILTERS\": [\n")
+      
+      set(NEED_COMMA_DOC_ITEM 0)
+      foreach(docListItem ${RefManual_Docs_${DocGroup}})
+        if(NEED_COMMA_DOC_ITEM)
+          file(APPEND "${PluginJsonFile}" "  ,\n")
+        endif()
+        if(NOT NEED_COMMA_DOC_ITEM)
+          set(NEED_COMMA_DOC_ITEM 1)
+        endif()
+        file(APPEND "${PluginJsonFile}" "        \"${docListItem}\"")
+      endforeach()
+      file(APPEND "${PluginJsonFile}" "    ]\n")
+      file(APPEND "${PluginJsonFile}" "  }")
+    endforeach()
+    #file(APPEND "${PluginJsonFile}" "\n  }")
+
+    file(APPEND "${PluginJsonFile}" "   ,\n")
+    file(APPEND "${PluginJsonFile}" "  \"Index\": { \n")
+    file(APPEND "${PluginJsonFile}" "      \"SOURCE_DIR\": \"${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual\",\n")
+    file(APPEND "${PluginJsonFile}" "      \"DOC_DIR\": \"\",\n")
+    file(APPEND "${PluginJsonFile}" "      \"IMAGES_DIR\": \"Images\",\n")
+    file(APPEND "${PluginJsonFile}" "      \"FILTERS\": [\n")
+    file(APPEND "${PluginJsonFile}" "        \"Index\"")
+    file(APPEND "${PluginJsonFile}" "       ]\n")
+    file(APPEND "${PluginJsonFile}" "    }")
+    file(APPEND "${PluginJsonFile}" "\n }")
+    # This Bit of JSON is the last part of the file
+    file(APPEND "${PluginJsonFile}" "\n}\n")
+
+    configure_file(${DREAM3DProj_SOURCE_DIR}/Documentation/mkdocs.yml
+      ${DREAM3DDocRoot}/mkdocs.yml 
+      )
+
+    configure_file("${BrandedSIMPLView_DIR}/icons/DREAM3D (PNG)/128x128.png"
+      ${DREAM3DDocRoot}/ReferenceManual/logo.png COPYONLY
+      )
+
+    get_filename_component(WORKSPACE_DIR "${DREAM3DProj_SOURCE_DIR}" DIRECTORY)  
+    if(EXISTS "${WORKSPACE_DIR}/DREAM3DSuperbuild")
+      add_custom_target(SUPERBUILD_DOC_FOLDER_COPY ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${WORKSPACE_DIR}/DREAM3DSuperbuild/docs"
+        "${DREAM3DDocRoot}/ReferenceManual/Developer/"
+        COMMENT "SUPERBUILD_DOC_FOLDER_COPY: Copying Documentation to build directory")
+      set_target_properties(SUPERBUILD_DOC_FOLDER_COPY PROPERTIES FOLDER ZZ_COPY_FILES)
+
     endif()
-  endforeach()
-  file(APPEND ${PluginIndexMD} "\n")
-endforeach()
 
 
-# -----------------------------------------------------------------------------
-# Use MKDOCS to build the docs
-if(DREAM3D_USE_MKDOCS)
 
-  get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
-  add_custom_target(REFMANUAL_DOC_FOLDER_COPY ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/"
-    "${DREAM3DDocRoot}/ReferenceManual/"
-    COMMENT "REFMANUAL_DOC_FOLDER_COPY: Copying Documentation to build directory")
-  set_target_properties(REFMANUAL_DOC_FOLDER_COPY PROPERTIES FOLDER ZZ_COPY_FILES)
+    if(APPLE)
+      set(HTML_OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${DREAM3D_PACKAGE_DEST_PREFIX}Resources/Help/DREAM3D")
+    else()
+      set(HTML_OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D")
+    endif()
 
 
-  configure_file(${DREAM3DProj_SOURCE_DIR}/Documentation/mkdocs.yml
-    ${DREAM3DDocRoot}/mkdocs.yml 
+    configure_file( ${DREAM3DProj_SOURCE_DIR}/Documentation/Tools/ToolConfiguration.h.in
+                    ${DREAM3DProj_BINARY_DIR}/Documentation/ReferenceManual/DocToolsConfiguration.h)
+
+
+    add_executable(GenerateHTMLDocs
+      ${DREAM3DProj_SOURCE_DIR}/Documentation/Tools/GenerateHTMLDocs.cpp 
+      ${DREAM3DProj_BINARY_DIR}/Documentation/Tools/${PROJECT_NAME}Configuration.h
+    )
+    target_include_directories(GenerateHTMLDocs INTERFACE  discount::libmarkdown)
+    target_link_libraries(GenerateHTMLDocs Qt5::Core discount::libmarkdown SIMPLib)
+    #-- Set the Debug Suffix for the application
+    set_target_properties( GenerateHTMLDocs
+                PROPERTIES
+                DEBUG_OUTPUT_NAME GenerateHTMLDocs${EXE_DEBUG_EXTENSION}
+                RELEASE_OUTPUT_NAME GenerateHTMLDocs
     )
 
-  configure_file("${BrandedSIMPLView_DIR}/icons/DREAM3D (PNG)/128x128.png"
-    ${DREAM3DDocRoot}/ReferenceManual/logo.png COPYONLY
-    )
+    add_custom_target(GenerateDiscountDocs ALL
+      COMMAND GenerateHTMLDocs
+      DEPENDS DREAM3D
+      COMMENT "Using Discount to generate HTML Documentation"
+      )
 
-
-  get_filename_component(WORKSPACE_DIR "${DREAM3DProj_SOURCE_DIR}" DIRECTORY)  
-  if(EXISTS "${WORKSPACE_DIR}/DREAM3DSuperbuild")
-    add_custom_target(SUPERBUILD_DOC_FOLDER_COPY ALL
-      COMMAND ${CMAKE_COMMAND} -E copy_directory "${WORKSPACE_DIR}/DREAM3DSuperbuild/docs"
-      "${DREAM3DDocRoot}/ReferenceManual/Developer/"
-      COMMENT "SUPERBUILD_DOC_FOLDER_COPY: Copying Documentation to build directory")
-    set_target_properties(SUPERBUILD_DOC_FOLDER_COPY PROPERTIES FOLDER ZZ_COPY_FILES)
-
+  else()
+    set(SIMPL_DISCOUNT_DOCUMENTATION OFF)
+    message(STATUS "Discount package was NOT found. Documentation will NOT be generated")
   endif()
 
 endif()
 
 # -----------------------------------------------------------------------------
 # Use DOXYGEN to Build the documentation
-if(DREAM3D_USE_DOXYGEN)
+if(SIMPL_DOXYGEN_DOCUMENTATION)
+  
+  set(DOX_GENERATE_RTF "NO")
+  option(SIMPL_GENERATE_RTF "Generate RTF Documentation" OFF)
+  if(SIMPL_GENERATE_RTF STREQUAL "ON")
+    set(DOX_GENERATE_RTF "YES")
+  endif()
+
+  # By default we generate the Documentation in HTML format
+  set(DOX_GENERATE_HTML "NO")
+  option(SIMPL_GENERATE_HTML "Generate HTML Documentation" ON)
+  if(SIMPL_GENERATE_HTML STREQUAL "ON")
+    set(DOX_GENERATE_HTML "YES")
+  endif()
+
+  #most windows machines do NOT have LATEX built in so default this to OFF
+  set(DOX_GENERATE_LATEX "NO")
+  option(SIMPL_GENERATE_LATEX "Generate PDF Documentation" OFF)
+  if(SIMPL_GENERATE_LATEX STREQUAL "ON")
+    set(DOX_GENERATE_LATEX "YES")
+    # Check for existence of LaTex executable files
+    include( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
+    if(APPLE)
+      option(AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
+    endif()
+  endif()
 
   PROJECT(DREAM3DReferenceManual)
   cmake_minimum_required(VERSION 3.8.0)
 
   if(NOT DEFINED PROJECT_RESOURCES_DIR)
-  set(PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
+      set(PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
   endif()
 
-  set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
+  set(DOCUMENTATION_SOURCE_FILES \"${PROJECT_SOURCE_DIR}/Index.dox\")
+  set(DOXYGEN_IMAGE_DIRS "")
 
+  foreach(DocGroup ${RefManual_Groups})
+    list(APPEND DOCUMENTATION_SOURCE_FILES \"${PROJECT_SOURCE_DIR}/${DocGroup}/${DocGroup}.dox\" )
+    if(EXISTS "${PROJECT_SOURCE_DIR}/${DocGroup}/Images")
+      list(APPEND DOXYGEN_IMAGE_DIRS \"${PROJECT_SOURCE_DIR}/${DocGroup}/Images\")
+    endif()    
+    foreach(docListItem ${RefManual_Docs_${DocGroup}})
+      #message(STATUS "docListItem: ${docListItem}")
+      list(APPEND DOCUMENTATION_SOURCE_FILES \"${PROJECT_SOURCE_DIR}/${DocGroup}/${docListItem}.md\" )
+    endforeach()
 
-  #-------------------------------------------------------------------------------
-  # Create the initial list of Files for DOxygen to process
-  set(DOCUMENTATION_SOURCE_FILES
-    \"${PROJECT_SOURCE_DIR}/Index.dox\"
-    \"${PROJECT_SOURCE_DIR}/Acknowledgements.md\"
-    \"${PROJECT_SOURCE_DIR}/DataStructure.md\"
-    \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/UsingDREAM3D.dox\"
-    \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/UserInterface.md\"
-    \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/CreatingPipeline.md\"
-    \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/ImportExportPipelines.md\"
-    \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/SupportedFileFormats.dox\"
-    \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/NativeDREAM3DFileFormat.md\"
-    \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/XdmfForVisualization.md\"
-    \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/MiscFileFormats.md\"
-    \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/H5EbsdFile.md\"
-    \"${PROJECT_SOURCE_DIR}/Tutorials/Tutorials.dox\"
-    \"${PROJECT_SOURCE_DIR}/Tutorials/EBSDReconstruction.md\"
-    \"${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md\"
-    \"${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md\"
-    \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingData.md\"
-    \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/DevHelper.md\"
-    \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/PipelineRunner.md\"
-    \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox\"
-    \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes.dox\"
-    \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_0_0.md\"
-    \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_1_0.md\"
-    \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_2_0.md\"
-    \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_3_0.md\"
-    \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_4_0.md\"
-  )
+  endforeach()
 
-  option(DREAM3D_INCLUDE_DEVELOPER_DOCS "Include the Developer Documentation in the DOxygen Generated output." ON)
-  if(DREAM3D_INCLUDE_DEVELOPER_DOCS)
-    set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
-      \"${PROJECT_SOURCE_DIR}/Developer/CodeGuidelines.md\"
-      \"${PROJECT_SOURCE_DIR}/Developer/CompilerSuite.md\"
-      \"${PROJECT_SOURCE_DIR}/Developer/CreatingAFilter.md\"
-      \"${PROJECT_SOURCE_DIR}/Developer/Developer.dox\"
-      \"${PROJECT_SOURCE_DIR}/Developer/Linux_Configuring_and_Building_DREAM3D.md\"
-      \"${PROJECT_SOURCE_DIR}/Developer/OSX_Configuring_and_Building_DREAM3D.md\"
-      \"${PROJECT_SOURCE_DIR}/Developer/RepositoryLayout.md\"
-      \"${PROJECT_SOURCE_DIR}/Developer/SDKInstall.md\"
-      \"${PROJECT_SOURCE_DIR}/Developer/SourceDownload.md\"
-      \"${PROJECT_SOURCE_DIR}/Developer/Windows_Configuring_and_Building_DREAM3D.md\"
-      \"${PROJECT_SOURCE_DIR}/Developer/WritingAFilter.md\"
-    )
-  endif()
-
-  set(DOXYGEN_IMAGE_DIRS
-    \"${PROJECT_SOURCE_DIR}/Images\"
-    \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images\"
-    \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/Images\"
-    \"${PROJECT_SOURCE_DIR}/Tutorials/Images\"
-    \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingImages\"
-    \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images\"
-    \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images/DevHelper\"
-    \"${PROJECT_SOURCE_DIR}/Developer/Images\"
-    )
 
   #-------------------------------------------------------------------------------
   # Read the list of Groups back into CMake
@@ -176,10 +303,12 @@ if(DREAM3D_USE_DOXYGEN)
   #-------------------------------------------------------------------------------
   # Now Append the list of filters for each Group into the same file
   foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
+    # message(STATUS "=======>   DOxygen Group: ${group}")
+
     string(TOLOWER ${group} filterGroup_Lower)
     #file(STRINGS ${DREAM3DDocRoot}/DREAM3DDoc_${group} filter_path_list)
-    get_property(filter_path_list GLOBAL PROPERTY DREAM3DDoc_${group})
-
+    get_property(filter_path_list GLOBAL PROPERTY DREAM3DDoc_${group}Filters)
+    # message(STATUS "filter_path_list: ${filter_path_list}")
     file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n@page ${filterGroup_Lower} ${group}\n\n")
     # Read the summary for the group if it exists
     if(EXISTS ${DREAM3DReferenceManual_SOURCE_DIR}/Filters/${group}/${group}.md)
@@ -204,8 +333,6 @@ if(DREAM3D_USE_DOXYGEN)
       "${DOCUMENTATION_SOURCE_FILES}"
        "\"${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox\""
   )
-
-
 
   include(${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
 
