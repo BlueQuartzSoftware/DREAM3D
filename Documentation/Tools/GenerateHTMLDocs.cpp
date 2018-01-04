@@ -291,6 +291,18 @@ int GenerateHTML(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
   
   std::string text = markDown.toStdString();
   mkd_flag_t flag = MKD_1_COMPAT | MKD_TOC;
+
+  // Sanity check for any characters that are out of the US ASCII printable range
+  // and if they are replace with a ' ' [SPACE] character. Discount does not like
+  // these out of range characters.
+  for (std::string::size_type i = 0; i < text.size(); i++)
+  {
+	if (text[i] > 126 || text[i] < 0)
+	{
+	 text[i] = ' ';
+	}
+  }
+
   MMIOT* doc = mkd_string(text.c_str(), text.size(), flag);
   if(!mkd_compile(doc, flag))
   {
@@ -360,7 +372,7 @@ int GenerateHTML(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
   
   mkd_cleanup(doc);
   
-  //std::cout<< "Saved File " << fi2.absoluteFilePath().toStdString() << std::endl;
+  // std::cout<< "Saved File " << fi2.absoluteFilePath().toStdString() << std::endl;
   file_count++;
   return 0;
 }
