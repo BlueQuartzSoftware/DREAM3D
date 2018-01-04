@@ -53,7 +53,8 @@ QString getCss()
       QFileInfo fi(CssFilePath);
       
       QFile source(fi.absoluteFilePath());
-      source.open(QFile::ReadOnly);
+      bool isOpen = source.open(QFile::ReadOnly);
+      Q_ASSERT(isOpen);
       Css = source.readAll();
       source.close();
     }
@@ -109,7 +110,8 @@ QString getNavIndex(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
   {
     // Read the json file
     QFile source(jsonFileInfo.absoluteFilePath());
-    source.open(QFile::ReadOnly);
+    bool isOpen = source.open(QFile::ReadOnly);
+    Q_ASSERT(isOpen);
     json = source.readAll();
     source.close();
   }
@@ -121,12 +123,13 @@ QString getNavIndex(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
     std::cout << "JSON Parse Error: " << parseError.errorString().toStdString() << std::endl;
     return QString("");
   }
+  QJsonObject jsonDocObject = jsonDoc.object();
   /* ***************************************************************************
    * This section converts all the ReferenceManual MarkDown files using Discount
    * into HTML and also copies any "Images" folder.
    ****************************************************************************/
   {
-    QJsonObject refManualObj = jsonDoc["ReferenceManual"].toObject();
+    QJsonObject refManualObj = jsonDocObject["ReferenceManual"].toObject();
     QStringList refKeys = refManualObj.keys();
     QStringListIterator refKeyIter(refKeys);
     while(refKeyIter.hasNext())
@@ -263,7 +266,8 @@ int GenerateHTML(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
   {
     // Read the markdown file
     QFile source(fi.absoluteFilePath());
-    source.open(QFile::ReadOnly);
+    bool isOpen = source.open(QFile::ReadOnly);
+    Q_ASSERT(isOpen);
     markDown = source.readAll();
     source.close();
   }
@@ -525,7 +529,8 @@ void GenerateIndexFile()
     {
       // Read the markdown file
       QFile source(fi.absoluteFilePath());
-      source.open(QFile::ReadOnly);
+      bool isOpen = source.open(QFile::ReadOnly);
+      Q_ASSERT(isOpen);
       markDown = source.readAll();
       source.close();
     }
@@ -542,7 +547,8 @@ void GenerateIndexFile()
     {
       // Read the markdown file
       QFile source(fi.absoluteFilePath());
-      source.open(QFile::ReadOnly);
+      bool isOpen = source.open(QFile::ReadOnly);
+      Q_ASSERT(isOpen);
       markDown = source.readAll();
       source.close();
     }
@@ -597,7 +603,8 @@ void GenerateHtmlFromJson()
   {
     // Read the json file
     QFile source(fi.absoluteFilePath());
-    source.open(QFile::ReadOnly);
+    bool isOpen = source.open(QFile::ReadOnly);
+    Q_ASSERT(isOpen);
     json = source.readAll();
     source.close();
   }
@@ -609,12 +616,13 @@ void GenerateHtmlFromJson()
     std::cout << "JSON Parse Error: " << parseError.errorString().toStdString() << std::endl;
     return;
   }
+  QJsonObject jsonDocObject = jsonDoc.object();
   /* ***************************************************************************
    * This section converts all the ReferenceManual MarkDown files using Discount
    * into HTML and also copies any "Images" folder.
    ****************************************************************************/
   {
-    QJsonObject refManualObj = jsonDoc["ReferenceManual"].toObject();
+    QJsonObject refManualObj = jsonDocObject["ReferenceManual"].toObject();
     QStringList refKeys = refManualObj.keys();
     QStringListIterator refKeyIter(refKeys);
     while(refKeyIter.hasNext())
@@ -674,7 +682,7 @@ void GenerateHtmlFromJson()
    * This section converts all the Plugin Documentation MarkDown files using Discount
    * into HTML and also copies any "Images" folder.
    ****************************************************************************/  
-  QJsonObject pluginObj = jsonDoc["Plugins"].toObject();
+  QJsonObject pluginObj = jsonDocObject["Plugins"].toObject();
   QStringList pluginKeys = pluginObj.keys();
   QStringListIterator pluginKeyIter(pluginKeys);
   while(pluginKeyIter.hasNext())
@@ -745,7 +753,8 @@ void GenerateIndexFile2()
     {
       // Read the markdown file
       QFile source(fi.absoluteFilePath());
-      source.open(QFile::ReadOnly);
+      bool isOpen = source.open(QFile::ReadOnly);
+      Q_ASSERT(isOpen);
       markDown = source.readAll();
       source.close();
     }
