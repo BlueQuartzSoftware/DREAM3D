@@ -5,8 +5,8 @@ Cropping data in DREAM.3D can help reduce the time for processing by removing da
 
 -----
 
-![Region of Interest for Cropping](CroppingImages/Annotated_Small.png)
-@image latex CroppingImages/Annotated_Small.png "Region of Interest for Cropping" width=6in
+![Region of Interest for Cropping](Images/Annotated_Small.png)
+@image latex Images/Annotated_Small.png "Region of Interest for Cropping" width=6in
 
 -----
 
@@ -14,8 +14,8 @@ Cropping data in DREAM.3D can help reduce the time for processing by removing da
 
 -------
 
-![ParaView Data Properties](CroppingImages/ParaView_DataExtents.png)
-@image latex CroppingImages/ParaView_DataExtents.png "ParaView Data Properties" width=2in
+![ParaView Data Properties](Images/ParaView_DataExtents.png)
+@image latex Images/ParaView_DataExtents.png "ParaView Data Properties" width=2in
 
 ------
 
@@ -37,14 +37,14 @@ These voxel values can then be entered into the [Crop Image Geometry](@ref cropi
 
 ------
 
-![Crop Volume Filter](CroppingImages/CropData_Filter.png)
-@image latex CroppingImages/CropData_Filter.png "Crop Volume Filter" width=5in
+![Crop Volume Filter](Images/CropData_Filter.png)
+@image latex Images/CropData_Filter.png "Crop Volume Filter" width=5in
 
 ------
 
 After the **Filter** executes, the data from the volume of interest is cropped out.
 
 
-![Data Volume After Cropping](CroppingImages/Cropped_Data.png)
-@image latex CroppingImages/Cropped_Data.png "Data Volume After Cropping" width=3in
+![Data Volume After Cropping](Images/Cropped_Data.png)
+@image latex Images/Cropped_Data.png "Data Volume After Cropping" width=3in
 

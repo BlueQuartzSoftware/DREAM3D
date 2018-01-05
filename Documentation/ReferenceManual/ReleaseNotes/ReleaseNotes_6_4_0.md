@@ -182,12 +182,10 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 
 Update the StatsGenerator UI to allow the user easier access to input fields. This version updates the StatsGenerator UI with the following:
-+ Create a stand alone FeatureSizeDistWidget that handles all the interactions
-with the ESD Size Distribution.
-+ Create class hierarchy for PrimaryPhaseWidget and PrecipitatePhaseWidget
-in order to reused code where possible.
-+ Update the documentation with new and additional images and clarifications.
-updates #571
+
++ Create a stand alone FeatureSizeDistWidget that handles all the interactions with the ESD Size Distribution.
++ Create class hierarchy for PrimaryPhaseWidget and PrecipitatePhaseWidget in order to reused code where possible.
++ Update the documentation with new and additional images and clarifications. updates #571
 + Allow user to set a specific name for each phase. updates #576
 + Remove code that is no longer used/required.
 + Format the various distribution plots with new dark color scheme

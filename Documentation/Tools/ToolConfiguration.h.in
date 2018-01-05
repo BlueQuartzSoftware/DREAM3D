@@ -49,7 +49,7 @@ namespace D3DTools
 
   QString GetDREAM3DToolsDir()
   {
-    return QString::fromLatin1("@DREAM3DProj_SOURCE_DIR_NORM@/Tools");
+    return QString::fromLatin1("@DREAM3DProj_SOURCE_DIR@/Documentation/Tools");
   }
 
 }

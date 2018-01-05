@@ -70,4 +70,4 @@ DREAM.3D is open-source and available under a BSD license. See the Resources/DRE
 
 ## Thirdy Party Licenses ##
 
-DREAM.3D depends on a number of other _libraries_ in order to function properly. These licenses are available within the application **About** dialog box. Qt 5.6.1 is licensed under the LGPLv2.1 and as such the developers of DREAM.3D are required to make available the source code to Qt 5.6 which can be downloaded from [http://download.qt.io](http://download.qt.io).
+DREAM.3D depends on a number of other _libraries_ in order to function properly. These licenses are available within the application **About** dialog box. Qt5 is licensed under the LGPLv2.1 and as such the developers of DREAM.3D are required to make available the source code to Qt5 which can be downloaded from [http://download.qt.io](http://download.qt.io).
