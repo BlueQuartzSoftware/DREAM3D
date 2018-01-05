@@ -59,7 +59,6 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/SIMPLibFilters.h"
 #include "UnitTestSupport.hpp"
 
 #include "DREAM3DTestFileLocations.h"

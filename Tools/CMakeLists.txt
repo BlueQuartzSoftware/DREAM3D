@@ -28,9 +28,9 @@ get_filename_component(DREAM3DProj_PARENT_DIR_NORM ${DREAM3DProj_SOURCE_DIR} PAT
 ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
 
 if(APPLE)
-  set(HTML_OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Help/DREAM3D")
+  set(HTML_OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${DREAM3D_PACKAGE_DEST_PREFIX}Resources/Help/DREAM3D")
 else()
-  set(HTML_OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help")
+  set(HTML_OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D")
 endif()
 
 
@@ -110,40 +110,14 @@ COMPILE_TOOL(
     LINK_LIBRARIES EbsdLib SIMPLib
 )
 
-# ------------------------------------------------------------------------------
-# This is an experimental tool that will convert all the markdown documents to
-# html with styling provided by CSS. This is an experimental way of removing the
-# DOxygen generated docs with it's insecure jquery.js file.
-find_package(discount QUIET)
-message(STATUS "discount_FOUND: ${discount_FOUND}")
-if(${discount_FOUND})
-  COMPILE_TOOL(
-      TARGET GenerateHTMLDocs
-      SOURCES ${DREAM3DTools_SOURCE_DIR}/GenerateHTMLDocs.cpp ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h
-      DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-      VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-      VERSION_MINOR ${DREAM3D_VER_MINOR}
-      VERSION_PATCH ${DREAM3D_VER_PATCH}
-      BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-      COMPONENT     Tools
-      LINK_LIBRARIES Qt5::Core discount::libmarkdown
-  )
-  target_include_directories(GenerateHTMLDocs INTERFACE  discount::libmarkdown)
-endif()
 
-# --------------------------------------------------------------------
-# Setup an option to compile the version JSON file. This should be off
-# by default as no one needs it except the web admin
-OPTION (DREAM3D_BUILD_VERSION_FILE "Generate dream3d_version.json for the webserver" OFF)
-if(${DREAM3D_BUILD_VERSION_FILE})
-  COMPILE_TOOL(
-      TARGET CreateWebServerJson
-      SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp ${SIMPLView_VERSION_SRC_FILE} ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h
-      DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-      VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-      VERSION_MINOR ${DREAM3D_VER_MINOR}
-      VERSION_PATCH ${DREAM3D_VER_PATCH}
-      BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-      LINK_LIBRARIES SIMPLib
-  )
-endif()
+COMPILE_TOOL(
+    TARGET CreateWebServerJson
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp ${SIMPLView_VERSION_SRC_FILE} ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    LINK_LIBRARIES SIMPLib
+)

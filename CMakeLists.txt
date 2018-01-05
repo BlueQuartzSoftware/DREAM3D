@@ -1,39 +1,5 @@
-# ============================================================================
-# Copyright (c) 2009-2015 BlueQuartz Software, LLC
-#
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
-#
-# Redistributions of source code must retain the above copyright notice, this
-# list of conditions and the following disclaimer.
-#
-# Redistributions in binary form must reproduce the above copyright notice, this
-# list of conditions and the following disclaimer in the documentation and/or
-# other materials provided with the distribution.
-#
-# Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-# contributors may be used to endorse or promote products derived from this software
-# without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-# USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-# The code contained herein was partially funded by the followig contracts:
-#    United States Air Force Prime Contract FA8650-07-D-5800
-#    United States Air Force Prime Contract FA8650-10-D-5210
-#    United States Prime Contract Navy N00173-07-C-2068
-#
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-message(STATUS "********* STARTING DREAM3D CONFIGURATION ***********************")
+message(STATUS "********* STARTING DREAM.3D CONFIGURATION ***********************")
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
   get_property(DREAM3D_SDK_STATUS_PRINTED GLOBAL PROPERTY DREAM3D_SDK_STATUS_PRINTED)
@@ -44,32 +10,32 @@ if(NOT "${DREAM3D_SDK}" STREQUAL "")
 else()
   message(STATUS "You have elected to NOT set a DREAM3D_SDK CMake variable. You will")
   message(STATUS "need to point to the various dependecies that DREAM.3D requires for")
-  message(STATUS "building. They currently are:")
-  message(STATUS "----------------------------------------------------------------------------")
-  message(STATUS "Eigen Version 3.2.9. Set EIGEN_INSTALL variable to the root directory of the")
-  message(STATUS "Eigen installation.")
-  message(STATUS "")
-  message(STATUS "----------------------------------------------------------------------------")
-  message(STATUS "HDF5 Version 1.8.19. Set HDF5_DIR variable to the directory where the ")
-  message(STATUS "hdf5-config.cmake. This is usually located in the HDF5_ROOT/share/cmake ")
-  message(STATUS "directory.")
-  message(STATUS "") 
-  message(STATUS "----------------------------------------------------------------------------")
-  message(STATUS "ITK Version 4.12.0. Set ITK_DIR variable to the directory where ")
-  message(STATUS "ITKConfig.cmake is located. This is usually located in the ITK_BUILD_ROOT/")  
-  message(STATUS " directory")
-  message(STATUS "")
-  message(STATUS "----------------------------------------------------------------------------")
-  message(STATUS "Qt Version 5.9.3. Set Qt5_DIR variable to the directory where Qt5Config.cmake")
-  message(STATUS "is located. This is usually located in the Qt5_INSTAL/QT_VERSION/BUILD_TOOLSET/lib/cmake/Qt5")
-  message(STATUS "")
-  message(STATUS "----------------------------------------------------------------------------")
-  message(STATUS "Qwt Version 6.1.3. Set QWT_INSTALL variable to the root directory where Qwt ")
-  message(STATUS "is installed.")
-  message(STATUS "")
-  message(STATUS "----------------------------------------------------------------------------")
-  message(STATUS "TBB Version 2018_20171205. Set TBB_ROOT variable to the root directory where TBB")
-  message(STATUS "is installed.")
+  message(STATUS "building. Those that are undefined are listed next:")
+
+  if(NOT DEFINED HDF5_DIR)
+      message(STATUS "Set HDF5_DIR variable to the directory where the hdf5-config.cmake is located.")
+  endif()
+
+  if(NOT DEFINED ITK_DIR)
+      message(STATUS "Set ITK_DIR variable to the directory where the ITKConfig.cmake is located.")
+  endif()
+
+  if(NOT DEFINED EIGEN_INSTALL)
+      message(STATUS "Set EIGEN_INSTALL variable to the root directory of the Eigen installation.")
+  endif()
+
+  if(NOT DEFINED Qt5_DIR)
+      message(STATUS "Set Qt5_DIR variable to the directory where the Qt5Config.cmake is located.")
+  endif()
+
+  if(NOT DEFINED QWT_INSTALL)
+      message(STATUS "Set QWT_INSTALL variable to the root directory where Qwt is located.")
+  endif()
+
+  if(NOT DEFINED TBB_ROOT)
+      message(STATUS "Set TBB_ROOT variable to the root directory where TBB is located.")
+  endif()
+
 endif()
 
 # Request C++11 standard, using new CMake variables.
@@ -139,27 +105,8 @@ if("${CMP_SOURCE_DIR}" STREQUAL "")
   elseif(EXISTS "${DREAM3D_PARENT}/CMP")
     set(CMP_SOURCE_DIR ${DREAM3D_PARENT}/CMP)
   endif()
-  #message(STATUS "CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
+  message(STATUS "CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
 endif()
-
-if(NOT EXISTS "${CMP_SOURCE_DIR}")
-  if(Git_FOUND)
-    message(STATUS "CMP_SOURCE_DIR does not exist at ${CMP_SOURCE_DIR}. Attempting to clone it from Github....")
-    execute_process(COMMAND ${GIT_EXECUTABLE} clone -b develop git://github.com/bluequartzsoftware/CMP.git ${DREAM3D_PARENT}/CMP
-                    OUTPUT_VARIABLE CLONE_OUTPUT
-                    RESULT_VARIABLE did_run
-                    ERROR_VARIABLE git_error
-                    WORKING_DIRECTORY ${DREAM3D_PARENT} )
-  endif()
-  # One last check. If it does not exist at this point then we simply Abort CMake
-  if(NOT EXISTS "${CMP_SOURCE_DIR}")
-    message(FATAL_ERROR "CMP_SOURCE_DIR does not exist. We attempted to clone it from the GitHub repo but that also seemed\
-      to fail. SIMPLView can not proceed without the CMP directory. Please ask a SIMPL developer for more\
-      information about this error. Can you access http://github.com/bluequartzsoftware/CMP.git? is\
-      a firewall blocking the 'git' protocol? ")
-  endif()
-endif()
-
 
 #------------------------------------------------------------------------------
 # If the developer has set another SIMPL directory then use that, otherwise look
@@ -184,27 +131,6 @@ if("${SIMPLViewProj_SOURCE_DIR}" STREQUAL "")
     set(SIMPLViewProj_SOURCE_DIR "${DREAM3D_PARENT}/SIMPLView")
   endif()
   message(STATUS "SIMPLViewProj_SOURCE_DIR: ${SIMPLViewProj_SOURCE_DIR}")
-endif()
-
-if(NOT EXISTS "${SIMPLViewProj_SOURCE_DIR}")
-  if(Git_FOUND)
-    message(STATUS "SIMPLViewProj_SOURCE_DIR does not exist at ${SIMPLViewProj_SOURCE_DIR}. Attempting to clone it from Github....")
-    execute_process(COMMAND ${GIT_EXECUTABLE} clone -b develop git://github.com/bluequartzsoftware/SIMPLView.git ${DREAM3D_PARENT}/SIMPLView
-                    OUTPUT_VARIABLE CLONE_OUTPUT
-                    RESULT_VARIABLE did_run
-                    ERROR_VARIABLE git_error
-                    WORKING_DIRECTORY ${DREAM3D_PARENT}/ )
-    # message(STATUS "CLONE_OUTPUT: ${CLONE_OUTPUT}")
-    # message(STATUS "did_run: ${did_run}")
-    # message(STATUS "git_error: ${git_error}")
-  endif()
-  # One last check. If it does not exist at this point then we simply Abort CMake
-  if(NOT EXISTS "${SIMPLViewProj_SOURCE_DIR}")
-    message(FATAL_ERROR "SIMPLViewProj_SOURCE_DIR does not exist. We attempted to clone it from the GitHub repo but that also seemed\
-      to fail. SIMPLView can not proceed without the SIMPLViewProj_SOURCE_DIR directory. Please ask a SIMPL developer for more\
-      information about this error. Can you access http://github.com/bluequartzsoftware/SIMPLView.git? is\
-      a firewall blocking the 'git' protocol? ")
-  endif()
 endif()
 
 #------------------------------------------------------------------------------
@@ -315,6 +241,44 @@ if(SIMPL_BUILD_TESTING)
 endif()
 
 
+
+# --------------------------------------------------------------------
+# This is set to "1" so that our test files are deleted at the end of the tests
+set(DREAM3D_REMOVE_TEST_FILES "1")
+
+# --------------------------------------------------------------------
+# Over ride CMake's built in module directory by prepending cmp's module
+# directory first
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMP_MODULES_SOURCE_DIR} )
+
+# Build shared libraries
+OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
+set(LIB_TYPE STATIC)
+if(BUILD_SHARED_LIBS)
+  #message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
+    set(LIB_TYPE SHARED)
+    list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
+    if(MSVC)
+        list(APPEND CMP_LIB_SEARCH_DIRS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
+                                        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
+    endif()
+
+else()
+  message(FATAL_ERROR "BUILD_SHARED_LIBS Must be set to ON in order to build properly.")
+endif(BUILD_SHARED_LIBS)
+
+
+# --------------------------------------------------------------------
+# Find and Use the Qt5 Libraries
+include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
+set(DREAM3D_Qt5_Components Core Widgets Network Gui Concurrent Xml OpenGL PrintSupport Sql)
+option(SIMPLView_USE_QtWebEngine "Use QWebEngine to display Help. OFF=Use default web browser" ON)
+CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
+                    "${SIMPLView_USE_QtWebEngine}"
+                    "${DREAM3DProj_BINARY_DIR}"
+                    "DREAM3D")
+
+
 # -----------------------------------------------------------------------
 # Bring in the SIMPLView Project, which will bring in SIMPLib
 # -----------------------------------------------------------------------
@@ -354,94 +318,6 @@ if("${DREAM3D_DATA_DIR}" STREQUAL "")
    message(FATAL_ERROR "The DREAM3D_DATA_DIR variable is not set and it needs to be set to a location where the test data is located")
 endif()
 
-# --------------------------------------------------------------------
-# This is set to "1" so that our test files are deleted at the end of the tests
-set(DREAM3D_REMOVE_TEST_FILES "1")
-
-# --------------------------------------------------------------------
-# Over ride CMake's built in module directory by prepending cmp's module
-# directory first
-set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH} ${Qt5_DIR})
-
-# Build shared libraries
-OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
-set(LIB_TYPE STATIC)
-if(BUILD_SHARED_LIBS)
-  #message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
-    set(LIB_TYPE SHARED)
-    list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
-    if(MSVC)
-        list(APPEND CMP_LIB_SEARCH_DIRS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
-                                        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
-    endif()
-
-else()
-  message(FATAL_ERROR "BUILD_SHARED_LIBS Must be set to ON in order to build properly.")
-endif(BUILD_SHARED_LIBS)
-
-
-# --------------------------------------------------------------------
-# Find and Use the Qt5 Libraries
-include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
-set(DREAM3D_Qt5_Components Core Widgets Network Gui Concurrent Xml OpenGL PrintSupport Sql)
-option(SIMPLView_USE_QtWebEngine "Use QWebEngine to display Help. OFF=Use default web browser" ON)
-CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
-                    "${SIMPLView_USE_QtWebEngine}"
-                    "${DREAM3DProj_BINARY_DIR}"
-                    "DREAM3D")
-
-
-# ---------- Find HDF5 Headers/Libraries -----------------------
-# HDF5 now comes with everything that is needed for CMake to load
-# up the targets (Exported) that it needs. We just need to find where
-# HDF5 is installed.
-include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
-
-# --------------------------------------------------------------------
-# Should we use Intel Threading Building Blocks
-# --------------------------------------------------------------------
-set(SIMPLib_USE_PARALLEL_ALGORITHMS "")
-option(SIMPL_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms" ON)
-if(SIMPL_USE_MULTITHREADED_ALGOS)
-    find_package(TBB)
-    if(TBB_FOUND)
-        #include_directories(${TBB_INCLUDE_DIRS} )
-        CMP_COPY_DEPENDENT_LIBRARIES("tbb;tbb_malloc")
-        # Append the locations of the TBB libraries to our Library Search Paths
-        list(APPEND CMP_LIB_SEARCH_DIRS ${TBB_BINARY_DIR} ${TBB_LIBRARY_DIR} )
-        # Create an install rule to copy the dependent shared library over to the installed location
-        CMP_LIBRARIES_INSTALL_RULES("tbb;tbb_malloc" ".")
-    else()
-        message(FATAL_ERROR "The Intel Threading Building Blocks library is needed to enable the multithreaded algorithms. Please make sure it is installed properly")
-    endif()
-    set(SIMPLib_USE_PARALLEL_ALGORITHMS "1")
-endif()
-
-# --------------------------------------------------------------------
-# SIMPL needs the Eigen library for Least Squares fit and Eigen
-# value/vector calculations.
-set(SIMPLib_USE_EIGEN "")
-Find_Package(Eigen REQUIRED)
-if(EIGEN_FOUND)
-  #message(STATUS "Found Eigen Library")
-  #include_directories( ${EIGEN_INCLUDE_DIRS} )
-  set(SIMPLib_USE_EIGEN "1")
-else()
-  message(WARNING "The Eigen Library is required for some algorithms to execute. These algorithms will be disabled.")
-endif()
-
-# --------------------------------------------------------------------
-# Find the Doxygen package
-FIND_PACKAGE(Doxygen)
-if(DOXYGEN_FOUND)
-  get_property(Doxygen_STATUS_PRINTED GLOBAL PROPERTY Doxygen_STATUS_PRINTED)
-  if(NOT Doxygen_STATUS_PRINTED)
-    #message(STATUS "Doxygen Found at ${DOXYGEN_EXECUTABLE}")
-    set_property(GLOBAL PROPERTY Doxygen_STATUS_PRINTED TRUE)
-  endif()
-else()
-  message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
-endif()
 
 # --------------------------------------------------------------------
 # Now that we have found all of our required libraries and packages we can start the all
@@ -524,45 +400,16 @@ if( SIMPL_BUILD_CLI_TOOLS )
   endif()
 endif()
 
-
 #-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
-option(SIMPL_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
+#option(SIMPL_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
 if(SIMPL_BUILD_DOCUMENTATION)
-  
-  set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
-
-  set(DOX_GENERATE_RTF "NO")
-  option(SIMPL_GENERATE_RTF "Generate RTF Documentation" OFF)
-  if(SIMPL_GENERATE_RTF STREQUAL "ON")
-    set(DOX_GENERATE_RTF "YES")
-  endif()
-
-  # By default we generate the Documentation in HTML format
-  set(DOX_GENERATE_HTML "NO")
-  option(SIMPL_GENERATE_HTML "Generate HTML Documentation" ON)
-  if(SIMPL_GENERATE_HTML STREQUAL "ON")
-    set(DOX_GENERATE_HTML "YES")
-  endif()
-
-  #most windows machines do NOT have LATEX built in so default this to OFF
-  set(DOX_GENERATE_LATEX "NO")
-  option(SIMPL_GENERATE_LATEX "Generate PDF Documentation" OFF)
-  if(SIMPL_GENERATE_LATEX STREQUAL "ON")
-    set(DOX_GENERATE_LATEX "YES")
-    # Check for existence of LaTex executable files
-    INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
-    if(APPLE)
-      option(AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
-    endif()
-  endif()
-
+  set(DOCUMENTATION_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources/DocConfigFiles)
 
   # Now add each subdirectory that holds our documentation files
-  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
-  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/APIDocs ${PROJECT_BINARY_DIR}/Documentation/APIDocs)
+  add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
+  add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Documentation/APIDocs ${PROJECT_BINARY_DIR}/Documentation/APIDocs)
 endif()
-
 
 # This should be the last line in this file:
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
@@ -572,70 +419,9 @@ if(SIMPL_BUILD_TESTING)
     include(${DREAM3DProj_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
-
 #-------------------------------------------------------------------------------
-#- This copies all the Prebuilt Pipeline files into the Build directory so the help
-#- works from the Build Tree
-add_custom_target(PrebuiltPipelinesCopy ALL
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-            ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/PrebuiltPipelines/
-            COMMENT "Copying Prebuilt Pipelines into Binary Directory")
-set_target_properties(PrebuiltPipelinesCopy PROPERTIES FOLDER ZZ_COPY_FILES)
-
-# Make Sure this target as part of the DREAM3D Build
-# add_dependencies(DREAM3D PrebuiltPipelinesCopy)
-
-#- This installs all the prebuilt pipeline files.
-if(APPLE)
-  set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources")
-else()
-  set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}")
-endif()
-install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-        DESTINATION ${INSTALL_DESTINATION}
-        COMPONENT Applications )
-
-
-#-------------------------------------------------------------------------------
-# Copy the Data Folder to the build directory
-
-add_custom_target(DataFolderCopy ALL
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_DATA_DIR}/Data
-            ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/Data/
-            COMMENT "Copying Data Folder into Binary Directory")
-set_target_properties(DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
-
-#-------------------------------------------------------------------------------
-# Make Sure the DataFolderCopy target is run before the DREAM3D target is built
-# add_dependencies(DREAM3D DataFolderCopy)
-
-# we want specific stats files to be bundled with the Application. The Ang data files
-# are too large to be included and will be a separate download
-set(SYNTHETIC_STATS_FILES
-    ${DREAM3D_DATA_DIR}/Data/Composite.dream3d
-    ${DREAM3D_DATA_DIR}/Data/CubicSingleEquiaxed.dream3d
-    ${DREAM3D_DATA_DIR}/Data/CubicSingleRolled.dream3d
-    ${DREAM3D_DATA_DIR}/Data/HexagonalSingleEquiaxed.dream3d
-    ${DREAM3D_DATA_DIR}/Data/TwoPhaseCubicHexParticlesEquiaxed.dream3d
-  )
-
-#- This installs all the Data files during a "make install" or "make package"
-list(GET SYNTHETIC_STATS_FILES 0 data_file)
-
-if(EXISTS ${data_file})
-  if(APPLE)
-    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Data")
-  else()
-    set(INSTALL_DESTINATION "Data")
-  endif()
-
-  install(FILES ${SYNTHETIC_STATS_FILES}
-          DESTINATION ${INSTALL_DESTINATION}
-          COMPONENT Applications )
-  install(DIRECTORY ${DREAM3D_DATA_DIR}/Data/SmallIN100 ${DREAM3D_DATA_DIR}/Data/Image ${DREAM3D_DATA_DIR}/Data/Textured_Copper
-          DESTINATION ${INSTALL_DESTINATION}
-          COMPONENT Applications)
-endif()
+# Include code to copy the prebuilt pipelines, data and other items
+include(${DREAM3DProj_SOURCE_DIR}/Support/Support.cmake)
 
 #------------------------------------------------------------------------------------
 # After we are all done, then update the LibrarySearchDirs.txt file
