@@ -25,6 +25,7 @@ function(DREAM3D_COMPILE_PLUGIN)
     if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})
         get_property(PluginNumFilters GLOBAL PROPERTY PluginNumFilters)
+        set_property(GLOBAL PROPERTY ${PLUG_PLUGIN_NAME}_NumFilters ${PluginNumFilters})
 
         if(${PluginNumFilters} GREATER -1)
           # get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
