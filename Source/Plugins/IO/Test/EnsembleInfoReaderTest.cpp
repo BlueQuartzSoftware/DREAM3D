@@ -49,9 +49,9 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+
 #include "UnitTestSupport.hpp"
 
-#include "GenerateFeatureIds.h"
 #include "IOTestFileLocations.h"
 
 class EnsembleInfoReaderTest

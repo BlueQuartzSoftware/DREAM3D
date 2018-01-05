@@ -14,6 +14,7 @@ set(DREAM3DTest_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/Test)
 #------------------------------------------------------------------------------
 # Include this file from the CMP Project
 include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
+include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 
 set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp)
 # Make sure the directory is created during CMake time

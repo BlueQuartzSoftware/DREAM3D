@@ -42,6 +42,7 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 #------------------------------------------------------------------------------
 # Include this file from the CMP Project
 include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
+include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 
 set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Test/Temp)
 # Make sure the directory is created during CMake time
@@ -90,7 +91,7 @@ foreach(name  ${TEST_NAMES})
   string(CONCAT
     FilterTestIncludes
     ${FilterTestIncludes}
-    "#include \"${${PLUGIN_NAME}Test_SOURCE_DIR}/${name}Test.cpp\"\n"
+    "#include \"${${PLUGIN_NAME}Test_SOURCE_DIR}/${name}.cpp\"\n"
     )
 
   string(CONCAT

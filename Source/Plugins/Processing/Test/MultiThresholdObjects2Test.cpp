@@ -207,7 +207,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> void ComparisonValueTestAll(AbstractFilter::Pointer filter, DataArray<T>* dataArray, T comparisonValue, QString outputName)
+  template <typename T> 
+  void ComparisonValueTestAll(AbstractFilter::Pointer filter, DataArray<T>* dataArray, T comparisonValue, QString outputName)
   {
     ComparisonValueTest(filter, dataArray, SIMPL::Comparison::Operator_GreaterThan, comparisonValue, outputName + QString::number(0));
 
@@ -269,12 +270,12 @@ public:
     DataArrayPath path = DataArrayPath("dc", "CellData", "TestArrayFloat");
     IDataArray::Pointer idataf = filter->getDataContainerArray()->getDataContainer(path)->getAttributeMatrix(path)->getAttributeArray(path.getDataArrayName());
     DataArray<float>::Pointer dataf = std::dynamic_pointer_cast<DataArray<float>>(idataf);
-    ComparisonValueTestAll(filter, dataf, 0.1f, "FloatComparison");
+    ComparisonValueTestAll(filter, dataf.get(), 0.1f, "FloatComparison");
 
     path.setDataArrayName("TestArrayInt");
     IDataArray::Pointer idatai = filter->getDataContainerArray()->getDataContainer(path)->getAttributeMatrix(path)->getAttributeArray(path.getDataArrayName());
     DataArray<int>::Pointer datai = std::dynamic_pointer_cast<DataArray<int>>(idatai);
-    ComparisonValueTestAll(filter, datai, 10, "IntComparison");
+    ComparisonValueTestAll(filter, datai.get(), 10, "IntComparison");
 
     return 1;
   }

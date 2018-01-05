@@ -36,24 +36,6 @@
 set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
-
-#------------------------------------------------------------------------------
-# Include this file from the CMP Project
-include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
-
-
-
-set(TEST_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test/Temp)
-# Make sure the directory is created during CMake time
-file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
-
-configure_file(${${PLUGIN_NAME}Test_SOURCE_DIR}/TestFileLocations.h.in
-               ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
-
-configure_file(${SIMPLProj_SOURCE_DIR}/Resources/UnitTestSupport.hpp
-               ${${PLUGIN_NAME}Test_BINARY_DIR}/UnitTestSupport.hpp COPYONLY IMMEDIATE)
-
-
 #------------------------------------------------------------------------------
 # List all the source files here. They will NOT be compiled but instead
 # be directly included in the main test source file. We list them here so that
@@ -66,61 +48,22 @@ set(TEST_NAMES
   ExportDataTest
 )
 
-
-set( ${PLUGIN_NAME}_TEST_SRCS )
-set(FilterTestIncludes "")
-set(TestMainFunctors "")
-
-foreach(name  ${TEST_NAMES})
-  set( ${PLUGIN_NAME}_TEST_SRCS
-    ${${PLUGIN_NAME}_TEST_SRCS}
-    "${${PLUGIN_NAME}_SOURCE_DIR}/Test/${name}.cpp"
-    )
-  string(CONCAT
-    FilterTestIncludes
-    ${FilterTestIncludes}
-    "#include \"${name}.cpp\"\n"
-    )
-
-  string(CONCAT
-    TestMainFunctors
-   ${TestMainFunctors}
-   "  ${name}()()|\n")
-endforeach()
-
-if(NOT "${TestMainFunctors}" STREQUAL "")
-  STRING(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors}   )
-endif()
-
-configure_file(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/TestMain.cpp.in
-               ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp @ONLY)
-
-# QT5_WRAP_CPP( GenerateFeatureIds_MOC  "${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h")
+#------------------------------------------------------------------------------
+# Include this file from the CMP Project
+include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
+include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 
 
-# Set the source files properties on each source file.
-foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
-  set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
-endforeach()
+get_filename_component(${PLUGIN_NAME}_PARENT_SOURCE_DIR "${${PLUGIN_NAME}_SOURCE_DIR}" DIRECTORY)
+get_filename_component(${PLUGIN_NAME}_PARENT_BINARY_DIR "${${PLUGIN_NAME}_BINARY_DIR}" DIRECTORY)
 
-set( ${PLUGIN_NAME}_TEST_SRCS
-  ${${PLUGIN_NAME}_TEST_SRCS}
-  ${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h
-  ${GenerateFeatureIds_MOC}
-  )
-
-AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}Test
-                 SOURCES ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
-                 FOLDER "${PLUGIN_NAME}Plugin/Test"
-                 LINK_LIBRARIES Qt5::Core H5Support SIMPLib
-                 INCLUDE_DIRS 
-                      ${${PLUGIN_NAME}Test_SOURCE_DIR}
-                      ${${PLUGIN_NAME}Test_BINARY_DIR}
-                    )
-
-
-
-if(MSVC)
-  set_source_files_properties(${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)
-endif()
-
+SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
+                           TEST_DATA_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Data
+                           SOURCES ${TEST_NAMES}
+                           EXTRA_SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h
+                           LINK_LIBRARIES Qt5::Core H5Support SIMPLib
+                           INCLUDE_DIRS ${${PLUGIN_NAME}_PARENT_SOURCE_DIR}
+                                        ${${PLUGIN_NAME}Test_SOURCE_DIR}
+                                        ${${PLUGIN_NAME}Test_BINARY_DIR}
+                                        ${${PLUGIN_NAME}_PARENT_BINARY_DIR}
+                           )

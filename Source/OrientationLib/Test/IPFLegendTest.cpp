@@ -40,7 +40,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "UnitTestSupport.hpp"
 
-#include "OrientationLib.h"
+#include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/LaueOps/CubicLowOps.h"
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalLowOps.h"

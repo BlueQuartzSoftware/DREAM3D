@@ -49,9 +49,10 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/SIMPLibVersion.h"
+
 #include "UnitTestSupport.hpp"
 
-#include "ImageIO/ImageIOVersion.cpp"
 #include "ImageIOTestFileLocations.h"
 
 #define WRITE_IMAGES_FILTER_NAME "WriteImages"
@@ -236,7 +237,7 @@ public:
       if(dcName == "dc2") // metadata only for .png
       {
         QString ver = testImage.text("Description");
-        DREAM3D_REQUIRE_EQUAL(ver, ImageIO::Version::PackageComplete());
+        DREAM3D_REQUIRE_EQUAL(ver, SIMPLib::Version::PackageComplete());
       }
     }
   }
