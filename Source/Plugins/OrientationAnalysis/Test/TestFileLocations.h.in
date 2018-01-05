@@ -21,7 +21,7 @@ namespace UnitTest
   const QString DataDir("@DREAM3D_DATA_DIR@");
   const QString TestTempDir("@TEST_TEMP_DIR@");
   const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
-  const QString OrientationAnalysisTestDataDir("@OrientationAnalysis_TEST_DATA_DIR@");
+  const QString OrientationAnalysisTestDataDir("@TEST_TEMP_DIR@");
 
   namespace AngCachingTest
   {
@@ -84,8 +84,8 @@ namespace UnitTest
     namespace CreateLambertSphereTest
     {
       const QString OutputFile("@TEST_TEMP_DIR@/LambertSphere.dream3d");
-      const QString MasterPattern("@OrientationAnalysis_TEST_DATA_DIR@/MasterPattern.png");
-      const QString PipelineFile("@OrientationAnalysis_TEST_DATA_DIR@/LambertSphere.json");
+      const QString MasterPattern("@TESTFILES_SOURCE_DIR@/MasterPattern.png");
+      const QString PipelineFile("@TESTFILES_SOURCE_DIR@/LambertSphere.json");
     }
 }
 
@@ -95,7 +95,7 @@ namespace UnitTest
     namespace GenerateFZQuaternionsTest
     {
       const QString TestFile1("@TEST_TEMP_DIR@/GenerateFZQuaternionsTest1.dream3d");
-      const QString TestFile2("@OrientationAnalysis_TEST_DATA_DIR@/GenerateFZQuaternionsTest2.dream3d");
+      const QString TestFile2("@TEST_TEMP_DIR@/GenerateFZQuaternionsTest2.dream3d");
     }
 }
 
