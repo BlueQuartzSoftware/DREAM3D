@@ -95,6 +95,10 @@ Find_package(Git)
 
 get_filename_component(DREAM3D_PARENT ${DREAM3DProj_SOURCE_DIR} DIRECTORY CACHE)
 set(DREAM3D_ExternalProject_DIR "${DREAM3DProj_SOURCE_DIR}/ExternalProjects")
+set(UnitTestAnalysisFile ${DREAM3DProj_BINARY_DIR}/UnitTestAnalysis.md)
+file(WRITE ${UnitTestAnalysisFile} "## Unit Test Analysis ##\n")
+set(TotalFilters 0)
+set(TotalTestedFilters 0)
 
 #------------------------------------------------------------------------------
 # If the developer has set another CMP directory then use that, otherwise look
