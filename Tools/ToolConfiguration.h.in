@@ -6,7 +6,12 @@
 
 namespace D3DTools
 {
-
+  
+  /* ***************************************************************************
+   * These methods are to get various directories within the Source folders. 
+   * Extreme care should be used to NOT write anything into these directories.
+   * **************************************************************************/
+   
   QString GetDREAM3DProjDir()
   {
     return QString::fromLatin1("@DREAM3DProj_SOURCE_DIR_NORM@");
@@ -32,11 +37,18 @@ namespace D3DTools
     return QString::fromLatin1("@DREAM3DProj_PARENT_DIR_NORM@");
   }
 
-  QString GetDREAM3DBinaryDir()
-  {
-    return QString::fromLatin1("@DREAM3DProj_BINARY_DIR@");
-  }
 
+  QString GetDREAM3DToolsDir()
+  {
+    return QString::fromLatin1("@DREAM3DProj_SOURCE_DIR_NORM@/Tools");
+  }
+  
+  
+  /* ***************************************************************************
+   * These methods are to get various directories within the build folder
+   * **************************************************************************/
+   
+   
   QString GetDREAM3DBinaryRefManualDir()
   {
     return QString::fromLatin1("@DREAM3DProj_BINARY_DIR@/Documentation/ReferenceManual");
@@ -47,9 +59,14 @@ namespace D3DTools
     return QString::fromLatin1("@HTML_OUTPUT_DIR@");
   }
 
-  QString GetDREAM3DToolsDir()
+  QString GetDREAM3DBinaryDir()
   {
-    return QString::fromLatin1("@DREAM3DProj_SOURCE_DIR_NORM@/Tools");
+    return QString::fromLatin1("@DREAM3DProj_BINARY_DIR@");
+  }
+
+  QString GetDREAM3DRuntimeDir()
+  {
+    return QString::fromLatin1("@CMAKE_RUNTIME_OUTPUT_DIRECTORY@");
   }
 
 }

@@ -97,6 +97,19 @@ COMPILE_TOOL(
     LINK_LIBRARIES Qt5::Core 
 )
 
+# Create a Command line tool for the FilterParameterTool
+COMPILE_TOOL(
+    TARGET ExamplePipelineCoverage
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/ExamplePipelineCoverage.cpp ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Tools
+    LINK_LIBRARIES Qt5::Core SIMPLib
+)
+
 # Create a Command line tool for the MATLAB_CodeGen
 COMPILE_TOOL(
     TARGET MATLAB_CodeGen
