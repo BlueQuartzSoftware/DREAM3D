@@ -2,9 +2,11 @@ Segment Features (Scalar) {#scalarsegmentfeatures}
 ======
 
 ## Group (Subgroup) ##
+
 Reconstruction (Segmentation)
 
 ## Description ##
+
 This **Filter** segments the **Features** by grouping neighboring **Cells** that satisfy the *scalar tolerance*, i.e., have a scalar difference less than the value set by the user. The process by which the **Features** are identified is given below and is a standard *burn algorithm*.
 
 1. Randomly select a **Cell**, add it to an empty list and set its *FeatureId* to the current **Feature**
@@ -18,12 +20,14 @@ The user has the option to *Use Mask Array*, which allows the user to set a bool
 After all the **Features** have been identified, an **Attribute Matrix** is created for the **Features** and each **Feature** is flagged as *Active* in a boolean array in the matrix.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Scalar Tolerance | float | Tolerance  used to determine if neighboring **Cells** belong to the same **Feature** |
 | Use Mask Array | bool | Specifies whether to use a boolean array to exclude some **Cells** from the **Feature** identification process |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

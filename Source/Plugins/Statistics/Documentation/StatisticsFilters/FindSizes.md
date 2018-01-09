@@ -2,19 +2,23 @@ Find Feature Sizes {#findsizes}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Morphological)
 
 ## Description ##
+
 This **Filter** calculates the sizes of all **Features**.  The **Filter** simply iterates through all **Elements** querying for the **Feature** that owns them and keeping a tally for each **Feature**.  The tally is then stored as *NumElements* and the *Volume* and *EquivalentDiameter* are also calculated (and stored) by knowing the volume of each **Element**.
 
 During the computation of the **Feature** sizes, the size of each individual **Element** is computed and stored in the corresponding **Geometry**. By default, these sizes are deleted after executing the **Filter** to save memory. If you wish to store the **Element** sizes, select the *Save Element Sizes* option. The sizes will be stored within the **Geometry** definition itself, not as a separate **Attribute Array**.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Save Element Sizes | bool | Whether the to store the individual **Element** sizes |
 
 ## Required Geometry ##
+
 Not Applicable 
 
 ## Required Objects ##

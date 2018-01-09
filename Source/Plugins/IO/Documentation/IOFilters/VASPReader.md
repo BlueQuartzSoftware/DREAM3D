@@ -2,13 +2,16 @@ VASP Reader{#vaspreader}
 =====
 
 ## Group (Subgroup) ##
+
 IOFilters (Inputs)
 
 
 ## Description ##
+
 This filter reads in files generated using the VASP program. See [the VASP web site ](http://www.vasp.at) for more details.
 
 ## Parameters ##
+
 | Name             | Type |
 |------------------|------|
 | Feature Array Name | String |

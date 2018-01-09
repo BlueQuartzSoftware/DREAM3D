@@ -2,9 +2,11 @@ Multi-Material Marching Cubes (Slice at a Time) {#m3cslicebyslice}
 ======
 
 ## Group (Subgroup) ##
+
 SurfaceMesh
 
 ## Description ##
+
 This filter creates a surface mesh using a MultiMaterial Marching Cubes (M3C) algorithm as implemented at Carnegie-Mellon University by Dr. Sukbin Lee in the Materials Engineering department. The implementation is based on the Wu/Sullivan algorithm\*\*. Heavy modifications were performed by M. Groeber and M. Jackson for the DREAM3D project. The user is urged to read the original article by Wu/Sullivan in order to gain an understanding of how the algorithm works.
 
 This version of the code meshes by looking at 2 slices of **Cells** at a time. The temporary data is then serialized out to disk and is then gathered into the complete shared vertex list and triangle list at the conclusion of the filter. The ramifications of this means that the working amount of RAM during the main part of the algorithm is much lower than the _Volume at a Time_ version of the M3C algorithm but does involve potentially a large amount of disk activity. At the conclusion of the filter the entire mesh is then read into memory which means that the user's computer must still have enough RAM to hold the final mesh in memory.
@@ -41,6 +43,7 @@ The values for the __Node Type__ array can take one of the following values.
 | Delete Temp Files | Boolean: Should the temporary files that are generated be deleted at the end of the filter. This is mostly for debugging. |
 
 ## Required DataContainers ##
+
 Voxel
 SurfaceMesh - This will create the Topology (Vertices and Triangles) of the surface mesh over writing anything that is currently in the SurfaceMeshDataContainer
 
@@ -68,6 +71,7 @@ SurfaceMesh - This will create the Topology (Vertices and Triangles) of the surf
 
 \*\*
 ## Bibliography ##
+
 Ziji Wu, John M. Sullivan Jr, 2003, "Multiple material marching cubes algorithm". International Journal for Numerical Methods in Engineering. 07/2003; 58(2):189 - 207. DOI:10.1002/nme.775 pp.189 - 207
 
 **ABSTRACT**

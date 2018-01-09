@@ -2,9 +2,11 @@ Find Kernel Average Misorientations {#findkernelavgmisorientations}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** determines the Kernel Average Misorientation (KAM) for each **Cell**.  The user can select the size of the kernel to be used in the calculation.  The kernel size entered by the user is the *radius* of the kernel (i.e., entering values of *1*, *2*, *3* will result in a kernel that is *3*, *5*, and *7* **Cells** in size in the X, Y and Z directions, respectively).  The algorithm for determination of KAM is as follows:
 
 1. Calculate the misorientation angle between each **Cell** in a kernel and the central **Cell** of the kernel
@@ -13,11 +15,13 @@ This **Filter** determines the Kernel Average Misorientation (KAM) for each **Ce
 *Note:* All **Cells** in the kernel are weighted equally during the averaging, though they are not equidistant from the central **Cell**.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Kernel Radius | int32_t (3x) | Size of the kernel in the X, Y and Z directions (in number of **Cells**) |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

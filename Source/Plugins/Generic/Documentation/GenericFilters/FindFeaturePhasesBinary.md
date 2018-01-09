@@ -2,17 +2,21 @@ Find Feature Phases Binary {#findfeaturephasesbinary}
 =============
 
 ## Group (Subgroup) ##
+
 Generic (Misc)
 
 ## Description ##
+
 This **Filter** assigns an **Ensemble** Id number to binary data. The *true* **Cells** will be **Ensemble** 1, and *false* **Cells** will be **Ensemble** 0. This **Filter** is generally useful when the **Cell Ensembles** were not known ahead of time. For example, if an image is segmented into precipitates and non-precipitates, this **Filter** will assign the precipitates to **Ensemble** 1, and the non-precipitates to **Ensemble** 0.
 
 Additionally, this **Filter** creates an **Ensemble Attribute Matrix** to hold ensemble data. 
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

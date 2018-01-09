@@ -2,15 +2,19 @@ Find Number of Features {#findnumfeatures}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Morphological)
 
 ## Description ##
+
 This **Filter** determines the number of **Features** in each **Ensemble**.
 
 ## Parameters ##
+
 None 
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

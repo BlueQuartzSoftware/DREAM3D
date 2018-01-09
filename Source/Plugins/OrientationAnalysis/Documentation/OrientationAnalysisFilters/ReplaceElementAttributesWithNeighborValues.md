@@ -2,9 +2,11 @@ Replace Element Attributes with Neighbor (Threshold) {#replaceelementattributesw
 ======
 
 ## Group (Subgroup) ##
+
 Processing (Cleanup)
 
 ## Description ##
+
 This **Filter** first identifies all **Cells** that have a value that meets the selected threshold value set by the user.  Then, for each of those **Cells**, their neighboring **Cells** are checked to determine the neighbor **Cell** with maximum or minimum value. The attributes of the neighbor with the maximum/minimum value are then reassigned to the reference **Cell**.
 
 *Note:* By default, the **Filter** will run only one iteration of the cleanup.  If the user selects the *Loop Until Gone* option, then the **Filter** will run iteratively until no **Cells** exist that meet the users criteria. So, if a **Cell** meets the threshold and so are all of its neighbors, then that **Cell** will not be changed during that iteration and will remain unchanged until one of its neighbors gets changed by a **Cell** further away.
@@ -61,6 +63,7 @@ Oxford Instruments and Bruker CTF data files do not include a "Confidence Index"
 Note the large areas of unindexed pixels in the original image (black pixels) and how they are all filled in. The filter can act much like a generic "flood fill" image processing algorithm if used improperly.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------|-------------|
 | Threshold Value | Any | Sets the threshold value a **Cell** must have to be considered for changing |
@@ -68,6 +71,7 @@ Note the large areas of unindexed pixels in the original image (black pixels) an
 | Loop Until Gone | bool | Whether to iterate until all **Cells** are above the minimum tolerance or just run one iteration |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -77,6 +81,7 @@ Image
 | **Cell Attribute Array** | N/A | Any | (1) | The DataArray to use as input into the filter. |
 
 ## Created Objects ##
+
 None
 
 

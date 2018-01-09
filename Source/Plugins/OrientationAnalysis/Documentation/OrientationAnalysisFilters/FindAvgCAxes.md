@@ -2,9 +2,11 @@ Find Average C-Axis Orientations {#findavgcaxes}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** determines the average C-axis location of each **Feature** by the following algorithm:
 
 1. Gather all **Elements** that belong to the **Feature**
@@ -14,9 +16,11 @@ This **Filter** determines the average C-axis location of each **Feature** by th
 *Note:* This **Filter** will only work properly for *Hexagonal* materials.  The **Filter** does not apply any symmetry operators because there is only one c-axis (<001>) in *Hexagonal* materials and thus all symmetry operators will leave the c-axis in the same position in the sample *reference frame*.  However, in *Cubic* materials, for example, the {100} family of directions are all equivalent and the <001> direction will change location in the sample *reference frame* when symmetry operators are applied. 
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

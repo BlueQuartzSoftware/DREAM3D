@@ -2,9 +2,11 @@ Nodes & Triangles To Vtk File {#nodestrianglestovtk}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This Filter will convert a pair of triangle and nodes files into a VTK PolyData file in either ASCII or binary format. Note if the file is in binary that the binary portions are written in big endian format as specified by the VTK file format. The input file formats were originally defined by Prof. Greg Rohrer (CMU), and are commonly used in studying Grain Boundary Character Distribution (GBCD). 
 
 The nodes file format is as follows:
@@ -35,6 +37,7 @@ The triangles file format is as follows:
 If the user selects to __disable__ the **Conformal Mesh** option then 2 triangles will be written to the file and the scalar data will have 2 entries for the each **Feature**Id, one for each **Feature** that the triangle borders.
 
 ### Example Output ###
+
 The vtk ASCII output file:     
 
     # vtk DataFile Version 2.0
@@ -60,6 +63,7 @@ The vtk ASCII output file:
 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------|-------------|
 | Nodes File | File Path | The input nodes file path |
@@ -69,12 +73,15 @@ The vtk ASCII output file:
 | Conformal Mesh | Boolean | Whether to write a conformal mesh |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

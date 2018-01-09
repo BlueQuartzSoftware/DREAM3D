@@ -2,6 +2,7 @@ Generate Face Schuh Misorientation Coloring {#generatefaceschuhmisorientationcol
 ======================
 
 ## Group (Subgroup) ##
+
 SurfaceMesh (Misc)
 
 ## Description ##
@@ -24,6 +25,7 @@ SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face lis
 
 
 ## Created Objects ##
+
 | Type | Name | Comment |
 |------|------|---------|
 | Face | SurfaceMeshTriangleIPFColors | N X 3 Array of floats that is the axis-angle of the misorientation across each **Face** |

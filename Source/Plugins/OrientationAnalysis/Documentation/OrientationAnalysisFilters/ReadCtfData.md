@@ -46,14 +46,17 @@ The user also may want to assign un-indexed pixels to be ignored by flagging the
 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Input File | File Path |The input .ctf file path |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

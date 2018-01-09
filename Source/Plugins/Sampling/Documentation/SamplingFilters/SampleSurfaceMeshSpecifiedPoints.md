@@ -2,9 +2,11 @@ Sample Triangle Geometry at Specified Points {#samplesurfacemeshspecifiedpoints}
 =============
 
 ## Group (Subgroup) ##
+
 Sampling (Resolution)
 
 ## Description ##
+
 This **Filter** "samples" a triangulated surface mesh with a specified list of **Vertices** (or points) read from a file.  The sampling is performed by the following steps:
 
 1. Determine the bounding box and **Triangle** list of each **Feature** by scanning all **Triangles** and noting the **Features** on either side of the **Triangle**
@@ -33,6 +35,7 @@ The **Filter** will write out a file with the list of **Feature** Ids for the **
 | Sampled Values File | File Path | The output sampled values file path |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##

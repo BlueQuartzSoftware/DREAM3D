@@ -2,9 +2,11 @@ Find Feature Neighbors {#findneighbors}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Morphological)
 
 ## Description ##
+
 This **Filter** determines, for each **Feature**, the number of other **Features** that are in contact with it.  The algorithm for determining the number of "contiguous" neighbors of each **Feature** is as follows:
 
 1. Identify the **Feature** to which a **Cell** belongs
@@ -15,12 +17,14 @@ This **Filter** determines, for each **Feature**, the number of other **Features
 While performing the above steps, the number of neighboring **Cells** with a different **Feature** owner than a given **Cell** is stored, which identifies whether a **Cell** lies on the surface/edge/corner of a **Feature** (i.e. the **Feature** boundary). Additionally, the surface area shared between each set of contiguous **Features** is calculated by tracking the number of times two neighboring **Cells** correspond to a contiguous **Feature** pair. The **Filter** also notes which **Features** touch the outer surface of the sample (this is obtained for "free" while performing the above algorithm). The **Filter** gives the user the option whether or not they want to store this additional information.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Store Boundary Cells Array | bool | Whether to store the boundary **Cells** array |
 | Store Surface Features Array | bool | Whether to store the surface **Features** array |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

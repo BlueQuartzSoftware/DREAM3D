@@ -2,9 +2,11 @@ Jumble Orientations {#jumbleorientations}
 =============
 
 ## Group (Subgroup) ##
+
 Synthetic Building (Crystallography)
 
 ## Description ##
+
 This **Filter** "jumbles" the orientations of a set of **Features** amongst each other. The algorithm for this procedure is as follows:
 
 1. For each **Feauture**, select another random **Feature** belonging to the same **Ensemble**
@@ -16,9 +18,11 @@ By cycling through all the **Features**, it is guaranteed that each **Feature** 
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Not Applicable
 
 

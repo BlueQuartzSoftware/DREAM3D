@@ -2,9 +2,11 @@ Write GBCD Triangles File {#gbcdtriangledumper}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** writes relevant information about the Grain Boundary Character Distribution (GBCD) on an existing set of triangles.  The information written includes the inward and outward Euler angles, normals, and areas for each triangle.  The file format was originally defined by Prof. Greg Rohrer (CMU).
 
 ## Example Output ## 
@@ -33,6 +35,7 @@ This **Filter** writes relevant information about the Grain Boundary Character D
 | Output File | File Path | The output GBCD triangle file path |
 
 ## Required Geometry ##
+
 Image + Triangle
 
 ## Required Objects ##
@@ -45,6 +48,7 @@ Image + Triangle
 | **Feature Attribute Array**  | AvgEulerAngles | float | (3) | Three angles defining the orientation of the **Feature** in Bunge convention (Z-X-Z). |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

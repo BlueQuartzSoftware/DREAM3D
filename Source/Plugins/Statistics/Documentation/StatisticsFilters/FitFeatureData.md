@@ -2,20 +2,24 @@ Fit Distribution to Feature Data {#fitfeaturedata}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Ensemble)
 
 ## Description ##
+
 This **Filter** will fit "common" statistical distributions (as chosen by the user) to specific **Feature** level attributes.  The user can chose both which attributes to fit and with what distribution to fit them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.  The user also has the option to remove *biased* **Features** from the fitting process.
 
 *Note:* The array selected must be a scalar array
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Distribution Type | Enumeration | Specifies distribution type to fit to the data (options include lognormal, power and beta distributions) |
 | Remove Biased Features | Boolean | Whether biased features are to be omitted from the binning counts |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

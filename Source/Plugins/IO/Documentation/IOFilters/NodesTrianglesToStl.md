@@ -2,9 +2,11 @@ Convert Nodes & Triangles To STL Files {#nodestrianglestostl}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This Filter will convert a pair of triangle and nodes files into an output STL File in Binary format for each unique **Feature** Id.  The input file formats were originally defined by Prof. Greg Rohrer (CMU), and are commonly used in studying Grain Boundary Character Distribution (GBCD). 
 
 The nodes file format is as follows:
@@ -42,12 +44,15 @@ The triangles file format is as follows:
 | STL File Prefix | String | The prefix that will be added to the STL files number |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##
+
 None
 
 

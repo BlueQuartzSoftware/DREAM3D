@@ -2,18 +2,23 @@ Generate Triangle Normals {#trianglenormalfilter}
 ============
 
 ## Group (Subgroup) ##
+
 Surface Meshing (Misc)
 
 ## Description ##
+
 This **Filter** calculates a normal vector of length 1 (normalized) for each **Triangle** in a **Triangle Geometry**.
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

@@ -2,9 +2,11 @@ Initialize Data {#initializedata}
 =============
 
 ## Group (Subgroup) ##
+
 Processing (Cleanup)
 
 ## Description ##
+
 This **Filter** allows the user to define a subvolume of the data set in which the **Filter** will reset all data by writing *zeros (0)* into every array for every **Cell** within the subvolume.
 
 ## Parameters ##
@@ -19,6 +21,7 @@ This **Filter** allows the user to define a subvolume of the data set in which t
 | Z Max | int32_t | Maximum Z bound in **Cells** |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##
@@ -28,6 +31,7 @@ Image
 | **Attribute Matrix** | CellData | Cell | N/A | **Cell** data in which to initialize a subvolume to zeros |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

@@ -2,9 +2,11 @@ Generate Ensemble Statistics {#generateensemblestatistics}
 ==========
 
 ## Group (Subgroup) ##
+
 Statistics (Ensemble)
 
 ## Description ##
+
 This **Filter** will fit "common" statistical distributions (as chosen by the user) to specific **Feature** level attributes.  The user can choose which types of attributes to fit (morphological and/or crystallographic) and what distribution to use when fitting them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.  The **Ensemble** array will be an array of *Statistics Objects* that are defined structures within DREAM.3D.  The *Statistics Objects* are used when building synthetic structures in DREAM.3D.  There are other **Filters** for fitting a distribution to an individual array, but this **Filter** is intended to be used to populate the *Statistics Objects* needed to build synthetic structures. 
 
 *Note:* The user must select a *Phase Type* for each **Ensemble** for which *Statistics Objects* are desired.  This selection occurs in the *Phase Types* selection, where the user must select the **Ensemble Attribute Matrix** that will be used to define the desired target **Ensembles**. The choice of *Phase Type* for each **Ensemble** will change the arrays that are fit for that **Ensemble**.
@@ -25,6 +27,7 @@ For more information on using this **Filter** to feed into synthetic building, v
 | Calculate Crystallographic Stats | bool | Specifies whether to calculate the fits for each of the *crystallographic* statistics (orientation distribution function, misorientation distribution function) |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

@@ -2,9 +2,11 @@ Find Schmid Factors {#findschmids}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** calculates the Schmid factor of each **Feature** given its average orientation and a user defined loading axis. The Schmid Factor is the combination of the component of the axial force _F_ that lies parallel to the slip direction and the component that lies perpendicular to the slip plane.  The equation for the Schmid Factor is given as:
 
 Schmid Factor = (cos &phi; cos &lambda;)
@@ -14,6 +16,7 @@ Schmid Factor = (cos &phi; cos &lambda;)
 The **Filter** determines the Schmid factor for each **Feature** by using the above equation for all possible slip systems (given the **Feature's** crystal structure).  The largest Schmid factor from all of the slip systems is stored for the **Feature**. Only the Schmid factor is used in determining which slip system's Schmid factor to report.  The critical resolved shear stress for the different slip systems is not considered. 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Loading Direction | float (3x) | The loading axis for the sample |
@@ -23,6 +26,7 @@ The **Filter** determines the Schmid factor for each **Feature** by using the ab
 | Slip Direction | float (3x) | Vector defining the slip direction. Only needed if _Override Default Slip System_ is checked |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

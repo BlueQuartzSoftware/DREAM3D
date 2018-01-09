@@ -2,9 +2,11 @@ Crop Geometry (Image) {#cropimagegeometry}
 =============
 
 ## Group (Subgroup) ##
+
 Sampling (Cropping/Cutting)
 
 ## Description ##
+
 This **Filter** allows the user to crop an **Image Geometry** of interest.  The input parameters are in units of **Cells**.  For example, if a **Image Geometry** was 100x100x100 **Cells** and each **Cell** was 0.25 x 0.25 x 0.25 units of resolution, then if the user wanted to crop the last 5 microns in the X direction, then the user would enter the following:
 
 Xmin = 80,
@@ -39,6 +41,7 @@ Normally this **Filter** will leave the origin of the volume set at (0, 0, 0), w
 | Save as New Data Container | bool | Specifies if the new grid of **Cells** should replace the current **Geometry** or if a new **Data Container** should be created to hold it |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##

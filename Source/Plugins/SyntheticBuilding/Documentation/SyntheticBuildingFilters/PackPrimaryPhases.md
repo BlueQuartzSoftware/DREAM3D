@@ -2,9 +2,11 @@ Pack Primary Phases {#packprimaryphases}
 =============
 
 ## Group (Subgroup) ##
+
 Synthetic Building (Packing)
 
 ## Description ##
+
 If there are primary *Phases Types* in the volume, then this **Filter** will place primary **Features** with the sizes, shapes, physical orientations and locations corresponding to the goal statistics.   All primary phase types will placed at once.
 
 First, the **Filter** will determine the available volume for placing primary **Features**.  This is accomplished by querying the *Feature Ids* array for the number of **Cells** not currently assigned to a valid **Feature** (*Feature Id* > 0).  Then, the available volume is divided amongst the primary phase types according to their relative volume fractions.  The size distribution of each primary phase type is sampled until the necessary volume of **Features** is generated.  After each primary phase type has a list of **Feature** sizes from sampling the size distribution, the shapes, number of neighoring **Features** and physical orientations are sampled from distributions that are correlated to the size distribution for that primary phase type.  At this point, the **Features** are fixed in their definition and are placed randomly in the volume.  Once all **Features**, from all primary phase types, are placed, the packing is assessed on two criteria: 1. How well do the **Features** fill space (i.e .minimal overlaps and gaps) and 2. How well do the neighborhoods of **Features** match the neighbor statistics distributions.  For a fixed number of iterations (100 * number of **Features**), the **Features** are moved and swapped while trying to optimize against the two criteria mentioned previously.  If a move or swap improves the packing, it is accepted and if it does not it is rejected.  During this process, the **Features** are not actually placed and are not filling space, but rather being represented analytically.  Once the itrative process is finished, the **Features** are locked at their current location and they begin to *grow* from their centroid location according to their size, shape and orientation.  The growth rates are defined such that the **Features** grow as the *Shape Type* they are (i.e. ellipsoid, superellipsoid, cube-octaheron, cylinder, etc), in the orientation they were placed and at a speed relative to their size.  This growth continues until **Features** impinge and until all available **Cells** from the initial check are consumed.
@@ -33,6 +35,7 @@ where (X,Y,Z) are the coordinates of the **Feature**'s centroid, (A,B,C) are the
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Periodic Boundaries | bool | Whether to *wrap* **Features** to create *periodic boundary conditions* |
@@ -43,6 +46,7 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 | New AttributeMatrix | DataArrayPath | AttributeMatrix to save the Shape DescriptionArrays into |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

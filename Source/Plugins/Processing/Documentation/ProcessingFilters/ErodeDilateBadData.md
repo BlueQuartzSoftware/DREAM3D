@@ -2,9 +2,11 @@ Erode/Dilate Bad Data {#erodedilatebaddata}
 =============
 
 ## Group (Subgroup) ##
+
 Processing (Cleanup)
 
 ## Description ##
+
 Bad data refers to a **Cell** that has a _Feature Id_ of *0*, which means the **Cell** has failed some sort of test and been marked as a *bad* **Cell**. If the *bad* data is _dilated_, the **Filter** grows the *bad* data by one **Cell** in an iterative sequence for a user defined number of iterations.  During the *dilate* process the _Feature Id_ of any **Cell** neighboring a *bad* **Cell** will be changed to *0*. If the *bad* data is _eroded_, the **Filter** shrinks the bad data by one **Cell** in an iterative sequence for a user defined number of iterations.  During the *erode* process the _Feature Id_ of the *bad* **Cell** is changed from *0* to the _Feature Id_ of the majority of its neighbors. If there is a tie between two _Feature Ids_, then one of the *Feature Ids*, chosen randomly, will be assigned to the *bad* **Cell**. If _Replace Bad Data_ is selected, all **Attribute Arrays** will be replaced with their neighbor's value during erosion/dilation (instead of only _Feature Id_). The **Filter** also offers the option(s) to turn on/off the erosion or dilation in specific directions (X, Y or Z).
 
 Goals a user might be trying to accomplish with this **Filter** include:
@@ -26,6 +28,7 @@ Running the _erode-dilate_ operations in pairs can often change the size of some
 | Replace Bad Data | bool | Whether to replace all data or just _Feature Ids_ |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -35,6 +38,7 @@ Image
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

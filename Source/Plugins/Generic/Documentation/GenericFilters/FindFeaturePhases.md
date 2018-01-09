@@ -2,15 +2,19 @@ Find Feature Phases {#findfeaturephases}
 =============
 
 ## Group (Subgroup) ##
+
 Generic (Misc)
 
 ## Description ##
+
 This **Filter** determines the **Ensemble** of each **Feature** by querying the **Ensemble** of the **Elements** that belong to the **Feature**. Note that it is assumed that all **Elements** belonging to a **Feature** are of the same **Feature**, and thus any **Element** can be used to determine the **Ensemble** of the **Feature** that owns that **Element**.
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

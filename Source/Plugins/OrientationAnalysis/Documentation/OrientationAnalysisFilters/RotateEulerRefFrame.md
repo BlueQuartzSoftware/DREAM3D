@@ -2,9 +2,11 @@ Rotate Euler Reference Frame {#rotateeulerrefframe}
 =============
 
 ## Group (Subgroup) ##
+
 Orientation Analysis (Conversion)
 
 ## Description ##
+
 This **Filter** will rotate the *Euler angles* that exist at each **Element**.  In actuality, the *reference frame* is being rotated and thus the *Euler Angles* necessary to represent the same orientation must change to account for the new *reference frame*.  The user can set an *angle* and an *axis* to define the rotation of the *reference frame*.
 
 ## Parameters ##
@@ -15,6 +17,7 @@ This **Filter** will rotate the *Euler angles* that exist at each **Element**.  
 | Rotation Angle | float | Angle (in degrees) that the Euler reference frame will be rotated around the rotation axis |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
@@ -24,6 +27,7 @@ Not Applicable
 | **Element Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

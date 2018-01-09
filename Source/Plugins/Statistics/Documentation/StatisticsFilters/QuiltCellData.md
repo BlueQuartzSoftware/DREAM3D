@@ -8,12 +8,15 @@ __This filter is highly experimental and under heavy development. Future version
 
 
 ## Group (Subgroup) ##
+
 Statistics Filters (Ensemble)
 
 ## Description ##
+
 This filter does the following...
 
 ## Parameters ##
+
 | Name             | Type |
 |------------------|------|
 | Feature Array Name | String |

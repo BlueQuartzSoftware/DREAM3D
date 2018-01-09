@@ -2,9 +2,11 @@ Group MicroTexture Regions (C-Axis Misorientation) {#groupmicrotextureregions}
 ======
 
 ## Group (Subgroup) ##
+
 Reconstruction Filters (Grouping)
 
 ## Description ##
+
 This Filter groups neighboring **Features** that have c-axes aligned within a user defined tolerance.  The algorithm for grouping the **Features** is analogous to the algorithm for segmenting the **Features** - only the average orientation of the **Features** are used instead of the orientations of the individual **Cells** and the criterion for grouping only considers the alignment of the c-axes.  The user can specify a tolerance for how closely aligned the c-axes must be for neighbor **Features** to be grouped.
 
 
@@ -19,6 +21,7 @@ NOTE: This filter is intended for use with *Hexagonal* materials.  While the c-a
 | Use Running Average | Boolean |
 
 ## Required DataContainers ##
+
 Volume
 
 ## Required Objects ##

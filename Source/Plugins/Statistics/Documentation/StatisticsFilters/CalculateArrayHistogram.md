@@ -2,14 +2,17 @@ Calculate Frequency Histogram {#calculatearrayhistogram}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Ensemble)
 
 ## Description ##
+
 This **Filter** will create a "frequency distribution" histogram of a specified scalar **Attribute Array**. The user will select the number of bins (a value greater than zero). The user will enter a new **Attribute Matrix** name and a new histogram **Attribute Array** name. If the user clicks the new **Data Container** check box, a new **Data Container** name must be entered. Otherwise the current **Data Container** will be used.
 
 The histogram is a "Left Closed, Right Open" histogram, meaning the bin intervals are denoted as [a, b). The value returned in component "0" of the output array is _b_ from the above interval while component "1" is the frequency for that bin. The output output array can be most easily be thought of as a 2 column x "num bins" row output.
 
 ## Example Data ##
+
 Using some data about the "Old Faithful" geyser in the United States from the [R site](http://www.r-tutor.com/elementary-statistics/quantitative-data/frequency-distribution-quantitative-data), here is the top few lines of data:
 
 	Duration, Wait Time
@@ -23,6 +26,7 @@ Using some data about the "Old Faithful" geyser in the United States from the [R
 	…..
 	
 ### Example Output ###
+
 The range on the data is [1.6, 5.1]. Using 8 bins starting from 1.5 with a bin width of 0.5 the expected output for a "Left Closed, Right Open" histogram is the following table data.
 	
 	[1.5,2)            51 
@@ -35,12 +39,15 @@ The range on the data is [1.6, 5.1]. Using 8 bins starting from 1.5 with a bin w
 	[5,5.5)             4
 
 ### Example Plot ###
+
 ![Example Plot of the Frequency Data from the Old Faithful data set](Images/HistogramExample.png)
 
 ### Additional Information ###
+
 Also see Histogram Quick Reference at [https://plot.ly/histogram/](https://plot.ly/histogram/).
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Number of Bins | int32_t | Specifies number of histogram bins (greater than zero) |
@@ -50,6 +57,7 @@ Also see Histogram Quick Reference at [https://plot.ly/histogram/](https://plot.
 | New Data Container | bool | Whether the output array will be stored in a new **Data Container** or the existing one |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
@@ -79,6 +87,7 @@ If you need more help with a **Filter**, please consider asking your question on
 ## Appendix ##
 
 ### Example Data ###
+
 	Index, Duration, Wait Time
 	{1,3.6,79},
 	{2,1.8,54},

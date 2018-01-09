@@ -2,9 +2,11 @@ Find GBCD (Metric-Based Approach) {#findgbcdmetricbased}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** computes a section through the five-dimensional grain boundary distirbution for a fixed misorientation. An example of such a section is shown in Fig. 1. Differently than [Find GBCD](@ref findgbcd) **Filter**, which uses a method based on partition of the boundary space into bins, this **Filter** implements an alternative metric-based approach described by K. Glowinski and A. Morawiec in [Analysis of experimental grain boundary distributions based on boundary-space metrics, Metall. Mater. Trans. A 45, 3189-3194 (2014)](http://link.springer.com/article/10.1007%2Fs11661-014-2325-y)
 
 ![Fig. 1: Section for the 17.9 deg./[111] misorientation through the grain boundary distribution obtained using this Filter for the small IN100 data set. Units are multiples of random distribution (MRDs).](Images/FindGBCDMetricBased_dist.png)
@@ -22,6 +24,7 @@ where &epsilon; is the relative error of the distribution function at a given po
 ![Fig. 3: (a) Errors (absolute values of one standard deviation) corresponding to the distribution shown in Fig. 1. Levels are given in MRDs. (b) Relative errors (given in %) of the distribution from Fig. 1.](Images/FindGBCDMetricBased_err2.png)
 
 ## Format of Output Files ##
+
 Output files are formatted to be readable by GMT plotting program. The first line contains the fixed misorientation axis and angle. Each of the remaining lines contains three numbers. The first two columns are angles (in degrees) describing a given sampling direction; let us denote them  *col*<sub>1</sub> and *col*<sub>2</sub>, respectively. The third column is either the value of the GBCD (in MRD) for that direction or its error (in MRD or %, depending on user's selection). If you use other software, you can retrive spherical angles &theta; and &phi; of the sampling directions in the following way:
 
 &theta; = 90&deg; - *col*<sub>1</sub>
@@ -31,6 +34,7 @@ Output files are formatted to be readable by GMT plotting program. The first lin
 Then, the directions are given as [ sin &theta; &times; cos &phi; , sin &theta; &times; sin &phi; , cos &theta; ].
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------|-------------|
 | Phase of Interest | int32_t | Index of the **Ensemble** for which to compute GBCD; boundaries having grains of this phase on both its sides will only be taken into account |
@@ -43,9 +47,11 @@ Then, the directions are given as [ sin &theta; &times; cos &phi; , sin &theta; 
 | Save Relative Errors Instead of Their Absolute Values | bool | What type of errors to save (see above description for more detail) |
 
 ## Required Geometry ##
+
 Image + Triangle
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |-------|--------------|-------------|---------|-----|
 | **Vertex Attribute Array**  | NodeTypes | int8_t | (1) | Specifies the type of node in the Geometry
@@ -58,13 +64,16 @@ Image + Triangle
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
 ## Feedback ##
+
 In the case of any questions, suggestions, bugs, etc.,  please feel free to email the author of this **Filter** at kglowinski *at* ymail.com
 
 ## References ##
+
 [1] K. Glowinski and A. Morawiec, Analysis of experimental grain boundary distributions based on boundary-space metrics, Metall. Mater. Trans. A 45, 3189-3194 (2014) 
 
 ## License & Copyright ##
+
 Please see the description file distributed with this **Plugin**.
 
 ## DREAM.3D Mailing Lists ##
-If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
+

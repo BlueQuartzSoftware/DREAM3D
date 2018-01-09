@@ -2,9 +2,11 @@ Find Feature Neighborhoods {#findneighborhoods}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Morphological)
 
 ## Description ##
+
 This **Filter** determines the number of **Features**, for each **Feature**, whose *centroids* lie within a distance equal to a user defined multiple of the average *Equivalent Sphere Diameter* (*average of all **Features**).  The algorithm for determining the number of **Features** is given below:
 
 1. Define a sphere centered at the **Feature**'s *centroid* and with radius equal to the average equivalent sphere diameter multiplied by the user defined multiple
@@ -12,11 +14,13 @@ This **Filter** determines the number of **Features**, for each **Feature**, who
 3. Repeat 1. & 2. for all **Features**
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Multiples of Average Diameter | float | Defines the search radius to use when looking for "neighboring" **Features** |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##

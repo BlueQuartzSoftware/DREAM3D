@@ -56,6 +56,7 @@ There are 5 columns of data which are the 3 Euler Angles, the Weight Value and t
 
 
 ### Delimiter ###
+
 Choice of delimiter is as follows:
 
     0 = , (comma)

@@ -2,9 +2,11 @@ Find Feature Neighbor C-Axis Misalignments {#findfeatureneighborcaxismisalignmen
 ==========
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** determines, for each **Feature**, the C-axis misalignments with the **Features** that are in contact with it.  The C-axis misalignments are stored as a list (for each **Feature**) of angles (in degrees).
 
 ### Notes ###

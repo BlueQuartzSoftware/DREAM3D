@@ -2,9 +2,11 @@ Find Feature Centroids from Triangle Geometry {#findtrianglegeomcentroids}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Morphological)
 
 ## Description ##
+
 This **Filter** determines the centroids of each **Feature** in a **Triangle Geometry**.  The centroids are determined using the following algorithm:
 
 1. Query each triangle within the **Triangle Geometry** to determine its two owners
@@ -12,9 +14,11 @@ This **Filter** determines the centroids of each **Feature** in a **Triangle Geo
 3. For each **Feature**, find the average (x,y,z) coordinate from the set of nodes that bound it
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
@@ -37,4 +41,3 @@ Please see the description file distributed with this plugin.
 ## DREAM3D Mailing Lists ##
 
 If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users

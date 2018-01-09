@@ -2,9 +2,11 @@ Find Feature Average Orientations {#findavgorientations}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** determines the average orientation of each **Feature** by the following algorithm:
 
 1. Gather all **Elements** that belong to the **Feature**
@@ -17,9 +19,11 @@ This **Filter** determines the average orientation of each **Feature** by the fo
 *Note:* The quaternions can be averaged with a simple average because the quaternion space is not distorted like Euler space.
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

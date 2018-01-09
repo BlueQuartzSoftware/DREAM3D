@@ -2,9 +2,11 @@ Los Alamos FFT Writer {#losalamosfftwriter}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** writes out **CellData** from an **Image Geometry** to a file that is appropriate to use as an input into Ricardo Lebensohn's FFT 3D simulation codes<sup>[1]</sup>. 
 
 The format of the file is an ASCII text file with the following space delimited information:
@@ -14,6 +16,7 @@ The format of the file is an ASCII text file with the following space delimited 
 The Euler angles are in degrees. X, Y, Z are integer indices into the **Image** geometry. Feature ID & Phase ID are the integer values for the feature and phase **Starting at One (1)**.
 
 ### Example Output ###
+
 The output file:     
 
 	90.000 0.000 0.000 1 1 1 0 1
@@ -38,12 +41,14 @@ The output file:
 	…..  
 
 ## Parameters ##
+
 | Name             | Type | Description |
 |------------------|------|-------------|
 | Output File | File Path | The output .txt file path |
 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -55,9 +60,11 @@ Image
 | **Cell Attribute Array** | Phases | int32_t | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
 
 ## Created Objects ##
+
 None
 
 ## References ##
+
 [1] R.A. Lebensohn, 2001. N-site modeling of a 3D viscoplastic polycrystal using Fast Fourier Transform. Acta mater. 49, 2723-2737.
 
 ## License & Copyright ##

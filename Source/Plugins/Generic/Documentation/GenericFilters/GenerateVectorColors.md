@@ -2,17 +2,21 @@ Generate Vector Colors {#generatevectorcolors}
 =============
 
 ## Group (Subgroup) ##
+
 Generic (Crystallography)
 
 ## Description ##
+
 This **Filter** generates a color for each **Element** based on the vector assigned to that **Element** in the input vector data.  The color scheme assigns a unique color to all points on the unit hemisphere using a HSV-like scheme. 
 
 ## Parameters ##
+
 | Name             | Type | Description |
 |------------------|------|---------|
 | Apply to Good Voxels Only (Bad Voxels Will Be Black) | bool | Whether or not to assign colors to *bad* voxels or leave them black |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

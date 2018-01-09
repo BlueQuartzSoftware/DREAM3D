@@ -2,9 +2,11 @@ Moving Finite Element Smoothing {#movingfiniteelementsmoothing}
 ======
 
 ## Group (Subgroup) ##
+
 SurfaceMesh
 
 ## Description ##
+
 _Kuprat, A., 2000. Modeling microstructure evolution using gradient-weighted moving
 finite elements. SIAM Journal of Scientific Computing 22, 535-560._
 
@@ -29,6 +31,7 @@ The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient 
 
 
 ## Required DataContainers ##
+
 SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Objects ##
@@ -39,6 +42,7 @@ SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face lis
 
 
 ## Created Objects ##
+
 None
 
 ## Authors ##

@@ -2,10 +2,12 @@ Import Image Stack Filter {#importvectorimagestack}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Input)
 
 
 ## Description ##
+
 Images that are imported into DREAM3D should probably be segmented using a preprocessing tool as there are currently no effective tools to do the segmentation in DREAM3D itself. If your images are already preprocessed so that they are segmented into specific regions DREAM3D may be able to work with the image data and give you meaningful results. There are 3 categories of images that DREAM3D can handle.
 
 ----------

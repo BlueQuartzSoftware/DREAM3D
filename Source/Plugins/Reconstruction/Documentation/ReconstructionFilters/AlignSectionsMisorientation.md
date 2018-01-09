@@ -2,9 +2,11 @@ Align Sections (Misorientation) {#alignsectionsmisorientation}
 ======
 
 ## Group (Subgroup) ##
+
 Reconstruction (Alignment)
 
 ## Description ##
+
 This **Filter** attempts to align consecutive 'sections' perpendicular to the Z-direction of the sample by determining the position that results in the minimum amount of misorientation between **Cells** directly above-below each other. The algorithm of this **Filter** is as follows:
 
 1. Calculate the misorientation between each **Cell** in a section and the **Cell** directly above it in the next section  
@@ -23,6 +25,7 @@ The user can choose to write the determined shift to an output file by enabling 
 The user can also decide to remove a _background shift_ present in the sample. The process for this is to fit a line to the X and Y shifts along the Z-direction of the sample.  The individual shifts are then modified to make the slope of the fit line be 0.  Effectively, this process is trying to keep the top and bottom section of the sample fixed.  Some combinations of sample geometry and internal features can result in this algorithm introducing a 'shear' in the sample and the *Linear Background Subtraction* will attempt to correct for this.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Misorientation Tolerance | float | Tolerance used to decide if **Cells** above/below one another should be considered to be _the same_. The value selected should be similar to the tolerance one would use to define **Features** (i.e., 2-10 degrees) |
@@ -33,6 +36,7 @@ The user can also decide to remove a _background shift_ present in the sample. T
 
  
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##
@@ -45,6 +49,7 @@ Image
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

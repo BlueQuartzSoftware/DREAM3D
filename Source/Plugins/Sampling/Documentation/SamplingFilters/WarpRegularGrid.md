@@ -2,9 +2,11 @@ Warp Rectilinear Grid {#warpregulargrid}
 =============
 
 ## Group (Subgroup) ##
+
 Sampling (Warping)
 
 ## Description ##
+
 This **Filter** warps a grid of **Cells** by a polynomial function defined by user set coefficients.  More specifically, the coefficients define the inverse polynomial, so a new rectilinear grid of **Cells** can be defined and mapped back into the reference grid of **Cells**.  The process is as listed below:
 
 1. Generate a grid of **Cells** identical to the grid to be warped
@@ -25,9 +27,11 @@ The user has the option to overwrite the original grid with the *warped* grid or
 | Save as New DataContainer | bool | Specifies if the new grid of **Cells** should replace the current **Geometry** or if a new **Data Container** should be created to hold it |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

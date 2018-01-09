@@ -2,9 +2,11 @@ Isolate Largest Feature (Identify Sample) {#identifysample}
 =============
 
 ## Group (Subgroup) ##
+
 Processing (Cleanup)
 
 ## Description ##
+
 Often when performing a serial sectioning experiment (especially in the FIB-SEM), the sample is *overscanned* resulting in a border of *bad* data around the sample.  This **Filter** attempts to _identify_ the sample within the overscanned volume.  The **Filter** makes the assumption that there is only one contiguous set of **Cells** that belong to the sample. The **Filter** requires that the user has already *thresheld* the data to determine which **Cells** are *good* and which are *bad*.  The algorithm for the identification of the sample is then as follows:
 
 1. Search for the largest contiguous set of *good* **Cells**. (This is assumed to be the sample)  
@@ -23,6 +25,7 @@ If _Fill Holes_ is set to *true*:
 | Fill Holes in Largest Feature | bool | Whether to fill holes within sample after it is identified |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##
@@ -32,6 +35,7 @@ Image
 | **Cell Attribute Array** | Mask | bool | (1) | *Mask* array defining what is sample and what is not |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

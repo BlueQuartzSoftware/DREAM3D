@@ -2,9 +2,11 @@ Read Ph File (Feature Ids) {#phreader}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Input)
 
 ## Description ##
+
 This **Filter** reads a custom data file used by the Materials Science Department at Carnegie Mellon University. The information in the file defines an **Image Geometry** with a set of **Feature** Ids.  The file format is a simple ASCII text file with the following contents:
 
 **Format**
@@ -32,6 +34,7 @@ This **Filter** reads a custom data file used by the Materials Science Departmen
     …..
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Input File | File Path | The input .ph file path |
@@ -39,9 +42,11 @@ This **Filter** reads a custom data file used by the Materials Science Departmen
 | Resolution | Float (x3) | The resolution values (dx, dy, dz) |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

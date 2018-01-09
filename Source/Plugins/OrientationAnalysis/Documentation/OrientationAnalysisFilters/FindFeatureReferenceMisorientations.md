@@ -2,19 +2,23 @@ Find Feature Reference Misorientations {#findfeaturereferencemisorientations}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** calculates the misorientation angle between each **Cell** within a **Feature** and a *reference orientation* for that **Feature**.  The user can choose the *reference orientation* to be used for the **Features** from a drop-down menu.  The options for the *reference orientation* are the average orientation of the **Feature** or the orientation of the **Cell** that is furthest from the *boundary* of the **Feature**.
 
 Note: the average orientation of the **Feature** is a typical choice, but if the **Feature** has undergone plastic deformation and the amount of lattice rotation developed is of interest, then it may be more reasonable to use the orientation *near the center* of the **Feature** as it may not have rotated and thus serve as a better *reference orientation*.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Reference Orientation | Enumeration | Specifies the *reference orientation* to use when comparing to each **Cell** |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

@@ -2,9 +2,11 @@ Generate Triangle Face Ids {#sharedfeaturefacefilter}
 ============
 
 ## Group (Subgroup) ##
+
 Surface Meshing (Connectivity/Arrangement)
 
 ## Description ##
+
 This **Filter** assigns a unique Id to each **Triangle** in a **Triangle Geometry** that represents the _unique boundary_ on which that **Triangle** resides. For example, if there were only two **Features** that shared one boundary, then the **Triangles** on that boundary would be labeled with a single unique Id. This procedure creates _unique groups_ of **Triangles**, which themselves are a set of **Features**. Thus, this **Filter** also creates a **Feature Attribute Matrux** for this new set of **Features**, and creates **Attribute Arrays** for their Ids and number of **Triangles**.
 
 ---------------
@@ -15,9 +17,11 @@ This **Filter** assigns a unique Id to each **Triangle** in a **Triangle Geometr
 ---------------
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##

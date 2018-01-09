@@ -2,14 +2,17 @@ EM/MPM {#emmpmfilter}
 =============
 
 ## Group (Subgroup) ##
+
 Reconstruction (Segmentation)
 
 ## Description ##
+
 This **Filter** performs the EM/MPM segmentation algorithm on an **Attribute Array** representing a grayscale image. The EM/MPM algorithm employs an advanced expectation maximization routine over Gaussian mixtures to determine an image segmeneation into a defined number of classes. The segmented image will be stored into a new **Attribute Array** with a user definable name. Note that the created segmentation will have **Cell** labels defining the class membership.  Thus, the labels will be unsigned 8 bit integers, matching the incoming grayscale image.  These labels can be considered **Feature** Ids for the purposes of most DREAM.3D analysis routines.  However, DREAM.3D assumes that **Feature** Ids are signed 32 bit integers.  It may therefore be required to use the [Convert Attribute Data Type](ConvertData.html "") **Filter** to convert the segmented image labels from unsigned 8 bit integers to signed 32 bit integers for further analysis.  
 
 **It is highly recommended that users consult references [1], [2], [3], and [4] for details on the impact of particular parameters on the EM/MPM algorithm.**
 
 ## Parameters ##
+
 | Name             | Type | Description |
 |------------------|------|-------------|
 | Number of Classes | int32_t | The number of classes in which to segment the image | 
@@ -26,6 +29,7 @@ This **Filter** performs the EM/MPM segmentation algorithm on an **Attribute Arr
 | Use 1-Based Values | bool | Use 1-based values instead of 0-based values |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

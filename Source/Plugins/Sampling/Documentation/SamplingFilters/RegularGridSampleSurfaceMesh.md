@@ -2,9 +2,11 @@ Sample Triangle Geometry on Regular Grid {#regulargridsamplesurfacemesh}
 =============
 
 ## Group (Subgroup) ##
+
 Sampling (Resolution)
 
 ## Description ##
+
 This **Filter** "samples" a triangulated surface mesh on a rectilinear grid. The user can specify the number of **Cells** along the X, Y, and Z directions in addition to the resolution in each direction and origin to define a rectilinear grid.  The sampling is then performed by the following steps:
 
 1. Determine the bounding box and **Triangle** list of each **Feature** by scanning all **Triangles** and noting the **Features** on either side of the **Triangle**
@@ -23,9 +25,11 @@ This **Filter** "samples" a triangulated surface mesh on a rectilinear grid. The
 | Origin | float (3x) | The origin of the sampling volume |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
+
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array** | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face**. |

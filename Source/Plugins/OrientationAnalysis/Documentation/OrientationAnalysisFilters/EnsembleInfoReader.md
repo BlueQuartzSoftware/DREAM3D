@@ -2,9 +2,11 @@ Import Ensemble Info File {#ensembleinforeader}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Input)
 
 ## Description ##
+
 This **Filter** reads in information about the crystal structure and phase types of all the **Features** that are contained in a **Cell** based volume. These values are needed to allow the calculation of statistics on the volume, if they have not already been provided by some other means.  The format of the input file is a simple ASCII text file with the extension .ini or .txt. The first group in the file is the name [EnsembleInfo] in square brackets with the key Number_Phases=*number of phases* that are contained in the volume. Subsequent groups in the file list the __Phase Number__, __Crystal Structure__ and __Phase Type__. The proper values for the crystal structure and phase type come from internal constants within DREAM.3D and are listed here:
 
 **Crystal Structure**
@@ -59,12 +61,15 @@ For example, if you have a structure that has 2 phases that consist of a Cubic P
 | Input Ensemble Info File | File Path | The input file path |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimension | Description |
 |------|--------------|-------------|---------|--------------|
 | **Attribute Matrix** | EnsembleAttributeMatrix | Ensemble | N/A | Created **Ensemble Attribute Matrix** name |

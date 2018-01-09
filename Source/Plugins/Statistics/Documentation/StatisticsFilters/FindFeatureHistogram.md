@@ -2,9 +2,11 @@ Find Feature Histogram {#findfeaturehistogram}
 ==========
 
 ## Group (Subgroup) ##
+
 Statistics Filters (Ensemble)
 
 ## Description ##
+
 This filter will bin a specified **Feature** level attribute.  The user can chose both which attributes to bin and the number of bins.  The bins will be stored in an **Ensemble** array.
 
 ## Parameters ##
@@ -16,6 +18,7 @@ This filter will bin a specified **Feature** level attribute.  The user can chos
 | Remove Biased Features | Boolean | TRUE if biased features are to be omitted from the binning counts. |
 
 ## Required DataContainers ##
+
 Volume
 
 ## Required Objects ##
@@ -27,6 +30,7 @@ Volume
 
 
 ## Created Objects ##
+
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Ensemble | Statistics |  |  |

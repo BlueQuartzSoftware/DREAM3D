@@ -2,9 +2,11 @@ Generate Euler Colors {#generateeulercolors}
 ========
 
 ## Group (Subgroup) ##
+
 Generic Filters (Misc)
 
 ## Description ##
+
 This filter will generate an RGB color for each **Cell** that is calculated from the Euler Angles for the cell. **If you want IPF Colors this is NOT the filter for you**, use the [Generate IPF Colors](generateipfcolors.html) filter. The  algorithm is to assign a color component based on a scale of the following:
 
 | Euler Component | Min Value (Radians) | Max Value (Radians) | Calculation |

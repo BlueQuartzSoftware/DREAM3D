@@ -2,9 +2,11 @@ Import EDAX EBSD Data (.h5) {#readedaxh5data}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Input)
 
 ## Description ##
+
 This **Filter** will read a single .h5 file into a new **Data Container** with a corresponding **Image Geometry**, allowing the immediate use of **Filters** on the data instead of having to generate the intermediate .h5ebsd file. A **Cell Attribute Matrix** and **Ensemble Attribute Matrix** will also be created to hold the imported EBSD information. Currently, the user has no control over the names of the created **Attribute Arrays**.
 
 | User interface before entering a proper "Z Spacing" value and selecting which scans to include. |
@@ -32,6 +34,7 @@ If the data has come from a TSL acquisition system and the settings of the acqui
 The user also may want to assign un-indexed pixels to be ignored by flagging them as "bad". The [Threshold Objects](@ref multithresholdobjects) **Filter** can be used to define this _mask_ by thresholding on values such as _Confidence Index_ > xx or _Image Quality_ > desired quality.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Input File | File Path | The input .h5 file path |
@@ -41,9 +44,11 @@ The user also may want to assign un-indexed pixels to be ignored by flagging the
 | Read Pattern Data | bool | Default=OFF |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ## 

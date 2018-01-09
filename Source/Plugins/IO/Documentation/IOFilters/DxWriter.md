@@ -19,21 +19,26 @@ The .dx file:
     # at [0 0 0], and the deltas are 1 in the first and third dimensions, and
     # 2 in the second dimension
     #
+
 	object 1 class gridpositions counts 118 202 190
 	origin 0 0 0
 	delta  1 0 0
 	delta  0 1 0
 	delta  0 0 1
     #
+
     # object 2 are the regular connections
     #
+
 	object 2 class gridconnections counts 118 202 190
     #
+
     # object 3 are the data, which are in a one-to-one correspondence with
     # the positions ("dep" on positions). The positions increment in the order
     # "last index varies fastest", i.e. (x0, y0, z0), (x0, y0, z1), (x0, y0, z2),
     # (x0, y1, z0), etc.
     #
+
 	object 3 class array type int rank 0 items 4444713 data follows
 	1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 	…..
@@ -46,15 +51,19 @@ The .dx file with a surface layer:
 	delta  0 1 0
 	delta  0 0 1
     #
+
     # object 2 are the regular connections
     #
+
 	object 2 class gridconnections counts 120 204 192
     #
+
     # object 3 are the data, which are in a one-to-one correspondence with
     # the positions ("dep" on positions). The positions increment in the order
     # "last index varies fastest", i.e. (x0, y0, z0), (x0, y0, z1), (x0, y0, z2),
     # (x0, y1, z0), etc.
     #
+
 	object 3 class array type int rank 0 items 4613987 data follows
 	-3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3
 	…..

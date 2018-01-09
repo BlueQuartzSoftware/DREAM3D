@@ -2,9 +2,11 @@ Write NonConformal Vtk PolyData from SurfaceMesh {#surfacemeshtononconformalvtk}
 ======
 
 ## Group (Subgroup) ##
+
 I/O Filters (Output)
 
 ## Description ##
+
 This filter will create a "legacy" vtk file (.vtk) that contains the POINTS and POLYGONS, where each POLYGON is a triangle.
 In addition the NODE_TYPE will be written as POINT_DATA and the GRAIN_ID will be written as CELL_DATA. There are 2 options for this filter.
 
@@ -20,9 +22,11 @@ binary format as stipulated by the VTK file format.
 | Write Binary Vtk File | Boolean | binary |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
+
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Triangle | SurfaceMeshFaceLabels | int  | (2)   | The list of all triangles (faces) in the mesh. Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
@@ -30,6 +34,7 @@ Triangle
 
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

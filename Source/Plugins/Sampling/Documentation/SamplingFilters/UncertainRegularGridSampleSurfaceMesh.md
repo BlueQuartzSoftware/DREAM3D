@@ -2,9 +2,11 @@ Sample Triangle Geometry on Uncertain Regular Grid {#uncertainregulargridsamples
 =============
 
 ## Group (Subgroup) ##
+
 Sampling (Resolution)
 
 ## Description ##
+
 This **Filter** "samples" a triangulated surface mesh on a rectilinear grid, but with "uncertainty" in the absolute position of the **Cells**.  The "uncertainty" is meant to simulate the possible positioning error in a sampling probe.  The user can specify the number of **Cells** along the X, Y, and Z directions in addition to the resolution in each direction and origin to define a rectilinear grid.  The sampling, with "uncertainty", is then performed by the following steps:
 
 1. Determine the bounding box and **Triangle** list of each **Feature** by scanning all **Triangles** and noting the **Features** on either side of the **Triangle**
@@ -27,9 +29,11 @@ This **Filter** "samples" a triangulated surface mesh on a rectilinear grid, but
 | Uncertainty | float (3x) | Vector of uncertainty values associated with X, Y and Z positions of **Cells** |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
+
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array** | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face**. |

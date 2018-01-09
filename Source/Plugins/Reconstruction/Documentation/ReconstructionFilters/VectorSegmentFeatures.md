@@ -2,9 +2,11 @@ Segment Features (Vector) {#vectorsegmentfeatures}
 ======
 
 ## Group (Subgroup) ##
+
 Reconstruction Filters (Segmentation)
 
 ## Description ##
+
 This Filter segments the **Features** by grouping neighboring **Cells** that satisfy the *angle tolerance*, i.e., have angle between vectors less than the value set by the user. The process by which the **Features** are identified is given below and is a standard *burn algorithm*.
 
 1) Randomly select a **Cell**, add it to an empty list and set its *FeatureId* to the current **Feature**.
@@ -19,21 +21,25 @@ After all the **Features** have been identified, an **Attribute Matrix** is crea
 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Angle Tolerance | Float | Tolerance used to determine if neighboring **Cells** belong to the same **Feature** |
 | Use Mask Array | Boolean | Specifies whether to use a boolean array to exclude some **Cells** from the **Feature** identification process |
 
 ## Required Geometry ##
+
 Image / Rectilinear Grid
 
 ## Required Objects ##
+
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Cell | None | Float | (3) | Vector array used during segmentation |
 | Cell | GoodVoxels | Boolean | (1) | Specifies if the **Cell** is to be considered during segmentation.  Array only required if *Use Mask Array* is set to *true* |
 
 ## Created Objects ##
+
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |

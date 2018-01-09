@@ -2,9 +2,11 @@ Write Vtk PolyData File (From SurfaceMesh) {#surfacemeshtovtk}
 ======
 
 ## Group (Subgroup) ##
+
 I/O Filters (Output)
 
 ## Description ##
+
 This filter will create a "legacy" vtk file (.vtk) that contains the POINTS and POLYGONS, where each POLYGON is a triangle.
 In addition the NODE_TYPE will be written as POINT_DATA and the GRAIN_ID will be written as CELL_DATA. There are 2 options
 for this filter.
@@ -20,6 +22,7 @@ binary format as stipulated by the VTK file format.
 | Write Binary Vtk File | Boolean | Big Endian binary format |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
@@ -30,6 +33,7 @@ Triangle
 | Vertex | SurfaceMeshNodeType | int | (1) | The shared node (vertex) list. Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 ## Created Objects ##
+
 None
 
 

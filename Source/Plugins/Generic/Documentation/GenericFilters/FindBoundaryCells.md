@@ -2,9 +2,11 @@ Find Boundary Cells (Image) {#findboundarycells}
 =============
 
 ## Group (Subgroup) ##
+
 Generic (Spatial)
 
 ## Description ##
+
 This **Filter** determines, for each **Cell**, the number of neighboring **Cells** that are owned by a different **Feature**.  The algorithm for determining this is as follows: 
 
 1. Identify the **Feature** to which a **Cell** belongs
@@ -13,11 +15,13 @@ This **Filter** determines, for each **Cell**, the number of neighboring **Cells
 4. Repeat 1-3 for all **Cells**
 
 ## Parameters ##
+
 | Name             | Type | Description |
 |------------------|------|-------------|
 | Ignore Feature 0 | bool | Do not use feature 0 |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##

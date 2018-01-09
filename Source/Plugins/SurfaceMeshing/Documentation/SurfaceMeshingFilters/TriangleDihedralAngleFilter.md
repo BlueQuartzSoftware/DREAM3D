@@ -2,18 +2,23 @@ Find Minimum Triangle Dihedral Angle {#triangledihedralanglefilter}
 ============
 
 ## Group (Subgroup) ##
+
 Surface Meshing (Misc)
 
 ## Description ##
+
 This **Filter** computes the minimum dihedral angle of each **Triangle** in a **Triangle Geometry** by calculating the angles between the three sides of the **Triangle** and storing the minimum value.
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

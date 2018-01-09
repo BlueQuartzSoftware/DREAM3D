@@ -2,15 +2,19 @@ Generate Misorientation Colors (Face) {#generatefacemisorientationcoloring}
 ============
 
 ## Group (Subgroup) ##
+
 Processing (Crystallography)
 
 ## Description ##
+
 This **Filter** generates a 3 component vector for each **Triangle** in a **Triangle Geometry** that is the axis-angle of the misorientation associated with the **Features** that lie on either side of the **Triangle**.  The axis is normalized, so if the magnitude of the vector is viewed, it will be the *misorientation angle* in degrees.
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Image + Triangle 
 
 ## Required Objects ##

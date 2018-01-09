@@ -2,18 +2,23 @@ Generate Triangle Centroids {#trianglecentroidfilter}
 ============
 
 ## Group (Subgroup) ##
+
 Surface Meshing (Misc)
 
 ## Description ##
+
 This **Filter** computes the centroid of each **Triangle** in a **Triangle Geometry** by calculating the average position of all 3 **Vertices** that make up the **Triangle**.
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

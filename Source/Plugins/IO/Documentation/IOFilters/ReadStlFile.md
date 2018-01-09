@@ -2,9 +2,11 @@ Read STL File {#readstlfile}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Input)
 
 ## Description ##
+
 This **Filter**  will read a binary STL File and create a **Triangle Geometry** object in memory. The STL reader is very strict to the STL specification. An explanation of the STL file format can be found on [Wikipedia](https://en.wikipedia.org/wiki/STL). The structure of the file is as follows:
 
 	UINT8[80] – Header
@@ -27,9 +29,11 @@ This **Filter**  will read a binary STL File and create a **Triangle Geometry** 
 | STL File | File Path  | The input .stl file path |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

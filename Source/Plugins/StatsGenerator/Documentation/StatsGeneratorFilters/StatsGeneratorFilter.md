@@ -2,9 +2,11 @@ StatsGenerator {#statsgeneratorfilter}
 =============
 
 ## Group (Subgroup) ##
+
 Synthetic Building (Generation)
 
 ## Description ##
+
 This **Filter** creates the arrays necessary to [generate synthetic microstructures](@ref tutorialsyntheticsingle).
 
 The StatsGenerator **Filter** was created to allow users to quickly generate a set of statistics that can be used to create a synthetic microstructure. Using this  **Filter**, the user can generate the necessary statistics that describe a microstructure, with the aid of visual plots of the statistics, and immediately use them in the **Pipeline** to generate a synthetic microstructure. The statistics data can also be [saved to a DREAM.3D file](@ref datacontainerwriter) for later use.
@@ -217,9 +219,11 @@ This tab works in a similar fashion to the ODF tab in that the user can enter va
 
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##
@@ -239,4 +243,3 @@ Please see the description file distributed with this plugin.
 ## DREAM3D Mailing Lists ##
 
 If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users

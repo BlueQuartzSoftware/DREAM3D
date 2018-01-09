@@ -2,9 +2,11 @@ Write SPParks Sites Format {#spparkssiteswriter}
 ============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** writes to a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/).
 
 + The "Values" section is a pair of numbers where the first number is the site ID and the second number is the actual value of the **Feature** Id at that site.
@@ -44,6 +46,7 @@ More information can be found at the [SPParks web site.](http://spparks.sandia.g
 | Output File | File Path | Output .spparks file path |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -53,6 +56,7 @@ Image
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

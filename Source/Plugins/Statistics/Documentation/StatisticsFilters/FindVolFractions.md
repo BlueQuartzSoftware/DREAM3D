@@ -2,15 +2,19 @@ Find Volume Fractions of Ensembles {#findvolfractions}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Morphological)
 
 ## Description ##
+
 This **Filter** determines the volume fraction of each **Ensemble**. The **Filter** counts the number of **Cells** belonging to each **Ensemble** and stores the number fraction.
 
 ## Parameters ##
+
 None 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

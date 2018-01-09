@@ -2,9 +2,11 @@ Find Relative Motion Between Slices {#findrelativemotionbetweenslices}
 =============
 
 ## Group (Subgroup) ##
+
 Processing (Image)
 
 ## Description ##
+
 This **Filter** assigns a direction *moved* to each **Cell** by extracting a patch of *user defined* size, centered at each **Cell**, moving it up a *user defined* number of *slices* and translating it while looking for the minimum mean squared distance between the patch and the slice to which it was shifted.  The center of the patch when it has the minimum mean squared difference is said to be the point to which the **Cell** moved.  A vector is drawn from the **Cell** to the point where the **Cell** moved and that vector is normalized and stored as a unit vector on the **Cell**. The **Filter** allows the user to ch0ose which plane the patches are extracted from and moved perpendicular to when moving *slices*.
 
 ## Parameters ##
@@ -19,6 +21,7 @@ This **Filter** assigns a direction *moved* to each **Cell** by extracting a pat
 | Slice Step | int32_t | Number of slices to move up perpendicular to the plane of interest |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##

@@ -2,21 +2,26 @@ Import Orientation File(s) to H5EBSD {#ebsdtoh5ebsd}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Input)
 
 ## Description ##
+
 This **Filter** will convert orientation data obtained from Electron Backscatter Diffraction (EBSD) experiments into a single file archive based on the [HDF5](http://www.hdfgroup.org) file specification. See the **Supported File Formats** section below for information on file compatibility. This **Filter** is typically run as a single **Filter** **Pipeline** to perform the conversion. All subsequent **Pipelines** should then use the [Read H5EBSD File](readh5ebsd.html) **Filter** to import the H5EBSD file into DREAM.3D for analysis, as opposed to re-importing the raw EBSD files.  The primary purpose of this **Filter** is to import a stack of data that forms a 3D volume.  If the user wishes to import a single data file, then the **Filters** [Read EDAX EBSD Data (.ang)](ReadAngData.html ""), [Read EDAX EBSD Data (.h5)](ReadEdaxH5Data.html ""), or [Read Oxford Instr. EBSD Data (.ctf)](ReadCtfData.html "") should be used for EDAX .ang, EDAX .h5, or Oxford .ctf files, respectively.
 
 ### Converting Orientation Data to H5EBSD Archive ###
+
 In order to work with orientation data, DREAM.3D needs to read the data from an archive file based on the [HDF5](http://www.hdfgroup.org) specification. In order to convert the data, the user will first build a single **Filter** **Pipeline** by selecting the [Import Orientation File(s) to H5EBSD](EbsdToH5Ebsd.html "") **Filter**. This **Filter** will convert a directory of sequentially numbered files into a single [HDF5](http://www.hdfgroup.org) file that retains all the meta data from the header(s) of the files. The user selects the directory that contains all the files to be imported then uses the additional input widgets on the **Filter** interface (_File Prefix_, _File Suffix_, _File Extension_, and _Padding Digits_) to make adjustments to the generated file name until the correct number of files is found. The user may also select starting and ending indices to import. The user interface indicates through red and green icons if an expected file exists on the file system and will also display a warning message at the bottom of the **Filter** interface if any of the generated file names do not appear on the file system.
 
 ### Stacking Order ###
+
 Due to different experimental setups, the definition of the _bottom_ slice or the **Z=0** slice can be different. The user should verify that the proper button box is checked for their data set. 
 
 + **Low to High** This means that the file with the lowest index, closest to zero (0), will be considered the Z=0 slice.
 + **High to Low** This means that the file with the highest index, farthest from zero (0), will be considered the Z=0 slice.
 
 ### Z Resolution ###
+
 Many serial sectioning systems are inherently a series of 2D scans stacked together to form a 3D volume of material. Therefore, the experimental systems have no knowledge of the amount of material that was removed between each slice and so the user is responsible for setting this value correctly for their data set.
 
 -----
@@ -46,6 +51,7 @@ Commercial EBSD acquisition systems do not typically follow this convention, and
 -----
 
 ### Setting the Spatial Reference Frame ###
+
 The user needs to click the _Set Reference Frame_ button to set the proper reference frame for the data set which will be written to the H5EBSD file as meta data. Below are a number of examples showing the differences in the data sets due to the selection of different reference frames.
 
 ---
@@ -61,6 +67,7 @@ The user needs to click the _Set Reference Frame_ button to set the proper refer
 ---
 
 ### Preset Transformations ###
+
 | Manufacturer | Sample Reference Transformation | Euler Transformation |  
 |  ------	| ------	| ------	|  
 | TSL | 180 @ <010> | 90 @ <001> |
@@ -69,6 +76,7 @@ The user needs to click the _Set Reference Frame_ button to set the proper refer
 | No Transform | 0 @ <001> | 0 @ <001>
 
 ### Supported File Formats ###
+
 | Manufacturer  | File Extension | Comments |  
 |---------------|----------------|----------|  
 | EDAX  | .ang | --|  
@@ -76,19 +84,24 @@ The user needs to click the _Set Reference Frame_ button to set the proper refer
 | HEDM from APS | .mic | A .config file with the same name is needed for each .mic file |
 
 ### Completing the Conversion ###
+
 Once all the inputs are correct the user can click the **Go** button to start the conversion. Progress will be displayed at the bottom of the DREAM3D user interface during the conversion.
 
 
 ## Parameters ##
+
 See Description 
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##
+
 None
 
 

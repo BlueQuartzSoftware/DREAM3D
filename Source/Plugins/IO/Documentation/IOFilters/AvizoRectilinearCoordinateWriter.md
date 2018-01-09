@@ -2,6 +2,7 @@ Avizo Rectilinear Coordinate Writer {#avizorectilinearcoordinatewriter}
 ======
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
@@ -32,21 +33,25 @@ This filter writes out a native Avizo Rectilinear Coordinate data file. Values s
 	….. 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Output File | File Path | Amira Mesh .am file created|
 | Write Binary File | Boolean | Binary file created, if checked |
 
 ## Required Geometry ##
+
 Image / Rectilinear Grid
 
 ## Required Objects ##
+
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Cell | FeatureIds | Ids (Int) that specify to which **Feature** each **Cell** belongs. | (1) | Filters Known to Create Data: Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
 
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

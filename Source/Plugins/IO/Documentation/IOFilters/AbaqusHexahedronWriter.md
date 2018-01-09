@@ -2,12 +2,15 @@ Abaqus Hexahedron Exporter {#abaqushexahedronwriter}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** produces the basic five Abaqus .inp files for input into the Abaqus analysis tool. The files created are: xxx.inp (the master file), xxx_nodes.inp, xxx_elems.inp, xxx_elset.inp and xxx_sects.inp. This **Filter** is based on a Python script developed by Matthew W. Priddy (Ga. Tech., early 2015).
 
 ### Example Output ###
+
 The master file:     
 
 	*Heading
@@ -110,6 +113,7 @@ The _sects.inp file:
 	
 
 ## Parameters ##
+
 | Name             | Type | Description |
 |------------------|------|------------------------|
 | Hour Glass Stiffness | int32_t | Only recommended if using C3D8R elements |
@@ -119,6 +123,7 @@ The _sects.inp file:
 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -128,6 +133,7 @@ Image
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

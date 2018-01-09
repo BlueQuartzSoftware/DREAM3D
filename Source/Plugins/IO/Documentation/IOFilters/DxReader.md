@@ -53,6 +53,7 @@ This **Filter** reads from a Dx file. This is a file in a format generated using
 _See: [the opendx site](http://www.opendx.org)_ for more information.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Input File | File Path | The input .dx file path |

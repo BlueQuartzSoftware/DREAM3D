@@ -2,6 +2,7 @@ Import H5EBSD File {#readh5ebsd}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Input)
 
 ## Description ##
@@ -57,6 +58,7 @@ An excellant reference for this is the following PDF file:
 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Input File | File Path | The input .h5ebsd file path |
@@ -67,9 +69,11 @@ An excellant reference for this is the following PDF file:
 | Angle Representation | Int (0=Radians, 1=Degrees) | How the Euler Angles are represented. |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

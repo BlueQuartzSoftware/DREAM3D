@@ -2,9 +2,11 @@ Laplacian Smoothing {#laplaciansmoothing}
 ============
 
 ## Group (Subgroup) ##
+
 Surface Meshing (Smoothing)
 
 ## Description ##
+
 This **Filter** applies Laplacian smoothing to a **Triangle Geometry** that represents a surface mesh. A. Belyaev [2] has a concise explanation of the Laplacian Smoothing as follows:
 
 ---------------------------
@@ -75,6 +77,7 @@ For more information on surface meshing, visit the [tutorial](@ref tutorialsurfa
 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------|-------------|
 | Iteration Steps | int32_t | Number of iteration steps to perform. More steps causes more smoothing but will also cause the volume to shrink more. _Inreasing this number too high may cause collapse of points!_ |
@@ -88,6 +91,7 @@ For more information on surface meshing, visit the [tutorial](@ref tutorialsurfa
 | Outer Quadruple Points Lambda | float | Value of &lambda; for the quadruple Points that lie on the outer surface of the volume. |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
@@ -98,6 +102,7 @@ Triangle
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 
 ## Created Objects ##
+
 None
 
 ## References ##

@@ -2,14 +2,17 @@ Find Twin Boundary Schmid Factors {#findtwinboundaryschmidfactors}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** calculates the *Schmid factors* for the 3 slip systems in the plane of each twin boundary.  The **Filter** only calculates the values for **Faces** already identified as twins. The **Filter** can also write an information file that contains details about each **Triangle** in the **Geometry**. The information written is ASCII text with the following columns of data for each **Triangle**:
 
 	Feature1	Feature2	IsTwin	Plane	Schmid1	Schmid2	Schmid3
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Loading Direction | float (3x) | The loading axis for the sample |
@@ -18,6 +21,7 @@ This **Filter** calculates the *Schmid factors* for the 3 slip systems in the pl
 
 
 ## Required Geometry ##
+
 Image + Triangle
 
 ## Required Objects ##

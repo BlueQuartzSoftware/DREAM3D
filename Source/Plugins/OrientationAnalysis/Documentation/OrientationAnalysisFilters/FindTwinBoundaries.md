@@ -2,12 +2,15 @@ Find Twin Boundaries {#findtwinboundaries}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** identifies all **Triangles** between neighboring **Features** that have a &sigma; = 3 twin relationship.  The **Filter** uses the average orientation of the **Features** on either side of the **Triangle** to determine the *misorientation* between the **Features**.  If the *axis-angle* that describes the *misorientation* is within both the axis and angle user-defined tolerance, then the **Triangle** is flagged as being a twin.  After the **Triangle** is flagged as a twin, the crystal direction parallel to the **Face** normal is determined and compared with the *misorientation axis* if *Compute Coherence* is selected.  The misalignment of these two crystal directions is stored as the incoherence value for the **Triangle** (in degrees). Note that this **Filter** will only extract twin boundaries if the twin **Feature** is the same phase as the parent **Feature**. 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Axis Tolerance (Degrees) | float | Degree of tolerance for angular distance from the [111] axis  |
@@ -15,6 +18,7 @@ This **Filter** identifies all **Triangles** between neighboring **Features** th
 | Compute Coherence | bool | Whether to compute the coherence between the **Face** normal and the misorientation axis |
 
 ## Required Geometry ##
+
 Image + Triangle
 
 ## Required Objects ##

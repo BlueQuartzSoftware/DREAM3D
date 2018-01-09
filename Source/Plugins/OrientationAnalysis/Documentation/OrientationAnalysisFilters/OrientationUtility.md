@@ -2,9 +2,11 @@ OrientationUtility {#orientationutility}
 =============
 
 ## Group (Subgroup) ##
+
 OrientationAnalysis (Utilities)
 
 ## Description ##
+
 This **Filter** is a **Utility** that allows the user to compute alternate representations of an orientation based on a another representation. The supported representations are:
 
 + Euler Angles

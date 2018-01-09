@@ -2,9 +2,11 @@ Align Sections (Feature) {#alignsectionsfeature}
 ======
 
 ## Group (Subgroup) ##
+
 Reconstruction (Alignment)
 
 ## Description ##
+
 This **Filter** attempts to align 'sections' of the sample perpendicular to the Z-direction by determining the position that results in the most overlap of previously defined "regions".  The "regions" are defined by a boolean array where the **Cells** have been flagged by another **Filter**.  Typically, during reading/processing of the data, each **Cell** is subject to a "quality metric" (or threshold) that defines if the **Cell** is *good*.  This threshold can be used to define areas of each slice that are bad, either due to actual **Features** in the microstructure or external references inserted by the user/experimentalist.  If these "regions" of *bad* **Cells** are believed to be consistent through sections, then this **Filter** will preserve that by aligning those "regions" on top of one another on consecutive sections. The algorithm of this **Filter** is as follows:
 
 1. Compare the value of the boolean array for each **Cell** in a section with the value of the array for the **Cell**  directly above it in the next section. 
@@ -21,6 +23,7 @@ The user can choose to write the determined shift to an output file by enabling 
 The user can also decide to remove a _background shift_ present in the sample. The process for this is to fit a line to the X and Y shifts along the Z-direction of the sample.  The individual shifts are then modified to make the slope of the fit line be 0.  Effectively, this process is trying to keep the top and bottom section of the sample fixed.  Some combinations of sample geometry and internal features can result in this algorithm introducing a 'shear' in the sample and the *Linear Background Subtraction* will attempt to correct for this.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Write Alignment Shift File | bool | Whether to write the shifts applied to each section to a file |
@@ -28,6 +31,7 @@ The user can also decide to remove a _background shift_ present in the sample. T
 | Linear Background Subtraction | bool | Whether to remove a _background shift_ present in the alignment |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##
@@ -37,6 +41,7 @@ Image
 | **Cell Attribute Array** | Mask | bool | (1) | Specifies if the **Cell** is to be counted as part of the *sample* or not |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

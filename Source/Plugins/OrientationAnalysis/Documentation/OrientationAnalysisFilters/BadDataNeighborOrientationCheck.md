@@ -2,9 +2,11 @@ Neighbor Orientation Comparison (Bad Data) {#baddataneighbororientationcheck}
 =============
 
 ## Group (Subgroup) ##
+
 Orientation Analysis (Cleanup)
 
 ## Description ##
+
 This **Filter** compares the orientations of *bad* **Cells** with their neighbor **Cells**.  If the misorientation is below a user defined tolerance for a user defined number of neighbor **Cells** , then the *bad* **Cell** will be changed to a *good* **Cell**.
 
 *Note:* Only the boolean value defining the **Cell** as *good* or *bad* is changed, not the data at **Cell**.
@@ -19,6 +21,7 @@ This **Filter** compares the orientations of *bad* **Cells** with their neighbor
 | Required Number of Neighbors | int32_t | Minimum number of neighbor **Cells** that must have orientations within above tolerace to allow **Cell** to be changed |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -31,6 +34,7 @@ Image
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each phase |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

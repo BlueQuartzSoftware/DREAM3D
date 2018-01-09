@@ -2,6 +2,7 @@ Avizo Uniform Coordinate Writer {#avizouniformcoordinatewriter}
 ===========
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
@@ -33,6 +34,7 @@ This filter writes out a native Avizo Uniform Coordinate data file. Values shoul
 	….. 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Output File | File Path | Amira Mesh .am file created|
@@ -40,6 +42,7 @@ This filter writes out a native Avizo Uniform Coordinate data file. Values shoul
 
 
 ## Required Geometry ##
+
 Image / Rectilinear Grid
 
 
@@ -51,6 +54,7 @@ Image / Rectilinear Grid
 
 
 ## Created Objects ##
+
 None
 
 

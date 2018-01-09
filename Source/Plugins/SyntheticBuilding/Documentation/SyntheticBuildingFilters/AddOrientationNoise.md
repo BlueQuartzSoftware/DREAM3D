@@ -2,9 +2,11 @@ Add Orientation Noise {#addorientationnoise}
 =============
 
 ## Group (Subgroup) ##
+
 Synthetic Building (Crystallography)
 
 ## Description ##
+
 This **Filter** adds "noise" to the orientations on each **Element** of a **Geometry**.  This **Filter**  is intended to add "realism" to synthetic structures that have single orientations assigned to **Features**.  The user can specify a magnitude of the noise, which refers to the maximum rotation angle that is applied to the existing **Element** orientations.  The algorithm for applying the orientation noise is as follows:
 
 1. Obtain the orientation of the **Element**
@@ -16,11 +18,13 @@ This **Filter** adds "noise" to the orientations on each **Element** of a **Geom
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Magnitude of Orientation Noise (Degrees) | Float | Maximum rotation angle in degrees to apply to **Element** orientations |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
@@ -30,6 +34,7 @@ Not Applicable
 | **Element Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

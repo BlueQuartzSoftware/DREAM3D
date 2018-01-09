@@ -2,9 +2,11 @@ Find Surface Features {#findsurfacefeatures}
 =============
 
 ## Group (Subgroup) ##
+
 Generic (Spatial)
 
 ## Description ##
+
 This **Filter** determines whether a **Feature** touches an outer surface of the sample. This is accomplished by simply querying the **Feature** owners of the **Cells** that sit at either . Any **Feature** that owns one of those **Cells** is said to touch an outer surface and all other **Features** are said to not touch an outer surface of the sample.
 
 

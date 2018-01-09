@@ -2,9 +2,11 @@ Export Pole Figure Images {#writepolefigure}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** creates a standard pole figure image for each **Ensemble** in a selected **Data Container** with an **Image Geometry**. The **Filter** uses Euler angles in radians and requires the crystal structures for each **Ensemble** array and the corresponding **Ensemble** Ids on the **Cells**. The **Filter** also requires a _mask_ array to determine which **Cells** are valid for the pole figure computation.
 
 The pole figure algorithm uses a _modified Lambert square_ to perform the interpolations onto the circle. This is an alternate type of interpolation that the EBSD OEMs do not perform which may make the output from DREAM.3D look slightly different than output obtained from the OEM programs.
@@ -19,6 +21,7 @@ The pole figure algorithm uses a _modified Lambert square_ to perform the interp
 -----
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Image Format | Enumeration | Image file format to write. Currently supports .tif, .bmp, and .png file formats |
@@ -43,6 +46,7 @@ NONE
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
 ## Created Objects ##
+
 None
 
 

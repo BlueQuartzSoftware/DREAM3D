@@ -2,9 +2,11 @@ Find Neighbor Slip Transmission Metrics {#findsliptransmissionmetrics}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** calculates a suite of *slip transmission metrics* that are related to the alignment of slip directions and planes across **Feature** boundaries.  The algorithm for calculation of these metrics is as follows:
 
 1. Get the average orientation of the **Feature**
@@ -17,9 +19,11 @@ This **Filter** calculates a suite of *slip transmission metrics* that are relat
 *Note:* The transmission metrics are calculated using the average orientations for neighboring **Features** and not the local orientation near the boundary. Also, the metrics are calculated twice (i.e., when **Feature** 1 has neighbor **Feature** 2 and when **Feature** 2 has neighbor **Feature** 1) because the direction across the boundary between the **Features** affects the value of the metric. 
   
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

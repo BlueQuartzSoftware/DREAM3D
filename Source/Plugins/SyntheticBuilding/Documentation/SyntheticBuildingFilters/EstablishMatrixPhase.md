@@ -2,9 +2,11 @@ Establish Matrix Phase {#establishmatrixphase}
 =============
 
 ## Group (Subgroup) ##
+
 Synthetic Building (Packing)
 
 ## Description ##
+
 This **Filter** inserts matrix phase(s) into a synthetic volume. A _matrix_ phase can be considered a contiguous region within a volume. The algorithm for inserting matrix phase(s) is as follows:
 
 1. Identify all the matrix phases from the **Ensemble** *Phase Types* array
@@ -19,9 +21,11 @@ The **Filter** requires the user to select a **Cell Attribute Matrix** in which 
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

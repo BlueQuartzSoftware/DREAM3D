@@ -1017,73 +1017,29 @@ void UpdateMarkdownImageNames(QString absPath)
     source.close();
   }
 
-  // qDebug() << absPath;
-
   QStringList names;
   bool didReplace = false;
 
   QVector<int> lines(0);
 
-  QString searchString = "![";
+  QString searchString = "#";
 
   QVector<QString> outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
   QStringList includes;
-
+  QString prevLine;
   while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
-    if(line.contains(searchString))
+    if(prevLine.endsWith(searchString) && !line.isEmpty())
     {
-      // hou qDebug() << line;
-      QStringList imageLinks = line.split("![");
-      foreach(QString chunk, imageLinks)
-      {
-        // qDebug() << chunk;
-
-        int rightParenIdx = chunk.lastIndexOf(')');
-        // Look for the last ')' character which _should_ be the end of the image tag
-        if(rightParenIdx > -1)
-        {
-          // Now look for the '(' character which _should_ be the start of the tag.
-          int leftParenIdx = chunk.lastIndexOf('(');
-          if(leftParenIdx > -1)
-          {
-            QString path = chunk.mid(leftParenIdx + 1, rightParenIdx - leftParenIdx - 1);
-            // qDebug() << path;
-
-            QFileInfo fi2(absPath);
-            QString imagePath = fi2.path() + QDir::separator() + path;
-            // qDebug() << imagePath;
-            QStringList filters;
-            QFileInfo fi3(imagePath);
-            QDir currentDir(fi3.path());
-            QFileInfoList itemList = currentDir.entryInfoList(filters);
-            foreach(QFileInfo itemInfo, itemList)
-            {
-              //                qDebug() << itemInfo.fileName().toLower();
-              //                qDebug() << fi3.fileName().toLower();
-              QString filename_lowercase = itemInfo.fileName().toLower();
-              if(filename_lowercase.compare(fi3.fileName().toLower(), Qt::CaseSensitive) == 0)
-              {
-                // the filenames are the same if converted to all lower case. Now lets see
-                // if they are the same if no conversion is performed.
-                if(itemInfo.fileName().compare(fi3.fileName(), Qt::CaseSensitive) != 0)
-                {
-                  // The filenames are different so we need to correct this
-                  line = line.replace(fi3.fileName(), itemInfo.fileName());
-                  didReplace = true;
-                  qDebug() << "Replacing filename .... ";
-                }
-              }
-            }
-          }
-        }
-      }
+      outLines.push_back(QString(""));
+      didReplace = true;
     }
     outLines.push_back(line);
+    prevLine = line;
   }
 
   writeOutput(didReplace, outLines, absPath);
@@ -1157,7 +1113,7 @@ int main(int argc, char* argv[])
   p1 = QUuid::createUuidV5(uuid, path1);
   qDebug() << p1;
 
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

@@ -2,9 +2,11 @@ Erode/Dilate Mask {#erodedilatemask}
 =============
 
 ## Group (Subgroup) ##
+
 Processing (Cleanup)
 
 ## Description ##
+
 If the mask is _dilated_, the **Filter** grows the *true* regions by one **Cell** in an iterative sequence for a user defined number of iterations.  During the *dilate* process, the classification of any **Cell** neighboring a *false* **Cell** will be changed to *true*.  If the mask is _eroded_, the **Filter** shrinks the *true* regions by one **Cell** in an iterative sequence for a user defined number of iterations.  During the *erode* process, the classification of the *false* **Cells** is changed to *true* if one of its neighbors is *true*. The **Filter** also offers the option(s) to turn on/off the erosion or dilation in specific directions (X, Y or Z).
 
 ## Parameters ##
@@ -18,14 +20,17 @@ If the mask is _dilated_, the **Filter** grows the *true* regions by one **Cell*
 | Z Direction | bool | Whether to erode/dilate in the Z direction |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensionss | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | Mask | bool | (1) | Used to define whether the **Cells** are part of the mask  |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

@@ -2,9 +2,11 @@ Find Feature Radial Distribution Function {#findradialdist}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics Filters (Morphological)
 
 ## Description ##
+
 This Filter determines the number of **Features** whose *centroids* lie within a distance of one *Equivalent Sphere Diameter* from a each **Feature**.  The algorithm for determining the number of **Features** is given below:
 
 1. Find the *centroid* of a **Feature**.
@@ -15,9 +17,11 @@ This Filter determines the number of **Features** whose *centroids* lie within a
 
 
 ## Parameters ##
+
 None
 
 ## Required DataContainers ##
+
 Voxel
 
 ## Required Objects ##
@@ -27,6 +31,7 @@ Voxel
 | Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 
 ## Created Objects ##
+
 None 
 
 

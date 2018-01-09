@@ -2,9 +2,11 @@ Export STL Files From Triangle Geometry {#writestlfile}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** will write a binary STL File for each unique **Feature** Id in the associated **Triangle** geometry. The STL files will be named with the [Feature_Id].stl. The user can designate an optional prefix for the files.
 
 ## Parameters ##
@@ -15,6 +17,7 @@ This **Filter** will write a binary STL File for each unique **Feature** Id in t
 | STL File Prefix | String | Optional Prefix to use when creating the STL file names |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
@@ -24,6 +27,7 @@ Triangle
 | **Face Attribute Array** | FaceLabels | int32_t | (2)  | Specifies which **Features** are on either side of each **Face** |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

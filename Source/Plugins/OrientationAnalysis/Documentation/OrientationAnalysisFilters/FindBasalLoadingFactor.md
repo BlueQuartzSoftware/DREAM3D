@@ -2,9 +2,11 @@ Find Basal Loading Factor {#findbasalloadingfactor}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics Filters (Crystallographic)
 
 ## Description ##
+
 This filter calculates the Basal Loading Factor of each **Feature** given its average orientation and a user defined loading axis.  The Basal Loading Factor is the stress on the basal plane in the given loading direction.
 
 ## Parameters ##

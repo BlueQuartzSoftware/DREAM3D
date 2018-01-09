@@ -2,9 +2,11 @@ Export Abaqus Surface Mesh {#abaqussurfacemeshwriter}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** writes an Abaqus file that is a surface mesh using S3 Elements. There are 3 sections to this INP File: Nodes, Elements and Sets of Elements for each **Feature**. This file represents a triangular based mesh with 'shell' elements. No boundary elements are written. The element type selected is TRI_ELEMENT_TYPE "SFM3D3" for the triangles.
 
 **This file is an experimental output from DREAM.3D. The user is responsible for verifying all elements in Abaqus.**
@@ -30,11 +32,13 @@ This **Filter** writes an Abaqus file that is a surface mesh using S3 Elements. 
     …..
 
 ## Parameters ##
+
 | Name             | Type | Description |
 |------------------|------|--------------------|
 | Output File | File Path | The output path for the .inp file |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
@@ -44,6 +48,7 @@ Triangle
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

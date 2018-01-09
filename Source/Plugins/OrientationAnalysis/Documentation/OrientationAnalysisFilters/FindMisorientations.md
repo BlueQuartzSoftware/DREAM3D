@@ -2,9 +2,11 @@ Find Feature Neighbor Misorientations {#findmisorientations}
 ==========
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** determines, for each **Feature**, the misorientations with each of the **Features** that are in contact with it.  The misorientations are stored as a list (for each **Feature**) of angles (in degrees).  The axis of the misorientation is not stored by this **Filter**.
 
 The user can also calculate the average misorientation between the feature and all contacting features.
@@ -20,6 +22,7 @@ __NOTE:__ Only features with identical crystal structures will be calculated. If
 | Find Average Misorientation Per Feature | bool | Specifies if the *average* of the misorienations with the neighboring **Features** should be stored for each **Feature** |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

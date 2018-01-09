@@ -2,9 +2,11 @@ Read SPParks Dump File {#spparksdumpreader}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Input)
 
 ## Description ##
+
 This **Filter** reads from a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/). The information in the file defines an **Image Geometry** with a set of **Feature** Ids. More information can be found at the [SPParks Dump file web site.](http://spparks.sandia.gov/doc/dump.html)
 
 ** This filter will read from a _DUMP_ file from a SPParks simulation.**
@@ -30,6 +32,7 @@ This **Filter** reads from a data file in a format used by [SPPARKS Kinetic Mont
 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Input File | File Path | The input .dump file path |
@@ -38,9 +41,11 @@ This **Filter** reads from a data file in a format used by [SPPARKS Kinetic Mont
 | One Based Arrays | bool | Whether the origin starts at (1, 1, 1) |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

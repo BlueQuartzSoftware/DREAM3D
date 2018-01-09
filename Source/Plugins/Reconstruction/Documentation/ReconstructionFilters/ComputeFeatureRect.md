@@ -2,9 +2,11 @@ Compute FeatureRect {#computefeaturerect}
 =============
 
 ## Group (Subgroup) ##
+
 Reconstruction (Reconstruction)
 
 ## Description ##
+
 This **Filter** computes the XYZ minimum and maximum coordinates for each **Feature** in a segmentation. This data can be important for finding the smallest ecompasing volume. This values are given in **Pixel** coordinates.
 
 |       | 0 | 1 | 2 | 3 | 4 |
@@ -54,4 +56,3 @@ Please see the description file distributed with this plugin.
 ## DREAM3D Mailing Lists ##
 
 If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users

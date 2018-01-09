@@ -2,9 +2,11 @@ Regularize Z Spacing {#regularizezspacing}
 =============
 
 ## Group (Subgroup) ##
+
 Sampling (Resolution)
 
 ## Description ##
+
 This **Filter** "resamples" the 3D array in the Z-direction (which is generally taken as the sectioning direction).  The **Image Geometry** assumes all **Cells** are of the same size (dx x dy x dx).  If the Z locations (i.e., slice positions) are not uniform, then the user can enter a list of the actual Z locations and a desired uniform "resolution".  The format of the list file is each Z slice position on a separate line. The **Filter** will then create a new volume with uniform Z locations and determine which of the old "slices" should be copied to the new "slices". Below is an example:
 
 If a dataset had 10 sections with the following locations:
@@ -49,9 +51,11 @@ and the user wanted a uniform resolution of *3*, then the following mapping woul
 | New Z Resolution | float | Uniform resolution desired in the Z direction of the new grid |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

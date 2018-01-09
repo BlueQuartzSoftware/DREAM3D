@@ -2,9 +2,11 @@ Find Feature Boundary Strength Metrics {#findboundarystrengths}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** calculates the same metrics as in the [Find Neighbor Slip Transmission Metrics](FindSlipTransmissionMetrics.html "") **Filter**.  However, this **Filter** stores the values in the **Face Attribute Matrix** of a **Triangle Geometry**.  The algorithm the **Filter** uses is as follows:
 
 1. Find the two **Features** that are separated by a **Face** in the **Triangle Geometry**
@@ -16,11 +18,13 @@ This **Filter** calculates the same metrics as in the [Find Neighbor Slip Transm
 *Note:* Each metric is calculated twice for the two different directions slip could approach the boundary.  The values are stored on each **Face** in the **Face** map in a way that notes the direction (i.e., when **Feature** 1 has neighbor **Feature** 2 and when **Feature** 2 has neighbor **Feature** 1) because the direction across the boundary between the **Features** affects the value of the metric. 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Loading Direction | float (3x) | The loading axis for the sample |
 
 ## Required Geometry ##
+
 Image + Triangle
 
 ## Required Objects ##

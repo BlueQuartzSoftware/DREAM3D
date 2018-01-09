@@ -2,9 +2,11 @@ Write Ph File (Feature Ids) {#phwriter}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** writes a custom data file used by the Materials Science Department at Carnegie Mellon University.  See the [PhReader](PhReader.html "") **Filter** description for example data format.
 
 ### Example Output ###
@@ -40,6 +42,7 @@ This **Filter** writes a custom data file used by the Materials Science Departme
 | Output File | File Path | The output .ph file path |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -49,6 +52,7 @@ Image
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

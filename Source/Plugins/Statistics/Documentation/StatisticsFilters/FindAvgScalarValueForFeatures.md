@@ -2,18 +2,22 @@ Find Average Value of Scalars For Feature {#findavgscalarvalueforfeatures}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Misc)
 
 ## Description ##
+
 This **Filter** determines the average value of a scalar **Attribute Array** for each **Feature** by the following algorithm:
 
 1. Gather all **Elements** that belong to the **Feature**
 2. Average the values of the scalar **Attribute Array** for all **Elements** and store as the average for the **Feature**
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

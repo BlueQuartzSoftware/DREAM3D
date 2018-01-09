@@ -2,15 +2,19 @@ Find Feature Centroids {#findfeaturecentroids}
 =============
 
 ## Group (Subgroup) ##
+
 Generic (Misc)
 
 ## Description ##
+
 This **Filter** calculates the _centroid_ of each **Feature** by determining the average X, Y, and Z position of all the **Cells** belonging to the **Feature**. Note that **Features** that intersect the outer surfaces of the sample will still have _centroids_ calculated, but they will be _centroids_ of the truncated part of the **Feature** that lies inside the sample.
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

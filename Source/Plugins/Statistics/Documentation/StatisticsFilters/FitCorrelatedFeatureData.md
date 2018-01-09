@@ -2,13 +2,16 @@ Fit Correlated Distributions To Feature Data {#fitcorrelatedfeaturedata}
 =====
 
 ## Group (Subgroup) ##
+
 Statistics (Ensemble)
 
 
 ## Description ##
+
 This filter will correlate one **Feature** with another **Feature** and bin the result.
 
 ## Parameters ##
+
 | Name             | Type |
 |------------------|------|
 | Distribution Type | Choice | Choose from a lognormal, power and beta distribution. |

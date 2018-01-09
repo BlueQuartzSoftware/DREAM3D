@@ -2,9 +2,11 @@ Write GBCD Pole Figure (GMT 5) {#visualizegbcdgmt}
 ============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** creates a .dat file that can be used in conjunction with [GMT](http://gmt.soest.hawaii.edu/) to generate a grain boundary character distribution (GBCD) pole figure. The user must select the relevant phase for which to write the pole figure by entering the _phase index_. 
 
 -----
@@ -15,6 +17,7 @@ This **Filter** creates a .dat file that can be used in conjunction with [GMT](h
 -----
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------|-------------|
 | Phase of Interest | int32_t | Index of the **Ensemble** for which to plot the pole figure |
@@ -23,6 +26,7 @@ This **Filter** creates a .dat file that can be used in conjunction with [GMT](h
 | Output GMT File | File Path | The output .dat file path |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
@@ -32,6 +36,7 @@ Triangle
 | **Ensemble Attribute Array** | GBDC | double | (n,m,l,o,q,r) | 5 parameter GBCD data. The 6<sup>th</sup> component is used internally to track the northern vs. southern hemisphere of the Lambert sphere |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

@@ -2,9 +2,11 @@ Insert Precipitate Phases {#insertprecipitatephases}
 =============
 
 ## Group (Subgroup) ##
+
 Synthetic Building (Packing)
 
 ## Description ##
+
 If there are precipitate _Phase Types_ in the volume, then this **Filter** will place precipitate **Features** with the sizes, shapes, physical orientations and locations corresponding to the goal statistics. Precipitate **Features** are currently placed _one at a time_ and are _not allowed to overlap_. The precpitiate packing process is similar to that for [packing primary phases](@ref packprimaryphases).
 
 Currently, the parameters that are matched to target parameters include: 
@@ -44,6 +46,7 @@ where (X, Y, Z) are the coordinates of the **Feature's** centroid, (A, B, C) are
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Periodic Boundaries | bool | Whether to *wrap* **Features** to create *periodic boundary conditions* |
@@ -54,6 +57,7 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 | New AttributeMatrix | DataArrayPath | AttributeMatrix to save the Shape DescriptionArrays into |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

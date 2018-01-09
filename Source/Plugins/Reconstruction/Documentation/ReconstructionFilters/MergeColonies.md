@@ -2,9 +2,11 @@ Merge Colonies {#mergecolonies}
 ======
 
 ## Group (Subgroup) ##
+
 Reconstruction (Grouping)
 
 ## Description ##
+
 This **Filter** groups neighboring **Features** that have a *special* misorientation that is associated with *alpha* variants that transformed from the same *beta* grain in titanium.  The algorithm for grouping the **Features** is analogous to the algorithm for segmenting the **Features**, except the average orientation of the **Features** are used instead of the orientations of the individual **Elements** and the criterion for grouping is specific to the *alpha-beta transformation*.  The user can specify a tolerance on both the *axis* and the *angle* that defines the misorientation relationship (i.e., a tolerance of 1 degree for both tolerances would allow the neighboring **Features** to be grouped if their misorientation was between 59-61 degrees about an axis within 1 degree of a2, as given by the 3rd *special* misorientation below).
 
 The list of *special* misorientations can be found in the paper by Germain et al.<sup>1</sup> and are listed here: 
@@ -20,6 +22,7 @@ The list of *special* misorientations can be found in the paper by Germain et al
 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Axis Tolerance (Degrees) | float | Tolerance allowed when comparing the axis part of the axis-angle representation of the misorientation to the _special_ misorientations listed above |
@@ -28,6 +31,7 @@ The list of *special* misorientations can be found in the paper by Germain et al
 | Identify Glob Alpha | bool | Whether to identify glob alpha regions during the merging process |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

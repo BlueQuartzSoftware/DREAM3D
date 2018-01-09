@@ -2,9 +2,11 @@ Find Slice to Slice Crystallographic Misalignments {#findslicetoslicerotations}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics Filters (Crystallographic)
 
 ## Description ##
+
 This filter is designed to quantify the amount of "misalignment" between sections in a serial-sectioning EBSD dataset.  The filter assumes that the **Features** in the volume are roughly equiaxed and randomly textured.  The filter calculates the *misorientation* between each **Cell** in a given section and the **Cell** directly above it in the next section.  The *misorientation* axis for each **Cell** pair is represented in the *sample reference frame* and averaged for all **Cells**.  If the *misorientations* are random (which would be expected for random, equiaxed **Features**), then the average misorientation axis would be <001>.  However, if the *misorientation* axis is some other direction, then it is likely that the *misorientations* are not random and may be due to the sections being *tilted* relative to each other, causing the orientations measured by the collection software to differ between sections.
 
 Note: this filter should not be treated as an absolute measure of slice-slice misalignment, but rather a qualitative assessment of possible misalignment.
@@ -16,6 +18,7 @@ Note: this filter should not be treated as an absolute measure of slice-slice mi
 | Slice to Slice Rotations File | Output File |
 
 ## Required DataContainers ##
+
 Voxel
 
 ## Required Objects ##
@@ -28,6 +31,7 @@ Voxel
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
 
 ## Created Objects ##
+
 None
 
 

@@ -2,9 +2,11 @@ Find Feature Shapes from Triangle Geometry {#findtrianglegeomshapes}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Morphological)
 
 ## Description ##
+
 This **Filter** calculates the second-order moments of each enclosed **Feature** in a **Triangle Geometry**.  The second-order moments allow for the determination of the *principal axis lengths, pricipal axis directions, aspect ratios and moment invariant Omega3s*.  The *principal axis lengths* are those of a "best-fit" ellipsoid.  The algorithm for determining the moments and these values is as follows:
 
 1. For each **Triangle** on the bounding surface of a **Feature**, construct a tetrahedron whose fourth vertex is the centroid of the **Feature**, ensuring normals are consistent (this **Filter** uses the convetion where normals point inwards; note that the actual winding of the **Triangle Geometry** is not modified)
@@ -19,9 +21,11 @@ This **Filter** calculates the second-order moments of each enclosed **Feature**
 *Note:* Due to the method used to subdivide the tetrahedra, some sharp corners of shapes may not be properly represented, resulting in inaccurate Omega3 values.  This problem is especially apparent for perfect rectangular prisms, but any shape with clear sharp corners may be affected.  
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
@@ -59,4 +63,3 @@ Please see the description file distributed with this plugin.
 ## DREAM3D Mailing Lists ##
 
 If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users

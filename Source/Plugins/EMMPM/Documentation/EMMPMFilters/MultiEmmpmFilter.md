@@ -2,14 +2,17 @@ Multi-Array EM/MPM {#multiemmpmfilter}
 =============
 
 ## Group (Subgroup) ##
+
 Reconstruction (Segmentation)
 
 ## Description ##
+
 This **Filter** performs the EM/MPM algorithm on a selected number of **Atribute Arrays**, representing grayscale images, that all belong to the same **Cell Attribute Matrix**. The user may select any number of **Attribute Arrays** to segment.  The _Select/Deselect All_  button can used to automatically select all **Attribute Arrays** in a given **Attribute Matrix**. The segmented images will be stored into a newly created **Cell Attribute Matrix** where the name of each output array will be the a user defined _prefix_ plus the original name of the input array. For information regarding the operation of the EM/MPM algorithm and the meaning of the parameters, please refer to the documentation for the [EM/MPM](EMMPMFilter.html "") **Filter**.
 
 This **Filter** contains an additional option to use the last mu (mean) and sigma (variance) values calculated on the current array as the initialization values for the next **Attribute Array** to process. Using this can help the EM/MPM algorithm achieve subjectively "better" segmentations by starting the algorithm at values that should be close to the ending values. This option should _only_ be used if all of the images are "similar" to one another (e.g., a montage/tiled data set or a 3D stack of images). If the input **Attribute Arrays** are qualitatively different, using this option can have negative effects on the accuracy of the final segmented images.
 
 ## Input Parameters ##
+
 | Name             | Type | Description |
 |------------------|------|-------------|
 | Number of Classes | int32_t | The number of classes in which to segment the image | 
@@ -28,6 +31,7 @@ This **Filter** contains an additional option to use the last mu (mean) and sigm
 | Output Array Name Prefix | String | Prefix to apply to the output segmented arrays |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

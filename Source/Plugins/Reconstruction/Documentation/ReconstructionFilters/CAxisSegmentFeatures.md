@@ -2,9 +2,11 @@ Segment Features (C-Axis Misalignment) {#caxissegmentfeatures}
 ======
 
 ## Group (Subgroup) ##
+
 Reconstruction (Segmentation)
 
 ## Description ##
+
 This **Filter** segments the **Features** by grouping neighboring **Cells** that satisfy the *C-axis misalignment tolerance*, i.e., have misalignment angle less than the value set by the user. The *C-axis misalignment* refers to the angle between the <001> directions (C-axis in the hexagonal system) that is present between neighboring **Cells**.  The process by which the **Features** are identified is given below and is a standard *burn algorithm*.
 
 1. Randomly select a **Cell**, add it to an empty list and set its *Feature Id* to the current **Feature**
@@ -18,12 +20,14 @@ The user has the option to *Use Mask Array*, which allows the user to set a bool
 After all the **Features** have been identified, a **Feature Attribute Matrix** is created for the **Features** and each **Feature** is flagged as *Active* in a boolean array in the matrix.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | C-Axis Misorientation Tolerance (Degrees) | float | Tolerance (in degrees) used to determine if neighboring **Cells** belong to the same **Feature** |
 | Use Mask Array | bool | Specifies whether to use a boolean array to exclude some **Cells** from the **Feature** identification process |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

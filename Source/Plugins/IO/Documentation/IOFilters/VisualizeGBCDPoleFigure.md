@@ -2,9 +2,11 @@ Export GBCD Pole Figure (VTK) {#visualizegbcdpolefigure}
 ============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** creates a .vtk file that can be used in [ParaView](http://www.paraview.org/) to visualize a Grain Boundary Character Distribution (GBCD) pole figure. The user must select the relevant phase for which to write the pole figure by entering the _phase index_. 
 
 -----
@@ -18,6 +20,7 @@ This **Filter** creates a .vtk file that can be used in [ParaView](http://www.pa
 -----
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------|-------------|
 | Phase of Interest | int32_t | Index of the **Ensemble** for which to plot the pole figure |
@@ -26,6 +29,7 @@ This **Filter** creates a .vtk file that can be used in [ParaView](http://www.pa
 | Output Regular Grid VTK File | File Path | The output .vtk file path |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
@@ -35,6 +39,7 @@ Triangle
 | **Ensemble Attribute Array** | GBDC | double | (n,m,l,o,q,r) | 5 parameter GBCD data. The 6<sup>th</sup> component is used internally to track the northern vs. southern hemisphere of the Lambert sphere |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

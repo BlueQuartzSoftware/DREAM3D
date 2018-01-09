@@ -2,9 +2,11 @@ Find Biased Features (Bounding Box) {#findboundingboxfeatures}
 =============
 
 ## Group (Subgroup) ##
+
 Generic (Spatial)
 
 ## Description ##
+
 This **Filter** determines which **Features** are _biased_ by the outer surfaces of the sample. Larger **Features** are more likely to intersect the outer surfaces and thus it is not sufficient to only note which **Features** touch the outer surfaces of the sample. Denoting which **Features** are biased is important so that they may be excluded from any statistical analyses. The algorithm for determining whether a **Feature** is _biased_ is as follows: 
 
 1. The _centroids_ of all **Features** are calculated
@@ -19,11 +21,13 @@ By definition of the box, no **Feature** that intersects an outer surface of the
 *Note:* This **Filter** is a modification of an algorithm from Dave Rowenhorst (Naval Research Laboratory).
 
 ## Parameters ##
+
 | Name             | Type | Description |
 |------------------|------|-------------|
 | Apply Phase by Phase | int32_t | Whether to apply the biased **Features** algorithm per **Ensemble** | 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

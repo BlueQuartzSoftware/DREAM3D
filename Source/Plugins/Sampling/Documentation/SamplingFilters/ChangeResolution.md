@@ -2,9 +2,11 @@ Change Resolution {#changeresolution}
 =============
 
 ## Group (Subgroup) ##
+
 Sampling (Resolution)
 
 ## Description ##
+
 This **Filter** changes the **Cell** spacing/resolution based on inputs from the user. The values entered are the desired new resolutions (not multiples of the current resolution).  The number of **Cells** in the volume will change when the resolution values are changed and thus the user should be cautious of generating "too many" **Cells** by entering very small values (i.e., very high resolution). Thus, this **Filter** will perform a down-sampling or up-sampling procedure.  
 
 A new grid of **Cells** is created and "overlaid" on the existing grid of **Cells**.  There is currently no *interpolation* performed, rather the attributes of the old **Cell** that is closest to each new **Cell's** is assigned to that new **Cell**. 
@@ -20,6 +22,7 @@ A new grid of **Cells** is created and "overlaid" on the existing grid of **Cell
 | Save as New Data Container | bool | Whether the new grid of **Cells** should replace the current **Geometry** or if a new **Data Container** should be created to hold it |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##

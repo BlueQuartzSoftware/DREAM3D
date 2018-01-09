@@ -2,15 +2,19 @@ Remove Flagged Features {#removeflaggedfeatures}
 =============
 
 ## Group (Subgroup) ##
+
 Processing (Cleanup)
 
 ## Description ##
+
 This **Filter** will remove **Features** that have been flagged by another **Filter** from the structure.  The **Filter** requires that the user point to a boolean array at the **Feature** level that tells the **Filter** whether the **Feature** should remain in the structure.  If the boolean array is *false* for a **Feature**, then all **Cells** that belong to that **Feature** are temporarily *unassigned* and after all *undesired* **Features** are removed, the remaining **Features** are isotropically coarsened to fill in the gaps left by the removed **Features**.
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -21,6 +25,7 @@ Image
 | **Feature Attribute Array** | Active | bool | (1) | Specifies whether the **Feature** will remain in the structure or not |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

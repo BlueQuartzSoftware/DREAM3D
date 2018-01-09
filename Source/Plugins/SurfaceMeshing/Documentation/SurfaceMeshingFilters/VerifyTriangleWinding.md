@@ -2,22 +2,28 @@ Verify Triangle Winding {#verifytrianglewinding}
 ======
 
 ## Group (Subgroup) ##
+
 SurfaceMesh
 
 ## Description ##
+
 This filter analyzes the mesh for consistent triangle winding and fixes any inconsistencies that are found. This algorithm can be memory intensive for larger meshes. The algorithm is an advancing wave front type of algorithm. The algorithm is know to have problems if there are disconnected **Features** with the same ID in the surface mesh.
 
 
 ## Parameters ##
+
 None
 
 ## Required DataContainers ##
+
 SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##
+
 None
 
 

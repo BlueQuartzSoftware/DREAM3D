@@ -2,9 +2,11 @@ Export INL File {#inlwriter}
 =============
 
 ## Group (Subgroup) ##
+
 IO (Output)
 
 ## Description ##
+
 This **Filter** writes out **Cell** data from an **Image Geometry** to a file format used by the Idaho National Laboratory (INL).  The format is columnar and space delimited, with header lines denoted by the "#" character. The columns are the following:
 
 	- phi1 
@@ -27,24 +29,30 @@ Some information about the phase is included in the header section of the file i
 	# Y_STEP: 0.250000
 	# Z_STEP: 0.250000
 	#
+
 	# X_MIN: -36.750004
 	# Y_MIN: 10.250000
 	# Z_MIN: -29.000000
 	#
+
 	# X_MAX: -11.750004
 	# Y_MAX: 35.250000
 	# Z_MAX: -4.000000
 	#
+
 	# X_DIM: 100
 	# Y_DIM: 100
 	# Z_DIM: 100
 	#
+
 	# Phase_1: Nickel 
 	# Symmetry_1: 43
 	# Features_1: 796
 	#
+
 	# Num_Features: 796 
 	#
+
 	# phi1 PHI phi2 x y z FeatureId PhaseId Symmetry
 	0.266984 0.696910 4.434039 -36.750004 10.250000 -29.000000 639 1 43
 	0.266984 0.696910 4.434039 -36.500004 10.250000 -29.000000 639 1 43
@@ -64,6 +72,7 @@ Some information about the phase is included in the header section of the file i
 | Output File | File Path | The output .txt file path |
 
 ## Required Geometry ##
+
 Image 
 
 ## Required Objects ##
@@ -78,6 +87,7 @@ Image
 | **Ensemble Attribute Array** | Number of Features | uint32_t | (1) | The number of **Features** per **Ensemble** |
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

@@ -2,6 +2,7 @@ Correlate Values with Vector Direction {#correlatevalueswithvectordirection}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics Filters (Crystallographic)
 
 ## Description ##

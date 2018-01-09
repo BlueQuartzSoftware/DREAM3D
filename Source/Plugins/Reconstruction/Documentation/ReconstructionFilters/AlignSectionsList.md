@@ -2,9 +2,11 @@ Align Sections (List) {#alignsectionslist}
 ======
 
 ## Group (Subgroup) ##
+
 Reconstruction (Alignment)
 
 ## Description ##
+
 This **Filter** accepts a .txt file that has full **Cells** shifts that have already been calculated in it.  
 
 The format of the file is as follows:
@@ -20,6 +22,7 @@ The slices must be ordered from the bottom of the sample to the top of the sampl
 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Input File | File Path | The input .txt file path containing the shifts to apply to the sections |
@@ -27,12 +30,15 @@ The slices must be ordered from the bottom of the sample to the top of the sampl
 | DataContainer Name | String | The name of the DataContainer that is used. The selected DataContainer  **MUST** have an ImageGeometry. |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##
+
 None
 
 ## License & Copyright ##

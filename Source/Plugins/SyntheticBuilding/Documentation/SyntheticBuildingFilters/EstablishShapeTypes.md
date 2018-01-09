@@ -2,9 +2,11 @@ Establish Shape Types {#establishshapetypes}
 =============
 
 ## Group (Subgroup) ##
+
 Synthetic Building (Generation)
 
 ## Description ##
+
 This **Filter** allows the user to assign a specific _shape type_ to each **Ensemble** of a synthetic structure. This **Filter** should be inserted **BEFORE** any packing **Filters** are added. The **Filter** is typically added just after the [initializing the synthetic volume](@ref initializesyntheticvolume). The various shape types are:
 
 + Ellipsoid
@@ -18,6 +20,7 @@ The _Unknown Shape Type_ represents an "error" shape type that _should not_ be u
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
+
 None
 
 ## Required Objects ##

@@ -2,9 +2,11 @@ Generate IPF Colors {#generateipfcolors}
 =============
 
 ## Group (Subgroup) ##
+
 Processing (Crystallography)
 
 ## Description ##
+
 This **Filter** will generate _inverse pole figure_ (IPF) colors for cubic, hexagonal or trigonal crystal structures. The user can enter the _Reference Direction_, which defaults to [001]. The **Filter** also has the option to apply a black color to all "bad" **Elements**, as defined by a boolean _mask_ array, which can be generated using the [Threshold Objects](@ref multithresholdobjects) **Filter**.
 
 ### Originating Data Notes ###
@@ -30,12 +32,14 @@ This **Filter** will generate _inverse pole figure_ (IPF) colors for cubic, hexa
 -----
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Reference Direction | float (3x) | The reference axis with respect to compute the IPF colors |
 | Apply to Good Elements Only (Bad Elements Will Be Black) | bool | Whether to assign a black color to "bad" **Elements** |
 
 ## Required Geometry ##
+
 Not Applicable
 
 ## Required Objects ##

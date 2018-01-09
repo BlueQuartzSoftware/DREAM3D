@@ -2,10 +2,12 @@ Read Legacy DREAM.3D H5voxel File {#h5voxelfilereader}
 =======
 
 ## Group (Subgroup) ##
+
 I/O Filters (Input)
 
 
 ## Description ##
+
 This filter reads a legacy DREAM.3D file that holds the *Euler Angles*, *Phases* and *GrainIds* of each **Cell**.  The *Crystal Structures* are also read from the file.  While reading the file, the **Feature** map is sized to the largest *GrainId* observed.
 
 ## Parameters ##
@@ -15,9 +17,11 @@ This filter reads a legacy DREAM.3D file that holds the *Euler Angles*, *Phases*
 | Input File | File Path |
 
 ## Required DataContainers ##
+
 Voxel
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

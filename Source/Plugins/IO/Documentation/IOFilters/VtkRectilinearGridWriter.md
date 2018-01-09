@@ -2,10 +2,12 @@ Vtk Rectilinear Grid Exporter {#vtkrectilineargridwriter}
 ======
 
 ## Group (Subgroup) ##
+
 I/O Filters
 
 
 ## Description ##
+
 This Filter reads the **Feature** and phase ids together with image parameters required by Vtk to an output file named by the user. The file is used to generate the image of the **Features** and phases of the **Features**.
 
 
@@ -25,6 +27,7 @@ This Filter reads the **Feature** and phase ids together with image parameters r
 | Write Binary File | Boolean (On or Off) |
 
 ## Required DataContainers ##
+
 Voxel
 
 ## Required Objects ##
@@ -34,6 +37,7 @@ Voxel
 | Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding)
 
 ## Created Objects ##
+
 None
 
 

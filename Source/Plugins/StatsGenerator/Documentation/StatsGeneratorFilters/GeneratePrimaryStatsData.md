@@ -2,9 +2,11 @@ Generate Primary StatsData {#generateprimarystatsdata}
 =====
 
 ## Group (Subgroup) ##
+
 StatsGenerator (StatsGenerator)
 
 ## Description ##
+
 This filter allows the user to generate statistics for a **Primary** phase that is suitable for use as an input into the @see InsertPrimaryPhases filter when generating a synthetic microstructure. The goal of this particular filter is in the use/generation of automated pipeline files. In this scenario the power user is wanting to generate a varied array of microstructures using some sort of scripting environment or language. By careful replacements of the values in a pipeline file the user can automate the generation of a synthetic microstructure.
 If the use wishes to have a more interactive environment in which to explore the various distribution curves then the @see **StatsGenerator** filter should be used instead.
 
@@ -75,4 +77,3 @@ Please see the description file distributed with this plugin.
 ## DREAM3D Mailing Lists ##
 
 If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl|en#!forum/dream3d-users

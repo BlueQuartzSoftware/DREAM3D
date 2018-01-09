@@ -2,13 +2,16 @@ Find Microtexture Regions {#findmicrotextureregions}
 =====
 
 ## Group (Subgroup) ##
+
 Filter Group (Filter Subgroup)
 
 
 ## Description ##
+
 This filter does the following...
 
 ## Parameters ##
+
 | Name             | Type |
 |------------------|------|
 | Field Array Name | String |

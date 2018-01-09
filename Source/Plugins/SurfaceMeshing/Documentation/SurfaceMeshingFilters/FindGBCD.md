@@ -2,17 +2,21 @@ Find GBCD {#findgbcd}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This **Filter** computes the 5D grain boundary character distribution (GBCD) for a **Triangle Geometry**, which is the relative area of grain boundary for a given misorientation and normal. The GBCD can be visualized by using either the [Write GBCD Pole Figure (GMT)](@ref visualizegbcdgmt) or the [Write GBCD Pole Figure (VTK)](@ref visualizegbcdpolefigure) **Filters**.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | GBCD Resolution (Degrees) | float | The resolution in degrees for the GBCD calculation |
 
 ## Required Geometry ##
+
 Image + Triangle
 
 ## Required Objects ##

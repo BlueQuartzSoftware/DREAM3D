@@ -2,9 +2,11 @@ Insert Atoms {#insertatoms}
 =============
 
 ## Group (Subgroup) ##
+
 Synthetic Building (Packing)
 
 ## Description ##
+
 This **Filter** creates a **Vertex** geometry where the **Vertices** represent atom positions.  The **Filter** requires a **Triangle** surface mesh that bounds **Features** of different crystallographic orientation.  The **Filter** then extracts the **Triangles** associated with each **Feature** and in parallel inserts atoms on the crystal lattice of each **Feature**.  The steps associated with inserting the atoms in each **Feature** are as follows:
 
 1. Transform the coordinates of the **Triangles** into the reference frame of the **Feature's** crystallographic orientation using its stored orientation
@@ -18,12 +20,14 @@ After all **Features** have had atoms inserted, combine the point lists for all 
 *Note:* Since each **Feature** is treated independently (in parallel), the interface between neighboring **Features** may not be "in equilibrium".  For example, at one point along the interface, each of the neighboring **Features** may have an atom fall just slightly outside its bounds.  In this case, there may not be an atom on the "ideal" lattice for both **Features**, but maybe there should be a single atom that sits at the midpoint between the two ideal positions.  The algorithm will instead just omit any atom from that area.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Lattice Constants (Angstroms) | float (x3) | Lattice parameters (a, b, c) for the unit cell in Angstroms |
 | Crystal Basis | Enumeration | Basis to be used when inserting atoms on lattice (currently Siple Cubic, Body-Centered Cubic and Face-Centered Cubic are available) |
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##

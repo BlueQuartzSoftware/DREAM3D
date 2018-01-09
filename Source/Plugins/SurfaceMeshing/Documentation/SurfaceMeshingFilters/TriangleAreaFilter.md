@@ -2,9 +2,11 @@ Generate Triangle Areas {#triangleareafilter}
 ============
 
 ## Group (Subgroup) ##
+
 Surface Meshing (Misc)
 
 ## Description ##
+
 This **Filter** computes the area of each **Triangle** in a **Triangle Geometry** by calculating the following: 
 	
 	1/2*|AB||AC|sin(O)
@@ -12,12 +14,15 @@ This **Filter** computes the area of each **Triangle** in a **Triangle Geometry*
 where _O_ is the angle between |AB| and |AC|.
 
 ## Parameters ##
+
 None
 
 ## Required Geometry ##
+
 Triangle
 
 ## Required Objects ##
+
 None
 
 ## Created Objects ##

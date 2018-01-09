@@ -2,9 +2,11 @@ Find Feature Clustering {#findfeatureclustering}
 =============
 
 ## Group (Subgroup) ##
+
 Statistics (Morphological)
 
 ## Description ##
+
 This Filter determines the radial distribution function (RDF), as a histogram, of a given set of **Features**. Currently, the **Features** need to be of the same **Ensemble** (specified by the user), and the resulting RDF is stored as **Ensemble** data. This Filter also returns the clustering list (the list of all the inter-**Feature** distances) and the minimum and maximum separation distances. The algorithm proceeds as follows:
 
 1. Find the Euclidean distance from the current **Feature** centroid to all other **Feature** centroids of the same specified phase
@@ -16,12 +18,14 @@ This Filter determines the radial distribution function (RDF), as a histogram, o
 *Note:* Because the algorithm iterates over all the **Features**, each distance will be double counted. For example, the distance from **Feature** 1 to **Feature** 2 will be counted along with the distance from **Feature** 2 to **Feature** 1, which will be identical. 
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Number of Bins for RDF | int32_t | Number of bins to split the RDF |
 | Phase Index | int32_t | **Ensemble** number for which to calculate the RDF and clustering list |
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

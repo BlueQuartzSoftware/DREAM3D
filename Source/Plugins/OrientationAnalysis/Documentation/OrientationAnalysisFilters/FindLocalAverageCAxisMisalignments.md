@@ -2,9 +2,11 @@ Find Local Average C-Axis Misalignments {#findlocalaveragecaxismisalignments}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics (Crystallographic)
 
 ## Description ##
+
 This filter finds parent average feature kernel average c-axis misalignment.  Alternatively, if the "Calculate Unbiased Local Average C-Axis Misalignment" parameter is TRUE, the parent average sub-boundary misalignment is calculated.
 
 
@@ -17,6 +19,7 @@ This filter finds parent average feature kernel average c-axis misalignment.  Al
 
 
 ## Required DataContainers ##
+
 Volume
 
 ## Required Objects ##

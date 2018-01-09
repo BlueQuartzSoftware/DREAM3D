@@ -2,15 +2,18 @@ Find Ellipsoid Error {#findellipsoiderror}
 ======
 
 ## Group (Subgroup) ##
+
 Statistics Filters (Morphological)
 
 ## Description ##
+
 Between the *Find Shapes* and *Find Centroids* filters, an ideal ellipsoid for each **Feature** can be described by the centroids, axis lengths and angles of rotation into the sample reference frame. This filter calculates the fraction of cells of each feature that lie outside the ideal ellipse described by those parameters. 
 
 **Currently, this filter only works on 2D Data. **
 
 
 ## Parameters ##
+
 | Name             | Type | Comments |
 |------------------|------|-----|
 | Write Ideal Ellipse Feature Ids | Bool | This writes out a cell array containing the ideal feature IDs. This is only for visualization, and can be a lengthy calculation |
