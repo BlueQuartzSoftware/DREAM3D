@@ -24,7 +24,7 @@
 class AnalyzePrebuiltPipelines
 {
   public:
-    AnalyzePrebuiltPipelines(){};
+    AnalyzePrebuiltPipelines(){}
     ~AnalyzePrebuiltPipelines() = default;
     
     /**
@@ -51,7 +51,44 @@ class AnalyzePrebuiltPipelines
       
       recursiveDirFind(QDir(D3DTools::GetDREAM3DRuntimeDir() + "/PrebuiltPipelines"));
       
+      QMapIterator<QString, QSet<QString>> iter(m_UsedFilters);
+      
+            
+      std::cout << "Filters Having Examples: " << m_FilterFactories.size() << std::endl;
+      std::cout << "|  Filter Name | Pipelines |" << std::endl;
+      std::cout << "|--------------|--------|" << std::endl;
+      
+      while(iter.hasNext())
+      {
+        iter.next();
+        
+        QString key = iter.key();
+        QSet<QString> value = iter.value();
+        QString humanLabel = fm->getFactoryForFilter(key)->create()->getHumanLabel();
+        
+        std::cout << "| " << humanLabel.toStdString() << " | ";
+        
+        for(auto name : value)
+        {
+          std::cout << name.toStdString() << ", ";
+        }
+        
+        std::cout << " |" << std::endl;
+        
+      }
+      
+      
+      std::cout << "\n\n\n" << std::endl;
       std::cout << "Filters Missing Example: " << m_FilterFactories.size() << std::endl;
+      std::cout << "|  Filter Name | Plugin |" << std::endl;
+      std::cout << "|--------------|--------|" << std::endl;
+      for(auto iter : m_FilterFactories)
+      {
+        IFilterFactory* fact = iter.get();
+        AbstractFilter::Pointer filter = fact->create();
+        std::cout << "| " <<filter->getNameOfClass().toStdString() << " | " << filter->getCompiledLibraryName().toStdString() << " |"<< std::endl;
+      }
+
     }
     
     /**
@@ -88,6 +125,8 @@ class AnalyzePrebuiltPipelines
      */
     void extractFilters(const QString &pipelineFile)
     {
+      //FilterManager* fm = FilterManager::Instance();
+      
       // Sanity Check the filepath to make sure it exists, Report an error and bail if it does not
       QFileInfo fi(pipelineFile);
       if(fi.exists() == false)
@@ -116,13 +155,29 @@ class AnalyzePrebuiltPipelines
       //std::cout << "  Filter Count: " << filters.size() << std::endl;
       for(auto filter : filters)
       {
-        m_FilterFactories.remove(filter->getNameOfClass());
+        QString filterClassName = filter->getNameOfClass();
+        m_FilterFactories.remove(filterClassName);
+        
+        
+        if(m_UsedFilters.find(filterClassName) == m_UsedFilters.end())
+        {
+          QSet<QString> theSet = {pipeline->getName() };
+          m_UsedFilters.insert(filterClassName, theSet);
+        }
+        else
+        {
+          QSet<QString> pipelineNameList = m_UsedFilters[filterClassName];
+          pipelineNameList.insert(pipeline->getName());
+          m_UsedFilters[filterClassName] = pipelineNameList;
+        }
+        
       }
     }
     
     
   private:
     FilterManager::Collection m_FilterFactories;
+    QMap<QString, QSet<QString> > m_UsedFilters;
     
     AnalyzePrebuiltPipelines(const AnalyzePrebuiltPipelines&) = delete; // Copy Constructor Not Implemented
     void operator=(const AnalyzePrebuiltPipelines&) = delete; // Operator '=' Not Implemented
