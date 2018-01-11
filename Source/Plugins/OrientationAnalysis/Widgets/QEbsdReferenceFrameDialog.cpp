@@ -347,7 +347,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   {
     QString filtName = ChangeAngleRepresentation::ClassName();
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer convertEulerFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer convertEulerFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr != convertEulerFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has

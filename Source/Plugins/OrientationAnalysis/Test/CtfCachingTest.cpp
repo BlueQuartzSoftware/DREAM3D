@@ -105,7 +105,7 @@ public:
     // Now instantiate the ReadCtfData Filter from the FilterManager
     QString filtName = "ReadCtfData";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
@@ -123,7 +123,7 @@ public:
     AbstractFilter::Pointer ctfReader = AbstractFilter::NullPointer();
     QString filtName = "ReadCtfData";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     // Reading first file
     {

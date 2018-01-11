@@ -87,7 +87,7 @@ public:
       // Now instantiate the EMMPM Filter from the FilterManager
       QString filtName = "EMMPMFilter";
       FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
       if(nullptr == filterFactory.get())
       {
         std::stringstream ss;
@@ -100,7 +100,7 @@ public:
       // Now instantiate the MultiEmmpm Filter from the FilterManager
       QString filtName = "MultiEmmpmFilter";
       FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
       if(nullptr == filterFactory.get())
       {
         std::stringstream ss;
@@ -114,7 +114,7 @@ public:
       m_ImageProcessingPluginLoaded = 1; // Assume it loaded.
       QString filtName = m_ReadImageFilterName;
       FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
       if(nullptr == filterFactory.get())
       {
         std::stringstream ss;
@@ -134,7 +134,7 @@ public:
   {
 
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(m_ReadImageFilterName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(m_ReadImageFilterName);
 
     if(nullptr != filterFactory.get())
     {
@@ -165,7 +165,7 @@ public:
   {
     QString filtName = "ItkRGBToGray";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     if(nullptr != filterFactory.get())
     {
@@ -206,7 +206,7 @@ public:
   {
     QString filtName = "EMMPMFilter";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     if(nullptr != filterFactory.get())
     {
@@ -241,7 +241,7 @@ public:
   {
     QString filtName = "MultiEmmpmFilter";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     if(nullptr != filterFactory.get())
     {

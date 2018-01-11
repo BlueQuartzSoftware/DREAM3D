@@ -91,7 +91,7 @@ int ReadPHFile(QString FileName, QVector<int>& data, int& nx, int& ny, int& nz)
   dca->pushBack(m);
 
   FilterManager::Pointer fm = FilterManager::Instance();
-  AbstractFilter::Pointer reader = fm->getFactoryForFilter("PhReader")->create();
+  AbstractFilter::Pointer reader = fm->getFactoryFromClassName("PhReader")->create();
   reader->setDataContainerArray(dca);
   bool propWasSet = reader->setProperty("InputFile", FileName);
   if(propWasSet == false)

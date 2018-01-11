@@ -180,7 +180,7 @@ QString getNavIndex(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
     
     for(auto filter: filters)
     {
-      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filter);
+      IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filter);
       QString humanName = filterFactory->getFilterHumanLabel();
       QString className = filterFactory->getFilterClassName();
       
@@ -806,7 +806,7 @@ void GenerateIndexFile2()
     
       for(auto filter: filters)
       {
-        IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filter);
+        IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filter);
         QString humanName = filterFactory->getFilterHumanLabel();
         QString className = filterFactory->getFilterClassName();
         

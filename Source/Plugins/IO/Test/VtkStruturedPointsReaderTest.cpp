@@ -230,7 +230,7 @@ public:
     // Now instantiate the PhWriter Filter from the FilterManager
     QString filtName = "VtkStructuredPointsReader";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr != filterFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has

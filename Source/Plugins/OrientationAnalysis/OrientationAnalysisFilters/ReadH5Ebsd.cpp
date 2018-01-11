@@ -594,7 +594,7 @@ void ReadH5Ebsd::execute()
       sampleAxis.z = m_SampleTransformation.l;
       QString filtName = "RotateSampleRefFrame";
       FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer rotSampleFactory = fm->getFactoryForFilter(filtName);
+      IFilterFactory::Pointer rotSampleFactory = fm->getFactoryFromClassName(filtName);
       if(nullptr != rotSampleFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
@@ -672,7 +672,7 @@ void ReadH5Ebsd::execute()
 
       QString filtName = "RotateEulerRefFrame";
       FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer rotEulerFactory = fm->getFactoryForFilter(filtName);
+      IFilterFactory::Pointer rotEulerFactory = fm->getFactoryFromClassName(filtName);
       if(nullptr != rotEulerFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has

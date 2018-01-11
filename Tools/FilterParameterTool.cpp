@@ -1113,7 +1113,7 @@ int main(int argc, char* argv[])
   p1 = QUuid::createUuidV5(uuid, path1);
   qDebug() << p1;
 
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

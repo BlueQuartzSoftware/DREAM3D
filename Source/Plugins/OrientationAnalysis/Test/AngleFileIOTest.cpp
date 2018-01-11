@@ -117,7 +117,7 @@ public:
     AbstractFilter::Pointer filter = AbstractFilter::NullPointer();
     QString filtName = "WriteStatsGenOdfAngleFile";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get())
 

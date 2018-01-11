@@ -147,7 +147,7 @@ public:
 
     QString filtName = "DataContainerWriter";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
     if(nullptr != filterFactory.get())
     {
@@ -572,7 +572,7 @@ public:
 
     QString filtName = "CropImageGeometry";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr != filterFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has

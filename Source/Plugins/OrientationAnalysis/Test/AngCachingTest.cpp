@@ -104,7 +104,7 @@ public:
     // Now instantiate the ReadAngData Filter from the FilterManager
     QString filtName = "ReadAngData";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
@@ -122,7 +122,7 @@ public:
     AbstractFilter::Pointer angReader = AbstractFilter::NullPointer();
     QString filtName = "ReadAngData";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     Ang_Private_Data originalData;
 
     // Reading first file

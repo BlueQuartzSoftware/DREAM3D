@@ -355,7 +355,7 @@ void TestPreflight(bool dataContainer = false, bool attributeMatrix = false, boo
   QString includeStr = "----------- ";
   if(true == dataContainer)
   {
-    IFilterFactory::Pointer ff = fm->getFactoryForFilter(QString("CreateDataContainer"));
+    IFilterFactory::Pointer ff = fm->getFactoryFromClassName(QString("CreateDataContainer"));
 
     AbstractFilter::Pointer dcFilter = ff->create();
     pipeline->pushBack(dcFilter);
@@ -363,7 +363,7 @@ void TestPreflight(bool dataContainer = false, bool attributeMatrix = false, boo
     includeStr += "With Data Container ";
     if(true == attributeMatrix)
     {
-      IFilterFactory::Pointer ff = fm->getFactoryForFilter(QString("CreateAttributeMatrix"));
+      IFilterFactory::Pointer ff = fm->getFactoryFromClassName(QString("CreateAttributeMatrix"));
 
       AbstractFilter::Pointer amFilter = ff->create();
       pipeline->pushBack(amFilter);
@@ -371,7 +371,7 @@ void TestPreflight(bool dataContainer = false, bool attributeMatrix = false, boo
       includeStr += "and Attribute Matrix ";
       if(true == dataArray)
       {
-        IFilterFactory::Pointer ff = fm->getFactoryForFilter(QString("CreateDataArray"));
+        IFilterFactory::Pointer ff = fm->getFactoryFromClassName(QString("CreateDataArray"));
 
         AbstractFilter::Pointer daFilter = ff->create();
         pipeline->pushBack(daFilter);
@@ -389,7 +389,7 @@ void TestPreflight(bool dataContainer = false, bool attributeMatrix = false, boo
   int err = 0;
   while(factoryMapIter != factories.constEnd())
   {
-    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    IFilterFactory::Pointer factory = fm->getFactoryFromClassName(factoryMapIter.key());
     if(factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
@@ -422,7 +422,7 @@ void TestUniqueHumanLabels()
   QMap<QString, AbstractFilter::Pointer> filterMap;
   while(factoryMapIter != factories.constEnd())
   {
-    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    IFilterFactory::Pointer factory = fm->getFactoryFromClassName(factoryMapIter.key());
     if(factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
@@ -457,7 +457,7 @@ void TestUncategorizedFilterParameters()
   QMap<QString, AbstractFilter::Pointer> filterMap;
   while(factoryMapIter != factories.constEnd())
   {
-    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    IFilterFactory::Pointer factory = fm->getFactoryFromClassName(factoryMapIter.key());
     if(factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();
@@ -514,7 +514,7 @@ void PrintFilterInfo()
   FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
   while(factoryMapIter != factories.constEnd())
   {
-    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    IFilterFactory::Pointer factory = fm->getFactoryFromClassName(factoryMapIter.key());
     if(factory.get() != nullptr)
     {
       AbstractFilter::Pointer filter = factory->create();

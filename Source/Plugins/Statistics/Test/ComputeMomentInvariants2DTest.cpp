@@ -83,7 +83,7 @@ public:
     // Now instantiate the ComputeMomentInvariants2DTest Filter from the FilterManager
     QString filtName = "ComputeMomentInvariants2D";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
@@ -165,7 +165,7 @@ public:
     // Now instantiate the ComputeMomentInvariants2DTest Filter from the FilterManager
     QString filtName = "ComputeMomentInvariants2D";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     AbstractFilter::Pointer filter = filterFactory->create();
     filter->setDataContainerArray(dca);

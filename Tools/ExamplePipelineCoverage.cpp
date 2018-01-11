@@ -64,7 +64,7 @@ class AnalyzePrebuiltPipelines
         
         QString key = iter.key();
         QSet<QString> value = iter.value();
-        QString humanLabel = fm->getFactoryForFilter(key)->create()->getHumanLabel();
+        QString humanLabel = fm->getFactoryFromClassName(key)->create()->getHumanLabel();
         
         std::cout << "| " << humanLabel.toStdString() << " | ";
         

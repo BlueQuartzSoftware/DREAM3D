@@ -93,7 +93,7 @@ public:
     // Also test for other filters that will be needed for the test
     FilterManager* fm = FilterManager::Instance();
     QString filtName = "FindShapes";
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
@@ -102,7 +102,7 @@ public:
     }
 
     filtName = "FindFeatureCentroids";
-    filterFactory = fm->getFactoryForFilter(filtName);
+    filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
@@ -177,7 +177,7 @@ public:
     QVariant var;
 
     QString filtName = "FindFeatureCentroids";
-    IFilterFactory::Pointer factory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer factory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE(factory.get() != nullptr);
     AbstractFilter::Pointer centroidsFilter = factory->create();
     DREAM3D_REQUIRE(centroidsFilter.get() != nullptr);
@@ -220,7 +220,7 @@ public:
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     filtName = "FindShapes";
-    factory = fm->getFactoryForFilter(filtName);
+    factory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE(factory.get() != nullptr);
     AbstractFilter::Pointer shapesFilter = factory->create();
     DREAM3D_REQUIRE(shapesFilter.get() != nullptr);

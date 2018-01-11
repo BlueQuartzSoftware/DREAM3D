@@ -96,7 +96,7 @@ public:
     // Now instantiate the DxWriter Filter from the FilterManager
     QString filtName = "DxWriter";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
@@ -105,7 +105,7 @@ public:
     }
 
     filtName = "DxReader";
-    filterFactory = fm->getFactoryForFilter(filtName);
+    filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
@@ -140,7 +140,7 @@ public:
       // Now instantiate the DxWriter Filter from the FilterManager
       QString filtName = "DxWriter";
       FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
       if(nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
@@ -191,7 +191,7 @@ public:
       // Now instantiate the DxWriter Filter from the FilterManager
       QString filtName = "DxWriter";
       FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
       if(nullptr != filterFactory.get())
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
@@ -236,7 +236,7 @@ public:
     AbstractFilter::Pointer dxReader = AbstractFilter::NullPointer();
     QString filtName = "DxReader";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr != filterFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
@@ -308,7 +308,7 @@ public:
     AbstractFilter::Pointer dxReader = AbstractFilter::NullPointer();
     QString filtName = "DxReader";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     // Reading first file
     {

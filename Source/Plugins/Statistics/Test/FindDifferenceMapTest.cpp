@@ -147,7 +147,7 @@ public:
     // Now instantiate the FindDifferenceMapTest Filter from the FilterManager
     QString filtName = "FindDifferenceMap";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
@@ -416,7 +416,7 @@ public:
 
     QString filtName = "FindDifferenceMap";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer factory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer factory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE(factory.get() != nullptr)
 
     AbstractFilter::Pointer diffMapFilter = factory->create();

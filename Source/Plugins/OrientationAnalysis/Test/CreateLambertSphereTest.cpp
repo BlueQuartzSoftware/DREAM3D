@@ -50,7 +50,7 @@ public:
     // Now instantiate the CreateLambertSphereTest Filter from the FilterManager
     QString filtName = m_FiltName;
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if(nullptr == filterFactory.get())
     {
       std::stringstream ss;
@@ -68,7 +68,7 @@ public:
     AbstractFilter::Pointer filter = AbstractFilter::NullPointer();
     QString filtName = m_FiltName;
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
 
