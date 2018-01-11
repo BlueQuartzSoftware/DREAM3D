@@ -192,14 +192,11 @@ if(SIMPL_DISCOUNT_DOCUMENTATION)
 
     endif()
 
-
-
     if(APPLE)
       set(HTML_OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${DREAM3D_PACKAGE_DEST_PREFIX}Resources/Help/DREAM3D")
     else()
       set(HTML_OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D")
     endif()
-
 
     configure_file( ${DREAM3DProj_SOURCE_DIR}/Documentation/Tools/ToolConfiguration.h.in
                     ${DREAM3DProj_BINARY_DIR}/Documentation/ReferenceManual/DocToolsConfiguration.h)
@@ -209,7 +206,7 @@ if(SIMPL_DISCOUNT_DOCUMENTATION)
       ${DREAM3DProj_SOURCE_DIR}/Documentation/Tools/GenerateHTMLDocs.cpp 
       ${DREAM3DProj_BINARY_DIR}/Documentation/ReferenceManual/DocToolsConfiguration.h
     )
-    target_include_directories(GenerateHTMLDocs INTERFACE  discount::libmarkdown)
+    target_include_directories(GenerateHTMLDocs INTERFACE discount::libmarkdown)
     target_link_libraries(GenerateHTMLDocs Qt5::Core discount::libmarkdown SIMPLib)
     #-- Set the Debug Suffix for the application
     set_target_properties( GenerateHTMLDocs
@@ -218,11 +215,12 @@ if(SIMPL_DISCOUNT_DOCUMENTATION)
                 RELEASE_OUTPUT_NAME GenerateHTMLDocs
     )
 
+    get_property(COPY_LIBRARY_TARGETS GLOBAL PROPERTY COPY_LIBRARY_TARGETS)
     add_custom_target(GenerateDiscountDocs ALL
       COMMAND GenerateHTMLDocs
-      DEPENDS DREAM3D
+      DEPENDS ${COPY_LIBRARY_TARGETS} DREAM3D
       COMMENT "Using Discount to generate HTML Documentation"
-      )
+    )
 
   else()
     set(SIMPL_DISCOUNT_DOCUMENTATION OFF)
