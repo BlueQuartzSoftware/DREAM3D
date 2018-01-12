@@ -47,11 +47,15 @@
 
 #include "TableModels/SGRDFTableModel.h"
 
-#include "ui_StatsGenRDFWidget.h"
 
 class SGRDFTableModel;
 class QwtPlotCurve;
+class QwtPlot;
 
+namespace Ui
+{
+class StatsGenRDFWidget;
+}
 /**
  * @class StatsGenRDFWidget StatsGenRDFWidget.h StatsGenerator/StatsGenRDFWidget.h
  * @brief This class gives GUIs an interface into the RDF settings
@@ -59,47 +63,103 @@ class QwtPlotCurve;
  * @date Apr 20, 2011
  * @version 1.0
  */
-class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
+class StatsGenRDFWidget : public QWidget
 {
     Q_OBJECT
 
   public:
     StatsGenRDFWidget(QWidget* parent = 0);
     virtual ~StatsGenRDFWidget();
-
+    /**
+     * @brief setupGui
+     */
     void setupGui();
+
+    /**
+     * @brief initQwtPlot
+     * @param xAxisName
+     * @param yAxisName
+     * @param plot
+     */
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
+    /**
+     * @brief getMisorientationData
+     * @param statsData
+     * @param phaseType
+     * @return
+     */
     int getMisorientationData(StatsData* statsData, PhaseType::Type phaseType);
+
+    /**
+     * @brief extractStatsData
+     * @param index
+     * @param statsData
+     * @param phaseType
+     */
     void extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType);
 
+    /**
+     * @brief generateODFData
+     * @return
+     */
     QVector<float> generateODFData();
 
+    /**
+     * @brief updateRDFPlot
+     * @param freqs
+     */
     void updateRDFPlot(QVector<float>& freqs);
+
+    /**
+     * @brief updatePlots
+     */
     void updatePlots();
 
+    /**
+     * @brief tableModel
+     * @return
+     */
     SGRDFTableModel* tableModel();
 
+    /**
+     * @brief getStatisticsData
+     * @return
+     */
     RdfData::Pointer getStatisticsData();
 
+    /**
+     * @brief getTabTitle
+     * @return
+     */
     QString getTabTitle();
 
   protected slots:
+    /**
+     * @brief on_generateRDFBtn_clicked
+     */
     void on_generateRDFBtn_clicked();
-    void on_minDistLE_textChanged(const QString& text);
-    void on_maxDistLE_textChanged(const QString& text);
-    void on_BoxSizeXLE_textChanged(const QString& text);
-    void on_BoxSizeYLE_textChanged(const QString& text);
-    void on_BoxSizeZLE_textChanged(const QString& text);
 
   signals:
+
+    /**
+     * @brief rdfParametersChanged
+     */
     void rdfParametersChanged();
 
   private:
+    QSharedPointer<Ui::StatsGenRDFWidget> ui = nullptr;
+
     SGRDFTableModel* m_RDFTableModel;
     QwtPlotCurve*    m_PlotCurve;
 
     QString m_OpenDialogLastFilePath; // Must be last in the list
+
+    /**
+     * @brief validateInput
+     * @return
+     */
+    bool validateInput();
 
     StatsGenRDFWidget(const StatsGenRDFWidget&) = delete; // Copy Constructor Not Implemented
     void operator=(const StatsGenRDFWidget&) = delete;    // Operator '=' Not Implemented

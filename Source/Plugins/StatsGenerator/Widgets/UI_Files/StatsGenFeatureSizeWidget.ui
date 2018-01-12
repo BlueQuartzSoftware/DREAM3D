@@ -402,6 +402,14 @@ font-size: 10px;
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>m_Mu_SizeDistribution</tabstop>
+  <tabstop>m_Sigma_SizeDistribution</tabstop>
+  <tabstop>m_BinStepSize</tabstop>
+  <tabstop>m_MinSigmaCutOff</tabstop>
+  <tabstop>m_MaxSigmaCutOff</tabstop>
+  <tabstop>distributionTypeCombo</tabstop>
+ </tabstops>
  <resources>
   <include location="../../../../../Resources/icons/images/Icons.qrc"/>
  </resources>
