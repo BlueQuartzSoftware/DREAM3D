@@ -47,7 +47,8 @@ None
 
 ## Example Pipelines ##
 
-
++ (10) SmallIN100 Full Reconstruction
++ (03) SmallIN100 Alignment
 
 ## License & Copyright ##
 

@@ -51,7 +51,10 @@ Image
 
 ## Example Pipelines ##
 
-
++ (10) SmallIN100 Full Reconstruction
++ INL Export
++ (05) SmallIN100 Segmentation
++ 04_Steiner Compact
 
 ## License & Copyright ##
 

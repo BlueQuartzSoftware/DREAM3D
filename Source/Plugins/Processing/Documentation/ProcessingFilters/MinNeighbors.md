@@ -41,7 +41,8 @@ None
 
 ## Example Pipelines ##
 
-
++ (10) SmallIN100 Full Reconstruction
++ (06) SmallIN100 Postsegmentation Processing
 
 ## License & Copyright ##
 

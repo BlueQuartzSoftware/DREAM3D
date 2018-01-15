@@ -60,7 +60,9 @@ Image
 
 ## Example Pipelines ##
 
-
++ TxCopper_Exposed
++ TxCopper_Unexposed
++ (01) SmallIN100 Quick Mesh
 
 ## License & Copyright ##
 

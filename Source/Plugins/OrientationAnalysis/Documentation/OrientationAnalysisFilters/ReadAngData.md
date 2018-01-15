@@ -52,7 +52,10 @@ None
 
 ## Example Pipelines ##
 
-
++ INL Export
++ Export Small IN100 ODF Data (StatsGenerator)
++ Edax IPF Colors
++ Confidence Index Histogram
 
 ## License & Copyright ##
 

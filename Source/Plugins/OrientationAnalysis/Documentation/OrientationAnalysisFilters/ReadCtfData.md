@@ -81,7 +81,8 @@ None
 
 ## Example Pipelines ##
 
-
++ TxCopper_Exposed
++ TxCopper_Unexposed
 
 ## License & Copyright ##
 

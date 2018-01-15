@@ -50,7 +50,7 @@ Image
 
 ## Example Pipelines ##
 
-
++ (05) Composite
 
 ## License & Copyright ##
 

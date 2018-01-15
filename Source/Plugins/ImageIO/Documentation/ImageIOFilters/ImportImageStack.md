@@ -88,7 +88,7 @@ None
 
 ## Example Pipelines ##
 
-
++ 03_Adaptive Alignment - Mutual Information - SEM Images
 
 ## License & Copyright ##
 

@@ -66,7 +66,14 @@ Not Applicable
 
 ## Example Pipelines ##
 
-
++ 02_Adaptive Alignment - Misorientation - Zero Shifts
++ (10) SmallIN100 Full Reconstruction
++ INL Export
++ 03_Adaptive Alignment - Mutual Information - SEM Images
++ MassifPipeline
++ InsertTransformationPhase
++ 04_Steiner Compact
++ (03) SmallIN100 Alignment
 
 ## License & Copyright ##
 

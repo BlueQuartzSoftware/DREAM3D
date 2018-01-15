@@ -51,7 +51,7 @@ QuadGeometry
 
 ## Example Pipelines ##
 
-
++ CreateLambertSphereSurface
 
 ## License & Copyright ##
 

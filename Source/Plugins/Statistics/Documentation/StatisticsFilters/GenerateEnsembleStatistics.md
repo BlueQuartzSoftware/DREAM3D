@@ -59,7 +59,7 @@ Not Applicable
 
 ## Example Pipelines ##
 
-
++ (06) SmallIN100 Synthetic
 
 ## License & Copyright ##
 

@@ -86,7 +86,12 @@ Image
 
 ## Example Pipelines ##
 
-
++ (02) Single Hexagonal Phase Equiaxed
++ (03) Single Cubic Phase Rolled
++ InsertTransformationPhase
++ (01) Single Cubic Phase Equiaxed
++ (04) Two Phase Cubic Hexagonal Particles Equiaxed
++ (06) SmallIN100 Synthetic
 
 ## License & Copyright ##
 

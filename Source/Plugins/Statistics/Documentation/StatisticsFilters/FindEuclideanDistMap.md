@@ -55,7 +55,7 @@ Image
 
 ## Example Pipelines ##
 
-
++ (01) SmallIN100 Morphological Statistics
 
 ## License & Copyright ##
 

@@ -95,7 +95,8 @@ Image
 
 ## Example Pipelines ##
 
-
++ (05) Composite
++ (04) Two Phase Cubic Hexagonal Particles Equiaxed
 
 ## License & Copyright ##
 

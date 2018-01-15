@@ -42,7 +42,8 @@ Image
 
 ## Example Pipelines ##
 
-
++ MassifPipeline
++ (05) SmallIN100 Crystallographic Statistics
 
 ## License & Copyright ##
 

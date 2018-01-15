@@ -38,7 +38,12 @@ Not Applicable
 
 ## Example Pipelines ##
 
-
++ (01) SmallIN100 Morphological Statistics
++ (10) SmallIN100 Full Reconstruction
++ InsertTransformationPhase
++ (06) SmallIN100 Postsegmentation Processing
++ (06) SmallIN100 Synthetic
++ (09) Image Segmentation
 
 ## License & Copyright ##
 

@@ -24,6 +24,7 @@
 
 #include "DREAM3DToolsConfiguration.h"
 
+#define OVERWRITE_SOURCE_FILE 0
 
 class AnalyzePrebuiltPipelines
 {
@@ -87,9 +88,9 @@ class AnalyzePrebuiltPipelines
       
       recursiveDirFind(QDir(D3DTools::GetDREAM3DRuntimeDir() + "/PrebuiltPipelines"));
       
+#if 0
       QMapIterator<QString, QSet<QString>> iter(m_UsedFilters);
       
-            
       std::cout << "# Filters **with** Examples: " << m_UsedFilters.size() << " #\n" << std::endl;
       
       std::cout << "|  Filter Name | Pipelines |" << std::endl;
@@ -98,7 +99,6 @@ class AnalyzePrebuiltPipelines
       while(iter.hasNext())
       {
         iter.next();
-        
         QString key = iter.key();
         QSet<QString> value = iter.value();
         QString humanLabel = fm->getFactoryFromClassName(key)->create()->getHumanLabel();
@@ -113,16 +113,62 @@ class AnalyzePrebuiltPipelines
           }
           else
           {
-          std::cout << name.toStdString();
+            std::cout << name.toStdString();
           }
         }
         std::cout << " |" << std::endl;
       }
-      
-      std::cout << "# Filters **without** Examples: " << m_FilterFactories.size() << " #\n" << std::endl;
+#endif
+      std::cout << "# Filters **with** Examples: " << m_UsedFilters.size() << " #\n" << std::endl;
 
       PluginManager* pm = PluginManager::Instance();
       QVector<ISIMPLibPlugin*> plugins = pm->getPluginsVector();
+      for(auto plugin : plugins) // Loop over all plugins
+      { 
+        std::cout << "## " << plugin->getPluginDisplayName().toStdString() << " ##\n" << std::endl;
+        std::cout << "| Filter Name | Doc Path Exists | Doc Path |" << std::endl;
+        std::cout << "|-------------|-----------------|----------|" << std::endl;
+        QList<QString> filters = plugin->getFilters();
+        for(auto filterName : filters)  // Loop over all filters in the plugin
+        {
+          if(m_UsedFilters.contains(filterName))  // Make sure the filter is still in the QMap<>
+          { 
+            IFilterFactory::Pointer fact = fm->getFactoryFromClassName(filterName); // Grap the IFilterFactory
+            AbstractFilter::Pointer filter = fact->create();
+            
+            QJsonObject pluginObj = pluginsObj[filter->getCompiledLibraryName()].toObject();
+            
+            QString docPath = QString("%1/%2/%3.md").arg(pluginObj["SOURCE_DIR"].toString()).arg(pluginObj["DOC_DIR"].toString()).arg(filterName);
+            QFileInfo fi(docPath);
+            
+            
+            QSet<QString> value = m_UsedFilters[filterName];
+            QString humanLabel = fm->getFactoryFromClassName(filterName)->create()->getHumanLabel();
+            
+            std::cout << "| " << humanLabel.toStdString() << " | ";
+            
+            for(auto name : value)
+            {
+              if(value.find(name) != value.end()-1)
+              {
+                std::cout << name.toStdString() << ", ";
+              }
+              else
+              {
+                std::cout << name.toStdString();
+              }
+            }
+            std::cout << " |" << std::endl;
+            
+            if(false) { adjustMarkdownFile(docPath, value);}
+            
+          }
+        }
+        std::cout << "\n" << std::endl;
+      }
+      
+      
+      std::cout << "# Filters **without** Examples: " << m_FilterFactories.size() << " #\n" << std::endl;
       for(auto plugin : plugins) // Loop over all plugins
       { 
         std::cout << "## " << plugin->getPluginDisplayName().toStdString() << " ##\n" << std::endl;
@@ -192,6 +238,92 @@ class AnalyzePrebuiltPipelines
         QString itemFilePath = itemInfo.absoluteFilePath();
         //std::cout << "PIPELINE FILE: " << itemFilePath.toStdString() << std::endl;
         extractFilters(itemFilePath);
+      }
+    }
+    
+    /**
+     * @brief adjustMarkdownFile
+     * @param docPath
+     * @param pipelines
+     */
+    bool adjustMarkdownFile(const QString &hFile, QSet<QString> &pipelines)
+    {
+      QString contents;
+      QFileInfo fi(hFile);
+      {
+        // Read the Source File
+        if(fi.suffix().compare("md") != 0)
+        {
+          return false;
+        }
+        
+        QFile source(hFile);
+        source.open(QFile::ReadOnly);
+        contents = source.readAll();
+        source.close();
+      }
+      
+      QStringList names;
+      bool didReplace = false;
+      
+      QString searchString = "## Example Pipelines ##";
+      QString replaceString = "";
+      QStringList outLines;
+      QStringList list = contents.split(QRegExp("\\n"));
+      QStringListIterator sourceLines(list);
+      QString body;
+      
+      int index = 0;
+      while(sourceLines.hasNext())
+      {
+        QString line = sourceLines.next();
+        if(line.contains(searchString))
+        {
+          outLines.push_back(searchString);
+          outLines.push_back("");
+          for(auto pipeline : pipelines)
+          {
+            outLines.push_back(QString("+ %1").arg(pipeline));
+          }
+          didReplace = true;
+          line = sourceLines.next();
+          line = sourceLines.next();
+        }
+        else
+        {
+          outLines.push_back(line);
+        }
+      }
+      
+      writeOutput(didReplace, outLines, hFile);
+      index++;
+      return didReplace;
+    }
+    
+    
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void writeOutput(bool didReplace, QStringList& outLines, QString filename)
+    {
+      if(didReplace == true)
+      {
+        QFileInfo fi2(filename);
+#if OVERWRITE_SOURCE_FILE
+        QFile hOut(filename);
+#else
+        QString tmpPath = "/tmp/" + fi2.fileName();
+        QFile hOut(tmpPath);
+#endif
+        hOut.open(QFile::WriteOnly);
+        QTextStream stream(&hOut);
+        for(qint32 i = 0; i < outLines.size() - 1; i++)
+        {
+          stream << outLines[i] << "\n";
+        }
+        hOut.close();
+        
+        qDebug() << "Saved File " << fi2.absoluteFilePath();
       }
     }
     

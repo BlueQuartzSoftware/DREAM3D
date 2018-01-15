@@ -33,7 +33,9 @@ Not Applicable
 
 ## Example Pipelines ##
 
-
++ (10) SmallIN100 Full Reconstruction
++ INL Export
++ (06) SmallIN100 Postsegmentation Processing
 
 ## License & Copyright ##
 

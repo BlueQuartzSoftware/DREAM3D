@@ -31,7 +31,9 @@ Image
 
 ## Example Pipelines ##
 
-
++ (01) SmallIN100 Morphological Statistics
++ InsertTransformationPhase
++ (06) SmallIN100 Synthetic
 
 ## License & Copyright ##
 

@@ -54,7 +54,10 @@ None
 
 ## Example Pipelines ##
 
-
++ (10) SmallIN100 Full Reconstruction
++ (04) SmallIN100 Presegmentation Processing
++ INL Export
++ 04_Steiner Compact
 
 ## License & Copyright ##
 

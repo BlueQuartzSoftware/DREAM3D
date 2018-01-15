@@ -88,7 +88,12 @@ An array for each of the arrays selected in the _Data Arrays to Read_ section wi
 
 ## Example Pipelines ##
 
-
++ 02_Adaptive Alignment - Misorientation - Zero Shifts
++ (10) SmallIN100 Full Reconstruction
++ 03_Adaptive Alignment - Mutual Information - SEM Images
++ 04_Steiner Compact
++ (02) SmallIN100 Initial Visualization
++ (03) SmallIN100 Alignment
 
 ## License & Copyright ##
 
