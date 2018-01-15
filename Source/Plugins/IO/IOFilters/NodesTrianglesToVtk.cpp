@@ -630,6 +630,14 @@ const QString NodesTrianglesToVtk::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid NodesTrianglesToVtk::getUuid()
+{
+  return QUuid("{a1d2eddd-6420-53e3-823b-b44d4a5965bb}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString NodesTrianglesToVtk::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

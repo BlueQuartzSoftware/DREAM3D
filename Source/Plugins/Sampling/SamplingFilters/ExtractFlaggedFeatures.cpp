@@ -305,6 +305,14 @@ const QString ExtractFlaggedFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ExtractFlaggedFeatures::getUuid()
+{
+  return QUuid("{e0555de5-bdc6-5bea-ba2f-aacfbec0a022}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ExtractFlaggedFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CropCutFilters;

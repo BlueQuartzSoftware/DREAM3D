@@ -247,6 +247,14 @@ const QString ReverseTriangleWinding::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ReverseTriangleWinding::getUuid()
+{
+  return QUuid("{9b9fb9e1-074d-54b6-a6ce-0be21ab4496d}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;

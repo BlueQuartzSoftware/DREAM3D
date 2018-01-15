@@ -522,6 +522,14 @@ const QString FindTwinBoundaries::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindTwinBoundaries::getUuid()
+{
+  return QUuid("{a10124f3-05d0-5f49-93a0-e93926f5b48b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindTwinBoundaries::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

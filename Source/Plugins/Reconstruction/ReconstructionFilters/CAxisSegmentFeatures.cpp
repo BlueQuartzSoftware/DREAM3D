@@ -523,6 +523,14 @@ const QString CAxisSegmentFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid CAxisSegmentFeatures::getUuid()
+{
+  return QUuid("{bff6be19-1219-5876-8838-1574ad29d965}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString CAxisSegmentFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;

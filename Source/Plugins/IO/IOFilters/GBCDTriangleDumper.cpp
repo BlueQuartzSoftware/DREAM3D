@@ -331,6 +331,14 @@ const QString GBCDTriangleDumper::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GBCDTriangleDumper::getUuid()
+{
+  return QUuid("{433976f0-710a-5dcc-938e-fcde49cd842f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GBCDTriangleDumper::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

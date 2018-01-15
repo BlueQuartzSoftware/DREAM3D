@@ -891,6 +891,14 @@ const QString SurfaceMeshToVtk::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid SurfaceMeshToVtk::getUuid()
+{
+  return QUuid("{f81b48ba-47a4-5808-bcdb-bd7772bf304b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString SurfaceMeshToVtk::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

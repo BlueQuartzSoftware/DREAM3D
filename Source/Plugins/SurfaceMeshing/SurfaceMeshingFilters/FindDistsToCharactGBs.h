@@ -62,7 +62,7 @@ public:
 
   SIMPL_SHARED_POINTERS(FindDistsToCharactGBs)
   SIMPL_STATIC_NEW_MACRO(FindDistsToCharactGBs)
-  SIMPL_TYPE_MACRO_SUPER(FindDistsToCharactGBs, SurfaceMeshFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindDistsToCharactGBs, SurfaceMeshFilter)
 
   virtual ~FindDistsToCharactGBs();
 
@@ -96,46 +96,52 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getCompiledLibraryName();
+  virtual const QString getCompiledLibraryName() override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  virtual const QString getBrandingString();
+  virtual const QString getBrandingString() override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  virtual const QString getFilterVersion();
+  virtual const QString getFilterVersion() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getGroupName();
+  virtual const QString getGroupName() override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName();
+  virtual const QString getSubGroupName() override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel();
+  virtual const QString getHumanLabel() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters();
+  virtual void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
@@ -145,12 +151,12 @@ public:
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
-  virtual void execute();
+  virtual void execute() override;
 
   /**
   * @brief preflight Reimplemented from @see AbstractFilter class
   */
-  virtual void preflight();
+  virtual void preflight() override;
 
 protected:
   FindDistsToCharactGBs();

@@ -74,7 +74,7 @@ class M3CSliceBySlice : public AbstractFilter
 public:
   SIMPL_SHARED_POINTERS(M3CSliceBySlice)
   SIMPL_STATIC_NEW_MACRO(M3CSliceBySlice)
-  SIMPL_TYPE_MACRO_SUPER(M3CSliceBySlice, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(M3CSliceBySlice, AbstractFilter)
 
   virtual ~M3CSliceBySlice();
   SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
@@ -92,18 +92,24 @@ public:
   SIMPL_FILTER_PARAMETER(bool, DeleteTempFiles)
   Q_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
 
-  virtual void preflight();
+  virtual void preflight() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  virtual const QString getCompiledLibraryName();
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-  virtual const QString getGroupName();
-  virtual const QString getSubGroupName();
-  virtual const QString getHumanLabel();
+  virtual const QString getCompiledLibraryName() override;
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
+  virtual const QString getGroupName() override;
+  virtual const QString getSubGroupName() override;
 
-  virtual void setupFilterParameters(); /**
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
+  virtual const QString getHumanLabel() override;
+
+  virtual void setupFilterParameters() override; /**
 *@brief This method will read the options from a file
 *@param reader The reader that is used to read the options from a file
 */

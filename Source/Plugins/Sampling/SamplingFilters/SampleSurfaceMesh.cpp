@@ -410,6 +410,14 @@ const QString SampleSurfaceMesh::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid SampleSurfaceMesh::getUuid()
+{
+  return QUuid("{1fc20816-a312-51ae-b89f-fa25e5042a03}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString SampleSurfaceMesh::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;

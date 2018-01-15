@@ -423,6 +423,14 @@ const QString BadDataNeighborOrientationCheck::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid BadDataNeighborOrientationCheck::getUuid()
+{
+  return QUuid("{f4a7c2df-e9b0-5da9-b745-a862666d6c99}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString BadDataNeighborOrientationCheck::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CleanupFilters;

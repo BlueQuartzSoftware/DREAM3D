@@ -492,6 +492,14 @@ const QString EstablishMatrixPhase::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid EstablishMatrixPhase::getUuid()
+{
+  return QUuid("{28910d1c-4309-500a-9508-e3ef1612e1f8}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString EstablishMatrixPhase::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::PackingFilters;

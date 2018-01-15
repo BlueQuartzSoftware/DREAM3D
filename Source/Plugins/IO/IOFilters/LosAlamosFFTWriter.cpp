@@ -325,6 +325,14 @@ const QString LosAlamosFFTWriter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid LosAlamosFFTWriter::getUuid()
+{
+  return QUuid("{158ebe9e-f772-57e2-ac1b-71ff213cf890}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString LosAlamosFFTWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

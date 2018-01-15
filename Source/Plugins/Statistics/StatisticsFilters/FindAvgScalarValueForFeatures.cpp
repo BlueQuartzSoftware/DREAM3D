@@ -267,6 +267,14 @@ const QString FindAvgScalarValueForFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindAvgScalarValueForFeatures::getUuid()
+{
+  return QUuid("{cd91b8fd-0383-5803-ad26-9a47d6c309b0}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindAvgScalarValueForFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MiscFilters;

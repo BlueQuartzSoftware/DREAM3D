@@ -342,6 +342,14 @@ const QString AvizoUniformCoordinateWriter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid AvizoUniformCoordinateWriter::getUuid()
+{
+  return QUuid("{339f1349-9236-5023-9a56-c82fb8eafd12}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString AvizoUniformCoordinateWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

@@ -388,6 +388,14 @@ const QString NearestPointFuseRegularGrids::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid NearestPointFuseRegularGrids::getUuid()
+{
+  return QUuid("{cbaf9e68-5ded-560c-9440-509289100ea8}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;

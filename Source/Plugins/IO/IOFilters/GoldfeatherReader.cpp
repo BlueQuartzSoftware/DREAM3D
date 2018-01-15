@@ -464,6 +464,14 @@ const QString GoldfeatherReader::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GoldfeatherReader::getUuid()
+{
+  return QUuid("{0b285734-f268-5c81-aeb0-8bfe7ad73f1f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GoldfeatherReader::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MiscFilters;

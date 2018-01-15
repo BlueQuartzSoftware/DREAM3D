@@ -422,6 +422,14 @@ const QString GenerateIPFColors::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GenerateIPFColors::getUuid()
+{
+  return QUuid("{a50e6532-8075-5de5-ab63-945feb0de7f7}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

@@ -302,6 +302,14 @@ const QString GenerateEulerColors::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GenerateEulerColors::getUuid()
+{
+  return QUuid("{6e112372-7b16-53ba-ab68-80dff0c9b50b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GenerateEulerColors::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MiscFilters;

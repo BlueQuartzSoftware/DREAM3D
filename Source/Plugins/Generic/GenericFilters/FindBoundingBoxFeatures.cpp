@@ -530,6 +530,14 @@ const QString FindBoundingBoxFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindBoundingBoxFeatures::getUuid()
+{
+  return QUuid("{450c2f00-9ddf-56e1-b4c1-0e74e7ad2349}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindBoundingBoxFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SpatialFilters;

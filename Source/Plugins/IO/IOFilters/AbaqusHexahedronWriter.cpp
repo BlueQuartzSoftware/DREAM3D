@@ -712,6 +712,14 @@ const QString AbaqusHexahedronWriter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid AbaqusHexahedronWriter::getUuid()
+{
+  return QUuid("{0559aa37-c5ad-549a-82d4-bff4bfcb6cc6}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString AbaqusHexahedronWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

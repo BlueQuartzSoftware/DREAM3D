@@ -53,7 +53,7 @@ class SurfaceMeshFilter : public AbstractFilter
 public:
   SIMPL_SHARED_POINTERS(SurfaceMeshFilter)
   SIMPL_STATIC_NEW_MACRO(SurfaceMeshFilter)
-  SIMPL_TYPE_MACRO_SUPER(SurfaceMeshFilter, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SurfaceMeshFilter, AbstractFilter)
 
   virtual ~SurfaceMeshFilter();
 

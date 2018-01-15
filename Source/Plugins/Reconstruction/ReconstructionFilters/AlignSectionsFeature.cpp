@@ -316,6 +316,14 @@ const QString AlignSectionsFeature::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid AlignSectionsFeature::getUuid()
+{
+  return QUuid("{2bb76fa9-934a-51df-bff1-b0c866971706}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString AlignSectionsFeature::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;

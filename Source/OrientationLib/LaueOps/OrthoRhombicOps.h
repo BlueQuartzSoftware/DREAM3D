@@ -56,7 +56,7 @@ class OrientationLib_EXPORT OrthoRhombicOps : public LaueOps
 {
   public:
     SIMPL_SHARED_POINTERS(OrthoRhombicOps)
-    SIMPL_TYPE_MACRO_SUPER(OrthoRhombicOps, LaueOps)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(OrthoRhombicOps, LaueOps)
     SIMPL_STATIC_NEW_MACRO(OrthoRhombicOps)
 
 

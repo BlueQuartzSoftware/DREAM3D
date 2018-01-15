@@ -376,6 +376,14 @@ const QString CalculateArrayHistogram::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid CalculateArrayHistogram::getUuid()
+{
+  return QUuid("{289f0d8c-29ab-5fbc-91bd-08aac01e37c5}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString CalculateArrayHistogram::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;

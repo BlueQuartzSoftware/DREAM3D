@@ -488,6 +488,14 @@ const QString QuiltCellData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid QuiltCellData::getUuid()
+{
+  return QUuid("{bddc673c-d3fa-5e7d-8fb6-5e234dfa9bc5}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString QuiltCellData::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;

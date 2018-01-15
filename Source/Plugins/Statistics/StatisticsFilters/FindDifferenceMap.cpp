@@ -381,6 +381,14 @@ const QString FindDifferenceMap::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindDifferenceMap::getUuid()
+{
+  return QUuid("{29086169-20ce-52dc-b13e-824694d759aa}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindDifferenceMap::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MiscFilters;

@@ -458,6 +458,14 @@ const QString SineParamsSegmentFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid SineParamsSegmentFeatures::getUuid()
+{
+  return QUuid("{2d05beff-cfda-5f38-afae-727bfc529585}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString SineParamsSegmentFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;

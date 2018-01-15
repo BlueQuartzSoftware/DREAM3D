@@ -56,7 +56,7 @@ class OrientationLib_EXPORT TriclinicOps : public LaueOps
 {
   public:
     SIMPL_SHARED_POINTERS(TriclinicOps)
-    SIMPL_TYPE_MACRO_SUPER(TriclinicOps, LaueOps)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriclinicOps, LaueOps)
     SIMPL_STATIC_NEW_MACRO(TriclinicOps)
 
     TriclinicOps();

@@ -223,6 +223,14 @@ const QString FindVolFractions::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindVolFractions::getUuid()
+{
+  return QUuid("{68246a67-7f32-5c80-815a-bec82008d7bc}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindVolFractions::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

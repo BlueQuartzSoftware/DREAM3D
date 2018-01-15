@@ -513,6 +513,14 @@ const QString VtkRectilinearGridWriter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid VtkRectilinearGridWriter::getUuid()
+{
+  return QUuid("{a043bd66-2681-5126-82e1-5fdc46694bf4}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

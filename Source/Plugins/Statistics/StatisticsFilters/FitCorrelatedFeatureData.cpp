@@ -530,6 +530,14 @@ const QString FitCorrelatedFeatureData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FitCorrelatedFeatureData::getUuid()
+{
+  return QUuid("{d9fb65ac-e75e-581b-8ebc-0129d797b546}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FitCorrelatedFeatureData::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;

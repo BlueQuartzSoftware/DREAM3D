@@ -473,6 +473,14 @@ const QString FindSaltykovSizes::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindSaltykovSizes::getUuid()
+{
+  return QUuid("{cc76cffe-81ad-5ece-be2a-ce127c5fa6d7}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindSaltykovSizes::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

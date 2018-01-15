@@ -56,7 +56,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
   public:
     SIMPL_SHARED_POINTERS(ModifiedLambertProjectionArray)
     SIMPL_STATIC_NEW_MACRO(ModifiedLambertProjectionArray)
-    SIMPL_TYPE_MACRO_SUPER(ModifiedLambertProjectionArray, IDataArray)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ModifiedLambertProjectionArray, IDataArray)
     SIMPL_CLASS_VERSION(2)
 
     virtual ~ModifiedLambertProjectionArray();

@@ -18,7 +18,7 @@ class GenerateFeatureIds : public AbstractFilter
 public:
   SIMPL_SHARED_POINTERS(GenerateFeatureIds)
   SIMPL_STATIC_NEW_MACRO(GenerateFeatureIds)
-  SIMPL_TYPE_MACRO_SUPER(GenerateFeatureIds, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFeatureIds, AbstractFilter)
 
   virtual ~GenerateFeatureIds()
   {
@@ -131,7 +131,7 @@ class CreateDataContainer : public AbstractFilter
 public:
   SIMPL_SHARED_POINTERS(CreateDataContainer)
   SIMPL_STATIC_NEW_MACRO(CreateDataContainer)
-  SIMPL_TYPE_MACRO_SUPER(CreateDataContainer, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateDataContainer, AbstractFilter)
 
   SIMPL_FILTER_PARAMETER(int64_t, XDim)
   SIMPL_FILTER_PARAMETER(int64_t, YDim)

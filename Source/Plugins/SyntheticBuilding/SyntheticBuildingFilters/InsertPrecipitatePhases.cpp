@@ -3077,6 +3077,14 @@ const QString InsertPrecipitatePhases::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid InsertPrecipitatePhases::getUuid()
+{
+  return QUuid("{1e552e0c-53bb-5ae1-bd1c-c7a6590f9328}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString InsertPrecipitatePhases::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::PackingFilters;

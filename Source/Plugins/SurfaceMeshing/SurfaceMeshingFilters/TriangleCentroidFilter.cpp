@@ -273,6 +273,14 @@ const QString TriangleCentroidFilter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid TriangleCentroidFilter::getUuid()
+{
+  return QUuid("{7aa33007-4186-5d7f-ba9d-d0a561b3351d}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString TriangleCentroidFilter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MiscFilters;

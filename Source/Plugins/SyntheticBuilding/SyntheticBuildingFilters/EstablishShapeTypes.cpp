@@ -274,6 +274,14 @@ const QString EstablishShapeTypes::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid EstablishShapeTypes::getUuid()
+{
+  return QUuid("{4edbbd35-a96b-5ff1-984a-153d733e2abb}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::GenerationFilters;

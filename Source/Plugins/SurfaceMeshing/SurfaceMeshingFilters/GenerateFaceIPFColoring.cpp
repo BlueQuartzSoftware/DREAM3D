@@ -491,6 +491,14 @@ const QString GenerateFaceIPFColoring::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GenerateFaceIPFColoring::getUuid()
+{
+  return QUuid("{0a121e03-3922-5c29-962d-40d88653f4b6}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GenerateFaceIPFColoring::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

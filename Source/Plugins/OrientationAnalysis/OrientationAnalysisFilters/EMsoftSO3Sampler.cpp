@@ -805,6 +805,14 @@ const QString EMsoftSO3Sampler::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid EMsoftSO3Sampler::getUuid()
+{
+  return QUuid("{b78d8825-d3ac-5351-be20-172f07fd2aec}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString EMsoftSO3Sampler::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

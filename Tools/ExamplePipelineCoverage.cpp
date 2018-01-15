@@ -36,8 +36,37 @@ class AnalyzePrebuiltPipelines
      * @brief operator ()
      */
     void operator()()
-    {
+    { 
       execute();
+    }
+    
+    /**
+     * @brief dumpUuids
+     */
+    void dumpUuids()
+    {
+      QFile outFile(D3DTools::GetDREAM3DBinaryDir() + "/Filter_UUID.json");
+      outFile.open(QFile::WriteOnly);
+      
+      QTextStream stream(&outFile);
+      stream << "{\n";
+      
+      
+      FilterManager* fm = FilterManager::Instance();
+      FilterManager::Collection factories = fm->getFactories();
+      
+      QMapIterator<QString, IFilterFactory::Pointer> iter(m_FilterFactories);
+      for(auto iter : m_FilterFactories)
+      {
+        IFilterFactory* fact = iter.get();
+        AbstractFilter::Pointer filter = fact->create();
+        stream << "\"" << filter->getNameOfClass() << "\" : ";
+        stream << "\"" << filter->getUuid().toString() << "\"," << "\n";
+      }
+      
+      stream << "}\n";
+      
+      outFile.close();
     }
     
     /**
@@ -85,6 +114,7 @@ class AnalyzePrebuiltPipelines
       
       m_FilterFactories = fm->getFactories();
       std::cout << "Total Filters: " << m_FilterFactories.size() << std::endl;
+      dumpUuids();
       
       recursiveDirFind(QDir(D3DTools::GetDREAM3DRuntimeDir() + "/PrebuiltPipelines"));
       

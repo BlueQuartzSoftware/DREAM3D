@@ -583,6 +583,14 @@ const QString WritePoleFigure::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid WritePoleFigure::getUuid()
+{
+  return QUuid("{a10bb78e-fcff-553d-97d6-830a43c85385}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString WritePoleFigure::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

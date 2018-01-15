@@ -471,6 +471,14 @@ const QString WriteStatsGenOdfAngleFile::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid WriteStatsGenOdfAngleFile::getUuid()
+{
+  return QUuid("{a4952f40-22dd-54ec-8c38-69c3fcd0e6f7}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString WriteStatsGenOdfAngleFile::getSubGroupName()
 {
   return "Output";

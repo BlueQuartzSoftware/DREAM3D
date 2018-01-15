@@ -636,6 +636,14 @@ const QString SPParksDumpReader::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid SPParksDumpReader::getUuid()
+{
+  return QUuid("{48db4da6-19c3-52a4-894f-776f3a57362e}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString SPParksDumpReader::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::InputFilters;

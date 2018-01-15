@@ -818,6 +818,14 @@ const QString FindEuclideanDistMap::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindEuclideanDistMap::getUuid()
+{
+  return QUuid("{933e4b2d-dd61-51c3-98be-00548ba783a3}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindEuclideanDistMap::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

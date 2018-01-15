@@ -516,6 +516,14 @@ const QString FeatureFaceCurvatureFilter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FeatureFaceCurvatureFilter::getUuid()
+{
+  return QUuid("{a69d8d43-5be9-59a0-b997-81773a635673}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FeatureFaceCurvatureFilter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CurvatureFilters;

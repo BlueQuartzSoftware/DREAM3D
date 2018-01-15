@@ -486,6 +486,14 @@ const QString ChangeResolution::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ChangeResolution::getUuid()
+{
+  return QUuid("{1966e540-759c-5798-ae26-0c6a3abc65c0}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ChangeResolution::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;

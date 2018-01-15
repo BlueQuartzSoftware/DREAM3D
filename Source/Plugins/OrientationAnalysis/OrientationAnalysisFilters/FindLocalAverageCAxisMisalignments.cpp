@@ -389,6 +389,14 @@ const QString FindLocalAverageCAxisMisalignments::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindLocalAverageCAxisMisalignments::getUuid()
+{
+  return QUuid("{49b2dd47-bb29-50d4-a051-5bad9b6b9f80}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindLocalAverageCAxisMisalignments::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

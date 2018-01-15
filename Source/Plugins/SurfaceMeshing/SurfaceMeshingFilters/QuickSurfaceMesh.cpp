@@ -1213,6 +1213,14 @@ const QString QuickSurfaceMesh::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid QuickSurfaceMesh::getUuid()
+{
+  return QUuid("{07b49e30-3900-5c34-862a-f1fb48bad568}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString QuickSurfaceMesh::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::GenerationFilters;

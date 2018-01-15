@@ -316,6 +316,14 @@ const QString FindLargestCrossSections::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindLargestCrossSections::getUuid()
+{
+  return QUuid("{9f77b4a9-6416-5220-a688-115f4e14c90d}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindLargestCrossSections::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

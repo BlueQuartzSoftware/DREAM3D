@@ -348,6 +348,14 @@ const QString AppendImageGeometryZSlice::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid AppendImageGeometryZSlice::getUuid()
+{
+  return QUuid("{52b2918a-4fb5-57aa-97d4-ccc084b89572}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString AppendImageGeometryZSlice::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MemoryManagementFilters;

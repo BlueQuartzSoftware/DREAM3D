@@ -423,6 +423,14 @@ const QString AbaqusSurfaceMeshWriter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid AbaqusSurfaceMeshWriter::getUuid()
+{
+  return QUuid("{abbe2e1e-6fb2-5511-91f3-0637252f0705}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString AbaqusSurfaceMeshWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

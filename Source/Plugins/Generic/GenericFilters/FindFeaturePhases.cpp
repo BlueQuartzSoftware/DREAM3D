@@ -280,6 +280,14 @@ const QString FindFeaturePhases::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindFeaturePhases::getUuid()
+{
+  return QUuid("{6334ce16-cea5-5643-83b5-9573805873fa}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindFeaturePhases::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

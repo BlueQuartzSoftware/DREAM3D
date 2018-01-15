@@ -500,6 +500,14 @@ const QString EBSDSegmentFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid EBSDSegmentFeatures::getUuid()
+{
+  return QUuid("{7861c691-b821-537b-bd25-dc195578e0ea}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString EBSDSegmentFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;

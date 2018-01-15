@@ -356,6 +356,14 @@ const QString FindMisorientations::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindMisorientations::getUuid()
+{
+  return QUuid("{286dd493-4fea-54f4-b59e-459dd13bbe57}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindMisorientations::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

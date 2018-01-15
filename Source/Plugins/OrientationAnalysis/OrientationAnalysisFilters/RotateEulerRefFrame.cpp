@@ -287,6 +287,14 @@ const QString RotateEulerRefFrame::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid RotateEulerRefFrame::getUuid()
+{
+  return QUuid("{ef9420b2-8c46-55f3-8ae4-f53790639de4}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ConversionFilters;

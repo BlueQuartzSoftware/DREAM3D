@@ -533,6 +533,14 @@ const QString FindOrientationFieldCurl::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindOrientationFieldCurl::getUuid()
+{
+  return QUuid("{d2011845-cae8-549a-88eb-7ecadf51a916}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

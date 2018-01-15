@@ -376,6 +376,14 @@ const QString GenerateFZQuaternions::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GenerateFZQuaternions::getUuid()
+{
+  return QUuid("{9a6677a6-b9e5-5fee-afa2-27e868cab8ca}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GenerateFZQuaternions::getSubGroupName()
 {
   return "OrientationAnalysis";

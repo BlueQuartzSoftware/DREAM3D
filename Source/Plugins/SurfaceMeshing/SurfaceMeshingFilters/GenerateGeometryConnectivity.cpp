@@ -208,6 +208,14 @@ const QString GenerateGeometryConnectivity::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GenerateGeometryConnectivity::getUuid()
+{
+  return QUuid("{ea565056-784e-52c5-b705-92f6799714c7}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;

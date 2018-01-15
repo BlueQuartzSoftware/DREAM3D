@@ -391,6 +391,14 @@ const QString ErodeDilateCoordinationNumber::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ErodeDilateCoordinationNumber::getUuid()
+{
+  return QUuid("{d26e85ff-7e52-53ae-b095-b1d969c9e73c}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ErodeDilateCoordinationNumber::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CleanupFilters;

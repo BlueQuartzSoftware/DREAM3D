@@ -326,6 +326,14 @@ const QString RegularizeZSpacing::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid RegularizeZSpacing::getUuid()
+{
+  return QUuid("{bc4952fa-34ca-50bf-a1e9-2b9f7e5d47ce}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;

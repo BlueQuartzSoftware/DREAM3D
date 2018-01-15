@@ -341,6 +341,14 @@ const QString GenerateVectorColors::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GenerateVectorColors::getUuid()
+{
+  return QUuid("{ef28de7e-5bdd-57c2-9318-60ba0dfaf7bc}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

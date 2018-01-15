@@ -979,6 +979,14 @@ const QString FindShapes::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindShapes::getUuid()
+{
+  return QUuid("{3b0ababf-9c8d-538d-96af-e40775c4f0ab}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindShapes::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

@@ -440,6 +440,14 @@ const QString ReplaceElementAttributesWithNeighborValues::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ReplaceElementAttributesWithNeighborValues::getUuid()
+{
+  return QUuid("{17410178-4e5f-58b9-900e-8194c69200ab}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ReplaceElementAttributesWithNeighborValues::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CleanupFilters;

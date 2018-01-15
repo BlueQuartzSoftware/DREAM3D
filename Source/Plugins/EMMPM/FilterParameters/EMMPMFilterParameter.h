@@ -52,7 +52,7 @@ class EMMPMFilterParameter : public FilterParameter
   public:
     SIMPL_SHARED_POINTERS(EMMPMFilterParameter)
     SIMPL_STATIC_NEW_MACRO(EMMPMFilterParameter)
-    SIMPL_TYPE_MACRO_SUPER(EMMPMFilterParameter, FilterParameter)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EMMPMFilterParameter, FilterParameter)
 
     /**
      * @brief New This function instantiates an instance of the DataContainerCreationFilterParameter.

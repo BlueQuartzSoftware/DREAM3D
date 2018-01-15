@@ -58,7 +58,7 @@ class OrientationLib_EXPORT CubicLowOps : public LaueOps
 {
   public:
     SIMPL_SHARED_POINTERS(CubicLowOps)
-    SIMPL_TYPE_MACRO_SUPER(CubicLowOps, LaueOps)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CubicLowOps, LaueOps)
     SIMPL_STATIC_NEW_MACRO(CubicLowOps)
 
     CubicLowOps();

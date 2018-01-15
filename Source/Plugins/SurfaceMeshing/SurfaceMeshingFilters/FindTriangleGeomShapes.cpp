@@ -755,6 +755,14 @@ const QString FindTriangleGeomShapes::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindTriangleGeomShapes::getUuid()
+{
+  return QUuid("{26765457-89fb-5686-87f6-878ca549f0df}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindTriangleGeomShapes::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

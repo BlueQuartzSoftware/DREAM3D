@@ -429,6 +429,14 @@ const QString FindEllipsoidError::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindEllipsoidError::getUuid()
+{
+  return QUuid("{583e0789-090a-5de2-b8f6-f3ef5baeab59}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindEllipsoidError::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

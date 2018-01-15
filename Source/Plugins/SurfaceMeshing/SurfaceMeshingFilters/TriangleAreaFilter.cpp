@@ -286,6 +286,14 @@ const QString TriangleAreaFilter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid TriangleAreaFilter::getUuid()
+{
+  return QUuid("{a9900cc3-169e-5a1b-bcf4-7569e1950d41}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString TriangleAreaFilter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MiscFilters;

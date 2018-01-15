@@ -596,6 +596,14 @@ const QString YSChoiAbaqusReader::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid YSChoiAbaqusReader::getUuid()
+{
+  return QUuid("{917b66ac-35ba-56ac-b752-9c4c3c17266d}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString YSChoiAbaqusReader::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::InputFilters;

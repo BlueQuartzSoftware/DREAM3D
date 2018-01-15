@@ -3140,6 +3140,14 @@ const QString M3CSliceBySlice::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid M3CSliceBySlice::getUuid()
+{
+  return QUuid("{86d77279-5a18-5b75-a411-c4e0c50bc4a4}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString M3CSliceBySlice::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::GenerationFilters;

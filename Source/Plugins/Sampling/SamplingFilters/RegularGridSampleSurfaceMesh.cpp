@@ -295,6 +295,14 @@ const QString RegularGridSampleSurfaceMesh::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid RegularGridSampleSurfaceMesh::getUuid()
+{
+  return QUuid("{0df3da89-9106-538e-b1a9-6bbf1cf0aa92}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString RegularGridSampleSurfaceMesh::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;

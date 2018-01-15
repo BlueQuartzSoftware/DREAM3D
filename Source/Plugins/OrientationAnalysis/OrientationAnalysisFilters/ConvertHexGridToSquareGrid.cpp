@@ -549,6 +549,14 @@ const QString ConvertHexGridToSquareGrid::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ConvertHexGridToSquareGrid::getUuid()
+{
+  return QUuid("{e1343abe-e5ad-5eb1-a89d-c209e620e4de}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ConvertHexGridToSquareGrid::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;

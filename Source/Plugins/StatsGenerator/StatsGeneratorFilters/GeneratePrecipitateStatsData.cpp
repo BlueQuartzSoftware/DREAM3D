@@ -719,6 +719,14 @@ const QString GeneratePrecipitateStatsData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GeneratePrecipitateStatsData::getUuid()
+{
+  return QUuid("{16659766-5c53-5ada-a7b7-8a95c29ea674}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GeneratePrecipitateStatsData::getSubGroupName()
 {
   return "StatsGenerator";

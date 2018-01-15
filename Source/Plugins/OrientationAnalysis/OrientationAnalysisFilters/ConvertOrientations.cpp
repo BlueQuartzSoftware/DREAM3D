@@ -349,6 +349,14 @@ const QString ConvertOrientations::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ConvertOrientations::getUuid()
+{
+  return QUuid("{e5629880-98c4-5656-82b8-c9fe2b9744de}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ConvertOrientations::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
