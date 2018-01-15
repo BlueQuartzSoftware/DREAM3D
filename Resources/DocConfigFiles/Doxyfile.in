@@ -75,11 +75,10 @@ BINARY_TOC = NO
 TOC_EXPAND = NO
 DISABLE_INDEX = NO
 ENUM_VALUES_PER_LINE = 4
-GENERATE_TREEVIEW = NO
+GENERATE_TREEVIEW = YES
 TREEVIEW_WIDTH = 250
-SEARCHENGINE = NO
-USE_MATHJAX = NO
-MATHJAX_RELPATH=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML
+SEARCHENGINE = YES
+USE_MATHJAX = YES
 
 #---------------------------------------------------------------------------
 # configuration options related to the Qt Help output
