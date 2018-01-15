@@ -47,6 +47,10 @@ Image/RectGrid
 | **Attribute Matrix** | FaceFeatureData | Face Feature | N/A | **Feature Attribute Matrix** of the created _Face Labels_ |
 | Any **Face Attribute Array** | None | Any | Any | The set of transferred **Cell Attribute Arrays** |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

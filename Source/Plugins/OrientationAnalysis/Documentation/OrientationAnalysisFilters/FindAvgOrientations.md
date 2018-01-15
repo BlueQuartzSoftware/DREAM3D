@@ -43,6 +43,10 @@ Not Applicable
 | **Feature Attribute Array** | AvgEulerAngles | float | (3) | Specifies the orientation of each **Feature** in Bunge convention (Z-X-Z) |
 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

@@ -42,6 +42,10 @@ Not Applicable
 | **Feature Attribute Array** | AvgMisorientation | float | (1) | Number weighted average of neighbor misorientations. Only created if _Find Average Misorientation Per Feature_ is checked |
 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

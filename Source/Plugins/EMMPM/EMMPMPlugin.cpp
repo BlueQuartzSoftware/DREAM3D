@@ -38,10 +38,27 @@ EMMPMPlugin::~EMMPMPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString EMMPMPlugin::getPluginName()
+QString EMMPMPlugin::getPluginFileName()
 {
-  return (EMMPMConstants::EMMPMPluginDisplayName);
+  return EMMPMConstants::EMMPMPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString EMMPMPlugin::getPluginDisplayName()
+{
+  return EMMPMConstants::EMMPMPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString EMMPMPlugin::getPluginBaseName()
+{
+  return EMMPMConstants::EMMPMBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

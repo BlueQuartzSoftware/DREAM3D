@@ -37,6 +37,10 @@ Between the *Find Shapes* and *Find Centroids* filters, an ideal ellipsoid for e
 
 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

@@ -40,6 +40,10 @@ Not Applicable
 |------|--------------|------|----------------------|-------------|
 | Any **Attribute Array** | DifferenceMap | Same as input arrays | Same as input arrays | The difference map **Attribute Array** |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.

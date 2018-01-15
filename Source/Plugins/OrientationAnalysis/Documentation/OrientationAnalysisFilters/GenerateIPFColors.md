@@ -57,6 +57,10 @@ Not Applicable
 |------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | IPFColor |  uint8_t | (3) | The RGB colors encoded as unsigned chars for each **Element** |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

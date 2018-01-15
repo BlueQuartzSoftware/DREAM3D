@@ -51,6 +51,10 @@ Not Applicable
 | **Feature Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of each **Feature** in Bunge convention (Z-X-Z) |
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

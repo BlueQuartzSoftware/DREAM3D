@@ -68,10 +68,27 @@ ImageIOPlugin::~ImageIOPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImageIOPlugin::getPluginName()
+QString ImageIOPlugin::getPluginFileName()
 {
-  return (ImageIOConstants::ImageIOPluginDisplayName);
+  return ImageIOConstants::ImageIOPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ImageIOPlugin::getPluginDisplayName()
+{
+  return ImageIOConstants::ImageIOPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ImageIOPlugin::getPluginBaseName()
+{
+  return ImageIOConstants::ImageIOBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

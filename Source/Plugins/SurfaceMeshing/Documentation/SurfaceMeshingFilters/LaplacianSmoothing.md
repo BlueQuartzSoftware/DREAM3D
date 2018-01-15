@@ -112,6 +112,10 @@ None
 [2] A. Belyaev, “Mesh smoothing and enhancing curvature estimation,” [http://www.mpi-inf.mpg.de/ ̃ag4-gm/handouts/06gm_surf3.pdf](http://www.mpi-inf.mpg.de/ ̃ag4-gm/handouts/06gm_surf3.pdf).
 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

@@ -69,10 +69,27 @@ IOPlugin::~IOPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString IOPlugin::getPluginName()
+QString IOPlugin::getPluginFileName()
 {
-  return (IOConstants::IOPluginDisplayName);
+  return IOConstants::IOPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getPluginDisplayName()
+{
+  return IOConstants::IOPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IOPlugin::getPluginBaseName()
+{
+  return IOConstants::IOBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

@@ -41,6 +41,10 @@ Not Applicable
 | **Element Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
 | **Feature Attribute Array** | AvgQuats | Float | (4) | The average orientation of each **Feature** in quaternion representation |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

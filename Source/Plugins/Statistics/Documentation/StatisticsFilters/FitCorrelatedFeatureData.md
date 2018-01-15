@@ -48,6 +48,10 @@ This filter will correlate one **Feature** with another **Feature** and bin the 
 
 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

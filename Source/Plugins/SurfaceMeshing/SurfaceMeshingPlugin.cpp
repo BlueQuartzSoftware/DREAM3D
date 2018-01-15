@@ -69,10 +69,27 @@ SurfaceMeshingPlugin::~SurfaceMeshingPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SurfaceMeshingPlugin::getPluginName()
+QString SurfaceMeshingPlugin::getPluginFileName()
 {
-  return (SurfaceMeshingConstants::SurfaceMeshingPluginDisplayName);
+  return SurfaceMeshingConstants::SurfaceMeshingPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SurfaceMeshingPlugin::getPluginDisplayName()
+{
+  return SurfaceMeshingConstants::SurfaceMeshingPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SurfaceMeshingPlugin::getPluginBaseName()
+{
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

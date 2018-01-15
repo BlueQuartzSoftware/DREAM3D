@@ -34,6 +34,10 @@ Not Applicable
 | **Feature Attribute Array** | ScalarAverages | float | (1) | Average value of scalar **Attribute Array** for each **Feature** |
 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

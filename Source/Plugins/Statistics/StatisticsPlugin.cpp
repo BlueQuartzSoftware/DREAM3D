@@ -69,10 +69,27 @@ StatisticsPlugin::~StatisticsPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString StatisticsPlugin::getPluginName()
+QString StatisticsPlugin::getPluginFileName()
 {
-  return (StatisticsConstants::StatisticsPluginDisplayName);
+  return StatisticsConstants::StatisticsPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatisticsPlugin::getPluginDisplayName()
+{
+  return StatisticsConstants::StatisticsPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatisticsPlugin::getPluginBaseName()
+{
+  return StatisticsConstants::StatisticsBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

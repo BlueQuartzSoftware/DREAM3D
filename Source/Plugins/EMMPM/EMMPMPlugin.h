@@ -29,9 +29,27 @@ class EMMPMPlugin : public QObject, public ISIMPLibPlugin
     EMMPMPlugin();
     virtual ~EMMPMPlugin();
     /**
-     * @brief Returns the name of the plugin
+     * @brief Returns the name of the plugin that appears on the file system. 
+     * 
+     * Note that if the build is a debug build there will be a _Plugin postfix
+     * to the filename.
      */
-    virtual QString getPluginName();
+    virtual QString getPluginFileName();
+    
+    /**
+     * @brief getPluginDisplayName The name that should be used for human facing
+     * labels and display strings
+     * @return 
+     */
+    virtual QString getPluginDisplayName();
+    
+    /**
+     * @brief getPluginBaseName The Name of the plugin.
+     * 
+     * This typically will NOT have the Plugin suffix.
+     * @return 
+     */
+    virtual QString getPluginBaseName();
 
     /**
      * @brief Returns the version

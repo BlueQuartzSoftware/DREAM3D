@@ -70,6 +70,10 @@ Journal articles on _Mutual Information_ that are useful:
 + _The mathematical theory of communication_. University of Illinois Press, Urbana, Illinois. Mézard, M. and Monatanari, A. (2009). 
 + _Information, Physics, and Computation_. Oxford University Press, Oxford.
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

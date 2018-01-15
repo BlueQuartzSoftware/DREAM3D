@@ -36,6 +36,10 @@ Image
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | MotionDirection | float | (3) | Specifies the direction, as a unit vector, that the extracted patch *moved* |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

@@ -48,6 +48,10 @@ Not Applicable
 | **Feature Attribute Array** | SchmidLambdas | Float | (1) | Angle between tensile axis and splid drirection. Only created if _Store Angle Components of Schmid Factor_ is checked |
 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**
