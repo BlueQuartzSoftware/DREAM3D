@@ -7,6 +7,10 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
@@ -40,6 +44,38 @@ class AnalyzePrebuiltPipelines
      */
     void execute()
     {
+      
+      QString docBinDir = D3DTools::GetDREAM3DBinaryRefManualDir();
+      QString jsonFilePath = docBinDir + QDir::separator() + "PluginIndex.json";
+      QFileInfo fi(jsonFilePath);
+      
+      if(!fi.exists())
+      {
+        std::cout << "Input Json file not found at " << jsonFilePath.toStdString() << std::endl;
+        return;
+      }
+      
+      QByteArray json;
+      {
+        // Read the json file
+        QFile source(fi.absoluteFilePath());
+        bool isOpen = source.open(QFile::ReadOnly);
+        Q_ASSERT(isOpen);
+        json = source.readAll();
+        source.close();
+      }
+      
+      QJsonParseError parseError;
+      m_JsonDoc = QJsonDocument::fromJson(json, &parseError);
+      if(parseError.error != QJsonParseError::NoError)
+      {
+        std::cout << "JSON Parse Error: " << parseError.errorString().toStdString() << std::endl;
+        return;
+      }
+      QJsonObject jsonDocObject = m_JsonDoc.object();
+      QJsonObject pluginsObj = jsonDocObject["Plugins"].toObject();
+      
+  
       // Register all the filters including trying to load those from Plugins
       FilterManager* fm = FilterManager::Instance();
       SIMPLibPluginLoader::LoadPluginFilters(fm, false);
@@ -54,9 +90,10 @@ class AnalyzePrebuiltPipelines
       QMapIterator<QString, QSet<QString>> iter(m_UsedFilters);
       
             
-      std::cout << "Filters Having Examples: " << m_FilterFactories.size() << std::endl;
+      std::cout << "# Filters **with** Examples: " << m_UsedFilters.size() << " #\n" << std::endl;
+      
       std::cout << "|  Filter Name | Pipelines |" << std::endl;
-      std::cout << "|--------------|--------|" << std::endl;
+      std::cout << "|--------------|-----------|" << std::endl;
       
       while(iter.hasNext())
       {
@@ -70,25 +107,64 @@ class AnalyzePrebuiltPipelines
         
         for(auto name : value)
         {
-          std::cout << name.toStdString() << ", ";
+          if(value.find(name) != value.end()-1)
+          {
+            std::cout << name.toStdString() << ", ";
+          }
+          else
+          {
+          std::cout << name.toStdString();
+          }
         }
-        
         std::cout << " |" << std::endl;
-        
       }
       
+      std::cout << "# Filters **without** Examples: " << m_FilterFactories.size() << " #\n" << std::endl;
+
+      PluginManager* pm = PluginManager::Instance();
+      QVector<ISIMPLibPlugin*> plugins = pm->getPluginsVector();
+      for(auto plugin : plugins) // Loop over all plugins
+      { 
+        std::cout << "## " << plugin->getPluginDisplayName().toStdString() << " ##\n" << std::endl;
+        std::cout << "| Filter Name | Doc Path Exists | Doc Path |" << std::endl;
+        std::cout << "|-------------|-----------------|----------|" << std::endl;
+        QList<QString> filters = plugin->getFilters();
+        for(auto filterName : filters)  // Loop over all filters in the plugin
+        {
+          if(m_FilterFactories.contains(filterName))  // Make sure the filter is still in the QMap<>
+          { 
+            IFilterFactory::Pointer fact = m_FilterFactories[filterName]; // Grap the IFilterFactory
+            AbstractFilter::Pointer filter = fact->create();
+            
+            QJsonObject pluginObj = pluginsObj[filter->getCompiledLibraryName()].toObject();
+            
+            QString docPath = QString("%1/%2/%3.md").arg(pluginObj["SOURCE_DIR"].toString()).arg(pluginObj["DOC_DIR"].toString()).arg(filterName);
+            QFileInfo fi(docPath);
+//            if(!fi.exists()) { 
+//              std::cout << "Here" << std::endl; 
+//            }
+            
+            std::cout << "| " << filter->getNameOfClass().toStdString() 
+                      << " | " << (fi.exists() ? "TRUE" : "FALSE")
+                      << " | " << docPath.toStdString()
+                      << " |"<< std::endl;
+          }
+        }
+        std::cout << "\n" << std::endl;
+      }
       
+#if 0
       std::cout << "\n\n\n" << std::endl;
       std::cout << "Filters Missing Example: " << m_FilterFactories.size() << std::endl;
-      std::cout << "|  Filter Name | Plugin |" << std::endl;
-      std::cout << "|--------------|--------|" << std::endl;
+      std::cout << "| Filter Name | Plugin |" << std::endl;
+      std::cout << "|-------------|--------|" << std::endl;
       for(auto iter : m_FilterFactories)
       {
         IFilterFactory* fact = iter.get();
         AbstractFilter::Pointer filter = fact->create();
-        std::cout << "| " <<filter->getNameOfClass().toStdString() << " | " << filter->getCompiledLibraryName().toStdString() << " |"<< std::endl;
+        std::cout << "| " << filter->getNameOfClass().toStdString() << " | " << filter->getCompiledLibraryName().toStdString() << " |"<< std::endl;
       }
-
+#endif
     }
     
     /**
@@ -176,8 +252,9 @@ class AnalyzePrebuiltPipelines
     
     
   private:
-    FilterManager::Collection m_FilterFactories;
+    FilterManager::Collection     m_FilterFactories;
     QMap<QString, QSet<QString> > m_UsedFilters;
+    QJsonDocument                 m_JsonDoc;
     
     AnalyzePrebuiltPipelines(const AnalyzePrebuiltPipelines&) = delete; // Copy Constructor Not Implemented
     void operator=(const AnalyzePrebuiltPipelines&) = delete; // Operator '=' Not Implemented

@@ -54,7 +54,7 @@ void WriteWebServerJSON(const QString& filePath)
   {
     ISIMPLibPlugin* plug = plugins[i];
     QJsonObject jobj;
-    jobj["Plugin Name"] = plug->getPluginName();
+    jobj["Plugin Name"] = plug->getPluginBaseName();
     jobj["Plugin Version"] = plug->getVersion();
     jobj["Plugin Vendor"] = plug->getVendor();
     plugArray.append(jobj);
