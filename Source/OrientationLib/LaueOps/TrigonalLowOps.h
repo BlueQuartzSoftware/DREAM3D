@@ -58,7 +58,7 @@ class OrientationLib_EXPORT TrigonalLowOps : public LaueOps
 {
   public:
     SIMPL_SHARED_POINTERS(TrigonalLowOps)
-    SIMPL_TYPE_MACRO_SUPER(TrigonalLowOps, LaueOps)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TrigonalLowOps, LaueOps)
     SIMPL_STATIC_NEW_MACRO(TrigonalLowOps)
 
     TrigonalLowOps();

@@ -79,6 +79,11 @@ None
 | **Ensemble Attribute Array** | LatticeConstants | float | (6) | The 6 values that define the lattice constants for each **Ensemble**|
 | **Ensemble Attribute Array** | MaterialName | String | (1) | Name of each **Ensemble** |
 
+## Example Pipelines ##
+
++ TxCopper_Exposed
++ TxCopper_Unexposed
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

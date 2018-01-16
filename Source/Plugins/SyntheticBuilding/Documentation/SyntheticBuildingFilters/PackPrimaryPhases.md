@@ -34,6 +34,12 @@ where (X,Y,Z) are the coordinates of the **Feature**'s centroid, (A,B,C) are the
 
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
+
+### How to write out the Goal Attributes ##
+
+In previous versions of DREAM.3D for this filter there was an option to "Write Goal Attributes". This has been replaced with the feature that allows the user to save the Shape Parameters to another Attribute Matrix. To regain this functionality the user can enable this option from a drop down combo box in the Filter Parameter input widget, then add the "Export Feature Data as CSV File" later in the pipeline. In that added filter, the user can select the Feature Attribute Matrix where they saved the Shape Parameters.
+
+
 ## Parameters ##
 
 | Name | Type | Description |
@@ -83,6 +89,15 @@ Image
 | **Cell Attribute Array** | Volumes | float | (1) | The Volume of the ellipsoid |
 
 
+
+## Example Pipelines ##
+
++ (02) Single Hexagonal Phase Equiaxed
++ (03) Single Cubic Phase Rolled
++ InsertTransformationPhase
++ (01) Single Cubic Phase Equiaxed
++ (04) Two Phase Cubic Hexagonal Particles Equiaxed
++ (06) SmallIN100 Synthetic
 
 ## License & Copyright ##
 

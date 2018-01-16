@@ -67,7 +67,7 @@ class EnsembleInfoFilterParameter : public FilterParameter
 public:
   SIMPL_SHARED_POINTERS(EnsembleInfoFilterParameter)
   SIMPL_STATIC_NEW_MACRO(EnsembleInfoFilterParameter)
-  SIMPL_TYPE_MACRO_SUPER(EnsembleInfoFilterParameter, FilterParameter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EnsembleInfoFilterParameter, FilterParameter)
 
   typedef std::function<void(EnsembleInfo)> SetterCallbackType;
   typedef std::function<EnsembleInfo(void)> GetterCallbackType;

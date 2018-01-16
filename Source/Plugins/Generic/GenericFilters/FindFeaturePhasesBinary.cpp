@@ -267,6 +267,14 @@ const QString FindFeaturePhasesBinary::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindFeaturePhasesBinary::getUuid()
+{
+  return QUuid("{64d20c7b-697c-5ff1-9d1d-8a27b071f363}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindFeaturePhasesBinary::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

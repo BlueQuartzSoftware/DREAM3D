@@ -281,6 +281,14 @@ const QString ChangeAngleRepresentation::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ChangeAngleRepresentation::getUuid()
+{
+  return QUuid("{f7bc0e1e-0f50-5fe0-a9e7-510b6ed83792}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ChangeAngleRepresentation::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ConversionFilters;

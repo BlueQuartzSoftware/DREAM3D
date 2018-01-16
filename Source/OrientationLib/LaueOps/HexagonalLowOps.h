@@ -56,7 +56,7 @@ class OrientationLib_EXPORT HexagonalLowOps : public LaueOps
 {
   public:
     SIMPL_SHARED_POINTERS(HexagonalLowOps)
-    SIMPL_TYPE_MACRO_SUPER(HexagonalLowOps, LaueOps)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(HexagonalLowOps, LaueOps)
     SIMPL_STATIC_NEW_MACRO(HexagonalLowOps)
 
     HexagonalLowOps();

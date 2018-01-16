@@ -236,6 +236,15 @@ None
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 | **Ensemble Attribute Array** | PhaseTypes | uint32_t | (1) | Enumeration specifying the phase type of each **Ensemble** |
 
+## Example Pipelines ##
+
++ (02) Single Hexagonal Phase Equiaxed
++ (03) Single Cubic Phase Rolled
++ (05) Composite
++ InsertTransformationPhase
++ (01) Single Cubic Phase Equiaxed
++ (04) Two Phase Cubic Hexagonal Particles Equiaxed
+
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.

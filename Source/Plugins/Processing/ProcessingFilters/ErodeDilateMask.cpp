@@ -327,6 +327,14 @@ const QString ErodeDilateMask::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ErodeDilateMask::getUuid()
+{
+  return QUuid("{4fff1aa6-4f62-56c4-8ee9-8e28ec2fcbba}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ErodeDilateMask::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CleanupFilters;

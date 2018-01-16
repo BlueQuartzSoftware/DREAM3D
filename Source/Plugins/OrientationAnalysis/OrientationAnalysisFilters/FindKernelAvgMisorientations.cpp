@@ -376,6 +376,14 @@ const QString FindKernelAvgMisorientations::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindKernelAvgMisorientations::getUuid()
+{
+  return QUuid("{88d332c1-cf6c-52d3-a38d-22f6eae19fa6}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindKernelAvgMisorientations::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

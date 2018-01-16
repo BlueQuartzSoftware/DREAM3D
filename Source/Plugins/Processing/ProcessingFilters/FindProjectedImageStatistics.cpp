@@ -654,6 +654,14 @@ const QString FindProjectedImageStatistics::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindProjectedImageStatistics::getUuid()
+{
+  return QUuid("{577dfdf6-02f8-5284-b45b-e31f5392a191}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindProjectedImageStatistics::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ImageFilters;

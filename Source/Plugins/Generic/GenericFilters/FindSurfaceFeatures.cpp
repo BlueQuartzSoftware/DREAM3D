@@ -373,6 +373,14 @@ const QString FindSurfaceFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindSurfaceFeatures::getUuid()
+{
+  return QUuid("{d2b0ae3d-686a-5dc0-a844-66bc0dc8f3cb}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindSurfaceFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SpatialFilters;

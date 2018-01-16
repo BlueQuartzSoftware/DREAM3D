@@ -31,6 +31,12 @@ Not Applicable
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs  |
 
 
+## Example Pipelines ##
+
++ (10) SmallIN100 Full Reconstruction
++ INL Export
++ (06) SmallIN100 Postsegmentation Processing
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

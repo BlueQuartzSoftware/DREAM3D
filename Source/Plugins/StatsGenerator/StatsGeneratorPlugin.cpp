@@ -38,10 +38,27 @@ StatsGeneratorPlugin::~StatsGeneratorPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString StatsGeneratorPlugin::getPluginName()
+QString StatsGeneratorPlugin::getPluginFileName()
 {
-  return (StatsGeneratorConstants::StatsGeneratorPluginDisplayName);
+  return StatsGeneratorConstants::StatsGeneratorPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatsGeneratorPlugin::getPluginDisplayName()
+{
+  return StatsGeneratorConstants::StatsGeneratorPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatsGeneratorPlugin::getPluginBaseName()
+{
+  return StatsGeneratorConstants::StatsGeneratorBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

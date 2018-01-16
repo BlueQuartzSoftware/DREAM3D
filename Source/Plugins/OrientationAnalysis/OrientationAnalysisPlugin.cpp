@@ -69,10 +69,27 @@ OrientationAnalysisPlugin::~OrientationAnalysisPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString OrientationAnalysisPlugin::getPluginName()
+QString OrientationAnalysisPlugin::getPluginFileName()
 {
-  return (OrientationAnalysisConstants::OrientationAnalysisPluginDisplayName);
+  return OrientationAnalysisConstants::OrientationAnalysisPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getPluginDisplayName()
+{
+  return OrientationAnalysisConstants::OrientationAnalysisPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OrientationAnalysisPlugin::getPluginBaseName()
+{
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

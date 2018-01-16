@@ -346,6 +346,14 @@ const QString ComputeMomentInvariants2D::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ComputeMomentInvariants2D::getUuid()
+{
+  return QUuid("{27a132b2-a592-519a-8cb7-38599a7f28ec}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ComputeMomentInvariants2D::getSubGroupName()
 {
   return "Statistics";

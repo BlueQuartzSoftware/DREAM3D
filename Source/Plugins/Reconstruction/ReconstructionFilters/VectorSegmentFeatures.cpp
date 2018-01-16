@@ -470,6 +470,14 @@ const QString VectorSegmentFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid VectorSegmentFeatures::getUuid()
+{
+  return QUuid("{c438af53-631e-581e-8b2d-1a23dcdc6f32}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString VectorSegmentFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;

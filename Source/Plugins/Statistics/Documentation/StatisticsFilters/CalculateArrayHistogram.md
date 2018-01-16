@@ -74,6 +74,11 @@ Not Applicable
 | **Attribute Matrix** | NewAttributeMatrixName | Generic | N/A | Created **Attribute Matrix** name |
 | Any **Attribute Array** | Histogram | double | (2) | Two component array with [Bin cutoff {right side}, Frequency] values for each bin |
 
+## Example Pipelines ##
+
++ Image Histogram
++ Confidence Index Histogram
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

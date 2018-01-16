@@ -747,6 +747,14 @@ const QString CropImageGeometry::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid CropImageGeometry::getUuid()
+{
+  return QUuid("{baa4b7fe-31e5-5e63-a2cb-0bb9d844cfaf}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString CropImageGeometry::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CropCutFilters;

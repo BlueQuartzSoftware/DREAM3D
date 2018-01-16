@@ -43,6 +43,14 @@ Not Applicable
 | **Feature Attribute Array** | AvgEulerAngles | float | (3) | Specifies the orientation of each **Feature** in Bunge convention (Z-X-Z) |
 
 
+## Example Pipelines ##
+
++ (10) SmallIN100 Full Reconstruction
++ InsertTransformationPhase
++ (06) SmallIN100 Postsegmentation Processing
++ (05) SmallIN100 Crystallographic Statistics
++ (06) SmallIN100 Synthetic
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

@@ -69,10 +69,27 @@ SamplingPlugin::~SamplingPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SamplingPlugin::getPluginName()
+QString SamplingPlugin::getPluginFileName()
 {
-  return (SamplingConstants::SamplingPluginDisplayName);
+  return SamplingConstants::SamplingPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SamplingPlugin::getPluginDisplayName()
+{
+  return SamplingConstants::SamplingPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SamplingPlugin::getPluginBaseName()
+{
+  return SamplingConstants::SamplingBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

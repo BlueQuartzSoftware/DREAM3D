@@ -90,6 +90,10 @@ Choice of delimiter is as follows:
 
 None
 
+## Example Pipelines ##
+
++ Export Small IN100 ODF Data (StatsGenerator)
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

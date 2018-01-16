@@ -394,6 +394,14 @@ const QString FindFeatureNeighborCAxisMisalignments::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindFeatureNeighborCAxisMisalignments::getUuid()
+{
+  return QUuid("{cdd50b83-ea09-5499-b008-4b253cf4c246}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindFeatureNeighborCAxisMisalignments::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

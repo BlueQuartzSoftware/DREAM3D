@@ -307,6 +307,14 @@ const QString SPParksSitesWriter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid SPParksSitesWriter::getUuid()
+{
+  return QUuid("{bcf2f246-610f-5575-a434-241d04114b9f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString SPParksSitesWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

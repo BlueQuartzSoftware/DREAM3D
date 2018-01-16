@@ -409,6 +409,14 @@ const QString FindFeatureReferenceCAxisMisorientations::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindFeatureReferenceCAxisMisorientations::getUuid()
+{
+  return QUuid("{1a0848da-2edd-52c0-b111-62a4dc6d2886}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

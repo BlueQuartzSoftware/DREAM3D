@@ -45,6 +45,10 @@ where (X, Y, Z) are the coordinates of the **Feature's** centroid, (A, B, C) are
 
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
+### How to write out the Goal Attributes ##
+
+In previous versions of DREAM.3D for this filter there was an option to "Write Goal Attributes". This has been replaced with the feature that allows the user to save the Shape Parameters to another Attribute Matrix. To regain this functionality the user can enable this option from a drop down combo box in the Filter Parameter input widget, then add the "Export Feature Data as CSV File" later in the pipeline. In that added filter, the user can select the Feature Attribute Matrix where they saved the Shape Parameters.
+
 ## Parameters ##
 
 | Name | Type | Description |
@@ -53,6 +57,8 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 | Match Radial Distribution Function | bool | Whether to attempt to match the _radial distribution function_ of the precipitates |
 | Already Have Precipitates | bool | Whether to read in a file that lists the available precipitates |
 | Precipitate Input File | File Path | The input precipitates file. Only needed if _Already Have Precipitates_ is checked |
+| Write Goal Attributes | bool | Whether to write the goal attributes of the packed precipitates |
+| Goal Attributes CSV File |  File Path | The output .csv file path. Only needed if _Write Goal Attributes_ is checked |
 | Save Shape Description Arrays | Int | 0=Do not Save, 1=Save to New Attribute Matrix, 2=Append to existing AttributeMatrix |
 | New AttributeMatrix | DataArrayPath | AttributeMatrix to save the Shape DescriptionArrays into |
 
@@ -92,6 +98,11 @@ Image
 
 
 
+
+## Example Pipelines ##
+
++ (05) Composite
++ (04) Two Phase Cubic Hexagonal Particles Equiaxed
 
 ## License & Copyright ##
 

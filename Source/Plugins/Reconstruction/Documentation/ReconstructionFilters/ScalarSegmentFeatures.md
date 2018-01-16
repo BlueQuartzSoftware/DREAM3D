@@ -46,6 +46,10 @@ Image
 | **Feature Attribute Array** | Active | bool | (1) | Specifies if the **Feature** is still in the sample (*true* if the **Feature** is in the sample and *false* if it is not). At the end of the **Filter**, all **Features** will be _Active_ |
 
 
+## Example Pipelines ##
+
++ (09) Image Segmentation
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

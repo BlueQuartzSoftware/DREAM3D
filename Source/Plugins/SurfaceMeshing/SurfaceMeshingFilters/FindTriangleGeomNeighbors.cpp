@@ -343,6 +343,14 @@ const QString FindTriangleGeomNeighbors::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindTriangleGeomNeighbors::getUuid()
+{
+  return QUuid("{749dc8ae-a402-5ee7-bbca-28d5734c60df}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindTriangleGeomNeighbors::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

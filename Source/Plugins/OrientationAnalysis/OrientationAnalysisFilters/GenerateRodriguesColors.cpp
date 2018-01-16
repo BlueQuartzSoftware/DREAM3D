@@ -328,6 +328,14 @@ const QString GenerateRodriguesColors::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GenerateRodriguesColors::getUuid()
+{
+  return QUuid("{626f6feb-68bc-537a-8f5b-c6062e72236f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GenerateRodriguesColors::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

@@ -272,6 +272,14 @@ const QString FindTriangleGeomCentroids::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindTriangleGeomCentroids::getUuid()
+{
+  return QUuid("{a5cff82b-9fe4-5a8c-90c9-6db74b6dcd50}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindTriangleGeomCentroids::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

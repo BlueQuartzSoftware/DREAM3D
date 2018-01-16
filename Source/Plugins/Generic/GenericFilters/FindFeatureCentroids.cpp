@@ -277,6 +277,14 @@ const QString FindFeatureCentroids::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindFeatureCentroids::getUuid()
+{
+  return QUuid("{6f8ca36f-2995-5bd3-8672-6b0b80d5b2ca}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindFeatureCentroids::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

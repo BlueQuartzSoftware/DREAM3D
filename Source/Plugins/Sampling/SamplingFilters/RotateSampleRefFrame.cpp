@@ -714,6 +714,14 @@ const QString RotateSampleRefFrame::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid RotateSampleRefFrame::getUuid()
+{
+  return QUuid("{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString RotateSampleRefFrame::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::RotationTransformationFilters;

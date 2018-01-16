@@ -1247,6 +1247,14 @@ const QString VtkStructuredPointsReader::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid VtkStructuredPointsReader::getUuid()
+{
+  return QUuid("{f2fecbf9-636b-5ef9-89db-5cb57e4c5676}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString VtkStructuredPointsReader::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::InputFilters;

@@ -34,6 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <iostream>
+#include <stdint.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -43,11 +44,17 @@
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
 #include <QtCore/QUuid>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
+
+
 
 // DREAM3DLib includes
 //#include "SIMPLib/SIMPLib.h"
 //#include "SIMPLib/SIMPLibVersion.h"
-//#include "SIMPLib/Plugin/PluginManager.h"∂
+//#include "SIMPLib/Plugin/PluginManager.h"
 //#include "SIMPLib/Filtering/FilterManager.h"
 //#include "SIMPLib/Filtering/FilterFactory.hpp"
 
@@ -57,6 +64,9 @@
 #include "DREAM3DToolsConfiguration.h"
 
 #define OVERWRITE_SOURCE_FILE 1
+
+QJsonDocument                 m_JsonDoc;
+
 
 // -----------------------------------------------------------------------------
 //
@@ -443,47 +453,130 @@ void fixFilterParameter(QStringListIterator& sourceLines, QStringList& outLines,
   outLines.push_back(final);
 }
 
-#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
+bool AddUuidCodes(const QString& hFile)
 {
   QString contents;
+  QFileInfo fi(hFile);
+  
+//  if (fi.baseName().compare("CropImageGeometry") != 0)
+//  {
+//    return false;
+//  }
+
   {
     // Read the Source File
-    QFileInfo fi(cppFile);
-    //        if (fi.baseName().compare("CropImageGeometry") != 0)
-    //        {
-    //          return false;
-    //        }
 
     QFile source(hFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
     source.close();
   }
-
-
-  QStringList names;
+  
   bool didReplace = false;
 
-  QString searchString = "virtual const QString getSubGroupName() {";
-  QString replaceString = "    virtual const QString getSubGroupName();";
+  QString searchString =  "virtual const QString getSubGroupName() override;";
+
   QStringList outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
-  QString body;
 
   int index = 0;
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
-    if(line.contains(searchString) )
+    if(line.contains("virtual const QString getCompiledLibraryName();") )
     {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
       outLines.push_back(replaceString);
-      QStringList chomp = line.split("{");
-      body = "{" + chomp.at(1);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual const QString getBrandingString();") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual const QString getFilterVersion();") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual const QString getGroupName();") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual const QString getSubGroupName();") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual const QUuid getUuid();") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual const QString getHumanLabel();") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual void setupFilterParameters();") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual void readFilterParameters(AbstractFilterParametersReader *reader, int index);") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual void execute();") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("virtual void preflight();") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else  if(line.contains("SIMPL_TYPE_MACRO_SUPER") )
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("SIMPL_TYPE_MACRO_SUPER", " SIMPL_TYPE_MACRO_SUPER_OVERRIDE");
+      outLines.push_back(replaceString);
       didReplace = true;
     }
     else
@@ -491,11 +584,16 @@ bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFil
       outLines.push_back(line);
     }
   }
-
+  
   writeOutput(didReplace, outLines, hFile);
   index++;
 
+
+  if(true) return true;
+  
   // Now update the .cpp file
+  QString cppFile = hFile;
+  cppFile = cppFile.replace(".h", ".cpp");
   {
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
@@ -503,24 +601,72 @@ bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFil
     source.close();
   }
 
-  QFileInfo fi(cppFile);
-  QString cName = fi.baseName();
+  didReplace = false;
 
-  QTextStream out(&contents);
-  out << "\n";
-  out << "// -----------------------------------------------------------------------------\n";
-  out << "//\n";
-  out << "// -----------------------------------------------------------------------------\n";
-  out << "const QString " << cName << "::getSubGroupName()\n";
-  out << body << "\n\n";
 
+  QJsonObject jsonDocObject = m_JsonDoc.object();
+  QString uuidString = jsonDocObject[fi.baseName()].toString("NOT_FOUND");
+  if(uuidString.compare("NOT_FOUND") == 0)
+  {
+    uint l = 100;
+    ushort w1 = 200;
+    ushort w2 = 300;
+    
+    QString libName = "RandomPl";
+    uchar b[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    int32_t i = 0;
+    while(i < 8 && i < libName.size())
+    {
+      b[i] = static_cast<uint8_t>(libName.at(i).toLatin1());
+      i++;
+    }
+    QUuid uuid = QUuid(l, w1, w2, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
+    QString nameSpace = QString("%1").arg(fi.baseName());
+    QUuid p1 = QUuid::createUuidV5(uuid, nameSpace);
+    uuidString = p1.toString();
+  }
+  
+  searchString =  "::getSubGroupName()";
+
+  outLines.clear();
+  
   list = contents.split(QRegExp("\\n"));
-  writeOutput(didReplace, list, cppFile);
-
+  sourceLines = QStringListIterator(list);
+  
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) )
+    {
+     
+      QString replaceString;
+      QTextStream ss (&replaceString);
+      ss << "const QUuid " << fi.baseName()  << "::getUuid()\n";
+      ss << "{\n";
+      ss << "  return QUuid(\"" << uuidString << "\");\n";
+      ss << "}\n";
+      ss << "\n";
+      ss << "// -----------------------------------------------------------------------------\n";
+      ss << "//\n";
+      ss << "// -----------------------------------------------------------------------------";
+      outLines.push_back(replaceString);
+      
+      outLines.push_back(line);
+      
+      didReplace = true;
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+  
+  writeOutput(didReplace, outLines, cppFile);
+  index++;
   return didReplace;
 }
 
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1053,7 +1199,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 
   QStringList filters;
   // filters.append("*.cpp");
-  filters.append("*.md");
+  filters.append("*.h");
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
   {
@@ -1072,15 +1218,9 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   QFileInfoList itemList = currentDir.entryInfoList(filters);
   foreach(QFileInfo itemInfo, itemList)
   {
-    QString itemFilePath = itemInfo.absoluteFilePath();
-    // ReplaceText(itemFilePath);
-    //    std::cout << "-------------------------------------" << std::endl;
-    //    std::cout << itemFilePath.toStdString() << std::endl;
-    //    AddIGeometryIncludes(itemFilePath);
-    //   GroupIncludes(itemFilePath);
-    // ReplaceText(itemFilePath);
-    //  ReplaceMacros(itemFilePath);
-    UpdateMarkdownImageNames(itemFilePath);
+    QString headerFilePath = itemInfo.absoluteFilePath();
+    //QString cppFilePath = headerFilePath.replace(".h", ".cpp");
+    AddUuidCodes(headerFilePath);
   }
 }
 
@@ -1089,7 +1229,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-
+#if 0
   // QUuid(uint l, ushort w1, ushort w2, uchar b1, uchar b2, uchar b3, uchar b4, uchar b5, uchar b6, uchar b7, uchar b8)
   uint l = 100;
   ushort w1 = 200;
@@ -1112,6 +1252,7 @@ int main(int argc, char* argv[])
   path1 = QString("%1/%2/%3").arg("DataContainer").arg("AttributeMatrix").arg("DataArray1");
   p1 = QUuid::createUuidV5(uuid, path1);
   qDebug() << p1;
+#endif
 
   Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
@@ -1122,18 +1263,49 @@ int main(int argc, char* argv[])
 
 // std::cout << "FilterParameterTool Starting. Version " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
 
-#if 0
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  SIMPLibPluginLoader::LoadPluginFilters(fm);
 
+  // Register all the filters including trying to load those from Plugins
+//  FilterManager* fm = FilterManager::Instance();
+//  SIMPLibPluginLoader::LoadPluginFilters(fm);
+#if 0
 
   // Send progress messages from PipelineBuilder to this object for display
-  qRegisterMetaType<PipelineMessage>();
-  GenerateFilterParametersCode();
+ // qRegisterMetaType<PipelineMessage>();
+//  GenerateFilterParametersCode();
 //  GenerateMarkDownDocs();
-  GenerateFilterParametersCode();
+//  GenerateFilterParametersCode();
 #else
+
+  
+  QString jsonFilePath = D3DTools::GetDREAM3DBinaryDir() + "/Filter_UUID.json";
+  QFileInfo fi(jsonFilePath);
+  
+  if(!fi.exists())
+  {
+    std::cout << "Input Json file not found at " << jsonFilePath.toStdString() << std::endl;
+    return EXIT_FAILURE;
+  }
+  
+  QByteArray json;
+  {
+    // Read the json file
+    QFile source(fi.absoluteFilePath());
+    bool isOpen = source.open(QFile::ReadOnly);
+    Q_ASSERT(isOpen);
+    json = source.readAll();
+    source.close();
+  }
+  
+  QJsonParseError parseError;
+  m_JsonDoc = QJsonDocument::fromJson(json, &parseError);
+  if(parseError.error != QJsonParseError::NoError)
+  {
+    std::cout << "JSON Parse Error: " << parseError.errorString().toStdString() << std::endl;
+    return EXIT_FAILURE;
+  }
+  
+  
+  
   ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
   ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
   ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL"));

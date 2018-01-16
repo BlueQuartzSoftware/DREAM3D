@@ -319,6 +319,14 @@ const QString SharedFeatureFaceFilter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid SharedFeatureFaceFilter::getUuid()
+{
+  return QUuid("{15c743db-5936-53a2-92cf-edf00526486d}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString SharedFeatureFaceFilter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;

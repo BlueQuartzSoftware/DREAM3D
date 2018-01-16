@@ -583,6 +583,14 @@ const QString FindDistsToCharactGBs::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindDistsToCharactGBs::getUuid()
+{
+  return QUuid("{94f986fc-1295-5e32-9808-752855fa658a}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindDistsToCharactGBs::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

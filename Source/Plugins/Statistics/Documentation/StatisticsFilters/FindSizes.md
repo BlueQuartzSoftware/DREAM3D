@@ -36,6 +36,15 @@ Not Applicable
 | **Feature Attribute Array** | NumElements |  int32_t | (1) | Number of **Elements** that are owned by the **Feature**. This value does not place any distinction between **Elements** that may be of a different size |
 | **Feature Attribute Array** | Volumes |  float | (1) | Volume of the **Feature**. This value may be "redundant" from the NumElements value if all **Elements** are the same size and is calculable from the EquivalentDiameters value |
 
+## Example Pipelines ##
+
++ (01) SmallIN100 Morphological Statistics
++ (10) SmallIN100 Full Reconstruction
++ InsertTransformationPhase
++ (06) SmallIN100 Postsegmentation Processing
++ (06) SmallIN100 Synthetic
++ (09) Image Segmentation
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

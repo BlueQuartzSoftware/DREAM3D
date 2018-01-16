@@ -70,10 +70,27 @@ GenericPlugin::~GenericPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString GenericPlugin::getPluginName()
+QString GenericPlugin::getPluginFileName()
 {
-  return (GenericConstants::GenericPluginDisplayName);
+  return GenericConstants::GenericPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getPluginDisplayName()
+{
+  return GenericConstants::GenericPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GenericPlugin::getPluginBaseName()
+{
+  return GenericConstants::GenericBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

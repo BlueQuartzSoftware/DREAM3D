@@ -256,6 +256,14 @@ const QString FindBasalLoadingFactor::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindBasalLoadingFactor::getUuid()
+{
+  return QUuid("{4a8cf012-7ce0-5479-970e-3f5e2052396e}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindBasalLoadingFactor::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

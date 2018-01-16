@@ -337,6 +337,14 @@ const QString WriteIPFStandardTriangle::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid WriteIPFStandardTriangle::getUuid()
+{
+  return QUuid("{0b72aa9a-6b5a-5677-bf6c-743445e75cc8}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

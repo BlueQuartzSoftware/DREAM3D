@@ -258,6 +258,14 @@ const QString FindBoundaryElementFractions::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindBoundaryElementFractions::getUuid()
+{
+  return QUuid("{6357243e-41a6-52c4-be2d-2f6894c39fcc}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindBoundaryElementFractions::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

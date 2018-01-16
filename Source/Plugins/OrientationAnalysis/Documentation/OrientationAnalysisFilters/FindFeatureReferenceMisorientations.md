@@ -40,6 +40,10 @@ Image
 | **Feature Attribute Array** | FeatureAvgMisorientations | float | (1) | Average of the *FeatureReferenceMisorientation* values for all of the **Cells** that belong to the **Feature** |
 
 
+## Example Pipelines ##
+
++ (05) SmallIN100 Crystallographic Statistics
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

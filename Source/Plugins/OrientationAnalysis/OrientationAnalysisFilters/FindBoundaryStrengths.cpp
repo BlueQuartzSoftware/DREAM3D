@@ -404,6 +404,14 @@ const QString FindBoundaryStrengths::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindBoundaryStrengths::getUuid()
+{
+  return QUuid("{8071facb-8905-5699-b345-105ae4ac33ff}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindBoundaryStrengths::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

@@ -29,6 +29,12 @@ Image
 |------|--------------|------|----------------------|-------------|
 | **Feature Attribute Array** | Centroids | float | (3) | X, Y, Z coordinates of **Feature** center of mass |
 
+## Example Pipelines ##
+
++ (01) SmallIN100 Morphological Statistics
++ InsertTransformationPhase
++ (06) SmallIN100 Synthetic
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

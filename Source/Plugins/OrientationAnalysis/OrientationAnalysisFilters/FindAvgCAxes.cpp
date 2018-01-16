@@ -299,6 +299,14 @@ const QString FindAvgCAxes::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindAvgCAxes::getUuid()
+{
+  return QUuid("{c5a9a96c-7570-5279-b383-cc25ebae0046}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindAvgCAxes::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

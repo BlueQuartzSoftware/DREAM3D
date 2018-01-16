@@ -40,6 +40,11 @@ Image
 | **Cell Attribute Array** | KernelAverageMisorientations | float | (1) | Average misorientation for all **Cells** within the kernel and the central **Cell** |
 
 
+## Example Pipelines ##
+
++ MassifPipeline
++ (05) SmallIN100 Crystallographic Statistics
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

@@ -298,6 +298,14 @@ const QString SampleSurfaceMeshSpecifiedPoints::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid SampleSurfaceMeshSpecifiedPoints::getUuid()
+{
+  return QUuid("{0f44da6f-5272-5d69-8378-9bf0bc4ae4f9}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString SampleSurfaceMeshSpecifiedPoints::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;

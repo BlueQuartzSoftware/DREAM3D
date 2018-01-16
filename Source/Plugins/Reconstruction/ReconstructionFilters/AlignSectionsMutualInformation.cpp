@@ -663,6 +663,14 @@ const QString AlignSectionsMutualInformation::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid AlignSectionsMutualInformation::getUuid()
+{
+  return QUuid("{61c5519b-5561-58b8-a522-2ce1324e244d}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString AlignSectionsMutualInformation::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;

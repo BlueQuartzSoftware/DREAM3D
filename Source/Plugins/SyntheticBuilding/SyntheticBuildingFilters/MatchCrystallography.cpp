@@ -1255,6 +1255,14 @@ const QString MatchCrystallography::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid MatchCrystallography::getUuid()
+{
+  return QUuid("{7bfb6e4a-6075-56da-8006-b262d99dff30}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString MatchCrystallography::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

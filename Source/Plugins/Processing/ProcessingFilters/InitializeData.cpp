@@ -582,6 +582,14 @@ const QString InitializeData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid InitializeData::getUuid()
+{
+  return QUuid("{dfab9921-fea3-521c-99ba-48db98e43ff8}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString InitializeData::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CleanupFilters;

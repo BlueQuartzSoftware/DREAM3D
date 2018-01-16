@@ -748,6 +748,14 @@ const QString CorrelateValuesWithVectorDirection::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid CorrelateValuesWithVectorDirection::getUuid()
+{
+  return QUuid("{6c8b16f1-3688-5b29-9e57-d2fd56d9e3da}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString CorrelateValuesWithVectorDirection::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

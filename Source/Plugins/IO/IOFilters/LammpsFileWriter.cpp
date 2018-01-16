@@ -309,6 +309,14 @@ const QString LammpsFileWriter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid LammpsFileWriter::getUuid()
+{
+  return QUuid("{01364630-cd73-5ad8-b882-17d34ec900f2}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

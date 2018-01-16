@@ -616,6 +616,14 @@ const QString ScalarSegmentFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ScalarSegmentFeatures::getUuid()
+{
+  return QUuid("{2c5edebf-95d8-511f-b787-90ee2adf485c}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ScalarSegmentFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;

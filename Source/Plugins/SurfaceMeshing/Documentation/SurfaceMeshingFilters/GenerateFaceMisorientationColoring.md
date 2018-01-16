@@ -34,6 +34,10 @@ Image + Triangle
 | **Face Attribute Array** | MisorientationColors | float | (3) | A set of RGB color schemes encoded as floats for each **Face** |
 
 
+## Example Pipelines ##
+
++ (03) SmallIN100 Mesh Statistics
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

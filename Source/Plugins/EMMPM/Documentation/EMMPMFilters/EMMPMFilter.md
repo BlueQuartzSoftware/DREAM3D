@@ -55,6 +55,10 @@ Image
 [4] D. Doria, Expectation Maximization of Gaussian Mixture Models in VTK - Release 0.00, September 21, 2010, Insight Journal [http://hdl.handle.net/10380/3218](http://hdl.handle.net/10380/3218)
 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

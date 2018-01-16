@@ -1137,6 +1137,14 @@ const QString MovingFiniteElementSmoothing::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid MovingFiniteElementSmoothing::getUuid()
+{
+  return QUuid("{a5a18501-0c48-5c7f-8aa2-1eba209ccbe6}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString MovingFiniteElementSmoothing::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SmoothingFilters;

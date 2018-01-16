@@ -28,6 +28,10 @@ None
 | **Face Attribute Array** | FaceDihedralAngles | double | (1) | Specifies the minimum dihedral angle of each **Face** |
 
 
+## Example Pipelines ##
+
++ (03) SmallIN100 Mesh Statistics
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

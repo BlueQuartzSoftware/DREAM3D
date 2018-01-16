@@ -36,6 +36,10 @@ Not Applicable
 |------|--------------|------|----------------------|-------------|
 | **Ensemble Attribute Array** | Statistics | float | (2) or (3) | Parameters of the fit distribution | 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

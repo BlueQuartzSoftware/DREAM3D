@@ -363,6 +363,14 @@ const QString FindFeatureHistogram::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindFeatureHistogram::getUuid()
+{
+  return QUuid("{f1b8354c-0aa7-517e-98c2-5e75ad2b828e}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindFeatureHistogram::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;

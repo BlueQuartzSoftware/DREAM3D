@@ -306,6 +306,14 @@ const QString UncertainRegularGridSampleSurfaceMesh::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid UncertainRegularGridSampleSurfaceMesh::getUuid()
+{
+  return QUuid("{75cfeb9b-cd4b-5a20-a344-4170b39bbfaf}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;

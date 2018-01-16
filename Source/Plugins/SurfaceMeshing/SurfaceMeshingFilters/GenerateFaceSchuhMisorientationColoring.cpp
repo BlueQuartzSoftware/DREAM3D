@@ -401,6 +401,14 @@ const QString GenerateFaceSchuhMisorientationColoring::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GenerateFaceSchuhMisorientationColoring::getUuid()
+{
+  return QUuid("{0850a882-ca6f-52c6-aa0b-885359b84c32}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GenerateFaceSchuhMisorientationColoring::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MiscFilters;

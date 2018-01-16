@@ -480,6 +480,14 @@ const QString FindNeighbors::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindNeighbors::getUuid()
+{
+  return QUuid("{97cf66f8-7a9b-5ec2-83eb-f8c4c8a17bac}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindNeighbors::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

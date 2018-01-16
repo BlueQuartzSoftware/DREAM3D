@@ -87,7 +87,7 @@ QString getNavIndex(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
   QMap<QString, ISIMPLibPlugin*> plugMap;
   for (auto plug : plugins)
   {
-    plugMap[plug->getPluginName()] = plug;
+    plugMap[plug->getPluginBaseName()] = plug;
   }
 
   QString plugMarkDown;
@@ -175,7 +175,7 @@ QString getNavIndex(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
     QString plugName = iter.key();
     ISIMPLibPlugin* plug = iter.value();
     QStringList filters;
-    plugMdOStream << "\n###### " << plug->getPluginName() << " ######\n\n";
+    plugMdOStream << "\n###### " << plug->getPluginDisplayName() << " ######\n\n";
     filters = plug->getFilters();
     
     for(auto filter: filters)
@@ -186,7 +186,7 @@ QString getNavIndex(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
       
       QString relPath;
       QTextStream relPathStream(&relPath);
-      relPathStream << D3DTools::GetDREAM3DGeneratedHelpRoot() << "/" << "Plugins/" << plug->getPluginName() << "/" << className << ".html";
+      relPathStream << D3DTools::GetDREAM3DGeneratedHelpRoot() << "/" << "Plugins/" << plug->getPluginBaseName() << "/" << className << ".html";
       relPath = indexDir.relativeFilePath(relPath);      
       plugMdOStream << "+ [" << humanName << "](" << relPath << ")" << "\n";
     }

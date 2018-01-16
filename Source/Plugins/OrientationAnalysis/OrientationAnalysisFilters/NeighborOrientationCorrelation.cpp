@@ -505,6 +505,14 @@ const QString NeighborOrientationCorrelation::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid NeighborOrientationCorrelation::getUuid()
+{
+  return QUuid("{6427cd5e-0ad2-5a24-8847-29f8e0720f4f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString NeighborOrientationCorrelation::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CleanupFilters;

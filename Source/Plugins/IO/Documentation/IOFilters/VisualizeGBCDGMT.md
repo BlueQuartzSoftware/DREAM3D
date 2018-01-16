@@ -39,6 +39,10 @@ Triangle
 
 None
 
+## Example Pipelines ##
+
++ (04) SmallIN100 GBCD
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

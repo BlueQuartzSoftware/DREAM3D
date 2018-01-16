@@ -284,6 +284,14 @@ const QString TriangleNormalFilter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid TriangleNormalFilter::getUuid()
+{
+  return QUuid("{928154f6-e4bc-5a10-a9dd-1abb6a6c0f6b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString TriangleNormalFilter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MiscFilters;

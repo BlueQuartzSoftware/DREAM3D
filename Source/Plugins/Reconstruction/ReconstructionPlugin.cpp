@@ -69,10 +69,27 @@ ReconstructionPlugin::~ReconstructionPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ReconstructionPlugin::getPluginName()
+QString ReconstructionPlugin::getPluginFileName()
 {
-  return (ReconstructionConstants::ReconstructionPluginDisplayName);
+  return ReconstructionConstants::ReconstructionPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getPluginDisplayName()
+{
+  return ReconstructionConstants::ReconstructionPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ReconstructionPlugin::getPluginBaseName()
+{
+  return ReconstructionConstants::ReconstructionBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

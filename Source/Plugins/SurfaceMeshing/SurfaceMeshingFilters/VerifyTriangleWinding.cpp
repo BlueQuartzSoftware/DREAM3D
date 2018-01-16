@@ -842,6 +842,14 @@ const QString VerifyTriangleWinding::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid VerifyTriangleWinding::getUuid()
+{
+  return QUuid("{3524c2dc-df60-5f90-b54b-e04946628a38}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString VerifyTriangleWinding::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;

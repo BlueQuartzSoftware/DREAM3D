@@ -706,6 +706,14 @@ const QString CreateLambertSphere::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid CreateLambertSphere::getUuid()
+{
+  return QUuid("{c4398303-db7d-506e-81ea-08f253895ccb}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString CreateLambertSphere::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::GenerationFilters;

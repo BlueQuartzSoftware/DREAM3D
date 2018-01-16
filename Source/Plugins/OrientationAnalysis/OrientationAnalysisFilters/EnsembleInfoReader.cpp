@@ -493,6 +493,14 @@ const QString EnsembleInfoReader::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid EnsembleInfoReader::getUuid()
+{
+  return QUuid("{33a37a47-d002-5c18-b270-86025881fe1e}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString EnsembleInfoReader::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::InputFilters;

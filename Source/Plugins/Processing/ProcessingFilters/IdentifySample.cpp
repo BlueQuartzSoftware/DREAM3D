@@ -369,6 +369,14 @@ const QString IdentifySample::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid IdentifySample::getUuid()
+{
+  return QUuid("{0e8c0818-a3fb-57d4-a5c8-7cb8ae54a40a}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString IdentifySample::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CleanupFilters;

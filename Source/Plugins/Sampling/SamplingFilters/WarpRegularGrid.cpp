@@ -373,6 +373,14 @@ const QString WarpRegularGrid::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid WarpRegularGrid::getUuid()
+{
+  return QUuid("{520fc4c4-9c22-5520-9e75-a64b81a5a38d}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString WarpRegularGrid::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::WarpingFilters;

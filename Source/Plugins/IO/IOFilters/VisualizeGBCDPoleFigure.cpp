@@ -615,6 +615,14 @@ const QString VisualizeGBCDPoleFigure::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid VisualizeGBCDPoleFigure::getUuid()
+{
+  return QUuid("{85900eba-3da9-5985-ac71-1d9d290a5d31}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString VisualizeGBCDPoleFigure::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

@@ -56,7 +56,7 @@ class OrientationLib_EXPORT MonoclinicOps : public LaueOps
 {
   public:
     SIMPL_SHARED_POINTERS(MonoclinicOps)
-    SIMPL_TYPE_MACRO_SUPER(MonoclinicOps, LaueOps)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(MonoclinicOps, LaueOps)
     SIMPL_STATIC_NEW_MACRO(MonoclinicOps)
 
     MonoclinicOps();

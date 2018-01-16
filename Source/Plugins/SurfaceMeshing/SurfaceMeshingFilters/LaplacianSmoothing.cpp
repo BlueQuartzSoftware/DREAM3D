@@ -578,6 +578,14 @@ const QString LaplacianSmoothing::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid LaplacianSmoothing::getUuid()
+{
+  return QUuid("{601c4885-c218-5da6-9fc7-519d85d241ad}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString LaplacianSmoothing::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SmoothingFilters;

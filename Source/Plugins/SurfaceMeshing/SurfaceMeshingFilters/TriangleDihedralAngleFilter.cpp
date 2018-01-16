@@ -307,6 +307,14 @@ const QString TriangleDihedralAngleFilter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid TriangleDihedralAngleFilter::getUuid()
+{
+  return QUuid("{0541c5eb-1976-5797-9468-be50a93d44e2}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString TriangleDihedralAngleFilter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MiscFilters;

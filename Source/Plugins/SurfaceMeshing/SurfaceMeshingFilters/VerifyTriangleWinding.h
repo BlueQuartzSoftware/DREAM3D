@@ -59,7 +59,7 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
   public:
     SIMPL_SHARED_POINTERS(VerifyTriangleWinding)
     SIMPL_STATIC_NEW_MACRO(VerifyTriangleWinding)
-    SIMPL_TYPE_MACRO_SUPER(VerifyTriangleWinding, SurfaceMeshFilter)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(VerifyTriangleWinding, SurfaceMeshFilter)
 
     virtual ~VerifyTriangleWinding();
     SIMPL_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
@@ -77,22 +77,28 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    virtual const QString getCompiledLibraryName();
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName();
-    virtual const QString getSubGroupName();
+    virtual const QString getCompiledLibraryName() override;
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
+    virtual const QString getGroupName() override;
+    virtual const QString getSubGroupName() override;
+
+    /**
+     * @brief getUuid Return the unique identifier for this filter.
+     * @return A QUuid object.
+     */
+    virtual const QUuid getUuid() override;
 
     /**
      * @brief This returns a string that is displayed in the GUI. It should be readable
      * and understandable by humans.
      */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() override;
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
     * for this filter
     */
-    virtual void setupFilterParameters();
+    virtual void setupFilterParameters() override;
 
     /**
     * @brief This method will read the options from a file
@@ -103,13 +109,13 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
     /**
     * @brief Reimplemented from @see AbstractFilter class
     */
-    virtual void execute();
+    virtual void execute() override;
 
     /**
     * @brief This function runs some sanity checks on the DataContainer and inputs
     * in an attempt to ensure the filter can process the inputs.
     */
-    virtual void preflight();
+    virtual void preflight() override;
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);

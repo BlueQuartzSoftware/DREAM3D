@@ -69,10 +69,27 @@ SyntheticBuildingPlugin::~SyntheticBuildingPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SyntheticBuildingPlugin::getPluginName()
+QString SyntheticBuildingPlugin::getPluginFileName()
 {
-  return (SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName);
+  return SyntheticBuildingConstants::SyntheticBuildingPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SyntheticBuildingPlugin::getPluginDisplayName()
+{
+  return SyntheticBuildingConstants::SyntheticBuildingPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SyntheticBuildingPlugin::getPluginBaseName()
+{
+  return SyntheticBuildingConstants::SyntheticBuildingBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

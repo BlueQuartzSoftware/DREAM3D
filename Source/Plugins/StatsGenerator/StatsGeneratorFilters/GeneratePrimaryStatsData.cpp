@@ -675,6 +675,14 @@ const QString GeneratePrimaryStatsData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GeneratePrimaryStatsData::getUuid()
+{
+  return QUuid("{383f0e2a-c82e-5f7e-a904-156828b42314}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GeneratePrimaryStatsData::getSubGroupName()
 {
   return "StatsGenerator";

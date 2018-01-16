@@ -330,6 +330,14 @@ const QString FindAvgOrientations::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindAvgOrientations::getUuid()
+{
+  return QUuid("{bf7036d8-25bd-540e-b6de-3a5ab0e42c5f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindAvgOrientations::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

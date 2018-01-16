@@ -56,7 +56,7 @@ class OrientationLib_EXPORT TetragonalOps : public LaueOps
 {
   public:
     SIMPL_SHARED_POINTERS(TetragonalOps)
-    SIMPL_TYPE_MACRO_SUPER(TetragonalOps, LaueOps)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TetragonalOps, LaueOps)
     SIMPL_STATIC_NEW_MACRO(TetragonalOps)
 
 

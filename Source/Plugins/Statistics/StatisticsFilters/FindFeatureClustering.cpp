@@ -506,6 +506,14 @@ const QString FindFeatureClustering::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindFeatureClustering::getUuid()
+{
+  return QUuid("{a1e9cf6d-2d1b-573e-98b8-0314c993d2b6}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindFeatureClustering::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

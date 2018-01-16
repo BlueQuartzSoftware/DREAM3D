@@ -352,6 +352,14 @@ const QString FindSurfaceAreaToVolume::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindSurfaceAreaToVolume::getUuid()
+{
+  return QUuid("{5d586366-6b59-566e-8de1-57aa9ae8a91c}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

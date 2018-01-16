@@ -83,6 +83,10 @@ Not Applicable
 | **Attribute Matrix** | EMsoftAttributeMatrix | Generic | N/A | Created **Cell Attribute Matrix** name |
 | **Generic Attribute Array** | (euler; user defined) | float | (1 tuple; 3D array) | Created **Generic Attribute Matrix** name |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.

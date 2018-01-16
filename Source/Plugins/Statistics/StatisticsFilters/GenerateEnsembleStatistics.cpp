@@ -1536,6 +1536,14 @@ const QString GenerateEnsembleStatistics::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GenerateEnsembleStatistics::getUuid()
+{
+  return QUuid("{19a1cb76-6b46-528d-b629-1af5f1d6344c}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GenerateEnsembleStatistics::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;

@@ -238,6 +238,14 @@ const QString FindCAxisLocations::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindCAxisLocations::getUuid()
+{
+  return QUuid("{68ae7b7e-b9f7-5799-9f82-ce21d0ccd55e}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindCAxisLocations::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

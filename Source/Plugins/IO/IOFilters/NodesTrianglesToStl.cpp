@@ -507,6 +507,14 @@ const QString NodesTrianglesToStl::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid NodesTrianglesToStl::getUuid()
+{
+  return QUuid("{5c4e21ac-902d-51d6-992b-2ddb89f26b84}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString NodesTrianglesToStl::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

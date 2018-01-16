@@ -561,6 +561,14 @@ const QString InitializeSyntheticVolume::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid InitializeSyntheticVolume::getUuid()
+{
+  return QUuid("{c2ae366b-251f-5dbd-9d70-d790376c0c0d}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString InitializeSyntheticVolume::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::PackingFilters;

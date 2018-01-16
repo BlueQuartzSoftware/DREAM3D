@@ -38,6 +38,12 @@ Image
 | **Feature Attribute Array** | Neighborhoods | int32_t | (1) | Number of **Features** that have their centroid within the user specified multiple of equivalent sphere diameters from each **Feature** |
 | **Feature Attribute Array** | NeighborhoodLists | List of int32_t | (1) | List of the **Features** whose centroids are within the user specified multiple of equivalent sphere diameter from each **Feature** |
 
+## Example Pipelines ##
+
++ (01) SmallIN100 Morphological Statistics
++ InsertTransformationPhase
++ (06) SmallIN100 Synthetic
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

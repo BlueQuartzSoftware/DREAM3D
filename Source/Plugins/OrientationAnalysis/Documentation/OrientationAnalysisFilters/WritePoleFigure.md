@@ -50,6 +50,11 @@ NONE
 None
 
 
+## Example Pipelines ##
+
++ TxCopper_Exposed
++ TxCopper_Unexposed
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

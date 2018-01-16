@@ -507,6 +507,14 @@ const QString ImportVectorImageStack::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ImportVectorImageStack::getUuid()
+{
+  return QUuid("{c5474cd1-bea9-5a33-a0df-516e5735bab4}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ImportVectorImageStack::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::InputFilters;

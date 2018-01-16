@@ -265,6 +265,14 @@ const QString FindTriangleGeomSizes::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindTriangleGeomSizes::getUuid()
+{
+  return QUuid("{9157ef1c-7cbc-5840-b6e7-26089c0b0f88}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindTriangleGeomSizes::getSubGroupName()
 { return SIMPL::FilterSubGroups::MorphologicalFilters; }
 

@@ -367,6 +367,14 @@ const QString FindSlipTransmissionMetrics::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindSlipTransmissionMetrics::getUuid()
+{
+  return QUuid("{97523038-5fb2-5e82-9177-ed3e8b24b4bd}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindSlipTransmissionMetrics::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

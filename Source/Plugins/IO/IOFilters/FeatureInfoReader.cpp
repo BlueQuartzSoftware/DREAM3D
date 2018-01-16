@@ -430,6 +430,14 @@ const QString FeatureInfoReader::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FeatureInfoReader::getUuid()
+{
+  return QUuid("{38f04ea5-d6cd-5baa-8450-ac963570821b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FeatureInfoReader::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::InputFilters;

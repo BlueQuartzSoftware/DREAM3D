@@ -399,6 +399,14 @@ const QString ErodeDilateBadData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ErodeDilateBadData::getUuid()
+{
+  return QUuid("{3adfe077-c3c9-5cd0-ad74-cf5f8ff3d254}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ErodeDilateBadData::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CleanupFilters;

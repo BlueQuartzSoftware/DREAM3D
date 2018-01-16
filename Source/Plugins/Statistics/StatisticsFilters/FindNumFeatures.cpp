@@ -216,6 +216,14 @@ const QString FindNumFeatures::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindNumFeatures::getUuid()
+{
+  return QUuid("{529743cf-d5d5-5d5a-a79f-95c84a5ddbb5}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindNumFeatures::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;

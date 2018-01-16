@@ -307,6 +307,14 @@ const QString Stereographic3D::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid Stereographic3D::getUuid()
+{
+  return QUuid("{3630623e-724b-5154-a060-a5fca4ecfff5}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString Stereographic3D::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ConversionFilters;

@@ -344,6 +344,14 @@ const QString FitFeatureData::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FitFeatureData::getUuid()
+{
+  return QUuid("{6c255fc4-1692-57cf-be55-71dc4e05ec83}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FitFeatureData::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;

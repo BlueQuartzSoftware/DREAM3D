@@ -239,6 +239,14 @@ const QString AddOrientationNoise::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid AddOrientationNoise::getUuid()
+{
+  return QUuid("{9f392fba-1520-5f8f-988b-0032d7c51811}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString AddOrientationNoise::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

@@ -416,6 +416,14 @@ const QString FindSchmids::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindSchmids::getUuid()
+{
+  return QUuid("{e67ca06a-176f-58fc-a676-d6ee5553511a}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindSchmids::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

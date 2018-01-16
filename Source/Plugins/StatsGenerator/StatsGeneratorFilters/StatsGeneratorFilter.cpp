@@ -518,6 +518,14 @@ const QString StatsGeneratorFilter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid StatsGeneratorFilter::getUuid()
+{
+  return QUuid("{f642e217-4722-5dd8-9df9-cee71e7b26ba}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::GenerationFilters;

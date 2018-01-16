@@ -549,6 +549,14 @@ const QString VisualizeGBCDGMT::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid VisualizeGBCDGMT::getUuid()
+{
+  return QUuid("{f62065b4-54e9-53b1-bed7-2178a57d3c7a}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString VisualizeGBCDGMT::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

@@ -49,6 +49,10 @@ Image Geometry
 
 QuadGeometry
 
+## Example Pipelines ##
+
++ CreateLambertSphereSurface
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

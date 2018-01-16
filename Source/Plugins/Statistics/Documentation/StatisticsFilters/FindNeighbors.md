@@ -44,6 +44,19 @@ Image
 | **Feature Attribute Array**  | SharedSurfaceAreaLists | List of float | (1) | List of the shared surface area for each of the contiguous neighboring **Features** for a given **Feature** |
 | **Feature Attribute Array**  | SurfaceFeatures | bool | (1) | Flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not. Only created if *Store Surface Features Array* is checked |
 
+## Example Pipelines ##
+
++ (01) SmallIN100 Morphological Statistics
++ (10) SmallIN100 Full Reconstruction
++ (02) Single Hexagonal Phase Equiaxed
++ (03) Single Cubic Phase Rolled
++ (05) Composite
++ InsertTransformationPhase
++ (06) SmallIN100 Postsegmentation Processing
++ (01) Single Cubic Phase Equiaxed
++ (04) Two Phase Cubic Hexagonal Particles Equiaxed
++ (06) SmallIN100 Synthetic
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

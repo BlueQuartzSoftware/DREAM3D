@@ -46,6 +46,10 @@ Image
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Arrays** | None | uint8_t | (1) | Unsigned 8 bit array representing the value of the class that the **Cell** was segmented into. An output array is created for each segmented input array and placed in a new **Cell Attribute Matrix** that the user may name |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

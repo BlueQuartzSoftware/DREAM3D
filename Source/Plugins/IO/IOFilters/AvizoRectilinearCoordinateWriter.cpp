@@ -377,6 +377,14 @@ const QString AvizoRectilinearCoordinateWriter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid AvizoRectilinearCoordinateWriter::getUuid()
+{
+  return QUuid("{2861f4b4-8d50-5e69-9575-68c9d35f1256}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString AvizoRectilinearCoordinateWriter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::OutputFilters;

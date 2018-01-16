@@ -69,10 +69,27 @@ ProcessingPlugin::~ProcessingPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ProcessingPlugin::getPluginName()
+QString ProcessingPlugin::getPluginFileName()
 {
-  return (ProcessingConstants::ProcessingPluginDisplayName);
+  return ProcessingConstants::ProcessingPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ProcessingPlugin::getPluginDisplayName()
+{
+  return ProcessingConstants::ProcessingPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ProcessingPlugin::getPluginBaseName()
+{
+  return ProcessingConstants::ProcessingBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //

@@ -737,6 +737,14 @@ const QString FindRelativeMotionBetweenSlices::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindRelativeMotionBetweenSlices::getUuid()
+{
+  return QUuid("{801008ce-1dcb-5604-8f16-a86526e28cf9}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindRelativeMotionBetweenSlices::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::ImageFilters;

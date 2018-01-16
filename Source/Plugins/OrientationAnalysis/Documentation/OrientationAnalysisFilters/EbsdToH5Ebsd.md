@@ -105,6 +105,11 @@ None
 None
 
 
+## Example Pipelines ##
+
++ (01) SmallIN100 Archive
++ 01_Import Data
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

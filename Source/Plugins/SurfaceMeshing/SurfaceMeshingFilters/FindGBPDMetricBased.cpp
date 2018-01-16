@@ -1247,6 +1247,14 @@ const QString FindGBPDMetricBased::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindGBPDMetricBased::getUuid()
+{
+  return QUuid("{00d20627-5b88-56ba-ac7a-fc2a4b337903}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindGBPDMetricBased::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

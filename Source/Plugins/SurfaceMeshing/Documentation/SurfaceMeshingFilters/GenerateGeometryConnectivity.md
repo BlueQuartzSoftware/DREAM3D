@@ -37,6 +37,10 @@ Any
 The resulting connectivity lists are stored with the **Geometry** objects, _not_ in any separate **Attribute Arrays**.
 
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

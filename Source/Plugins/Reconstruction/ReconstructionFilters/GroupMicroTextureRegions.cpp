@@ -598,6 +598,14 @@ const QString GroupMicroTextureRegions::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid GroupMicroTextureRegions::getUuid()
+{
+  return QUuid("{5e18a9e2-e342-56ac-a54e-3bd0ca8b9c53}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString GroupMicroTextureRegions::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::GroupingFilters;

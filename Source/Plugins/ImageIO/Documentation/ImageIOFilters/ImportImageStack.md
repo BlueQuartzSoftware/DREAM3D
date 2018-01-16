@@ -86,6 +86,10 @@ None
 | **Cell Attribute Array**  | ImageData | uint8_t| (n) | **Attribute Array** for the imported image data. The dimensionality of the array depends on the kind of image read: (1) for grayscale, (3) for RGB, and (4) for ARGB |
 
 
+## Example Pipelines ##
+
++ 03_Adaptive Alignment - Mutual Information - SEM Images
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

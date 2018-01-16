@@ -302,6 +302,14 @@ const QString FindBoundaryCells::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindBoundaryCells::getUuid()
+{
+  return QUuid("{8a1106d4-c67f-5e09-a02a-b2e9b99d031e}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindBoundaryCells::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SpatialFilters;

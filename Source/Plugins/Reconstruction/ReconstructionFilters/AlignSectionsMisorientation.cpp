@@ -451,6 +451,14 @@ const QString AlignSectionsMisorientation::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid AlignSectionsMisorientation::getUuid()
+{
+  return QUuid("{4fb2b9de-3124-534b-b914-dbbbdbc14604}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString AlignSectionsMisorientation::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;

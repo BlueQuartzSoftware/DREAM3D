@@ -49,6 +49,15 @@ Image
 | **Feature Attribute Array** | AvgEulerAngles | float | (3) | Three angles defining the orientation of the **Feature** in Bunge convention (Z-X-Z) |
 | **Feature Attribute Array** | AvgQuats | float | (4) | The average orientation of each **Feature** in quaternion representation |
 
+## Example Pipelines ##
+
++ (02) Single Hexagonal Phase Equiaxed
++ (03) Single Cubic Phase Rolled
++ InsertTransformationPhase
++ (01) Single Cubic Phase Equiaxed
++ (04) Two Phase Cubic Hexagonal Particles Equiaxed
++ (06) SmallIN100 Synthetic
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

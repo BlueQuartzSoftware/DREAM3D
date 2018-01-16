@@ -60,7 +60,7 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
   public:
     SIMPL_SHARED_POINTERS(BinaryNodesTrianglesReader)
     SIMPL_STATIC_NEW_MACRO(BinaryNodesTrianglesReader)
-    SIMPL_TYPE_MACRO_SUPER(BinaryNodesTrianglesReader, SurfaceMeshFilter)
+     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(BinaryNodesTrianglesReader, SurfaceMeshFilter)
 
     virtual ~BinaryNodesTrianglesReader();
 
@@ -77,7 +77,7 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters();
+    virtual void setupFilterParameters() override;
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
@@ -87,12 +87,12 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
-    virtual void execute();
+    virtual void execute() override;
 
     /**
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
-    virtual void preflight();
+    virtual void preflight() override;
 
   protected:
     BinaryNodesTrianglesReader();

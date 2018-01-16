@@ -3568,6 +3568,14 @@ const QString PackPrimaryPhases::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid PackPrimaryPhases::getUuid()
+{
+  return QUuid("{84305312-0d10-50ca-b89a-fda17a353cc9}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString PackPrimaryPhases::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::PackingFilters;

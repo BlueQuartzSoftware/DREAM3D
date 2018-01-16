@@ -41,6 +41,10 @@ Image + Triangle
 | **Face Attribute Array** | IPFColors | uint8_t | (6) | A set of two RGB color schemes encoded as unsigned chars for each **Face** |
 
 
+## Example Pipelines ##
+
++ (03) SmallIN100 Mesh Statistics
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

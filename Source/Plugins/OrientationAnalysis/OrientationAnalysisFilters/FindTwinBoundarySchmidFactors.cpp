@@ -558,6 +558,14 @@ const QString FindTwinBoundarySchmidFactors::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindTwinBoundarySchmidFactors::getUuid()
+{
+  return QUuid("{b0e30e6d-912d-5a7e-aeed-750134aba86b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindTwinBoundarySchmidFactors::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

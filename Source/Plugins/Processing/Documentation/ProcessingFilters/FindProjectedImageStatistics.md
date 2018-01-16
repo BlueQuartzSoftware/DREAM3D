@@ -35,6 +35,10 @@ Image
 | **Cell Attribute Array** | ProjectedImageStd | float | (1) | The standard deviation of the scalar array along the stack of voxels perpendicular to the plane of interest |
 | **Cell Attribute Array** | ProjectedImageVar | float | (1) | The variance of the scalar array along the stack of voxels perpendicular to the plane of interest |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

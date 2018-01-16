@@ -53,6 +53,10 @@ Image
 | **Cell Attribute Array** | NearestNeighbors | int32_t | (3) | Indices of the closest **Cell** that touches a boundary, triple and quadruple point for each **Cell**. Only created if _Store the Nearest Boundary Cells_ is checked |
 
 
+## Example Pipelines ##
+
++ (01) SmallIN100 Morphological Statistics
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**

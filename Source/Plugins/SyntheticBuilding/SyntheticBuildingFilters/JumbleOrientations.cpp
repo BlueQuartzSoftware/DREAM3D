@@ -316,6 +316,14 @@ const QString JumbleOrientations::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid JumbleOrientations::getUuid()
+{
+  return QUuid("{b7301dbf-27d5-5335-b86e-563d573f002b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString JumbleOrientations::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

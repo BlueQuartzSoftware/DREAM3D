@@ -392,6 +392,14 @@ const QString MultiEmmpmFilter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid MultiEmmpmFilter::getUuid()
+{
+  return QUuid("{b2847755-dd39-5989-b624-98b1fdc9db5b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString MultiEmmpmFilter::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;

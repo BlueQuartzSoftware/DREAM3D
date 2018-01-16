@@ -441,6 +441,14 @@ const QString FindFeatureReferenceMisorientations::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid FindFeatureReferenceMisorientations::getUuid()
+{
+  return QUuid("{428e1f5b-e6d8-5e8b-ad68-56ff14ee0e8c}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindFeatureReferenceMisorientations::getSubGroupName()
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;

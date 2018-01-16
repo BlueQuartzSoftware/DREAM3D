@@ -30,6 +30,15 @@ Image
 
 None
 
+## Example Pipelines ##
+
++ INL Export
++ Export Small IN100 ODF Data (StatsGenerator)
++ TxCopper_Exposed
++ TxCopper_Unexposed
++ Edax IPF Colors
++ Confidence Index Histogram
+
 ## License & Copyright ##
 
 Please see the description file distributed with this **Plugin**
