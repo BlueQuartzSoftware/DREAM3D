@@ -56,6 +56,24 @@ set(RefManual_Groups
       UsingDREAM3D
     )
 
+# --------------------------------------------------------------------------
+macro(ConvertPathToHeaderCompatible INPUT)
+    if(WIN32)
+      STRING(REPLACE "\\" "\\\\" ${INPUT} ${INPUT} )
+      STRING(REPLACE "/" "\\\\" ${INPUT} ${INPUT}  )
+    endif()
+endmacro()
+
+
+set(DREAM3DProj_SOURCE_DIR_NORM ${DREAM3DProj_SOURCE_DIR})
+ConvertPathToHeaderCompatible(${DREAM3DProj_SOURCE_DIR_NORM})
+set(SIMPLib_SOURCE_DIR_NORM ${SIMPLib_SOURCE_DIR})
+ConvertPathToHeaderCompatible(${SIMPLib_SOURCE_DIR_NORM})
+set(SIMPLib_PLUGIN_DIR_NORM "${DREAM3DProj_SOURCE_DIR}/Source/Plugins")
+ConvertPathToHeaderCompatible(${SIMPLib_PLUGIN_DIR_NORM})
+
+get_filename_component(DREAM3DProj_PARENT_DIR_NORM ${DREAM3DProj_SOURCE_DIR} PATH)
+ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
 
 # ------------------------------------------------------------------------------
 # This is an experimental tool that will convert all the markdown documents to
