@@ -50,6 +50,7 @@
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -79,7 +80,8 @@ class FindConnectedFeaturesTest
   void RemoveTestFiles()
   {
   #if REMOVE_TEST_FILES
-    QFile::remove(UnitTest::FindConnectedFeaturesTest::OutputFile);
+    QFile::remove(UnitTest::FindConnectedFeaturesTest::FeatureAlgorithmOutputFile);
+    QFile::remove(UnitTest::FindConnectedFeaturesTest::PhaseAlgorithmOutputFile);
   #endif
   }
 
@@ -182,24 +184,28 @@ class FindConnectedFeaturesTest
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
       DataContainerWriter::Pointer writer = DataContainerWriter::New();
-      writer->setOutputFile(UnitTest::FindConnectedFeaturesTest::OutputFile);
+      writer->setOutputFile(UnitTest::FindConnectedFeaturesTest::FeatureAlgorithmOutputFile);
       writer->setWriteXdmfFile(false);
       pipeline->pushBack(writer);
 
       pipeline->execute();
       DREAM3D_REQUIRE_EQUAL(filter->getErrorCondition(), 0);
 
-      hid_t fileId = QH5Utilities::openFile(UnitTest::FindConnectedFeaturesTest::OutputFile, true);
+      hid_t fileId = QH5Utilities::openFile(UnitTest::FindConnectedFeaturesTest::FeatureAlgorithmOutputFile, true);
       DREAM3D_REQUIRE(fileId >= 0);
+      HDF5ScopedFileSentinel sentinel(&fileId, true);
 
       hid_t rootId = QH5Utilities::openHDF5Object(fileId, "DataContainers");
       DREAM3D_REQUIRE(rootId >= 0);
+      sentinel.addGroupId(&rootId);
 
       hid_t dcId = QH5Utilities::openHDF5Object(rootId, DataContainerName);
       DREAM3D_REQUIRE(dcId >= 0);
+      sentinel.addGroupId(&dcId);
 
       hid_t amId = QH5Utilities::openHDF5Object(dcId, AttributeMatrixName);
       DREAM3D_REQUIRE(amId >= 0);
+      sentinel.addGroupId(&amId);
 
       IDataArray::Pointer iDataArray = H5DataArrayReader::ReadNeighborListData(amId, NeighborListArrayName);
       NeighborList<int32_t>::Pointer nList = std::dynamic_pointer_cast<NeighborList<int32_t> >(iDataArray);
@@ -323,7 +329,7 @@ class FindConnectedFeaturesTest
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
       DataContainerWriter::Pointer writer = DataContainerWriter::New();
-      writer->setOutputFile(UnitTest::FindConnectedFeaturesTest::OutputFile);
+      writer->setOutputFile(UnitTest::FindConnectedFeaturesTest::PhaseAlgorithmOutputFile);
       writer->setWriteXdmfFile(false);
       pipeline->pushBack(writer);
 
@@ -334,17 +340,21 @@ class FindConnectedFeaturesTest
       pipeline->execute();
       DREAM3D_REQUIRE_EQUAL(filter->getErrorCondition(), 0);
 
-      hid_t fileId = QH5Utilities::openFile(UnitTest::FindConnectedFeaturesTest::OutputFile, true);
+      hid_t fileId = QH5Utilities::openFile(UnitTest::FindConnectedFeaturesTest::PhaseAlgorithmOutputFile, true);
       DREAM3D_REQUIRE(fileId >= 0);
+      HDF5ScopedFileSentinel sentinel(&fileId, true);
 
       hid_t rootId = QH5Utilities::openHDF5Object(fileId, "DataContainers");
       DREAM3D_REQUIRE(rootId >= 0);
+      sentinel.addGroupId(&rootId);
 
       hid_t dcId = QH5Utilities::openHDF5Object(rootId, DataContainerName);
       DREAM3D_REQUIRE(dcId >= 0);
+      sentinel.addGroupId(&dcId);
 
       hid_t amId = QH5Utilities::openHDF5Object(dcId, AttributeMatrixName);
       DREAM3D_REQUIRE(amId >= 0);
+      sentinel.addGroupId(&amId);
 
       IDataArray::Pointer iDataArray = H5DataArrayReader::ReadNeighborListData(amId, NeighborListArrayName);
       NeighborList<int32_t>::Pointer nList = std::dynamic_pointer_cast<NeighborList<int32_t> >(iDataArray);
@@ -358,33 +368,43 @@ class FindConnectedFeaturesTest
       BoolArrayType::Pointer connectedFeaturesArray = std::dynamic_pointer_cast<BoolArrayType >(iDataArray);
       DREAM3D_REQUIRE(connectedFeaturesArray.get() != nullptr);
 
-      for (int i = 0; i < phasesArray->getNumberOfTuples(); i++)
+
+      // Find the feature ids that have the same phase as the selected phase
+      QSet<int> featureIdSet;
+      for (int i = 1; i < phasesArray->getNumberOfTuples(); i++)
       {
         int phaseNumber = phasesArray->getValue(i);
         if (phaseNumber == SelectedPhaseIdValue)
         {
-          NeighborList<int32_t>::SharedVectorType featureIdNList = nList->getList(i);
+          featureIdSet.insert(i);
+        }
+      }
+      QList<int> featureList = featureIdSet.toList();
 
-          for (int j = 0; j < connectedFeaturesArray->getNumberOfTuples(); j++)
-          {
-            bool value = connectedFeaturesArray->getValue(j);
-            if (value == true)
-            {
-              if(std::find(featureIdNList->begin(), featureIdNList->end(), j) == featureIdNList->end())
-              {
-                // The ConnectedFeatures array has this feature marked as a neighbor, but it does not appear in the feature's neighbor list
-                DREAM3D_REQUIRE_EQUAL(0, 1)
-              }
-            }
-            else
-            {
-              if(std::find(featureIdNList->begin(), featureIdNList->end(), j) != featureIdNList->end())
-              {
-                // The ConnectedFeatures array does not have this feature marked as a neighbor, but it still appears in the feature's neighbor list
-                DREAM3D_REQUIRE_EQUAL(0, 1)
-              }
-            }
-          }
+      // Find the neighbor feature ids of all these feature ids, which can otherwise be called the neighbor list for the given phase
+      QSet<int> neighborIdSet;
+      for (int i = 0; i < featureList.size(); i++)
+      {
+        int featureId = featureList[i];
+        NeighborList<int32_t>::SharedVectorType featureIdNList = nList->getList(featureId);
+        for (std::vector<int>::size_type j = 0; j < featureIdNList->size(); j++)
+        {
+          int neighborId = featureIdNList->at(j);
+          neighborIdSet.insert(neighborId);
+        }
+      }
+      QList<int> phaseNeighborList = neighborIdSet.toList();
+
+      // Check every feature id.  Ids in the phase neighbor list should be marked true, otherwise false
+      for (int i = 0; i < connectedFeaturesArray->getNumberOfTuples(); i++)
+      {
+        if (phaseNeighborList.contains(i) == true)
+        {
+          DREAM3D_REQUIRE_EQUAL(connectedFeaturesArray->getValue(i), true);
+        }
+        else
+        {
+          DREAM3D_REQUIRE_EQUAL(connectedFeaturesArray->getValue(i), false);
         }
       }
     }

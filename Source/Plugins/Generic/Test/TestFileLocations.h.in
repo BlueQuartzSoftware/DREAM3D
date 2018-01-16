@@ -24,7 +24,8 @@ namespace UnitTest
   namespace FindConnectedFeaturesTest
   {
   	const QString InputFile("@TEST_FILES_DIR@/FindConnectedFeatures_Input.dream3d");
-  	const QString OutputFile("@TEST_TEMP_DIR@/FindConnectedFeatures_Output.dream3d");
+  	const QString FeatureAlgorithmOutputFile("@TEST_TEMP_DIR@/FindConnectedFeatures_FeatureOutput.dream3d");
+  	const QString PhaseAlgorithmOutputFile("@TEST_TEMP_DIR@/FindConnectedFeatures_PhaseOutput.dream3d");
   }
 }
 
