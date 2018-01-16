@@ -178,16 +178,6 @@ class FindConnectedFeatures : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, PhasesArray)
     DEFINE_DATAARRAY_VARIABLE(bool, ConnectedFeaturesArray)
 
-    /**
-     * @brief findConnectedFeaturesOfFeature
-     */
-    void findConnectedFeaturesOfFeature(int featureId);
-
-    /**
-     * @brief findConnectedFeaturesOfPhase
-     */
-    void findConnectedFeaturesOfPhase();
-
     FindConnectedFeatures(const FindConnectedFeatures&); // Copy Constructor Not Implemented
     void operator=(const FindConnectedFeatures&); // Operator '=' Not Implemented
 };

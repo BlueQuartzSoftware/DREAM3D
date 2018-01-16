@@ -390,7 +390,10 @@ class FindConnectedFeaturesTest
         for (std::vector<int>::size_type j = 0; j < featureIdNList->size(); j++)
         {
           int neighborId = featureIdNList->at(j);
-          neighborIdSet.insert(neighborId);
+          if (phasesArray->getValue(neighborId) != SelectedPhaseIdValue)
+          {
+            neighborIdSet.insert(neighborId);
+          }
         }
       }
       QList<int> phaseNeighborList = neighborIdSet.toList();

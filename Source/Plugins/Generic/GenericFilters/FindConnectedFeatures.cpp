@@ -227,62 +227,70 @@ void FindConnectedFeatures::execute()
 
   if (m_AlgorithmType == static_cast<int>(AlgorithmTypeString::Feature))
   {
-    findConnectedFeaturesOfFeature(m_SelectedFeatureId);
+    std::shared_ptr<NeighborList<int> > nList = m_NeighborList.lock();
+    BoolArrayType::Pointer connectedFeaturesArray = m_ConnectedFeaturesArrayPtr.lock();
+
+    // Get the list of neighbors for the given feature id
+    NeighborList<int>::SharedVectorType featureNeighborList = nList->getList(m_SelectedFeatureId);
+    if (featureNeighborList.get() == nullptr)
+    {
+      QString ss = QObject::tr("There was a problem getting the list of neighbors for feature id %1.").arg(m_SelectedFeatureId);
+      setErrorCondition(-30005);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    // Set all the neighbor feature ids as connected features in the connected features array
+    for (std::vector<int>::size_type i = 0; i < featureNeighborList->size(); i++)
+    {
+      int neighborId = featureNeighborList->at(i);
+      connectedFeaturesArray->setValue(neighborId, true);
+    }
   }
   else if (m_AlgorithmType == static_cast<int>(AlgorithmTypeString::Phase))
   {
-    findConnectedFeaturesOfPhase();
-  }
+    Int32ArrayType::Pointer phasesArray = m_PhasesArrayPtr.lock();
+    QSet<int> featureIdSet;
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindConnectedFeatures::findConnectedFeaturesOfFeature(int featureId)
-{
-  std::shared_ptr<NeighborList<int> > nList = m_NeighborList.lock();
-  BoolArrayType::Pointer connectedFeaturesArray = m_ConnectedFeaturesArrayPtr.lock();
-
-  NeighborList<int>::SharedVectorType featureNeighborList = nList->getList(featureId);
-  if (featureNeighborList.get() == nullptr)
-  {
-    QString ss = QObject::tr("There was a problem getting the list of neighbors for feature id %1.").arg(featureId);
-    setErrorCondition(-30005);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  for (std::vector<int>::size_type i = 0; i < featureNeighborList->size(); i++)
-  {
-    int neighborId = featureNeighborList->at(i);
-    connectedFeaturesArray->setValue(neighborId, true);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindConnectedFeatures::findConnectedFeaturesOfPhase()
-{
-  Int32ArrayType::Pointer phasesArray = m_PhasesArrayPtr.lock();
-  QSet<int> featureIdSet;
-
-  for (size_t i = 0; i < phasesArray->getNumberOfTuples(); i++)
-  {
-    int32_t phaseId = phasesArray->getValue(i);
-    if (phaseId == m_SelectedPhaseId)
+    // Get the list of feature ids for the given phase
+    for (size_t i = 0; i < phasesArray->getNumberOfTuples(); i++)
     {
-      featureIdSet.insert(i);
+      int32_t phaseId = phasesArray->getValue(i);
+      if (phaseId == m_SelectedPhaseId)
+      {
+        featureIdSet.insert(i);
+      }
+    }
+
+    // For each feature id, get the list of neighbor feature ids.  Set all the neighbor feature ids, that are not part of the selected phase, as connected features in the connected features array
+    QList<int> featureList = featureIdSet.toList();
+    for (int i = 0; i < featureList.size(); i++)
+    {
+      std::shared_ptr<NeighborList<int> > nList = m_NeighborList.lock();
+      BoolArrayType::Pointer connectedFeaturesArray = m_ConnectedFeaturesArrayPtr.lock();
+
+      NeighborList<int>::SharedVectorType featureNeighborList = nList->getList(featureList[i]);
+      if (featureNeighborList.get() == nullptr)
+      {
+        QString ss = QObject::tr("There was a problem getting the list of neighbors for feature id %1.").arg(featureList[i]);
+        setErrorCondition(-30005);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+
+      for (std::vector<int>::size_type i = 0; i < featureNeighborList->size(); i++)
+      {
+        int neighborId = featureNeighborList->at(i);
+
+        if (phasesArray->getValue(neighborId) != m_SelectedPhaseId)
+        {
+          connectedFeaturesArray->setValue(neighborId, true);
+        }
+      }
     }
   }
 
-  QList<int> featureList = featureIdSet.toList();
-  for (int i = 0; i < featureList.size(); i++)
-  {
-    findConnectedFeaturesOfFeature(featureList[i]);
-  }
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
