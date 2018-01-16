@@ -20,6 +20,7 @@ SIMPL_START_FILTER_GROUP(
 set(_PublicFilters
 FindBoundaryCells
 FindBoundingBoxFeatures
+FindConnectedFeatures
 FindFeatureCentroids
 FindFeaturePhases
 FindFeaturePhasesBinary

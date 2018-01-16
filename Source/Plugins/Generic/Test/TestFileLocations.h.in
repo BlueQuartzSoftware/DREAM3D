@@ -21,7 +21,11 @@ namespace UnitTest
   const QString TestTempDir("@TEST_TEMP_DIR@");
   const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 
-  
+  namespace FindConnectedFeaturesTest
+  {
+  	const QString InputFile("@TEST_FILES_DIR@/FindConnectedFeatures_Input.dream3d");
+  	const QString OutputFile("@TEST_TEMP_DIR@/FindConnectedFeatures_Output.dream3d");
+  }
 }
 
 #endif
