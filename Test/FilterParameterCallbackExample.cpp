@@ -247,10 +247,13 @@ public:
       DataArrayPath dap;
       QJsonObject obj = jsonValue.toObject();
       dap.readJson(obj);
-      m_SetterCallback(dap);
+      if( m_SetterCallback)
+      {
+        m_SetterCallback(dap);
+      }
     }
   }
-
+  
   void writeJson(QJsonObject& json)
   {
     if(m_GetterCallback)
@@ -258,7 +261,7 @@ public:
       json[getPropertyName()] = m_GetterCallback().toJsonObject();
     }
   }
-
+  
 protected:
   DataArrayPathParameter(const QString& humanLabel, const QString& propertyName, const DataArrayPath &defaultValue, Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback, int groupIndex)
   : IFilterParameter(humanLabel, propertyName, category, groupIndex)
@@ -358,6 +361,12 @@ private:
   SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4, SIMPL_NEW_FP_3)\
   (DoubleParameter, double, __VA_ARGS__))
 
+
+#define SIMPL_NEW_DATA_ARRAY_PATH_FP(...) \
+  SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, \
+  SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4, SIMPL_NEW_FP_3)\
+  (DataArrayPathParameter, DataArrayPath, __VA_ARGS__))
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -381,6 +390,7 @@ public:
     params.push_back( SIMPL_NEW_INT32_FP("Parameter 1", Parameter1, IFilterParameter::Category::Parameter) );
     params.push_back( SIMPL_NEW_DOUBLE_FP("Parameter 2", Parameter2, IFilterParameter::Category::Parameter) );
     params.push_back( SIMPL_NEW_INT32_FP("Index", Index, IFilterParameter::Category::Parameter, groupIndex) );
+    params.push_back( SIMPL_NEW_DATA_ARRAY_PATH_FP("FeatureIdsPath", FeatureIdsPath, IFilterParameter::Category::Parameter, groupIndex) );
 
     m_FilterParameters = params;
   }
@@ -499,6 +509,14 @@ int main(int argc, char* argv[])
   if(nullptr != dblParam.get())
   {
     dblParam->getSetterCallback()(6.66666);
+  }
+  
+  DataArrayPathParameter::Pointer dapParam = std::dynamic_pointer_cast<DataArrayPathParameter>(params.at(3));
+  if(dapParam) {
+    std::function<void(DataArrayPath)> dapCallback = dapParam->getSetterCallback();
+    if(dapCallback) {
+      dapCallback(DataArrayPath("Image","CellAM","FeatureIds"));
+    }
   }
 
   filter.printValues(std::cout);
