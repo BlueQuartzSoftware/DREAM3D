@@ -29,21 +29,6 @@ configure_file(${SIMPLProj_SOURCE_DIR}/Resources/UnitTestSupport.hpp
                ${DREAM3DTest_BINARY_DIR}/UnitTestSupport.hpp COPYONLY IMMEDIATE)
 
 
-AddSIMPLUnitTest(TESTNAME FilterParameterCallbackExample
-                  SOURCES 
-                    ${DREAM3DTest_SOURCE_DIR}/FilterParameterCallbackExample.cpp
-                  FOLDER 
-                    "DREAM3D UnitTests"
-                  LINK_LIBRARIES 
-                    Qt5::Core H5Support SIMPLib  
-                  INCLUDE_DIRS
-                    ${DREAM3DTest_BINARY_DIR}
-                    ${SIMPLProj_SOURCE_DIR}/Source
-                    ${SIMPLProj_BINARY_DIR}
-                   )
-
-
-
 ## QT5_WRAP_CPP( PreflightVerify_MOC  "${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h")
 #set_source_files_properties(${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h PROPERTIES HEADER_FILE_ONLY TRUE)
 set(PreFlightTest_SOURCES ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp
