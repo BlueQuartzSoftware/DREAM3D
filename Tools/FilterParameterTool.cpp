@@ -48,8 +48,7 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonValue>
-
-
+#include <QtCore/QSet>
 
 // DREAM3DLib includes
 //#include "SIMPLib/SIMPLib.h"
@@ -453,6 +452,78 @@ void fixFilterParameter(QStringListIterator& sourceLines, QStringList& outLines,
   outLines.push_back(final);
 }
 
+static QSet<QString> qobjectClasses;
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CheckForQObjectSuperClass(const QString& hFile)
+{
+  QString contents;
+  QFileInfo fi(hFile);
+  
+//  if (fi.baseName().compare("CropImageGeometry") != 0)
+//  {
+//    return false;
+//  }
+
+  {
+    // Read the Source File
+
+    QFile source(hFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+  
+  bool didReplace = false;
+
+  QString searchString =  "virtual const QString getSubGroupName() override;";
+  
+  QStringList outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  
+  int index = 0;
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains("public QObject") )
+    {
+      //"main -> parse -> execute;"
+      if(!qobjectClasses.contains(fi.baseName()) )
+      {
+        qobjectClasses.insert(fi.baseName());
+        std::cout << "QObject -> " << fi.baseName().toStdString() << ";" <<  std::endl;
+        break;
+      }
+      
+    }
+    
+    else if(line.startsWith("class"))
+    {
+      QStringList tokens = line.split(" ");
+      for(auto qsubclass : qobjectClasses)
+      {
+        //QString adjustQSubClass = qsubclass;
+        if(tokens.contains(qsubclass) && qsubclass != fi.baseName())
+        {
+          if(!qobjectClasses.contains(fi.baseName()) ) 
+          {
+            qobjectClasses.insert(fi.baseName());
+            std::cout << qsubclass.trimmed().toStdString() << " -> " << fi.baseName().toStdString() << ";" << std::endl;
+            break;
+          }
+        }
+      }
+      
+      outLines.push_back(line);
+    }
+  }
+  
+  writeOutput(didReplace, outLines, hFile);
+  index++;
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1220,7 +1291,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   {
     QString headerFilePath = itemInfo.absoluteFilePath();
     //QString cppFilePath = headerFilePath.replace(".h", ".cpp");
-    AddUuidCodes(headerFilePath);
+    //AddUuidCodes(headerFilePath);
+    CheckForQObjectSuperClass(headerFilePath);
   }
 }
 
@@ -1306,11 +1378,13 @@ int main(int argc, char* argv[])
   
   
   
-  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
-  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
-  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL"));
-  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView"));
-  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins"));
+//  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
+//  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
+
+//  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView"));
+//  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins"));
 
 #endif
   return 0;
