@@ -48,7 +48,7 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-// Include the MOC generated CPP file which has all the QMetaObject methods/data
+
 
 // -----------------------------------------------------------------------------
 //

@@ -70,7 +70,7 @@
 #include <qwt_scale_widget.h>
 #include <qwt_symbol.h>
 
-// Include the MOC generated CPP file which has all the QMetaObject methods/data
+
 
 // -----------------------------------------------------------------------------
 //

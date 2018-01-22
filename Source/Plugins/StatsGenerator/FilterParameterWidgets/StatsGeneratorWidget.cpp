@@ -68,7 +68,7 @@
 #include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorFilter.h"
 #include "StatsGenerator/Widgets/EditPhaseDialog.h"
 
-// Include the MOC generated CPP file which has all the QMetaObject methods/data
+
 //
 
 // -----------------------------------------------------------------------------

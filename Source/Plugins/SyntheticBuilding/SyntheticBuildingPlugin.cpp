@@ -44,7 +44,7 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
-// Include the MOC generated CPP file which has all the QMetaObject methods/data
+
 
 // -----------------------------------------------------------------------------
 //

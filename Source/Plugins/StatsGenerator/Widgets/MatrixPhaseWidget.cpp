@@ -57,7 +57,7 @@
 #include <qwt_plot_grid.h>
 #include <qwt_plot_marker.h>
 
-// Include the MOC generated CPP file which has all the QMetaObject methods/data
+
 
 // -----------------------------------------------------------------------------
 //

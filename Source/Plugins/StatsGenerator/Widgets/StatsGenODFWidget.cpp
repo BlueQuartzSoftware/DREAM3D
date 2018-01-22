@@ -84,7 +84,7 @@
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1
 
-// Include the MOC generated CPP file which has all the QMetaObject methods/data
+
 
 // -----------------------------------------------------------------------------
 //
@@ -116,7 +116,7 @@ StatsGenODFWidget::~StatsGenODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_m_WeightSpreads_clicked(bool checked)
+void StatsGenODFWidget::on_m_WeightSpreads_clicked(bool /* checked */)
 {
   m_WeightSpreadsStackedWidget->setCurrentIndex(0);
   m_ODFTableView->setModel(m_ODFTableModel);
@@ -129,7 +129,7 @@ void StatsGenODFWidget::on_m_WeightSpreads_clicked(bool checked)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool checked)
+void StatsGenODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool /* checked */)
 {
   m_WeightSpreadsStackedWidget->setCurrentIndex(1);
   m_ODFTableView->setModel(m_OdfBulkTableModel);
@@ -142,7 +142,7 @@ void StatsGenODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool checked)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_m_ODFParametersBtn_clicked(bool b)
+void StatsGenODFWidget::on_m_ODFParametersBtn_clicked(bool /* b */)
 {
   stackedWidget->setCurrentIndex(0);
 }
@@ -150,7 +150,7 @@ void StatsGenODFWidget::on_m_ODFParametersBtn_clicked(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_m_MDFParametersBtn_clicked(bool b)
+void StatsGenODFWidget::on_m_MDFParametersBtn_clicked(bool /* b */)
 {
   stackedWidget->setCurrentIndex(1);
 }
@@ -188,26 +188,26 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
   if(arrays.size() > 0)
   {
     QVector<float> e1(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy(e1.data(), arrays[0]->getVoidPointer(0), sizeof(float) * e1.size());
+    ::memcpy(e1.data(), arrays[0]->getVoidPointer(0), sizeof(float) * static_cast<size_t>(e1.size()));
 
     QVector<float> e2(static_cast<int>(arrays[1]->getNumberOfTuples()));
-    ::memcpy(e2.data(), arrays[1]->getVoidPointer(0), sizeof(float) * e2.size());
+    ::memcpy(e2.data(), arrays[1]->getVoidPointer(0), sizeof(float) * static_cast<size_t>(e2.size()));
 
     QVector<float> e3(static_cast<int>(arrays[2]->getNumberOfTuples()));
-    ::memcpy(e3.data(), arrays[2]->getVoidPointer(0), sizeof(float) * e3.size());
+    ::memcpy(e3.data(), arrays[2]->getVoidPointer(0), sizeof(float) * static_cast<size_t>(e3.size()));
 
     QVector<float> weights(static_cast<int>(arrays[4]->getNumberOfTuples()));
-    ::memcpy(weights.data(), arrays[4]->getVoidPointer(0), sizeof(float) * weights.size());
+    ::memcpy(weights.data(), arrays[4]->getVoidPointer(0), sizeof(float) * static_cast<size_t>(weights.size()));
 
     QVector<float> sigmas(static_cast<int>(arrays[3]->getNumberOfTuples()));
-    ::memcpy(sigmas.data(), arrays[3]->getVoidPointer(0), sizeof(float) * sigmas.size());
+    ::memcpy(sigmas.data(), arrays[3]->getVoidPointer(0), sizeof(float) * static_cast<size_t>(sigmas.size()));
 
     // Convert from Radians to Degrees for the Euler Angles
     for(int i = 0; i < e1.size(); ++i)
     {
-      e1[i] = static_cast<float>(e1[i] * 180.0f / M_PI);
-      e2[i] = static_cast<float>(e2[i] * 180.0f / M_PI);
-      e3[i] = static_cast<float>(e3[i] * 180.0f / M_PI);
+      e1[i] = e1[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
+      e2[i] = e2[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
+      e3[i] = e3[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
     }
 
     if(e1.size() > 0)
@@ -257,9 +257,9 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, PhaseType::Type 
   // Convert from Degrees to Radians
   for(QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = static_cast<float>(e1s[i] * SIMPLib::Constants::k_PiOver180);
-    e2s[i] = static_cast<float>(e2s[i] * SIMPLib::Constants::k_PiOver180);
-    e3s[i] = static_cast<float>(e3s[i] * SIMPLib::Constants::k_PiOver180);
+    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
 
   StatsGeneratorUtilities::GenerateODFBinData(statsData, phaseType, m_CrystalStructure, e1s, e2s, e3s, weights, sigmas, !preflight);
@@ -381,7 +381,7 @@ void StatsGenODFWidget::setupGui()
 
   // In release mode hide the Lambert Square Size.
   QString releaseType = QString::fromLatin1(SIMPLProj_RELEASE_TYPE);
-  if(releaseType.compare("Official") == 0)
+// if(releaseType.compare("Official") == 0)
   {
     pfLambertSize->hide();
     pfLambertLabel->hide();
@@ -440,8 +440,8 @@ void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
 
   for(int i = 0; i < 450; ++i)
   {
-    circleX[i] = 1.0 - (i * inc);
-    circleX[450 + i] = -1.0 + (i * inc);
+    circleX[i] = 1.0 - static_cast<double>(i * inc);
+    circleX[450 + i] = -1.0 + static_cast<double>(i * inc);
 
     circleY[i] = sqrt(1.0 - (circleX[i] * circleX[i]));
     circleY[450 + i] = -circleY[i];
@@ -462,9 +462,9 @@ void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
   {
     QwtArray<double> rotCrossX(2);
     QwtArray<double> rotCrossY(2);
-    rotCrossX[0] = 0.7071067811f;
+    rotCrossX[0] = 0.7071067811;
     rotCrossY[0] = sqrt(1.0 - (rotCrossX[0] * rotCrossX[0]));
-    rotCrossX[1] = -0.7071067811f;
+    rotCrossX[1] = -0.7071067811;
     rotCrossY[1] = -sqrt(1.0 - (rotCrossX[1] * rotCrossX[1]));
     m_RotCross0 = new QwtPlotCurve;
 #if QWT_VERSION >= 0x060000
@@ -482,9 +482,9 @@ void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
   {
     QwtArray<double> rotCrossX(2);
     QwtArray<double> rotCrossY(2);
-    rotCrossX[0] = 0.7071067811f;
+    rotCrossX[0] = 0.7071067811;
     rotCrossY[0] = -sqrt(1.0 - (rotCrossX[0] * rotCrossX[0]));
-    rotCrossX[1] = -0.7071067811f;
+    rotCrossX[1] = -0.7071067811;
     rotCrossY[1] = sqrt(1.0 - (rotCrossX[1] * rotCrossX[1]));
     m_RotCross1 = new QwtPlotCurve;
 #if QWT_VERSION >= 0x060000
@@ -560,11 +560,11 @@ void StatsGenODFWidget::calculateODF()
   // Convert from Degrees to Radians
   for(int i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = static_cast<float>(e1s[i] * M_PI / 180.0);
-    e2s[i] = static_cast<float>(e2s[i] * M_PI / 180.0);
-    e3s[i] = static_cast<float>(e3s[i] * M_PI / 180.0);
+    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
-  size_t numEntries = e1s.size();
+  size_t numEntries = static_cast<size_t>(e1s.size());
 
   int imageSize = pfImageSize->value();
   int lamberSize = pfLambertSize->value();
@@ -573,6 +573,13 @@ void StatsGenODFWidget::calculateODF()
   QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
   PoleFigureConfiguration_t config;
+  config.eulers = eulers.get();
+  config.imageDim = imageSize;
+  config.lambertDim = lamberSize;
+  config.numColors = numColors;
+  config.discrete = true;
+  
+  
   QVector<UInt8ArrayType::Pointer> figures;
 
   if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
@@ -584,11 +591,6 @@ void StatsGenODFWidget::calculateODF()
     err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     CubicOps ops;
-    config.eulers = eulers.get();
-    config.imageDim = imageSize;
-    config.lambertDim = lamberSize;
-    config.numColors = numColors;
-
     figures = ops.generatePoleFigure(config);
   }
   else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
@@ -600,11 +602,6 @@ void StatsGenODFWidget::calculateODF()
     err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     HexagonalOps ops;
-    config.eulers = eulers.get();
-    config.imageDim = imageSize;
-    config.lambertDim = lamberSize;
-    config.numColors = numColors;
-
     figures = ops.generatePoleFigure(config);
   }
   else if(Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
@@ -616,11 +613,6 @@ void StatsGenODFWidget::calculateODF()
     err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     OrthoRhombicOps ops;
-    config.eulers = eulers.get();
-    config.imageDim = imageSize;
-    config.lambertDim = lamberSize;
-    config.numColors = numColors;
-
     figures = ops.generatePoleFigure(config);
   }
   else
