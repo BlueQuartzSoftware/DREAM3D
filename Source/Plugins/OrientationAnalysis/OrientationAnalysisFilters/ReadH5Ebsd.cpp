@@ -1022,7 +1022,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters) const
 {
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
   if(true == copyFilterParameters)
@@ -1050,7 +1050,7 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getCompiledLibraryName()
+const QString ReadH5Ebsd::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -1058,7 +1058,7 @@ const QString ReadH5Ebsd::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getBrandingString()
+const QString ReadH5Ebsd::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -1066,7 +1066,7 @@ const QString ReadH5Ebsd::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getFilterVersion()
+const QString ReadH5Ebsd::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1076,7 +1076,7 @@ const QString ReadH5Ebsd::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getGroupName()
+const QString ReadH5Ebsd::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -1092,7 +1092,7 @@ const QUuid ReadH5Ebsd::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getSubGroupName()
+const QString ReadH5Ebsd::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -1100,7 +1100,7 @@ const QString ReadH5Ebsd::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getHumanLabel()
+const QString ReadH5Ebsd::getHumanLabel() const
 {
   return "Import H5EBSD File";
 }

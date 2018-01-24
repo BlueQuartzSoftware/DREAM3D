@@ -813,7 +813,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilterParameters) const
 {
   VerifyTriangleWinding::Pointer filter = VerifyTriangleWinding::New();
   if(true == copyFilterParameters)
@@ -826,7 +826,7 @@ AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getCompiledLibraryName()
+const QString VerifyTriangleWinding::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -834,7 +834,7 @@ const QString VerifyTriangleWinding::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getGroupName()
+const QString VerifyTriangleWinding::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -850,7 +850,7 @@ const QUuid VerifyTriangleWinding::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getSubGroupName()
+const QString VerifyTriangleWinding::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
 }
@@ -858,7 +858,7 @@ const QString VerifyTriangleWinding::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getHumanLabel()
+const QString VerifyTriangleWinding::getHumanLabel() const
 {
   return "Verify Triangle Winding";
 }

@@ -245,7 +245,7 @@ void MorphFilter::multiSE(EMMPM_Data* data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MorphFilter::getHumanLabel()
+const QString MorphFilter::getHumanLabel() const
 {
   return "EMMPM";
 }

@@ -328,7 +328,7 @@ void GenerateFZQuaternions::incrementPhaseWarningCount()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateFZQuaternions::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GenerateFZQuaternions::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateFZQuaternions::Pointer filter = GenerateFZQuaternions::New();
   if(true == copyFilterParameters)
@@ -341,7 +341,7 @@ AbstractFilter::Pointer GenerateFZQuaternions::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFZQuaternions::getCompiledLibraryName()
+const QString GenerateFZQuaternions::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -349,7 +349,7 @@ const QString GenerateFZQuaternions::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFZQuaternions::getBrandingString()
+const QString GenerateFZQuaternions::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -357,7 +357,7 @@ const QString GenerateFZQuaternions::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFZQuaternions::getFilterVersion()
+const QString GenerateFZQuaternions::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -368,7 +368,7 @@ const QString GenerateFZQuaternions::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFZQuaternions::getGroupName()
+const QString GenerateFZQuaternions::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -384,7 +384,7 @@ const QUuid GenerateFZQuaternions::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFZQuaternions::getSubGroupName()
+const QString GenerateFZQuaternions::getSubGroupName() const
 {
   return "OrientationAnalysis";
 }
@@ -392,7 +392,7 @@ const QString GenerateFZQuaternions::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFZQuaternions::getHumanLabel()
+const QString GenerateFZQuaternions::getHumanLabel() const
 {
   return "Reduce Orientations to Fundamental Zone";
 }

@@ -416,7 +416,7 @@ void GoldfeatherReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GoldfeatherReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GoldfeatherReader::newFilterInstance(bool copyFilterParameters) const
 {
   GoldfeatherReader::Pointer filter = GoldfeatherReader::New();
   if(true == copyFilterParameters)
@@ -429,7 +429,7 @@ AbstractFilter::Pointer GoldfeatherReader::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getCompiledLibraryName()
+const QString GoldfeatherReader::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -437,7 +437,7 @@ const QString GoldfeatherReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getBrandingString()
+const QString GoldfeatherReader::getBrandingString() const
 {
   return "IO";
 }
@@ -445,7 +445,7 @@ const QString GoldfeatherReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getFilterVersion()
+const QString GoldfeatherReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -456,7 +456,7 @@ const QString GoldfeatherReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getGroupName()
+const QString GoldfeatherReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -472,7 +472,7 @@ const QUuid GoldfeatherReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getSubGroupName()
+const QString GoldfeatherReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -480,7 +480,7 @@ const QString GoldfeatherReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getHumanLabel()
+const QString GoldfeatherReader::getHumanLabel() const
 {
   return "Goldfeather Mesh Importer";
 }

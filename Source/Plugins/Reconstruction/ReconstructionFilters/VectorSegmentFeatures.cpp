@@ -423,7 +423,7 @@ void VectorSegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer VectorSegmentFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer VectorSegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   VectorSegmentFeatures::Pointer filter = VectorSegmentFeatures::New();
   if(true == copyFilterParameters)
@@ -436,7 +436,7 @@ AbstractFilter::Pointer VectorSegmentFeatures::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getCompiledLibraryName()
+const QString VectorSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -444,7 +444,7 @@ const QString VectorSegmentFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getBrandingString()
+const QString VectorSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -452,7 +452,7 @@ const QString VectorSegmentFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getFilterVersion()
+const QString VectorSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -462,7 +462,7 @@ const QString VectorSegmentFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getGroupName()
+const QString VectorSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -478,7 +478,7 @@ const QUuid VectorSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getSubGroupName()
+const QString VectorSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -486,7 +486,7 @@ const QString VectorSegmentFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getHumanLabel()
+const QString VectorSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Vector)";
 }

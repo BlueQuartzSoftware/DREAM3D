@@ -223,7 +223,7 @@ void FindTriangleGeomSizes::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindTriangleGeomSizes::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindTriangleGeomSizes::newFilterInstance(bool copyFilterParameters) const
 {
   FindTriangleGeomSizes::Pointer filter = FindTriangleGeomSizes::New();
   if(true == copyFilterParameters)
@@ -236,19 +236,19 @@ AbstractFilter::Pointer FindTriangleGeomSizes::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getCompiledLibraryName()
+const QString FindTriangleGeomSizes::getCompiledLibraryName() const
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getBrandingString()
+const QString FindTriangleGeomSizes::getBrandingString() const
 { return "SurfaceMeshing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getFilterVersion()
+const QString FindTriangleGeomSizes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -259,7 +259,7 @@ const QString FindTriangleGeomSizes::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getGroupName()
+const QString FindTriangleGeomSizes::getGroupName() const
 { return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
@@ -273,12 +273,12 @@ const QUuid FindTriangleGeomSizes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getSubGroupName()
+const QString FindTriangleGeomSizes::getSubGroupName() const
 { return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getHumanLabel()
+const QString FindTriangleGeomSizes::getHumanLabel() const
 { return "Find Feature Volumes from Triangle Geometry"; }
 

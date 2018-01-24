@@ -383,7 +383,7 @@ void GenerateFaceMisorientationColoring::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateFaceMisorientationColoring::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GenerateFaceMisorientationColoring::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateFaceMisorientationColoring::Pointer filter = GenerateFaceMisorientationColoring::New();
   if(true == copyFilterParameters)
@@ -396,7 +396,7 @@ AbstractFilter::Pointer GenerateFaceMisorientationColoring::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getCompiledLibraryName()
+const QString GenerateFaceMisorientationColoring::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -404,7 +404,7 @@ const QString GenerateFaceMisorientationColoring::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getBrandingString()
+const QString GenerateFaceMisorientationColoring::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -412,7 +412,7 @@ const QString GenerateFaceMisorientationColoring::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getFilterVersion()
+const QString GenerateFaceMisorientationColoring::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -422,7 +422,7 @@ const QString GenerateFaceMisorientationColoring::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getGroupName()
+const QString GenerateFaceMisorientationColoring::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -438,7 +438,7 @@ const QUuid GenerateFaceMisorientationColoring::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getSubGroupName()
+const QString GenerateFaceMisorientationColoring::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -446,7 +446,7 @@ const QString GenerateFaceMisorientationColoring::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getHumanLabel()
+const QString GenerateFaceMisorientationColoring::getHumanLabel() const
 {
   return "Generate Misorientation Colors (Face)";
 }

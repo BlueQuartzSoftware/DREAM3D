@@ -200,7 +200,7 @@ void ReverseTriangleWinding::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilterParameters) const
 {
   ReverseTriangleWinding::Pointer filter = ReverseTriangleWinding::New();
   if(true == copyFilterParameters)
@@ -213,7 +213,7 @@ AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getCompiledLibraryName()
+const QString ReverseTriangleWinding::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -221,7 +221,7 @@ const QString ReverseTriangleWinding::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getBrandingString()
+const QString ReverseTriangleWinding::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -229,7 +229,7 @@ const QString ReverseTriangleWinding::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getFilterVersion()
+const QString ReverseTriangleWinding::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -239,7 +239,7 @@ const QString ReverseTriangleWinding::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getGroupName()
+const QString ReverseTriangleWinding::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -255,7 +255,7 @@ const QUuid ReverseTriangleWinding::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getSubGroupName()
+const QString ReverseTriangleWinding::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
 }
@@ -263,7 +263,7 @@ const QString ReverseTriangleWinding::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getHumanLabel()
+const QString ReverseTriangleWinding::getHumanLabel() const
 {
   return "Reverse Triangle Winding";
 }

@@ -161,7 +161,7 @@ void GenerateGeometryConnectivity::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateGeometryConnectivity::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GenerateGeometryConnectivity::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateGeometryConnectivity::Pointer filter = GenerateGeometryConnectivity::New();
   if(true == copyFilterParameters)
@@ -174,7 +174,7 @@ AbstractFilter::Pointer GenerateGeometryConnectivity::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateGeometryConnectivity::getCompiledLibraryName()
+const QString GenerateGeometryConnectivity::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -182,7 +182,7 @@ const QString GenerateGeometryConnectivity::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateGeometryConnectivity::getBrandingString()
+const QString GenerateGeometryConnectivity::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -190,7 +190,7 @@ const QString GenerateGeometryConnectivity::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateGeometryConnectivity::getFilterVersion()
+const QString GenerateGeometryConnectivity::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -200,7 +200,7 @@ const QString GenerateGeometryConnectivity::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateGeometryConnectivity::getGroupName()
+const QString GenerateGeometryConnectivity::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -216,7 +216,7 @@ const QUuid GenerateGeometryConnectivity::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateGeometryConnectivity::getSubGroupName()
+const QString GenerateGeometryConnectivity::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
 }
@@ -224,7 +224,7 @@ const QString GenerateGeometryConnectivity::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateGeometryConnectivity::getHumanLabel()
+const QString GenerateGeometryConnectivity::getHumanLabel() const
 {
   return "Generate Geometry Connectivity";
 }

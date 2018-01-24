@@ -260,7 +260,7 @@ int32_t SPParksSitesWriter::writeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SPParksSitesWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer SPParksSitesWriter::newFilterInstance(bool copyFilterParameters) const
 {
   SPParksSitesWriter::Pointer filter = SPParksSitesWriter::New();
   if(true == copyFilterParameters)
@@ -273,7 +273,7 @@ AbstractFilter::Pointer SPParksSitesWriter::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getCompiledLibraryName()
+const QString SPParksSitesWriter::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -281,7 +281,7 @@ const QString SPParksSitesWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getBrandingString()
+const QString SPParksSitesWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -289,7 +289,7 @@ const QString SPParksSitesWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getFilterVersion()
+const QString SPParksSitesWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -299,7 +299,7 @@ const QString SPParksSitesWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getGroupName()
+const QString SPParksSitesWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -315,7 +315,7 @@ const QUuid SPParksSitesWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getSubGroupName()
+const QString SPParksSitesWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -323,7 +323,7 @@ const QString SPParksSitesWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getHumanLabel()
+const QString SPParksSitesWriter::getHumanLabel() const
 {
   return "Export SPParks Sites File";
 }

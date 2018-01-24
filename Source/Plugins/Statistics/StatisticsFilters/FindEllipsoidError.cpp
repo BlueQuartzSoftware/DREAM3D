@@ -381,7 +381,7 @@ void FindEllipsoidError::find_error2D()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindEllipsoidError::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindEllipsoidError::newFilterInstance(bool copyFilterParameters) const
 {
   FindEllipsoidError::Pointer filter = FindEllipsoidError::New();
   if(true == copyFilterParameters)
@@ -394,7 +394,7 @@ AbstractFilter::Pointer FindEllipsoidError::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getCompiledLibraryName()
+const QString FindEllipsoidError::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -402,7 +402,7 @@ const QString FindEllipsoidError::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getBrandingString()
+const QString FindEllipsoidError::getBrandingString() const
 {
   return "Statistics";
 }
@@ -410,7 +410,7 @@ const QString FindEllipsoidError::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getFilterVersion()
+const QString FindEllipsoidError::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -421,7 +421,7 @@ const QString FindEllipsoidError::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getGroupName()
+const QString FindEllipsoidError::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -437,7 +437,7 @@ const QUuid FindEllipsoidError::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getSubGroupName()
+const QString FindEllipsoidError::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -445,7 +445,7 @@ const QString FindEllipsoidError::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getHumanLabel()
+const QString FindEllipsoidError::getHumanLabel() const
 {
   return "Find Ellipsoid Error";
 }

@@ -296,7 +296,7 @@ void FindTriangleGeomNeighbors::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindTriangleGeomNeighbors::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindTriangleGeomNeighbors::newFilterInstance(bool copyFilterParameters) const
 {
   FindTriangleGeomNeighbors::Pointer filter = FindTriangleGeomNeighbors::New();
   if(true == copyFilterParameters)
@@ -309,7 +309,7 @@ AbstractFilter::Pointer FindTriangleGeomNeighbors::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getCompiledLibraryName()
+const QString FindTriangleGeomNeighbors::getCompiledLibraryName() const
 {
 	return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -317,7 +317,7 @@ const QString FindTriangleGeomNeighbors::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getBrandingString()
+const QString FindTriangleGeomNeighbors::getBrandingString() const
 {
   return "Statistics";
 }
@@ -325,7 +325,7 @@ const QString FindTriangleGeomNeighbors::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getFilterVersion()
+const QString FindTriangleGeomNeighbors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -335,7 +335,7 @@ const QString FindTriangleGeomNeighbors::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getGroupName()
+const QString FindTriangleGeomNeighbors::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -351,7 +351,7 @@ const QUuid FindTriangleGeomNeighbors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getSubGroupName()
+const QString FindTriangleGeomNeighbors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -359,7 +359,7 @@ const QString FindTriangleGeomNeighbors::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getHumanLabel()
+const QString FindTriangleGeomNeighbors::getHumanLabel() const
 {
   return "Find Feature Neighbors from Triangle Geometry";
 }

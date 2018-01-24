@@ -593,7 +593,7 @@ void ConvertColorToGrayScale::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ConvertColorToGrayScale::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ConvertColorToGrayScale::newFilterInstance(bool copyFilterParameters) const
 {
   ConvertColorToGrayScale::Pointer filter = ConvertColorToGrayScale::New();
   if(true == copyFilterParameters)
@@ -606,7 +606,7 @@ AbstractFilter::Pointer ConvertColorToGrayScale::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertColorToGrayScale::getCompiledLibraryName()
+const QString ConvertColorToGrayScale::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -614,7 +614,7 @@ const QString ConvertColorToGrayScale::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertColorToGrayScale::getBrandingString()
+const QString ConvertColorToGrayScale::getBrandingString() const
 {
   return "Processing";
 }
@@ -622,7 +622,7 @@ const QString ConvertColorToGrayScale::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertColorToGrayScale::getFilterVersion()
+const QString ConvertColorToGrayScale::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -632,7 +632,7 @@ const QString ConvertColorToGrayScale::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertColorToGrayScale::getGroupName()
+const QString ConvertColorToGrayScale::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -648,7 +648,7 @@ const QUuid ConvertColorToGrayScale::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertColorToGrayScale::getSubGroupName()
+const QString ConvertColorToGrayScale::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ImageFilters;
 }
@@ -656,7 +656,7 @@ const QString ConvertColorToGrayScale::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertColorToGrayScale::getHumanLabel()
+const QString ConvertColorToGrayScale::getHumanLabel() const
 {
   return "Color to GrayScale";
 }

@@ -272,7 +272,7 @@ void SharedFeatureFaceFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SharedFeatureFaceFilter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer SharedFeatureFaceFilter::newFilterInstance(bool copyFilterParameters) const
 {
   SharedFeatureFaceFilter::Pointer filter = SharedFeatureFaceFilter::New();
   if(true == copyFilterParameters)
@@ -285,7 +285,7 @@ AbstractFilter::Pointer SharedFeatureFaceFilter::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getCompiledLibraryName()
+const QString SharedFeatureFaceFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -293,7 +293,7 @@ const QString SharedFeatureFaceFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getBrandingString()
+const QString SharedFeatureFaceFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -301,7 +301,7 @@ const QString SharedFeatureFaceFilter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getFilterVersion()
+const QString SharedFeatureFaceFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -311,7 +311,7 @@ const QString SharedFeatureFaceFilter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getGroupName()
+const QString SharedFeatureFaceFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -327,7 +327,7 @@ const QUuid SharedFeatureFaceFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getSubGroupName()
+const QString SharedFeatureFaceFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
 }
@@ -335,7 +335,7 @@ const QString SharedFeatureFaceFilter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getHumanLabel()
+const QString SharedFeatureFaceFilter::getHumanLabel() const
 {
   return "Generate Triangle Face Ids";
 }

@@ -444,7 +444,7 @@ void GenerateFaceIPFColoring::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateFaceIPFColoring::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GenerateFaceIPFColoring::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateFaceIPFColoring::Pointer filter = GenerateFaceIPFColoring::New();
   if(true == copyFilterParameters)
@@ -457,7 +457,7 @@ AbstractFilter::Pointer GenerateFaceIPFColoring::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getCompiledLibraryName()
+const QString GenerateFaceIPFColoring::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -465,7 +465,7 @@ const QString GenerateFaceIPFColoring::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getBrandingString()
+const QString GenerateFaceIPFColoring::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -473,7 +473,7 @@ const QString GenerateFaceIPFColoring::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getFilterVersion()
+const QString GenerateFaceIPFColoring::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -483,7 +483,7 @@ const QString GenerateFaceIPFColoring::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getGroupName()
+const QString GenerateFaceIPFColoring::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -499,7 +499,7 @@ const QUuid GenerateFaceIPFColoring::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getSubGroupName()
+const QString GenerateFaceIPFColoring::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -507,7 +507,7 @@ const QString GenerateFaceIPFColoring::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getHumanLabel()
+const QString GenerateFaceIPFColoring::getHumanLabel() const
 {
   return "Generate IPF Colors (Face)";
 }

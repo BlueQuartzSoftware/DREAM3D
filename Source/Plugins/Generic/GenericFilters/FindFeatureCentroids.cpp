@@ -229,7 +229,7 @@ void FindFeatureCentroids::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindFeatureCentroids::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindFeatureCentroids::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureCentroids::Pointer filter = FindFeatureCentroids::New();
   if(true == copyFilterParameters)
@@ -242,7 +242,7 @@ AbstractFilter::Pointer FindFeatureCentroids::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getCompiledLibraryName()
+const QString FindFeatureCentroids::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -250,7 +250,7 @@ const QString FindFeatureCentroids::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getBrandingString()
+const QString FindFeatureCentroids::getBrandingString() const
 {
   return "Generic";
 }
@@ -258,7 +258,7 @@ const QString FindFeatureCentroids::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getFilterVersion()
+const QString FindFeatureCentroids::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -269,7 +269,7 @@ const QString FindFeatureCentroids::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getGroupName()
+const QString FindFeatureCentroids::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -285,7 +285,7 @@ const QUuid FindFeatureCentroids::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getSubGroupName()
+const QString FindFeatureCentroids::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -293,7 +293,7 @@ const QString FindFeatureCentroids::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getHumanLabel()
+const QString FindFeatureCentroids::getHumanLabel() const
 {
   return "Find Feature Centroids";
 }

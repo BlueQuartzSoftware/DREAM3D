@@ -459,7 +459,7 @@ void FindFeatureClustering::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindFeatureClustering::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindFeatureClustering::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureClustering::Pointer filter = FindFeatureClustering::New();
   if(true == copyFilterParameters)
@@ -472,7 +472,7 @@ AbstractFilter::Pointer FindFeatureClustering::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getCompiledLibraryName()
+const QString FindFeatureClustering::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -480,7 +480,7 @@ const QString FindFeatureClustering::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getBrandingString()
+const QString FindFeatureClustering::getBrandingString() const
 {
   return "Statistics";
 }
@@ -488,7 +488,7 @@ const QString FindFeatureClustering::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getFilterVersion()
+const QString FindFeatureClustering::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -498,7 +498,7 @@ const QString FindFeatureClustering::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getGroupName()
+const QString FindFeatureClustering::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -514,7 +514,7 @@ const QUuid FindFeatureClustering::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getSubGroupName()
+const QString FindFeatureClustering::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -522,7 +522,7 @@ const QString FindFeatureClustering::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getHumanLabel()
+const QString FindFeatureClustering::getHumanLabel() const
 {
   return "Find Feature Clustering";
 }

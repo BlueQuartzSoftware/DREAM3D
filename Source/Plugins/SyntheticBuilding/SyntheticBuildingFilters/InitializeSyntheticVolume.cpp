@@ -514,7 +514,7 @@ QString InitializeSyntheticVolume::getBoxDimensions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFilterParameters) const
 {
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   if(true == copyFilterParameters)
@@ -527,7 +527,7 @@ AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeSyntheticVolume::getCompiledLibraryName()
+const QString InitializeSyntheticVolume::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -535,7 +535,7 @@ const QString InitializeSyntheticVolume::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeSyntheticVolume::getBrandingString()
+const QString InitializeSyntheticVolume::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -543,7 +543,7 @@ const QString InitializeSyntheticVolume::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeSyntheticVolume::getFilterVersion()
+const QString InitializeSyntheticVolume::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -553,7 +553,7 @@ const QString InitializeSyntheticVolume::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeSyntheticVolume::getGroupName()
+const QString InitializeSyntheticVolume::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -569,7 +569,7 @@ const QUuid InitializeSyntheticVolume::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeSyntheticVolume::getSubGroupName()
+const QString InitializeSyntheticVolume::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::PackingFilters;
 }
@@ -577,7 +577,7 @@ const QString InitializeSyntheticVolume::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeSyntheticVolume::getHumanLabel()
+const QString InitializeSyntheticVolume::getHumanLabel() const
 {
   return "Initialize Synthetic Volume";
 }

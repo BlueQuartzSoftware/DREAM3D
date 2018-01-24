@@ -254,7 +254,7 @@ void GenerateEulerColors::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateEulerColors::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GenerateEulerColors::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateEulerColors::Pointer filter = GenerateEulerColors::New();
   if(true == copyFilterParameters)
@@ -267,7 +267,7 @@ AbstractFilter::Pointer GenerateEulerColors::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getCompiledLibraryName()
+const QString GenerateEulerColors::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -275,7 +275,7 @@ const QString GenerateEulerColors::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getBrandingString()
+const QString GenerateEulerColors::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -283,7 +283,7 @@ const QString GenerateEulerColors::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getFilterVersion()
+const QString GenerateEulerColors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -294,7 +294,7 @@ const QString GenerateEulerColors::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getGroupName()
+const QString GenerateEulerColors::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -310,7 +310,7 @@ const QUuid GenerateEulerColors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getSubGroupName()
+const QString GenerateEulerColors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -318,7 +318,7 @@ const QString GenerateEulerColors::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getHumanLabel()
+const QString GenerateEulerColors::getHumanLabel() const
 {
   return "Generate Euler Colors";
 }

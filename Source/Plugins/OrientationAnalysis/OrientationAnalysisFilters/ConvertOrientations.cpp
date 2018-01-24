@@ -302,7 +302,7 @@ void ConvertOrientations::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterParameters) const
 {
   ConvertOrientations::Pointer filter = ConvertOrientations::New();
   if(true == copyFilterParameters)
@@ -315,7 +315,7 @@ AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getCompiledLibraryName()
+const QString ConvertOrientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -323,7 +323,7 @@ const QString ConvertOrientations::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getBrandingString()
+const QString ConvertOrientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -331,7 +331,7 @@ const QString ConvertOrientations::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getFilterVersion()
+const QString ConvertOrientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -341,7 +341,7 @@ const QString ConvertOrientations::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getGroupName()
+const QString ConvertOrientations::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -357,7 +357,7 @@ const QUuid ConvertOrientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getSubGroupName()
+const QString ConvertOrientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -365,7 +365,7 @@ const QString ConvertOrientations::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getHumanLabel()
+const QString ConvertOrientations::getHumanLabel() const
 {
   return "Convert Orientation Representation";
 }

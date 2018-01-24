@@ -575,7 +575,7 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer NodesTrianglesToVtk::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer NodesTrianglesToVtk::newFilterInstance(bool copyFilterParameters) const
 {
   /*
   * NodesFile
@@ -595,7 +595,7 @@ AbstractFilter::Pointer NodesTrianglesToVtk::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getCompiledLibraryName()
+const QString NodesTrianglesToVtk::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -603,7 +603,7 @@ const QString NodesTrianglesToVtk::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getBrandingString()
+const QString NodesTrianglesToVtk::getBrandingString() const
 {
   return "IO";
 }
@@ -611,7 +611,7 @@ const QString NodesTrianglesToVtk::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getFilterVersion()
+const QString NodesTrianglesToVtk::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -622,7 +622,7 @@ const QString NodesTrianglesToVtk::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getGroupName()
+const QString NodesTrianglesToVtk::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -638,7 +638,7 @@ const QUuid NodesTrianglesToVtk::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getSubGroupName()
+const QString NodesTrianglesToVtk::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -646,7 +646,7 @@ const QString NodesTrianglesToVtk::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getHumanLabel()
+const QString NodesTrianglesToVtk::getHumanLabel() const
 {
   return "Convert Nodes & Triangles To Vtk";
 }

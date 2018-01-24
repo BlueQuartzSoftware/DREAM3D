@@ -667,7 +667,7 @@ void RotateSampleRefFrame::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterParameters) const
 {
   RotateSampleRefFrame::Pointer filter = RotateSampleRefFrame::New();
   if(true == copyFilterParameters)
@@ -680,7 +680,7 @@ AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getCompiledLibraryName()
+const QString RotateSampleRefFrame::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -688,7 +688,7 @@ const QString RotateSampleRefFrame::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getBrandingString()
+const QString RotateSampleRefFrame::getBrandingString() const
 {
   return "Sampling";
 }
@@ -696,7 +696,7 @@ const QString RotateSampleRefFrame::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getFilterVersion()
+const QString RotateSampleRefFrame::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -706,7 +706,7 @@ const QString RotateSampleRefFrame::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getGroupName()
+const QString RotateSampleRefFrame::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -722,7 +722,7 @@ const QUuid RotateSampleRefFrame::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getSubGroupName()
+const QString RotateSampleRefFrame::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::RotationTransformationFilters;
 }
@@ -730,7 +730,7 @@ const QString RotateSampleRefFrame::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getHumanLabel()
+const QString RotateSampleRefFrame::getHumanLabel() const
 {
   return "Rotate Sample Reference Frame";
 }

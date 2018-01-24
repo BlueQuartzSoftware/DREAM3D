@@ -191,7 +191,7 @@ void FindCAxisLocations::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindCAxisLocations::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindCAxisLocations::newFilterInstance(bool copyFilterParameters) const
 {
   FindCAxisLocations::Pointer filter = FindCAxisLocations::New();
   if(true == copyFilterParameters)
@@ -204,7 +204,7 @@ AbstractFilter::Pointer FindCAxisLocations::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getCompiledLibraryName()
+const QString FindCAxisLocations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -212,7 +212,7 @@ const QString FindCAxisLocations::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getBrandingString()
+const QString FindCAxisLocations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -220,7 +220,7 @@ const QString FindCAxisLocations::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getFilterVersion()
+const QString FindCAxisLocations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -230,7 +230,7 @@ const QString FindCAxisLocations::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getGroupName()
+const QString FindCAxisLocations::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -246,7 +246,7 @@ const QUuid FindCAxisLocations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getSubGroupName()
+const QString FindCAxisLocations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -254,7 +254,7 @@ const QString FindCAxisLocations::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getHumanLabel()
+const QString FindCAxisLocations::getHumanLabel() const
 {
   return "Find C-Axis Locations";
 }

@@ -321,7 +321,7 @@ void IdentifySample::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParameters) const
 {
   IdentifySample::Pointer filter = IdentifySample::New();
   if(true == copyFilterParameters)
@@ -334,7 +334,7 @@ AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getCompiledLibraryName()
+const QString IdentifySample::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -342,7 +342,7 @@ const QString IdentifySample::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getBrandingString()
+const QString IdentifySample::getBrandingString() const
 {
   return "Processing";
 }
@@ -350,7 +350,7 @@ const QString IdentifySample::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getFilterVersion()
+const QString IdentifySample::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -361,7 +361,7 @@ const QString IdentifySample::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getGroupName()
+const QString IdentifySample::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -377,7 +377,7 @@ const QUuid IdentifySample::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getSubGroupName()
+const QString IdentifySample::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -385,7 +385,7 @@ const QString IdentifySample::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getHumanLabel()
+const QString IdentifySample::getHumanLabel() const
 {
   return "Isolate Largest Feature (Identify Sample)";
 }

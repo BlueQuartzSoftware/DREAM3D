@@ -294,7 +294,7 @@ void GenerateVectorColors::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateVectorColors::Pointer filter = GenerateVectorColors::New();
   if(true == copyFilterParameters)
@@ -307,7 +307,7 @@ AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getCompiledLibraryName()
+const QString GenerateVectorColors::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -315,7 +315,7 @@ const QString GenerateVectorColors::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getBrandingString()
+const QString GenerateVectorColors::getBrandingString() const
 {
   return "Generic";
 }
@@ -323,7 +323,7 @@ const QString GenerateVectorColors::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getFilterVersion()
+const QString GenerateVectorColors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -333,7 +333,7 @@ const QString GenerateVectorColors::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getGroupName()
+const QString GenerateVectorColors::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -349,7 +349,7 @@ const QUuid GenerateVectorColors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getSubGroupName()
+const QString GenerateVectorColors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -357,7 +357,7 @@ const QString GenerateVectorColors::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getHumanLabel()
+const QString GenerateVectorColors::getHumanLabel() const
 {
   return "Generate Vector Colors";
 }

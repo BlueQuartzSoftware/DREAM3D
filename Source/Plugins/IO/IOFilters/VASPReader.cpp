@@ -416,7 +416,7 @@ int VASPReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer VASPReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer VASPReader::newFilterInstance(bool copyFilterParameters) const
 {
   VASPReader::Pointer filter = VASPReader::New();
   if(true == copyFilterParameters)
@@ -429,7 +429,7 @@ AbstractFilter::Pointer VASPReader::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getCompiledLibraryName()
+const QString VASPReader::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -437,7 +437,7 @@ const QString VASPReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getBrandingString()
+const QString VASPReader::getBrandingString() const
 {
   return "IO";
 }
@@ -445,7 +445,7 @@ const QString VASPReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getFilterVersion()
+const QString VASPReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -456,7 +456,7 @@ const QString VASPReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getGroupName()
+const QString VASPReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -472,7 +472,7 @@ const QUuid VASPReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getSubGroupName()
+const QString VASPReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -480,7 +480,7 @@ const QString VASPReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getHumanLabel()
+const QString VASPReader::getHumanLabel() const
 {
   return "Import VASP File";
 }

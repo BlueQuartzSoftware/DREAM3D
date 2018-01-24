@@ -347,7 +347,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindFeatureNeighborCAxisMisalignments::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindFeatureNeighborCAxisMisalignments::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureNeighborCAxisMisalignments::Pointer filter = FindFeatureNeighborCAxisMisalignments::New();
   if(true == copyFilterParameters)
@@ -360,7 +360,7 @@ AbstractFilter::Pointer FindFeatureNeighborCAxisMisalignments::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureNeighborCAxisMisalignments::getCompiledLibraryName()
+const QString FindFeatureNeighborCAxisMisalignments::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -368,7 +368,7 @@ const QString FindFeatureNeighborCAxisMisalignments::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureNeighborCAxisMisalignments::getBrandingString()
+const QString FindFeatureNeighborCAxisMisalignments::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -376,7 +376,7 @@ const QString FindFeatureNeighborCAxisMisalignments::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureNeighborCAxisMisalignments::getFilterVersion()
+const QString FindFeatureNeighborCAxisMisalignments::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -386,7 +386,7 @@ const QString FindFeatureNeighborCAxisMisalignments::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureNeighborCAxisMisalignments::getGroupName()
+const QString FindFeatureNeighborCAxisMisalignments::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -402,7 +402,7 @@ const QUuid FindFeatureNeighborCAxisMisalignments::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureNeighborCAxisMisalignments::getSubGroupName()
+const QString FindFeatureNeighborCAxisMisalignments::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -410,7 +410,7 @@ const QString FindFeatureNeighborCAxisMisalignments::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureNeighborCAxisMisalignments::getHumanLabel()
+const QString FindFeatureNeighborCAxisMisalignments::getHumanLabel() const
 {
   return "Find Feature Neighbor C-Axis Misalignments";
 }

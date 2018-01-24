@@ -3520,7 +3520,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterParameters) const
 {
   PackPrimaryPhases::Pointer filter = PackPrimaryPhases::New();
   if(true == copyFilterParameters)
@@ -3534,7 +3534,7 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getCompiledLibraryName()
+const QString PackPrimaryPhases::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -3542,7 +3542,7 @@ const QString PackPrimaryPhases::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getBrandingString()
+const QString PackPrimaryPhases::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -3550,7 +3550,7 @@ const QString PackPrimaryPhases::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getFilterVersion()
+const QString PackPrimaryPhases::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -3560,7 +3560,7 @@ const QString PackPrimaryPhases::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getGroupName()
+const QString PackPrimaryPhases::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -3576,7 +3576,7 @@ const QUuid PackPrimaryPhases::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getSubGroupName()
+const QString PackPrimaryPhases::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::PackingFilters;
 }
@@ -3584,7 +3584,7 @@ const QString PackPrimaryPhases::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getHumanLabel()
+const QString PackPrimaryPhases::getHumanLabel() const
 {
   return "Pack Primary Phases";
 }

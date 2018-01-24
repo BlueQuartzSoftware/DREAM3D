@@ -326,7 +326,7 @@ void FindDifferenceMap::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindDifferenceMap::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindDifferenceMap::newFilterInstance(bool copyFilterParameters) const
 {
   FindDifferenceMap::Pointer filter = FindDifferenceMap::New();
   if(true == copyFilterParameters)
@@ -339,7 +339,7 @@ AbstractFilter::Pointer FindDifferenceMap::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getCompiledLibraryName()
+const QString FindDifferenceMap::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -347,7 +347,7 @@ const QString FindDifferenceMap::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getBrandingString()
+const QString FindDifferenceMap::getBrandingString() const
 {
   return "Statistics";
 }
@@ -355,7 +355,7 @@ const QString FindDifferenceMap::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getFilterVersion()
+const QString FindDifferenceMap::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -365,7 +365,7 @@ const QString FindDifferenceMap::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getGroupName()
+const QString FindDifferenceMap::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -373,7 +373,7 @@ const QString FindDifferenceMap::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getHumanLabel()
+const QString FindDifferenceMap::getHumanLabel() const
 {
   return "Find Difference Map";
 }
@@ -389,7 +389,7 @@ const QUuid FindDifferenceMap::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getSubGroupName()
+const QString FindDifferenceMap::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }

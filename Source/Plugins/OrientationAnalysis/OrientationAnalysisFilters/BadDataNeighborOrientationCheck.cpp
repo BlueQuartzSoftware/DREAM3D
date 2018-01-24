@@ -376,7 +376,7 @@ void BadDataNeighborOrientationCheck::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer BadDataNeighborOrientationCheck::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer BadDataNeighborOrientationCheck::newFilterInstance(bool copyFilterParameters) const
 {
   BadDataNeighborOrientationCheck::Pointer filter = BadDataNeighborOrientationCheck::New();
   if(true == copyFilterParameters)
@@ -389,7 +389,7 @@ AbstractFilter::Pointer BadDataNeighborOrientationCheck::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString BadDataNeighborOrientationCheck::getCompiledLibraryName()
+const QString BadDataNeighborOrientationCheck::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -397,7 +397,7 @@ const QString BadDataNeighborOrientationCheck::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString BadDataNeighborOrientationCheck::getBrandingString()
+const QString BadDataNeighborOrientationCheck::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -405,7 +405,7 @@ const QString BadDataNeighborOrientationCheck::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString BadDataNeighborOrientationCheck::getFilterVersion()
+const QString BadDataNeighborOrientationCheck::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -415,7 +415,7 @@ const QString BadDataNeighborOrientationCheck::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString BadDataNeighborOrientationCheck::getGroupName()
+const QString BadDataNeighborOrientationCheck::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -431,7 +431,7 @@ const QUuid BadDataNeighborOrientationCheck::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString BadDataNeighborOrientationCheck::getSubGroupName()
+const QString BadDataNeighborOrientationCheck::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -439,7 +439,7 @@ const QString BadDataNeighborOrientationCheck::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString BadDataNeighborOrientationCheck::getHumanLabel()
+const QString BadDataNeighborOrientationCheck::getHumanLabel() const
 {
   return "Neighbor Orientation Comparison (Bad Data)";
 }

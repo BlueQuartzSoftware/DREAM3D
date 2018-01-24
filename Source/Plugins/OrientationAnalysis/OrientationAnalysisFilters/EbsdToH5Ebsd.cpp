@@ -521,7 +521,7 @@ void EbsdToH5Ebsd::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameters) const
 {
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
   if(true == copyFilterParameters)
@@ -548,7 +548,7 @@ AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getCompiledLibraryName()
+const QString EbsdToH5Ebsd::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -556,7 +556,7 @@ const QString EbsdToH5Ebsd::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getBrandingString()
+const QString EbsdToH5Ebsd::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -564,7 +564,7 @@ const QString EbsdToH5Ebsd::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getFilterVersion()
+const QString EbsdToH5Ebsd::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -574,7 +574,7 @@ const QString EbsdToH5Ebsd::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getGroupName()
+const QString EbsdToH5Ebsd::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -590,7 +590,7 @@ const QUuid EbsdToH5Ebsd::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getSubGroupName()
+const QString EbsdToH5Ebsd::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -598,7 +598,7 @@ const QString EbsdToH5Ebsd::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getHumanLabel()
+const QString EbsdToH5Ebsd::getHumanLabel() const
 {
   return "Import Orientation File(s) to H5EBSD";
 }

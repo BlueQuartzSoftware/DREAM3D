@@ -224,7 +224,7 @@ void FindTriangleGeomCentroids::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindTriangleGeomCentroids::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindTriangleGeomCentroids::newFilterInstance(bool copyFilterParameters) const
 {
   FindTriangleGeomCentroids::Pointer filter = FindTriangleGeomCentroids::New();
   if(true == copyFilterParameters)
@@ -237,7 +237,7 @@ AbstractFilter::Pointer FindTriangleGeomCentroids::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomCentroids::getCompiledLibraryName()
+const QString FindTriangleGeomCentroids::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -245,7 +245,7 @@ const QString FindTriangleGeomCentroids::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomCentroids::getBrandingString()
+const QString FindTriangleGeomCentroids::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -253,7 +253,7 @@ const QString FindTriangleGeomCentroids::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomCentroids::getFilterVersion()
+const QString FindTriangleGeomCentroids::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -264,7 +264,7 @@ const QString FindTriangleGeomCentroids::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomCentroids::getGroupName()
+const QString FindTriangleGeomCentroids::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -280,7 +280,7 @@ const QUuid FindTriangleGeomCentroids::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomCentroids::getSubGroupName()
+const QString FindTriangleGeomCentroids::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -288,7 +288,7 @@ const QString FindTriangleGeomCentroids::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomCentroids::getHumanLabel()
+const QString FindTriangleGeomCentroids::getHumanLabel() const
 {
   return "Find Feature Centroids from Triangle Geometry";
 }

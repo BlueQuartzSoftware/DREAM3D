@@ -86,7 +86,7 @@ void OrientationUtility::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer OrientationUtility::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer OrientationUtility::newFilterInstance(bool copyFilterParameters) const
 {
   OrientationUtility::Pointer filter = OrientationUtility::New();
   if(true == copyFilterParameters)
@@ -99,7 +99,7 @@ AbstractFilter::Pointer OrientationUtility::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getCompiledLibraryName()
+const QString OrientationUtility::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -107,7 +107,7 @@ const QString OrientationUtility::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getBrandingString()
+const QString OrientationUtility::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -115,7 +115,7 @@ const QString OrientationUtility::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getFilterVersion()
+const QString OrientationUtility::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -125,7 +125,7 @@ const QString OrientationUtility::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getGroupName()
+const QString OrientationUtility::getGroupName() const
 {
   return SIMPL::FilterGroups::Utilities;
 }
@@ -141,7 +141,7 @@ const QUuid OrientationUtility::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getSubGroupName()
+const QString OrientationUtility::getSubGroupName() const
 {
   return "OrientationAnalysis";
 }
@@ -149,7 +149,7 @@ const QString OrientationUtility::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getHumanLabel()
+const QString OrientationUtility::getHumanLabel() const
 {
   return "Orientation Utility";
 }

@@ -270,7 +270,7 @@ void EMMPM::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMMPM::getHumanLabel()
+const QString EMMPM::getHumanLabel() const
 {
   return "EMMPM";
 }

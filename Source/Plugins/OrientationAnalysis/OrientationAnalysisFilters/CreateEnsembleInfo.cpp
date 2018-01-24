@@ -260,7 +260,7 @@ void CreateEnsembleInfo::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer CreateEnsembleInfo::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer CreateEnsembleInfo::newFilterInstance(bool copyFilterParameters) const
 {
   CreateEnsembleInfo::Pointer filter = CreateEnsembleInfo::New();
   if(true == copyFilterParameters)
@@ -273,7 +273,7 @@ AbstractFilter::Pointer CreateEnsembleInfo::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getCompiledLibraryName()
+const QString CreateEnsembleInfo::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -281,7 +281,7 @@ const QString CreateEnsembleInfo::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getBrandingString()
+const QString CreateEnsembleInfo::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -289,7 +289,7 @@ const QString CreateEnsembleInfo::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getFilterVersion()
+const QString CreateEnsembleInfo::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -299,7 +299,7 @@ const QString CreateEnsembleInfo::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getGroupName()
+const QString CreateEnsembleInfo::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -315,7 +315,7 @@ const QUuid CreateEnsembleInfo::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getSubGroupName()
+const QString CreateEnsembleInfo::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -323,7 +323,7 @@ const QString CreateEnsembleInfo::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getHumanLabel()
+const QString CreateEnsembleInfo::getHumanLabel() const
 {
   return "Create Ensemble Info";
 }

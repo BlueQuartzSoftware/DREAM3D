@@ -357,7 +357,7 @@ void FindBoundaryStrengths::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindBoundaryStrengths::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindBoundaryStrengths::newFilterInstance(bool copyFilterParameters) const
 {
   FindBoundaryStrengths::Pointer filter = FindBoundaryStrengths::New();
   if(true == copyFilterParameters)
@@ -370,7 +370,7 @@ AbstractFilter::Pointer FindBoundaryStrengths::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryStrengths::getCompiledLibraryName()
+const QString FindBoundaryStrengths::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -378,7 +378,7 @@ const QString FindBoundaryStrengths::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryStrengths::getBrandingString()
+const QString FindBoundaryStrengths::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -386,7 +386,7 @@ const QString FindBoundaryStrengths::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryStrengths::getFilterVersion()
+const QString FindBoundaryStrengths::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -396,7 +396,7 @@ const QString FindBoundaryStrengths::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryStrengths::getGroupName()
+const QString FindBoundaryStrengths::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -412,7 +412,7 @@ const QUuid FindBoundaryStrengths::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryStrengths::getSubGroupName()
+const QString FindBoundaryStrengths::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -420,7 +420,7 @@ const QString FindBoundaryStrengths::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryStrengths::getHumanLabel()
+const QString FindBoundaryStrengths::getHumanLabel() const
 {
   return "Find Feature Boundary Strength Metrics";
 }

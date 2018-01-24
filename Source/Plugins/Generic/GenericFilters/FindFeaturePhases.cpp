@@ -233,7 +233,7 @@ void FindFeaturePhases::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindFeaturePhases::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindFeaturePhases::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeaturePhases::Pointer filter = FindFeaturePhases::New();
   if(true == copyFilterParameters)
@@ -246,7 +246,7 @@ AbstractFilter::Pointer FindFeaturePhases::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getCompiledLibraryName()
+const QString FindFeaturePhases::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -254,7 +254,7 @@ const QString FindFeaturePhases::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getBrandingString()
+const QString FindFeaturePhases::getBrandingString() const
 {
   return "Generic";
 }
@@ -262,7 +262,7 @@ const QString FindFeaturePhases::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getFilterVersion()
+const QString FindFeaturePhases::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -272,7 +272,7 @@ const QString FindFeaturePhases::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getGroupName()
+const QString FindFeaturePhases::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -288,7 +288,7 @@ const QUuid FindFeaturePhases::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getSubGroupName()
+const QString FindFeaturePhases::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -296,7 +296,7 @@ const QString FindFeaturePhases::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getHumanLabel()
+const QString FindFeaturePhases::getHumanLabel() const
 {
   return "Find Feature Phases";
 }

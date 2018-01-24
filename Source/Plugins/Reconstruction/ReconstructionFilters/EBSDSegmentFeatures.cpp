@@ -453,7 +453,7 @@ void EBSDSegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   EBSDSegmentFeatures::Pointer filter = EBSDSegmentFeatures::New();
   if(true == copyFilterParameters)
@@ -466,7 +466,7 @@ AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getCompiledLibraryName()
+const QString EBSDSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -474,7 +474,7 @@ const QString EBSDSegmentFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getBrandingString()
+const QString EBSDSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -482,7 +482,7 @@ const QString EBSDSegmentFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getFilterVersion()
+const QString EBSDSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -492,7 +492,7 @@ const QString EBSDSegmentFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getGroupName()
+const QString EBSDSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -508,7 +508,7 @@ const QUuid EBSDSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getSubGroupName()
+const QString EBSDSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -516,7 +516,7 @@ const QString EBSDSegmentFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getHumanLabel()
+const QString EBSDSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Misorientation)";
 }

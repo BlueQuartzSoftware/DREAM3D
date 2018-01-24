@@ -353,7 +353,7 @@ void GenerateFaceSchuhMisorientationColoring::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateFaceSchuhMisorientationColoring::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GenerateFaceSchuhMisorientationColoring::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateFaceSchuhMisorientationColoring::Pointer filter = GenerateFaceSchuhMisorientationColoring::New();
   if(true == copyFilterParameters)
@@ -366,7 +366,7 @@ AbstractFilter::Pointer GenerateFaceSchuhMisorientationColoring::newFilterInstan
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getCompiledLibraryName()
+const QString GenerateFaceSchuhMisorientationColoring::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -374,7 +374,7 @@ const QString GenerateFaceSchuhMisorientationColoring::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getBrandingString()
+const QString GenerateFaceSchuhMisorientationColoring::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -382,7 +382,7 @@ const QString GenerateFaceSchuhMisorientationColoring::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getFilterVersion()
+const QString GenerateFaceSchuhMisorientationColoring::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -393,7 +393,7 @@ const QString GenerateFaceSchuhMisorientationColoring::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getGroupName()
+const QString GenerateFaceSchuhMisorientationColoring::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -409,7 +409,7 @@ const QUuid GenerateFaceSchuhMisorientationColoring::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getSubGroupName()
+const QString GenerateFaceSchuhMisorientationColoring::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -417,7 +417,7 @@ const QString GenerateFaceSchuhMisorientationColoring::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getHumanLabel()
+const QString GenerateFaceSchuhMisorientationColoring::getHumanLabel() const
 {
   return "Generate Face Schuh Misorientation Colors";
 }

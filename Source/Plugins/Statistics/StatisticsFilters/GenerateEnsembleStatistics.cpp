@@ -1484,7 +1484,7 @@ void GenerateEnsembleStatistics::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateEnsembleStatistics::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GenerateEnsembleStatistics::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
   if(true == copyFilterParameters)
@@ -1502,7 +1502,7 @@ AbstractFilter::Pointer GenerateEnsembleStatistics::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getCompiledLibraryName()
+const QString GenerateEnsembleStatistics::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -1510,7 +1510,7 @@ const QString GenerateEnsembleStatistics::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getBrandingString()
+const QString GenerateEnsembleStatistics::getBrandingString() const
 {
   return "Statistics";
 }
@@ -1518,7 +1518,7 @@ const QString GenerateEnsembleStatistics::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getFilterVersion()
+const QString GenerateEnsembleStatistics::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1528,7 +1528,7 @@ const QString GenerateEnsembleStatistics::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getGroupName()
+const QString GenerateEnsembleStatistics::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -1544,7 +1544,7 @@ const QUuid GenerateEnsembleStatistics::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getSubGroupName()
+const QString GenerateEnsembleStatistics::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -1552,7 +1552,7 @@ const QString GenerateEnsembleStatistics::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getHumanLabel()
+const QString GenerateEnsembleStatistics::getHumanLabel() const
 {
   return "Generate Ensemble Statistics";
 }

@@ -226,7 +226,7 @@ void TriangleCentroidFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilterParameters) const
 {
   TriangleCentroidFilter::Pointer filter = TriangleCentroidFilter::New();
   if(true == copyFilterParameters)
@@ -239,7 +239,7 @@ AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleCentroidFilter::getCompiledLibraryName()
+const QString TriangleCentroidFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -247,7 +247,7 @@ const QString TriangleCentroidFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleCentroidFilter::getBrandingString()
+const QString TriangleCentroidFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -255,7 +255,7 @@ const QString TriangleCentroidFilter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleCentroidFilter::getFilterVersion()
+const QString TriangleCentroidFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -265,7 +265,7 @@ const QString TriangleCentroidFilter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleCentroidFilter::getGroupName()
+const QString TriangleCentroidFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -281,7 +281,7 @@ const QUuid TriangleCentroidFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleCentroidFilter::getSubGroupName()
+const QString TriangleCentroidFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -289,7 +289,7 @@ const QString TriangleCentroidFilter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleCentroidFilter::getHumanLabel()
+const QString TriangleCentroidFilter::getHumanLabel() const
 {
   return "Generate Triangle Centroids";
 }

@@ -802,7 +802,7 @@ void FindGBCD::sizeGBCD(size_t faceChunkSize, size_t numMisoReps)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindGBCD::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindGBCD::newFilterInstance(bool copyFilterParameters) const
 {
   FindGBCD::Pointer filter = FindGBCD::New();
   if(true == copyFilterParameters)
@@ -815,7 +815,7 @@ AbstractFilter::Pointer FindGBCD::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getCompiledLibraryName()
+const QString FindGBCD::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -823,7 +823,7 @@ const QString FindGBCD::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getBrandingString()
+const QString FindGBCD::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -831,7 +831,7 @@ const QString FindGBCD::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getFilterVersion()
+const QString FindGBCD::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -841,7 +841,7 @@ const QString FindGBCD::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getGroupName()
+const QString FindGBCD::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -857,7 +857,7 @@ const QUuid FindGBCD::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getSubGroupName()
+const QString FindGBCD::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -865,7 +865,7 @@ const QString FindGBCD::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getHumanLabel()
+const QString FindGBCD::getHumanLabel() const
 {
   return "Find GBCD";
 }

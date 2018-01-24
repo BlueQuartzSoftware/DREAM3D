@@ -482,7 +482,7 @@ void FindBoundingBoxFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindBoundingBoxFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindBoundingBoxFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   FindBoundingBoxFeatures::Pointer filter = FindBoundingBoxFeatures::New();
   if(true == copyFilterParameters)
@@ -495,7 +495,7 @@ AbstractFilter::Pointer FindBoundingBoxFeatures::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getCompiledLibraryName()
+const QString FindBoundingBoxFeatures::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -503,7 +503,7 @@ const QString FindBoundingBoxFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getBrandingString()
+const QString FindBoundingBoxFeatures::getBrandingString() const
 {
   return "Generic";
 }
@@ -511,7 +511,7 @@ const QString FindBoundingBoxFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getFilterVersion()
+const QString FindBoundingBoxFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -522,7 +522,7 @@ const QString FindBoundingBoxFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getGroupName()
+const QString FindBoundingBoxFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -538,7 +538,7 @@ const QUuid FindBoundingBoxFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getSubGroupName()
+const QString FindBoundingBoxFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SpatialFilters;
 }
@@ -546,7 +546,7 @@ const QString FindBoundingBoxFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getHumanLabel()
+const QString FindBoundingBoxFeatures::getHumanLabel() const
 {
   return "Find Biased Features (Bounding Box)";
 }

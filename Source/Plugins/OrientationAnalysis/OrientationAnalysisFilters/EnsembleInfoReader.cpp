@@ -445,7 +445,7 @@ void EnsembleInfoReader::ensembleLookup(QStringList list)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterParameters) const
 {
   EnsembleInfoReader::Pointer filter = EnsembleInfoReader::New();
   if(true == copyFilterParameters)
@@ -458,7 +458,7 @@ AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getCompiledLibraryName()
+const QString EnsembleInfoReader::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -466,7 +466,7 @@ const QString EnsembleInfoReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getBrandingString()
+const QString EnsembleInfoReader::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -474,7 +474,7 @@ const QString EnsembleInfoReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getFilterVersion()
+const QString EnsembleInfoReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -485,7 +485,7 @@ const QString EnsembleInfoReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getGroupName()
+const QString EnsembleInfoReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -501,7 +501,7 @@ const QUuid EnsembleInfoReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getSubGroupName()
+const QString EnsembleInfoReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -509,7 +509,7 @@ const QString EnsembleInfoReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getHumanLabel()
+const QString EnsembleInfoReader::getHumanLabel() const
 {
   return "Import Ensemble Info File";
 }

@@ -589,7 +589,7 @@ int32_t SPParksDumpReader::getTypeSize(const QString& featureName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SPParksDumpReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer SPParksDumpReader::newFilterInstance(bool copyFilterParameters) const
 {
   SPParksDumpReader::Pointer filter = SPParksDumpReader::New();
   if(true == copyFilterParameters)
@@ -602,7 +602,7 @@ AbstractFilter::Pointer SPParksDumpReader::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getCompiledLibraryName()
+const QString SPParksDumpReader::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -610,7 +610,7 @@ const QString SPParksDumpReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getBrandingString()
+const QString SPParksDumpReader::getBrandingString() const
 {
   return "IO";
 }
@@ -618,7 +618,7 @@ const QString SPParksDumpReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getFilterVersion()
+const QString SPParksDumpReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -628,7 +628,7 @@ const QString SPParksDumpReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getGroupName()
+const QString SPParksDumpReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -644,7 +644,7 @@ const QUuid SPParksDumpReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getSubGroupName()
+const QString SPParksDumpReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -652,7 +652,7 @@ const QString SPParksDumpReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getHumanLabel()
+const QString SPParksDumpReader::getHumanLabel() const
 {
   return "Import SPParks Dump File";
 }

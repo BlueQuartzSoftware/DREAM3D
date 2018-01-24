@@ -278,7 +278,7 @@ int32_t LosAlamosFFTWriter::writeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterParameters) const
 {
   LosAlamosFFTWriter::Pointer filter = LosAlamosFFTWriter::New();
   if(true == copyFilterParameters)
@@ -291,7 +291,7 @@ AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getCompiledLibraryName()
+const QString LosAlamosFFTWriter::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -299,7 +299,7 @@ const QString LosAlamosFFTWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getBrandingString()
+const QString LosAlamosFFTWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -307,7 +307,7 @@ const QString LosAlamosFFTWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getFilterVersion()
+const QString LosAlamosFFTWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -317,7 +317,7 @@ const QString LosAlamosFFTWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getGroupName()
+const QString LosAlamosFFTWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -333,7 +333,7 @@ const QUuid LosAlamosFFTWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getSubGroupName()
+const QString LosAlamosFFTWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -341,7 +341,7 @@ const QString LosAlamosFFTWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getHumanLabel()
+const QString LosAlamosFFTWriter::getHumanLabel() const
 {
   return "Export Los Alamos FFT File";
 }

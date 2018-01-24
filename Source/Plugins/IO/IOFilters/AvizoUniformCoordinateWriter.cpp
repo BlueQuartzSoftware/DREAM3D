@@ -294,7 +294,7 @@ int AvizoUniformCoordinateWriter::writeData(FILE* f)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer AvizoUniformCoordinateWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer AvizoUniformCoordinateWriter::newFilterInstance(bool copyFilterParameters) const
 {
   AvizoUniformCoordinateWriter::Pointer filter = AvizoUniformCoordinateWriter::New();
   if(true == copyFilterParameters)
@@ -307,7 +307,7 @@ AbstractFilter::Pointer AvizoUniformCoordinateWriter::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getCompiledLibraryName()
+const QString AvizoUniformCoordinateWriter::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -315,7 +315,7 @@ const QString AvizoUniformCoordinateWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getBrandingString()
+const QString AvizoUniformCoordinateWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -323,7 +323,7 @@ const QString AvizoUniformCoordinateWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getFilterVersion()
+const QString AvizoUniformCoordinateWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -334,7 +334,7 @@ const QString AvizoUniformCoordinateWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getGroupName()
+const QString AvizoUniformCoordinateWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -350,7 +350,7 @@ const QUuid AvizoUniformCoordinateWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getSubGroupName()
+const QString AvizoUniformCoordinateWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -358,7 +358,7 @@ const QString AvizoUniformCoordinateWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getHumanLabel()
+const QString AvizoUniformCoordinateWriter::getHumanLabel() const
 {
   return "Avizo Uniform Coordinate Exporter";
 }

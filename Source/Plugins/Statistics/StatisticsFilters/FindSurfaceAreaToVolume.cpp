@@ -305,7 +305,7 @@ void FindSurfaceAreaToVolume::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindSurfaceAreaToVolume::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindSurfaceAreaToVolume::newFilterInstance(bool copyFilterParameters) const
 {
   FindSurfaceAreaToVolume::Pointer filter = FindSurfaceAreaToVolume::New();
   if(true == copyFilterParameters)
@@ -318,7 +318,7 @@ AbstractFilter::Pointer FindSurfaceAreaToVolume::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getCompiledLibraryName()
+const QString FindSurfaceAreaToVolume::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -326,7 +326,7 @@ const QString FindSurfaceAreaToVolume::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getBrandingString()
+const QString FindSurfaceAreaToVolume::getBrandingString() const
 {
   return "Statistics";
 }
@@ -334,7 +334,7 @@ const QString FindSurfaceAreaToVolume::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getFilterVersion()
+const QString FindSurfaceAreaToVolume::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -344,7 +344,7 @@ const QString FindSurfaceAreaToVolume::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getGroupName()
+const QString FindSurfaceAreaToVolume::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -360,7 +360,7 @@ const QUuid FindSurfaceAreaToVolume::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getSubGroupName()
+const QString FindSurfaceAreaToVolume::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -368,7 +368,7 @@ const QString FindSurfaceAreaToVolume::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getHumanLabel()
+const QString FindSurfaceAreaToVolume::getHumanLabel() const
 {
   return "Find Surface Area to Volume";
 }

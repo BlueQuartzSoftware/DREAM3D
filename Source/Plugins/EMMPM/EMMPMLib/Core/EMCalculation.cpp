@@ -260,7 +260,7 @@ void EMCalculation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMCalculation::getHumanLabel()
+const QString EMCalculation::getHumanLabel() const
 {
   return "EMCalculation";
 }

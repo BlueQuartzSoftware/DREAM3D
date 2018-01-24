@@ -757,7 +757,7 @@ bool EMsoftSO3Sampler::insideCubicFZ(double* rod, int ot)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer EMsoftSO3Sampler::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer EMsoftSO3Sampler::newFilterInstance(bool copyFilterParameters) const
 {
   EMsoftSO3Sampler::Pointer filter = EMsoftSO3Sampler::New();
   if(true == copyFilterParameters)
@@ -770,7 +770,7 @@ AbstractFilter::Pointer EMsoftSO3Sampler::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getCompiledLibraryName()
+const QString EMsoftSO3Sampler::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -778,7 +778,7 @@ const QString EMsoftSO3Sampler::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getBrandingString()
+const QString EMsoftSO3Sampler::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -786,7 +786,7 @@ const QString EMsoftSO3Sampler::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getFilterVersion()
+const QString EMsoftSO3Sampler::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -797,7 +797,7 @@ const QString EMsoftSO3Sampler::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getGroupName()
+const QString EMsoftSO3Sampler::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -813,7 +813,7 @@ const QUuid EMsoftSO3Sampler::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getSubGroupName()
+const QString EMsoftSO3Sampler::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -821,7 +821,7 @@ const QString EMsoftSO3Sampler::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getHumanLabel()
+const QString EMsoftSO3Sampler::getHumanLabel() const
 {
   return "SO3 Angle Sampler";
 }

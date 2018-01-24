@@ -219,7 +219,7 @@ void FindAvgScalarValueForFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindAvgScalarValueForFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindAvgScalarValueForFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   FindAvgScalarValueForFeatures::Pointer filter = FindAvgScalarValueForFeatures::New();
   if(true == copyFilterParameters)
@@ -232,7 +232,7 @@ AbstractFilter::Pointer FindAvgScalarValueForFeatures::newFilterInstance(bool co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgScalarValueForFeatures::getCompiledLibraryName()
+const QString FindAvgScalarValueForFeatures::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -240,7 +240,7 @@ const QString FindAvgScalarValueForFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgScalarValueForFeatures::getBrandingString()
+const QString FindAvgScalarValueForFeatures::getBrandingString() const
 {
   return "Statistics";
 }
@@ -248,7 +248,7 @@ const QString FindAvgScalarValueForFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgScalarValueForFeatures::getFilterVersion()
+const QString FindAvgScalarValueForFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -259,7 +259,7 @@ const QString FindAvgScalarValueForFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgScalarValueForFeatures::getGroupName()
+const QString FindAvgScalarValueForFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -275,7 +275,7 @@ const QUuid FindAvgScalarValueForFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgScalarValueForFeatures::getSubGroupName()
+const QString FindAvgScalarValueForFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -283,7 +283,7 @@ const QString FindAvgScalarValueForFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgScalarValueForFeatures::getHumanLabel()
+const QString FindAvgScalarValueForFeatures::getHumanLabel() const
 {
   return "Find Average Value of Scalars For Feature";
 }

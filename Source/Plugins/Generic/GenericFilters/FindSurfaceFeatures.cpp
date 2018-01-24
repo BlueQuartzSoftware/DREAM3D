@@ -326,7 +326,7 @@ void FindSurfaceFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindSurfaceFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindSurfaceFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   FindSurfaceFeatures::Pointer filter = FindSurfaceFeatures::New();
   if(true == copyFilterParameters)
@@ -339,7 +339,7 @@ AbstractFilter::Pointer FindSurfaceFeatures::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getCompiledLibraryName()
+const QString FindSurfaceFeatures::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -347,7 +347,7 @@ const QString FindSurfaceFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getBrandingString()
+const QString FindSurfaceFeatures::getBrandingString() const
 {
   return "Generic";
 }
@@ -355,7 +355,7 @@ const QString FindSurfaceFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getFilterVersion()
+const QString FindSurfaceFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -365,7 +365,7 @@ const QString FindSurfaceFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getGroupName()
+const QString FindSurfaceFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -381,7 +381,7 @@ const QUuid FindSurfaceFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getSubGroupName()
+const QString FindSurfaceFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SpatialFilters;
 }
@@ -389,7 +389,7 @@ const QString FindSurfaceFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getHumanLabel()
+const QString FindSurfaceFeatures::getHumanLabel() const
 {
   return "Find Surface Features";
 }

@@ -518,7 +518,7 @@ void MPMCalculation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MPMCalculation::getHumanLabel()
+const QString MPMCalculation::getHumanLabel() const
 {
   return "MPMCalculation";
 }

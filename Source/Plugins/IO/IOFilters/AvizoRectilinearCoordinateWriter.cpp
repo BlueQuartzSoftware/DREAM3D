@@ -329,7 +329,7 @@ int AvizoRectilinearCoordinateWriter::writeData(FILE* f)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer AvizoRectilinearCoordinateWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer AvizoRectilinearCoordinateWriter::newFilterInstance(bool copyFilterParameters) const
 {
   AvizoRectilinearCoordinateWriter::Pointer filter = AvizoRectilinearCoordinateWriter::New();
   if(true == copyFilterParameters)
@@ -342,7 +342,7 @@ AbstractFilter::Pointer AvizoRectilinearCoordinateWriter::newFilterInstance(bool
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoRectilinearCoordinateWriter::getCompiledLibraryName()
+const QString AvizoRectilinearCoordinateWriter::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -350,7 +350,7 @@ const QString AvizoRectilinearCoordinateWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoRectilinearCoordinateWriter::getBrandingString()
+const QString AvizoRectilinearCoordinateWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -358,7 +358,7 @@ const QString AvizoRectilinearCoordinateWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoRectilinearCoordinateWriter::getFilterVersion()
+const QString AvizoRectilinearCoordinateWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -369,7 +369,7 @@ const QString AvizoRectilinearCoordinateWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoRectilinearCoordinateWriter::getGroupName()
+const QString AvizoRectilinearCoordinateWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -385,7 +385,7 @@ const QUuid AvizoRectilinearCoordinateWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoRectilinearCoordinateWriter::getSubGroupName()
+const QString AvizoRectilinearCoordinateWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -393,7 +393,7 @@ const QString AvizoRectilinearCoordinateWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoRectilinearCoordinateWriter::getHumanLabel()
+const QString AvizoRectilinearCoordinateWriter::getHumanLabel() const
 {
   return "Avizo Rectilinear Coordinate Exporter";
 }

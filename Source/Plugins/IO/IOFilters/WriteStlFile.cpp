@@ -423,7 +423,7 @@ int32_t WriteStlFile::writeNumTrianglesToFile(const QString& filename, int32_t t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer WriteStlFile::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer WriteStlFile::newFilterInstance(bool copyFilterParameters) const
 {
   WriteStlFile::Pointer filter = WriteStlFile::New();
   if(true == copyFilterParameters)
@@ -436,7 +436,7 @@ AbstractFilter::Pointer WriteStlFile::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStlFile::getCompiledLibraryName()
+const QString WriteStlFile::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -444,7 +444,7 @@ const QString WriteStlFile::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStlFile::getBrandingString()
+const QString WriteStlFile::getBrandingString() const
 {
   return "IO";
 }
@@ -452,7 +452,7 @@ const QString WriteStlFile::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStlFile::getFilterVersion()
+const QString WriteStlFile::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -462,7 +462,7 @@ const QString WriteStlFile::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStlFile::getGroupName()
+const QString WriteStlFile::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -478,7 +478,7 @@ const QUuid WriteStlFile::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStlFile::getSubGroupName()
+const QString WriteStlFile::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -486,7 +486,7 @@ const QString WriteStlFile::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStlFile::getHumanLabel()
+const QString WriteStlFile::getHumanLabel() const
 {
   return "Export STL Files from Triangle Geometry";
 }

@@ -280,7 +280,7 @@ void ErodeDilateMask::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ErodeDilateMask::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ErodeDilateMask::newFilterInstance(bool copyFilterParameters) const
 {
   ErodeDilateMask::Pointer filter = ErodeDilateMask::New();
   if(true == copyFilterParameters)
@@ -293,7 +293,7 @@ AbstractFilter::Pointer ErodeDilateMask::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateMask::getCompiledLibraryName()
+const QString ErodeDilateMask::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -301,7 +301,7 @@ const QString ErodeDilateMask::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateMask::getBrandingString()
+const QString ErodeDilateMask::getBrandingString() const
 {
   return "Processing";
 }
@@ -309,7 +309,7 @@ const QString ErodeDilateMask::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateMask::getFilterVersion()
+const QString ErodeDilateMask::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -319,7 +319,7 @@ const QString ErodeDilateMask::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateMask::getGroupName()
+const QString ErodeDilateMask::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -335,7 +335,7 @@ const QUuid ErodeDilateMask::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateMask::getSubGroupName()
+const QString ErodeDilateMask::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -343,7 +343,7 @@ const QString ErodeDilateMask::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateMask::getHumanLabel()
+const QString ErodeDilateMask::getHumanLabel() const
 {
   return "Erode/Dilate Mask";
 }

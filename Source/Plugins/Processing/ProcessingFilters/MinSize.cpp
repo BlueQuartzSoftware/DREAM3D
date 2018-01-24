@@ -492,7 +492,7 @@ QVector<bool> MinSize::remove_smallfeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer MinSize::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer MinSize::newFilterInstance(bool copyFilterParameters) const
 {
   MinSize::Pointer filter = MinSize::New();
   if(true == copyFilterParameters)
@@ -505,7 +505,7 @@ AbstractFilter::Pointer MinSize::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinSize::getCompiledLibraryName()
+const QString MinSize::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -513,7 +513,7 @@ const QString MinSize::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinSize::getBrandingString()
+const QString MinSize::getBrandingString() const
 {
   return "Processing";
 }
@@ -521,7 +521,7 @@ const QString MinSize::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinSize::getFilterVersion()
+const QString MinSize::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -531,7 +531,7 @@ const QString MinSize::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinSize::getGroupName()
+const QString MinSize::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -547,7 +547,7 @@ const QUuid MinSize::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinSize::getSubGroupName()
+const QString MinSize::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -555,7 +555,7 @@ const QString MinSize::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinSize::getHumanLabel()
+const QString MinSize::getHumanLabel() const
 {
   return "Minimum Size";
 }

@@ -493,7 +493,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer MinNeighbors::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer MinNeighbors::newFilterInstance(bool copyFilterParameters) const
 {
   MinNeighbors::Pointer filter = MinNeighbors::New();
   if(true == copyFilterParameters)
@@ -506,7 +506,7 @@ AbstractFilter::Pointer MinNeighbors::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getCompiledLibraryName()
+const QString MinNeighbors::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -514,7 +514,7 @@ const QString MinNeighbors::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getBrandingString()
+const QString MinNeighbors::getBrandingString() const
 {
   return "Processing";
 }
@@ -522,7 +522,7 @@ const QString MinNeighbors::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getFilterVersion()
+const QString MinNeighbors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -532,7 +532,7 @@ const QString MinNeighbors::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getGroupName()
+const QString MinNeighbors::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -548,7 +548,7 @@ const QUuid MinNeighbors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getSubGroupName()
+const QString MinNeighbors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -556,7 +556,7 @@ const QString MinNeighbors::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getHumanLabel()
+const QString MinNeighbors::getHumanLabel() const
 {
   return "Minimum Number of Neighbors";
 }

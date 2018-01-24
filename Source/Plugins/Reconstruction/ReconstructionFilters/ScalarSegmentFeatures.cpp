@@ -569,7 +569,7 @@ void ScalarSegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   ScalarSegmentFeatures::Pointer filter = ScalarSegmentFeatures::New();
   if(true == copyFilterParameters)
@@ -582,7 +582,7 @@ AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getCompiledLibraryName()
+const QString ScalarSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -590,7 +590,7 @@ const QString ScalarSegmentFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getBrandingString()
+const QString ScalarSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -598,7 +598,7 @@ const QString ScalarSegmentFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getFilterVersion()
+const QString ScalarSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -608,7 +608,7 @@ const QString ScalarSegmentFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getGroupName()
+const QString ScalarSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -624,7 +624,7 @@ const QUuid ScalarSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getSubGroupName()
+const QString ScalarSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -632,7 +632,7 @@ const QString ScalarSegmentFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getHumanLabel()
+const QString ScalarSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Scalar)";
 }

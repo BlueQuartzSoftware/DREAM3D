@@ -456,7 +456,7 @@ void MergeTwins::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer MergeTwins::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer MergeTwins::newFilterInstance(bool copyFilterParameters) const
 {
   MergeTwins::Pointer filter = MergeTwins::New();
   if(true == copyFilterParameters)
@@ -469,7 +469,7 @@ AbstractFilter::Pointer MergeTwins::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getCompiledLibraryName()
+const QString MergeTwins::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -477,7 +477,7 @@ const QString MergeTwins::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getBrandingString()
+const QString MergeTwins::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -485,7 +485,7 @@ const QString MergeTwins::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getFilterVersion()
+const QString MergeTwins::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -495,7 +495,7 @@ const QString MergeTwins::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getGroupName()
+const QString MergeTwins::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -511,7 +511,7 @@ const QUuid MergeTwins::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getSubGroupName()
+const QString MergeTwins::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GroupingFilters;
 }
@@ -519,7 +519,7 @@ const QString MergeTwins::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getHumanLabel()
+const QString MergeTwins::getHumanLabel() const
 {
   return "Merge Twins";
 }

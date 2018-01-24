@@ -1098,7 +1098,7 @@ void FindGBCDMetricBased::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindGBCDMetricBased::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindGBCDMetricBased::newFilterInstance(bool copyFilterParameters) const
 {
   FindGBCDMetricBased::Pointer filter = FindGBCDMetricBased::New();
   if(true == copyFilterParameters)
@@ -1111,7 +1111,7 @@ AbstractFilter::Pointer FindGBCDMetricBased::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getCompiledLibraryName()
+const QString FindGBCDMetricBased::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -1119,7 +1119,7 @@ const QString FindGBCDMetricBased::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getBrandingString()
+const QString FindGBCDMetricBased::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -1127,7 +1127,7 @@ const QString FindGBCDMetricBased::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getFilterVersion()
+const QString FindGBCDMetricBased::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1138,7 +1138,7 @@ const QString FindGBCDMetricBased::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getGroupName()
+const QString FindGBCDMetricBased::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -1154,7 +1154,7 @@ const QUuid FindGBCDMetricBased::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getSubGroupName()
+const QString FindGBCDMetricBased::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -1162,7 +1162,7 @@ const QString FindGBCDMetricBased::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getHumanLabel()
+const QString FindGBCDMetricBased::getHumanLabel() const
 {
   return "Find GBCD (Metric-Based Approach)";
 }

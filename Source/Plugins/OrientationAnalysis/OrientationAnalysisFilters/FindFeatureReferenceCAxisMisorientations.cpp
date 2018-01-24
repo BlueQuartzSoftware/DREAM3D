@@ -362,7 +362,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindFeatureReferenceCAxisMisorientations::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindFeatureReferenceCAxisMisorientations::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureReferenceCAxisMisorientations::Pointer filter = FindFeatureReferenceCAxisMisorientations::New();
   if(true == copyFilterParameters)
@@ -375,7 +375,7 @@ AbstractFilter::Pointer FindFeatureReferenceCAxisMisorientations::newFilterInsta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getCompiledLibraryName()
+const QString FindFeatureReferenceCAxisMisorientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -383,7 +383,7 @@ const QString FindFeatureReferenceCAxisMisorientations::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getBrandingString()
+const QString FindFeatureReferenceCAxisMisorientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -391,7 +391,7 @@ const QString FindFeatureReferenceCAxisMisorientations::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getFilterVersion()
+const QString FindFeatureReferenceCAxisMisorientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -401,7 +401,7 @@ const QString FindFeatureReferenceCAxisMisorientations::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getGroupName()
+const QString FindFeatureReferenceCAxisMisorientations::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -417,7 +417,7 @@ const QUuid FindFeatureReferenceCAxisMisorientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName()
+const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -425,7 +425,7 @@ const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getHumanLabel()
+const QString FindFeatureReferenceCAxisMisorientations::getHumanLabel() const
 {
   return "Find Feature Reference C-Axis Misalignments";
 }

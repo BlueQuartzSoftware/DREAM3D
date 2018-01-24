@@ -476,7 +476,7 @@ void CAxisSegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer CAxisSegmentFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer CAxisSegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   CAxisSegmentFeatures::Pointer filter = CAxisSegmentFeatures::New();
   if(true == copyFilterParameters)
@@ -489,7 +489,7 @@ AbstractFilter::Pointer CAxisSegmentFeatures::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getCompiledLibraryName()
+const QString CAxisSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -497,7 +497,7 @@ const QString CAxisSegmentFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getBrandingString()
+const QString CAxisSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -505,7 +505,7 @@ const QString CAxisSegmentFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getFilterVersion()
+const QString CAxisSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -515,7 +515,7 @@ const QString CAxisSegmentFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getGroupName()
+const QString CAxisSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -531,7 +531,7 @@ const QUuid CAxisSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getSubGroupName()
+const QString CAxisSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -539,7 +539,7 @@ const QString CAxisSegmentFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getHumanLabel()
+const QString CAxisSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (C-Axis Misalignment)";
 }

@@ -269,7 +269,7 @@ void JumbleOrientations::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterParameters) const
 {
   JumbleOrientations::Pointer filter = JumbleOrientations::New();
   if(true == copyFilterParameters)
@@ -282,7 +282,7 @@ AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getCompiledLibraryName()
+const QString JumbleOrientations::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -290,7 +290,7 @@ const QString JumbleOrientations::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getBrandingString()
+const QString JumbleOrientations::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -298,7 +298,7 @@ const QString JumbleOrientations::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getFilterVersion()
+const QString JumbleOrientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -308,7 +308,7 @@ const QString JumbleOrientations::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getGroupName()
+const QString JumbleOrientations::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -324,7 +324,7 @@ const QUuid JumbleOrientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getSubGroupName()
+const QString JumbleOrientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -332,7 +332,7 @@ const QString JumbleOrientations::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getHumanLabel()
+const QString JumbleOrientations::getHumanLabel() const
 {
   return "Jumble Orientations";
 }

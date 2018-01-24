@@ -225,7 +225,7 @@ void AlignSectionsList::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterParameters) const
 {
   AlignSectionsList::Pointer filter = AlignSectionsList::New();
   if(true == copyFilterParameters)
@@ -238,7 +238,7 @@ AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getCompiledLibraryName()
+const QString AlignSectionsList::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -246,7 +246,7 @@ const QString AlignSectionsList::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getBrandingString()
+const QString AlignSectionsList::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -254,7 +254,7 @@ const QString AlignSectionsList::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getFilterVersion()
+const QString AlignSectionsList::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -264,7 +264,7 @@ const QString AlignSectionsList::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getGroupName()
+const QString AlignSectionsList::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -280,7 +280,7 @@ const QUuid AlignSectionsList::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getSubGroupName()
+const QString AlignSectionsList::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -288,7 +288,7 @@ const QString AlignSectionsList::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getHumanLabel()
+const QString AlignSectionsList::getHumanLabel() const
 {
   return "Align Sections (List)";
 }

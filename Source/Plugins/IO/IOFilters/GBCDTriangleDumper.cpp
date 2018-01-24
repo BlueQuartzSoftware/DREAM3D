@@ -284,7 +284,7 @@ void GBCDTriangleDumper::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GBCDTriangleDumper::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GBCDTriangleDumper::newFilterInstance(bool copyFilterParameters) const
 {
   GBCDTriangleDumper::Pointer filter = GBCDTriangleDumper::New();
   if(true == copyFilterParameters)
@@ -297,7 +297,7 @@ AbstractFilter::Pointer GBCDTriangleDumper::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GBCDTriangleDumper::getCompiledLibraryName()
+const QString GBCDTriangleDumper::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -305,7 +305,7 @@ const QString GBCDTriangleDumper::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GBCDTriangleDumper::getBrandingString()
+const QString GBCDTriangleDumper::getBrandingString() const
 {
   return "IO";
 }
@@ -313,7 +313,7 @@ const QString GBCDTriangleDumper::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GBCDTriangleDumper::getFilterVersion()
+const QString GBCDTriangleDumper::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -323,7 +323,7 @@ const QString GBCDTriangleDumper::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GBCDTriangleDumper::getGroupName()
+const QString GBCDTriangleDumper::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -339,7 +339,7 @@ const QUuid GBCDTriangleDumper::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GBCDTriangleDumper::getSubGroupName()
+const QString GBCDTriangleDumper::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -347,7 +347,7 @@ const QString GBCDTriangleDumper::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GBCDTriangleDumper::getHumanLabel()
+const QString GBCDTriangleDumper::getHumanLabel() const
 {
   return "Export GBCD Triangles File";
 }

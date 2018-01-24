@@ -568,7 +568,7 @@ int32_t VisualizeGBCDPoleFigure::writeCoords(FILE* f, const char* axis, const ch
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer VisualizeGBCDPoleFigure::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer VisualizeGBCDPoleFigure::newFilterInstance(bool copyFilterParameters) const
 {
   VisualizeGBCDPoleFigure::Pointer filter = VisualizeGBCDPoleFigure::New();
   if(true == copyFilterParameters)
@@ -581,7 +581,7 @@ AbstractFilter::Pointer VisualizeGBCDPoleFigure::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getCompiledLibraryName()
+const QString VisualizeGBCDPoleFigure::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -589,7 +589,7 @@ const QString VisualizeGBCDPoleFigure::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getBrandingString()
+const QString VisualizeGBCDPoleFigure::getBrandingString() const
 {
   return "IO";
 }
@@ -597,7 +597,7 @@ const QString VisualizeGBCDPoleFigure::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getFilterVersion()
+const QString VisualizeGBCDPoleFigure::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -607,7 +607,7 @@ const QString VisualizeGBCDPoleFigure::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getGroupName()
+const QString VisualizeGBCDPoleFigure::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -623,7 +623,7 @@ const QUuid VisualizeGBCDPoleFigure::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getSubGroupName()
+const QString VisualizeGBCDPoleFigure::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -631,7 +631,7 @@ const QString VisualizeGBCDPoleFigure::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getHumanLabel()
+const QString VisualizeGBCDPoleFigure::getHumanLabel() const
 {
   return "Export GBCD Pole Figure (VTK)";
 }

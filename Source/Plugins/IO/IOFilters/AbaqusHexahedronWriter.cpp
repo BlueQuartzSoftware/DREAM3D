@@ -665,7 +665,7 @@ void AbaqusHexahedronWriter::deleteFile(const QList<QString>& fileNames)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer AbaqusHexahedronWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer AbaqusHexahedronWriter::newFilterInstance(bool copyFilterParameters) const
 {
   AbaqusHexahedronWriter::Pointer filter = AbaqusHexahedronWriter::New();
   if(true == copyFilterParameters)
@@ -678,7 +678,7 @@ AbstractFilter::Pointer AbaqusHexahedronWriter::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getCompiledLibraryName()
+const QString AbaqusHexahedronWriter::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -686,7 +686,7 @@ const QString AbaqusHexahedronWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getBrandingString()
+const QString AbaqusHexahedronWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -694,7 +694,7 @@ const QString AbaqusHexahedronWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getFilterVersion()
+const QString AbaqusHexahedronWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -704,7 +704,7 @@ const QString AbaqusHexahedronWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getGroupName()
+const QString AbaqusHexahedronWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -720,7 +720,7 @@ const QUuid AbaqusHexahedronWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getSubGroupName()
+const QString AbaqusHexahedronWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -728,7 +728,7 @@ const QString AbaqusHexahedronWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getHumanLabel()
+const QString AbaqusHexahedronWriter::getHumanLabel() const
 {
   return "Abaqus Hexahedron Exporter";
 }

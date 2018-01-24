@@ -466,7 +466,7 @@ int32_t INLWriter::writeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer INLWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer INLWriter::newFilterInstance(bool copyFilterParameters) const
 {
   INLWriter::Pointer filter = INLWriter::New();
   if(true == copyFilterParameters)
@@ -479,7 +479,7 @@ AbstractFilter::Pointer INLWriter::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString INLWriter::getCompiledLibraryName()
+const QString INLWriter::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -487,7 +487,7 @@ const QString INLWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString INLWriter::getBrandingString()
+const QString INLWriter::getBrandingString() const
 {
   return "Orientation Analysis";
 }
@@ -495,7 +495,7 @@ const QString INLWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString INLWriter::getFilterVersion()
+const QString INLWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -505,7 +505,7 @@ const QString INLWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString INLWriter::getGroupName()
+const QString INLWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -521,7 +521,7 @@ const QUuid INLWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString INLWriter::getSubGroupName()
+const QString INLWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -529,7 +529,7 @@ const QString INLWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString INLWriter::getHumanLabel()
+const QString INLWriter::getHumanLabel() const
 {
   return "Export INL File";
 }

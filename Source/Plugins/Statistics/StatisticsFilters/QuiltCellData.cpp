@@ -440,7 +440,7 @@ void QuiltCellData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParameters) const
 {
   QuiltCellData::Pointer filter = QuiltCellData::New();
   if(true == copyFilterParameters)
@@ -453,7 +453,7 @@ AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getCompiledLibraryName()
+const QString QuiltCellData::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -461,7 +461,7 @@ const QString QuiltCellData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getBrandingString()
+const QString QuiltCellData::getBrandingString() const
 {
   return "Statistics";
 }
@@ -469,7 +469,7 @@ const QString QuiltCellData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getFilterVersion()
+const QString QuiltCellData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -480,7 +480,7 @@ const QString QuiltCellData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getGroupName()
+const QString QuiltCellData::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -496,7 +496,7 @@ const QUuid QuiltCellData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getSubGroupName()
+const QString QuiltCellData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -504,7 +504,7 @@ const QString QuiltCellData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getHumanLabel()
+const QString QuiltCellData::getHumanLabel() const
 {
   return "Quilt Cell Data";
 }

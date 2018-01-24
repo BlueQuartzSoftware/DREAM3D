@@ -671,7 +671,7 @@ void GeneratePrecipitateStatsData::normalizePhaseFractions(StatsDataArray* stats
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GeneratePrecipitateStatsData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GeneratePrecipitateStatsData::newFilterInstance(bool copyFilterParameters) const
 {
   GeneratePrecipitateStatsData::Pointer filter = GeneratePrecipitateStatsData::New();
   if(true == copyFilterParameters)
@@ -684,7 +684,7 @@ AbstractFilter::Pointer GeneratePrecipitateStatsData::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getCompiledLibraryName()
+const QString GeneratePrecipitateStatsData::getCompiledLibraryName() const
 {
   return StatsGeneratorConstants::StatsGeneratorBaseName;
 }
@@ -692,7 +692,7 @@ const QString GeneratePrecipitateStatsData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getBrandingString()
+const QString GeneratePrecipitateStatsData::getBrandingString() const
 {
   return "StatsGenerator";
 }
@@ -700,7 +700,7 @@ const QString GeneratePrecipitateStatsData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getFilterVersion()
+const QString GeneratePrecipitateStatsData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -711,7 +711,7 @@ const QString GeneratePrecipitateStatsData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getGroupName()
+const QString GeneratePrecipitateStatsData::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -727,7 +727,7 @@ const QUuid GeneratePrecipitateStatsData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getSubGroupName()
+const QString GeneratePrecipitateStatsData::getSubGroupName() const
 {
   return "StatsGenerator";
 }
@@ -735,7 +735,7 @@ const QString GeneratePrecipitateStatsData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getHumanLabel()
+const QString GeneratePrecipitateStatsData::getHumanLabel() const
 {
   return "Generate Precipitate StatsData";
 }

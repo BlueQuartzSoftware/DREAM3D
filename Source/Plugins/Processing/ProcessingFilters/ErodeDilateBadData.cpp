@@ -352,7 +352,7 @@ void ErodeDilateBadData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ErodeDilateBadData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ErodeDilateBadData::newFilterInstance(bool copyFilterParameters) const
 {
   ErodeDilateBadData::Pointer filter = ErodeDilateBadData::New();
   if(true == copyFilterParameters)
@@ -365,7 +365,7 @@ AbstractFilter::Pointer ErodeDilateBadData::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getCompiledLibraryName()
+const QString ErodeDilateBadData::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -373,7 +373,7 @@ const QString ErodeDilateBadData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getBrandingString()
+const QString ErodeDilateBadData::getBrandingString() const
 {
   return "Processing";
 }
@@ -381,7 +381,7 @@ const QString ErodeDilateBadData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getFilterVersion()
+const QString ErodeDilateBadData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -391,7 +391,7 @@ const QString ErodeDilateBadData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getGroupName()
+const QString ErodeDilateBadData::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -407,7 +407,7 @@ const QUuid ErodeDilateBadData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getSubGroupName()
+const QString ErodeDilateBadData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -415,7 +415,7 @@ const QString ErodeDilateBadData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getHumanLabel()
+const QString ErodeDilateBadData::getHumanLabel() const
 {
   return "Erode/Dilate Bad Data";
 }

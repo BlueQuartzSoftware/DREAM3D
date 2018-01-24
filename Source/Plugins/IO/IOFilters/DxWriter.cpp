@@ -399,7 +399,7 @@ int32_t DxWriter::writeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer DxWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer DxWriter::newFilterInstance(bool copyFilterParameters) const
 {
   DxWriter::Pointer filter = DxWriter::New();
   if(true == copyFilterParameters)
@@ -412,7 +412,7 @@ AbstractFilter::Pointer DxWriter::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getCompiledLibraryName()
+const QString DxWriter::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -420,7 +420,7 @@ const QString DxWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getBrandingString()
+const QString DxWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -428,7 +428,7 @@ const QString DxWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getFilterVersion()
+const QString DxWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -438,7 +438,7 @@ const QString DxWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getGroupName()
+const QString DxWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -454,7 +454,7 @@ const QUuid DxWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getSubGroupName()
+const QString DxWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -462,7 +462,7 @@ const QString DxWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getHumanLabel()
+const QString DxWriter::getHumanLabel() const
 {
   return "Export Dx File (Feature Ids)";
 }

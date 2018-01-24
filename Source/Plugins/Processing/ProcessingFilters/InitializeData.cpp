@@ -535,7 +535,7 @@ template <typename T> void InitializeData::initializeArrayWithReals(IDataArray::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer InitializeData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer InitializeData::newFilterInstance(bool copyFilterParameters) const
 {
   InitializeData::Pointer filter = InitializeData::New();
   if(true == copyFilterParameters)
@@ -548,7 +548,7 @@ AbstractFilter::Pointer InitializeData::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeData::getCompiledLibraryName()
+const QString InitializeData::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -556,7 +556,7 @@ const QString InitializeData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeData::getBrandingString()
+const QString InitializeData::getBrandingString() const
 {
   return "Processing";
 }
@@ -564,7 +564,7 @@ const QString InitializeData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeData::getFilterVersion()
+const QString InitializeData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -574,7 +574,7 @@ const QString InitializeData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeData::getGroupName()
+const QString InitializeData::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -590,7 +590,7 @@ const QUuid InitializeData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeData::getSubGroupName()
+const QString InitializeData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -598,7 +598,7 @@ const QString InitializeData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InitializeData::getHumanLabel()
+const QString InitializeData::getHumanLabel() const
 {
   return "Initialize Data";
 }

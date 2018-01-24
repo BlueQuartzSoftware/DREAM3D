@@ -627,7 +627,7 @@ void GeneratePrimaryStatsData::normalizePhaseFractions(StatsDataArray* statsData
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GeneratePrimaryStatsData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GeneratePrimaryStatsData::newFilterInstance(bool copyFilterParameters) const
 {
   GeneratePrimaryStatsData::Pointer filter = GeneratePrimaryStatsData::New();
   if(true == copyFilterParameters)
@@ -640,7 +640,7 @@ AbstractFilter::Pointer GeneratePrimaryStatsData::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getCompiledLibraryName()
+const QString GeneratePrimaryStatsData::getCompiledLibraryName() const
 {
   return StatsGeneratorConstants::StatsGeneratorBaseName;
 }
@@ -648,7 +648,7 @@ const QString GeneratePrimaryStatsData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getBrandingString()
+const QString GeneratePrimaryStatsData::getBrandingString() const
 {
   return "StatsGenerator";
 }
@@ -656,7 +656,7 @@ const QString GeneratePrimaryStatsData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getFilterVersion()
+const QString GeneratePrimaryStatsData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -667,7 +667,7 @@ const QString GeneratePrimaryStatsData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getGroupName()
+const QString GeneratePrimaryStatsData::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -683,7 +683,7 @@ const QUuid GeneratePrimaryStatsData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getSubGroupName()
+const QString GeneratePrimaryStatsData::getSubGroupName() const
 {
   return "StatsGenerator";
 }
@@ -691,7 +691,7 @@ const QString GeneratePrimaryStatsData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getHumanLabel()
+const QString GeneratePrimaryStatsData::getHumanLabel() const
 {
   return "Generate Primary StatsData";
 }

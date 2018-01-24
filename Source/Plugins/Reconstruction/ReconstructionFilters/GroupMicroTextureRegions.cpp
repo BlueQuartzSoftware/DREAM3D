@@ -551,7 +551,7 @@ void GroupMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GroupMicroTextureRegions::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GroupMicroTextureRegions::newFilterInstance(bool copyFilterParameters) const
 {
   GroupMicroTextureRegions::Pointer filter = GroupMicroTextureRegions::New();
   if(true == copyFilterParameters)
@@ -564,7 +564,7 @@ AbstractFilter::Pointer GroupMicroTextureRegions::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupMicroTextureRegions::getCompiledLibraryName()
+const QString GroupMicroTextureRegions::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -572,7 +572,7 @@ const QString GroupMicroTextureRegions::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupMicroTextureRegions::getBrandingString()
+const QString GroupMicroTextureRegions::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -580,7 +580,7 @@ const QString GroupMicroTextureRegions::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupMicroTextureRegions::getFilterVersion()
+const QString GroupMicroTextureRegions::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -590,7 +590,7 @@ const QString GroupMicroTextureRegions::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupMicroTextureRegions::getGroupName()
+const QString GroupMicroTextureRegions::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -606,7 +606,7 @@ const QUuid GroupMicroTextureRegions::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupMicroTextureRegions::getSubGroupName()
+const QString GroupMicroTextureRegions::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GroupingFilters;
 }
@@ -614,7 +614,7 @@ const QString GroupMicroTextureRegions::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupMicroTextureRegions::getHumanLabel()
+const QString GroupMicroTextureRegions::getHumanLabel() const
 {
   return "Group MicroTexture Regions";
 }

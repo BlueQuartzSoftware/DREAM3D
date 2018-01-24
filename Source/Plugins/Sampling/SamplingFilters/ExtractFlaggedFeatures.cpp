@@ -257,7 +257,7 @@ void ExtractFlaggedFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ExtractFlaggedFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ExtractFlaggedFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   ExtractFlaggedFeatures::Pointer filter = ExtractFlaggedFeatures::New();
   if(true == copyFilterParameters)
@@ -270,7 +270,7 @@ AbstractFilter::Pointer ExtractFlaggedFeatures::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getCompiledLibraryName()
+const QString ExtractFlaggedFeatures::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -278,7 +278,7 @@ const QString ExtractFlaggedFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getBrandingString()
+const QString ExtractFlaggedFeatures::getBrandingString() const
 {
   return "Sampling";
 }
@@ -286,7 +286,7 @@ const QString ExtractFlaggedFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getFilterVersion()
+const QString ExtractFlaggedFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -297,7 +297,7 @@ const QString ExtractFlaggedFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getGroupName()
+const QString ExtractFlaggedFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -313,7 +313,7 @@ const QUuid ExtractFlaggedFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getSubGroupName()
+const QString ExtractFlaggedFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CropCutFilters;
 }
@@ -321,7 +321,7 @@ const QString ExtractFlaggedFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getHumanLabel()
+const QString ExtractFlaggedFeatures::getHumanLabel() const
 {
   return "Extract Flagged Features (Rogues Gallery)";
 }

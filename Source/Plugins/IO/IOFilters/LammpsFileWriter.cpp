@@ -254,7 +254,7 @@ void LammpsFileWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer LammpsFileWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer LammpsFileWriter::newFilterInstance(bool copyFilterParameters) const
 {
   /*
   * NodesFile
@@ -274,7 +274,7 @@ AbstractFilter::Pointer LammpsFileWriter::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getCompiledLibraryName()
+const QString LammpsFileWriter::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -282,7 +282,7 @@ const QString LammpsFileWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getBrandingString()
+const QString LammpsFileWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -290,7 +290,7 @@ const QString LammpsFileWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getFilterVersion()
+const QString LammpsFileWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -301,7 +301,7 @@ const QString LammpsFileWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getGroupName()
+const QString LammpsFileWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -317,7 +317,7 @@ const QUuid LammpsFileWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getSubGroupName()
+const QString LammpsFileWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -325,7 +325,7 @@ const QString LammpsFileWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getHumanLabel()
+const QString LammpsFileWriter::getHumanLabel() const
 {
   return "Export Lammps File";
 }

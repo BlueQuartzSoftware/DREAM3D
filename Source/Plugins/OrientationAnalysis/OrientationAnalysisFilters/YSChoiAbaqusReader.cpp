@@ -548,7 +548,7 @@ void YSChoiAbaqusReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer YSChoiAbaqusReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer YSChoiAbaqusReader::newFilterInstance(bool copyFilterParameters) const
 {
   YSChoiAbaqusReader::Pointer filter = YSChoiAbaqusReader::New();
   if(true == copyFilterParameters)
@@ -561,7 +561,7 @@ AbstractFilter::Pointer YSChoiAbaqusReader::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString YSChoiAbaqusReader::getCompiledLibraryName()
+const QString YSChoiAbaqusReader::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -569,7 +569,7 @@ const QString YSChoiAbaqusReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString YSChoiAbaqusReader::getBrandingString()
+const QString YSChoiAbaqusReader::getBrandingString() const
 {
   return "Orientation Analysis";
 }
@@ -577,7 +577,7 @@ const QString YSChoiAbaqusReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString YSChoiAbaqusReader::getFilterVersion()
+const QString YSChoiAbaqusReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -588,7 +588,7 @@ const QString YSChoiAbaqusReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString YSChoiAbaqusReader::getGroupName()
+const QString YSChoiAbaqusReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -604,7 +604,7 @@ const QUuid YSChoiAbaqusReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString YSChoiAbaqusReader::getSubGroupName()
+const QString YSChoiAbaqusReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -612,7 +612,7 @@ const QString YSChoiAbaqusReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString YSChoiAbaqusReader::getHumanLabel()
+const QString YSChoiAbaqusReader::getHumanLabel() const
 {
   return "Import YS Choi Abaqus Vtk Output File";
 }

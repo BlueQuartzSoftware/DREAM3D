@@ -453,7 +453,7 @@ int NodesTrianglesToStl::writeNumTrianglesToFile(const QString& filename, int tr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer NodesTrianglesToStl::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer NodesTrianglesToStl::newFilterInstance(bool copyFilterParameters) const
 {
   /*
   * NodesFile
@@ -472,7 +472,7 @@ AbstractFilter::Pointer NodesTrianglesToStl::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getCompiledLibraryName()
+const QString NodesTrianglesToStl::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -480,7 +480,7 @@ const QString NodesTrianglesToStl::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getBrandingString()
+const QString NodesTrianglesToStl::getBrandingString() const
 {
   return "IO";
 }
@@ -488,7 +488,7 @@ const QString NodesTrianglesToStl::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getFilterVersion()
+const QString NodesTrianglesToStl::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -499,7 +499,7 @@ const QString NodesTrianglesToStl::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getGroupName()
+const QString NodesTrianglesToStl::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -515,7 +515,7 @@ const QUuid NodesTrianglesToStl::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getSubGroupName()
+const QString NodesTrianglesToStl::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -523,7 +523,7 @@ const QString NodesTrianglesToStl::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getHumanLabel()
+const QString NodesTrianglesToStl::getHumanLabel() const
 {
   return "Convert Nodes & Triangles To STL Files";
 }

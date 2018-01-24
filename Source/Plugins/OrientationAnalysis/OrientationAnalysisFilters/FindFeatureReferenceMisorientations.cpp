@@ -394,7 +394,7 @@ void FindFeatureReferenceMisorientations::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindFeatureReferenceMisorientations::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindFeatureReferenceMisorientations::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureReferenceMisorientations::Pointer filter = FindFeatureReferenceMisorientations::New();
   if(true == copyFilterParameters)
@@ -407,7 +407,7 @@ AbstractFilter::Pointer FindFeatureReferenceMisorientations::newFilterInstance(b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceMisorientations::getCompiledLibraryName()
+const QString FindFeatureReferenceMisorientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -415,7 +415,7 @@ const QString FindFeatureReferenceMisorientations::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceMisorientations::getBrandingString()
+const QString FindFeatureReferenceMisorientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -423,7 +423,7 @@ const QString FindFeatureReferenceMisorientations::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceMisorientations::getFilterVersion()
+const QString FindFeatureReferenceMisorientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -433,7 +433,7 @@ const QString FindFeatureReferenceMisorientations::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceMisorientations::getGroupName()
+const QString FindFeatureReferenceMisorientations::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -449,7 +449,7 @@ const QUuid FindFeatureReferenceMisorientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceMisorientations::getSubGroupName()
+const QString FindFeatureReferenceMisorientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -457,7 +457,7 @@ const QString FindFeatureReferenceMisorientations::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceMisorientations::getHumanLabel()
+const QString FindFeatureReferenceMisorientations::getHumanLabel() const
 {
   return "Find Feature Reference Misorientations";
 }

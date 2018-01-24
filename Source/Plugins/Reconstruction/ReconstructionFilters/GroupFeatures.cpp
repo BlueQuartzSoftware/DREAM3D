@@ -276,7 +276,7 @@ void GroupFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GroupFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GroupFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   GroupFeatures::Pointer filter = GroupFeatures::New();
   if(true == copyFilterParameters)
@@ -289,7 +289,7 @@ AbstractFilter::Pointer GroupFeatures::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getCompiledLibraryName()
+const QString GroupFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -297,7 +297,7 @@ const QString GroupFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getBrandingString()
+const QString GroupFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -305,7 +305,7 @@ const QString GroupFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getFilterVersion()
+const QString GroupFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -315,7 +315,7 @@ const QString GroupFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getGroupName()
+const QString GroupFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -331,7 +331,7 @@ const QUuid GroupFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getSubGroupName()
+const QString GroupFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -339,7 +339,7 @@ const QString GroupFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getHumanLabel()
+const QString GroupFeatures::getHumanLabel() const
 {
   return "Group Features";
 }

@@ -226,7 +226,7 @@ int EstablishShapeTypes::getPhaseCount()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterParameters) const
 {
   EstablishShapeTypes::Pointer filter = EstablishShapeTypes::New();
   if(true == copyFilterParameters)
@@ -240,7 +240,7 @@ AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getCompiledLibraryName()
+const QString EstablishShapeTypes::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -248,7 +248,7 @@ const QString EstablishShapeTypes::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getBrandingString()
+const QString EstablishShapeTypes::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -256,7 +256,7 @@ const QString EstablishShapeTypes::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getFilterVersion()
+const QString EstablishShapeTypes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -266,7 +266,7 @@ const QString EstablishShapeTypes::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getGroupName()
+const QString EstablishShapeTypes::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -282,7 +282,7 @@ const QUuid EstablishShapeTypes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getSubGroupName()
+const QString EstablishShapeTypes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -290,7 +290,7 @@ const QString EstablishShapeTypes::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getHumanLabel()
+const QString EstablishShapeTypes::getHumanLabel() const
 {
   return "Establish Shape Types";
 }

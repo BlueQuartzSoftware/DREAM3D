@@ -1166,7 +1166,7 @@ void QuickSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParameters) const
 {
   QuickSurfaceMesh::Pointer filter = QuickSurfaceMesh::New();
   if(true == copyFilterParameters)
@@ -1179,7 +1179,7 @@ AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getCompiledLibraryName()
+const QString QuickSurfaceMesh::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -1187,7 +1187,7 @@ const QString QuickSurfaceMesh::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getBrandingString()
+const QString QuickSurfaceMesh::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -1195,7 +1195,7 @@ const QString QuickSurfaceMesh::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getFilterVersion()
+const QString QuickSurfaceMesh::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1205,7 +1205,7 @@ const QString QuickSurfaceMesh::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getGroupName()
+const QString QuickSurfaceMesh::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -1221,7 +1221,7 @@ const QUuid QuickSurfaceMesh::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getSubGroupName()
+const QString QuickSurfaceMesh::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -1229,7 +1229,7 @@ const QString QuickSurfaceMesh::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getHumanLabel()
+const QString QuickSurfaceMesh::getHumanLabel() const
 {
   return "Quick Surface Mesh";
 }

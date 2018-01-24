@@ -425,7 +425,7 @@ template <class T> int FindSaltykovSizes::round_to_nearest_int(T x)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindSaltykovSizes::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindSaltykovSizes::newFilterInstance(bool copyFilterParameters) const
 {
   FindSaltykovSizes::Pointer filter = FindSaltykovSizes::New();
   if(true == copyFilterParameters)
@@ -438,7 +438,7 @@ AbstractFilter::Pointer FindSaltykovSizes::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getCompiledLibraryName()
+const QString FindSaltykovSizes::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -446,7 +446,7 @@ const QString FindSaltykovSizes::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getBrandingString()
+const QString FindSaltykovSizes::getBrandingString() const
 {
   return "Statistics";
 }
@@ -454,7 +454,7 @@ const QString FindSaltykovSizes::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getFilterVersion()
+const QString FindSaltykovSizes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -465,7 +465,7 @@ const QString FindSaltykovSizes::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getGroupName()
+const QString FindSaltykovSizes::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -481,7 +481,7 @@ const QUuid FindSaltykovSizes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getSubGroupName()
+const QString FindSaltykovSizes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -489,7 +489,7 @@ const QString FindSaltykovSizes::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getHumanLabel()
+const QString FindSaltykovSizes::getHumanLabel() const
 {
   return "Find Feature Saltykov Sizes";
 }

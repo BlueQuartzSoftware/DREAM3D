@@ -559,97 +559,63 @@ bool AddUuidCodes(const QString& hFile)
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
-    if(line.contains("virtual const QString getCompiledLibraryName();") )
+    if(line.contains("virtual const QString getCompiledLibraryName()") )
     {
       QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
+      replaceString = replaceString.replace("override;", " const override;");
       outLines.push_back(replaceString);
       didReplace = true;
     }
-    else  if(line.contains("virtual const QString getBrandingString();") )
+    else  if(line.contains("virtual const QString getBrandingString()") )
     {
       QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
+      replaceString = replaceString.replace("override;", " const override;");
       outLines.push_back(replaceString);
       didReplace = true;
     }
-    else  if(line.contains("virtual const QString getFilterVersion();") )
+    else  if(line.contains("virtual const QString getFilterVersion()") )
     {
       QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
+      replaceString = replaceString.replace("override;", " const override;");
       outLines.push_back(replaceString);
       didReplace = true;
     }
-    else if(line.contains("virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);") )
+    else if(line.contains("virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters)") )
     {
       QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
+      replaceString = replaceString.replace("override;", " const override;");
       outLines.push_back(replaceString);
       didReplace = true;
     }
-    else  if(line.contains("virtual const QString getGroupName();") )
+    else  if(line.contains("virtual const QString getGroupName()") )
     {
       QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
+      replaceString = replaceString.replace("override;", " const override;");
       outLines.push_back(replaceString);
       didReplace = true;
     }
-    else  if(line.contains("virtual const QString getSubGroupName();") )
+    else  if(line.contains("virtual const QString getSubGroupName()") )
     {
       QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
+      replaceString = replaceString.replace("override;", " const override;");
       outLines.push_back(replaceString);
       didReplace = true;
     }
-    else  if(line.contains("virtual const QUuid getUuid();") )
+    else  if(line.contains("virtual const QUuid getUuid()") )
     {
       QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
+      replaceString = replaceString.replace("override;", " const override;");
       outLines.push_back(replaceString);
       didReplace = true;
     }
-    else  if(line.contains("virtual const QString getHumanLabel();") )
+    else  if(line.contains("virtual const QString getHumanLabel()") )
     {
       QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
+      replaceString = replaceString.replace("override;", " const override;");
       outLines.push_back(replaceString);
       didReplace = true;
     }
-    else  if(line.contains("virtual void setupFilterParameters();") )
-    {
-      QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
-      outLines.push_back(replaceString);
-      didReplace = true;
-    }
-    else  if(line.contains("virtual void readFilterParameters(AbstractFilterParametersReader *reader, int index);") )
-    {
-      QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
-      outLines.push_back(replaceString);
-      didReplace = true;
-    }
-    else  if(line.contains("virtual void execute();") )
-    {
-      QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
-      outLines.push_back(replaceString);
-      didReplace = true;
-    }
-    else  if(line.contains("virtual void preflight();") )
-    {
-      QString replaceString = line;
-      replaceString = replaceString.replace(";", " override;");
-      outLines.push_back(replaceString);
-      didReplace = true;
-    }
-    else  if(line.contains("SIMPL_TYPE_MACRO_SUPER") )
-    {
-      QString replaceString = line;
-      replaceString = replaceString.replace("SIMPL_TYPE_MACRO_SUPER", " SIMPL_TYPE_MACRO_SUPER_OVERRIDE");
-      outLines.push_back(replaceString);
-      didReplace = true;
-    }
+   
     else
     {
       outLines.push_back(line);
@@ -1291,8 +1257,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   {
     QString headerFilePath = itemInfo.absoluteFilePath();
     //QString cppFilePath = headerFilePath.replace(".h", ".cpp");
-    //AddUuidCodes(headerFilePath);
-    CheckForQObjectSuperClass(headerFilePath);
+    AddUuidCodes(headerFilePath);
+    //CheckForQObjectSuperClass(headerFilePath);
   }
 }
 
@@ -1326,7 +1292,7 @@ int main(int argc, char* argv[])
   qDebug() << p1;
 #endif
 
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -1378,13 +1344,12 @@ int main(int argc, char* argv[])
   
   
   
-//  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
-//  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
   ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
-  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
-
-//  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView"));
-//  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins"));
+ // ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins"));
 
 #endif
   return 0;

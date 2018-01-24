@@ -216,7 +216,7 @@ void AddBadData::add_noise()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer AddBadData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer AddBadData::newFilterInstance(bool copyFilterParameters) const
 {
   AddBadData::Pointer filter = AddBadData::New();
   if(true == copyFilterParameters)
@@ -229,7 +229,7 @@ AbstractFilter::Pointer AddBadData::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getCompiledLibraryName()
+const QString AddBadData::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -237,7 +237,7 @@ const QString AddBadData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getBrandingString()
+const QString AddBadData::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -245,7 +245,7 @@ const QString AddBadData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getFilterVersion()
+const QString AddBadData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -255,7 +255,7 @@ const QString AddBadData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getGroupName()
+const QString AddBadData::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -271,7 +271,7 @@ const QUuid AddBadData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getSubGroupName()
+const QString AddBadData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -279,7 +279,7 @@ const QString AddBadData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getHumanLabel()
+const QString AddBadData::getHumanLabel() const
 {
   return "Add Bad Data";
 }

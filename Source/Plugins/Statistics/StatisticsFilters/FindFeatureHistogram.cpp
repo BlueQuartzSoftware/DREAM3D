@@ -315,7 +315,7 @@ void FindFeatureHistogram::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindFeatureHistogram::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindFeatureHistogram::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureHistogram::Pointer filter = FindFeatureHistogram::New();
   if(true == copyFilterParameters)
@@ -328,7 +328,7 @@ AbstractFilter::Pointer FindFeatureHistogram::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getCompiledLibraryName()
+const QString FindFeatureHistogram::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -336,7 +336,7 @@ const QString FindFeatureHistogram::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getBrandingString()
+const QString FindFeatureHistogram::getBrandingString() const
 {
   return "Statistics";
 }
@@ -344,7 +344,7 @@ const QString FindFeatureHistogram::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getFilterVersion()
+const QString FindFeatureHistogram::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -355,7 +355,7 @@ const QString FindFeatureHistogram::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getGroupName()
+const QString FindFeatureHistogram::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -371,7 +371,7 @@ const QUuid FindFeatureHistogram::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getSubGroupName()
+const QString FindFeatureHistogram::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -379,7 +379,7 @@ const QString FindFeatureHistogram::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getHumanLabel()
+const QString FindFeatureHistogram::getHumanLabel() const
 {
   return "Find Feature Histogram";
 }

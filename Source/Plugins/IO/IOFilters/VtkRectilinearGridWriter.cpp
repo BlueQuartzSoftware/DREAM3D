@@ -465,7 +465,7 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFilterParameters) const
 {
   VtkRectilinearGridWriter::Pointer filter = VtkRectilinearGridWriter::New();
   if(true == copyFilterParameters)
@@ -478,7 +478,7 @@ AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getCompiledLibraryName()
+const QString VtkRectilinearGridWriter::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -486,7 +486,7 @@ const QString VtkRectilinearGridWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getBrandingString()
+const QString VtkRectilinearGridWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -494,7 +494,7 @@ const QString VtkRectilinearGridWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getFilterVersion()
+const QString VtkRectilinearGridWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -505,7 +505,7 @@ const QString VtkRectilinearGridWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getGroupName()
+const QString VtkRectilinearGridWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -521,7 +521,7 @@ const QUuid VtkRectilinearGridWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getSubGroupName()
+const QString VtkRectilinearGridWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -529,7 +529,7 @@ const QString VtkRectilinearGridWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getHumanLabel()
+const QString VtkRectilinearGridWriter::getHumanLabel() const
 {
   return "Vtk Rectilinear Grid Exporter";
 }

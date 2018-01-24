@@ -88,10 +88,10 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
-    virtual const QString getCompiledLibraryName() override;
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
-    virtual const QString getGroupName() override;
-    virtual const QString getSubGroupName() override;
+    virtual const QString getCompiledLibraryName() const override;
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+    virtual const QString getGroupName() const override;
+    virtual const QString getSubGroupName() const override;
 
     /**
      * @brief getUuid Return the unique identifier for this filter.
@@ -103,7 +103,7 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() override;
+    virtual const QString getHumanLabel() const override;
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

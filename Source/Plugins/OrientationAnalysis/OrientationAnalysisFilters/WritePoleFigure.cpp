@@ -536,7 +536,7 @@ void WritePoleFigure::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParameters) const
 {
   WritePoleFigure::Pointer filter = WritePoleFigure::New();
   if(true == copyFilterParameters)
@@ -549,7 +549,7 @@ AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getCompiledLibraryName()
+const QString WritePoleFigure::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -557,7 +557,7 @@ const QString WritePoleFigure::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getBrandingString()
+const QString WritePoleFigure::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -565,7 +565,7 @@ const QString WritePoleFigure::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getFilterVersion()
+const QString WritePoleFigure::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -575,7 +575,7 @@ const QString WritePoleFigure::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getGroupName()
+const QString WritePoleFigure::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -591,7 +591,7 @@ const QUuid WritePoleFigure::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getSubGroupName()
+const QString WritePoleFigure::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -599,7 +599,7 @@ const QString WritePoleFigure::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getHumanLabel()
+const QString WritePoleFigure::getHumanLabel() const
 {
   return "Export Pole Figure Images";
 }

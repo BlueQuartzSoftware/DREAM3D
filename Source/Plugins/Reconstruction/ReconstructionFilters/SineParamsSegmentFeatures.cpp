@@ -410,7 +410,7 @@ void SineParamsSegmentFeatures::initializeVoxelSeedGenerator(const size_t rangeM
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SineParamsSegmentFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer SineParamsSegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   SineParamsSegmentFeatures::Pointer filter = SineParamsSegmentFeatures::New();
   if(true == copyFilterParameters)
@@ -423,7 +423,7 @@ AbstractFilter::Pointer SineParamsSegmentFeatures::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getCompiledLibraryName()
+const QString SineParamsSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -431,7 +431,7 @@ const QString SineParamsSegmentFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getBrandingString()
+const QString SineParamsSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -439,7 +439,7 @@ const QString SineParamsSegmentFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getFilterVersion()
+const QString SineParamsSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -450,7 +450,7 @@ const QString SineParamsSegmentFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getGroupName()
+const QString SineParamsSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -466,7 +466,7 @@ const QUuid SineParamsSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getSubGroupName()
+const QString SineParamsSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -474,7 +474,7 @@ const QString SineParamsSegmentFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getHumanLabel()
+const QString SineParamsSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Sine Parameters)";
 }

@@ -259,7 +259,7 @@ void Stereographic3D::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer Stereographic3D::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer Stereographic3D::newFilterInstance(bool copyFilterParameters) const
 {
   Stereographic3D::Pointer filter = Stereographic3D::New();
   if(true == copyFilterParameters)
@@ -272,7 +272,7 @@ AbstractFilter::Pointer Stereographic3D::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getCompiledLibraryName()
+const QString Stereographic3D::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -280,7 +280,7 @@ const QString Stereographic3D::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getBrandingString()
+const QString Stereographic3D::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -288,7 +288,7 @@ const QString Stereographic3D::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getFilterVersion()
+const QString Stereographic3D::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -299,7 +299,7 @@ const QString Stereographic3D::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getGroupName()
+const QString Stereographic3D::getGroupName() const
 {
   return SIMPL::FilterGroups::Utilities;
 }
@@ -315,7 +315,7 @@ const QUuid Stereographic3D::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getSubGroupName()
+const QString Stereographic3D::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -323,7 +323,7 @@ const QString Stereographic3D::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getHumanLabel()
+const QString Stereographic3D::getHumanLabel() const
 {
   return "Stereographic 3D Coordinates";
 }

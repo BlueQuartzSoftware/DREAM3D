@@ -423,7 +423,7 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer WriteStatsGenOdfAngleFile::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer WriteStatsGenOdfAngleFile::newFilterInstance(bool copyFilterParameters) const
 {
   WriteStatsGenOdfAngleFile::Pointer filter = WriteStatsGenOdfAngleFile::New();
   if(true == copyFilterParameters)
@@ -436,7 +436,7 @@ AbstractFilter::Pointer WriteStatsGenOdfAngleFile::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getCompiledLibraryName()
+const QString WriteStatsGenOdfAngleFile::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -444,7 +444,7 @@ const QString WriteStatsGenOdfAngleFile::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getBrandingString()
+const QString WriteStatsGenOdfAngleFile::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -452,7 +452,7 @@ const QString WriteStatsGenOdfAngleFile::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getFilterVersion()
+const QString WriteStatsGenOdfAngleFile::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -463,7 +463,7 @@ const QString WriteStatsGenOdfAngleFile::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getGroupName()
+const QString WriteStatsGenOdfAngleFile::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -479,7 +479,7 @@ const QUuid WriteStatsGenOdfAngleFile::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getSubGroupName()
+const QString WriteStatsGenOdfAngleFile::getSubGroupName() const
 {
   return "Output";
 }
@@ -487,7 +487,7 @@ const QString WriteStatsGenOdfAngleFile::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getHumanLabel()
+const QString WriteStatsGenOdfAngleFile::getHumanLabel() const
 {
   return "Export StatsGenerator ODF Angle File";
 }

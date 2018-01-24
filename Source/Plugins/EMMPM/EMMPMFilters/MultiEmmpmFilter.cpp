@@ -333,7 +333,7 @@ void MultiEmmpmFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParameters) const
 {
   MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
   if(true == copyFilterParameters)
@@ -358,7 +358,7 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getCompiledLibraryName()
+const QString MultiEmmpmFilter::getCompiledLibraryName() const
 {
   return EMMPMConstants::EMMPMBaseName;
 }
@@ -366,7 +366,7 @@ const QString MultiEmmpmFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getBrandingString()
+const QString MultiEmmpmFilter::getBrandingString() const
 {
   return "EMMPM";
 }
@@ -374,7 +374,7 @@ const QString MultiEmmpmFilter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getFilterVersion()
+const QString MultiEmmpmFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -384,7 +384,7 @@ const QString MultiEmmpmFilter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getGroupName()
+const QString MultiEmmpmFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -400,7 +400,7 @@ const QUuid MultiEmmpmFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getSubGroupName()
+const QString MultiEmmpmFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -408,7 +408,7 @@ const QString MultiEmmpmFilter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getHumanLabel()
+const QString MultiEmmpmFilter::getHumanLabel() const
 {
   return "Segment Features (EM/MPM Multi-Array)";
 }

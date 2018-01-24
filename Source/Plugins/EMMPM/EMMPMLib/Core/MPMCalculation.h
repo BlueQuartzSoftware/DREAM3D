@@ -68,7 +68,7 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() const;
 
     /**
      * @fn void acvmpm(EMMPM_Data* data, EMMPM_CallbackFunctions* callbacks);

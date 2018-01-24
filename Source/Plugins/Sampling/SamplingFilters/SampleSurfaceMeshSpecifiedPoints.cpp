@@ -251,7 +251,7 @@ void SampleSurfaceMeshSpecifiedPoints::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SampleSurfaceMeshSpecifiedPoints::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer SampleSurfaceMeshSpecifiedPoints::newFilterInstance(bool copyFilterParameters) const
 {
   SampleSurfaceMeshSpecifiedPoints::Pointer filter = SampleSurfaceMeshSpecifiedPoints::New();
   if(true == copyFilterParameters)
@@ -264,7 +264,7 @@ AbstractFilter::Pointer SampleSurfaceMeshSpecifiedPoints::newFilterInstance(bool
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMeshSpecifiedPoints::getCompiledLibraryName()
+const QString SampleSurfaceMeshSpecifiedPoints::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -272,7 +272,7 @@ const QString SampleSurfaceMeshSpecifiedPoints::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMeshSpecifiedPoints::getBrandingString()
+const QString SampleSurfaceMeshSpecifiedPoints::getBrandingString() const
 {
   return "Sampling";
 }
@@ -280,7 +280,7 @@ const QString SampleSurfaceMeshSpecifiedPoints::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMeshSpecifiedPoints::getFilterVersion()
+const QString SampleSurfaceMeshSpecifiedPoints::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -290,7 +290,7 @@ const QString SampleSurfaceMeshSpecifiedPoints::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMeshSpecifiedPoints::getGroupName()
+const QString SampleSurfaceMeshSpecifiedPoints::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -306,7 +306,7 @@ const QUuid SampleSurfaceMeshSpecifiedPoints::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMeshSpecifiedPoints::getSubGroupName()
+const QString SampleSurfaceMeshSpecifiedPoints::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -314,7 +314,7 @@ const QString SampleSurfaceMeshSpecifiedPoints::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMeshSpecifiedPoints::getHumanLabel()
+const QString SampleSurfaceMeshSpecifiedPoints::getHumanLabel() const
 {
   return "Sample Triangle Geometry at Specified Points";
 }

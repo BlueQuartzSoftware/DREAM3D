@@ -747,7 +747,7 @@ void ReadEdaxH5Data::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ReadEdaxH5Data::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ReadEdaxH5Data::newFilterInstance(bool copyFilterParameters) const
 {
   ReadEdaxH5Data::Pointer filter = ReadEdaxH5Data::New();
   if(true == copyFilterParameters)
@@ -761,7 +761,7 @@ AbstractFilter::Pointer ReadEdaxH5Data::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadEdaxH5Data::getCompiledLibraryName()
+const QString ReadEdaxH5Data::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -769,7 +769,7 @@ const QString ReadEdaxH5Data::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadEdaxH5Data::getBrandingString()
+const QString ReadEdaxH5Data::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -777,7 +777,7 @@ const QString ReadEdaxH5Data::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadEdaxH5Data::getFilterVersion()
+const QString ReadEdaxH5Data::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -787,7 +787,7 @@ const QString ReadEdaxH5Data::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadEdaxH5Data::getGroupName()
+const QString ReadEdaxH5Data::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -803,7 +803,7 @@ const QUuid ReadEdaxH5Data::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadEdaxH5Data::getSubGroupName()
+const QString ReadEdaxH5Data::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -811,7 +811,7 @@ const QString ReadEdaxH5Data::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadEdaxH5Data::getHumanLabel()
+const QString ReadEdaxH5Data::getHumanLabel() const
 {
   return "Import EDAX EBSD Data (.h5)";
 }

@@ -97,17 +97,17 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  virtual const QString getCompiledLibraryName() override;
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
-  virtual const QString getGroupName() override;
-  virtual const QString getSubGroupName() override;
+  virtual const QString getCompiledLibraryName() const override;
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  virtual const QString getGroupName() const override;
+  virtual const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
   virtual const QUuid getUuid() override;
-  virtual const QString getHumanLabel() override;
+  virtual const QString getHumanLabel() const override;
 
   virtual void setupFilterParameters() override; /**
 *@brief This method will read the options from a file

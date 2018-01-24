@@ -475,7 +475,7 @@ void FindTwinBoundaries::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindTwinBoundaries::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindTwinBoundaries::newFilterInstance(bool copyFilterParameters) const
 {
   FindTwinBoundaries::Pointer filter = FindTwinBoundaries::New();
   if(true == copyFilterParameters)
@@ -488,7 +488,7 @@ AbstractFilter::Pointer FindTwinBoundaries::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getCompiledLibraryName()
+const QString FindTwinBoundaries::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -496,7 +496,7 @@ const QString FindTwinBoundaries::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getBrandingString()
+const QString FindTwinBoundaries::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -504,7 +504,7 @@ const QString FindTwinBoundaries::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getFilterVersion()
+const QString FindTwinBoundaries::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -514,7 +514,7 @@ const QString FindTwinBoundaries::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getGroupName()
+const QString FindTwinBoundaries::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -530,7 +530,7 @@ const QUuid FindTwinBoundaries::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getSubGroupName()
+const QString FindTwinBoundaries::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -538,7 +538,7 @@ const QString FindTwinBoundaries::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getHumanLabel()
+const QString FindTwinBoundaries::getHumanLabel() const
 {
   return "Find Twin Boundaries";
 }

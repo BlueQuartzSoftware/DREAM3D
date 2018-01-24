@@ -383,7 +383,7 @@ int32_t FeatureInfoReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FeatureInfoReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FeatureInfoReader::newFilterInstance(bool copyFilterParameters) const
 {
   FeatureInfoReader::Pointer filter = FeatureInfoReader::New();
   if(true == copyFilterParameters)
@@ -396,7 +396,7 @@ AbstractFilter::Pointer FeatureInfoReader::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getCompiledLibraryName()
+const QString FeatureInfoReader::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -404,7 +404,7 @@ const QString FeatureInfoReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getBrandingString()
+const QString FeatureInfoReader::getBrandingString() const
 {
   return "IO";
 }
@@ -412,7 +412,7 @@ const QString FeatureInfoReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getFilterVersion()
+const QString FeatureInfoReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -422,7 +422,7 @@ const QString FeatureInfoReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getGroupName()
+const QString FeatureInfoReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -438,7 +438,7 @@ const QUuid FeatureInfoReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getSubGroupName()
+const QString FeatureInfoReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -446,7 +446,7 @@ const QString FeatureInfoReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getHumanLabel()
+const QString FeatureInfoReader::getHumanLabel() const
 {
   return "Import Feature Info File";
 }

@@ -450,7 +450,7 @@ void StatsGeneratorFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterParameters) const
 {
   StatsGeneratorFilter::Pointer filter = StatsGeneratorFilter::New();
   if(true == copyFilterParameters)
@@ -483,7 +483,7 @@ AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getCompiledLibraryName()
+const QString StatsGeneratorFilter::getCompiledLibraryName() const
 {
   return StatsGeneratorConstants::StatsGeneratorBaseName;
 }
@@ -491,7 +491,7 @@ const QString StatsGeneratorFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getBrandingString()
+const QString StatsGeneratorFilter::getBrandingString() const
 {
   return "StatsGenerator";
 }
@@ -499,7 +499,7 @@ const QString StatsGeneratorFilter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getFilterVersion()
+const QString StatsGeneratorFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -510,7 +510,7 @@ const QString StatsGeneratorFilter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getGroupName()
+const QString StatsGeneratorFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -526,7 +526,7 @@ const QUuid StatsGeneratorFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getSubGroupName()
+const QString StatsGeneratorFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -534,7 +534,7 @@ const QString StatsGeneratorFilter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getHumanLabel()
+const QString StatsGeneratorFilter::getHumanLabel() const
 {
   return "StatsGenerator";
 }

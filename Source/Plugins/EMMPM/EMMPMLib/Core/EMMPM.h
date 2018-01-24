@@ -72,7 +72,7 @@ class EMMPMLib_EXPORT EMMPM : public Observable
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() const;
 
     /**
      * @brief Main entry point for running the EMMPM algorithm. The Inputs and

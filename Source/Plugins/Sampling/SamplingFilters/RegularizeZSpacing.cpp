@@ -279,7 +279,7 @@ void RegularizeZSpacing::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterParameters) const
 {
   RegularizeZSpacing::Pointer filter = RegularizeZSpacing::New();
   if(true == copyFilterParameters)
@@ -292,7 +292,7 @@ AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getCompiledLibraryName()
+const QString RegularizeZSpacing::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -300,7 +300,7 @@ const QString RegularizeZSpacing::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getBrandingString()
+const QString RegularizeZSpacing::getBrandingString() const
 {
   return "Sampling";
 }
@@ -308,7 +308,7 @@ const QString RegularizeZSpacing::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getFilterVersion()
+const QString RegularizeZSpacing::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -318,7 +318,7 @@ const QString RegularizeZSpacing::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getGroupName()
+const QString RegularizeZSpacing::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -334,7 +334,7 @@ const QUuid RegularizeZSpacing::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getSubGroupName()
+const QString RegularizeZSpacing::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -342,7 +342,7 @@ const QString RegularizeZSpacing::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getHumanLabel()
+const QString RegularizeZSpacing::getHumanLabel() const
 {
   return "Regularize Z Spacing";
 }

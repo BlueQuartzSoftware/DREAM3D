@@ -301,7 +301,7 @@ void AppendImageGeometryZSlice::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer AppendImageGeometryZSlice::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer AppendImageGeometryZSlice::newFilterInstance(bool copyFilterParameters) const
 {
   AppendImageGeometryZSlice::Pointer filter = AppendImageGeometryZSlice::New();
   if(true == copyFilterParameters)
@@ -314,7 +314,7 @@ AbstractFilter::Pointer AppendImageGeometryZSlice::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AppendImageGeometryZSlice::getCompiledLibraryName()
+const QString AppendImageGeometryZSlice::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -322,7 +322,7 @@ const QString AppendImageGeometryZSlice::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AppendImageGeometryZSlice::getBrandingString()
+const QString AppendImageGeometryZSlice::getBrandingString() const
 {
   return "Sampling";
 }
@@ -330,7 +330,7 @@ const QString AppendImageGeometryZSlice::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AppendImageGeometryZSlice::getFilterVersion()
+const QString AppendImageGeometryZSlice::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -340,7 +340,7 @@ const QString AppendImageGeometryZSlice::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AppendImageGeometryZSlice::getGroupName()
+const QString AppendImageGeometryZSlice::getGroupName() const
 {
   return SIMPL::FilterGroups::CoreFilters;
 }
@@ -356,7 +356,7 @@ const QUuid AppendImageGeometryZSlice::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AppendImageGeometryZSlice::getSubGroupName()
+const QString AppendImageGeometryZSlice::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MemoryManagementFilters;
 }
@@ -364,7 +364,7 @@ const QString AppendImageGeometryZSlice::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AppendImageGeometryZSlice::getHumanLabel()
+const QString AppendImageGeometryZSlice::getHumanLabel() const
 {
   return "Append Z Slice (Image Geometry)";
 }

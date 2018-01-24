@@ -502,7 +502,7 @@ bool VisualizeGBCDGMT::getSquareCoord(float* xstl1_norm1, float* sqCoord)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParameters) const
 {
   VisualizeGBCDGMT::Pointer filter = VisualizeGBCDGMT::New();
   if(true == copyFilterParameters)
@@ -515,7 +515,7 @@ AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getCompiledLibraryName()
+const QString VisualizeGBCDGMT::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -523,7 +523,7 @@ const QString VisualizeGBCDGMT::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getBrandingString()
+const QString VisualizeGBCDGMT::getBrandingString() const
 {
   return "IO";
 }
@@ -531,7 +531,7 @@ const QString VisualizeGBCDGMT::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getFilterVersion()
+const QString VisualizeGBCDGMT::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -541,7 +541,7 @@ const QString VisualizeGBCDGMT::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getGroupName()
+const QString VisualizeGBCDGMT::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -557,7 +557,7 @@ const QUuid VisualizeGBCDGMT::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getSubGroupName()
+const QString VisualizeGBCDGMT::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -565,7 +565,7 @@ const QString VisualizeGBCDGMT::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getHumanLabel()
+const QString VisualizeGBCDGMT::getHumanLabel() const
 {
   return "Export GBCD Pole Figure (GMT 5)";
 }

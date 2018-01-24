@@ -369,7 +369,7 @@ void FindSchmids::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindSchmids::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindSchmids::newFilterInstance(bool copyFilterParameters) const
 {
   FindSchmids::Pointer filter = FindSchmids::New();
   if(true == copyFilterParameters)
@@ -382,7 +382,7 @@ AbstractFilter::Pointer FindSchmids::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getCompiledLibraryName()
+const QString FindSchmids::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -390,7 +390,7 @@ const QString FindSchmids::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getBrandingString()
+const QString FindSchmids::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -398,7 +398,7 @@ const QString FindSchmids::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getFilterVersion()
+const QString FindSchmids::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -408,7 +408,7 @@ const QString FindSchmids::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getGroupName()
+const QString FindSchmids::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -424,7 +424,7 @@ const QUuid FindSchmids::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getSubGroupName()
+const QString FindSchmids::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -432,7 +432,7 @@ const QString FindSchmids::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getHumanLabel()
+const QString FindSchmids::getHumanLabel() const
 {
   return "Find Schmid Factors";
 }

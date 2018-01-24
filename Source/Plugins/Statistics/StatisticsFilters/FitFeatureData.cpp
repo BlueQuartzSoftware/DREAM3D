@@ -297,7 +297,7 @@ void FitFeatureData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParameters) const
 {
   FitFeatureData::Pointer filter = FitFeatureData::New();
   if(true == copyFilterParameters)
@@ -310,7 +310,7 @@ AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getCompiledLibraryName()
+const QString FitFeatureData::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -318,7 +318,7 @@ const QString FitFeatureData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getBrandingString()
+const QString FitFeatureData::getBrandingString() const
 {
   return "Statistics";
 }
@@ -326,7 +326,7 @@ const QString FitFeatureData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getFilterVersion()
+const QString FitFeatureData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -336,7 +336,7 @@ const QString FitFeatureData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getGroupName()
+const QString FitFeatureData::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -352,7 +352,7 @@ const QUuid FitFeatureData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getSubGroupName()
+const QString FitFeatureData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -360,7 +360,7 @@ const QString FitFeatureData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getHumanLabel()
+const QString FitFeatureData::getHumanLabel() const
 {
   return "Fit Distribution to Feature Data";
 }

@@ -341,7 +341,7 @@ void FindLocalAverageCAxisMisalignments::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindLocalAverageCAxisMisalignments::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindLocalAverageCAxisMisalignments::newFilterInstance(bool copyFilterParameters) const
 {
   FindLocalAverageCAxisMisalignments::Pointer filter = FindLocalAverageCAxisMisalignments::New();
   if(true == copyFilterParameters)
@@ -354,7 +354,7 @@ AbstractFilter::Pointer FindLocalAverageCAxisMisalignments::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getCompiledLibraryName()
+const QString FindLocalAverageCAxisMisalignments::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -362,7 +362,7 @@ const QString FindLocalAverageCAxisMisalignments::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getBrandingString()
+const QString FindLocalAverageCAxisMisalignments::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -370,7 +370,7 @@ const QString FindLocalAverageCAxisMisalignments::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getFilterVersion()
+const QString FindLocalAverageCAxisMisalignments::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -381,7 +381,7 @@ const QString FindLocalAverageCAxisMisalignments::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getGroupName()
+const QString FindLocalAverageCAxisMisalignments::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -397,7 +397,7 @@ const QUuid FindLocalAverageCAxisMisalignments::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getSubGroupName()
+const QString FindLocalAverageCAxisMisalignments::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -405,7 +405,7 @@ const QString FindLocalAverageCAxisMisalignments::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getHumanLabel()
+const QString FindLocalAverageCAxisMisalignments::getHumanLabel() const
 {
   return "Find Local Average C-Axis Misalignments";
 }

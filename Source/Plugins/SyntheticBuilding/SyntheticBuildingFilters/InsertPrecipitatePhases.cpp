@@ -3030,7 +3030,7 @@ void InsertPrecipitatePhases::appendToExistingAttributeMatrix(QList<IDataArray::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer InsertPrecipitatePhases::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer InsertPrecipitatePhases::newFilterInstance(bool copyFilterParameters) const
 {
   InsertPrecipitatePhases::Pointer filter = InsertPrecipitatePhases::New();
   if(true == copyFilterParameters)
@@ -3043,7 +3043,7 @@ AbstractFilter::Pointer InsertPrecipitatePhases::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getCompiledLibraryName()
+const QString InsertPrecipitatePhases::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -3051,7 +3051,7 @@ const QString InsertPrecipitatePhases::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getBrandingString()
+const QString InsertPrecipitatePhases::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -3059,7 +3059,7 @@ const QString InsertPrecipitatePhases::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getFilterVersion()
+const QString InsertPrecipitatePhases::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -3069,7 +3069,7 @@ const QString InsertPrecipitatePhases::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getGroupName()
+const QString InsertPrecipitatePhases::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -3085,7 +3085,7 @@ const QUuid InsertPrecipitatePhases::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getSubGroupName()
+const QString InsertPrecipitatePhases::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::PackingFilters;
 }
@@ -3093,7 +3093,7 @@ const QString InsertPrecipitatePhases::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getHumanLabel()
+const QString InsertPrecipitatePhases::getHumanLabel() const
 {
   return "Insert Precipitate Phases";
 }

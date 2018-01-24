@@ -527,7 +527,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ReadStlFile::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ReadStlFile::newFilterInstance(bool copyFilterParameters) const
 {
   ReadStlFile::Pointer filter = ReadStlFile::New();
   if(true == copyFilterParameters)
@@ -540,7 +540,7 @@ AbstractFilter::Pointer ReadStlFile::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getCompiledLibraryName()
+const QString ReadStlFile::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -548,7 +548,7 @@ const QString ReadStlFile::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getBrandingString()
+const QString ReadStlFile::getBrandingString() const
 {
   return "IO";
 }
@@ -556,7 +556,7 @@ const QString ReadStlFile::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getFilterVersion()
+const QString ReadStlFile::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -566,7 +566,7 @@ const QString ReadStlFile::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getGroupName()
+const QString ReadStlFile::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -582,7 +582,7 @@ const QUuid ReadStlFile::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getSubGroupName()
+const QString ReadStlFile::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -590,7 +590,7 @@ const QString ReadStlFile::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getHumanLabel()
+const QString ReadStlFile::getHumanLabel() const
 {
   return "Import STL File";
 }

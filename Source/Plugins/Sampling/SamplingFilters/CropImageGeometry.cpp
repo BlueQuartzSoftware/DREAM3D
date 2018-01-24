@@ -692,7 +692,7 @@ QString CropImageGeometry::getNewBoxDimensions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer CropImageGeometry::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer CropImageGeometry::newFilterInstance(bool copyFilterParameters) const
 {
   CropImageGeometry::Pointer filter = CropImageGeometry::New();
   if(true == copyFilterParameters)
@@ -705,7 +705,7 @@ AbstractFilter::Pointer CropImageGeometry::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getCompiledLibraryName()
+const QString CropImageGeometry::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -713,7 +713,7 @@ const QString CropImageGeometry::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getBrandingString()
+const QString CropImageGeometry::getBrandingString() const
 {
   return "Sampling";
 }
@@ -721,7 +721,7 @@ const QString CropImageGeometry::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getFilterVersion()
+const QString CropImageGeometry::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -731,7 +731,7 @@ const QString CropImageGeometry::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getGroupName()
+const QString CropImageGeometry::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -739,7 +739,7 @@ const QString CropImageGeometry::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getHumanLabel()
+const QString CropImageGeometry::getHumanLabel() const
 {
   return "Crop Geometry (Image)";
 }
@@ -755,7 +755,7 @@ const QUuid CropImageGeometry::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getSubGroupName()
+const QString CropImageGeometry::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CropCutFilters;
 }

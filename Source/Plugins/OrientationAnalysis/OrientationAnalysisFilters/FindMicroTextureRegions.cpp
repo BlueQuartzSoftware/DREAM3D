@@ -302,7 +302,7 @@ void FindMicroTextureRegions::find_microtextureregions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindMicroTextureRegions::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindMicroTextureRegions::newFilterInstance(bool copyFilterParameters) const
 {
   FindMicroTextureRegions::Pointer filter = FindMicroTextureRegions::New();
   if(true == copyFilterParameters)
@@ -315,7 +315,7 @@ AbstractFilter::Pointer FindMicroTextureRegions::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getCompiledLibraryName()
+const QString FindMicroTextureRegions::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -323,7 +323,7 @@ const QString FindMicroTextureRegions::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getBrandingString()
+const QString FindMicroTextureRegions::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -331,7 +331,7 @@ const QString FindMicroTextureRegions::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getFilterVersion()
+const QString FindMicroTextureRegions::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -342,7 +342,7 @@ const QString FindMicroTextureRegions::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getGroupName()
+const QString FindMicroTextureRegions::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -358,7 +358,7 @@ const QUuid FindMicroTextureRegions::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getSubGroupName()
+const QString FindMicroTextureRegions::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -366,7 +366,7 @@ const QString FindMicroTextureRegions::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getHumanLabel()
+const QString FindMicroTextureRegions::getHumanLabel() const
 {
   return "Find MicroTexture Regions";
 }

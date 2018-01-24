@@ -412,7 +412,7 @@ int32_t PhReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer PhReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer PhReader::newFilterInstance(bool copyFilterParameters) const
 {
   PhReader::Pointer filter = PhReader::New();
   if(true == copyFilterParameters)
@@ -425,7 +425,7 @@ AbstractFilter::Pointer PhReader::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getCompiledLibraryName()
+const QString PhReader::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -433,7 +433,7 @@ const QString PhReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getBrandingString()
+const QString PhReader::getBrandingString() const
 {
   return "IO";
 }
@@ -441,7 +441,7 @@ const QString PhReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getFilterVersion()
+const QString PhReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -451,7 +451,7 @@ const QString PhReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getGroupName()
+const QString PhReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -467,7 +467,7 @@ const QUuid PhReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getSubGroupName()
+const QString PhReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -475,7 +475,7 @@ const QString PhReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getHumanLabel()
+const QString PhReader::getHumanLabel() const
 {
   return "Import Ph File (Feature Ids)";
 }

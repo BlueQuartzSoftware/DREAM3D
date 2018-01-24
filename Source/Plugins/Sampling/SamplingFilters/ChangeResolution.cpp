@@ -439,7 +439,7 @@ void ChangeResolution::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParameters) const
 {
   ChangeResolution::Pointer filter = ChangeResolution::New();
   if(true == copyFilterParameters)
@@ -452,7 +452,7 @@ AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getCompiledLibraryName()
+const QString ChangeResolution::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -460,7 +460,7 @@ const QString ChangeResolution::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getBrandingString()
+const QString ChangeResolution::getBrandingString() const
 {
   return "Sampling";
 }
@@ -468,7 +468,7 @@ const QString ChangeResolution::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getFilterVersion()
+const QString ChangeResolution::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -478,7 +478,7 @@ const QString ChangeResolution::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getGroupName()
+const QString ChangeResolution::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -494,7 +494,7 @@ const QUuid ChangeResolution::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getSubGroupName()
+const QString ChangeResolution::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -502,7 +502,7 @@ const QString ChangeResolution::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getHumanLabel()
+const QString ChangeResolution::getHumanLabel() const
 {
   return "Change Resolution";
 }

@@ -387,7 +387,7 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer RemoveFlaggedFeatures::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer RemoveFlaggedFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   RemoveFlaggedFeatures::Pointer filter = RemoveFlaggedFeatures::New();
   if(true == copyFilterParameters)
@@ -400,7 +400,7 @@ AbstractFilter::Pointer RemoveFlaggedFeatures::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getCompiledLibraryName()
+const QString RemoveFlaggedFeatures::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -408,7 +408,7 @@ const QString RemoveFlaggedFeatures::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getBrandingString()
+const QString RemoveFlaggedFeatures::getBrandingString() const
 {
   return "Processing";
 }
@@ -416,7 +416,7 @@ const QString RemoveFlaggedFeatures::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getFilterVersion()
+const QString RemoveFlaggedFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -426,7 +426,7 @@ const QString RemoveFlaggedFeatures::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getGroupName()
+const QString RemoveFlaggedFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -442,7 +442,7 @@ const QUuid RemoveFlaggedFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getSubGroupName()
+const QString RemoveFlaggedFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -450,7 +450,7 @@ const QString RemoveFlaggedFeatures::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getHumanLabel()
+const QString RemoveFlaggedFeatures::getHumanLabel() const
 {
   return "Remove Flagged Features";
 }

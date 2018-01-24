@@ -446,7 +446,7 @@ void FillBadData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters) const
 {
   FillBadData::Pointer filter = FillBadData::New();
   if(true == copyFilterParameters)
@@ -459,7 +459,7 @@ AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getCompiledLibraryName()
+const QString FillBadData::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -467,7 +467,7 @@ const QString FillBadData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getBrandingString()
+const QString FillBadData::getBrandingString() const
 {
   return "Processing";
 }
@@ -475,7 +475,7 @@ const QString FillBadData::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getFilterVersion()
+const QString FillBadData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -485,7 +485,7 @@ const QString FillBadData::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getGroupName()
+const QString FillBadData::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -501,7 +501,7 @@ const QUuid FillBadData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getSubGroupName()
+const QString FillBadData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -509,7 +509,7 @@ const QString FillBadData::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getHumanLabel()
+const QString FillBadData::getHumanLabel() const
 {
   return "Fill Bad Data";
 }

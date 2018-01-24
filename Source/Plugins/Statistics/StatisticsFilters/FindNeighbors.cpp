@@ -433,7 +433,7 @@ void FindNeighbors::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParameters) const
 {
   FindNeighbors::Pointer filter = FindNeighbors::New();
   if(true == copyFilterParameters)
@@ -446,7 +446,7 @@ AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getCompiledLibraryName()
+const QString FindNeighbors::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -454,7 +454,7 @@ const QString FindNeighbors::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getBrandingString()
+const QString FindNeighbors::getBrandingString() const
 {
   return "Statistics";
 }
@@ -462,7 +462,7 @@ const QString FindNeighbors::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getFilterVersion()
+const QString FindNeighbors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -472,7 +472,7 @@ const QString FindNeighbors::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getGroupName()
+const QString FindNeighbors::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -488,7 +488,7 @@ const QUuid FindNeighbors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getSubGroupName()
+const QString FindNeighbors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -496,7 +496,7 @@ const QString FindNeighbors::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getHumanLabel()
+const QString FindNeighbors::getHumanLabel() const
 {
   return "Find Feature Neighbors";
 }

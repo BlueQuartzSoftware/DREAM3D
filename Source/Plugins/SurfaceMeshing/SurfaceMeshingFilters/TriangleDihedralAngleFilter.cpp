@@ -260,7 +260,7 @@ void TriangleDihedralAngleFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer TriangleDihedralAngleFilter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer TriangleDihedralAngleFilter::newFilterInstance(bool copyFilterParameters) const
 {
   TriangleDihedralAngleFilter::Pointer filter = TriangleDihedralAngleFilter::New();
   if(true == copyFilterParameters)
@@ -273,7 +273,7 @@ AbstractFilter::Pointer TriangleDihedralAngleFilter::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleDihedralAngleFilter::getCompiledLibraryName()
+const QString TriangleDihedralAngleFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -281,7 +281,7 @@ const QString TriangleDihedralAngleFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleDihedralAngleFilter::getBrandingString()
+const QString TriangleDihedralAngleFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -289,7 +289,7 @@ const QString TriangleDihedralAngleFilter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleDihedralAngleFilter::getFilterVersion()
+const QString TriangleDihedralAngleFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -299,7 +299,7 @@ const QString TriangleDihedralAngleFilter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleDihedralAngleFilter::getGroupName()
+const QString TriangleDihedralAngleFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -315,7 +315,7 @@ const QUuid TriangleDihedralAngleFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleDihedralAngleFilter::getSubGroupName()
+const QString TriangleDihedralAngleFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -323,7 +323,7 @@ const QString TriangleDihedralAngleFilter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleDihedralAngleFilter::getHumanLabel()
+const QString TriangleDihedralAngleFilter::getHumanLabel() const
 {
   return "Find Minimum Triangle Dihedral Angle";
 }

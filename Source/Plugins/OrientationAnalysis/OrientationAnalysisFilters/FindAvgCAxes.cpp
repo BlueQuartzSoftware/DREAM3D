@@ -252,7 +252,7 @@ void FindAvgCAxes::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindAvgCAxes::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindAvgCAxes::newFilterInstance(bool copyFilterParameters) const
 {
   FindAvgCAxes::Pointer filter = FindAvgCAxes::New();
   if(true == copyFilterParameters)
@@ -265,7 +265,7 @@ AbstractFilter::Pointer FindAvgCAxes::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgCAxes::getCompiledLibraryName()
+const QString FindAvgCAxes::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -273,7 +273,7 @@ const QString FindAvgCAxes::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgCAxes::getBrandingString()
+const QString FindAvgCAxes::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -281,7 +281,7 @@ const QString FindAvgCAxes::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgCAxes::getFilterVersion()
+const QString FindAvgCAxes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -291,7 +291,7 @@ const QString FindAvgCAxes::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgCAxes::getGroupName()
+const QString FindAvgCAxes::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -307,7 +307,7 @@ const QUuid FindAvgCAxes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgCAxes::getSubGroupName()
+const QString FindAvgCAxes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -315,7 +315,7 @@ const QString FindAvgCAxes::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgCAxes::getHumanLabel()
+const QString FindAvgCAxes::getHumanLabel() const
 {
   return "Find Average C-Axis Orientations";
 }

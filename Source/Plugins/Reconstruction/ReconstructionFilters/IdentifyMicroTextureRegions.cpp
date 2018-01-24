@@ -761,7 +761,7 @@ void IdentifyMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer IdentifyMicroTextureRegions::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer IdentifyMicroTextureRegions::newFilterInstance(bool copyFilterParameters) const
 {
   IdentifyMicroTextureRegions::Pointer filter = IdentifyMicroTextureRegions::New();
   if(true == copyFilterParameters)
@@ -775,7 +775,7 @@ AbstractFilter::Pointer IdentifyMicroTextureRegions::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getCompiledLibraryName()
+const QString IdentifyMicroTextureRegions::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -783,7 +783,7 @@ const QString IdentifyMicroTextureRegions::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getBrandingString()
+const QString IdentifyMicroTextureRegions::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -791,7 +791,7 @@ const QString IdentifyMicroTextureRegions::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getFilterVersion()
+const QString IdentifyMicroTextureRegions::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -801,7 +801,7 @@ const QString IdentifyMicroTextureRegions::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getGroupName()
+const QString IdentifyMicroTextureRegions::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -817,7 +817,7 @@ const QUuid IdentifyMicroTextureRegions::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getSubGroupName()
+const QString IdentifyMicroTextureRegions::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GroupingFilters;
 }
@@ -825,7 +825,7 @@ const QString IdentifyMicroTextureRegions::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getHumanLabel()
+const QString IdentifyMicroTextureRegions::getHumanLabel() const
 {
   return "Identify MicroTexture Patches (C-Axis Misalignment)";
 }

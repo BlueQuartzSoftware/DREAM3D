@@ -541,7 +541,7 @@ int32_t DxReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer DxReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer DxReader::newFilterInstance(bool copyFilterParameters) const
 {
   DxReader::Pointer filter = DxReader::New();
   if(true == copyFilterParameters)
@@ -554,7 +554,7 @@ AbstractFilter::Pointer DxReader::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getCompiledLibraryName()
+const QString DxReader::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -562,7 +562,7 @@ const QString DxReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getBrandingString()
+const QString DxReader::getBrandingString() const
 {
   return "IO";
 }
@@ -570,7 +570,7 @@ const QString DxReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getFilterVersion()
+const QString DxReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -580,7 +580,7 @@ const QString DxReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getGroupName()
+const QString DxReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -596,7 +596,7 @@ const QUuid DxReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getSubGroupName()
+const QString DxReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -604,7 +604,7 @@ const QString DxReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getHumanLabel()
+const QString DxReader::getHumanLabel() const
 {
   return "Import Dx File (Feature Ids)";
 }

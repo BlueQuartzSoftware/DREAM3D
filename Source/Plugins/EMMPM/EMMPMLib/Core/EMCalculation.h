@@ -58,7 +58,7 @@
  */
 class EMMPMLib_EXPORT EMCalculation : public Observable
 {
-    Q_OBJECT;
+    Q_OBJECT
 
   public:
     SIMPL_SHARED_POINTERS(EMCalculation)
@@ -67,8 +67,8 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
 
     virtual ~EMCalculation();
 
-    SIMPL_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data);
-    SIMPL_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate);
+    SIMPL_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
+    SIMPL_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate)
     SIMPL_INSTANCE_PROPERTY(int, ErrorCondition)
     SIMPL_INSTANCE_PROPERTY(QString, MessagePrefix)
 
@@ -76,7 +76,7 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() const;
 
     /**
      * @fn void EMMPM_CurvatureEMLoops(EMMPM_Data* data, EMMPM_CallbackFunctions* callbacks)

@@ -469,7 +469,7 @@ void FeatureFaceCurvatureFilter::tbbTaskProgress()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FeatureFaceCurvatureFilter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FeatureFaceCurvatureFilter::newFilterInstance(bool copyFilterParameters) const
 {
   FeatureFaceCurvatureFilter::Pointer filter = FeatureFaceCurvatureFilter::New();
   if(true == copyFilterParameters)
@@ -482,7 +482,7 @@ AbstractFilter::Pointer FeatureFaceCurvatureFilter::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getCompiledLibraryName()
+const QString FeatureFaceCurvatureFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -490,7 +490,7 @@ const QString FeatureFaceCurvatureFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getBrandingString()
+const QString FeatureFaceCurvatureFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -498,7 +498,7 @@ const QString FeatureFaceCurvatureFilter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getFilterVersion()
+const QString FeatureFaceCurvatureFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -508,7 +508,7 @@ const QString FeatureFaceCurvatureFilter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getGroupName()
+const QString FeatureFaceCurvatureFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -524,7 +524,7 @@ const QUuid FeatureFaceCurvatureFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getSubGroupName()
+const QString FeatureFaceCurvatureFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CurvatureFilters;
 }
@@ -532,7 +532,7 @@ const QString FeatureFaceCurvatureFilter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getHumanLabel()
+const QString FeatureFaceCurvatureFilter::getHumanLabel() const
 {
   return "Find Feature Face Curvature";
 }

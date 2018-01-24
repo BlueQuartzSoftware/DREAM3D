@@ -3092,7 +3092,7 @@ QVector<int> M3CSliceBySlice::findAdjacentTriangles(SurfaceMesh::M3C::Triangle* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParameters) const
 {
   M3CSliceBySlice::Pointer filter = M3CSliceBySlice::New();
   if(true == copyFilterParameters)
@@ -3105,7 +3105,7 @@ AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getCompiledLibraryName()
+const QString M3CSliceBySlice::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -3113,7 +3113,7 @@ const QString M3CSliceBySlice::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getBrandingString()
+const QString M3CSliceBySlice::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -3121,7 +3121,7 @@ const QString M3CSliceBySlice::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getFilterVersion()
+const QString M3CSliceBySlice::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -3132,7 +3132,7 @@ const QString M3CSliceBySlice::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getGroupName()
+const QString M3CSliceBySlice::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -3148,7 +3148,7 @@ const QUuid M3CSliceBySlice::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getSubGroupName()
+const QString M3CSliceBySlice::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -3156,7 +3156,7 @@ const QString M3CSliceBySlice::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getHumanLabel()
+const QString M3CSliceBySlice::getHumanLabel() const
 {
   return "M3C Surface Meshing (Slice at a time)";
 }

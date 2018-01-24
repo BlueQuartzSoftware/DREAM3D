@@ -932,7 +932,7 @@ void FindShapes::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindShapes::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindShapes::newFilterInstance(bool copyFilterParameters) const
 {
   FindShapes::Pointer filter = FindShapes::New();
   if(true == copyFilterParameters)
@@ -945,7 +945,7 @@ AbstractFilter::Pointer FindShapes::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getCompiledLibraryName()
+const QString FindShapes::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -953,7 +953,7 @@ const QString FindShapes::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getBrandingString()
+const QString FindShapes::getBrandingString() const
 {
   return "Statistics";
 }
@@ -961,7 +961,7 @@ const QString FindShapes::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getFilterVersion()
+const QString FindShapes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -971,7 +971,7 @@ const QString FindShapes::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getGroupName()
+const QString FindShapes::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -987,7 +987,7 @@ const QUuid FindShapes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getSubGroupName()
+const QString FindShapes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -995,7 +995,7 @@ const QString FindShapes::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getHumanLabel()
+const QString FindShapes::getHumanLabel() const
 {
   return "Find Feature Shapes";
 }

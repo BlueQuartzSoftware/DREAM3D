@@ -240,7 +240,7 @@ void RotateEulerRefFrame::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterParameters) const
 {
   RotateEulerRefFrame::Pointer filter = RotateEulerRefFrame::New();
   if(true == copyFilterParameters)
@@ -253,7 +253,7 @@ AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getCompiledLibraryName()
+const QString RotateEulerRefFrame::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -261,7 +261,7 @@ const QString RotateEulerRefFrame::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getBrandingString()
+const QString RotateEulerRefFrame::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -269,7 +269,7 @@ const QString RotateEulerRefFrame::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getFilterVersion()
+const QString RotateEulerRefFrame::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -279,7 +279,7 @@ const QString RotateEulerRefFrame::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getGroupName()
+const QString RotateEulerRefFrame::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -295,7 +295,7 @@ const QUuid RotateEulerRefFrame::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getSubGroupName()
+const QString RotateEulerRefFrame::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -303,7 +303,7 @@ const QString RotateEulerRefFrame::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getHumanLabel()
+const QString RotateEulerRefFrame::getHumanLabel() const
 {
   return "Rotate Euler Reference Frame";
 }

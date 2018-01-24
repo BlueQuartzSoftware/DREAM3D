@@ -685,7 +685,7 @@ int ImportImageStack::readBounds()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParameters) const
 {
   ImportImageStack::Pointer filter = ImportImageStack::New();
   if(true == copyFilterParameters)
@@ -719,7 +719,7 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportImageStack::getCompiledLibraryName()
+const QString ImportImageStack::getCompiledLibraryName() const
 {
   return ImageIOConstants::ImageIOBaseName;
 }
@@ -727,7 +727,7 @@ const QString ImportImageStack::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportImageStack::getBrandingString()
+const QString ImportImageStack::getBrandingString() const
 {
   return "ImageIO";
 }
@@ -735,7 +735,7 @@ const QString ImportImageStack::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportImageStack::getFilterVersion()
+const QString ImportImageStack::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -745,7 +745,7 @@ const QString ImportImageStack::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportImageStack::getGroupName()
+const QString ImportImageStack::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -761,7 +761,7 @@ const QUuid ImportImageStack::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportImageStack::getSubGroupName()
+const QString ImportImageStack::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -769,7 +769,7 @@ const QString ImportImageStack::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportImageStack::getHumanLabel()
+const QString ImportImageStack::getHumanLabel() const
 {
   return "Import Images (3D Stack)";
 }

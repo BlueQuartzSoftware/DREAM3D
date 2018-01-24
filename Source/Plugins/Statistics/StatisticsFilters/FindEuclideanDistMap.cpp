@@ -771,7 +771,7 @@ void FindEuclideanDistMap::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindEuclideanDistMap::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindEuclideanDistMap::newFilterInstance(bool copyFilterParameters) const
 {
   FindEuclideanDistMap::Pointer filter = FindEuclideanDistMap::New();
   if(true == copyFilterParameters)
@@ -784,7 +784,7 @@ AbstractFilter::Pointer FindEuclideanDistMap::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEuclideanDistMap::getCompiledLibraryName()
+const QString FindEuclideanDistMap::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -792,7 +792,7 @@ const QString FindEuclideanDistMap::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEuclideanDistMap::getBrandingString()
+const QString FindEuclideanDistMap::getBrandingString() const
 {
   return "Statistics";
 }
@@ -800,7 +800,7 @@ const QString FindEuclideanDistMap::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEuclideanDistMap::getFilterVersion()
+const QString FindEuclideanDistMap::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -810,7 +810,7 @@ const QString FindEuclideanDistMap::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEuclideanDistMap::getGroupName()
+const QString FindEuclideanDistMap::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -826,7 +826,7 @@ const QUuid FindEuclideanDistMap::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEuclideanDistMap::getSubGroupName()
+const QString FindEuclideanDistMap::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -834,7 +834,7 @@ const QString FindEuclideanDistMap::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEuclideanDistMap::getHumanLabel()
+const QString FindEuclideanDistMap::getHumanLabel() const
 {
   return "Find Euclidean Distance Map";
 }

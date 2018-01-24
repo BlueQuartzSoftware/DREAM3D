@@ -393,7 +393,7 @@ void ReplaceElementAttributesWithNeighborValues::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ReplaceElementAttributesWithNeighborValues::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ReplaceElementAttributesWithNeighborValues::newFilterInstance(bool copyFilterParameters) const
 {
   ReplaceElementAttributesWithNeighborValues::Pointer filter = ReplaceElementAttributesWithNeighborValues::New();
   if(true == copyFilterParameters)
@@ -406,7 +406,7 @@ AbstractFilter::Pointer ReplaceElementAttributesWithNeighborValues::newFilterIns
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReplaceElementAttributesWithNeighborValues::getCompiledLibraryName()
+const QString ReplaceElementAttributesWithNeighborValues::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -414,7 +414,7 @@ const QString ReplaceElementAttributesWithNeighborValues::getCompiledLibraryName
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReplaceElementAttributesWithNeighborValues::getBrandingString()
+const QString ReplaceElementAttributesWithNeighborValues::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -422,7 +422,7 @@ const QString ReplaceElementAttributesWithNeighborValues::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReplaceElementAttributesWithNeighborValues::getFilterVersion()
+const QString ReplaceElementAttributesWithNeighborValues::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -432,7 +432,7 @@ const QString ReplaceElementAttributesWithNeighborValues::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReplaceElementAttributesWithNeighborValues::getGroupName()
+const QString ReplaceElementAttributesWithNeighborValues::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -448,7 +448,7 @@ const QUuid ReplaceElementAttributesWithNeighborValues::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReplaceElementAttributesWithNeighborValues::getSubGroupName()
+const QString ReplaceElementAttributesWithNeighborValues::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -456,7 +456,7 @@ const QString ReplaceElementAttributesWithNeighborValues::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReplaceElementAttributesWithNeighborValues::getHumanLabel()
+const QString ReplaceElementAttributesWithNeighborValues::getHumanLabel() const
 {
   return "Replace Element Attributes with Neighbor (Threshold)";
 }

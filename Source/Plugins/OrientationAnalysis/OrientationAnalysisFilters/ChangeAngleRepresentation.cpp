@@ -234,7 +234,7 @@ void ChangeAngleRepresentation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ChangeAngleRepresentation::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ChangeAngleRepresentation::newFilterInstance(bool copyFilterParameters) const
 {
   ChangeAngleRepresentation::Pointer filter = ChangeAngleRepresentation::New();
   if(true == copyFilterParameters)
@@ -247,7 +247,7 @@ AbstractFilter::Pointer ChangeAngleRepresentation::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getCompiledLibraryName()
+const QString ChangeAngleRepresentation::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -255,7 +255,7 @@ const QString ChangeAngleRepresentation::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getBrandingString()
+const QString ChangeAngleRepresentation::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -263,7 +263,7 @@ const QString ChangeAngleRepresentation::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getFilterVersion()
+const QString ChangeAngleRepresentation::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -273,7 +273,7 @@ const QString ChangeAngleRepresentation::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getGroupName()
+const QString ChangeAngleRepresentation::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -289,7 +289,7 @@ const QUuid ChangeAngleRepresentation::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getSubGroupName()
+const QString ChangeAngleRepresentation::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -297,7 +297,7 @@ const QString ChangeAngleRepresentation::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getHumanLabel()
+const QString ChangeAngleRepresentation::getHumanLabel() const
 {
   return "Convert Angles to Degrees or Radians";
 }

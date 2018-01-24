@@ -220,7 +220,7 @@ size_t ComputeFeatureRect::sub2ind(QVector<size_t> tDims, size_t x, size_t y, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ComputeFeatureRect::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ComputeFeatureRect::newFilterInstance(bool copyFilterParameters) const
 {
   ComputeFeatureRect::Pointer filter = ComputeFeatureRect::New();
   if(true == copyFilterParameters)
@@ -233,7 +233,7 @@ AbstractFilter::Pointer ComputeFeatureRect::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getCompiledLibraryName()
+const QString ComputeFeatureRect::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -241,7 +241,7 @@ const QString ComputeFeatureRect::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getBrandingString()
+const QString ComputeFeatureRect::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -249,7 +249,7 @@ const QString ComputeFeatureRect::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getFilterVersion()
+const QString ComputeFeatureRect::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -260,7 +260,7 @@ const QString ComputeFeatureRect::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getGroupName()
+const QString ComputeFeatureRect::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -276,7 +276,7 @@ const QUuid ComputeFeatureRect::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getSubGroupName()
+const QString ComputeFeatureRect::getSubGroupName() const
 {
   return "Reconstruction";
 }
@@ -284,7 +284,7 @@ const QString ComputeFeatureRect::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getHumanLabel()
+const QString ComputeFeatureRect::getHumanLabel() const
 {
   return "Compute Feature Corners";
 }

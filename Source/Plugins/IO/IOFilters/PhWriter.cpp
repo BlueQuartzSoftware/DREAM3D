@@ -254,7 +254,7 @@ int32_t PhWriter::writeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters) const
 {
   PhWriter::Pointer filter = PhWriter::New();
   if(true == copyFilterParameters)
@@ -267,7 +267,7 @@ AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getCompiledLibraryName()
+const QString PhWriter::getCompiledLibraryName() const
 {
   return IOConstants::IOBaseName;
 }
@@ -275,7 +275,7 @@ const QString PhWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getBrandingString()
+const QString PhWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -283,7 +283,7 @@ const QString PhWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getFilterVersion()
+const QString PhWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -293,7 +293,7 @@ const QString PhWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getGroupName()
+const QString PhWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -309,7 +309,7 @@ const QUuid PhWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getSubGroupName()
+const QString PhWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -317,7 +317,7 @@ const QString PhWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getHumanLabel()
+const QString PhWriter::getHumanLabel() const
 {
   return "Export Ph File (Feature Ids)";
 }

@@ -326,7 +326,7 @@ void WarpRegularGrid::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer WarpRegularGrid::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer WarpRegularGrid::newFilterInstance(bool copyFilterParameters) const
 {
   WarpRegularGrid::Pointer filter = WarpRegularGrid::New();
   if(true == copyFilterParameters)
@@ -339,7 +339,7 @@ AbstractFilter::Pointer WarpRegularGrid::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getCompiledLibraryName()
+const QString WarpRegularGrid::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -347,7 +347,7 @@ const QString WarpRegularGrid::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getBrandingString()
+const QString WarpRegularGrid::getBrandingString() const
 {
   return "Sampling";
 }
@@ -355,7 +355,7 @@ const QString WarpRegularGrid::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getFilterVersion()
+const QString WarpRegularGrid::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -365,7 +365,7 @@ const QString WarpRegularGrid::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getGroupName()
+const QString WarpRegularGrid::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -381,7 +381,7 @@ const QUuid WarpRegularGrid::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getSubGroupName()
+const QString WarpRegularGrid::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::WarpingFilters;
 }
@@ -389,7 +389,7 @@ const QString WarpRegularGrid::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getHumanLabel()
+const QString WarpRegularGrid::getHumanLabel() const
 {
   return "Warp Rectilinear Grid";
 }

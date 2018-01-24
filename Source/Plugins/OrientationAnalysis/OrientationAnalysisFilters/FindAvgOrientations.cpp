@@ -283,7 +283,7 @@ void FindAvgOrientations::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindAvgOrientations::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindAvgOrientations::newFilterInstance(bool copyFilterParameters) const
 {
   FindAvgOrientations::Pointer filter = FindAvgOrientations::New();
   if(true == copyFilterParameters)
@@ -296,7 +296,7 @@ AbstractFilter::Pointer FindAvgOrientations::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getCompiledLibraryName()
+const QString FindAvgOrientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -304,7 +304,7 @@ const QString FindAvgOrientations::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getBrandingString()
+const QString FindAvgOrientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -312,7 +312,7 @@ const QString FindAvgOrientations::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getFilterVersion()
+const QString FindAvgOrientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -322,7 +322,7 @@ const QString FindAvgOrientations::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getGroupName()
+const QString FindAvgOrientations::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -338,7 +338,7 @@ const QUuid FindAvgOrientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getSubGroupName()
+const QString FindAvgOrientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -346,7 +346,7 @@ const QString FindAvgOrientations::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getHumanLabel()
+const QString FindAvgOrientations::getHumanLabel() const
 {
   return "Find Feature Average Orientations";
 }

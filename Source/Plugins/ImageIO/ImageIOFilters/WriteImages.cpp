@@ -538,7 +538,7 @@ int32_t WriteImages::writeGrayscaleImage(size_t slice, size_t dB, size_t dA, siz
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer WriteImages::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer WriteImages::newFilterInstance(bool copyFilterParameters) const
 {
   WriteImages::Pointer filter = WriteImages::New();
   if(true == copyFilterParameters)
@@ -551,7 +551,7 @@ AbstractFilter::Pointer WriteImages::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteImages::getCompiledLibraryName()
+const QString WriteImages::getCompiledLibraryName() const
 {
   return ImageIOConstants::ImageIOBaseName;
 }
@@ -559,7 +559,7 @@ const QString WriteImages::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteImages::getBrandingString()
+const QString WriteImages::getBrandingString() const
 {
   return "ImageIO";
 }
@@ -567,7 +567,7 @@ const QString WriteImages::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteImages::getFilterVersion()
+const QString WriteImages::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -577,7 +577,7 @@ const QString WriteImages::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteImages::getGroupName()
+const QString WriteImages::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -593,7 +593,7 @@ const QUuid WriteImages::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteImages::getSubGroupName()
+const QString WriteImages::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -601,7 +601,7 @@ const QString WriteImages::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteImages::getHumanLabel()
+const QString WriteImages::getHumanLabel() const
 {
   return "Export Images";
 }

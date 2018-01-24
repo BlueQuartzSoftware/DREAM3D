@@ -531,7 +531,7 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterParameters) const
 {
   LaplacianSmoothing::Pointer filter = LaplacianSmoothing::New();
   if(true == copyFilterParameters)
@@ -544,7 +544,7 @@ AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getCompiledLibraryName()
+const QString LaplacianSmoothing::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -552,7 +552,7 @@ const QString LaplacianSmoothing::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getBrandingString()
+const QString LaplacianSmoothing::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -560,7 +560,7 @@ const QString LaplacianSmoothing::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getFilterVersion()
+const QString LaplacianSmoothing::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -570,7 +570,7 @@ const QString LaplacianSmoothing::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getGroupName()
+const QString LaplacianSmoothing::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -586,7 +586,7 @@ const QUuid LaplacianSmoothing::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getSubGroupName()
+const QString LaplacianSmoothing::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SmoothingFilters;
 }
@@ -594,7 +594,7 @@ const QString LaplacianSmoothing::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getHumanLabel()
+const QString LaplacianSmoothing::getHumanLabel() const
 {
   return "Laplacian Smoothing";
 }

@@ -280,7 +280,7 @@ void GenerateRodriguesColors::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateRodriguesColors::Pointer filter = GenerateRodriguesColors::New();
   if(true == copyFilterParameters)
@@ -293,7 +293,7 @@ AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getCompiledLibraryName()
+const QString GenerateRodriguesColors::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -301,7 +301,7 @@ const QString GenerateRodriguesColors::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getBrandingString()
+const QString GenerateRodriguesColors::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -309,7 +309,7 @@ const QString GenerateRodriguesColors::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getFilterVersion()
+const QString GenerateRodriguesColors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -320,7 +320,7 @@ const QString GenerateRodriguesColors::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getGroupName()
+const QString GenerateRodriguesColors::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -336,7 +336,7 @@ const QUuid GenerateRodriguesColors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getSubGroupName()
+const QString GenerateRodriguesColors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -344,7 +344,7 @@ const QString GenerateRodriguesColors::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getHumanLabel()
+const QString GenerateRodriguesColors::getHumanLabel() const
 {
   return "Generate Rodrigues Colors";
 }
