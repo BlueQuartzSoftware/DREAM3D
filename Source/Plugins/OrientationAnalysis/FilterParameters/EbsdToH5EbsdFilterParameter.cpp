@@ -70,7 +70,7 @@ EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::New(const QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString EbsdToH5EbsdFilterParameter::getWidgetType()
+QString EbsdToH5EbsdFilterParameter::getWidgetType() const
 {
   return QString("EbsdToH5EbsdWidget");
 }

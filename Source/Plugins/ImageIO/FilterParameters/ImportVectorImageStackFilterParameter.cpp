@@ -72,7 +72,7 @@ ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImportVectorImageStackFilterParameter::getWidgetType()
+QString ImportVectorImageStackFilterParameter::getWidgetType() const
 {
   return QString("ImportVectorImageStackWidget");
 }
@@ -108,7 +108,7 @@ void ImportVectorImageStackFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportVectorImageStackFilterParameter::writeJson(QJsonObject& json)
+void ImportVectorImageStackFilterParameter::writeJson(QJsonObject & json)
 {
   json["StartIndex"] = QString::number(m_Filter->getStartIndex());
   json["EndIndex"] = QString::number(m_Filter->getEndIndex());

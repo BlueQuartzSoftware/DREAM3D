@@ -72,7 +72,7 @@ ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::New(const QString&
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ReadH5EbsdFilterParameter::getWidgetType()
+QString ReadH5EbsdFilterParameter::getWidgetType() const
 {
   return QString("ReadH5EbsdWidget");
 }

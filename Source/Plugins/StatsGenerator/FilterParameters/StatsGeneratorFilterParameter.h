@@ -65,7 +65,7 @@ public:
    * this FilterParameter subclass
    * @return
    */
-  QString getWidgetType();
+  QString getWidgetType() const override;
 
 protected:
   StatsGeneratorFilterParameter();

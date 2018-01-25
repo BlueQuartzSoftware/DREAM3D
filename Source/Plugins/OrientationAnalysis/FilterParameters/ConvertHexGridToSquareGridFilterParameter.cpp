@@ -73,7 +73,7 @@ ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ConvertHexGridToSquareGridFilterParameter::getWidgetType()
+QString ConvertHexGridToSquareGridFilterParameter::getWidgetType() const
 {
   return QString("ConvertHexGridToSquareGridWidget");
 }

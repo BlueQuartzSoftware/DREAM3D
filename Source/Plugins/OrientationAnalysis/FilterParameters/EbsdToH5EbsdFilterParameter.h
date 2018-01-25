@@ -60,19 +60,19 @@ public:
 
   SIMPL_INSTANCE_PROPERTY(EbsdToH5Ebsd*, Filter)
 
-  QString getWidgetType();
+  QString getWidgetType() const override;
 
   /**
    * @brief readJson
    * @return
    */
-  void readJson(const QJsonObject &json);
+  void readJson(const QJsonObject &json) override;
 
   /**
    * @brief writeJson
    * @return
    */
-  void writeJson(QJsonObject &json);
+  void writeJson(QJsonObject &json) override;
 
 protected:
   EbsdToH5EbsdFilterParameter();

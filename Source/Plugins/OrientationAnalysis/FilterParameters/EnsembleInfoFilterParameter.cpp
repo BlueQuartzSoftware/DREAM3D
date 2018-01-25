@@ -76,7 +76,7 @@ EnsembleInfoFilterParameter::Pointer EnsembleInfoFilterParameter::New(const QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString EnsembleInfoFilterParameter::getWidgetType()
+QString EnsembleInfoFilterParameter::getWidgetType() const
 {
   return QString("EnsembleInfoCreationWidget");
 }

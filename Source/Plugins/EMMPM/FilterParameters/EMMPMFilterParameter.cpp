@@ -72,7 +72,7 @@ EMMPMFilterParameter::Pointer EMMPMFilterParameter::New(const QString& humanLabe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString EMMPMFilterParameter::getWidgetType()
+QString EMMPMFilterParameter::getWidgetType() const
 {
   return QString("EMMPMWidget");
 }

@@ -65,7 +65,7 @@ StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::New(const 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString StatsGeneratorFilterParameter::getWidgetType()
+QString StatsGeneratorFilterParameter::getWidgetType() const
 {
   return QString("StatsGeneratorWidget");
 }

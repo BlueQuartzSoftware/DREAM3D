@@ -73,7 +73,7 @@ ReadEdaxH5DataFilterParameter::Pointer ReadEdaxH5DataFilterParameter::New(const 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ReadEdaxH5DataFilterParameter::getWidgetType()
+QString ReadEdaxH5DataFilterParameter::getWidgetType() const
 {
   return QString("ReadEdaxH5DataWidget");
 }

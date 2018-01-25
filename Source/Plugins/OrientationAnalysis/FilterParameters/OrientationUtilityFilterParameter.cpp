@@ -68,7 +68,7 @@ OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::Ne
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString OrientationUtilityFilterParameter::getWidgetType()
+QString OrientationUtilityFilterParameter::getWidgetType() const
 {
   return QString("OrientationUtilityWidget");
 }

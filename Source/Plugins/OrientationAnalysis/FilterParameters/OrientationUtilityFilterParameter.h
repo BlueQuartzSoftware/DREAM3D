@@ -51,7 +51,7 @@ public:
 
   virtual ~OrientationUtilityFilterParameter();
 
-  QString getWidgetType();
+  QString getWidgetType() const override;
 
 protected:
   OrientationUtilityFilterParameter();

@@ -106,7 +106,7 @@ public:
  * this FilterParameter subclass
  * @return
  */
-  QString getWidgetType();
+  QString getWidgetType() const override;
 
   /**
    * @brief readJson Reads this filter parameter's corresponding property out of a QJsonObject.

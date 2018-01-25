@@ -55,19 +55,19 @@ public:
 
   virtual ~ReadEdaxH5DataFilterParameter();
 
-  QString getWidgetType();
+  QString getWidgetType() const override;
 
   /**
    * @brief readJson
    * @return
    */
-  void readJson(const QJsonObject &json);
+  void readJson(const QJsonObject &json) override;
 
   /**
    * @brief writeJson
    * @return
    */
-  void writeJson(QJsonObject &json);
+  void writeJson(QJsonObject &json) override;
 
   SIMPL_INSTANCE_PROPERTY(SetterCallbackType, SetterCallback)
   SIMPL_INSTANCE_PROPERTY(GetterCallbackType, GetterCallback)
