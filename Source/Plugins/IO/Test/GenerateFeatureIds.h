@@ -29,15 +29,15 @@ public:
   SIMPL_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
   SIMPL_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-  virtual const QString getGroupName()
+  virtual const QString getGroupName() const override
   {
     return "UnitTest";
   }
-  virtual const QString getHumanLabel()
+  virtual const QString getHumanLabel() const override
   {
     return "Generate Feature Ids";
   }
-  virtual void execute()
+  virtual void execute() override
   {
     setErrorCondition(0);
     setWarningCondition(0);
@@ -64,12 +64,12 @@ public:
       m_FeatureIds[i] = i + UnitTest::FeatureIdsTest::Offset;
     }
   }
-  virtual void preflight()
+  virtual void preflight() override
   {
     dataCheck();
   }
 
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index)
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override
   {
     reader->openFilterGroup(this, index);
     reader->closeFilterGroup();
@@ -146,7 +146,7 @@ public:
   * a different group if you want. The string returned here will be displayed
   * in the GUI for the filter
   */
-  virtual const QString getGroupName()
+  virtual const QString getGroupName() const override
   {
     return "UnitTest";
   }
@@ -155,7 +155,7 @@ public:
   * @brief This returns a string that is displayed in the GUI. It should be readable
   * and understandable by humans.
   */
-  virtual const QString getHumanLabel()
+  virtual const QString getHumanLabel() const override
   {
     return "CreateDataContainer Filter";
   }
@@ -163,7 +163,7 @@ public:
   /**
   * @brief Reimplemented from @see AbstractFilter class
   */
-  virtual void execute()
+  virtual void execute() override
   {
     dataCheck();
   }
@@ -172,12 +172,12 @@ public:
   * @brief This function runs some sanity checks on the DataContainer and inputs
   * in an attempt to ensure the filter can process the inputs.
   */
-  virtual void preflight()
+  virtual void preflight() override
   {
     dataCheck();
   }
 
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index)
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override
   {
     reader->openFilterGroup(this, index);
     reader->closeFilterGroup();
