@@ -46,7 +46,7 @@
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/H5ScopedSentinel.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/ShapeType.h"

@@ -38,7 +38,7 @@
 #include <QtCore/QDir>
 
 #include "H5Support/QH5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/H5ScopedSentinel.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -256,7 +256,7 @@ void EbsdToH5Ebsd::execute()
     return;
   }
 
-  HDF5ScopedFileSentinel sentinel(&fileId, true);
+  H5ScopedFileSentinel sentinel(&fileId, true);
 
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
   if(err < 0)

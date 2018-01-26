@@ -46,7 +46,7 @@
 
 #include "H5Support/QH5Lite.h"
 #include "H5Support/QH5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/H5ScopedSentinel.h"
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdMacros.h"
@@ -155,7 +155,7 @@ int H5AngReader::readHeaderOnly()
     return -1;
   }
 
-  HDF5ScopedFileSentinel sentinel(&fileId, true);
+  H5ScopedFileSentinel sentinel(&fileId, true);
 
   hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)

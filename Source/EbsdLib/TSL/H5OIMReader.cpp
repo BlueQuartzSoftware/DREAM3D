@@ -44,7 +44,7 @@
 #include "AngConstants.h"
 
 #include "H5Support/H5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/H5ScopedSentinel.h"
 #include "H5Support/QH5Lite.h"
 #include "H5Support/QH5Utilities.h"
 
@@ -129,7 +129,7 @@ int H5OIMReader::readFile()
     return err;
   }
 
-  HDF5ScopedFileSentinel sentinel(&fileId, false);
+  H5ScopedFileSentinel sentinel(&fileId, false);
   hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if(gid < 0)
   {
@@ -239,7 +239,7 @@ int H5OIMReader::readHeaderOnly()
     setErrorMessage(str);
     return getErrorCode();
   }
-  HDF5ScopedFileSentinel sentinel(&fileId, false);
+  H5ScopedFileSentinel sentinel(&fileId, false);
 
   if(m_HDF5Path.isEmpty() == true)
   {
@@ -351,7 +351,7 @@ int H5OIMReader::readScanNames(QStringList& names)
     names.clear();
     return getErrorCode();
   }
-  HDF5ScopedFileSentinel sentinel(&fileId, false);
+  H5ScopedFileSentinel sentinel(&fileId, false);
 
   err = QH5Utilities::getGroupObjects(fileId, H5Utilities::H5Support_GROUP, names);
   setErrorCode(err);
@@ -426,7 +426,7 @@ int H5OIMReader::readHeader(hid_t parId)
     setErrorMessage("H5OIMReader Error: Could not open 'Header' Group");
     return -1;
   }
-  HDF5ScopedGroupSentinel sentinel(&gid, false);
+  H5ScopedGroupSentinel sentinel(&gid, false);
 
   QString path = Ebsd::H5::PatternCenterCalibration + "/" + Ebsd::Ang::XStar;
   hid_t patternCenterCalibrationGid = H5Gopen(gid, Ebsd::H5::PatternCenterCalibration.toLatin1().data(), H5P_DEFAULT);

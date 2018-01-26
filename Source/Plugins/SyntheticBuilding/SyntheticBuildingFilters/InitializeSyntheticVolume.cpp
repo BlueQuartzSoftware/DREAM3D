@@ -39,7 +39,7 @@
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/H5ScopedSentinel.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -375,7 +375,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
     // open the file
     fileId = H5Utilities::openFile(getInputStatsFile().toLatin1().constData(), true);
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
-    HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+    H5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
     DataArrayPath dap = getInputPhaseTypesArrayPath();
     // Generate the path to the AttributeMatrix

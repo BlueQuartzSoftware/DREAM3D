@@ -51,7 +51,7 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/H5ScopedSentinel.h"
 
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
@@ -860,7 +860,7 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+  H5ScopedFileSentinel scopedFileSentinel(&fileId, true);
   hid_t dcaGid = H5Gopen(fileId, SIMPL::StringConstants::DataContainerGroupName.toLatin1().constData(), 0);
   scopedFileSentinel.addGroupId(&dcaGid);
 

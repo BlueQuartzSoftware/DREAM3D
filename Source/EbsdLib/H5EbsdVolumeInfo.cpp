@@ -41,7 +41,7 @@
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include "H5Support/H5ScopedSentinel.h"
 
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
@@ -160,7 +160,7 @@ int H5EbsdVolumeInfo::updateToLatestVersion()
   }
   // This sentinel will make sure the file is closed and the errors turned back on when we
   // exit the function
-  HDF5ScopedFileSentinel sentinel(&fileId, true);
+  H5ScopedFileSentinel sentinel(&fileId, true);
 
   // Update any existing datasets/attributes with new datasets/attributes/
 
@@ -181,7 +181,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
     //std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
     return -1;
   }
-  HDF5ScopedFileSentinel sentinel(&fileId, true);
+  H5ScopedFileSentinel sentinel(&fileId, true);
 
   m_FileVersion = 0;
   // Attempt to read the file version number. If it is not there that is OK as early h5ebsd
