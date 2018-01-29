@@ -48,6 +48,10 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+//Forward Declare classes.
+class ImageGeom;
+
+
 /**
  * @brief The SPParksDumpReader class. See [Filter documentation](@ref spparkstextreader) for details.
  */
@@ -197,12 +201,14 @@ protected:
    * @param xCol X coordinate
    * @param yCol Y coordinate
    * @param zCol Z coordinate
+   * @param lineNum
    */
-  void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol);
+  void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol, size_t lineNum);
 
 private:
   QFile m_InStream;
   QMap<QString, DataParser::Pointer> m_NamePointerMap;
+  ImageGeom* m_CachedGeometry = nullptr;
 
   SPParksDumpReader(const SPParksDumpReader&) = delete; // Copy Constructor Not Implemented
   void operator=(const SPParksDumpReader&);    // Operator '=' Not Implemented

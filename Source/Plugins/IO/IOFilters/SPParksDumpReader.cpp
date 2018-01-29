@@ -277,6 +277,9 @@ int32_t SPParksDumpReader::readHeader()
   }
 
   bool ok = false; // Use this to verify that the comversions from string to numbers actually works.
+  int64_t nx = 0;
+  int64_t ny = 0;
+  int64_t nz = 0;
   // We are going to reuse the 'buf' variable
   QByteArray buf = m_InStream.readLine(); // ITEM: TIMESTEP
   buf = m_InStream.readLine();            // 210    21000.6
@@ -289,23 +292,78 @@ int32_t SPParksDumpReader::readHeader()
   buf = m_InStream.readLine(); // 0.5 44.5
   buf = buf.trimmed();
   QList<QByteArray> tokens = buf.split(' ');
-  float low = tokens[0].toFloat(&ok);
-  float high = tokens[1].toFloat(&ok);
-  int64_t nx = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
-
+  ok = false;
+  float low = 0.0f;
+  int lowInt = tokens[0].toInt(&ok);
+  if(ok)
+  {
+    low = static_cast<float>(lowInt);
+  }
+  else 
+  {
+    low  = tokens[0].toFloat(&ok);
+  }
+  
+  float high = 0.0f;
+  int highInt = tokens[1].toInt(&ok);
+  if(ok)
+  {
+    high = static_cast<float>(highInt);
+    nx = static_cast<int64_t>(highInt - ceil(low)) + oneBase;
+  }
+  else 
+  {
+    high = tokens[1].toFloat(&ok);
+    nx = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
+  }  
+  
   buf = m_InStream.readLine(); // 0.5 44.5
   buf = buf.trimmed();
   tokens = buf.split(' ');
-  low = tokens[0].toFloat(&ok);
-  high = tokens[1].toFloat(&ok);
-  int64_t ny = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
+  lowInt = tokens[0].toInt(&ok);
+  if(ok)
+  {
+    low = static_cast<float>(lowInt);
+  }
+  else 
+  {
+    low  = tokens[0].toFloat(&ok);
+  }
+  highInt = tokens[1].toInt(&ok);
+  if(ok)
+  {
+    high = static_cast<float>(highInt);
+    ny = static_cast<int64_t>(high - ceil(low)) + oneBase;
+  }
+  else 
+  {
+    high = tokens[1].toFloat(&ok);
+    ny = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
+  }
 
   buf = m_InStream.readLine(); // 0.5 55.5
   buf = buf.trimmed();
   tokens = buf.split(' ');
-  low = tokens[0].toFloat(&ok);
-  high = tokens[1].toFloat(&ok);
-  int64_t nz = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
+  lowInt = tokens[0].toInt(&ok);
+  if(ok)
+  {
+    low = static_cast<float>(lowInt);
+  }
+  else 
+  {
+    low  = tokens[0].toFloat(&ok);
+  }
+  highInt = tokens[1].toInt(&ok);
+  if(ok)
+  {
+    high = static_cast<float>(highInt);
+    nz = static_cast<int64_t>(high - ceil(low)) + oneBase;
+  }
+  else 
+  {
+    high = tokens[1].toFloat(&ok);
+    nz = static_cast<int64_t>(floor(high - 0.01f) - ceil(low)) + oneBase;
+  }
 
   if(numAtoms != nx * ny * nz)
   {
@@ -314,7 +372,14 @@ int32_t SPParksDumpReader::readHeader()
     notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return -100;
   }
-  m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
+  
+  m_CachedGeometry = m->getGeometryAs<ImageGeom>().get();
+  m_CachedGeometry->setDimensions(nx, ny, nz);
+  FloatVec3_t res = getResolution();
+  m_CachedGeometry->setResolution(res.x, res.y, res.z);
+  FloatVec3_t origin = getOrigin();
+  m_CachedGeometry->setOrigin(origin.x, origin.y, origin.z);
+  
   return 0;
 }
 
@@ -418,7 +483,15 @@ int32_t SPParksDumpReader::readFile()
       // otherwise we read EXACTLY the last line and we still need to parse the line.
       break;
     }
-    parseDataLine(buf, tDims, xCol, yCol, zCol);
+    parseDataLine(buf, tDims, xCol, yCol, zCol, n + 9);
+    if(getErrorCondition() < 0)
+    {
+      break;
+    }
+  }
+  if (getErrorCondition() < 0)
+  {
+    return getErrorCondition();
   }
 
   DataParser::Pointer parser = m_NamePointerMap["type"];
@@ -448,7 +521,7 @@ int32_t SPParksDumpReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksDumpReader::parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol)
+void SPParksDumpReader::parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol, size_t lineNum)
 {
   // Filter the line to convert European command style decimals to US/UK style points
   for(qint32 c = 0; c < line.size(); ++c)
@@ -472,11 +545,25 @@ void SPParksDumpReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
   xIdx = tokens[xCol].toInt(&ok) - oneBase;
   yIdx = tokens[yCol].toInt(&ok) - oneBase;
   zIdx = tokens[zCol].toInt(&ok) - oneBase;
-
+  
+  float coords[3] = { static_cast<float>(xIdx), static_cast<float>(yIdx), static_cast<float>(zIdx) };
   // Calculate the offset into the actual array based on the x, y & z values from the data line we just read
-  size_t offset = static_cast<size_t>((dims[1] * dims[0] * zIdx) + (dims[0] * yIdx) + xIdx);
-  // Q_ASSERT(tokens.size() == m_NamePointerMap.size());
-
+  //size_t offset = static_cast<size_t>((dims[1] * dims[0] * zIdx) + (dims[0] * yIdx) + xIdx);
+  size_t offset = std::numeric_limits<size_t>::max();
+  ImageGeom::ErrorType err = m_CachedGeometry->computeCellIndex(coords, offset);
+  if(err != ImageGeom::ErrorType::NoError)
+  {
+      QString msg;
+      QTextStream ss(&msg);
+      ss << "The calculated offset into the data array " << offset << " is larger "
+      << " than the total number of elements " << m_CachedGeometry->getNumberOfElements() << " in the array."
+      << "Line Number: " << lineNum << " Content\"" << line << "\"\n";
+      setErrorCondition(-48100);
+      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+      return;
+  }
+  
+  
   QMapIterator<QString, DataParser::Pointer> iter(m_NamePointerMap);
   while(iter.hasNext())
   {
@@ -489,7 +576,22 @@ void SPParksDumpReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
     {
       continue;
     }
-    dparser->parse(tokens[dparser->getColumnIndex()], offset);
+    if(offset < dparser->getSize())
+    {
+      dparser->parse(tokens[dparser->getColumnIndex()], offset);
+    }
+    else
+    {
+      QString msg;
+      QTextStream ss(&msg);
+      ss << "The calculated offset into the data array " << offset << " is larger "
+      << " than the total number of elements " << dparser->getSize() << " in the array."
+      << "The content of the current line is\"\n"
+      << line << "\"\n";
+      setErrorCondition(-48100);
+      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+      return;
+    }
   }
 }
 

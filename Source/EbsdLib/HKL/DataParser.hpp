@@ -114,6 +114,7 @@ class Int32Parser : public DataParser
 
     virtual void parse(const QByteArray& token, size_t index)
     {
+      Q_ASSERT(index < getSize());
       bool ok = false;
       m_Ptr[index] = token.toInt(&ok, 10);
     }
