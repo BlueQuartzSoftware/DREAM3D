@@ -201,7 +201,7 @@ endif()
 
 
 
-add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
+add_library(${PLUGIN_NAME} SHARED ${${PLUGIN_NAME}_MODULE_SRCS})
 CMP_AddDefinitions(TARGET ${PLUGIN_NAME})
 set_target_properties(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 #-------------------------------
@@ -249,4 +249,4 @@ if(SIMPL_BUILD_TESTING)
   include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
-
+#include(${${PLUGIN_NAME}_SOURCE_DIR}/PyBind11/CMakeLists.txt)
