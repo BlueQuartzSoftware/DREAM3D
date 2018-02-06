@@ -39,7 +39,7 @@ Springboro, Ohio 45066
 
 <h2>BSD Open-Source License</h2>
 <pre>
-Copyright (c) 2009-2015 BlueQuartz Software, LLC
+Copyright (c) 2009-2018 BlueQuartz Software, LLC
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:

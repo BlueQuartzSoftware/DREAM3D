@@ -1,0 +1,24 @@
+label.md-nav__link.md-nav__link--active:after {
+	content: "\E313";
+}
+
+.md-nav__link[for=toc] {
+	display: block !important;
+}
+
+@media only screen and (max-width: 76.1875em) {
+	.md-nav__list.toc-ul {
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+}
+
+@media only screen and (min-width: 60em) {
+	.md-content {
+		margin-right: 0 !important;
+	}
+}
+
+.md-sidebar.md-sidebar--secondary {
+	display: none !important;
+}
