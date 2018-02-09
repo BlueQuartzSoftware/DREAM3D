@@ -1,4 +1,4 @@
-Find Twin Boundary Schmid Factors {#findtwinboundaryschmidfactors}
+Find Twin Boundary Schmid Factors 
 =============
 
 ## Group (Subgroup) ##

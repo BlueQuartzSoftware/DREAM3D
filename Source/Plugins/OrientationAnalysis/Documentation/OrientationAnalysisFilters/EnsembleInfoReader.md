@@ -1,4 +1,4 @@
-Import Ensemble Info File {#ensembleinforeader}
+Import Ensemble Info File 
 =============
 
 ## Group (Subgroup) ##

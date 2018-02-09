@@ -1,4 +1,4 @@
-Sample Triangle Geometry at Specified Points {#samplesurfacemeshspecifiedpoints}
+Sample Triangle Geometry at Specified Points 
 =============
 
 ## Group (Subgroup) ##

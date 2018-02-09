@@ -1,4 +1,4 @@
-Avizo Uniform Coordinate Writer {#avizouniformcoordinatewriter}
+Avizo Uniform Coordinate Writer 
 ===========
 
 ## Group (Subgroup) ##
@@ -31,7 +31,7 @@ This filter writes out a native Avizo Uniform Coordinate data file. Values shoul
     }
 	Lattice { int FeatureIds } = @1
 	# Data section follows
-	….. 
+	   .. 
 
 ## Parameters ##
 

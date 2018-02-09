@@ -35,7 +35,7 @@
 
 #include "TrigonalOps.h"
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -619,7 +619,7 @@ namespace Detail
           }
         }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
         void operator()(const tbb::blocked_range<size_t>& r) const
         {
           generate(r.begin(), r.end());
@@ -649,12 +649,12 @@ void TrigonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatAr
     xyz111->resize(nOrientations * Detail::TrigonalHigh::symSize2 * 3);
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -834,7 +834,7 @@ QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfi
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 
@@ -928,7 +928,7 @@ QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfi
     poleFigures[2] = image111;
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 
   if(doParallel == true)
   {

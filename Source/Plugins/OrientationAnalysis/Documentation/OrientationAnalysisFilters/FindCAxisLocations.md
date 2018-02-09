@@ -1,4 +1,4 @@
-Find C-Axis Locations {#findcaxislocations}
+Find C-Axis Locations 
 ======
 
 ## Group (Subgroup) ##

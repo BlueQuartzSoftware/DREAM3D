@@ -1,4 +1,4 @@
-Write Dx File (Feature Ids) {#dxwriter}
+Write Dx File (Feature Ids) 
 =============
 
 ## Group (Subgroup) ##
@@ -41,7 +41,7 @@ The .dx file:
 
 	object 3 class array type int rank 0 items 4444713 data follows
 	1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-	…..
+	   ..
 ```
 The .dx file with a surface layer:
 ```
@@ -66,7 +66,7 @@ The .dx file with a surface layer:
 
 	object 3 class array type int rank 0 items 4613987 data follows
 	-3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3
-	…..
+	   ..
 ```
 _See: [the opendx site](http://www.opendx.org)_ for more information.
 

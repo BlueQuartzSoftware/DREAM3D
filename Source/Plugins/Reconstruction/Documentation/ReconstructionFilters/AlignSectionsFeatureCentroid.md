@@ -1,4 +1,4 @@
-Align Sections (Feature Centroid) {#alignsectionsfeaturecentroid}
+Align Sections (Feature Centroid) 
 ======
 
 ## Group (Subgroup) ##

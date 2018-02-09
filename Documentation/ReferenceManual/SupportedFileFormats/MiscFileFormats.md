@@ -1,4 +1,4 @@
-Import & Export File Formats {#miscfileformats}
+Import & Export File Formats 
 =======
 
 ## Supported Input File Types

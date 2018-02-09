@@ -1,4 +1,4 @@
-Find GBCD (Metric-Based Approach) {#findgbcdmetricbased}
+Find GBCD (Metric-Based Approach) 
 =============
 
 ## Group (Subgroup) ##

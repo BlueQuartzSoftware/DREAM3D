@@ -1,4 +1,4 @@
-Write Images {#writeimages}
+Write Images 
 =============
 
 ## Group (Subgroup) ##

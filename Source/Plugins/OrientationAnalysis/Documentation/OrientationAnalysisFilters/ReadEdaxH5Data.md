@@ -1,4 +1,4 @@
-Import EDAX EBSD Data (.h5) {#readedaxh5data}
+Import EDAX EBSD Data (.h5) 
 =============
 
 ## Group (Subgroup) ##

@@ -35,7 +35,7 @@
 
 #include "GenerateIPFColors.h"
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
@@ -123,7 +123,7 @@ public:
     }
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range<size_t>& r) const
   {
     convert(r.begin(), r.end());
@@ -332,12 +332,12 @@ void GenerateIPFColors::execute()
   FloatVec3_t normRefDir = m_ReferenceDir; // Make a copy of the reference Direction
   MatrixMath::Normalize3x1(normRefDir.x, normRefDir.y, normRefDir.z);
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),

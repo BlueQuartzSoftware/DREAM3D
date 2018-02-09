@@ -1,4 +1,4 @@
-Find Feature Neighbors {#findneighbors}
+Find Feature Neighbors 
 =============
 
 ## Group (Subgroup) ##

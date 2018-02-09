@@ -1,4 +1,4 @@
-Create Lambert Sphere from MasterPattern{#createlambertsphere}
+Create Lambert Sphere from MasterPattern
 =============
 
 ## Group (Subgroup) ##

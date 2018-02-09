@@ -1,4 +1,4 @@
-Generate Vector Colors {#generatevectorcolors}
+Generate Vector Colors 
 =============
 
 ## Group (Subgroup) ##

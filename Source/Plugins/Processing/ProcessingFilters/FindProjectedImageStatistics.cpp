@@ -35,7 +35,7 @@
 
 #include "FindProjectedImageStatistics.h"
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
@@ -125,7 +125,7 @@ public:
     }
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range<size_t>& r) const
   {
     convert(r.begin(), r.end());
@@ -342,7 +342,7 @@ void FindProjectedImageStatistics::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedArrayPath().getDataContainerName());
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
@@ -416,7 +416,7 @@ void FindProjectedImageStatistics::execute()
   {
     Int8ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int8ArrayType>(m_InDataPtr.lock());
     int8_t* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
@@ -434,7 +434,7 @@ void FindProjectedImageStatistics::execute()
   {
     UInt8ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt8ArrayType>(m_InDataPtr.lock());
     uint8_t* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
@@ -452,7 +452,7 @@ void FindProjectedImageStatistics::execute()
   {
     Int16ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int16ArrayType>(m_InDataPtr.lock());
     int16_t* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
@@ -470,7 +470,7 @@ void FindProjectedImageStatistics::execute()
   {
     UInt16ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt16ArrayType>(m_InDataPtr.lock());
     uint16_t* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
@@ -488,7 +488,7 @@ void FindProjectedImageStatistics::execute()
   {
     Int32ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int32ArrayType>(m_InDataPtr.lock());
     int32_t* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
@@ -506,7 +506,7 @@ void FindProjectedImageStatistics::execute()
   {
     UInt32ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt32ArrayType>(m_InDataPtr.lock());
     uint32_t* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
@@ -524,7 +524,7 @@ void FindProjectedImageStatistics::execute()
   {
     Int64ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int64ArrayType>(m_InDataPtr.lock());
     int64_t* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
@@ -542,7 +542,7 @@ void FindProjectedImageStatistics::execute()
   {
     UInt64ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt64ArrayType>(m_InDataPtr.lock());
     uint64_t* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
@@ -560,7 +560,7 @@ void FindProjectedImageStatistics::execute()
   {
     FloatArrayType::Pointer cellArray = std::dynamic_pointer_cast<FloatArrayType>(m_InDataPtr.lock());
     float* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
@@ -578,7 +578,7 @@ void FindProjectedImageStatistics::execute()
   {
     DoubleArrayType::Pointer cellArray = std::dynamic_pointer_cast<DoubleArrayType>(m_InDataPtr.lock());
     double* cPtr = cellArray->getPointer(0);
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count),

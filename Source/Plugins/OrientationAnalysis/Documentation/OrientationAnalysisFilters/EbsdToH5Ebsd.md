@@ -1,4 +1,4 @@
-Import Orientation File(s) to H5EBSD {#ebsdtoh5ebsd}
+Import Orientation File(s) to H5EBSD 
 =============
 
 ## Group (Subgroup) ##
@@ -27,7 +27,6 @@ Many serial sectioning systems are inherently a series of 2D scans stacked toget
 -----
 
 ![Import Orientation Files User Interface](Images/ImportOrientationDataFilter.png)
-@image latex Images/ImportOrientationDataFilter.png "Import Orientation Files User Interface" width=6in
 
 -----
 
@@ -37,7 +36,6 @@ DREAM.3D's origin follows the specimen's coordinate system so that the physical 
 -----
 
 ![TSL Coordinate System (Spatial)](Images/CoordinateSystem1.png)
-@image latex Images/CoordinateSystem1.png "TSL Coordinate System (Spatial)" width=6in
 
 -----
 
@@ -46,7 +44,6 @@ Commercial EBSD acquisition systems do not typically follow this convention, and
 -----
 
 ![Advanced Reference Frame Dialog](Images/EbsdToH5Ebsd_ReferenceFrameDialog.png)
-@image latex Images/EbsdToH5Ebsd_ReferenceFrameDialog.png "Advanced Reference Frame Dialog" width=6in
 
 -----
 
@@ -57,12 +54,10 @@ The user needs to click the _Set Reference Frame_ button to set the proper refer
 ---
 
 ![No Transform or Unknown Manufacturer or HEDM Data](Images/NoUnknown_HEDM_RefFrame.png)
-@image latex Images/NoUnknown_HEDM_RefFrame.png "No Transform or Unknown Manufacturer or HEDM Data" width=6in
 
 ---
 
 ![TSL or HKL Transform](Images/EDAX_HKL_RefFrame.png)
-@image latex Images/EDAX_HKL_RefFrame.png "TSL or HKL Transform" width=6in
 
 ---
 

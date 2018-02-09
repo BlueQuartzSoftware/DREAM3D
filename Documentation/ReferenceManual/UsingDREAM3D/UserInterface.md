@@ -1,4 +1,4 @@
-Overview of the User Interface {#userinterface}
+Overview of the User Interface 
 =========
 
 DREAM.3D has 4 main sections of its user interface:
@@ -19,7 +19,6 @@ In order to keep the size of the DREAM.3D exeuctable manageable, most of the lib
 ---
 
 ![Overview of the DREAM.3D User Interface](Images/OverView-DREAM3D.png)
-@image latex Images/OverView-DREAM3D.png "Overview of the DREAM.3D User Interface" width=6in
 
 ---
 
@@ -36,7 +35,6 @@ The DREAM.3D Toolbox contains the **Filter List**, **Filter Library**, and **Boo
 </a>
 
 ![Filter List](Images/OverView-FilterList.png)
-@image latex Images/OverView-FilterList.png "Filter List" width=6in
 
 The **Filter List** section organizes the **Filters** of DREAM.3D alphabetically by name. Using the search bar, the user can search for **Filters** based on the name.
 
@@ -54,7 +52,6 @@ Clicking on the magnifying glass icon in the search bar allows the user to pick 
 </a>
 
 ![Filter Library](Images/OverView-FilterLibrary.png)
-@image latex Images/OverView-FilterLibrary.png "Filter Library" width=6in
 
 The **Filter Library** section organizes the **Filters** of DREAM.3D according to their _group_ and _subgroup_. The user can expand a specific _group_ (and possibly a _subgroup_) to expose the **Filters**. **Filters** are placed into groups and subgroups based on their _functionality_. This makes it easy to find **Filters** based on a desired function. In general, the **Filter** group will correspond to the **Plugin** that **Filter** resides in, but this may not always be the case.
 
@@ -65,20 +62,16 @@ The **Filter Library** section organizes the **Filters** of DREAM.3D according t
 </a>
 
 ![Bookmarks View](Images/OverView-BookmarksView.png)
-@image latex Images/OverView-BookmarksView.png "Bookmarks View" width=6in
 
 The **Bookmarks** section is where the user can _bookmark_ any **Pipelines** that they have saved on the file system for later use.  This section allows the user to bookmark the pipelines in any structure that they want, using _virtual folders_. Visit the [Saving & Opening Pipelines](@ref importexportsavepipeline) section for more information on handling saved **Pipelines**.
 
 **Pipelines** and folders containing **Pipelines** can be dragged from the file system into **Bookmarks**. The user can right click anywhere in **Bookmarks** to make a contextual menu appear with additional options.
 
 ![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu1.png)
-@image latex Images/OverView-BookmarksViewMenu1.png "Bookmarks Contextual Menu" width=6in
 
 ![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu2.png)
-@image latex Images/OverView-BookmarksViewMenu2.png "Bookmarks Contextual Menu" width=6in
 
 ![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu3.png)
-@image latex Images/OverView-BookmarksViewMenu3.png "Bookmarks Contextual Menu" width=6in
 
 ### Interacting With Bookmarks ###
 To add a bookmark to **Bookmarks**, open the *Bookmarks* menu and choose *Add Bookmark*. Users can also use the **Bookmarks Contextual Menu** to add a bookmark by right clicking on an existing virtual folder or empty space and selecting *Add Bookmark*. **Bookmarks** and virtual folders can be renamed by right clicking on them and selecting the *Rename Bookmark* or *Rename Folder* option. To update a bookmark in **Bookmarks**, use the **Bookmarks Contextual Menu** by right clicking on a bookmark and select *Update Pipeline*. The **Bookmark** that was right clicked will be updated with the pipeline that is currently in the **Pipeline View**. To remove a **Bookmark** or virtual folder from **Bookmarks**, use the **Bookmarks Contextual Menu** by right clicking on a bookmark or virtual folder and select *Remove Bookmark* or *Remove Folder*. This procedure _does not_ delete the **Pipeline** files themselves, but only removes them from the **Bookmarks View**.
@@ -96,7 +89,6 @@ DREAM.3D provides several _prebuilt_ **Pipelines** that can aid new users in get
 </a>
 
 ![Pipeline View](Images/OverView-PipelineView.png)
-@image latex Images/OverView-PipelineView.png "Pipeline View" width=6in
 
 The **Pipeline View** section displays which **Filters** are in the current pipeline, and in what order. This section is where the user will construct their **Pipeline** by double clicking on a **Filter** in the **Filter List** or the **Filter Library**.  It is also possible to drag a **Filter** from these areas and drop it into the **Pipeline View**. **Filters** in this section can be rearranged into different orders via dragging and dropping the **Filter** objects. More information on creating **Pipelines** can be found in the [Creating a Pipeline](@ref creatingpipeline) section.
 
@@ -112,13 +104,10 @@ A **Filter** can be selected by single left clicking. Multiple **Filters** can b
 **Note:** Copying **Filters** puts them onto the system clipboard as a pipeline in JSON format.  Therefore, it is possible to create a sub-pipeline of a pipeline currently loaded in DREAM.3D by copying filters to the clipboard in DREAM.3D and then pasting into any text editor.
 
 ![Alt-Drag Example](Images/OverView-CutCopyPaste1.png)
-@image latex OverView-CutCopyPaste1.png "Alt-Drag Example" width=6in
 
 ![Alt-Drag Example](Images/OverView-CutCopyPaste2.png)
-@image latex OverView-CutCopyPaste2.png "Alt-Drag Example" width=6in
 
 ![Alt-Drag Example](Images/OverView-CutCopyPaste3.png)
-@image latex OverView-CutCopyPaste3.png "Alt-Drag Example" width=6in
 
 In the example above, filters 2 and 4 are selected and then copied to the bottom of the pipeline by pressing the Alt key and dragging.
 
@@ -143,7 +132,6 @@ Each filter in the pipeline will have a specific background color. The colors ar
 * Unsupported.
 
 ![Filter Group Colors](Images/FilterColors.png)
-@image latex FilterColors.png "Filter Group Colors" width=3in
 
 ---
 
@@ -152,7 +140,6 @@ Each filter in the pipeline will have a specific background color. The colors ar
 </a>
 
 ![Filter Input View - Variables Tab](Images/OverView-FilterInputView1.png)
-@image latex OverView-FilterInputView1.png "Filter Input View - Variables Tab" width=6in
 
 The **Filter Input View** contains all the parameters for the selected **Filter**. There are two sections: **Variables** and **Current Structure**:
 
@@ -172,7 +159,6 @@ To view the help page for the selected **Filter**, press the _?_ icon.
 </a>
 
 ![Data Structure](Images/OverView-DataStructure.png)
-@image latex Images/OverView-DataStructure.png "Data Structure" width=6in
 
 The **Data Structure** displays the current data structure of the pipeline, including all data containers, attribute matrices, and data arrays that exist in the current pipeline's data container array.  This tool is a good way to tell at-a-glance the current structure of your data when clicking on filters in the pipeline.
 
@@ -183,7 +169,6 @@ The **Data Structure** displays the current data structure of the pipeline, incl
 </a>
 
 ![Pipeline Output Log](Images/OverView-PipelineOutputLog.png)
-@image latex Images/OverView-PipelineErrorTable.png "Pipeline Error Table" width=6in
 
 The **Pipeline Output Log** displays any output messages associated with GUI actions or **Filters** that are actively being used in the **Pipeline View**.
 
@@ -201,7 +186,6 @@ Messages are added to the output log when:
 </a>
 
 ![Pipeline Issues Table](Images/OverView-PipelineErrorTable.png)
-@image latex Images/OverView-PipelineErrorTable.png "Pipeline Error Table" width=6in
 
 The **Pipeline Error Table** displays any errors and/or warnings associated with **Filters** that are actively being used in the **Pipeline View**.
 

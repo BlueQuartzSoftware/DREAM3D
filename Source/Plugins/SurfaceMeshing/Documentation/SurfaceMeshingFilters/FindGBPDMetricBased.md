@@ -1,4 +1,4 @@
-Find GBPD (Metric-Based Approach) {#findgbpdmetricbased}
+Find GBPD (Metric-Based Approach) 
 =============
 
 ## Group (Subgroup) ##

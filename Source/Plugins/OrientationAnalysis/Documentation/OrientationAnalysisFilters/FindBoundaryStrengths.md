@@ -1,4 +1,4 @@
-Find Feature Boundary Strength Metrics {#findboundarystrengths}
+Find Feature Boundary Strength Metrics 
 =============
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-Jumble Orientations {#jumbleorientations}
+Jumble Orientations 
 =============
 
 ## Group (Subgroup) ##

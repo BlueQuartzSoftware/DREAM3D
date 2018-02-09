@@ -1,4 +1,4 @@
-Los Alamos FFT Writer {#losalamosfftwriter}
+Los Alamos FFT Writer 
 =============
 
 ## Group (Subgroup) ##
@@ -38,7 +38,7 @@ The output file:
 	90.000 0.000 0.000 17 1 1 0 1
 	135.009 55.304 295.274 18 1 1 1742 1 
 	90.000 0.000 0.000 19 1 1 0 1 
-	…..  
+	   ..  
 
 ## Parameters ##
 

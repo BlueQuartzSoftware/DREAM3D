@@ -1,4 +1,4 @@
-Find Surface Area to Volume {#findsurfaceareatovolume}
+Find Surface Area to Volume 
 =============
 
 ## Group (Subgroup) ##

@@ -37,7 +37,7 @@
 
 #include <QtCore/QtGlobal>
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/task.h>
 #include <tbb/task_group.h>
 #include <tbb/task_scheduler_init.h>

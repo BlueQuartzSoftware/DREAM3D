@@ -36,7 +36,7 @@
 
 #include "OrthoRhombicOps.h"
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -582,7 +582,7 @@ namespace Detail
           }
         }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
         void operator()(const tbb::blocked_range<size_t>& r) const
         {
           generate(r.begin(), r.end());
@@ -613,13 +613,12 @@ void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Flo
     xyz111->resize(nOrientations * Detail::Orthorhombic::symSize2 * 3);
   }
 
-
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -805,7 +804,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity100 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity010 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
   tbb::task_group* g = new tbb::task_group;
@@ -899,7 +898,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
     poleFigures[2] = image010;
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
     g = new tbb::task_group;

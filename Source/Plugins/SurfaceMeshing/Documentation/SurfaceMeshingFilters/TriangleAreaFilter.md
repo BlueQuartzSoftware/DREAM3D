@@ -1,4 +1,4 @@
-Generate Triangle Areas {#triangleareafilter}
+Generate Triangle Areas 
 ============
 
 ## Group (Subgroup) ##

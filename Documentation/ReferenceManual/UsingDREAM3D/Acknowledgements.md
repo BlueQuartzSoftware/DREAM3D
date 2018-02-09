@@ -1,4 +1,4 @@
-Funding and Contribution Acknowledgements {#acknowledgements}
+Funding and Contribution Acknowledgements 
 ========
 
 ## Funding Sources ##
@@ -16,7 +16,6 @@ Many others have contributed to the code including the following (non-exhaustive
 
 ![Contributing Institutions](Images/DREAM3D_Contributors.png)
 
-@image latex Images/DREAM3D_Contributors.png "Contributing Institutions " width=4.75in
 
 ## List of Code Contributors (CC) and Vision Contributors (VC) ###
 

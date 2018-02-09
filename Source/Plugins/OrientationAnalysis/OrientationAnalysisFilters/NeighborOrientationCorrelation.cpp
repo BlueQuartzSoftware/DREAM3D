@@ -37,7 +37,7 @@
 
 #include <vector>
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/atomic.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
@@ -484,12 +484,12 @@ void NeighborOrientationCorrelation::execute()
     {
       return;
     }
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     tbb::task_scheduler_init init;
     bool doParallel = true;
 #endif
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     // The idea for this parallel section is to parallelize over each Data Array that
     // will need it's data adjusted. This should go faster than before by about 2x.
     // Better speed up could be achieved if we had better data locality.

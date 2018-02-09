@@ -1,4 +1,4 @@
-Initialize Synthetic Volume {#initializesyntheticvolume}
+Initialize Synthetic Volume 
 =============
 
 ## Group (Subgroup) ##
@@ -14,7 +14,6 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 ### User Interface ###
 
 ![](Images/InitializeSyntheticVolume.png)
-@image latex InitializeSyntheticVolume.png "User Interface" width=6in
 
 ### Relationship between Dimensions and Resolution ###
 

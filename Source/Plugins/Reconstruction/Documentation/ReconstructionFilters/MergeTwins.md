@@ -1,4 +1,4 @@
-Merge Twins {#mergetwins}
+Merge Twins 
 ======
 
 ## Group (Subgroup) ##

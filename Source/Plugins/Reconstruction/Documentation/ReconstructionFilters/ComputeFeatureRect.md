@@ -1,4 +1,4 @@
-Compute FeatureRect {#computefeaturerect}
+Compute FeatureRect 
 =============
 
 ## Group (Subgroup) ##

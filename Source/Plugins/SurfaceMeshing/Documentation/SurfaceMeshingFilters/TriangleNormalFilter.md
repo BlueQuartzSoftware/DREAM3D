@@ -1,4 +1,4 @@
-Generate Triangle Normals {#trianglenormalfilter}
+Generate Triangle Normals 
 ============
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-Write GBCD Pole Figure (GMT 5) {#visualizegbcdgmt}
+Write GBCD Pole Figure (GMT 5) 
 ============
 
 ## Group (Subgroup) ##
@@ -12,7 +12,6 @@ This **Filter** creates a .dat file that can be used in conjunction with [GMT](h
 -----
 
 ![GMT Visualization of the Small IN100 GBCD Results](Images/SmallIn100GMT_.png)
-@image latex SmallIn100GMT_.png "GMT Output of GBCD Data" width=6in 
 
 -----
 

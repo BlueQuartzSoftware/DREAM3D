@@ -1,4 +1,4 @@
-Color to GrayScale {#convertcolortograyscale}
+Color to GrayScale 
 =============
 
 ## Group (Subgroup) ##
@@ -9,7 +9,7 @@ Processing (Image)
 
 This **Filter** allows the user to select a *flattening* method for turning an array of RGB or RGBa values into grayscale values.
 
-+ Luminosity: The **luminosity** method is a more sophisticated version of the average method. It also averages the values, but it forms a weighted average to account for human perception. We’re more sensitive to green than other colors, so green is weighted most heavily. The default formula for luminosity is BT709 Greyscale: Red: 0.2125 Green: 0.7154 Blue: 0.0721. The user can set the weightings to what ever values they would like.
++ Luminosity: The **luminosity** method is a more sophisticated version of the average method. It also averages the values, but it forms a weighted average to account for human perception. We   re more sensitive to green than other colors, so green is weighted most heavily. The default formula for luminosity is BT709 Greyscale: Red: 0.2125 Green: 0.7154 Blue: 0.0721. The user can set the weightings to what ever values they would like.
 + Average  (R + G + B) / 3
 + Lightness (max(R, G, B) + min(R, G, B)) / 2
 + Color Channel: The user selects a specific R|G|B channel to use as the GrayScale values.

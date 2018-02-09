@@ -35,7 +35,7 @@
 
 #include "ChangeAngleRepresentation.h"
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
@@ -78,7 +78,7 @@ public:
     }
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range<size_t>& r) const
   {
     convert(r.begin(), r.end());
@@ -199,7 +199,7 @@ void ChangeAngleRepresentation::execute()
 
   int64_t totalPoints = static_cast<int64_t>(m_CellEulerAnglesPtr.lock()->getNumberOfTuples());
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
@@ -216,7 +216,7 @@ void ChangeAngleRepresentation::execute()
 
   totalPoints *= 3;
 //  qDebug() << "ChangeAngleRepresentation: " << m_ConversionFactor << "\n";
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), ChangeAngleRepresentationImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());

@@ -1,4 +1,4 @@
-H5EBSD Data File Specification {#h5ebsdfile}
+H5EBSD Data File Specification 
 ================
 
 DREAM.3D can store EBSD data from multiple vendors in a data file using the [HDF5](http://www.hdfgroup.org) file format library. Although the general layout of the HDF5 file is the same between vendors, there are details that are _not_ the same between vendors, because each vendor chooses to save different types of data. The top level datasets that deal with the basic volume information is the same for every file.

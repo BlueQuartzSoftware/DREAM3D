@@ -32,7 +32,7 @@
 
 #include "Stereographic3D.h"
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
@@ -103,7 +103,7 @@ public:
     }
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range<size_t>& r) const
   {
     convert(r.begin(), r.end());
@@ -236,12 +236,12 @@ void Stereographic3D::execute()
 
   size_t totalPoints = m_QuatsPtr.lock()->getNumberOfTuples();
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateCoordinatesImpl(this, m_Quats, m_CellCoordinates), tbb::auto_partitioner());

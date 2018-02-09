@@ -1,4 +1,4 @@
-Read Ph File (Feature Ids) {#phreader}
+Read Ph File (Feature Ids) 
 =============
 
 ## Group (Subgroup) ##
@@ -31,7 +31,7 @@ This **Filter** reads a custom data file used by the Materials Science Departmen
     977
     830
     830
-    …..
+       ..
 
 ## Parameters ##
 

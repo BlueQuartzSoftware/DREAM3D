@@ -1,4 +1,4 @@
-Remove Flagged Features {#removeflaggedfeatures}
+Remove Flagged Features 
 =============
 
 ## Group (Subgroup) ##

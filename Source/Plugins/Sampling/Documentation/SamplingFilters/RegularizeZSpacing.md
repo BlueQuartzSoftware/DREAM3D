@@ -1,4 +1,4 @@
-Regularize Z Spacing {#regularizezspacing}
+Regularize Z Spacing 
 =============
 
 ## Group (Subgroup) ##

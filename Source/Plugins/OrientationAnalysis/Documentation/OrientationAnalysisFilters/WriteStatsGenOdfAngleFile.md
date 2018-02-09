@@ -1,4 +1,4 @@
-Export StatsGenerator ODF Angle File {#writestatsgenodfanglefile}
+Export StatsGenerator ODF Angle File 
 =====
 
 ## Group (Subgroup) ##

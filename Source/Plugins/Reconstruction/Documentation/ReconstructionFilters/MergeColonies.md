@@ -1,4 +1,4 @@
-Merge Colonies {#mergecolonies}
+Merge Colonies 
 ======
 
 ## Group (Subgroup) ##

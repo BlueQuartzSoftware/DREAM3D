@@ -1,4 +1,4 @@
-Find Feature Phases {#findfeaturephases}
+Find Feature Phases 
 =============
 
 ## Group (Subgroup) ##

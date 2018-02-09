@@ -1,3 +1,8 @@
+message(STATUS "************* DOCUMENTATION ****************")
+message(STATUS "SIMPL_USE_MKDOCS: ${SIMPL_USE_MKDOCS}")
+message(STATUS "SIMPL_USE_DISCOUNT: ${SIMPL_USE_DISCOUNT}")
+
+
 set(RefManual_Docs_AuxiliaryTools
     DevHelper
     PipelineRunner
@@ -77,11 +82,8 @@ ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
 
 
 # ------------------------------------------------------------------------------
-# This is an experimental tool that will convert all the markdown documents to
-# html with styling provided by CSS. This is an experimental way of removing the
-# DOxygen generated docs with it's insecure jquery.js file.
-option(SIMPL_MKDOCS_DOCUMENTATION "Use mkdocs (python) to generate the Documentation" ON)
-if(SIMPL_MKDOCS_DOCUMENTATION)
+if(SIMPL_USE_MKDOCS)
+  message(STATUS "MkDocs being used to generate HTML Files")
   # get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
   # add_custom_target(REFMANUAL_DOC_FOLDER_COPY ALL
   #   COMMAND ${CMAKE_COMMAND} -E copy_directory "${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/"
@@ -106,32 +108,38 @@ if(SIMPL_MKDOCS_DOCUMENTATION)
   foreach(DocGroup ${DREAM3DDoc_GROUPS})
     file(APPEND "${docsCmakeFile}" "# ${DocGroup}\n")
     if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
+      message(STATUS "${DocGroup}_SOURCE_DIR: ${${DocGroup}_SOURCE_DIR}")
       string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters" tempstring ${${DocGroup}_SOURCE_DIR})
-      file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${tempstring}\"
-   DESTINATION 
+      message(STATUS "tempstring: ${tempstring}")
+      file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${tempstring}/${DocGroup}Filters\"
+     DESTINATION 
      \"${docsDestDir}/Filters\")\n")
     else()
-      file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${${DocGroup}_SOURCE_DIR}/Documentation/${DocGroup}Filters\"
-   DESTINATION 
-     \"${docsDestDir}/Filters\")\n")
+      file(APPEND "${docsCmakeFile}" "file(COPY \n      \"${${DocGroup}_SOURCE_DIR}/Documentation/${DocGroup}Filters\"
+     DESTINATION 
+      \"${docsDestDir}/Filters\")\n")
+    #   file(APPEND "${docsCmakeFile}" 
+    #  "file(RENAME
+    #  \"${docsDestDir}/Filters/${DocGroup}Filters\"
+    #  \"${docsDestDir}/Filters/${DocGroup}\")\n") 
     endif()
   endforeach()
 
   foreach(DocGroup ${RefManual_Groups})
-      file(APPEND "${docsCmakeFile}" "# ${DocGroup}\n")
-      file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/${DocGroup}\"
-   DESTINATION 
+    file(APPEND "${docsCmakeFile}" "# ${DocGroup}\n")
+    file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/${DocGroup}\"
+     DESTINATION 
      \"${docsDestDir}\")\n")
   endforeach()
   
   file(APPEND "${docsCmakeFile}" "# Main Index File\n")
   file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/Index.md\"
-   DESTINATION 
+     DESTINATION 
      \"${docsDestDir}\")\n")
   file(APPEND "${docsCmakeFile}" "file(RENAME \"${docsDestDir}/Index.md\" \"${docsDestDir}/index.md\")\n")   
 
   file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${BrandedSIMPLView_DIR}/icons/DREAM3D (PNG)/128x128.png\"
-   DESTINATION 
+     DESTINATION 
      \"${docsDestDir}\")\n")
   file(APPEND "${docsCmakeFile}" "file(RENAME \"${docsDestDir}/128x128.png\" \"${docsDestDir}/logo.png\")\n")
 
@@ -139,26 +147,43 @@ if(SIMPL_MKDOCS_DOCUMENTATION)
   find_program (
           MKDOCS_EXECUTABLE
           mkdocs
-         )
+  )
+
+  set(docsStampFile "${DREAM3DDocRoot}/MkDocsGeneration.stamp")
+  string(TIMESTAMP mkdocsTimeStamp %Y:%m:%d:%H:%M:%S)
+  #----------------------------------------------------------------------------
+  # Write out a time stamp file which signals the script that the mkdocs needs
+  # to run during the compile process.
+  file(WRITE "${docsStampFile}" "${mkdocsTimeStamp}")
 
   file(APPEND "${docsCmakeFile}" "\n\n")
-  file(APPEND "${docsCmakeFile}" "execute_process(COMMAND ${MKDOCS_EXECUTABLE} build\n")
+  file(APPEND "${docsCmakeFile}" "#--------------------------------------------------------------\n")
+  file(APPEND "${docsCmakeFile}" "# Execute the 'mkdocs' python command to generate the docs\n")
+  file(APPEND "${docsCmakeFile}" "if(EXISTS \"${docsStampFile}\")\n")
+  file(APPEND "${docsCmakeFile}" "  message(STATUS \"Starting mkdocs execution. This can take a while.....\")\n")
+  file(APPEND "${docsCmakeFile}" "  execute_process(COMMAND \"${MKDOCS_EXECUTABLE}\" build\n")
   file(APPEND "${docsCmakeFile}" "                OUTPUT_VARIABLE mkdocs_gen_output\n")               
   file(APPEND "${docsCmakeFile}" "                RESULT_VARIABLE mkdocs_gen_result\n")
   file(APPEND "${docsCmakeFile}" "                ERROR_VARIABLE mkdocs_gen_error\n")
   file(APPEND "${docsCmakeFile}" "                WORKING_DIRECTORY \"${DREAM3DDocRoot}/mkdocs\"\n")
   file(APPEND "${docsCmakeFile}" "                )\n")
-  file(APPEND "${docsCmakeFile}" "message(STATUS \"mkdocs_gen_result: \${mkdocs_gen_result}\")\n")
-  file(APPEND "${docsCmakeFile}" "message(STATUS \"mkdocs_gen_error: \${mkdocs_gen_error}\")\n")
-  file(APPEND "${docsCmakeFile}" "message(STATUS \"**************************************************************************\")\n")
-  file(APPEND "${docsCmakeFile}" "message(STATUS \"mkdocs_gen_output: \${mkdocs_gen_output}\")\n")
-  file(APPEND "${docsCmakeFile}" "message(STATUS \"**************************************************************************\")\n")
+  file(APPEND "${docsCmakeFile}" "  message(STATUS \"mkdocs_gen_result: \${mkdocs_gen_result}\")\n")
+  file(APPEND "${docsCmakeFile}" "  message(STATUS \"mkdocs_gen_error: \${mkdocs_gen_error}\")\n")
+  file(APPEND "${docsCmakeFile}" "  message(STATUS \"**************************************************************************\")\n")
+  file(APPEND "${docsCmakeFile}" "  message(STATUS \"mkdocs_gen_output: \${mkdocs_gen_output}\")\n")
+  file(APPEND "${docsCmakeFile}" "  message(STATUS \"**************************************************************************\")\n")
+  file(APPEND "${docsCmakeFile}" "  file(REMOVE \"${docsStampFile}\")\n")
+  file(APPEND "${docsCmakeFile}" "else()\n")
+  file(APPEND "${docsCmakeFile}" "  message(STATUS \"mkdocs: Nothing to do.\")\n")
+  file(APPEND "${docsCmakeFile}" "endif()\n")
+  file(APPEND "${docsCmakeFile}" "# END OF FILE\n")
 
-  get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
- # add_custom_target(DREAM3D_MKDOCS_GENERATION ALL
- #   COMMAND ${CMAKE_COMMAND} -P "${docsCmakeFile}"    
- #   COMMENT "using mkdocs to generate the documentation")
-
+  #----------------------------------------------------------------------------
+  # Add the custom target to run mkdocs
+  add_custom_target(DREAM3D_MKDOCS_GENERATION ALL
+    COMMAND "${CMAKE_COMMAND}" -P "${docsCmakeFile}"    
+    COMMENT "using mkdocs to generate the documentation"
+  )
 
 endif()
 
@@ -166,8 +191,7 @@ endif()
 # This is an experimental tool that will convert all the markdown documents to
 # html with styling provided by CSS. This is an experimental way of removing the
 # DOxygen generated docs with it's insecure jquery.js file.
-option(SIMPL_DISCOUNT_DOCUMENTATION "Use Discount to generate the Documentation" OFF)
-if(SIMPL_DISCOUNT_DOCUMENTATION)
+if(SIMPL_USE_DISCOUNT)
 
   find_package(discount)
   if(discount_FOUND)
@@ -192,11 +216,26 @@ if(SIMPL_DISCOUNT_DOCUMENTATION)
         set(NEED_COMMA_DOC_GROUP 1)
       endif()
       file(APPEND "${PluginJsonFile}" "  \"${DocGroup}\": { \n")
-      file(APPEND "${PluginJsonFile}" "    \"SOURCE_DIR\": \"${${DocGroup}_SOURCE_DIR}\",\n")
-      file(APPEND "${PluginJsonFile}" "    \"DOC_DIR\": \"Documentation/${DocGroup}Filters\",\n")
-      if(EXISTS "${${DocGroup}_SOURCE_DIR}/Documentation/${DocGroup}Filters/Images")
-        file(APPEND "${PluginJsonFile}" "    \"IMAGES_DIR\": \"Documentation/${DocGroup}Filters/Images\",\n")
+      
+      if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
+        get_filename_component(core_PARENT ${${DocGroup}_SOURCE_DIR} DIRECTORY)
+
+        file(APPEND "${PluginJsonFile}" "    \"SOURCE_DIR\": \"${core_PARENT}\",\n")
+        file(APPEND "${PluginJsonFile}" "    \"DOC_DIR\": \"Documentation/SIMPLibFilters/${DocGroup}Filters\",\n")
+        if(EXISTS "${core_PARENT}/Documentation/SIMPLibFilters/${DocGroup}Filters/Images")
+          file(APPEND "${PluginJsonFile}" "    \"IMAGES_DIR\": \"Documentation/SIMPLibFilters/${DocGroup}Filters/Images\",\n")
+        endif()
+              
+      else()
+        file(APPEND "${PluginJsonFile}" "    \"SOURCE_DIR\": \"${${DocGroup}_SOURCE_DIR}\",\n")
+        file(APPEND "${PluginJsonFile}" "    \"DOC_DIR\": \"Documentation/${DocGroup}Filters\",\n")
+        if(EXISTS "${${DocGroup}_SOURCE_DIR}/Documentation/${DocGroup}Filters/Images")
+          file(APPEND "${PluginJsonFile}" "    \"IMAGES_DIR\": \"Documentation/${DocGroup}Filters/Images\",\n")
+        endif()
+      
       endif()
+      
+
       file(APPEND "${PluginJsonFile}" "    \"FILTERS\": [\n")
 
       get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup}Filters)
@@ -209,14 +248,12 @@ if(SIMPL_DISCOUNT_DOCUMENTATION)
           set(NEED_COMMA_DOC_ITEM 1)
         endif()
 
-        if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
-          string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters" tempstring ${${DocGroup}_SOURCE_DIR})
-          string(REPLACE "${tempstring}" "Plugins" tempstring ${docListItem})
-          string(REPLACE "Filters" "" tempstring ${tempstring})
+        if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")         
+          string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters/${DocGroup}Filters" tempstring ${${DocGroup}_SOURCE_DIR})
+          string(REPLACE "${tempstring}/" "" tempstring ${docListItem})          
+          string(REPLACE "Filters" "" tempstring ${tempstring})          
           string(REPLACE "Plugins/${DocGroup}/" "" filterName ${tempstring})
           string(REPLACE ".md" "" filterName ${filterName})
-          string(REPLACE ".md" ".html" tempstring ${tempstring})
-
           file(APPEND "${PluginJsonFile}" "        \"${filterName}\"")
         else()
           string(REPLACE "${${DocGroup}_SOURCE_DIR}/Documentation/" "" tempstring ${docListItem})
@@ -328,7 +365,7 @@ if(SIMPL_DISCOUNT_DOCUMENTATION)
     )
 
   else()
-    set(SIMPL_DISCOUNT_DOCUMENTATION OFF)
+    set(SIMPL_USE_DISCOUNT OFF)
     message(STATUS "Discount package was NOT found. Documentation will NOT be generated")
   endif()
 

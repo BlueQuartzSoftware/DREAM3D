@@ -1,4 +1,4 @@
-Find Feature Largest Cross-Section Areas {#findlargestcrosssections}
+Find Feature Largest Cross-Section Areas 
 =============
 
 ## Group (Subgroup) ##

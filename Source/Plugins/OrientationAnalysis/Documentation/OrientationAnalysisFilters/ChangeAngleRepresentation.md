@@ -1,4 +1,4 @@
-Convert Angles to Degrees or Radians {#changeanglerepresentation}
+Convert Angles to Degrees or Radians 
 =============
 
 ## Group (Subgroup) ##

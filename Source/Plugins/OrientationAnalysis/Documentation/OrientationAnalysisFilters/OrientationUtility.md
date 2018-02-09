@@ -1,4 +1,4 @@
-OrientationUtility {#orientationutility}
+OrientationUtility 
 =============
 
 ## Group (Subgroup) ##
@@ -31,7 +31,7 @@ If the user enters invalid values for a representation, an error message will be
 
 [_Consistent representations of and conversions between 3D rotations_
 D Rowenhorst, A D Rollett, G S Rohrer, M Groeber, M Jackson, P J Konijnenberg, and M De Graef
-Published 5 October 2015 • © 2015 IOP Publishing Ltd • Modelling and Simulation in Materials Science and Engineering, Volume 23, Number 8](http://iopscience.iop.org/article/10.1088/0965-0393/23/8/083501)
+Published 5 October 2015        2015 IOP Publishing Ltd     Modelling and Simulation in Materials Science and Engineering, Volume 23, Number 8](http://iopscience.iop.org/article/10.1088/0965-0393/23/8/083501)
 
 ## Example Pipelines ##
 

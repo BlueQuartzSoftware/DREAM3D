@@ -1,4 +1,4 @@
-Find GBCD {#findgbcd}
+Find GBCD 
 =============
 
 ## Group (Subgroup) ##

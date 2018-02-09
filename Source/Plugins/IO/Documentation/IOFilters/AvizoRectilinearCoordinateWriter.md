@@ -1,4 +1,4 @@
-Avizo Rectilinear Coordinate Writer {#avizorectilinearcoordinatewriter}
+Avizo Rectilinear Coordinate Writer 
 ======
 
 ## Group (Subgroup) ##
@@ -30,7 +30,7 @@ This filter writes out a native Avizo Rectilinear Coordinate data file. Values s
 	Lattice { int FeatureIds } = @1
 	Coordinates { float xyz } = @2
 	# Data section follows
-	….. 
+	   .. 
 
 ## Parameters ##
 

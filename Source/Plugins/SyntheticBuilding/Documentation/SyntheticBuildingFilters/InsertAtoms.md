@@ -1,4 +1,4 @@
-Insert Atoms {#insertatoms}
+Insert Atoms 
 =============
 
 ## Group (Subgroup) ##

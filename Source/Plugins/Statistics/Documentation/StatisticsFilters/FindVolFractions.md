@@ -1,4 +1,4 @@
-Find Volume Fractions of Ensembles {#findvolfractions}
+Find Volume Fractions of Ensembles 
 =============
 
 ## Group (Subgroup) ##

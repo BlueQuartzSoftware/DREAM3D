@@ -1,4 +1,4 @@
-Find Feature Clustering {#findfeatureclustering}
+Find Feature Clustering 
 =============
 
 ## Group (Subgroup) ##

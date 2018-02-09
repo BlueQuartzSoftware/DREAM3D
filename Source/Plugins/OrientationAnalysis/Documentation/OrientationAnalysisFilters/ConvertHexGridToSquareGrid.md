@@ -1,4 +1,4 @@
-Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang) {#converthexgridtosquaregrid}
+Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang) 
 =============
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-Minimum Number of Neighbors {#minneighbors}
+Minimum Number of Neighbors 
 =============
 
 ## Group (Subgroup) ##
