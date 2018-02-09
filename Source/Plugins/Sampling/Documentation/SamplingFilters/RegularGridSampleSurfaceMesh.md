@@ -1,4 +1,4 @@
-Sample Triangle Geometry on Regular Grid {#regulargridsamplesurfacemesh}
+Sample Triangle Geometry on Regular Grid 
 =============
 
 ## Group (Subgroup) ##

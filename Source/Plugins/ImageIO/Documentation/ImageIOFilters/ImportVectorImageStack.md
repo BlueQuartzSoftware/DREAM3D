@@ -1,4 +1,4 @@
-Import Image Stack Filter {#importvectorimagestack}
+Import Image Stack Filter 
 =============
 
 ## Group (Subgroup) ##
@@ -17,7 +17,6 @@ Images that are imported into DREAM3D should probably be segmented using a prepr
 The regions of the image that represent a phase or grain each have a unique identifier such as a gray scale value or unique RGB value.
 
 ![Type 1 Image](Images/Type1.png)
-@image latex Type1.png "Type 1 Image" width=5in
 
 -----
 
@@ -26,7 +25,6 @@ The regions of the image that represent a phase or grain each have a unique iden
 There are regions that represent grains where each region has a unique identifier but there are multiple regions with the same identifier.
 
 ![Type 2 Image](Images/Type2.png)
-@image latex Type2.png "Type 2 Image" width=5in
 
 -----
 
@@ -35,7 +33,6 @@ There are regions that represent grains where each region has a unique identifie
 Each Grain is traced out via a another pixel identifier so that grain boundaries are "black" and each grain is "white".
 
 ![Type 3 Image](Images/Type3.png)
-@image latex Type3.png "Type 3 Image" width=5in
 
 -----
 

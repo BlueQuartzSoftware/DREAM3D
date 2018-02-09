@@ -1,4 +1,4 @@
-Export GBCD Pole Figure (VTK) {#visualizegbcdpolefigure}
+Export GBCD Pole Figure (VTK) 
 ============
 
 ## Group (Subgroup) ##
@@ -12,10 +12,8 @@ This **Filter** creates a .vtk file that can be used in [ParaView](http://www.pa
 -----
 
 ![Regular Grid Visualization of the Small IN100 GBCD results](Images/Small_IN00_GBCD_RegularGrid.png)
-@image latex Small_IN00_GBCD_RegularGrid.png "Regular Grid Visualization of the Small IN100 GBCD results" width=6in 
 
 ![Using ParaView's Threshold filter + Cells to Points + Delaunay2D Filters](Images/Small_IN100_GBCD_Delaunay2D.png)
-@image latex Small_IN100_GBCD_Delaunay2D.png "Using ParaView's Threshold filter + Cells to Points + Delaunay2D Filters" width=6in 
 
 -----
 

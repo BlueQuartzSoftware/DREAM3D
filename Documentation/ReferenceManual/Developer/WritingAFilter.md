@@ -1,4 +1,4 @@
-Writing A Filter {#writingafilter}
+Writing A Filter 
 ========
 
 Developers can write new filters for DREAM.3D to accomplish their own objectives.  There are several major functions that every new filter must implement to work with DREAM.3D's filter interface.

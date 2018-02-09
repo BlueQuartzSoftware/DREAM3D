@@ -1,4 +1,4 @@
-Find Projected Image Statistics {#findprojectedimagestatistics}
+Find Projected Image Statistics 
 =============
 
 ## Group (Subgroup) ##

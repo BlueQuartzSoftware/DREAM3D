@@ -1,4 +1,4 @@
-Find Feature Neighbor C-Axis Misalignments {#findfeatureneighborcaxismisalignments}
+Find Feature Neighbor C-Axis Misalignments 
 ==========
 
 ## Group (Subgroup) ##

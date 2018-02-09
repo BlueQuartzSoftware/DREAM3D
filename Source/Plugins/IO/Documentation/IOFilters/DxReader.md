@@ -1,4 +1,4 @@
-Read Dx File (Feature Ids) {#dxreader}
+Read Dx File (Feature Ids) 
 =============
 
 ## Group (Subgroup) ##

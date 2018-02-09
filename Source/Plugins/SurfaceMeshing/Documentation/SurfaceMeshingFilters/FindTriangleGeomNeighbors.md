@@ -1,4 +1,4 @@
-Find Feature Neighbors from Triangle Geometry {#findtrianglegeomneighbors}
+Find Feature Neighbors from Triangle Geometry 
 =============
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-Warp Rectilinear Grid {#warpregulargrid}
+Warp Rectilinear Grid 
 =============
 
 ## Group (Subgroup) ##

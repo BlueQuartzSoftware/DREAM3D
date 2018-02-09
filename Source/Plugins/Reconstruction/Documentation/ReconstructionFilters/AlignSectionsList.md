@@ -1,4 +1,4 @@
-Align Sections (List) {#alignsectionslist}
+Align Sections (List) 
 ======
 
 ## Group (Subgroup) ##

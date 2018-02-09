@@ -1,4 +1,4 @@
-Find Distances to Characteristic Grain Boundaries {#finddiststocharactgbs}
+Find Distances to Characteristic Grain Boundaries 
 =============
 
 ## Group (Subgroup) ##

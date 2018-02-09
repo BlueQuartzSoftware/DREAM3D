@@ -1,4 +1,4 @@
-Write SPParks Sites Format {#spparkssiteswriter}
+Write SPParks Sites Format 
 ============
 
 ## Group (Subgroup) ##
@@ -37,7 +37,7 @@ More information can be found at the [SPParks web site.](http://spparks.sandia.g
     5 509
     6 509
     7 509
-    …..
+       ..
 
 ## Parameters ##
 

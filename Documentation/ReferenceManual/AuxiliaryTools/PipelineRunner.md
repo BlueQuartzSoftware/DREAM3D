@@ -1,4 +1,4 @@
-PipelineRunner {#pipelinerunner}
+PipelineRunner 
 ========
 
 **PipelineRunner** is a _terminal_ or _command line_ application that is designed to simply run a DREAM.3D **Pipeline** without the use of a GUI. Because of this design, **PipelineRunner** can be launched through a terminal or command prompt or through other ways such as directly from a shell script (Linux), batch file (Windows), Python script, IDL script or MATLAB script.

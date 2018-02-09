@@ -1,4 +1,4 @@
-Import Oxford Instr. Ebsd Data {#readctfdata}
+Import Oxford Instr. Ebsd Data 
 =============
 
 ## Group (Subgroup) ##
@@ -30,11 +30,11 @@ The user also may want to assign un-indexed pixels to be ignored by flagging the
 + The issue with hexagonal materials is the alignment of the Cartesian coordinate system used for calculations with the crystal coordinate system (the Bravais lattice).
 + In one convention (e.g. EDAX.TSL), the x-axis, i.e. [1,0,0], is aligned with the crystal a1 axis, i.e. the [2,-1,-1,0] direction. In this case, the y-axis is aligned with the [0,1,-1,0] direction. (Green Axis in Figure 1)
 + In the other convention, (e.g. Oxford Instr, Univ. Metz software), the x-axis, i.e. [1,0,0], is aligned with the crystal [1,0,-1,0] direction. In this case, the y-axis is aligned with the [-1,2,-1,0] direction. (Red Axis in Figure 1)
-+ This is important because texture analysis can lead to an ambiguity as to the alignment of [2,-1,-1,0] versus [1,0,-1,0], with apparent **30°** shifts in the data.
++ This is important because texture analysis can lead to an ambiguity as to the alignment of [2,-1,-1,0] versus [1,0,-1,0], with apparent **30  ** shifts in the data.
 + Caution: it appears that the axis alignment is a choice that must be made when installing TSL software so determination of which convention is in use must be made on a case-by-case basis. It is fixed to the y-convention in the HKL software.
 + The main clue that something is wrong in a conversion is that either the 2110 & 1010 pole figures are transposed, or that a peak in the inverse pole figure that should be present at 2110 has shifted over to 1010.
 + DREAM.3D uses the TSL/EDAX convention.
-+ **The result of this is that the filter will _AUTOMATICALLY_ add 30° to phi2 when reading Oxford Instr (.ctf) files. There is no way to turn off this behavior. **
++ **The result of this is that the filter will _AUTOMATICALLY_ add 30   to phi2 when reading Oxford Instr (.ctf) files. There is no way to turn off this behavior. **
 
 | Figure 1 |
 |--------|

@@ -1,4 +1,4 @@
- EMsoftSO3Sampler {#emsoftso3sampler}
+ EMsoftSO3Sampler 
 =============
 
 ## Group (Subgroup) ##

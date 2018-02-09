@@ -1,4 +1,4 @@
-Fit Distribution to Feature Data {#fitfeaturedata}
+Fit Distribution to Feature Data 
 =============
 
 ## Group (Subgroup) ##

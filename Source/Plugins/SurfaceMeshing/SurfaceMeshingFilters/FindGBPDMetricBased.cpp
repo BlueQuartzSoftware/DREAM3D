@@ -61,7 +61,7 @@
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/LaueOps/LaueOps.h"
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include "tbb/concurrent_vector.h"
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
@@ -119,7 +119,7 @@ class TrisSelector
   bool m_ExcludeTripleLines;
   int64_t* m_Triangles;
   int8_t* m_NodeTypes;
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
 #else
   QVector<TriAreaAndNormals>* selectedTris;
@@ -138,7 +138,7 @@ class TrisSelector
 public:
   TrisSelector(bool __m_ExcludeTripleLines, int64_t* __m_Triangles, int8_t* __m_NodeTypes,
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
                tbb::concurrent_vector<TriAreaAndNormals>* __selectedTris,
 #else
                QVector<TriAreaAndNormals>* __selectedTris,
@@ -230,7 +230,7 @@ public:
     }
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range<size_t>& r) const
   {
     select(r.begin(), r.end());
@@ -249,7 +249,7 @@ class ProbeDistrib
   QVector<float>* samplPtsX;
   QVector<float>* samplPtsY;
   QVector<float>* samplPtsZ;
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals> selectedTris;
 #else
   QVector<TriAreaAndNormals> selectedTris;
@@ -264,7 +264,7 @@ class ProbeDistrib
 
 public:
   ProbeDistrib(QVector<double>* __distribValues, QVector<double>* __errorValues, QVector<float>* __samplPtsX, QVector<float>* __samplPtsY, QVector<float>* __samplPtsZ,
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
                tbb::concurrent_vector<TriAreaAndNormals> __selectedTris,
 #else
                QVector<TriAreaAndNormals> __selectedTris,
@@ -352,7 +352,7 @@ public:
     }
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range<size_t>& r) const
   {
     probe(r.begin(), r.end());
@@ -1026,7 +1026,7 @@ void FindGBPDMetricBased::execute()
   // ---------  find triangles corresponding to Phase of Interests, and their normals in crystal reference frames ---------
   size_t numMeshTris = m_SurfaceMeshFaceAreasPtr.lock()->getNumberOfTuples();
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
   tbb::concurrent_vector<GBPDMetricBased::TriAreaAndNormals> selectedTris(0);
@@ -1053,7 +1053,7 @@ void FindGBPDMetricBased::execute()
       trisChunkSize = numMeshTris - i;
     }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize), GBPDMetricBased::TrisSelector(m_ExcludeTripleLines, m_Triangles, m_NodeTypes, &selectedTris, m_PhaseOfInterest, m_CrystalStructures, m_Eulers,
@@ -1122,7 +1122,7 @@ void FindGBPDMetricBased::execute()
       pointsChunkSize = samplPtsX.size() - i;
     }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + pointsChunkSize),

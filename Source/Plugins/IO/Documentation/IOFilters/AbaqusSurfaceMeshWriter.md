@@ -1,4 +1,4 @@
-Export Abaqus Surface Mesh {#abaqussurfacemeshwriter}
+Export Abaqus Surface Mesh 
 =============
 
 ## Group (Subgroup) ##
@@ -29,7 +29,7 @@ This **Filter** writes an Abaqus file that is a surface mesh using S3 Elements. 
     5, -36.500000, 10.250000, -29.000004
     6, -36.500000, 10.250000, -28.750004
     7, -36.500000, 10.500000, -29.000004
-    …..
+       ..
 
 ## Parameters ##
 

@@ -39,7 +39,7 @@
 
 #include <QtCore/QDateTime>
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/atomic.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
@@ -203,7 +203,7 @@ public:
     }
   }
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range<size_t>& r) const
   {
     convert(r.begin(), r.end());
@@ -600,13 +600,13 @@ void IdentifyMicroTextureRegions::execute()
   // Convert user defined tolerance to radians.
   m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
 // first determine the misorientation vectors on all the voxel faces
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPatches),

@@ -1,4 +1,4 @@
-Find Average Value of Scalars For Feature {#findavgscalarvalueforfeatures}
+Find Average Value of Scalars For Feature 
 =============
 
 ## Group (Subgroup) ##

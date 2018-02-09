@@ -1,4 +1,4 @@
-Reverse Triangle Winding {#reversetrianglewinding}
+Reverse Triangle Winding 
 ============
 
 ## Group (Subgroup) ##

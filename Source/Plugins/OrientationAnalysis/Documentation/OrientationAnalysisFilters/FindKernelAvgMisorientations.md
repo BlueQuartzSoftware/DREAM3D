@@ -1,4 +1,4 @@
-Find Kernel Average Misorientations {#findkernelavgmisorientations}
+Find Kernel Average Misorientations 
 ======
 
 ## Group (Subgroup) ##

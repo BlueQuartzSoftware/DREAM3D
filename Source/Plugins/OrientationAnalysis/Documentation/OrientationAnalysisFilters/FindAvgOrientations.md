@@ -1,4 +1,4 @@
-Find Feature Average Orientations {#findavgorientations}
+Find Feature Average Orientations 
 ======
 
 ## Group (Subgroup) ##

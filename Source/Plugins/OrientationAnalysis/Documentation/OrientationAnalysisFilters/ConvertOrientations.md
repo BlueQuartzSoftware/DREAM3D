@@ -1,4 +1,4 @@
-Convert Orientation Representations {#convertorientations}
+Convert Orientation Representations 
 =======
 
 ## Group (Subgroup) ##

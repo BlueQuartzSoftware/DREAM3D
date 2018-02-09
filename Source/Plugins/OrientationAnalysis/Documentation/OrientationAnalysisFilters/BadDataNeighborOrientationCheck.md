@@ -1,4 +1,4 @@
-Neighbor Orientation Comparison (Bad Data) {#baddataneighbororientationcheck}
+Neighbor Orientation Comparison (Bad Data) 
 =============
 
 ## Group (Subgroup) ##

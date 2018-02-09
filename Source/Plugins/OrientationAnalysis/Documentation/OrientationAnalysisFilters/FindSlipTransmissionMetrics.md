@@ -1,4 +1,4 @@
-Find Neighbor Slip Transmission Metrics {#findsliptransmissionmetrics}
+Find Neighbor Slip Transmission Metrics 
 =============
 
 ## Group (Subgroup) ##

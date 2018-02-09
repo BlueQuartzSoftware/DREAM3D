@@ -1,4 +1,4 @@
-Establish Matrix Phase {#establishmatrixphase}
+Establish Matrix Phase 
 =============
 
 ## Group (Subgroup) ##

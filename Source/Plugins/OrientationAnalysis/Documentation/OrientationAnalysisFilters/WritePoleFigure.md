@@ -1,4 +1,4 @@
-Export Pole Figure Images {#writepolefigure}
+Export Pole Figure Images 
 =============
 
 ## Group (Subgroup) ##

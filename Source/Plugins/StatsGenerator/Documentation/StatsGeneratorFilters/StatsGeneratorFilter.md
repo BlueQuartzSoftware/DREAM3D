@@ -1,4 +1,4 @@
-StatsGenerator {#statsgeneratorfilter}
+StatsGenerator 
 =============
 
 ## Group (Subgroup) ##
@@ -44,7 +44,6 @@ The user can use the following buttons to add, remove or edit a phase
 The user can add, remove or modify properties of the phase by clicking the *Phase Properties Buttons* at the bottom of the StatsGenerator GUI. The _plus button_ allows the user to add a phase, the _minus button_ allows the user to remove a phase, and the _cogwheel button_ allows the user to edit the currently selected phase.
 
 ![Phase Properties Manager](Images/SG_PhaseProperties.png)
-@image latex Images/SG_PhaseProperties.png "Phase Properties Manager" width=6in
 
 The *Phase Properties* is a dialog where the user can enter information about the phase for which statistics are currently being generated. The following items can be set in the manager:
 
@@ -57,7 +56,6 @@ The *Phase Properties* is a dialog where the user can enter information about th
 ## Size Distribution Tab ##
 
 ![Size Distribution GUI](Images/image001.png)
-@image latex Images/image001.png "Size Distribution GUI" width=6in 
 
 The plot displayed on this tab is the _actual size distribution_ of the **Features** that will be placed for this phase.  The X-axis is the _equivalent sphere diameter_ (ESD) of the **Feature**.  ESD indicates the diameter of a sphere that has the equivalent volume of the **Feature**.  The units of ESD in this plot are in arbitrary units of length (i.e., meters, millimeters, microns, nanometers, etc).  The Y-axis of the plot is the probability of sampling that ESD from the distribution.  The parameters listed below are what define the size distribution and how it is binned for correlation with other statistical descriptors to be described later.  When entering the parameters that define the size distribution, it is generally a good work flow to iteratively adjust the parameters while watching the plot until the plot appears "satisfactory" with respect to the location of the peak and the length of the "tails", rather that be overly concerned with the parameter values themselves.
 
@@ -69,7 +67,6 @@ These parameters define the size distribution itself but given a constant **Bin 
   + **Sigma Cut Off Value**: Allows the user to truncate the distribution to remove very large (or small) **Features**.  These values show up as blue vertical lines on the plot and only the portion of the **Feature** size distribution between the two blue vertical lines can be sampled.
 
 ![Equations to calculate the minimum and maximum ESD values that will be used when generating the **Features**](Images/SG_MinMax_Equation.png)
-@image latex Images/SG_MinMax_Equation.png "Equations to calculate the minimum and maximum ESD values that will be used when generating the **Features**" width=2in
 
   + **Feature ESD**: If the user would rather simply input the ESD directly instead of manipulating the **Mu** parameter then this field can be used as an alternate. After entering an ESD the user should type the __RETURN__ or __ENTER__ key or click somewhere else in the user interface to update the plots. This field and the **Mu** fields are linked. Changing one will update the other.
 
@@ -78,7 +75,6 @@ These parameters control the binning of the **Feature** size distribution:
   + **Bin Step Size**: The size of bin to use in segregating the **Feature** size distribution into classes for correlating other statistics to **Feature** size. The point of creating size classes in the **Feature** size distribution is that it allows the user to give different shape or number of neighbors distributions to features at different points along the **Feature** size distribution. For example, the user can set to small **Features** to be spherical while making large **Features** elongated by modifying the statistics associated with **Features** in the lower bins differently than those in the higher bins.  If the user has no desire to have different statistics for different sizes, then a large value can be used to create a single size class.  Note that the *Bins to be Created* value is displayed in the bottom left corner, which tells the user for the given *Bin Step Size* how many size classes will be created along the **Feature** size distribution
 
 ![Equation to calculate the number of bins](Images/numbin_eqn.png)
-@image latex Images/numbin_eqn.png "Equation to calculate the number of bins" width=3in
 
 ### These options set the initial defaults for the correlated statistics.###
 
@@ -110,7 +106,6 @@ The Omega3 tab controls the morphological shape of the features that are generat
 
 
 ![Omega3 GUI](Images/Omega3Plot.png)
-@image latex Images/Omega3Plot.png "Omega3 GUI" width=6in
 
 ![Examples of object shapes from the class of the superellipsoid shapes. The normalized affine invariant &omega;3 is shown as a function of the shape parameter __n__. Figure courtesy of M. De Graef](Images/Omega3_Chart.png)
 ![Examples of object shapes from the class of the superellipsoid shapes. The normalized affine invariant &Omega;3 is shown as a function of the shape parameter __n__. Figure courtesy of M. De Graef](Images/Omega3Range.png)
@@ -120,9 +115,7 @@ The Omega3 tab controls the morphological shape of the features that are generat
 ## Shape Distribution Tab ##
 
 ![Shape Distribution (Aspect Ratios) GUI](Images/BOverAPlot.png)
-@image latex Images/BOverAPlot.png "Shape Distribution (Aspect Ratios) GUI" width=6in
 ![Shape Distribution (Aspect Ratios) GUI](Images/COverAPlot.png)
-@image latex Images/COverAPlot.png "Shape Distribution (Aspect Ratios) GUI" width=6in
 
 + **Bin**: Xalculated from the size distribution and cannot be changed
 + **Alpha**: The &alpha; parameter of a beta distribution. B/A, C/A and C/B are normalized and can only be between 0 and 1 to insure that the beta distribution is a good fit
@@ -132,7 +125,6 @@ The Omega3 tab controls the morphological shape of the features that are generat
 ## Neighbor Distribution Tab ##
 
 ![Number of Neighbors Distribution GUI](Images/NeighborDistPlot.png)
-@image latex Images/NeighborDistPlot.png "Number of Neighbors Distribution GUI" width=6in 
 
 + **Bin**: Calculated from the size distribution and cannot be changed
 + **Alpha**: The &alpha; parameter of a power law distribution, which the exponent of a power law distribution
@@ -159,14 +151,12 @@ Also note, the number of created bins in the normalized frequency list may be MO
 The user **MUST** click **Generate RDF** button for the values to get stored.
 
 ![RDF Plot](Images/RDFPlot.png)
-@image latex Images/RDFPlot.png "Radial Distribution Plot" width=6in
 
 ## ODF Tab ##
 
 The ODF tab controls the generation of the Orientation Distribution Function. This is the place where the user can apply a crystalographic texture to their synthetic structure. The user can enter specific angles in degrees to add a texture to their synthetic structure or read angle representations from a simple text file. The format of the text file is described in the _Write StatsGenerator ODF Angle File_ filter.
 
 ![ODF (Crystallographic Orientation) GUI](Images/SG_ODF_1.png)
-@image latex Images/SG_ODF_1.png "ODF (Crystallographic Orientation) GUI" width=6in
 
 ### Weights and Spreads Section ###
 
@@ -185,7 +175,6 @@ The ODF tab controls the generation of the Orientation Distribution Function. Th
 ### Bulk Load of Angle Data ##
 
 ![Bulk Load the ODF Angles from a File.](Images/BulkLoadAngles.png)
-@image latex Images/BulkLoadAngles.png "Bulk Load the ODF Angles from a File." width=6in
 
 
 
@@ -194,7 +183,6 @@ The ODF tab controls the generation of the Orientation Distribution Function. Th
 This sub-tab will display the baseline _misorientation distribution function_ (MDF) for the generated ODF.  The  implemented algorithm proceeds by randomly sampling pairs of orientations from the ODF and calculating the misorientation (axis-angle only). Only the angle is plotted in the misorientation distribution plot.  The user can also add axis-angle pairs to increase in weight.
 
 ![MDF GUI](Images/MDF_Plot.png)
-@image latex Images/MDF_Plot.png "MDF GUI" width=6in
 
 + **Angle**: The angle of the misorientation to increase in weight
 + **Axis**: The axis of the misorientation to increase in weight.  If the crystal structure being used for the phase is Hexagonal, then this axis is in the 3-index, orthogonal convention, not the true (hkil) convention
@@ -205,7 +193,6 @@ This sub-tab will display the baseline _misorientation distribution function_ (M
 This tab works in a similar fashion to the ODF tab in that the user can enter values that will orient the grains in a morhphological sense.
 
 ![Axis ODF (Morphological Orientation) GUI](Images/AxisODF_1.png)
-@image latex Images/AxisODF_1.png "Axis ODF (Morphological Orientation) GUI" width=6in 
 
 ### Weights and Spreads Section ###
 

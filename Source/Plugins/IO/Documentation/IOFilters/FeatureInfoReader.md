@@ -1,4 +1,4 @@
-Read Feature Info File {#featureinforeader}
+Read Feature Info File 
 =============
 
 ## Group (Subgroup) ##

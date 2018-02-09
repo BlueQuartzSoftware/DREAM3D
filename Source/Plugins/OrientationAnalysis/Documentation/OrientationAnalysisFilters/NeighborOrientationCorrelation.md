@@ -1,4 +1,4 @@
-Neighbor Orientation Correlation {#neighbororientationcorrelation}
+Neighbor Orientation Correlation 
 ======
 
 ## Group (Subgroup) ##

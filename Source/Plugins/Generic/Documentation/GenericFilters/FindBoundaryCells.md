@@ -1,4 +1,4 @@
-Find Boundary Cells (Image) {#findboundarycells}
+Find Boundary Cells (Image) 
 =============
 
 ## Group (Subgroup) ##

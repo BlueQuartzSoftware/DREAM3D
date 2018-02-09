@@ -1,4 +1,4 @@
-Generate Ensemble Statistics {#generateensemblestatistics}
+Generate Ensemble Statistics 
 ==========
 
 ## Group (Subgroup) ##

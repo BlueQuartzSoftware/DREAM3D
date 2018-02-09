@@ -1,4 +1,4 @@
-Export IPF Triangle Legend (Cubic m-3m) {#writeipfstandardtriangle}
+Export IPF Triangle Legend (Cubic m-3m) 
 =============
 
 ## Group (Subgroup) ##
@@ -14,7 +14,6 @@ This **Filter** will generate a standard inverse pole figure color stereographic
 -----
 
 ![Cubic Standard Stereographic Triangle](Images/IPFFilterLegend.png)
-@image latex Images/IPFFilterLegend.png "Cubic Standard Stereographic Triangle" width=6in
 
 -----
 

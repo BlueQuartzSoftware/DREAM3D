@@ -1,4 +1,4 @@
-DREAM.3D Data Structure {#datastructure}
+DREAM.3D Data Structure 
 =========
 
 ## Overview ##
@@ -15,7 +15,6 @@ The above node types are commonly referred to as _objects_, while the data store
 -----
 
 ![DREAM.3D Data Structure](Images/DataStructure.png)
-@image latex Images/DataStructure.png "DREAM.3D Data Structure" width=6in 
 
 -----
 
@@ -25,7 +24,6 @@ A special kind of object is known as the **Geometry**, which defines the spatial
 -----
 
 ![Unit Element Types](Images/vefc.png)
-@image latex Images/vefc.png "Unit Element Types" width=6in 
 
 -----
 
@@ -59,7 +57,6 @@ The four different types of **Element Attribute Matrix** correspond to the four 
 -----
 
 ![Attribute Matrix Layout](Images/AttributeMatrix.png)
-@image latex Images/AttributeMatrix.png "Attribute Matrix Layout" width=6in 
 
 -----
 
@@ -74,7 +71,6 @@ A key concept behind **Features** and **Ensembles** is the existence of a _map_ 
 -----
 
 ![Object-Attribute Associations](Images/ElFeatEns.png)
-@image latex Images/ElFeatEns.png "Object-Attribute Associations" width=6in 
 
 -----
 

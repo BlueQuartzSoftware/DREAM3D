@@ -1,4 +1,4 @@
-GenerateFZQuaternions {#generatefzquaternions}
+GenerateFZQuaternions 
 =============
 
 ## Group (Subgroup) ##

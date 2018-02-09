@@ -1,4 +1,4 @@
-Generate Primary StatsData {#generateprimarystatsdata}
+Generate Primary StatsData 
 =====
 
 ## Group (Subgroup) ##

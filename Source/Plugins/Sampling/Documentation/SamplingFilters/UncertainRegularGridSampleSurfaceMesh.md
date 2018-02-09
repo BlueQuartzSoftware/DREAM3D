@@ -1,4 +1,4 @@
-Sample Triangle Geometry on Uncertain Regular Grid {#uncertainregulargridsamplesurfacemesh}
+Sample Triangle Geometry on Uncertain Regular Grid 
 =============
 
 ## Group (Subgroup) ##

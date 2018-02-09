@@ -1,4 +1,4 @@
-Find Feature Volumes from Triangle Geometry {#findtrianglegeomsizes}
+Find Feature Volumes from Triangle Geometry 
 =============
 
 ## Group (Subgroup) ##

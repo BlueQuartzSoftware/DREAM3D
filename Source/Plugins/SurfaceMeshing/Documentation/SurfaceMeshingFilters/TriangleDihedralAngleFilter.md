@@ -1,4 +1,4 @@
-Find Minimum Triangle Dihedral Angle {#triangledihedralanglefilter}
+Find Minimum Triangle Dihedral Angle 
 ============
 
 ## Group (Subgroup) ##

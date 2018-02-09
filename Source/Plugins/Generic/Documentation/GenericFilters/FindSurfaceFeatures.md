@@ -1,4 +1,4 @@
-Find Surface Features {#findsurfacefeatures}
+Find Surface Features 
 =============
 
 ## Group (Subgroup) ##

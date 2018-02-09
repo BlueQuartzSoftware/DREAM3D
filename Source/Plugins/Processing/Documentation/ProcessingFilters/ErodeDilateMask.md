@@ -1,4 +1,4 @@
-Erode/Dilate Mask {#erodedilatemask}
+Erode/Dilate Mask 
 =============
 
 ## Group (Subgroup) ##

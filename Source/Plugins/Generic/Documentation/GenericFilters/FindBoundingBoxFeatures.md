@@ -1,4 +1,4 @@
-Find Biased Features (Bounding Box) {#findboundingboxfeatures}
+Find Biased Features (Bounding Box) 
 =============
 
 ## Group (Subgroup) ##

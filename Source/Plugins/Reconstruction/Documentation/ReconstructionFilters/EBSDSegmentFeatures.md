@@ -1,4 +1,4 @@
-Segment Features (Misorientation) {#ebsdsegmentfeatures}
+Segment Features (Misorientation) 
 ======
 
 ## Group (Subgroup) ##

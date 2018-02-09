@@ -13,10 +13,6 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonParseError>
 
-#include "discount/mkdio.h"
-
-#include "DocToolsConfiguration.h"
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
@@ -24,6 +20,16 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/Plugin/PluginManager.h"
+
+
+#include "SVWidgetsLib/SVWidgetsLib.h"
+
+#ifdef SIMPL_USE_DISCOUNT
+#include "discount/mkdio.h"
+#endif
+
+
+#include "DocToolsConfiguration.h"
 
 #define OVERWRITE_SOURCE_FILE 1
 
@@ -260,7 +266,14 @@ void writeHtmlFooter(QTextStream &stream)
 // -----------------------------------------------------------------------------
 int GenerateHTML(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
 {
-  
+
+  //    if (fi.baseName().compare("ArrayCalculator") != 0)
+  //    {
+  //      return false;
+  //    }
+
+  //  qDebug() << fi.absoluteFilePath();
+
   QString CssFilePath = D3DTools::GetDREAM3DProjDir();
   QString markDown;
   {
@@ -271,7 +284,7 @@ int GenerateHTML(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
     markDown = source.readAll();
     source.close();
   }
-  
+
   // Extract the title of the file from the MarkDown which should be the first line
   QString searchString = QString("{#%1}").arg(fi.baseName());
   searchString = searchString.toLower();
@@ -301,11 +314,21 @@ int GenerateHTML(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
   // these out of range characters.
   for (std::string::size_type i = 0; i < text.size(); i++)
   {
-	if (text[i] > 126 || text[i] < 0)
-	{
-	 text[i] = ' ';
-	}
+    if(text[i] > 126 || text[i] < 0)
+    {
+      text[i] = ' ';
+    }
   }
+  
+  {
+    QFile hOut(fi.absoluteFilePath());
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream(&hOut);
+    QString newMD = QString::fromStdString(text);
+    stream << newMD;
+    hOut.close();
+  }
+  
 
   MMIOT* doc = mkd_string(text.c_str(), text.size(), flag);
   if(!mkd_compile(doc, flag))
@@ -322,25 +345,7 @@ int GenerateHTML(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
 //      std::cout << "HTML: " << html << std::endl;
     }
   
-#if 0
-  QString sourcePath = fi.absoluteFilePath();
-  QString binDirPrefix = getDocSourceDir();
-  
-  if( !sourcePath.contains(binDirPrefix) )
-  {
-    mkd_cleanup(doc);
-    std::cout << "Source file " << fi.absoluteFilePath().toStdString() << " is outside the binary directory. That is not right" << std::endl;
-    return -2;
-  }
-  
-  QString destPath = D3DTools::GetDREAM3DGeneratedHelpRoot();
-  QString htmlPath = sourcePath.replace(binDirPrefix, destPath);
-  
-  htmlPath = htmlPath.replace(".md", ".html");
-  
-  
-  QFileInfo fi2(htmlPath);
-#endif
+
   QFileInfo fi2 = htmlFileInfo;
   
   QString parentPath = fi2.path();
@@ -354,7 +359,12 @@ int GenerateHTML(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
     return -2;
   }
 #if OVERWRITE_SOURCE_FILE
-  QFile hOut(htmlFileInfo.absoluteFilePath());
+  QString absFilePath = htmlFileInfo.absoluteFilePath();
+  if(absFilePath.contains("SIMPLib/"))
+  {
+    absFilePath = absFilePath.replace("SIMPLib/", "");
+  }
+  QFile hOut(absFilePath);
 #else
   QString tmpPath = "/tmp/" + fi2.fileName();
   QFile hOut(tmpPath);
@@ -376,7 +386,7 @@ int GenerateHTML(const QFileInfo& fi, const QFileInfo& htmlFileInfo)
   
   mkd_cleanup(doc);
   
-  // std::cout<< "Saved File " << fi2.absoluteFilePath().toStdString() << std::endl;
+  std::cout<< "Saved File " << fi2.absoluteFilePath().toStdString() << std::endl;
   file_count++;
   return 0;
 }
@@ -431,13 +441,20 @@ int CopyImageFile(const QFileInfo& fi)
 // -----------------------------------------------------------------------------
 int CopyImageFile(const QFileInfo& fi, const QFileInfo& outFileInfo)
 {
-  QFile destImage(outFileInfo.absoluteFilePath());
+
+  QString absFilePath = outFileInfo.absoluteFilePath();
+  if(absFilePath.contains("SIMPLib/"))
+  {
+    absFilePath = absFilePath.replace("SIMPLib/", "");
+  }
+
+  QFile destImage(absFilePath);
   if(destImage.exists())
   {
     destImage.remove();
   }
-  
-  bool success = QFile::copy(fi.absoluteFilePath(), outFileInfo.absoluteFilePath());
+
+  bool success = QFile::copy(fi.absoluteFilePath(), absFilePath);
   if(!success)
   {
     std::cout << "File was not copied: " << fi.absoluteFilePath().toStdString() << std::endl;
@@ -657,6 +674,11 @@ void GenerateHtmlFromJson()
       if(imagesDir.compare("NOT_FOUND") != 0)
       {
         QString imagesDestDirPath = QString("%1/%2").arg(D3DTools::GetDREAM3DGeneratedHelpRoot()).arg(imagesDir);
+        if(imagesDestDirPath.contains("SIMPLib/"))
+        {
+          imagesDestDirPath = imagesDestDirPath.replace("SIMPLib/", "");
+        }
+
         QDir dir;
         if(!dir.mkpath(imagesDestDirPath))
         {  
@@ -717,6 +739,11 @@ void GenerateHtmlFromJson()
       
       QString imagesDestDirPath = QString("%1/%2").arg(D3DTools::GetDREAM3DGeneratedHelpRoot()).arg(imagesDir.replace("Filters", ""));
       imagesDestDirPath = imagesDestDirPath.replace("Documentation", "Plugins");
+      if(imagesDestDirPath.contains("SIMPLib/"))
+      {
+        imagesDestDirPath = imagesDestDirPath.replace("SIMPLib/", "");
+      }
+
       QDir dir;
       if(!dir.mkpath(imagesDestDirPath))
       {  
@@ -864,7 +891,9 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("GenerateHTMLDocs");
-  
+
+  QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+
   std::cout << "Starting " << QCoreApplication::applicationName().toStdString() << std::endl;
   
 #if 0

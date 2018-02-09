@@ -1,4 +1,4 @@
-Find Average C-Axis Orientations {#findavgcaxes}
+Find Average C-Axis Orientations 
 ======
 
 ## Group (Subgroup) ##

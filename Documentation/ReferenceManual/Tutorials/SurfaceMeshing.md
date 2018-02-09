@@ -8,7 +8,6 @@ Most **Geometry** objects in DREAM.3D are defined by their _shared vertex list_.
 -------------------
 
 ![Triangle/Face](Images/TriangleSmall.png)
-@image latex Images/TriangleSmall.png "Triangle/Face" width=6in
 
 -------------------
 
@@ -37,6 +36,5 @@ Thus, to see the internal mesh structure, simply apply the ParaView *Threshold* 
 -------------------
 
 ![Surface Mesh of Small IN100](Images/SurfaceMesh.png)
-@image latex Images/SurfaceMesh.png "Surface Mesh of Small IN100" width=6in
 
 -------------------

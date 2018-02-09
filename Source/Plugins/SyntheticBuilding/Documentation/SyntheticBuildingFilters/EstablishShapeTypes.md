@@ -1,4 +1,4 @@
-Establish Shape Types {#establishshapetypes}
+Establish Shape Types 
 =============
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-Find Feature Centroids from Triangle Geometry {#findtrianglegeomcentroids}
+Find Feature Centroids from Triangle Geometry 
 =============
 
 ## Group (Subgroup) ##

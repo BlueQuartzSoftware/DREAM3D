@@ -1,4 +1,4 @@
-Version 6.4 Release Notes {#releasenotes_6_4_0}
+Version 6.4 Release Notes 
 ===========
 
 These release notes summarize the major changes for each officially released version of DREAM.3D. The official bug report is located at the [DREAM.3D GitHub issues page](https://github.com/bluequartzsoftware/DREAM3D/issues).
@@ -181,10 +181,10 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + On Mac OS X, DREAM.3D is now a single .app package.
 + Add filter to compute the Central Moments for 2D slices of data (Moment Invariant 2D)
 + Add filter to compute the min XYZ and max XYZ pixel coordinates for each feature.
-+ Update ‘SpaceGroupOps’ to ‘LaueOps’
++ Update    SpaceGroupOps    to    LaueOps   
 + Enable search and MathJax in Doxygen Allows for searchable help and well-rendered Latex equations.
 + EBSD Standard Triangle codes for all Laue classes except Cubic 3m Tetrahedral
-+ Rename ‘FlattenImage’ to ‘ConvertColorToGrayScale’ and add additional options for the conversion algorithm
++ Rename    FlattenImage    to    ConvertColorToGrayScale    and add additional options for the conversion algorithm
 + Adding "Use 1-Based Values" boolean option to EMMPM filter.
 + Add filters that compute morphological statisics of features in TriangleGeoms
 + Fix crashing when selecting ShapeTypes through the ShapeTypes Widget

@@ -1,4 +1,4 @@
-Find Feature Shapes {#findshapes}
+Find Feature Shapes 
 =============
 
 ## Group (Subgroup) ##
@@ -52,7 +52,7 @@ Image
 
 [3] n-Dimensional Moment Invariants and Conceptual Mathematical Theory of Recognition n-Dimensional Solids, Alexander G. Mamistvalov, IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 20, NO. 8, AUGUST 1998, p. 819-831.
 
-[4] M. Groeber, M. Uchic, D. Dimiduk, and S. Ghosh. “A Framework for Automated Analysis and Simulation of 3D Polycrystalline Microstructures, Part 1: Statistical Characterization” Acta Materialia, 56 (2008), 1257-1273. 
+[4] M. Groeber, M. Uchic, D. Dimiduk, and S. Ghosh.    A Framework for Automated Analysis and Simulation of 3D Polycrystalline Microstructures, Part 1: Statistical Characterization    Acta Materialia, 56 (2008), 1257-1273. 
 
 ## Example Pipelines ##
 

@@ -278,7 +278,7 @@ The developer now needs to create a basic cmake file that describes the location
 	  #--------------------------------------------------------------------------------------------------
 	  # ITK (www.itk.org) For Image Processing Plugin
 	  set(ITK_DIR "${DREAM3D_SDK_ROOT}/ITK-4.9.1-${BUILD_TYPE}")
-	  set(SIMPLib_USE_ITK "ON")
+	  set(SIMPL_USE_ITK "ON")
 
 	  #--------------------------------------------------------------------------------------------------
 	  # Qwt 6.1.2 Library

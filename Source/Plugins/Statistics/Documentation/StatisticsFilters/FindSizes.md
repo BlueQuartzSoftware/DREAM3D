@@ -1,4 +1,4 @@
-Find Feature Sizes {#findsizes}
+Find Feature Sizes 
 =============
 
 ## Group (Subgroup) ##

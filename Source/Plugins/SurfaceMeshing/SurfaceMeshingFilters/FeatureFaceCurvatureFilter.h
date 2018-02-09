@@ -177,7 +177,7 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     */
     virtual void preflight() override;
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     virtual void tbbTaskProgress();
 #endif
 

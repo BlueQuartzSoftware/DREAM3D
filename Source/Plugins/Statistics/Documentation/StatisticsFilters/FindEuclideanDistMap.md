@@ -1,4 +1,4 @@
-Find Euclidean Distance Map {#findeuclideandistmap}
+Find Euclidean Distance Map 
 =============
 
 ## Group (Subgroup) ##

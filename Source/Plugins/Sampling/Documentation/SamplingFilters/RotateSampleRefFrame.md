@@ -1,4 +1,4 @@
-Rotate Sample Reference Frame {#rotatesamplerefframe}
+Rotate Sample Reference Frame 
 =============
 
 ## Group (Subgroup) ##

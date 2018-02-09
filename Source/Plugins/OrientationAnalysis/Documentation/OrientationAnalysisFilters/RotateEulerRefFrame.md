@@ -1,4 +1,4 @@
-Rotate Euler Reference Frame {#rotateeulerrefframe}
+Rotate Euler Reference Frame 
 =============
 
 ## Group (Subgroup) ##

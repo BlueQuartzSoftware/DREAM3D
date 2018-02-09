@@ -1,4 +1,4 @@
-Abaqus Hexahedron Exporter {#abaqushexahedronwriter}
+Abaqus Hexahedron Exporter 
 =============
 
 ## Group (Subgroup) ##
@@ -39,7 +39,7 @@ The _nodes.inp file:
 	2, 0.500000, 0.000000, 0.000000
 	3, 1.000000, 0.000000, 0.000000
 	4, 1.500000, 0.000000, 0.000000
-	…..
+	   ..
 	
 
 The _elset.inp file:
@@ -77,7 +77,7 @@ The _elset.inp file:
 	32319, 32320, 32348, 32349, 32350, 32351, 32352, 32381, 32382, 32383, 32384, 32413, 32414, 32415, 32416, 32447,
 	32448
 	*Elset, elset=Grain2_set 
-	…..	
+	   ..	
 
 
 The _elems.inp file: 
@@ -92,7 +92,7 @@ The _elems.inp file:
 	4, 1094, 5, 4, 1093, 1127, 38, 37, 1126 
 	5, 1095, 6, 5, 1094, 1128, 39, 38, 1127 
 	6, 1096, 7, 6, 1095, 1129, 40, 39, 1128  
-	…..
+	   ..
 	
 
 The _sects.inp file:
@@ -109,7 +109,7 @@ The _sects.inp file:
 	** Section: Grain2 
 	*Solid Section, elset=Grain2_set, material=Grain_Mat2  
 	
-	…..
+	   ..
 	
 
 ## Parameters ##
