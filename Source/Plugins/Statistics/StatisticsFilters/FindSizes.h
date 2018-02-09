@@ -47,12 +47,6 @@
 class FindSizes : public AbstractFilter
 {
   Q_OBJECT
-      // This line MUST be first when exposing a class and properties to Python
-    PYB11_CREATE_BINDINGS(FindSizes SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
-    PYB11_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
-    PYB11_PROPERTY(QString NumElementsArrayName READ getNumElementsArrayName WRITE setNumElementsArrayName)
-
 public:
   SIMPL_SHARED_POINTERS(FindSizes)
   SIMPL_STATIC_NEW_MACRO(FindSizes)
