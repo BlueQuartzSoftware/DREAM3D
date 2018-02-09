@@ -65,6 +65,8 @@ public:
   SIMPL_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
   Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
+  void updateProgress(size_t p);
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -173,6 +175,9 @@ protected:
   virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
 private:
+  size_t m_Progress = 0;
+  size_t m_TotalProgress = 0;
+
   AlignSections(const AlignSections&);  // Copy Constructor Not Implemented
   void operator=(const AlignSections&) = delete; // Operator '=' Not Implemented
 };

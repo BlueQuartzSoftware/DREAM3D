@@ -35,6 +35,17 @@
 
 #include "NeighborOrientationCorrelation.h"
 
+#include <vector>
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#include <tbb/atomic.h>
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/task_group.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/tick_count.h>
+#endif
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -45,6 +56,57 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+class NeighborOrientationCorrelationTransferDataImpl
+{
+public:
+  NeighborOrientationCorrelationTransferDataImpl() = delete;
+  NeighborOrientationCorrelationTransferDataImpl(const NeighborOrientationCorrelationTransferDataImpl&) = default; // Copy Constructor Not Implemented
+
+  NeighborOrientationCorrelationTransferDataImpl(NeighborOrientationCorrelation* filter, size_t totalPoints, const std::vector<int64_t>& bestNeighbor, AttributeMatrix* attrMat,
+                                                 int32_t voxelArrayIndex)
+  : m_Filter(filter)
+  , m_TotalPoints(totalPoints)
+  , m_BestNeighbor(bestNeighbor)
+  , m_AttrMat(attrMat)
+  , m_VoxelArrayIndex(voxelArrayIndex)
+  {
+  }
+
+  ~NeighborOrientationCorrelationTransferDataImpl() = default;
+
+  void operator()() const
+  {
+
+    QVector<QString> voxelArrayNames = m_AttrMat->getAttributeArrayNames().toVector();
+
+    size_t progIncrement = static_cast<size_t>(m_TotalPoints / 50);
+    size_t prog = 1;
+    for(size_t i = 0; i < m_TotalPoints; i++)
+    {
+      if(i > prog)
+      {
+        prog = prog + progIncrement;
+        m_Filter->updateProgress(progIncrement);
+      }
+      int64_t neighbor = m_BestNeighbor[i];
+      if(neighbor != -1)
+      {
+        IDataArray::Pointer p = m_AttrMat->getAttributeArray(voxelArrayNames[m_VoxelArrayIndex]);
+        p->copyTuple(neighbor, i);
+      }
+    }
+  }
+
+private:
+  NeighborOrientationCorrelation* m_Filter = nullptr;
+  size_t m_TotalPoints = 0;
+  std::vector<int64_t> m_BestNeighbor;
+  AttributeMatrix* m_AttrMat = nullptr;
+  int32_t m_VoxelArrayIndex = 0;
+
+  void operator=(const NeighborOrientationCorrelationTransferDataImpl&) = delete; // Operator '=' Not Implemented
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -214,10 +276,13 @@ void NeighborOrientationCorrelation::execute()
     return;
   }
 
+  m_Progress = 0;
+  m_TotalProgress = 0;
+
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ConfidenceIndexArrayPath.getDataContainerName());
   size_t totalPoints = m_ConfidenceIndexPtr.lock()->getNumberOfTuples();
 
-  float misorientationToleranceR = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  float misorientationToleranceR = m_MisorientationTolerance * static_cast<float>(SIMPLib::Constants::k_PiOver180);
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
@@ -248,12 +313,12 @@ void NeighborOrientationCorrelation::execute()
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   uint32_t phase1 = 0, phase2 = 0;
 
-  QVector<int32_t> neighborDiffCount(totalPoints, 0);
-  QVector<int32_t> neighborSimCount(6, 0);
-  QVector<int64_t> bestNeighbor(totalPoints, -1);
+  std::vector<int32_t> neighborDiffCount(totalPoints, 0);
+  std::vector<int32_t> neighborSimCount(6, 0);
+  std::vector<int64_t> bestNeighbor(totalPoints, -1);
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  int32_t startLevel = 6;
+  const int32_t startLevel = 6;
   for(int32_t currentLevel = startLevel; currentLevel > m_Level; currentLevel--)
   {
     if(getCancel())
@@ -268,7 +333,7 @@ void NeighborOrientationCorrelation::execute()
     {
       if(int64_t(i) > prog)
       {
-        progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
+        progressInt = static_cast<int64_t>((static_cast<float>(i) / totalPoints) * 100.0f);
         QString ss = QObject::tr("Level %1 of %2 || Processing Data %3%").arg((startLevel - currentLevel) + 1).arg(startLevel - m_Level).arg(progressInt);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         prog = prog + progIncrement;
@@ -277,10 +342,10 @@ void NeighborOrientationCorrelation::execute()
       if(m_ConfidenceIndex[i] < m_MinConfidence)
       {
         count = 0;
-        column = i % dims[0];
+        column = static_cast<int64_t>(i % dims[0]);
         row = (i / dims[0]) % dims[1];
         plane = i / (dims[0] * dims[1]);
-        for(int32_t j = 0; j < 6; j++)
+        for(size_t j = 0; j < 6; j++)
         {
           good = true;
           neighbor = int64_t(i) + neighpoints[j];
@@ -324,7 +389,7 @@ void NeighborOrientationCorrelation::execute()
             {
               neighborDiffCount[i]++;
             }
-            for(int32_t k = j + 1; k < 6; k++)
+            for(size_t k = j + 1; k < 6; k++)
             {
               good2 = true;
               neighbor2 = int64_t(i) + neighpoints[k];
@@ -372,7 +437,7 @@ void NeighborOrientationCorrelation::execute()
             }
           }
         }
-        for(int32_t j = 0; j < 6; j++)
+        for(size_t j = 0; j < 6; j++)
         {
           best = 0;
           good = true;
@@ -414,36 +479,67 @@ void NeighborOrientationCorrelation::execute()
       }
     }
     QString attrMatName = m_ConfidenceIndexArrayPath.getAttributeMatrixName();
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
     if(getCancel())
     {
       return;
     }
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+    tbb::task_scheduler_init init;
+    bool doParallel = true;
+#endif
 
-    progIncrement = static_cast<int64_t>(totalPoints / 100);
-    prog = 1;
-    progressInt = 0;
-    for(size_t i = 0; i < totalPoints; i++)
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+    // The idea for this parallel section is to parallelize over each Data Array that
+    // will need it's data adjusted. This should go faster than before by about 2x.
+    // Better speed up could be achieved if we had better data locality.
+    m_Progress = 0;
+    m_TotalProgress = 0;
+    if(doParallel == true)
     {
-      if(int64_t(i) > prog)
+      tbb::task_group* g = new tbb::task_group;
+      AttributeMatrix* attrMat = m->getAttributeMatrix(attrMatName).get();
+      QVector<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames().toVector();
+      m_TotalProgress = voxelArrayNames.size() * totalPoints; // Total number of points to update
+      // Create and run all the tasks
+      for(int32_t voxelArray = 0; voxelArray < voxelArrayNames.size(); voxelArray++)
       {
-        progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
-        QString ss = QObject::tr("Level %1 of %2 || Copying Data %3%").arg((startLevel - currentLevel) + 2).arg(startLevel - m_Level).arg(progressInt);
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-        prog = prog + progIncrement;
+        g->run(NeighborOrientationCorrelationTransferDataImpl(this, totalPoints, bestNeighbor, attrMat, voxelArray));
       }
-      neighbor = bestNeighbor[i];
-      if(neighbor != -1)
+      // Wait for them to complete.
+      g->wait();
+      delete g;
+    }
+    else
+#endif
+    {
+      QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
+      progIncrement = static_cast<int64_t>(totalPoints / 100);
+      prog = 1;
+      progressInt = 0;
+      for(size_t i = 0; i < totalPoints; i++)
       {
-        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        if(int64_t(i) > prog)
         {
-          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
-          p->copyTuple(neighbor, i);
+          progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
+          QString ss = QObject::tr("Level %1 of %2 || Copying Data %3%").arg((startLevel - currentLevel) + 2).arg(startLevel - m_Level).arg(progressInt);
+          notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+          prog = prog + progIncrement;
+        }
+        neighbor = bestNeighbor[i];
+        if(neighbor != -1)
+        {
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+            p->copyTuple(neighbor, i);
+          }
         }
       }
     }
+
     currentLevel = currentLevel - 1;
+    m_CurrentLevel = currentLevel;
   }
 
   if(getCancel())
@@ -453,6 +549,17 @@ void NeighborOrientationCorrelation::execute()
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::updateProgress(size_t p)
+{
+  m_Progress += p;
+  int32_t progressInt = static_cast<int>((static_cast<float>(m_Progress) / static_cast<float>(m_TotalProgress)) * 100.0f);
+  QString ss = QObject::tr("Level %1 of %2 || Copying Data %3%").arg((6 - m_CurrentLevel) + 2).arg(6 - m_Level).arg(progressInt);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 }
 
 // -----------------------------------------------------------------------------
