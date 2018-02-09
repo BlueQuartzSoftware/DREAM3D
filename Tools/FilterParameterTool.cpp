@@ -460,15 +460,12 @@ void CheckForQObjectSuperClass(const QString& hFile)
 {
   QString contents;
   QFileInfo fi(hFile);
-  
 //  if (fi.baseName().compare("CropImageGeometry") != 0)
 //  {
 //    return false;
 //  }
-
   {
     // Read the Source File
-
     QFile source(hFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -477,8 +474,8 @@ void CheckForQObjectSuperClass(const QString& hFile)
   
   bool didReplace = false;
 
-  QString searchString =  "virtual const QString getSubGroupName() override;";
-  
+  QString searchString = "";
+
   QStringList outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
@@ -1257,8 +1254,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   {
     QString headerFilePath = itemInfo.absoluteFilePath();
     //QString cppFilePath = headerFilePath.replace(".h", ".cpp");
-    AddUuidCodes(headerFilePath);
-    //CheckForQObjectSuperClass(headerFilePath);
+    // AddUuidCodes(headerFilePath);
+    CheckForQObjectSuperClass(headerFilePath);
   }
 }
 
@@ -1314,7 +1311,7 @@ int main(int argc, char* argv[])
 //  GenerateFilterParametersCode();
 #else
 
-  
+#if 0
   QString jsonFilePath = D3DTools::GetDREAM3DBinaryDir() + "/Filter_UUID.json";
   QFileInfo fi(jsonFilePath);
   
@@ -1341,9 +1338,8 @@ int main(int argc, char* argv[])
     std::cout << "JSON Parse Error: " << parseError.errorString().toStdString() << std::endl;
     return EXIT_FAILURE;
   }
-  
-  
-  
+#endif
+
   ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
   ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
   ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
