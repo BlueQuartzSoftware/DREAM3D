@@ -250,13 +250,13 @@ void FindAvgOrientations::execute()
   {
     if(m_FeatureIds[i] > 0 && m_CellPhases[i] > 0)
     {
-      counts[m_FeatureIds[i]] += 1;
+      counts[m_FeatureIds[i]] += 1.0f;
       phase = m_CellPhases[i];
       QuaternionMathF::Copy(quats[i], voxquat);
       QuaternionMathF::Copy(avgQuats[m_FeatureIds[i]], curavgquat);
       QuaternionMathF::ScalarDivide(curavgquat, counts[m_FeatureIds[i]]);
 
-      if(counts[m_FeatureIds[i]] == 1)
+      if(counts[m_FeatureIds[i]] == 1.0f)
       {
         QuaternionMathF::Identity(curavgquat);
       }
@@ -267,7 +267,7 @@ void FindAvgOrientations::execute()
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    if(counts[i] == 0)
+    if(counts[i] == 0.0f)
     {
       QuaternionMathF::Identity(avgQuats[i]);
     }
