@@ -76,6 +76,8 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
+  void updateProgress(size_t p);
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -177,6 +179,10 @@ protected:
   void initialize();
 
 private:
+  size_t m_Progress = 0;
+  size_t m_TotalProgress = 0;
+  int32_t m_CurrentLevel = 0;
+
   QVector<LaueOps::Pointer> m_OrientationOps;
 
   DEFINE_DATAARRAY_VARIABLE(float, ConfidenceIndex)
