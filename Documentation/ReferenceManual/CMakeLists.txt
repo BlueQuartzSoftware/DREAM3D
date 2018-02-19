@@ -108,9 +108,9 @@ if(SIMPL_USE_MKDOCS)
   foreach(DocGroup ${DREAM3DDoc_GROUPS})
     file(APPEND "${docsCmakeFile}" "# ${DocGroup}\n")
     if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
-      message(STATUS "${DocGroup}_SOURCE_DIR: ${${DocGroup}_SOURCE_DIR}")
+      #message(STATUS "${DocGroup}_SOURCE_DIR: ${${DocGroup}_SOURCE_DIR}")
       string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters" tempstring ${${DocGroup}_SOURCE_DIR})
-      message(STATUS "tempstring: ${tempstring}")
+      #message(STATUS "tempstring: ${tempstring}")
       file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${tempstring}/${DocGroup}Filters\"
      DESTINATION 
      \"${docsDestDir}/Filters\")\n")
@@ -184,6 +184,16 @@ if(SIMPL_USE_MKDOCS)
     COMMAND "${CMAKE_COMMAND}" -P "${docsCmakeFile}"    
     COMMENT "using mkdocs to generate the documentation"
   )
+
+
+  if(APPLE)
+
+  else()
+    install(DIRECTORY ${HTML_OUTPUT_DIR}
+            DESTINATION "Help"
+    )
+  endif()
+
 
 endif()
 
@@ -363,6 +373,14 @@ if(SIMPL_USE_DISCOUNT)
       DEPENDS ${COPY_LIBRARY_TARGETS} DREAM3D
       COMMENT "Using Discount to generate HTML Documentation"
     )
+
+    if(APPLE)
+
+    else()
+      install(DIRECTORY ${HTML_OUTPUT_DIR}/ 
+              DESTINATION "."
+      )
+    endif()
 
   else()
     set(SIMPL_USE_DISCOUNT OFF)
