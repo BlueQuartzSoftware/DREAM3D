@@ -123,9 +123,7 @@ void writeOutput(bool didReplace, QVector<QString>& outLines, QString filename)
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
+
 QString findPath(const QString& groupName, const QString& filtName, const QString ext)
 {
   //  std::cout << groupName.toStdString() << "::" << filtName.toStdString() << std::endl;
@@ -305,6 +303,7 @@ int main(int argc, char* argv[])
 
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
+
 
   ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
 
