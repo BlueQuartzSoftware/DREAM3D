@@ -1,4 +1,4 @@
-Minimum Size {#minsize}
+Minimum Size 
 =============
 
 ## Group (Subgroup) ##

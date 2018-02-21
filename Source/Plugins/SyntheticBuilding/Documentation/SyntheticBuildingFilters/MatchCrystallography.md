@@ -1,4 +1,4 @@
-Match Crystallography {#matchcrystallography}
+Match Crystallography 
 =============
 
 ## Group (Subgroup) ##

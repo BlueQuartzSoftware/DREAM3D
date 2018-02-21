@@ -6,7 +6,6 @@ Xdmf for Visualization {#xdmf}
 -------
 
 ![Opening an Xdmf File in ParaView](Images/XdmfParaViewLoading.png)
-@image latex Images/XdmfParaViewLoading.png "Opening an Xdmf File in ParaView" width=3in
 
 --------
 

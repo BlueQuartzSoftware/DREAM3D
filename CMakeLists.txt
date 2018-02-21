@@ -280,21 +280,19 @@ else()
 endif(BUILD_SHARED_LIBS)
 
 
-# --------------------------------------------------------------------
-# Find and Use the Qt5 Libraries
-include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
-set(DREAM3D_Qt5_Components Core Widgets Network Gui Concurrent Xml OpenGL PrintSupport Sql)
-option(SIMPLView_USE_QtWebEngine "Use QWebEngine to display Help. OFF=Use default web browser" ON)
-CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
-                    "${SIMPLView_USE_QtWebEngine}"
-                    "${DREAM3DProj_BINARY_DIR}"
-                    "DREAM3D")
-
-
 # -----------------------------------------------------------------------
 # Bring in the SIMPLView Project, which will bring in SIMPLib
 # -----------------------------------------------------------------------
 add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
+
+# --------------------------------------------------------------------
+# Find and Use the Qt5 Libraries
+include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
+set(DREAM3D_Qt5_Components Core Widgets Network Gui Concurrent Xml OpenGL PrintSupport Sql)
+CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
+                    "${SIMPL_USE_QtWebEngine}"
+                    "${DREAM3DProj_BINARY_DIR}"
+                    "DREAM3D")
 
 #Enable use of Solution Folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -413,14 +411,14 @@ if( SIMPL_BUILD_CLI_TOOLS )
 endif()
 
 #-------------------------------------------------------------------------------
-# Should we build the documentation using DOxygen
-#option(SIMPL_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
-if(SIMPL_BUILD_DOCUMENTATION)
+# Should we build the documentation
+get_property(SIMPLView_BUILD_DOCUMENTATION GLOBAL PROPERTY SIMPLView_BUILD_DOCUMENTATION)
+message(STATUS "SIMPLView_BUILD_DOCUMENTATION: ${SIMPLView_BUILD_DOCUMENTATION}")
+if(SIMPLView_BUILD_DOCUMENTATION)
   set(DOCUMENTATION_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources/DocConfigFiles)
 
   # Now add each subdirectory that holds our documentation files
   add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
-  add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Documentation/APIDocs ${PROJECT_BINARY_DIR}/Documentation/APIDocs)
 endif()
 
 # This should be the last line in this file:

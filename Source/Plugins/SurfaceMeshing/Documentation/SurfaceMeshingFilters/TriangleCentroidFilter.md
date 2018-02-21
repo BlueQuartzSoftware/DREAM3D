@@ -1,4 +1,4 @@
-Generate Triangle Centroids {#trianglecentroidfilter}
+Generate Triangle Centroids 
 ============
 
 ## Group (Subgroup) ##

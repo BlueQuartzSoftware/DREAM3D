@@ -1,4 +1,4 @@
-Generate Precipitate StatsData {#generateprecipitatestatsdata}
+Generate Precipitate StatsData 
 =============
 
 ## Group (Subgroup) ##

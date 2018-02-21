@@ -1,4 +1,4 @@
-Insert Precipitate Phases {#insertprecipitatephases}
+Insert Precipitate Phases 
 =============
 
 ## Group (Subgroup) ##

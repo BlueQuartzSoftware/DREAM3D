@@ -1,4 +1,4 @@
-Find Schmid Factors {#findschmids}
+Find Schmid Factors 
 =============
 
 ## Group (Subgroup) ##

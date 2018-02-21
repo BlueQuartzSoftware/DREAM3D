@@ -1,4 +1,4 @@
-Find Feature Phases Binary {#findfeaturephasesbinary}
+Find Feature Phases Binary 
 =============
 
 ## Group (Subgroup) ##

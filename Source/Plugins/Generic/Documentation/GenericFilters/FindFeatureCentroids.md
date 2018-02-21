@@ -1,4 +1,4 @@
-Find Feature Centroids {#findfeaturecentroids}
+Find Feature Centroids 
 =============
 
 ## Group (Subgroup) ##

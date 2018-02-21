@@ -1,4 +1,4 @@
-Write GBCD Triangles File {#gbcdtriangledumper}
+Write GBCD Triangles File 
 =============
 
 ## Group (Subgroup) ##
@@ -26,7 +26,7 @@ This **Filter** writes relevant information about the Grain Boundary Character D
 	0.7993 0.6738 3.5200 0.2662 0.6970 4.4347 -0.5737 -0.0995 0.8130 0.0221
 	3.4109 0.6178 1.0586 0.2662 0.6970 4.4347 1.0000 0.0000 0.0000 0.0312
 	3.4109 0.6178 1.0586 0.2662 0.6970 4.4347 0.9822 0.1328 0.1328 0.0256
-	…..
+	   ..
 
 ## Parameters ##
 

@@ -1,4 +1,4 @@
-Write Ph File (Feature Ids) {#phwriter}
+Write Ph File (Feature Ids) 
 =============
 
 ## Group (Subgroup) ##
@@ -33,7 +33,7 @@ This **Filter** writes a custom data file used by the Materials Science Departme
     0
     1742
     0
-    …..
+       ..
 
 ## Parameters ##
 

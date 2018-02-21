@@ -1,4 +1,4 @@
-Find Feature Reference C-Axis Misalignments {#findfeaturereferencecaxismisorientations}
+Find Feature Reference C-Axis Misalignments 
 ======
 
 ## Group (Subgroup) ##

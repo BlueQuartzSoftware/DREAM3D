@@ -1,4 +1,4 @@
-Find Twin Boundaries {#findtwinboundaries}
+Find Twin Boundaries 
 =============
 
 ## Group (Subgroup) ##

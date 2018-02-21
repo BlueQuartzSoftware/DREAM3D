@@ -1,4 +1,4 @@
-Creating a Pipeline {#creatingpipeline}
+Creating a Pipeline 
 =========
 
 In DREAM.3D, the user processes their data by creating what is known as a **Pipeline** which is constructed out of a series of **Filters**. By chaining together a series of **Filters**, the underlying data structure is processed and modified in quick succession. The user should be aware that all processing on the data is done **in place**, i.e., there is only a single copy of the data resident in memory at any one time. While this reduces the overall memory footprint, the user will have to be aware that their data may be modified from its original form. To help the user avoid accidentally overwriting data, all objects at a given hierarchy level in the [data structure](@ref datastructure) are not allowed to share the same name. For example, a data structure can have an **Attribute Matrix** named _foo_ that holds an **Attribute Array** named _bar_, but if the user tries to create a new **Attribute Matrix** named _foo_, an error will be presented in the **Pipeline Error Table**. The user _is allowed_ to create another **Attribute Array** named _bar_, however, as long as that **Attribute Array** belongs to a different **Attribute Matrix**. In other words, no two children of a given data structure object can share the same name!  
@@ -9,7 +9,6 @@ The interface mechanics of building a **Pipeline** are discussed in the [Overvie
 ------
 
 ![Anatomy of a Pipeline](Images/PipelineAnatomy.png)
-@image latex Images/PipelineAnatomy.png "Anatomy of a Pipeline" width=6in
 
 ------
 

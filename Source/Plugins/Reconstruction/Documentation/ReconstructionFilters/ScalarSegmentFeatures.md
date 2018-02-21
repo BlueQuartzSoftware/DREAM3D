@@ -1,4 +1,4 @@
-Segment Features (Scalar) {#scalarsegmentfeatures}
+Segment Features (Scalar) 
 ======
 
 ## Group (Subgroup) ##

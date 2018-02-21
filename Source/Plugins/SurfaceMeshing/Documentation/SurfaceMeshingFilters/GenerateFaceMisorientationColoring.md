@@ -1,4 +1,4 @@
-Generate Misorientation Colors (Face) {#generatefacemisorientationcoloring}
+Generate Misorientation Colors (Face) 
 ============
 
 ## Group (Subgroup) ##

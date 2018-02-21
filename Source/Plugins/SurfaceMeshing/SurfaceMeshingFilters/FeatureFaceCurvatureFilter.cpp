@@ -34,7 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FeatureFaceCurvatureFilter.h"
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/task.h>
 #include <tbb/task_group.h>
 #include <tbb/task_scheduler_init.h>
@@ -404,12 +404,12 @@ void FeatureFaceCurvatureFilter::execute()
   m_TotalFeatureFaces = sharedFeatureFaces.size();
   m_CompletedFeatureFaces = 0;
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_group* g = new tbb::task_group;
 #else
 
@@ -423,7 +423,7 @@ void FeatureFaceCurvatureFilter::execute()
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     FaceIds_t& triangleIds = (*iter).second;
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     if(doParallel == true)
     {
       g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting, m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
@@ -443,7 +443,7 @@ void FeatureFaceCurvatureFilter::execute()
   }
 // *********************** END END END END END END  ********************************************************************
 
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   g->wait(); // Wait for all the threads to complete before moving on.
   delete g;
 #endif
@@ -455,7 +455,7 @@ void FeatureFaceCurvatureFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 void FeatureFaceCurvatureFilter::tbbTaskProgress()
 {
   m_CompletedFeatureFaces++;

@@ -1,4 +1,4 @@
-Smooth Bad Data (Coordination Number) {#erodedilatecoordinationnumber}
+Smooth Bad Data (Coordination Number) 
 =============
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-Generate IPF Colors (Face) {#generatefaceipfcoloring}
+Generate IPF Colors (Face) 
 ============
 
 ## Group (Subgroup) ##
@@ -12,7 +12,6 @@ This **Filter** generates a pair of colors for each **Triangle** in a **Triangle
 ------------
 
 ![Face IPF Coloring](Images/GenerateFaceIPFColoring.png)
-@image latex GenerateFaceIPFColoring.png "Face IPF Coloring" width=6in
 
 ------------
 

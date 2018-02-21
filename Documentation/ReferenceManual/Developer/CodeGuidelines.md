@@ -1,4 +1,4 @@
-Best Practices for Portable Code {#codeguidelines}
+Best Practices for Portable Code 
 ========
 
 # Source Code Line Endings #

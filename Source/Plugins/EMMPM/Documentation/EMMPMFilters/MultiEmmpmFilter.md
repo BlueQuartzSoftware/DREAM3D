@@ -1,4 +1,4 @@
-Multi-Array EM/MPM {#multiemmpmfilter}
+Multi-Array EM/MPM 
 =============
 
 ## Group (Subgroup) ##

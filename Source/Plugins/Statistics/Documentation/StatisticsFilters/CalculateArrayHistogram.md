@@ -1,4 +1,4 @@
-Calculate Frequency Histogram {#calculatearrayhistogram}
+Calculate Frequency Histogram 
 =============
 
 ## Group (Subgroup) ##
@@ -23,7 +23,7 @@ Using some data about the "Old Faithful" geyser in the United States from the [R
 	{4.533,85},
 	{2.883,55},
 	{4.7,88},
-	…..
+	   ..
 	
 ### Example Output ###
 

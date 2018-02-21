@@ -1,4 +1,4 @@
-Change Resolution {#changeresolution}
+Change Resolution 
 =============
 
 ## Group (Subgroup) ##

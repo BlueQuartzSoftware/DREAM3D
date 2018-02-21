@@ -1,4 +1,4 @@
-Find Number of Features {#findnumfeatures}
+Find Number of Features 
 =============
 
 ## Group (Subgroup) ##

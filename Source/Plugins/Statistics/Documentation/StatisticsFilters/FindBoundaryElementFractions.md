@@ -1,4 +1,4 @@
-Find Feature Boundary Element Fractions {#findboundaryelementfractions}
+Find Feature Boundary Element Fractions 
 =============
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-Generate Geometry Connectivity {#generategeometryconnectivity}
+Generate Geometry Connectivity 
 ============
 
 ## Group (Subgroup) ##

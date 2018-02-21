@@ -1,4 +1,4 @@
-Align Sections (Misorientation) {#alignsectionsmisorientation}
+Align Sections (Misorientation) 
 ======
 
 ## Group (Subgroup) ##

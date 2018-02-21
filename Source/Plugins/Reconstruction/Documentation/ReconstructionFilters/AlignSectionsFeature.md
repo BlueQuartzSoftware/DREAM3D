@@ -1,4 +1,4 @@
-Align Sections (Feature) {#alignsectionsfeature}
+Align Sections (Feature) 
 ======
 
 ## Group (Subgroup) ##

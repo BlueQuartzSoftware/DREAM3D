@@ -1,4 +1,4 @@
-Segment Features (C-Axis Misalignment) {#caxissegmentfeatures}
+Segment Features (C-Axis Misalignment) 
 ======
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-Generate IPF Colors {#generateipfcolors}
+Generate IPF Colors 
 =============
 
 ## Group (Subgroup) ##
@@ -22,12 +22,10 @@ This **Filter** will generate _inverse pole figure_ (IPF) colors for cubic, hexa
 -----
 
 ![IPF Color Triangle](Images/IPFFilterLegend.png)
-@image latex Images/IPFFilterLegend.png "IPF Color Triangle" width=6in
 
 -----
 
 ![Example Data Set](Images/IPFColor_1.png)
-@image latex IPFColor_1.png "Example Data Set" width=6in
 
 -----
 

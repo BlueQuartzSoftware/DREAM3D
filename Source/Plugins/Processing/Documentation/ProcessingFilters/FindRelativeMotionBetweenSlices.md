@@ -1,4 +1,4 @@
-Find Relative Motion Between Slices {#findrelativemotionbetweenslices}
+Find Relative Motion Between Slices 
 =============
 
 ## Group (Subgroup) ##

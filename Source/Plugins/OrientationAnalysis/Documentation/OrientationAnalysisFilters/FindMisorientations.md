@@ -1,4 +1,4 @@
-Find Feature Neighbor Misorientations {#findmisorientations}
+Find Feature Neighbor Misorientations 
 ==========
 
 ## Group (Subgroup) ##

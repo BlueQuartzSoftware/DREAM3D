@@ -1,4 +1,4 @@
-Import Images (3D Stack) {#importimagestack}
+Import Images (3D Stack) 
 =============
 
 ## Group (Subgroup) ##
@@ -27,7 +27,6 @@ The user has the option to read the images in as an **Image Geometry** or a **Re
 -----
 
 ![Import Image Stack User Interface](ImportImageStackGUI.png)
-@image latex ImportImageStackGUI.png "Import Image Stack User Interface" width=6in
 
 -----
 
@@ -41,7 +40,6 @@ DREAM.3D contains numerous tools to modify, analyze and segment generic image da
 The regions of the image that represent an **Ensemble** or **Feature** each have a unique identifier such as a grayscale value or unique RGB value.
 
 ![Category 1 Image](Images/Type1.png)
-@image latex Type1.png "Category 1 Image" width=6in
 
 -----
 
@@ -50,7 +48,6 @@ The regions of the image that represent an **Ensemble** or **Feature** each have
 There are regions in the image that represent **Features**, where each region has a unique identifier but there are multiple regions with the same identifier.
 
 ![Category 2 Image](Images/Type2.png)
-@image latex Type2.png "Category 2 Image" width=6in
 
 -----
 
@@ -59,7 +56,6 @@ There are regions in the image that represent **Features**, where each region ha
 Each **Feature** is traced out via another pixel identifier so that **Feature** boundaries are "black" and each **Feature** is "white". This type of image is commonly referred to as a *binary* image.
 
 ![Category 3 Image](Images/Type3.png)
-@image latex Type3.png "Category 3 Image" width=6in
 
 -----
 

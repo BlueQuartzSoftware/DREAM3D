@@ -1,4 +1,4 @@
-Read SPParks Dump File {#spparksdumpreader}
+Read SPParks Dump File 
 =============
 
 ## Group (Subgroup) ##
@@ -28,7 +28,7 @@ This **Filter** reads from a data file in a format used by [SPPARKS Kinetic Mont
     5 944 54 27 5
     6 944 54 28 6
     7 944 54 29 7
-    …..
+       ..
 
 
 ## Parameters ##

@@ -1,4 +1,4 @@
-Stereographic3D {#stereographic3d}
+Stereographic3D 
 =============
 
 ## Group (Subgroup) ##
@@ -11,7 +11,7 @@ This **Filter** takes a set of quaternions as input and projects them into a 3D 
 
 ![Images/Stereographic3D_Equations.png](Images/Stereographic3D_Equations.png)
 
-**Note that if the value of w equals -1.0 then the filter will exit early and present an error. This is because with a value of -1 the output value would divide by zero.  This should not happen if the angle ω falls inside the proper range.**
+**Note that if the value of w equals -1.0 then the filter will exit early and present an error. This is because with a value of -1 the output value would divide by zero.  This should not happen if the angle    falls inside the proper range.**
 
 
 ### Data Layout Notes ###

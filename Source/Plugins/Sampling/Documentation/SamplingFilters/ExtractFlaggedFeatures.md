@@ -1,4 +1,4 @@
-Extract Flagged Features (Rogues Gallery) {#extractflaggedfeatures}
+Extract Flagged Features (Rogues Gallery) 
 =============
 
 ## Group (Subgroup) ##
