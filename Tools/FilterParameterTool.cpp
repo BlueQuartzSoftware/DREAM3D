@@ -233,7 +233,7 @@ void AddPybindMacros(QString absPath)
       didReplace = true;
     }
 
-    if(line.contains("Q_OBJECT"))
+    if(line.contains("PYB11_CREATE_BINDINGS"))
     {
       qObjectMacroLine = currentLine + 1;
     }
