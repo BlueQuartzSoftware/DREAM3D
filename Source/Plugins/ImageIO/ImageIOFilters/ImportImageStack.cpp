@@ -281,7 +281,7 @@ void ImportImageStack::dataCheck()
     {
       tDims[i] = dims[i];
     }
-    m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+    m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
 
     size_t pixelBytes = 0;
 

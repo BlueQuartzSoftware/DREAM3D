@@ -233,7 +233,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[0] = m_Dimensions.x;
   tDims[1] = m_Dimensions.y;
   tDims[2] = m_Dimensions.z;
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0 && cellAttrMat.get() == nullptr)
   {
     return;
@@ -246,7 +246,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[0] = ensembleAM->getNumberOfTuples();
 
   // Create our own Ensemble Attribute Matrix
-  AttributeMatrix::Pointer ensembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+  AttributeMatrix::Pointer ensembleAttrMat = m->createNonPrereqAttributeMatrix(this, getEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0 && cellAttrMat.get() == nullptr) { return; }
 
   QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component

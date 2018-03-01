@@ -135,14 +135,14 @@ void CreateEnsembleInfo::dataCheck()
 
   int numPhases = m_Ensemble.size();
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName());
   if(getErrorCondition() < 0)
   {
     return;
   }
 
   QVector<size_t> tDims(1, numPhases + 1);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+  m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0)
   {
     return;

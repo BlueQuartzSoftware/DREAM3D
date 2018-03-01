@@ -178,7 +178,7 @@ if(SIMPL_USE_MKDOCS)
   file(APPEND "${docsCmakeFile}" "    file(REMOVE \"${docsStampFile}\")\n")
   file(APPEND "${docsCmakeFile}" "  endif()\n")
   file(APPEND "${docsCmakeFile}" "else()\n")
-  file(APPEND "${docsCmakeFile}" "  message(STATUS \"mkdocs: Nothing to do.\")\n")
+  file(APPEND "${docsCmakeFile}" "  message(STATUS \"\${CMAKE_CURRENT_LIST_FILE}: No Work To Do.\")\n")
   file(APPEND "${docsCmakeFile}" "endif()\n")
   file(APPEND "${docsCmakeFile}" "# END OF FILE\n")
 

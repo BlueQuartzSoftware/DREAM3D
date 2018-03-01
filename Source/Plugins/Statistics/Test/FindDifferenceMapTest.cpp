@@ -166,8 +166,7 @@ public:
 
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
-    DataContainer::Pointer m = DataContainer::New();
-    m->setName("FindDifferenceMapTest");
+    DataContainer::Pointer m = DataContainer::New("FindDifferenceMapTest");
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
     QVector<size_t> tDims(1, 100);
