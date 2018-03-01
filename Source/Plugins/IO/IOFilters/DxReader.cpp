@@ -269,7 +269,7 @@ void DxReader::dataCheck()
   }
 
   QVector<size_t> tDims = getDims();
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0)
   {
     return;

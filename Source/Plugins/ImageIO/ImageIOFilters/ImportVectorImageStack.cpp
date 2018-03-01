@@ -263,7 +263,7 @@ void ImportVectorImageStack::dataCheck()
     {
       tDims[i] = dims[i];
     }
-    AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+    AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
     if(getErrorCondition() < 0)
     {
       return;
@@ -287,7 +287,7 @@ void ImportVectorImageStack::dataCheck()
   //  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, ImportVectorImageStack>(this, getDataContainerName());
   //  if(getErrorCondition() < 0) { return; }
 
-  //  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
+  //  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix(this, getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
   //  if(getErrorCondition() < 0) { return; }
 
   //  QVector<size_t> tDims = cellAttrMat->getTupleDimensions();

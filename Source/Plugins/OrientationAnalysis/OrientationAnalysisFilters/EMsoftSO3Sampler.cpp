@@ -173,7 +173,7 @@ void EMsoftSO3Sampler::dataCheck()
   AttributeMatrix::Pointer emsoftAttrMat = m->getAttributeMatrix(getEMsoftAttributeMatrixName());
   if(nullptr == emsoftAttrMat.get())
   {
-    emsoftAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
+    emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
   }
   if(getErrorCondition() < 0 || nullptr == emsoftAttrMat.get())
   {
@@ -181,7 +181,7 @@ void EMsoftSO3Sampler::dataCheck()
   }
 
   //  QVector<size_t> tDims(1, 1);
-  //  AttributeMatrix::Pointer emsoftAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
+  //  AttributeMatrix::Pointer emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
   //  if (getErrorCondition() < 0) { return; }
   //  m->addAttributeMatrix(emsoftAttrMat->getName(),emsoftAttrMat);
 

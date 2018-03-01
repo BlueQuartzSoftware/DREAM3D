@@ -287,7 +287,7 @@ void VerifyTriangleWinding::initialize()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::dataCheck()
 {
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0)
   {
     return;

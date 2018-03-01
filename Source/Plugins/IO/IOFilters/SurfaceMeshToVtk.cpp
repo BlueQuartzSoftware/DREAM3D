@@ -172,7 +172,7 @@ void SurfaceMeshToVtk::dataCheck()
     }
   }
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName, false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, dcName, false);
   if(getErrorCondition() < 0)
   {
     return;

@@ -489,14 +489,14 @@ void FindGBCD::dataCheckSurfaceMesh()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || nullptr == sm.get())
   {
     return;
   }
 
   QVector<size_t> tDims(1, m_CrystalStructuresPtr.lock()->getNumberOfTuples());
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceEnsemble);
+  sm->createNonPrereqAttributeMatrix(this, getFaceEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceEnsemble);
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),

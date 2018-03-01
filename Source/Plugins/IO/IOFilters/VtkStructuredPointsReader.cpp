@@ -173,7 +173,7 @@ void VtkStructuredPointsReader::dataCheck()
   pointData_DataContainer->setGeometry(pointDataGeom);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0)
   {
     return;
@@ -194,7 +194,7 @@ void VtkStructuredPointsReader::dataCheck()
   tDims[0] = 0;
   tDims[1] = 0;
   tDims[2] = 0;
-  AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0)
   {
     return;

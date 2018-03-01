@@ -152,7 +152,7 @@ void SPParksDumpReader::dataCheck()
   }
 
   QVector<size_t> tDims(3, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0)
   {
     return;

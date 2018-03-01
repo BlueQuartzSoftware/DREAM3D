@@ -151,7 +151,7 @@ void NearestPointFuseRegularGrids::dataCheck()
   // We are only copying feature/ensemble attribute matrices here with a deep copy.
   for(QList<QString>::Iterator it = m_AttrMatList.begin(); it != m_AttrMatList.end(); ++it)
   {
-    AttributeMatrix::Pointer tmpAttrMat = mS->getPrereqAttributeMatrix<AbstractFilter>(this, *it, -301);
+    AttributeMatrix::Pointer tmpAttrMat = mS->getPrereqAttributeMatrix(this, *it, -301);
     if(getErrorCondition() >= 0)
     {
       tempAttrMatType = tmpAttrMat->getType();

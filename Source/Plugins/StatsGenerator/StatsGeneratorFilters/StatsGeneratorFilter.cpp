@@ -250,7 +250,7 @@ void StatsGeneratorFilter::dataCheck()
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getStatsGeneratorDataContainerName());
 
     QVector<size_t> tDims(1, m_StatsDataArray->getNumberOfTuples());
-    AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
 
     m_StatsDataArray->setName(getStatsDataArrayName());
     cellEnsembleAttrMat->addAttributeArray(getStatsDataArrayName(), m_StatsDataArray);

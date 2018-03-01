@@ -120,14 +120,14 @@ void SharedFeatureFaceFilter::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0)
   {
     return;
   }
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer facefeatureAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
+  AttributeMatrix::Pointer facefeatureAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
   if(getErrorCondition() < 0 || nullptr == facefeatureAttrMat.get())
   {
     return;

@@ -175,7 +175,7 @@ void CreateLambertSphere::dataCheck()
     m_ImageData = m_ImageDataPtr.lock()->getPointer(0);/* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  DataContainer::Pointer m = dca->getPrereqDataContainer<AbstractFilter>(this, getImageDataArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer m = dca->getPrereqDataContainer(this, getImageDataArrayPath().getDataContainerName(), false);
   if(nullptr == m.get())
   {
     return;
@@ -239,7 +239,7 @@ void CreateLambertSphere::dataCheck()
     vertDC->setGeometry(vertGeom);
     
 //    QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
-//    vertDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+//    vertDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
     
 //    QVector<size_t> cDims = {1};
 //    DataArrayPath path(getVertexDataContainerName(), getVertexAttributeMatrixName(), m_VertexDataName);
@@ -263,9 +263,9 @@ void CreateLambertSphere::dataCheck()
     size_t numEdges = ((imageDims[0] + 1) * imageDims[0]) + ((imageDims[1] + 1) * imageDims[1]);
 
     QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
-    edgeDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+    edgeDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
     tDims[0] = numEdges;
-    edgeDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), tDims, AttributeMatrix::Type::Edge);
+    edgeDC->createNonPrereqAttributeMatrix(this, getEdgeAttributeMatrixName(), tDims, AttributeMatrix::Type::Edge);
     
     // Create Edge Geometry
     QVector<size_t> cDims = {2};
@@ -291,9 +291,9 @@ void CreateLambertSphere::dataCheck()
     }
 
     QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
-    triangleDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+    triangleDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
     tDims[0] = static_cast<size_t>(totalQuads * 2);
-    triangleDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+    triangleDC->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
     
     // Create a Triangle Geometry
     size_t numTris = imageDims[0] * imageDims[1] * 2; // Twice the number of Quads
@@ -320,9 +320,9 @@ void CreateLambertSphere::dataCheck()
     }
 
     QVector<size_t> tDims(1, static_cast<size_t>(totalVerts));
-    quadDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+    quadDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
     tDims[0] = static_cast<size_t>(totalQuads);
-    quadDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+    quadDC->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
 
     // Create a Quad Geometry
     QuadGeom::Pointer quadGeom = QuadGeom::CreateGeometry(totalQuads, m_Vertices, SIMPL::Geometry::QuadGeometry, !getInPreflight());

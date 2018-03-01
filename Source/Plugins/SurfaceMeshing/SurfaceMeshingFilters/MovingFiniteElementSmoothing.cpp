@@ -197,7 +197,7 @@ void MovingFiniteElementSmoothing::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0)
   {
     return;

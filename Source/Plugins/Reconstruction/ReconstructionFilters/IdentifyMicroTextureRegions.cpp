@@ -344,14 +344,14 @@ void IdentifyMicroTextureRegions::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCAxisLocationsArrayPath().getDataContainerName());
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCAxisLocationsArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getCAxisLocationsArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0 || nullptr == m.get())
   {
     return;
   }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  m->createNonPrereqAttributeMatrix(this, getNewCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
 
   QVector<size_t> cDims(1, 3);
 
@@ -563,7 +563,7 @@ void IdentifyMicroTextureRegions::execute()
   tDims[0] = newDimX;
   tDims[1] = newDimY;
   tDims[2] = newDimZ;
-  tmpDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchAM(Temp)", tDims, AttributeMatrix::Type::Cell);
+  tmpDC->createNonPrereqAttributeMatrix(this, "_INTERNAL_USE_ONLY_PatchAM(Temp)", tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0)
   {
     return;

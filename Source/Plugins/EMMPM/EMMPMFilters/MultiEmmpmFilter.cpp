@@ -202,7 +202,7 @@ void MultiEmmpmFilter::dataCheck()
   QVector<size_t> tDims = inAM->getTupleDimensions();
   AttributeMatrix::Pointer outAM = getDataContainerArray()
                                        ->getDataContainer(inputAMPath.getDataContainerName())
-                                       ->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+                                       ->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0 || nullptr == outAM.get())
   {
     return;

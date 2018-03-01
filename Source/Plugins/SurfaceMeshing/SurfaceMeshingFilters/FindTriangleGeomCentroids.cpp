@@ -132,7 +132,7 @@ void FindTriangleGeomCentroids::dataCheck()
     dataArrays.push_back(m_FaceLabelsPtr.lock());
   }
 
-  DataContainer::Pointer tdc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFaceLabelsArrayPath().getDataContainerName());
+  DataContainer::Pointer tdc = getDataContainerArray()->getPrereqDataContainer(this, getFaceLabelsArrayPath().getDataContainerName());
   if(getErrorCondition() < 0)
   {
     return;

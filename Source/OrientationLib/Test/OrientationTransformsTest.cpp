@@ -363,8 +363,7 @@ public:
 
       DataContainerArray::Pointer dca = DataContainerArray::New();
 
-      DataContainer::Pointer m = DataContainer::New();
-      m->setName(DCName);
+      DataContainer::Pointer m = DataContainer::New(DCName);
 
       size_t nStepsCubed = (nSteps + 1) * (nSteps + 1) * (nSteps + 1);
 
