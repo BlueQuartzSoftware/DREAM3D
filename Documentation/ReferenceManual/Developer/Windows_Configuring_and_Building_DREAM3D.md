@@ -1,4 +1,4 @@
-Configuring and Building DREAM.3D on Windows {#windows_configure_and_build_dream3d}
+Configuring and Building DREAM.3D on Windows 
 ========
 
 <a name="prerequisites">

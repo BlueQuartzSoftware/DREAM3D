@@ -1,4 +1,4 @@
-Lammps File Writer{#lammpsfilewriter}
+Lammps File Writer
 ======
 
 ## Group (Subgroup) ##

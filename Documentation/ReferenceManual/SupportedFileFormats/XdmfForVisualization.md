@@ -1,4 +1,4 @@
-Xdmf for Visualization {#xdmf}
+Xdmf for Visualization 
 ========
 
 [Xdmf](http://www.xdmf.org) is an XML file that describes either a regular grid or an unstructured grid data set where the data can be stored in an [HDF5](http://www.hdfgroup.org) file, binary file or with the XML file itself. The user can find out more information for this format at the [Xdmf website](http://www.xdmf.org). DREAM.3D will optionally write out an Xdmf file when writing a DREAM.3D data file so that users can view the processed data easily using the open source [ParaView](http://www.paraview.org) application. In prior versions of DREAM.3D, the only way to view the data was to write out a legacy VTK file, which can be slow and duplicate much of the data that is stored in the .dream3d file. The Xdmf format allows for more efficient approach to visualization

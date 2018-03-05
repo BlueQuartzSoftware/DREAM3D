@@ -1,4 +1,4 @@
-Segment Features (Vector) {#vectorsegmentfeatures}
+Segment Features (Vector) 
 ======
 
 ## Group (Subgroup) ##

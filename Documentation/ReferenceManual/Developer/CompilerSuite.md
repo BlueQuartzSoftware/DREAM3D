@@ -1,4 +1,4 @@
-# Installing a Compiler Suite # {#compiler_suite}
+# Installing a Compiler Suite # 
 
 ## Minimum Supported Compiler Versions ##
 

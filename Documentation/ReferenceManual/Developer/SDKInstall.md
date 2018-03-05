@@ -1,4 +1,4 @@
-Installing the DREAM.3D SDK {#sdk_install}
+Installing the DREAM.3D SDK 
 ========
 
 <a name="prerequisites">

@@ -1,4 +1,4 @@
-Generate Euler Colors {#generateeulercolors}
+Generate Euler Colors 
 ========
 
 ## Group (Subgroup) ##

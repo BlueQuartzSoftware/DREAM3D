@@ -1,4 +1,4 @@
-Goldfeather Reader {#goldfeatherreader}
+Goldfeather Reader 
 ======
 [TOC]
 

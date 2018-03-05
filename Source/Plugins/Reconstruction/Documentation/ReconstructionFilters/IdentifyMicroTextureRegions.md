@@ -1,4 +1,4 @@
-Identify MicroTexture (C-Axis Misalignment) {#identifymicrotextureregions}
+Identify MicroTexture (C-Axis Misalignment) 
 ======
 
 ## Group (Subgroup) ##

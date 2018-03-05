@@ -1,4 +1,4 @@
-# Downloading the Source Code for DREAM.3D # {#source_download}
+# Downloading the Source Code for DREAM.3D # 
 
 **Note**: If you used the DREAM.3D Superbuild to build your SDK, you can skip this page.  The DREAM.3D Superbuild automatically downloads the source code for you.
 

@@ -1,4 +1,4 @@
-Configuring and Building DREAM.3D on Mac OS X {#osx_configure_and_build_dream3d}
+Configuring and Building DREAM.3D on Mac OS X 
 ========
 
 <a name="prerequisites">

@@ -1,4 +1,4 @@
-Find Basal Loading Factor {#findbasalloadingfactor}
+Find Basal Loading Factor 
 ======
 
 ## Group (Subgroup) ##

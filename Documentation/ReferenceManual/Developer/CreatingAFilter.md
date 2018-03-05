@@ -1,4 +1,4 @@
-Creating A Filter {#creating_a_filter}
+Creating A Filter 
 =========
 <a name="prerequisites">
 ## Prerequisites ##
