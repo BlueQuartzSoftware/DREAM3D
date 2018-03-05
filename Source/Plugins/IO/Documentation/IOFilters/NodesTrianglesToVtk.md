@@ -1,4 +1,4 @@
-Nodes & Triangles To Vtk File {#nodestrianglestovtk}
+Nodes & Triangles To Vtk File 
 =============
 
 ## Group (Subgroup) ##

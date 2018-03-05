@@ -1,4 +1,4 @@
-Fit Correlated Distributions To Feature Data {#fitcorrelatedfeaturedata}
+Fit Correlated Distributions To Feature Data 
 =====
 
 ## Group (Subgroup) ##

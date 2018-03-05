@@ -1,4 +1,4 @@
-Generate Face Schuh Misorientation Coloring {#generatefaceschuhmisorientationcoloring}
+Generate Face Schuh Misorientation Coloring 
 ======================
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-VASP Reader{#vaspreader}
+VASP Reader
 =====
 
 ## Group (Subgroup) ##

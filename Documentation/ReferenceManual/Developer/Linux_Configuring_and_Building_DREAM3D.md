@@ -1,4 +1,4 @@
-Configuring and Building DREAM.3D on Linux {#linux_configure_and_build_dream3d}
+Configuring and Building DREAM.3D on Linux 
 ========
 
 <a name="prerequisites">

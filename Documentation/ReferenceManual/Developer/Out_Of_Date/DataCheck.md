@@ -1,4 +1,4 @@
-The DataCheck Function {#dataCheckPage}
+The DataCheck Function 
 ========
 
 Intro goes here...

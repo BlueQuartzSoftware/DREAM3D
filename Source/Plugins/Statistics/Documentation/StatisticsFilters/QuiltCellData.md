@@ -1,4 +1,4 @@
-Quilt Cell Data {#quiltcelldata}
+Quilt Cell Data 
 ==========
 
 

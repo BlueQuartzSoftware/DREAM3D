@@ -1,4 +1,4 @@
-Native DREAM.3D File Format {#nativedream3d}
+Native DREAM.3D File Format 
 ===========
 
 DREAM.3D uses [HDF5](http://www.hdfgroup.org) as its native file format, which means that _any_ software package capable of reading an HDF5 file can read a DREAM.3D file. HDF5 stores data in a hierarchical format with complete descriptors for the data stored in the file. HDF5 is open source and a number of tools exist that allow a user to view and manipulate HDF5 data files. One such tool from The HDF Group is the free [HDFView](http://www.hdfgroup.org/hdf-java-html/hdfview/index.html#download_hdfview), which is a Java based program that can view and edit HDF5 data files. 

@@ -1,4 +1,4 @@
-Segment Features (Sine Parameters) {#sineparamssegmentfeatures}
+Segment Features (Sine Parameters) 
 ======
 
 ## Group (Subgroup) ##

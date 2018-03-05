@@ -1,4 +1,4 @@
-Find Ellipsoid Error {#findellipsoiderror}
+Find Ellipsoid Error 
 ======
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-Find Local Average C-Axis Misalignments {#findlocalaveragecaxismisalignments}
+Find Local Average C-Axis Misalignments 
 ======
 
 ## Group (Subgroup) ##

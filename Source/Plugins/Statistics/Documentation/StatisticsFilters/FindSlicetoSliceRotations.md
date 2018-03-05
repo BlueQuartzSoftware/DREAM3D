@@ -1,4 +1,4 @@
-Find Slice to Slice Crystallographic Misalignments {#findslicetoslicerotations}
+Find Slice to Slice Crystallographic Misalignments 
 ======
 
 ## Group (Subgroup) ##

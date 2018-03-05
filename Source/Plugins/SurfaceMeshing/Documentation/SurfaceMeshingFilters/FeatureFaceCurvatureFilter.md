@@ -1,4 +1,4 @@
-Find Feature Face Curvature {#featurefacecurvaturefilter}
+Find Feature Face Curvature 
 =============
 
 ## Group (Subgroup) ##

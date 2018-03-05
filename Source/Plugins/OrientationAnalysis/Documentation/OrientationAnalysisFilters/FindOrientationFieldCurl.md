@@ -1,4 +1,4 @@
-Find Orientation Field Curl {#findorientationfieldcurl}
+Find Orientation Field Curl 
 ======
 
 

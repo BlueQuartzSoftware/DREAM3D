@@ -1,4 +1,4 @@
-Multi-Material Marching Cubes (Slice at a Time) {#m3cslicebyslice}
+Multi-Material Marching Cubes (Slice at a Time) 
 ======
 
 ## Group (Subgroup) ##
