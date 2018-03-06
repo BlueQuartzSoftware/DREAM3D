@@ -1,4 +1,4 @@
-Find Feature Radial Distribution Function {#findradialdist}
+Find Feature Radial Distribution Function 
 ======
 
 ## Group (Subgroup) ##

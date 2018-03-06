@@ -1,4 +1,4 @@
-Generate Rodrigues Colors {#generaterodriguescolors}
+Generate Rodrigues Colors 
 =============
 
 ## Group (Subgroup) ##

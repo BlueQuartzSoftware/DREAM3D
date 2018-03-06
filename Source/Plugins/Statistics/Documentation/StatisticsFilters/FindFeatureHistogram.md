@@ -1,4 +1,4 @@
-Find Feature Histogram {#findfeaturehistogram}
+Find Feature Histogram 
 ==========
 
 ## Group (Subgroup) ##

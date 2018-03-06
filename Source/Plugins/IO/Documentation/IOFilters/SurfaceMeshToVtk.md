@@ -1,4 +1,4 @@
-Write Vtk PolyData File (From SurfaceMesh) {#surfacemeshtovtk}
+Write Vtk PolyData File (From SurfaceMesh) 
 ======
 
 ## Group (Subgroup) ##

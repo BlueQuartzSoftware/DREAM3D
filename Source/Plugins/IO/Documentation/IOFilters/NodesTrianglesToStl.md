@@ -1,4 +1,4 @@
-Convert Nodes & Triangles To STL Files {#nodestrianglestostl}
+Convert Nodes & Triangles To STL Files 
 =============
 
 ## Group (Subgroup) ##

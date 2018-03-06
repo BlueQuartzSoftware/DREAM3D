@@ -1,4 +1,4 @@
-Find Microtexture Regions {#findmicrotextureregions}
+Find Microtexture Regions 
 =====
 
 ## Group (Subgroup) ##

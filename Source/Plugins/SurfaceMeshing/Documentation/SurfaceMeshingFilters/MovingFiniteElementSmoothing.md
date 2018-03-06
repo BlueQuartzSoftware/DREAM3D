@@ -1,4 +1,4 @@
-Moving Finite Element Smoothing {#movingfiniteelementsmoothing}
+Moving Finite Element Smoothing 
 ======
 
 ## Group (Subgroup) ##

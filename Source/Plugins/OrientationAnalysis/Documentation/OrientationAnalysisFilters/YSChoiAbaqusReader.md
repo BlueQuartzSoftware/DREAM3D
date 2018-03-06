@@ -1,4 +1,4 @@
-Read YS Choi Abaqus Vtk Output File {#yschoiabaqusreader}
+Read YS Choi Abaqus Vtk Output File 
 ======
 ## Group (Subgroup) ##
 

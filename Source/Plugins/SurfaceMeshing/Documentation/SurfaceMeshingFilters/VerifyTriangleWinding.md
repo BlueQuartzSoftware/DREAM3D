@@ -1,4 +1,4 @@
-Verify Triangle Winding {#verifytrianglewinding}
+Verify Triangle Winding 
 ======
 
 ## Group (Subgroup) ##

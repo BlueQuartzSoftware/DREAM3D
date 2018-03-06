@@ -1,4 +1,4 @@
-Saving & Opening Pipelines {#importexportsavepipeline}
+Saving & Opening Pipelines 
 =========
 
 A current **Pipeline** in the **Pipeline View** can be saved to the disk by selecting the _Save_ option in the _File_ menu. Once saved to the disk, the files can be **Bookmarked** for quick access. For more information on **Bookmarks**, visit the [user interface](@ref userinterface) section. A saved **Pipeline** file can be opened by choosing the _Open..._ option in the _File_ menu and selecting the desired **Pipeline** file. 

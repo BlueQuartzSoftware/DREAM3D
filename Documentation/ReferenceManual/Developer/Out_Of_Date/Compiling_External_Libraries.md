@@ -1,4 +1,4 @@
-Compiling External Libraries {#compilingexternallibraries}
+Compiling External Libraries 
 ========
 
 # Online SDK Installation Tutorial #

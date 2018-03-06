@@ -1,4 +1,4 @@
-Correlate Values with Vector Direction {#correlatevalueswithvectordirection}
+Correlate Values with Vector Direction 
 ======
 
 ## Group (Subgroup) ##

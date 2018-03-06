@@ -1,4 +1,4 @@
-Find Feature Saltykov Sizes {#findsaltykovsizes}
+Find Feature Saltykov Sizes 
 ======
 
 ## Group (Subgroup) ##
