@@ -149,10 +149,10 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
   m->setGeometry(image);
 
   // Set the Dimensions, Resolution and Origin of the output data container
-  m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-
+  m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XPoints, m_YPoints, m_ZPoints));
+  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
+  
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XPoints;
   tDims[1] = m_YPoints;

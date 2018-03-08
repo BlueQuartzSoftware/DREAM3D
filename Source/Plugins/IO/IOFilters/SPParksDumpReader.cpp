@@ -374,11 +374,11 @@ int32_t SPParksDumpReader::readHeader()
   }
   
   m_CachedGeometry = m->getGeometryAs<ImageGeom>().get();
-  m_CachedGeometry->setDimensions(nx, ny, nz);
+  m_CachedGeometry->setDimensions(std::make_tuple(nx, ny, nz));
   FloatVec3_t res = getResolution();
-  m_CachedGeometry->setResolution(res.x, res.y, res.z);
+  m_CachedGeometry->setResolution(std::make_tuple(res.x, res.y, res.z));
   FloatVec3_t origin = getOrigin();
-  m_CachedGeometry->setOrigin(origin.x, origin.y, origin.z);
+  m_CachedGeometry->setOrigin(std::make_tuple(origin.x, origin.y, origin.z));
   
   return 0;
 }
@@ -511,8 +511,8 @@ int32_t SPParksDumpReader::readFile()
   }
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;

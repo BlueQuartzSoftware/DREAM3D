@@ -146,7 +146,7 @@ void RegularizeZSpacing::dataCheck()
 
   if(getInPreflight())
   {
-    image->setDimensions(image->getXPoints(), image->getYPoints(), zP);
+    image->setDimensions(std::make_tuple(image->getXPoints(), image->getYPoints(), zP));
     QVector<size_t> tDims(3, 0);
     tDims[0] = image->getXPoints();
     tDims[1] = image->getYPoints();
@@ -268,8 +268,8 @@ void RegularizeZSpacing::execute()
     cellAttrMat->removeAttributeArray(*iter);
     newCellAttrMat->addAttributeArray(*iter, data);
   }
-  m->getGeometryAs<ImageGeom>()->setResolution(xRes, yRes, m_NewZRes);
-  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
+  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(xRes, yRes, m_NewZRes));
+  m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 

@@ -230,7 +230,7 @@ void PhReader::dataCheck()
       ImageGeom::Pointer imageGeom =  m->getGeometryAs<ImageGeom>();
       if(nullptr != imageGeom.get())
       {
-        imageGeom->setDimensions(v[0], v[1], v[2]);
+        imageGeom->setDimensions(v.data());
       }
     }
     else
@@ -278,8 +278,8 @@ void PhReader::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
 
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
 }
 
 // -----------------------------------------------------------------------------
@@ -359,7 +359,7 @@ int32_t PhReader::readHeader()
     ImageGeom::Pointer imageGeom =  m->getGeometryAs<ImageGeom>();
     if(nullptr != imageGeom.get())
     {
-      imageGeom->setDimensions(static_cast<size_t>(nx), static_cast<size_t>(ny), static_cast<size_t>(nz));
+      imageGeom->setDimensions(v.data());
     }
   }
 
@@ -402,8 +402,8 @@ int32_t PhReader::readFile()
   }
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;

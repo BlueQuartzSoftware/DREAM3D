@@ -148,15 +148,18 @@ public:
 
     // Create an instance of each geometry for testing
     ImageGeom::Pointer image2D = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
-    image2D->setDimensions(2, 2, 1);
+    size_t dims[3] = {2, 2, 1};
+    image2D->setDimensions(dims);
     image2D_DC->setGeometry(image2D);
 
     ImageGeom::Pointer image3D = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
-    image3D->setDimensions(2, 2, 2);
+    dims[2] = 2;
+    image3D->setDimensions(dims);
     image3D_DC->setGeometry(image3D);
 
     RectGridGeom::Pointer rectGrid = RectGridGeom::CreateGeometry(SIMPL::Geometry::RectGridGeometry);
-    rectGrid->setDimensions(2, 2, 1);
+    dims[2] = 1;
+    rectGrid->setDimensions(dims);
     FloatArrayType::Pointer xBounds = FloatArrayType::CreateArray(3, SIMPL::Geometry::xBoundsList);
     xBounds->setValue(0, 0.0f);
     xBounds->setValue(1, 1.0f);

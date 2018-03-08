@@ -103,7 +103,8 @@ public:
     dca->addDataContainer(dc);
 
     ImageGeom::Pointer igeom = ImageGeom::New();
-    igeom->setDimensions(5, 5, 1);
+    size_t dims_in[3] = { 5, 5, 1};
+    igeom->setDimensions(dims_in);
     dc->setGeometry(igeom);
     QVector<size_t> dims(3, 0);
     dims[0] = 5;

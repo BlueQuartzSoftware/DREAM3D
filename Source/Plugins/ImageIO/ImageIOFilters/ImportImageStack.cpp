@@ -259,13 +259,13 @@ void ImportImageStack::dataCheck()
 
     if(m_GeometryType == 0)
     {
-      m->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
-      m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-      m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+      m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2])));
+      m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+      m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
     }
     else if(m_GeometryType == 1)
     {
-      m->getGeometryAs<RectGridGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
+      m->getGeometryAs<RectGridGeom>()->setDimensions(std::make_tuple(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2])));
       if(!m_BoundsFile.isEmpty())
       {
         err = readBounds();
@@ -352,8 +352,8 @@ void ImportImageStack::execute()
 
   if(m_GeometryType == 0)
   {
-    m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-    m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+    m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
   }
   else if(m_GeometryType == 1)
   {
@@ -418,11 +418,11 @@ void ImportImageStack::execute()
     {
       if(m_GeometryType == 0)
       {
-        m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size());
+        m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(width, height, fileList.size()));
       }
       else if(m_GeometryType == 1)
       {
-        m->getGeometryAs<RectGridGeom>()->setDimensions(width, height, fileList.size());
+        m->getGeometryAs<RectGridGeom>()->setDimensions(std::make_tuple(width, height, fileList.size()));
       }
 
       const QImage::Format format = reader.imageFormat();

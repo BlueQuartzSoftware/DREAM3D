@@ -235,7 +235,7 @@ void DxReader::dataCheck()
       ImageGeom::Pointer imageGeom =  m->getGeometryAs<ImageGeom>();
       if(nullptr != imageGeom.get())
       {
-        imageGeom->setDimensions(v[0], v[1], v[2]);
+        imageGeom->setDimensions(v.data());
       }
     }
     else
@@ -283,8 +283,8 @@ void DxReader::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
 
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
 
 
 }
@@ -438,7 +438,7 @@ int32_t DxReader::readHeader()
     ImageGeom::Pointer imageGeom =  m->getGeometryAs<ImageGeom>();
     if(nullptr != imageGeom.get())
     {
-      imageGeom->setDimensions(nx, ny, nz);
+      imageGeom->setDimensions(v.data());
     }
   }
 
