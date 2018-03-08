@@ -181,7 +181,7 @@ public:
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     dc1->setGeometry(image);
 
-    dc1->getGeometryAs<ImageGeom>()->setDimensions(X.getMax(), Y.getMax(), Z.getMax());
+    dc1->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(X.getMax(), Y.getMax(), Z.getMax()));
     dc1->getGeometryAs<ImageGeom>()->setOrigin(originalOrigin);
     dc1->getGeometryAs<ImageGeom>()->setResolution(originalRes);
 

@@ -224,7 +224,7 @@ void AvizoRectilinearCoordinateWriter::generateHeader(FILE* f)
   fprintf(f, "\n");
   fprintf(f, "# Dimensions in x-, y-, and z-direction\n");
   size_t x = 0, y = 0, z = 0;
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getDimensions(x, y, z);
+  std::tie(x, y, z) = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getDimensions();
 
   fprintf(f, "define Lattice %llu %llu %llu\n", static_cast<unsigned long long>(x), static_cast<unsigned long long>(y), static_cast<unsigned long long>(z));
   fprintf(f, "define Coordinates %llu\n\n", static_cast<unsigned long long>(x + y + z));

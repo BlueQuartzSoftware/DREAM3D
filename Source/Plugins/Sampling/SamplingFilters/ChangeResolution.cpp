@@ -235,8 +235,8 @@ void ChangeResolution::preflight()
     m_ZP = 1;
   }
 
-  image->setDimensions(m_XP, m_YP, m_ZP);
-  image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  image->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
+  image->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
@@ -402,8 +402,8 @@ void ChangeResolution::execute()
     cellAttrMat->removeAttributeArray(*iter);
     newCellAttrMat->addAttributeArray(*iter, data);
   }
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
+  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+  m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 

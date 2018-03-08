@@ -348,7 +348,7 @@ void FindProjectedImageStatistics::execute()
 #endif
 
   size_t xP = 0, yP = 0, zP = 0;
-  m->getGeometryAs<ImageGeom>()->getDimensions(xP, yP, zP);
+  std::tie(xP, yP, zP) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "_INTERNAL_USE_ONLY_startingPoints");
   int32_t* startPoints = nullptr;

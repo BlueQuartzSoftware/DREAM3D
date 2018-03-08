@@ -210,7 +210,7 @@ protected:
     int64_t nx = m_XDim;
     int64_t ny = m_YDim;
     int64_t nz = m_ZDim;
-    m->getGeometryAs<ImageGeom>()->setDimensions(nx, ny, nz);
+    m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(nx, ny, nz));
     getDataContainerArray()->addDataContainer(m);
     QVector<size_t> tDims(3, 0);
     tDims[0] = nx;

@@ -168,10 +168,8 @@ void FindFeatureCentroids::find_centroids()
   float yRes = imageGeom->getYRes();
   float zRes = imageGeom->getZRes();
 
-  float xOrigin = 0.0f;
-  float yOrigin = 0.0f;
-  float zOrigin = 0.0f;
-  imageGeom->getOrigin(xOrigin, yOrigin, zOrigin);
+  float origin[3] = { 0.0f, 0.0f, 0.0f};
+  imageGeom->getOrigin(origin);
 
   size_t zStride = 0;
   size_t yStride = 0;
@@ -201,9 +199,9 @@ void FindFeatureCentroids::find_centroids()
       featurecenters[i * 4 + 1] = featurecenters[i * 4 + 1] / featurecenters[i * 4 + 0];
       featurecenters[i * 4 + 2] = featurecenters[i * 4 + 2] / featurecenters[i * 4 + 0];
       featurecenters[i * 4 + 3] = featurecenters[i * 4 + 3] / featurecenters[i * 4 + 0];
-      m_Centroids[3 * i] = featurecenters[i * 4 + 1] + xOrigin;
-      m_Centroids[3 * i + 1] = featurecenters[i * 4 + 2] + yOrigin;
-      m_Centroids[3 * i + 2] = featurecenters[i * 4 + 3] + zOrigin;
+      m_Centroids[3 * i] = featurecenters[i * 4 + 1] + origin[0];
+      m_Centroids[3 * i + 1] = featurecenters[i * 4 + 2] + origin[1];
+      m_Centroids[3 * i + 2] = featurecenters[i * 4 + 3] + origin[2];
     }
   }
 }
