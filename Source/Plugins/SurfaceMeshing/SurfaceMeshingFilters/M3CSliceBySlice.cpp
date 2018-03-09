@@ -465,7 +465,7 @@ void M3CSliceBySlice::execute()
   float res[3];
   float origin[3];
 
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  /* FIXME: ImageGeom */ std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
   /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
   /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
@@ -684,7 +684,7 @@ void M3CSliceBySlice::execute()
 bool M3CSliceBySlice::volumeHasGhostLayer()
 {
   size_t fileDim[3];
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName()) /* FIXME: ImageGeom */->getGeometryAs<ImageGeom>()->getDimensions(fileDim);
+  std::tie(fileDim[0], fileDim[1], fileDim[2]) = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getDimensions();
   size_t index = 0;
   int32_t* p = m_FeatureIds;
   bool p_value = false;
@@ -734,7 +734,7 @@ int32_t M3CSliceBySlice::volumeHasFeatureValuesOfZero()
 {
   size_t fileDim[3];
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(fileDim);
+  /* FIXME: ImageGeom */ std::tie(fileDim[0], fileDim[1], fileDim[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int32_t count = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
@@ -780,7 +780,7 @@ void M3CSliceBySlice::renumberVoxelFeatureIds(int32_t gid)
 {
   size_t fileDim[3];
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(fileDim);
+  /* FIXME: ImageGeom */ std::tie(fileDim[0], fileDim[1], fileDim[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int32_t count = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 

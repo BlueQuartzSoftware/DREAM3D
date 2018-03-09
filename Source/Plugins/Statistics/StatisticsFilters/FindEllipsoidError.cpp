@@ -251,9 +251,10 @@ void FindEllipsoidError::execute()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
 
   m_ScaleFator = 1.0 / xRes;
   if(yRes > xRes && yRes > zRes)
@@ -291,9 +292,10 @@ void FindEllipsoidError::find_error2D()
   size_t yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
   size_t zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
 
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  // float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
 
   float xsquared, ysquared, asquared, bsquared, xc, yc, theta;
   int32_t xcoord, ycoord;

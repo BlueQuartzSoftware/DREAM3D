@@ -212,8 +212,8 @@ void NearestPointFuseRegularGrids::execute()
   float sampleRes[3] = {0.0f, 0.0f, 0.0f};
   float refOrigin[3] = {0.0f, 0.0f, 0.0f};
   float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-  refDC->getGeometryAs<ImageGeom>()->getDimensions(_refDims);
-  sampleDC->getGeometryAs<ImageGeom>()->getDimensions(_sampleDims);
+  std::tie(_refDims[0], _refDims[1], _refDims[2]) = refDC->getGeometryAs<ImageGeom>()->getDimensions();
+  std::tie(_sampleDims[0], _sampleDims[1], _sampleDims[2]) = sampleDC->getGeometryAs<ImageGeom>()->getDimensions();
   refDC->getGeometryAs<ImageGeom>()->getResolution(refRes);
   sampleDC->getGeometryAs<ImageGeom>()->getResolution(sampleRes);
   refDC->getGeometryAs<ImageGeom>()->getOrigin(refOrigin);

@@ -483,9 +483,9 @@ void ImportImageStack::execute()
 // -----------------------------------------------------------------------------
 int ImportImageStack::readBounds()
 {
-  size_t dims[3];
+  size_t dims[3] = {0, 0, 0};
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
-  m->getGeometryAs<RectGridGeom>()->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<RectGridGeom>()->getDimensions();
 
   FloatArrayType::Pointer xbounds = FloatArrayType::CreateArray(dims[0] + 1, SIMPL::Geometry::xBoundsList);
   FloatArrayType::Pointer ybounds = FloatArrayType::CreateArray(dims[1] + 1, SIMPL::Geometry::yBoundsList);

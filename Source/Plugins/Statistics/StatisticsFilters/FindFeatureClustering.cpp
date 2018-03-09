@@ -275,11 +275,17 @@ void FindFeatureClustering::find_clustering()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_EquivalentDiametersArrayPath.getDataContainerName());
 
   size_t dims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
-  sizex = float(dims[0]) * m->getGeometryAs<ImageGeom>()->getXRes();
-  sizey = float(dims[1]) * m->getGeometryAs<ImageGeom>()->getYRes();
-  sizez = float(dims[2]) * m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+
+  sizex = dims[0] * xRes;
+  sizey = dims[1] * yRes;
+  sizez = dims[2] * zRes;
+
   totalvol = sizex * sizey * sizez;
   totalpoints = static_cast<float>(dims[0] * dims[1] * dims[2]);
 
@@ -289,10 +295,8 @@ void FindFeatureClustering::find_clustering()
   boxdims[1] = sizey;
   boxdims[2] = sizez;
 
-  std::vector<float> boxres(3);
-  boxres[0] = m->getGeometryAs<ImageGeom>()->getXRes();
-  boxres[1] = m->getGeometryAs<ImageGeom>()->getYRes();
-  boxres[2] = m->getGeometryAs<ImageGeom>()->getZRes();
+  std::vector<float> boxres = {0.0f, 0.0f, 0.0f};
+  std::tie(boxres.at(0), boxres.at(1), boxres.at(2)) = m->getGeometryAs<ImageGeom>()->getResolution();
 
   for(size_t i = 1; i < totalFeatures; i++)
   {

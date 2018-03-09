@@ -265,7 +265,7 @@ int M3CEntireVolume::createMesh()
   /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
   int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   size_t dims[3] = {0, 0, 0};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  /* FIXME: ImageGeom */ std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   size_t fileDim[3] = {dims[0], dims[1], dims[2]};
   size_t posDim[3] = {fileDim[0] + 1, fileDim[1] + 1, fileDim[2] + 1};

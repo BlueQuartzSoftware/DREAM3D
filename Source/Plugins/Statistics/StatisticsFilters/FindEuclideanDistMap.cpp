@@ -86,9 +86,7 @@ class ComputeDistanceMapImpl
     {
     }
 
-    virtual ~ComputeDistanceMapImpl()
-    {
-    }
+    virtual ~ComputeDistanceMapImpl() = default;
 
     void operator()() const
     {
@@ -103,9 +101,10 @@ class ComputeDistanceMapImpl
       int64_t xpoints = static_cast<int64_t>(imageGeom->getXPoints());
       int64_t ypoints = static_cast<int64_t>(imageGeom->getYPoints());
       int64_t zpoints = static_cast<int64_t>(imageGeom->getZPoints());
-      double resx = static_cast<double>(imageGeom->getXRes());
-      double resy = static_cast<double>(imageGeom->getYRes());
-      double resz = static_cast<double>(imageGeom->getZRes());
+      double resx = 0.0;
+      double resy = 0.0;
+      double resz = 0.0;
+      std::tie(resx, resy, resz) = imageGeom->getResolution();
 
       neighbors[0] = -xpoints * ypoints;
       neighbors[1] = -xpoints;
@@ -540,7 +539,7 @@ void FindEuclideanDistMap::findDistanceMap()
   std::vector<int32_t> coordination;
 
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
     static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),

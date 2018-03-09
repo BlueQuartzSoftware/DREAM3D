@@ -417,7 +417,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 
   DataContainer::Pointer m = dca->getDataContainer(dcName);
   size_t dims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
   float res[3] = {0.0f, 0.0f, 0.0f};
   m->getGeometryAs<ImageGeom>()->getResolution(res);
 

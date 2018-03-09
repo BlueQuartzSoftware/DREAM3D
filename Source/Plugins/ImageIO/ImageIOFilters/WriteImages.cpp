@@ -175,7 +175,7 @@ void WriteImages::dataCheck()
   }
 
   size_t dims[3] = {0, 0, 0};
-  image->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = image->getDimensions();
   if(0 == m_Plane) // XY plane
   {
     size_t total = dims[0] * dims[1] * 4;
@@ -279,7 +279,7 @@ void WriteImages::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ColorsArrayPath.getDataContainerName());
   size_t dims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int32_t nComp = m_ColorsPtr.lock()->getNumberOfComponents();
 

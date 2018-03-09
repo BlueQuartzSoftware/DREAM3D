@@ -186,7 +186,7 @@ void RegularizeZSpacing::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
   size_t dims[3];
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   std::ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
@@ -200,8 +200,10 @@ void RegularizeZSpacing::execute()
   }
   inFile.close();
 
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
 
   float sizez = zboundvalues[dims[2]];
   size_t m_XP = dims[0];

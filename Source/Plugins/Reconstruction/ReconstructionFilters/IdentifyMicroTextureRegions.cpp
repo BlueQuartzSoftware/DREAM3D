@@ -505,7 +505,7 @@ void IdentifyMicroTextureRegions::execute()
   size_t dcDims[3] = {0, 0, 0};
   float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
   float origin[3] = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
+  std::tie(dcDims[0], dcDims[1], dcDims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
   m->getGeometryAs<ImageGeom>()->getResolution(xRes, yRes, zRes);
   m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 

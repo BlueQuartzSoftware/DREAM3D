@@ -357,15 +357,20 @@ void EstablishMatrixPhase::establish_matrix()
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-  sizex = dims[0] * m->getGeometryAs<ImageGeom>()->getXRes();
-  sizey = dims[1] * m->getGeometryAs<ImageGeom>()->getYRes();
-  sizez = dims[2] * m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+
+  sizex = dims[0] * xRes;
+  sizey = dims[1] * yRes;
+  sizez = dims[2] * zRes;
   totalvol = sizex * sizey * sizez;
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();

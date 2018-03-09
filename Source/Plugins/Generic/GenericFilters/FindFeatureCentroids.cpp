@@ -164,10 +164,10 @@ void FindFeatureCentroids::find_centroids()
   size_t yPoints = imageGeom->getYPoints();
   size_t zPoints = imageGeom->getZPoints();
 
-  float xRes = imageGeom->getXRes();
-  float yRes = imageGeom->getYRes();
-  float zRes = imageGeom->getZRes();
-
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
   float origin[3] = { 0.0f, 0.0f, 0.0f};
   imageGeom->getOrigin(origin);
 

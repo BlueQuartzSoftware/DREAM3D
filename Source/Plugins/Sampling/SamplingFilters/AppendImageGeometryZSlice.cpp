@@ -137,10 +137,10 @@ void AppendImageGeometryZSlice::dataCheck()
   // Get the Dimensions of the ImageGeometries
 
   size_t inputGeomDims[3] = {0, 0, 0};
-  inputGeometry->getDimensions(inputGeomDims);
+  std::tie(inputGeomDims[0], inputGeomDims[1], inputGeomDims[2]) = inputGeometry->getDimensions();
 
-  QVector<size_t> destGeomDims(3, 0);
-  destGeometry->getDimensions(destGeomDims.data());
+  size_t destGeomDims[3] = {0, 0, 0};
+  std::tie(destGeomDims[0], destGeomDims[1], destGeomDims[2]) = destGeometry->getDimensions();
 
   if(getCheckResolution())
   {
@@ -190,7 +190,7 @@ void AppendImageGeometryZSlice::dataCheck()
     destGeomDims[2] = destGeomDims[2] + inputGeomDims[2];
 
     // Update the existing z dimension of the image geometry and set that value back into the Image Geometry
-    destGeometry->setDimensions(destGeomDims.data());
+    destGeometry->setDimensions(destGeomDims);
 
     size_t totalPoints = 1;
     for(int i = 0; i < 3; i++)
@@ -200,7 +200,8 @@ void AppendImageGeometryZSlice::dataCheck()
         totalPoints *= destGeomDims[i];
       }
     }
-    AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(destGeomDims, destCellAttrMat->getName(), destCellAttrMat->getType());
+    QVector<size_t> dgd = {destGeomDims[0], destGeomDims[1], destGeomDims[2]};
+    AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(dgd, destCellAttrMat->getName(), destCellAttrMat->getType());
     // Create new DataArrays with the new sizes and place into a temp AttributeMatrix which
     // will be inserted into the data container as a replacement for the existing
     // AttributeMatrix
@@ -256,10 +257,10 @@ void AppendImageGeometryZSlice::execute()
   AttributeMatrix::Pointer destCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getDestinationAttributeMatrix(), -8200);
 
   size_t inputGeomDims[3] = {0, 0, 0};
-  inputGeometry->getDimensions(inputGeomDims);
+  std::tie(inputGeomDims[0], inputGeomDims[1], inputGeomDims[2]) = inputGeometry->getDimensions();
 
-  QVector<size_t> destGeomDims(3, 0);
-  destGeometry->getDimensions(destGeomDims.data());
+  size_t destGeomDims[3] = {0, 0, 0};
+  std::tie(destGeomDims[0], destGeomDims[1], destGeomDims[2]) = destGeometry->getDimensions();
 
   size_t tupleOffset = 1;
   for(int i = 0; i < 3; i++)
@@ -275,9 +276,10 @@ void AppendImageGeometryZSlice::execute()
 
   // Now update the geometry with new dimension
   // Update the existing z dimension of the image geometry and set that value back into the Image Geometry
-  destGeometry->setDimensions(destGeomDims.data());
+  destGeometry->setDimensions(destGeomDims);
 
-  destCellAttrMat->resizeAttributeArrays(destGeomDims);
+  QVector<size_t> dgd = {destGeomDims[0], destGeomDims[1], destGeomDims[2]};
+  destCellAttrMat->resizeAttributeArrays(dgd);
 
   QList<QString> voxelArrayNames = destCellAttrMat->getAttributeArrayNames();
   for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)

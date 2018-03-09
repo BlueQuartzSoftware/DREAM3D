@@ -353,7 +353,7 @@ void QuickSurfaceMesh::execute()
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
 
   size_t udims[3] = {0, 0, 0};
-  grid->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = grid->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
