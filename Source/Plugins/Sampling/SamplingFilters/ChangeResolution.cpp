@@ -214,11 +214,16 @@ void ChangeResolution::preflight()
   size_t dims[3] = {0, 0, 0};
 
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-  image->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = image->getDimensions();
 
-  float sizex = (dims[0]) * image->getXRes();
-  float sizey = (dims[1]) * image->getYRes();
-  float sizez = (dims[2]) * image->getZRes();
+  float sizex = 0.0f;
+  float sizey = 0.0f;
+  float sizez = 0.0f;
+  std::tie(sizex, sizey, sizez) = m->getGeometryAs<ImageGeom>()->getResolution();
+  sizex *= static_cast<float>(dims[0]);
+  sizey *= static_cast<float>(dims[1]);
+  sizez *= static_cast<float>(dims[2]);
+
   size_t m_XP = size_t(sizex / m_Resolution.x);
   size_t m_YP = size_t(sizey / m_Resolution.y);
   size_t m_ZP = size_t(sizez / m_Resolution.z);
@@ -304,8 +309,12 @@ void ChangeResolution::execute()
   {
     m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
   }
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
 
-  if(m->getGeometryAs<ImageGeom>()->getXRes() == m_Resolution.x && m->getGeometryAs<ImageGeom>()->getYRes() == m_Resolution.y && m->getGeometryAs<ImageGeom>()->getZRes() == m_Resolution.z)
+  if(xRes == m_Resolution.x && yRes == m_Resolution.y && zRes == m_Resolution.z)
   {
     return;
   }
@@ -313,11 +322,16 @@ void ChangeResolution::execute()
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
 
   size_t dims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
-  float sizex = (dims[0]) * m->getGeometryAs<ImageGeom>()->getXRes();
-  float sizey = (dims[1]) * m->getGeometryAs<ImageGeom>()->getYRes();
-  float sizez = (dims[2]) * m->getGeometryAs<ImageGeom>()->getZRes();
+  float sizex = 0.0f;
+  float sizey = 0.0f;
+  float sizez = 0.0f;
+  std::tie(sizex, sizey, sizez) = m->getGeometryAs<ImageGeom>()->getResolution();
+  sizex *= static_cast<float>(dims[0]);
+  sizey *= static_cast<float>(dims[1]);
+  sizez *= static_cast<float>(dims[2]);
+
   size_t m_XP = size_t(sizex / m_Resolution.x);
   size_t m_YP = size_t(sizey / m_Resolution.y);
   size_t m_ZP = size_t(sizez / m_Resolution.z);

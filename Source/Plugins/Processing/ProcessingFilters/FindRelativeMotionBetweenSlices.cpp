@@ -669,9 +669,11 @@ void FindRelativeMotionBetweenSlices::execute()
   }
 
   float v[3];
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+
   for(size_t i = 0; i < totalPoints; i++)
   {
     v[0] = m_MotionDirection[3 * i + 0] * xRes;

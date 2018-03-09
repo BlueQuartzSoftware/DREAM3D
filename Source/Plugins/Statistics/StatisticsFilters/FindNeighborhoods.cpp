@@ -234,7 +234,7 @@ void FindNeighborhoods::find_neighborhoods()
   float m_OriginX = 0.0f, m_OriginY = 0.0f, m_OriginZ = 0.0f;
   m->getGeometryAs<ImageGeom>()->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   size_t xbin = 0, ybin = 0, zbin = 0;
   std::vector<int64_t> bins(3 * totalFeatures, 0);

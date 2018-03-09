@@ -191,9 +191,9 @@ void QuiltCellData::dataCheck()
 
   // Establish the dimensions, resolutions and origin of the new data container
   size_t dcDims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  float res[3] = {m_QuiltStep.x * m->getGeometryAs<ImageGeom>()->getXRes(), m_QuiltStep.y * m->getGeometryAs<ImageGeom>()->getYRes(), m_QuiltStep.z * m->getGeometryAs<ImageGeom>()->getZRes()};
-
+  std::tie(dcDims[0], dcDims[1], dcDims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  float res[3] = {0.0f, 0.0f, 0.0f};
+  std::tie(res[0], res[1], res[2]) = m->getGeometryAs<ImageGeom>()->getResolution();
   // Create a new DataContainer
   DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName());
   if(getErrorCondition() < 0)
@@ -352,9 +352,9 @@ void QuiltCellData::execute()
   DataContainer::Pointer m2 = getDataContainerArray()->getDataContainer(getOutputDataContainerName());
 
   size_t dcDims[3];
-  m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
+  std::tie(dcDims[0], dcDims[1], dcDims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
   size_t dc2Dims[3];
-  m2->getGeometryAs<ImageGeom>()->getDimensions(dc2Dims[0], dc2Dims[1], dc2Dims[2]);
+  std::tie(dc2Dims[0], dc2Dims[1], dc2Dims[2]) = m2->getGeometryAs<ImageGeom>()->getDimensions();
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
   if(nullptr == inputData.get())

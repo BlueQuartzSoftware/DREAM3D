@@ -212,9 +212,10 @@ void FindMicroTextureRegions::find_microtextureregions()
   float xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
   float yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
   float zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
 
   // Initialize every element to 0.0 or max Dimension
   for(size_t i = 0; i < nummicrotextureregions * 1; i++)

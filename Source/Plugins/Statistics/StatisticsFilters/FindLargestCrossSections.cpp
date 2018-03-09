@@ -147,7 +147,7 @@ void FindLargestCrossSections::dataCheck()
   }
 
   size_t dims[3] = {0, 0, 0};
-  image->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = image->getDimensions();
 
   if(dims[0] <= 1 || dims[1] <= 1 || dims[2] <= 1)
   {
@@ -189,12 +189,18 @@ void FindLargestCrossSections::find_crosssections()
   size_t istride = 0, jstride = 0, kstride = 0;
   size_t point = 0, gnum = 0;
 
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+
   if(m_Plane == 0)
   {
     outPlane = m->getGeometryAs<ImageGeom>()->getZPoints();
     inPlane1 = m->getGeometryAs<ImageGeom>()->getXPoints();
     inPlane2 = m->getGeometryAs<ImageGeom>()->getYPoints();
-    res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes();
+
+    res_scalar = xRes * yRes;
     stride1 = inPlane1 * inPlane2;
     stride2 = 1;
     stride3 = inPlane1;
@@ -204,7 +210,7 @@ void FindLargestCrossSections::find_crosssections()
     outPlane = m->getGeometryAs<ImageGeom>()->getYPoints();
     inPlane1 = m->getGeometryAs<ImageGeom>()->getXPoints();
     inPlane2 = m->getGeometryAs<ImageGeom>()->getZPoints();
-    res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getZRes();
+    res_scalar = xRes * zRes;
     stride1 = inPlane1;
     stride2 = 1;
     stride3 = inPlane1 * inPlane2;
@@ -214,7 +220,7 @@ void FindLargestCrossSections::find_crosssections()
     outPlane = m->getGeometryAs<ImageGeom>()->getXPoints();
     inPlane1 = m->getGeometryAs<ImageGeom>()->getYPoints();
     inPlane2 = m->getGeometryAs<ImageGeom>()->getZPoints();
-    res_scalar = m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
+    res_scalar = yRes * zRes;
     stride1 = 1;
     stride2 = inPlane1;
     stride3 = inPlane1 * inPlane2;

@@ -1087,18 +1087,16 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
-  m_SizeX = static_cast<float>(dims[0] * m->getGeometryAs<ImageGeom>()->getXRes());
-  m_SizeY = static_cast<float>(dims[1] * m->getGeometryAs<ImageGeom>()->getYRes());
-  m_SizeZ = static_cast<float>(dims[2] * m->getGeometryAs<ImageGeom>()->getZRes());
+  std::tie(m_SizeX, m_SizeY, m_SizeZ) = m->getGeometryAs<ImageGeom>()->getResolution();
+  m_SizeX *= static_cast<float>(dims[0]);
+  m_SizeY *= static_cast<float>(dims[1]);
+  m_SizeZ *= static_cast<float>(dims[2]);
   m_TotalVol = m_SizeX * m_SizeY * m_SizeZ;
 
   // Making a double to prevent float overflow on incrementing
@@ -1112,7 +1110,13 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
   float totalprimaryvol = static_cast<float>(totalprimaryvolTEMP);
-  totalprimaryvol = totalprimaryvol * (m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes());
+
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+
+  totalprimaryvol = totalprimaryvol * xRes * yRes * zRes;
 
   float change = 0.0f;
   int32_t phase = 0;
@@ -1718,9 +1722,15 @@ Int32ArrayType::Pointer PackPrimaryPhases::initializePackingGrid()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
-  m_PackingRes[0] = m->getGeometryAs<ImageGeom>()->getXRes() * 2.0f;
-  m_PackingRes[1] = m->getGeometryAs<ImageGeom>()->getYRes() * 2.0f;
-  m_PackingRes[2] = m->getGeometryAs<ImageGeom>()->getZRes() * 2.0f;
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+
+  std::tie(m_PackingRes[0], m_PackingRes[1], m_PackingRes[2]) = m->getGeometryAs<ImageGeom>()->getResolution();
+  m_PackingRes[0] *= 2.0f;
+  m_PackingRes[1] *= 2.0f;
+  m_PackingRes[2] *= 2.0f;
 
   m_HalfPackingRes[0] = m_PackingRes[0] * 0.5f;
   m_HalfPackingRes[1] = m_PackingRes[1] * 0.5f;
@@ -2617,7 +2627,7 @@ void PackPrimaryPhases::assignVoxels()
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumberOfTuples();
 
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -2634,9 +2644,10 @@ void PackPrimaryPhases::assignVoxels()
 
   int64_t xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
 
-  float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
-  float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
-  float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
   float res[3] = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_newowners");
@@ -3032,7 +3043,7 @@ void PackPrimaryPhases::cleanupFeatures()
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumberOfTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -3067,7 +3078,12 @@ void PackPrimaryPhases::cleanupFeatures()
     m_GSizes[i] = 0;
   }
 
-  float resConst = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+  float zRes = 0.0f;
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+
+  float resConst = xRes * yRes * zRes;
   const double k_PiOver6 = M_PI / 6.0;
   for(size_t i = 0; i < totalPoints; i++)
   {

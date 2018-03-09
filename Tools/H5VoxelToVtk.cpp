@@ -151,7 +151,7 @@ int main(int argc, char** argv)
 //   addErrorMessages(h5Reader->getErrorMessages());
     return EXIT_FAILURE;
   }
-  m->getDimensions(dcDims);
+  std::tie(dcDims[0], dcDims[1], dcDims[2]) = m->getDimensions();
   m->getResolution(spacing);
   m->getOrigin(origin);
 

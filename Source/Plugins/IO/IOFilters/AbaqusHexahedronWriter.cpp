@@ -201,7 +201,7 @@ void AbaqusHexahedronWriter::execute()
   DataContainer::Pointer r = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   size_t cDims[3] = {0, 0, 0};
-  r->getGeometryAs<ImageGeom>()->getDimensions(cDims);
+  std::tie(cDims[0], cDims[1], cDims[2]) = r->getGeometryAs<ImageGeom>()->getDimensions();
   size_t pDims[3] = {cDims[0] + 1, cDims[1] + 1, cDims[2] + 1};
   float origin[3] = {0.0f, 0.0f, 0.0f};
   r->getGeometryAs<ImageGeom>()->getOrigin(origin);

@@ -314,7 +314,7 @@ int32_t INLWriter::writeFile()
 
   int32_t err = 0;
   size_t dims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
   float res[3] = {0.0f, 0.0f, 0.0f};
   m->getGeometryAs<ImageGeom>()->getResolution(res);
   float origin[3] = {0.0f, 0.0f, 0.0f};

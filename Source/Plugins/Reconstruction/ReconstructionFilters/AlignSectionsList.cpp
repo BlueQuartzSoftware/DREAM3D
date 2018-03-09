@@ -165,7 +165,7 @@ void AlignSectionsList::find_shifts(std::vector<int64_t>& xshifts, std::vector<i
   ImageGeom::Pointer geom = m->getGeometryAs<ImageGeom>();
 
   size_t udims[3] = {0, 0, 0};
-  geom->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = geom->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),

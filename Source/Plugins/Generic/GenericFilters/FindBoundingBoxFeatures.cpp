@@ -348,30 +348,25 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   int32_t move = 0;
 
   int32_t xPoints = 0, yPoints = 0;
-  float xRes = 0.0f, yRes = 0.0f;
-
-
+  float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
 
   if(imageGeom->getXPoints() == 1)
   {
     xPoints = imageGeom->getYPoints();
-    xRes = imageGeom->getYRes();
     yPoints = imageGeom->getZPoints();
-    yRes = imageGeom->getZRes();
+    std::tie(zRes, xRes, yRes) = imageGeom->getResolution();
   }
   if(imageGeom->getYPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
-    xRes = imageGeom->getXRes();
     yPoints = imageGeom->getZPoints();
-    yRes = imageGeom->getZRes();
+    std::tie(xRes, zRes, yRes) = imageGeom->getResolution();
   }
   if(imageGeom->getZPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
-    xRes = imageGeom->getXRes();
     yPoints = imageGeom->getYPoints();
-    yRes = imageGeom->getYRes();
+    std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
   }
 
   boundbox[0] = xOrigin;

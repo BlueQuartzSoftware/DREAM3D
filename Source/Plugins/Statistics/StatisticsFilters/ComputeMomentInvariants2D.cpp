@@ -106,7 +106,7 @@ void ComputeMomentInvariants2D::dataCheck()
   }
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(igeom);
   size_t imageDims[3] = { 0,0,0};
-  imageGeom->getDimensions(imageDims);
+  std::tie(imageDims[0], imageDims[1], imageDims[2]) = imageGeom->getDimensions();
   if (imageDims[2] != 1)
   {
     setErrorCondition(-73000);
@@ -188,7 +188,7 @@ void ComputeMomentInvariants2D::execute()
 
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(igeom);
   size_t volDims[3] = { 0, 0, 0 };
-  imageGeom->getDimensions(volDims);
+  std::tie(volDims[0], volDims[1], volDims[2]) = imageGeom->getDimensions();
 
   Int32ArrayType::Pointer featureIdArray = m_FeatureIdsPtr.lock();
   int32_t numFeatures = static_cast<int32_t>(m_FeatureRectPtr.lock()->getNumberOfTuples());

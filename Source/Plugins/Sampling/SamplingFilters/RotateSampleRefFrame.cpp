@@ -267,11 +267,10 @@ void RotateSampleRefFrame::preflight()
   RotateSampleRefFrameImplArg_t params;
 
   xp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
-  xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
-  yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
-  zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
 
   params.xp = xp;
   params.xRes = xRes;
@@ -441,11 +440,10 @@ void RotateSampleRefFrame::execute()
   RotateSampleRefFrameImplArg_t params;
 
   xp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
-  xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
-  yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
-  zRes = m->getGeometryAs<ImageGeom>()->getZRes();
+
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
 
   params.xp = xp;
   params.xRes = xRes;

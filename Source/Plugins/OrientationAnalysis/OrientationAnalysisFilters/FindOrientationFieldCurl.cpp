@@ -337,7 +337,7 @@ void FindOrientationFieldCurl::execute()
   //  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   //  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t xPoints = static_cast<int64_t>(udims[0]);
   int64_t yPoints = static_cast<int64_t>(udims[1]);

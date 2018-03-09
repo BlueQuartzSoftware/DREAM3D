@@ -260,7 +260,7 @@ int AvizoRectilinearCoordinateWriter::writeData(FILE* f)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t dims[3];
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
   float origin[3];
   m->getGeometryAs<ImageGeom>()->getOrigin(origin);
   float res[3];

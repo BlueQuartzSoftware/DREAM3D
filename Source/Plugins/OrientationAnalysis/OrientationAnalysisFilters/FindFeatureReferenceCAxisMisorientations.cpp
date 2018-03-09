@@ -257,7 +257,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
 
   float w = 0.0f;
   size_t udims[3] = {0, 0, 0};
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   uint32_t maxUInt32 = std::numeric_limits<uint32_t>::max();
   // We have more points than can be allocated on a 32 bit machine. Assert Now.
