@@ -46,6 +46,13 @@
 class FitFeatureData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FitFeatureData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
+    PYB11_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
+    PYB11_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
+    PYB11_PROPERTY(DataArrayPath NewEnsembleArrayArray READ getNewEnsembleArrayArray WRITE setNewEnsembleArrayArray)
 public:
   SIMPL_SHARED_POINTERS(FitFeatureData)
   SIMPL_STATIC_NEW_MACRO(FitFeatureData)

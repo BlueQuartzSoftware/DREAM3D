@@ -50,6 +50,16 @@
 class ImportImageStack : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ImportImageStack SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+    PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+    PYB11_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)
+    PYB11_PROPERTY(int GeometryType READ getGeometryType WRITE setGeometryType)
+    PYB11_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+    PYB11_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
+    PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 public:
   SIMPL_SHARED_POINTERS(ImportImageStack)
   SIMPL_STATIC_NEW_MACRO(ImportImageStack)

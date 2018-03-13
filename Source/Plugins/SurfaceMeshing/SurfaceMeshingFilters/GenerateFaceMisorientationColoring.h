@@ -48,6 +48,12 @@
 class GenerateFaceMisorientationColoring : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateFaceMisorientationColoring SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(QString SurfaceMeshFaceMisorientationColorsArrayName READ getSurfaceMeshFaceMisorientationColorsArrayName WRITE setSurfaceMeshFaceMisorientationColorsArrayName)
 public:
   SIMPL_SHARED_POINTERS(GenerateFaceMisorientationColoring)
   SIMPL_STATIC_NEW_MACRO(GenerateFaceMisorientationColoring)

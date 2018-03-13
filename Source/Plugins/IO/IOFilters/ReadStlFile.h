@@ -46,6 +46,11 @@
 class ReadStlFile : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ReadStlFile SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
+    PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
+    PYB11_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
+    PYB11_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
 public:
   SIMPL_SHARED_POINTERS(ReadStlFile)
   SIMPL_STATIC_NEW_MACRO(ReadStlFile)

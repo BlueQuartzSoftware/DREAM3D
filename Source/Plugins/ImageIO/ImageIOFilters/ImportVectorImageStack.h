@@ -55,6 +55,24 @@
 class ImportVectorImageStack : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ImportVectorImageStack SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(int64_t StartIndex READ getStartIndex WRITE setStartIndex)
+    PYB11_PROPERTY(int64_t EndIndex READ getEndIndex WRITE setEndIndex)
+    PYB11_PROPERTY(int64_t StartComp READ getStartComp WRITE setStartComp)
+    PYB11_PROPERTY(int64_t EndComp READ getEndComp WRITE setEndComp)
+    PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+    PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+    PYB11_PROPERTY(QString InputPath READ getInputPath WRITE setInputPath)
+    PYB11_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)
+    PYB11_PROPERTY(QString Separator READ getSeparator WRITE setSeparator)
+    PYB11_PROPERTY(QString FileSuffix READ getFileSuffix WRITE setFileSuffix)
+    PYB11_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
+    PYB11_PROPERTY(int PaddingDigits READ getPaddingDigits WRITE setPaddingDigits)
+    PYB11_PROPERTY(uint32_t RefFrameZDir READ getRefFrameZDir WRITE setRefFrameZDir)
+    PYB11_PROPERTY(int ImageVector READ getImageVector WRITE setImageVector)
+    PYB11_PROPERTY(QString VectorDataArrayName READ getVectorDataArrayName WRITE setVectorDataArrayName)
 public:
   SIMPL_SHARED_POINTERS(ImportVectorImageStack)
   SIMPL_STATIC_NEW_MACRO(ImportVectorImageStack)

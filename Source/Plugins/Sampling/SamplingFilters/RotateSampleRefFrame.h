@@ -47,6 +47,11 @@
 class RotateSampleRefFrame : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(RotateSampleRefFrame SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+    PYB11_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
+    PYB11_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
+    PYB11_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
 public:
   SIMPL_SHARED_POINTERS(RotateSampleRefFrame)
   SIMPL_STATIC_NEW_MACRO(RotateSampleRefFrame)

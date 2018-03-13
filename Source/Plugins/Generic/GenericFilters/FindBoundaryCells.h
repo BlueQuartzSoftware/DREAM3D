@@ -46,6 +46,11 @@
 class FindBoundaryCells : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindBoundaryCells SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
+    PYB11_PROPERTY(bool IgnoreFeatureZero READ getIgnoreFeatureZero WRITE setIgnoreFeatureZero)
+    PYB11_PROPERTY(bool IncludeVolumeBoundary READ getIncludeVolumeBoundary WRITE setIncludeVolumeBoundary)
 public:
   SIMPL_SHARED_POINTERS(FindBoundaryCells)
   SIMPL_STATIC_NEW_MACRO(FindBoundaryCells)

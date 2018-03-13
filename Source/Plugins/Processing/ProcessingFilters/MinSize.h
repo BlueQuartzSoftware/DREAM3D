@@ -46,6 +46,13 @@
 class MinSize : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(MinSize SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
+    PYB11_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
+    PYB11_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(MinSize)
   SIMPL_STATIC_NEW_MACRO(MinSize)

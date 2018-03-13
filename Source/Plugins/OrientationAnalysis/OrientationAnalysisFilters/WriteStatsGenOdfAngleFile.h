@@ -53,6 +53,16 @@
 class WriteStatsGenOdfAngleFile : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(WriteStatsGenOdfAngleFile SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+    PYB11_PROPERTY(float Weight READ getWeight WRITE setWeight)
+    PYB11_PROPERTY(int Sigma READ getSigma WRITE setSigma)
+    PYB11_PROPERTY(int Delimiter READ getDelimiter WRITE setDelimiter)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(bool ConvertToDegrees READ getConvertToDegrees WRITE setConvertToDegrees)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 public:
   SIMPL_SHARED_POINTERS(WriteStatsGenOdfAngleFile)
   SIMPL_STATIC_NEW_MACRO(WriteStatsGenOdfAngleFile)

@@ -48,6 +48,8 @@
 class TriangleCentroidFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(TriangleCentroidFilter SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(TriangleCentroidFilter)
   SIMPL_STATIC_NEW_MACRO(TriangleCentroidFilter)

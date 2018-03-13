@@ -46,6 +46,12 @@
 class AddBadData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AddBadData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
+    PYB11_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
+    PYB11_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
+    PYB11_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
+    PYB11_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
 public:
   SIMPL_SHARED_POINTERS(AddBadData)
   SIMPL_STATIC_NEW_MACRO(AddBadData)

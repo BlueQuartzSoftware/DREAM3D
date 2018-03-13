@@ -49,6 +49,13 @@
 class FindKernelAvgMisorientations : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindKernelAvgMisorientations SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+    PYB11_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
+    PYB11_PROPERTY(IntVec3_t KernelSize READ getKernelSize WRITE setKernelSize)
 public:
   SIMPL_SHARED_POINTERS(FindKernelAvgMisorientations)
   SIMPL_STATIC_NEW_MACRO(FindKernelAvgMisorientations)

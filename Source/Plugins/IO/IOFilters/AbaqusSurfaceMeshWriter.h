@@ -46,6 +46,9 @@
 class AbaqusSurfaceMeshWriter : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AbaqusSurfaceMeshWriter SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(AbaqusSurfaceMeshWriter)
   SIMPL_STATIC_NEW_MACRO(AbaqusSurfaceMeshWriter)

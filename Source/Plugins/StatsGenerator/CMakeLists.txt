@@ -229,22 +229,26 @@ if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Plugins  )
 endif()
 
-add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
-CMP_AddDefinitions(TARGET ${PLUGIN_NAME})
-set_target_properties(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
-#-------------------------------
-#
-target_include_directories(${PLUGIN_NAME}
-                            PUBLIC
+set(plug_target_name ${PLUGIN_NAME}Plug) 
+add_library(${plug_target_name} SHARED ${${PLUGIN_NAME}_MODULE_SRCS}) 
+CMP_AddDefinitions(TARGET ${plug_target_name}) 
+set_target_properties(${plug_target_name} PROPERTIES  
+                                          FOLDER ${PLUGIN_NAME}Plugin 
+                                          OUTPUT_NAME ${PLUGIN_NAME} 
+                                          ) 
+#------------------------------- 
+# 
+target_include_directories(${plug_target_name}
+                          PUBLIC
                               ${${PLUGIN_NAME}_BINARY_DIR}
                               ${${PLUGIN_NAME}_SOURCE_DIR}
                               ${PLUGINS_SOURCE_DIR}
                               ${PLUGINS_BINARY_DIR}
                               ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters
 )
-#-------------------------------
-#
-target_include_directories(${PLUGIN_NAME}
+#------------------------------- 
+# 
+target_include_directories(${plug_target_name}
                       PUBLIC
                         ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets
                         ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets
@@ -259,9 +263,9 @@ target_include_directories(${PLUGIN_NAME}
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
-PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
+PluginProperties(${plug_target_name} "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
-target_link_libraries(${PLUGIN_NAME}
+target_link_libraries(${plug_target_name}
                     Qt5::Core
                     SIMPLib
                     Qt5::Gui

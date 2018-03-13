@@ -54,6 +54,11 @@
 class SurfaceMeshToNonconformalVtk : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(SurfaceMeshToNonconformalVtk SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
+    PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 public:
   SIMPL_SHARED_POINTERS(SurfaceMeshToNonconformalVtk)
   SIMPL_STATIC_NEW_MACRO(SurfaceMeshToNonconformalVtk)

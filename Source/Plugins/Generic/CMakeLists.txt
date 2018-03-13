@@ -38,7 +38,7 @@ set(${PLUGIN_NAME}_VERSION "1.0")
 set(${PLUGIN_NAME}_VERSION_MAJOR "1")
 set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
-set(Generic_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
+set(${PLUGIN_NAME}_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
 # --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated
@@ -223,13 +223,16 @@ if(NOT MSVC)
 endif()
 
 
-
-add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
-CMP_AddDefinitions(TARGET ${PLUGIN_NAME})
-set_target_properties(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
+set(plug_target_name ${PLUGIN_NAME}Plug)
+add_library(${plug_target_name} SHARED ${${PLUGIN_NAME}_MODULE_SRCS})
+CMP_AddDefinitions(TARGET ${plug_target_name})
+set_target_properties(${plug_target_name} PROPERTIES 
+                                          FOLDER ${PLUGIN_NAME}Plugin
+                                          OUTPUT_NAME ${PLUGIN_NAME}
+                                          )
 #-------------------------------
 #
-target_include_directories(${PLUGIN_NAME}
+target_include_directories(${plug_target_name}
                             PUBLIC
                               ${${PLUGIN_NAME}_BINARY_DIR}
                               ${${PLUGIN_NAME}_SOURCE_DIR}
@@ -239,7 +242,7 @@ target_include_directories(${PLUGIN_NAME}
 )
 #-------------------------------
 #
-target_include_directories(${PLUGIN_NAME}
+target_include_directories(${plug_target_name}
                           PUBLIC
                             ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets
                             ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets
@@ -250,9 +253,9 @@ target_include_directories(${PLUGIN_NAME}
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
-PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
+PluginProperties(${plug_target_name} "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
-target_link_libraries(${PLUGIN_NAME}
+target_link_libraries(${plug_target_name}
                     Qt5::Core
                     SIMPLib
                     OrientationLib
@@ -267,8 +270,21 @@ if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_SAVE}  )
 endif()
 
+# --------------------------------------------------------------------
+# If Testing is enabled, turn on the Unit Tests
+# -------------------------------------------------------------------- 
+# If Testing is enabled, turn on the Unit Tests 
+if(SIMPL_BUILD_TESTING) 
+  include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt) 
+endif() 
+ 
+string(TOLOWER ${PLUGIN_NAME} PLUGIN_NAME_lower) 
+CreatePybind11Module(MODULE_NAME ${PLUGIN_NAME_lower} 
+                    SOURCE_DIR "${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters" 
+                    PATH_TO_STRIP "${PLUGIN_NAME}/${PLUGIN_NAME}Filters" 
+                    OUTPUT_PATH "${${PLUGIN_NAME}_BINARY_DIR}/Wrapping/PythonCore" 
+                    BINARY_DIR "${${PLUGIN_NAME}_BINARY_DIR}" 
+                    MODULE_TEMPLATE_FILE "${SIMPLProj_SOURCE_DIR}/Wrapping/Tools/Pybind11/Templates/PluginModuleCodeTemplate.cpp" 
+                    MODULE_LINK_LIBRARIES ${plug_target_name} 
+) 
 
-
-if(SIMPL_BUILD_TESTING)
-  include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
-endif()

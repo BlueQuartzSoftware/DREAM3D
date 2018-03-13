@@ -47,6 +47,11 @@
 class FindTriangleGeomNeighbors : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindTriangleGeomNeighbors SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixPath READ getFeatureAttributeMatrixPath WRITE setFeatureAttributeMatrixPath)
+    PYB11_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
+    PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
+    PYB11_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindTriangleGeomNeighbors)
   SIMPL_STATIC_NEW_MACRO(FindTriangleGeomNeighbors)

@@ -49,6 +49,9 @@
 class IdentifySample : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(IdentifySample SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(IdentifySample)
   SIMPL_STATIC_NEW_MACRO(IdentifySample)

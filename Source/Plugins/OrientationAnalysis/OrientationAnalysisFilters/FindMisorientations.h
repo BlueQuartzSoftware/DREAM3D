@@ -49,6 +49,14 @@
 class FindMisorientations : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindMisorientations SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+    PYB11_PROPERTY(QString MisorientationListArrayName READ getMisorientationListArrayName WRITE setMisorientationListArrayName)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(QString AvgMisorientationsArrayName READ getAvgMisorientationsArrayName WRITE setAvgMisorientationsArrayName)
+    PYB11_PROPERTY(bool FindAvgMisors READ getFindAvgMisors WRITE setFindAvgMisors)
 public:
   SIMPL_SHARED_POINTERS(FindMisorientations)
   SIMPL_STATIC_NEW_MACRO(FindMisorientations)

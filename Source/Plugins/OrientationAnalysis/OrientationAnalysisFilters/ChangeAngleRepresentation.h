@@ -46,6 +46,9 @@
 class ChangeAngleRepresentation : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ChangeAngleRepresentation SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(ChangeAngleRepresentation)
   SIMPL_STATIC_NEW_MACRO(ChangeAngleRepresentation)

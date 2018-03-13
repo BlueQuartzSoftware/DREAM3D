@@ -48,6 +48,10 @@
 class LosAlamosFFTWriter : public FileWriter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(LosAlamosFFTWriter SUPERCLASS FileWriter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(LosAlamosFFTWriter)
   SIMPL_STATIC_NEW_MACRO(LosAlamosFFTWriter)

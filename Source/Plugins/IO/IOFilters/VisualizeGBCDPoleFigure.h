@@ -52,6 +52,12 @@
 class VisualizeGBCDPoleFigure : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(VisualizeGBCDPoleFigure SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+    PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
+    PYB11_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
+    PYB11_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 public:
   SIMPL_SHARED_POINTERS(VisualizeGBCDPoleFigure)
   SIMPL_STATIC_NEW_MACRO(VisualizeGBCDPoleFigure)

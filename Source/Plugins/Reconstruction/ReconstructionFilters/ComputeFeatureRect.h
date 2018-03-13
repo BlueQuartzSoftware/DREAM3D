@@ -15,6 +15,9 @@
 class ComputeFeatureRect : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ComputeFeatureRect SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
 
 public:
   SIMPL_SHARED_POINTERS(ComputeFeatureRect)

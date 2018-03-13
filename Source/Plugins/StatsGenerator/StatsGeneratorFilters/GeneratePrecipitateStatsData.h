@@ -22,6 +22,28 @@ class PrecipitateStatsData;
 class GeneratePrecipitateStatsData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GeneratePrecipitateStatsData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString PhaseName READ getPhaseName WRITE setPhaseName)
+    PYB11_PROPERTY(int PhaseIndex READ getPhaseIndex WRITE setPhaseIndex)
+    PYB11_PROPERTY(int CrystalSymmetry READ getCrystalSymmetry WRITE setCrystalSymmetry)
+    PYB11_PROPERTY(int MicroPresetModel READ getMicroPresetModel WRITE setMicroPresetModel)
+    PYB11_PROPERTY(double PhaseFraction READ getPhaseFraction WRITE setPhaseFraction)
+    PYB11_PROPERTY(double Mu READ getMu WRITE setMu)
+    PYB11_PROPERTY(double Sigma READ getSigma WRITE setSigma)
+    PYB11_PROPERTY(double MinCutOff READ getMinCutOff WRITE setMinCutOff)
+    PYB11_PROPERTY(double MaxCutOff READ getMaxCutOff WRITE setMaxCutOff)
+    PYB11_PROPERTY(double BinStepSize READ getBinStepSize WRITE setBinStepSize)
+    PYB11_PROPERTY(bool CreateEnsembleAttributeMatrix READ getCreateEnsembleAttributeMatrix WRITE setCreateEnsembleAttributeMatrix)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    PYB11_PROPERTY(bool AppendToExistingAttributeMatrix READ getAppendToExistingAttributeMatrix WRITE setAppendToExistingAttributeMatrix)
+    PYB11_PROPERTY(DataArrayPath SelectedEnsembleAttributeMatrix READ getSelectedEnsembleAttributeMatrix WRITE setSelectedEnsembleAttributeMatrix)
+    PYB11_PROPERTY(DynamicTableData OdfData READ getOdfData WRITE setOdfData)
+    PYB11_PROPERTY(DynamicTableData MdfData READ getMdfData WRITE setMdfData)
+    PYB11_PROPERTY(DynamicTableData AxisOdfData READ getAxisOdfData WRITE setAxisOdfData)
+    PYB11_PROPERTY(FloatVec2_t RdfMinMaxDistance READ getRdfMinMaxDistance WRITE setRdfMinMaxDistance)
+    PYB11_PROPERTY(int RdfNumBins READ getRdfNumBins WRITE setRdfNumBins)
+    PYB11_PROPERTY(FloatVec3_t RdfBoxSize READ getRdfBoxSize WRITE setRdfBoxSize)
 
 public:
   SIMPL_SHARED_POINTERS(GeneratePrecipitateStatsData)

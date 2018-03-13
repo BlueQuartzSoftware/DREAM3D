@@ -56,6 +56,9 @@
 class LammpsFileWriter : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(LammpsFileWriter SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    PYB11_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
 public:
   SIMPL_SHARED_POINTERS(LammpsFileWriter)
   SIMPL_STATIC_NEW_MACRO(LammpsFileWriter)

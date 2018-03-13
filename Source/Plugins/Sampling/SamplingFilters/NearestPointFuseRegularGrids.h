@@ -46,6 +46,9 @@
 class NearestPointFuseRegularGrids : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(NearestPointFuseRegularGrids SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
+    PYB11_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
 public:
   SIMPL_SHARED_POINTERS(NearestPointFuseRegularGrids)
   SIMPL_STATIC_NEW_MACRO(NearestPointFuseRegularGrids)

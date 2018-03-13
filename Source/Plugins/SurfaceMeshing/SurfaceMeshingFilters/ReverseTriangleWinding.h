@@ -48,6 +48,8 @@
 class ReverseTriangleWinding : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ReverseTriangleWinding SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 public:
   SIMPL_SHARED_POINTERS(ReverseTriangleWinding)
   SIMPL_STATIC_NEW_MACRO(ReverseTriangleWinding)

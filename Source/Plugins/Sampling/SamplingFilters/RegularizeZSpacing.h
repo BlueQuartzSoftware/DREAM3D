@@ -46,6 +46,10 @@
 class RegularizeZSpacing : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(RegularizeZSpacing SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes)
 public:
   SIMPL_SHARED_POINTERS(RegularizeZSpacing)
   SIMPL_STATIC_NEW_MACRO(RegularizeZSpacing)

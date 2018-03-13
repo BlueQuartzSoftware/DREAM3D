@@ -48,6 +48,8 @@
 class TriangleAreaFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(TriangleAreaFilter SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)
 public:
   SIMPL_SHARED_POINTERS(TriangleAreaFilter)
   SIMPL_STATIC_NEW_MACRO(TriangleAreaFilter)

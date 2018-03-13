@@ -54,6 +54,11 @@
 class FindMicroTextureRegions : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindMicroTextureRegions SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(QString MicroTextureRegionNumCellsArrayName READ getMicroTextureRegionNumCellsArrayName WRITE setMicroTextureRegionNumCellsArrayName)
+    PYB11_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindMicroTextureRegions)
   SIMPL_STATIC_NEW_MACRO(FindMicroTextureRegions)

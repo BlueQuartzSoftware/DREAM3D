@@ -46,6 +46,9 @@
 class AddOrientationNoise : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AddOrientationNoise SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(AddOrientationNoise)
   SIMPL_STATIC_NEW_MACRO(AddOrientationNoise)

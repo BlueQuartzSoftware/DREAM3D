@@ -47,6 +47,8 @@
 class PhWriter : public FileWriter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(PhWriter SUPERCLASS FileWriter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(PhWriter)
   SIMPL_STATIC_NEW_MACRO(PhWriter)

@@ -51,6 +51,14 @@ class CompareFunctor;
 class ScalarSegmentFeatures : public SegmentFeatures
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ScalarSegmentFeatures SUPERCLASS SegmentFeatures)
+    PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+    PYB11_PROPERTY(DataArrayPath ScalarArrayPath READ getScalarArrayPath WRITE setScalarArrayPath)
+    PYB11_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+    PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 public:
   SIMPL_SHARED_POINTERS(ScalarSegmentFeatures)
   SIMPL_STATIC_NEW_MACRO(ScalarSegmentFeatures)

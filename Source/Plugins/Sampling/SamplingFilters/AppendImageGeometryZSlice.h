@@ -46,6 +46,10 @@
 class AppendImageGeometryZSlice : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AppendImageGeometryZSlice SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
+    PYB11_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
+    PYB11_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
 public:
   SIMPL_SHARED_POINTERS(AppendImageGeometryZSlice)
   SIMPL_STATIC_NEW_MACRO(AppendImageGeometryZSlice)

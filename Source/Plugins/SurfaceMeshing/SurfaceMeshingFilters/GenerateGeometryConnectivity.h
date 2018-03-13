@@ -48,6 +48,10 @@
 class GenerateGeometryConnectivity : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateGeometryConnectivity SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    PYB11_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
+    PYB11_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
 public:
   SIMPL_SHARED_POINTERS(GenerateGeometryConnectivity)
   SIMPL_STATIC_NEW_MACRO(GenerateGeometryConnectivity)

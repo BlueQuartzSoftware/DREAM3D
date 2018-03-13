@@ -21,7 +21,7 @@ target_include_directories(${PLUGIN_NAME}Py PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
   "${SIMPLProj_SOURCE_DIR}/PyBind11"
   )
-target_link_libraries(${PLUGIN_NAME}Py LINK_PUBLIC ${PLUGIN_NAME} LINK_PRIVATE pybind11::module)
+target_link_libraries(${plug_target_name}Py LINK_PUBLIC ${PLUGIN_NAME} LINK_PRIVATE pybind11::module)
 target_compile_features(${PLUGIN_NAME}Py PRIVATE cxx_local_type_template_args)
 set_target_properties(${PLUGIN_NAME}Py PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
                                          SUFFIX "${PYTHON_MODULE_EXTENSION}"

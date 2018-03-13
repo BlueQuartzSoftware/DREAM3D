@@ -48,6 +48,12 @@
 class EnsembleInfoReader : public FileReader
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(EnsembleInfoReader SUPERCLASS FileReader)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+    PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 public:
   SIMPL_SHARED_POINTERS(EnsembleInfoReader)
   SIMPL_STATIC_NEW_MACRO(EnsembleInfoReader)

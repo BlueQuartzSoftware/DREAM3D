@@ -48,6 +48,20 @@
 class CropImageGeometry : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(CropImageGeometry SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+    PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
+    PYB11_PROPERTY(int XMin READ getXMin WRITE setXMin)
+    PYB11_PROPERTY(int YMin READ getYMin WRITE setYMin)
+    PYB11_PROPERTY(int ZMin READ getZMin WRITE setZMin)
+    PYB11_PROPERTY(int XMax READ getXMax WRITE setXMax)
+    PYB11_PROPERTY(int YMax READ getYMax WRITE setYMax)
+    PYB11_PROPERTY(int ZMax READ getZMax WRITE setZMax)
+    PYB11_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
+    PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
+    PYB11_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(CropImageGeometry)
   SIMPL_STATIC_NEW_MACRO(CropImageGeometry)

@@ -49,6 +49,9 @@
 class SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(SampleSurfaceMeshSpecifiedPoints SUPERCLASS SampleSurfaceMesh)
+    PYB11_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
+    PYB11_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
 public:
   SIMPL_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
   SIMPL_STATIC_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)

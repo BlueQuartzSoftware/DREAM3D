@@ -46,6 +46,9 @@
 class FindVolFractions : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindVolFractions SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath VolFractionsArrayPath READ getVolFractionsArrayPath WRITE setVolFractionsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindVolFractions)
   SIMPL_STATIC_NEW_MACRO(FindVolFractions)

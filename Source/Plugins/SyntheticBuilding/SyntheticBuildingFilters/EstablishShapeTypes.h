@@ -47,6 +47,10 @@
 class EstablishShapeTypes : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(EstablishShapeTypes SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+    PYB11_PROPERTY(QString ShapeTypesArrayName READ getShapeTypesArrayName WRITE setShapeTypesArrayName)
+    PYB11_PROPERTY(ShapeType::Types ShapeTypeData READ getShapeTypeData WRITE setShapeTypeData)
 public:
   SIMPL_SHARED_POINTERS(EstablishShapeTypes)
   SIMPL_STATIC_NEW_MACRO(EstablishShapeTypes)

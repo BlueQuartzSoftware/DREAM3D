@@ -71,6 +71,14 @@
 class M3CSliceBySlice : public AbstractFilter
 {
   Q_OBJECT
+  //  PYB11_CREATE_BINDINGS(M3CSliceBySlice SUPERCLASS AbstractFilter)
+  // PYB11_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  // PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+  // PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
+  // PYB11_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
+  // PYB11_PROPERTY(QString SurfaceMeshNodeTypesArrayName READ getSurfaceMeshNodeTypesArrayName WRITE setSurfaceMeshNodeTypesArrayName)
+  // PYB11_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
+  // PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(M3CSliceBySlice)
   SIMPL_STATIC_NEW_MACRO(M3CSliceBySlice)

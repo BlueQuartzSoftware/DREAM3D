@@ -46,6 +46,17 @@
 class FindEuclideanDistMap : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindEuclideanDistMap SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(QString GBDistancesArrayName READ getGBDistancesArrayName WRITE setGBDistancesArrayName)
+    PYB11_PROPERTY(QString TJDistancesArrayName READ getTJDistancesArrayName WRITE setTJDistancesArrayName)
+    PYB11_PROPERTY(QString QPDistancesArrayName READ getQPDistancesArrayName WRITE setQPDistancesArrayName)
+    PYB11_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
+    PYB11_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)
+    PYB11_PROPERTY(bool DoTripleLines READ getDoTripleLines WRITE setDoTripleLines)
+    PYB11_PROPERTY(bool DoQuadPoints READ getDoQuadPoints WRITE setDoQuadPoints)
+    PYB11_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
+    PYB11_PROPERTY(bool CalcManhattanDist READ getCalcManhattanDist WRITE setCalcManhattanDist)
 public:
   SIMPL_SHARED_POINTERS(FindEuclideanDistMap)
   SIMPL_STATIC_NEW_MACRO(FindEuclideanDistMap)

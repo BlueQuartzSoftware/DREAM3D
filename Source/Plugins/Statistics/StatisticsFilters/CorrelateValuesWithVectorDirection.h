@@ -59,6 +59,9 @@
 class CorrelateValuesWithVectorDirection : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(CorrelateValuesWithVectorDirection SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
+    PYB11_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 public:
   SIMPL_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
   SIMPL_STATIC_NEW_MACRO(CorrelateValuesWithVectorDirection)

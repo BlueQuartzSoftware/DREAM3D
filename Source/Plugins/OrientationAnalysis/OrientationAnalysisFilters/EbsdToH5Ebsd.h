@@ -50,6 +50,14 @@
 class EbsdToH5Ebsd : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(EbsdToH5Ebsd SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString InputPath READ getInputPath WRITE setInputPath)
+    PYB11_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)
+    PYB11_PROPERTY(QString FileSuffix READ getFileSuffix WRITE setFileSuffix)
+    PYB11_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
+    PYB11_PROPERTY(int PaddingDigits READ getPaddingDigits WRITE setPaddingDigits)
+    PYB11_PROPERTY(AxisAngleInput_t SampleTransformation READ getSampleTransformation WRITE setSampleTransformation)
+    PYB11_PROPERTY(AxisAngleInput_t EulerTransformation READ getEulerTransformation WRITE setEulerTransformation)
 public:
   SIMPL_SHARED_POINTERS(EbsdToH5Ebsd)
   SIMPL_STATIC_NEW_MACRO(EbsdToH5Ebsd)

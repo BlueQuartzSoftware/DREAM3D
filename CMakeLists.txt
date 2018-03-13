@@ -247,6 +247,8 @@ get_property(DREAM3D_PACKAGE_DEST_PREFIX GLOBAL PROPERTY DREAM3D_PACKAGE_DEST_PR
 
 # ------- Enable the CTest testing. ---------------
 OPTION(SIMPL_BUILD_TESTING "Compile the test programs" ON)
+# -------------------------------------------------------------------- 
+# If Testing is enabled, turn on the Unit Tests 
 if(SIMPL_BUILD_TESTING)
     #ENABLE_TESTING()
     include( CTest )
@@ -425,6 +427,8 @@ endif()
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
+# -------------------------------------------------------------------- 
+# If Testing is enabled, turn on the Unit Tests 
 if(SIMPL_BUILD_TESTING)
     include(${DREAM3DProj_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()

@@ -69,6 +69,12 @@ class ReadCtfDataPrivate;
 class ReadCtfData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ReadCtfData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   Q_DECLARE_PRIVATE(ReadCtfData)
 
 public:

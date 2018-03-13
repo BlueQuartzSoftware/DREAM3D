@@ -47,6 +47,9 @@
 class DxWriter : public FileWriter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(DxWriter SUPERCLASS FileWriter)
+    PYB11_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(DxWriter)
   SIMPL_STATIC_NEW_MACRO(DxWriter)

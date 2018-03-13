@@ -54,6 +54,9 @@
 class FindSaltykovSizes : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindSaltykovSizes SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
+    PYB11_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindSaltykovSizes)
   SIMPL_STATIC_NEW_MACRO(FindSaltykovSizes)

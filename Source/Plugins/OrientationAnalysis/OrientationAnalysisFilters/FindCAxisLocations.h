@@ -48,6 +48,9 @@
 class FindCAxisLocations : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindCAxisLocations SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+    PYB11_PROPERTY(QString CAxisLocationsArrayName READ getCAxisLocationsArrayName WRITE setCAxisLocationsArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindCAxisLocations)
   SIMPL_STATIC_NEW_MACRO(FindCAxisLocations)

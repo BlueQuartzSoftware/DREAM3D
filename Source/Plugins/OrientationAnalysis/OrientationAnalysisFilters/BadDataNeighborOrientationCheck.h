@@ -48,6 +48,13 @@
 class BadDataNeighborOrientationCheck : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(BadDataNeighborOrientationCheck SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
+    PYB11_PROPERTY(int NumberOfNeighbors READ getNumberOfNeighbors WRITE setNumberOfNeighbors)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(BadDataNeighborOrientationCheck)
   SIMPL_STATIC_NEW_MACRO(BadDataNeighborOrientationCheck)

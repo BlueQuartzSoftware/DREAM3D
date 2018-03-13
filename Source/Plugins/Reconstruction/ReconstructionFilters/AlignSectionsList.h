@@ -48,6 +48,9 @@
 class AlignSectionsList : public AlignSections
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AlignSectionsList SUPERCLASS AlignSections)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(bool DREAM3DAlignmentFile READ getDREAM3DAlignmentFile WRITE setDREAM3DAlignmentFile)
 public:
   SIMPL_SHARED_POINTERS(AlignSectionsList)
   SIMPL_STATIC_NEW_MACRO(AlignSectionsList)

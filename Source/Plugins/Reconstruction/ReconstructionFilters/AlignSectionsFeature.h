@@ -51,6 +51,8 @@
 class AlignSectionsFeature : public AlignSections
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AlignSectionsFeature SUPERCLASS AlignSections)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(AlignSectionsFeature)
   SIMPL_STATIC_NEW_MACRO(AlignSectionsFeature)

@@ -46,6 +46,9 @@
 class FindNumFeatures : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindNumFeatures SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindNumFeatures)
   SIMPL_STATIC_NEW_MACRO(FindNumFeatures)

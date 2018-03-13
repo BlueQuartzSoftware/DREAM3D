@@ -46,6 +46,9 @@
 class FindFeatureCentroids : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindFeatureCentroids SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindFeatureCentroids)
   SIMPL_STATIC_NEW_MACRO(FindFeatureCentroids)

@@ -46,6 +46,14 @@
 class VtkStructuredPointsReader : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(VtkStructuredPointsReader SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
+    PYB11_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
+    PYB11_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 public:
   SIMPL_SHARED_POINTERS(VtkStructuredPointsReader)
   SIMPL_STATIC_NEW_MACRO(VtkStructuredPointsReader)

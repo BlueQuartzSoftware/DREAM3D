@@ -15,6 +15,7 @@
 class GenerateFeatureIds : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateFeatureIds SUPERCLASS AbstractFilter)
 public:
   SIMPL_SHARED_POINTERS(GenerateFeatureIds)
   SIMPL_STATIC_NEW_MACRO(GenerateFeatureIds)
@@ -128,6 +129,10 @@ private:
 class CreateDataContainer : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateFeatureIds SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(int64_t XDim READ getXDim WRITE setXDim)
+    PYB11_PROPERTY(int64_t YDim READ getYDim WRITE setYDim)
+    PYB11_PROPERTY(int64_t ZDim READ getZDim WRITE setZDim)
 public:
   SIMPL_SHARED_POINTERS(CreateDataContainer)
   SIMPL_STATIC_NEW_MACRO(CreateDataContainer)

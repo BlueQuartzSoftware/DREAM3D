@@ -46,6 +46,13 @@
 class WriteImages : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(WriteImages SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool FilePrefix READ getFilePrefix WRITE setFilePrefix)
+    PYB11_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+    PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+    PYB11_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+    PYB11_PROPERTY(int Plane READ getPlane WRITE setPlane)
+    PYB11_PROPERTY(DataArrayPath ColorsArrayPath READ getColorsArrayPath WRITE setColorsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(WriteImages)
   SIMPL_STATIC_NEW_MACRO(WriteImages)

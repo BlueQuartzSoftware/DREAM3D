@@ -46,6 +46,9 @@
 class FindSurfaceFeatures : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindSurfaceFeatures SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindSurfaceFeatures)
   SIMPL_STATIC_NEW_MACRO(FindSurfaceFeatures)

@@ -57,6 +57,12 @@
 class VASPReader : public FileReader
 {
     Q_OBJECT
+    PYB11_CREATE_BINDINGS(VASPReader SUPERCLASS FileReader)
+    PYB11_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(QString AtomVelocitiesArrayName READ getAtomVelocitiesArrayName WRITE setAtomVelocitiesArrayName)
+    PYB11_PROPERTY(QString AtomTypesArrayName READ getAtomTypesArrayName WRITE setAtomTypesArrayName)
   public:
     SIMPL_SHARED_POINTERS(VASPReader)
     SIMPL_STATIC_NEW_MACRO(VASPReader)

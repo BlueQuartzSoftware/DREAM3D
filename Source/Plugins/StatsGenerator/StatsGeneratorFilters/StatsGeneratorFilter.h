@@ -49,6 +49,18 @@
 class StatsGeneratorFilter : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(StatsGeneratorFilter SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString StatsGeneratorDataContainerName READ getStatsGeneratorDataContainerName WRITE setStatsGeneratorDataContainerName)
+    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    PYB11_PROPERTY(QString StatsDataArrayName READ getStatsDataArrayName WRITE setStatsDataArrayName)
+    PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+    PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+    PYB11_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
+    PYB11_PROPERTY(StatsDataArray::Pointer StatsDataArray READ getStatsDataArray WRITE setStatsDataArray)
+    PYB11_PROPERTY(UInt32ArrayType::Pointer CrystalStructures READ getCrystalStructures WRITE setCrystalStructures)
+    PYB11_PROPERTY(UInt32ArrayType::Pointer PhaseTypes READ getPhaseTypes WRITE setPhaseTypes)
+    PYB11_PROPERTY(StringDataArray::Pointer PhaseNames READ getPhaseNames WRITE setPhaseNames)
+    PYB11_PROPERTY(DataArrayPath Path READ getPath WRITE setPath)
 
 public:
   SIMPL_SHARED_POINTERS(StatsGeneratorFilter)

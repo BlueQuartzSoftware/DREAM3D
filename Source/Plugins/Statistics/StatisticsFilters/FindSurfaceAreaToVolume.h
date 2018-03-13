@@ -46,6 +46,10 @@
 class FindSurfaceAreaToVolume : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindSurfaceAreaToVolume SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
+    PYB11_PROPERTY(QString SurfaceAreaVolumeRatioArrayName READ getSurfaceAreaVolumeRatioArrayName WRITE setSurfaceAreaVolumeRatioArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindSurfaceAreaToVolume)
   SIMPL_STATIC_NEW_MACRO(FindSurfaceAreaToVolume)

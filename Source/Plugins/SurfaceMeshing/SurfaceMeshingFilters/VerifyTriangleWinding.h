@@ -56,6 +56,8 @@
 class VerifyTriangleWinding : public SurfaceMeshFilter
 {
     Q_OBJECT
+    PYB11_CREATE_BINDINGS(VerifyTriangleWinding SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
   public:
     SIMPL_SHARED_POINTERS(VerifyTriangleWinding)
     SIMPL_STATIC_NEW_MACRO(VerifyTriangleWinding)

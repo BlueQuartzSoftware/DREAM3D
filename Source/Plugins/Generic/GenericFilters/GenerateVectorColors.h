@@ -46,6 +46,11 @@
 class GenerateVectorColors : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateVectorColors SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath VectorsArrayPath READ getVectorsArrayPath WRITE setVectorsArrayPath)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(QString CellVectorColorsArrayName READ getCellVectorColorsArrayName WRITE setCellVectorColorsArrayName)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 public:
   SIMPL_SHARED_POINTERS(GenerateVectorColors)
   SIMPL_STATIC_NEW_MACRO(GenerateVectorColors)

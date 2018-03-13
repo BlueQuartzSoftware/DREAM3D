@@ -49,6 +49,13 @@
 class ErodeDilateBadData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ErodeDilateBadData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
+    PYB11_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
+    PYB11_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
+    PYB11_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
+    PYB11_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(ErodeDilateBadData)
   SIMPL_STATIC_NEW_MACRO(ErodeDilateBadData)

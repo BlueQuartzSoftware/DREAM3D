@@ -57,6 +57,12 @@
 class FindOrientationFieldCurl : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindOrientationFieldCurl SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+    PYB11_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
+    PYB11_PROPERTY(IntVec3_t CurlSize READ getCurlSize WRITE setCurlSize)
 public:
   SIMPL_SHARED_POINTERS(FindOrientationFieldCurl)
   SIMPL_STATIC_NEW_MACRO(FindOrientationFieldCurl)

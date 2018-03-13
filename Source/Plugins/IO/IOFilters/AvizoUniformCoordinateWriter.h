@@ -57,6 +57,11 @@
 class AvizoUniformCoordinateWriter : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AvizoUniformCoordinateWriter SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+    PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
+    PYB11_PROPERTY(QString Units READ getUnits WRITE setUnits)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(AvizoUniformCoordinateWriter)
   SIMPL_STATIC_NEW_MACRO(AvizoUniformCoordinateWriter)

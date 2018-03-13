@@ -48,6 +48,8 @@ class SPParksSitesWriter : public FileWriter
 {
 
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(SPParksSitesWriter SUPERCLASS FileWriter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(SPParksSitesWriter)
   SIMPL_STATIC_NEW_MACRO(SPParksSitesWriter)

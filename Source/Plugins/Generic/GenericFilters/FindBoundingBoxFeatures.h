@@ -46,6 +46,12 @@
 class FindBoundingBoxFeatures : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindBoundingBoxFeatures SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool CalcByPhase READ getCalcByPhase WRITE setCalcByPhase)
+    PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
+    PYB11_PROPERTY(DataArrayPath PhasesArrayPath READ getPhasesArrayPath WRITE setPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
+    PYB11_PROPERTY(QString BiasedFeaturesArrayName READ getBiasedFeaturesArrayName WRITE setBiasedFeaturesArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindBoundingBoxFeatures)
   SIMPL_STATIC_NEW_MACRO(FindBoundingBoxFeatures)

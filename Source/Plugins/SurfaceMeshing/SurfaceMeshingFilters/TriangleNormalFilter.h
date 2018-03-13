@@ -48,6 +48,8 @@
 class TriangleNormalFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(TriangleNormalFilter SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(TriangleNormalFilter)
   SIMPL_STATIC_NEW_MACRO(TriangleNormalFilter)

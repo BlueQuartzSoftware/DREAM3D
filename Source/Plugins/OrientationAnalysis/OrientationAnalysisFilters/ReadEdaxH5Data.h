@@ -58,6 +58,17 @@ class ReadEdaxH5DataPrivate;
 class ReadEdaxH5Data : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ReadEdaxH5Data SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(QStringList SelectedScanNames READ getSelectedScanNames WRITE setSelectedScanNames)
+    PYB11_PROPERTY(int NumberOfScans READ getNumberOfScans WRITE setNumberOfScans)
+    PYB11_PROPERTY(double ZSpacing READ getZSpacing WRITE setZSpacing)
+    PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(bool ReadPatternData READ getReadPatternData WRITE setReadPatternData)
+    PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
   Q_DECLARE_PRIVATE(ReadEdaxH5Data)
 
 public:

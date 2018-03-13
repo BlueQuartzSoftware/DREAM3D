@@ -47,22 +47,28 @@
 class AlignSections : public AbstractFilter
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(AlignSections SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE WriteAlignmentShifts)
+  PYB11_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
+
 public:
   SIMPL_SHARED_POINTERS(AlignSections)
   SIMPL_STATIC_NEW_MACRO(AlignSections)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AlignSections, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AlignSections, AbstractFilter)
 
   virtual ~AlignSections();
 
-  SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
   Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
 
-  SIMPL_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
+  SIMPL_FILTER_PARAMETER(bool, WriteAlignmentShifts)
   Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
+  SIMPL_FILTER_PARAMETER(QString, AlignmentShiftFileName)
   Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
   void updateProgress(size_t p);

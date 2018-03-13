@@ -49,6 +49,13 @@
 class MinNeighbors : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(MinNeighbors SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
+    PYB11_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
+    PYB11_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath NumNeighborsArrayPath READ getNumNeighborsArrayPath WRITE setNumNeighborsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(MinNeighbors)
   SIMPL_STATIC_NEW_MACRO(MinNeighbors)

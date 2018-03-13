@@ -183,10 +183,10 @@ void AddPybindMacros(QString absPath)
   {
     // Read the Source File
     QFileInfo fi(absPath);
-    if (fi.baseName().compare("DataContainerReader") != 0)
-    {
-      return;
-    }
+    // if (fi.baseName().compare("DataContainerReader") != 0)
+    // {
+    //   return;
+    // }
     filterName = fi.baseName();
     QFile source(absPath);
     source.open(QFile::ReadOnly);
@@ -201,7 +201,7 @@ void AddPybindMacros(QString absPath)
 
   QVector<int> lines(0);
   QList<QString> pybindLines;
-
+  bool fileIsFilter = false;
   int qObjectMacroLine = 0;
   int currentLine = 0;
   QString searchString = "SIMPL_FILTER_PARAMETER";
@@ -211,12 +211,12 @@ void AddPybindMacros(QString absPath)
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
   QStringList includes;
-
+  QString superclass("FOO");
   while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
     QString line2 = line;
-
+    
     if(line.contains(searchString))
     {
       line = line.trimmed();
@@ -232,13 +232,66 @@ void AddPybindMacros(QString absPath)
       qDebug() << pybindMacro;
       didReplace = true;
     }
+    
+    if(line.contains(": public AbstractFilter"))
+    {
+      fileIsFilter = true;
+      superclass = "AbstractFilter";
+    }
+    if (line.contains(": public FileReader"))
+    {
+      fileIsFilter = true;
+      superclass = "FileReader";
+    }
+    if( line.contains(": public FileWriter"))
+    {
+      fileIsFilter = true;
+      superclass = "FileWriter";
+    }
+    if(line.contains(": public AlignSections"))
+    {
+      fileIsFilter = true;
+      superclass = "AlignSections";
+    }
+    if(line.contains(": public EMMPMFilter"))
+    {
+      fileIsFilter = true;
+      superclass = "EMMPMFilter";
+    }
+    if(line.contains(": public SegmentFeatures"))
+    {
+      fileIsFilter = true;
+      superclass = "SegmentFeatures";
+    }
+    if(line.contains(": public GroupFeatures"))
+    {
+      fileIsFilter = true;
+      superclass = "GroupFeatures";
+    }
+    if(line.contains(": public SampleSurfaceMesh"))
+    {
+      fileIsFilter = true;
+      superclass = "SampleSurfaceMesh";
+    }
+    if(line.contains(": public SurfaceMeshFilter"))
+    {
+      fileIsFilter = true;
+      superclass = "SurfaceMeshFilter";
+    }
 
+    
+    if(line.contains("Q_OBJECT") && fileIsFilter)
+    {
+      line2 = line2 + "\n    PYB11_CREATE_BINDINGS(" + filterName + " SUPERCLASS " + superclass + ")";
+      line = line + "\n    PYB11_CREATE_BINDINGS(" + filterName + " SUPERCLASS " + superclass + ")";
+
+      qObjectMacroLine = currentLine + 2;
+    }
     if(line.contains("PYB11_CREATE_BINDINGS"))
     {
       qObjectMacroLine = currentLine + 1;
     }
     
-
     outLines.push_back(line2);
     currentLine++;
   }
@@ -287,7 +340,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 int main(int argc, char* argv[])
 {
 
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -305,7 +358,12 @@ int main(int argc, char* argv[])
   qRegisterMetaType<PipelineMessage>();
 
 
-  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
+//  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
+  //ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/Source/Plugins"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREA3D_Plugins"));
+
+
 
   return 0;
 }
