@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
+* Copyright (c) 2009-2017 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -33,15 +33,15 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _OrientationConverter_H_
-#define _OrientationConverter_H_
+#ifndef _orientationConverter_H_
+#define _orientationConverter_H_
 
-#include <iostream>     // std::cout, std::fixed, std::scientific
-
+#include <iostream>
 
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -50,12 +50,22 @@
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+/**
+ * @brief This is the top level superclass for doing the conversions between orientation
+ * representations
+ */
 template<typename T>
 class OrientationConverter
 {
-
   public:
-
     SIMPL_SHARED_POINTERS(OrientationConverter<T> )
     SIMPL_TYPE_MACRO(OrientationConverter<T>)
     SIMPL_CLASS_VERSION(1)
@@ -72,8 +82,7 @@ class OrientationConverter
       UnknownOrientationType
     };
 
-
-    virtual ~OrientationConverter() {}
+    virtual ~OrientationConverter() = default;
 
     /**
     * @brief getOrientationRepresentation
@@ -82,8 +91,8 @@ class OrientationConverter
     virtual OrientationType getOrientationRepresentation() { return UnknownOrientationType; }
 
     /**
-    * @brief convert
-    * @param src
+    * @brief convertRepresentationTo Converts the data to the desired type
+    * @param repType The type of representation to convert to.
     * @return
     */
     void convertRepresentationTo(OrientationType repType)
@@ -135,9 +144,9 @@ class OrientationConverter
     /**
      * @brief compareRepresentations Compares 2 representations of the same type
      * and returns if the values differ only by the tolerance value
-     * @param a
-     * @param b
-     * @param epsilon
+     * @param a Input Orientations
+     * @param b Comparison Orientations
+     * @param epsilon The epsilon to use for the comparison
      * @return
      */
     virtual bool compareRepresentations(T* a, T* b,
@@ -152,18 +161,19 @@ class OrientationConverter
     /**
      * @brief printRepresentation Prints the values of a single representation to
      * an output stream;
-     * @param a
-     * @param label
+     * @param out An output stream
+     * @param a Pointer to print
+     * @param label Optional Label
      */
     virtual void printRepresentation(std::ostream& out, T* a, const std::string& label = std::string("")) = 0;
 
     /**
-    * @brief
+    * @brief Sets/Gets the input orientations
     */
     SIMPL_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, InputData)
 
     /**
-    * @brief
+    * @brief Sets/Gets the output orientations
     */
     SIMPL_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, OutputData)
 
@@ -225,7 +235,7 @@ class OrientationConverter
     static int GetMinIndex() { return 0; }
 
     /**
-     * @brief GetMaxIndex
+     * @brief Returns the maximum index into the arrays of conversion types and representations
      * @return
      */
     static int GetMaxIndex() { return 6; }
@@ -239,27 +249,176 @@ class OrientationConverter
 
 };
 
-#define OC_CONVERT_BODY(OUTSTRIDE, OUT_ARRAY_NAME, CONVERSION_METHOD)\
-  typedef OrientationArray<T> OrientationArray_t;\
-  typename DataArray<T>::Pointer input = this->getInputData();\
-  T* inPtr = input->getPointer(0);\
-  size_t nTuples = input->getNumberOfTuples();\
-  int inStride = input->getNumberOfComponents();\
-  int outStride = OUTSTRIDE;\
-  QVector<size_t> cDims(1, outStride); /* Create the n component (nx1) based array.*/ \
-  typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);\
-  output->initializeWithZeros(); /* Intialize the array with Zeros */ \
-  T* OUT_ARRAY_NAME##Ptr = output->getPointer(0);\
-  for (size_t i = 0; i < nTuples; ++i) { \
-    OrientationArray_t rot(inPtr, inStride); \
-    OrientationArray_t res(OUT_ARRAY_NAME##Ptr, outStride); \
+
+/**
+ * @brief This macro is used to create a functor that wraps a paricular conversion
+ * method with a functor class so it can be passed to the parallel algorithms
+ */
+#define OC_CONVERTOR_FUNCTOR(CLASSNAME, INSTRIDE, OUTSTRIDE, CONVERSION_METHOD)\
+template<typename T>\
+class CLASSNAME {\
+public:\
+  CLASSNAME()  { }\
+  void operator()(T* eu, T* om) { \
+    using OrientationArray_t = OrientationArray<T>;\
+    OrientationArray_t rot(eu, INSTRIDE); \
+    OrientationArray_t res(om, OUTSTRIDE); \
     OrientationTransforms<OrientationArray_t, T>::CONVERSION_METHOD(rot, res); \
-    inPtr = inPtr + inStride; /* Increment input pointer */ \
-    OUT_ARRAY_NAME##Ptr = OUT_ARRAY_NAME##Ptr + outStride; /* Increment output pointer*/ \
-  }\
-  this->setOutputData(output);
+   }\
+private:\
+};
+
+/**
+ * @brief This contains all the functors that represent all possible conversion routines
+ * between orientation representations
+ */
+namespace Convertors {
+  /* Euler Functors  */
+  OC_CONVERTOR_FUNCTOR(Eu2Om, 3, 9, eu2om)
+  OC_CONVERTOR_FUNCTOR(Eu2Qu, 3, 4, eu2qu)
+  OC_CONVERTOR_FUNCTOR(Eu2Ax, 3, 4, eu2ax)
+  OC_CONVERTOR_FUNCTOR(Eu2Ro, 3, 4, eu2ro)
+  OC_CONVERTOR_FUNCTOR(Eu2Ho, 3, 3, eu2ho)
+  OC_CONVERTOR_FUNCTOR(Eu2Cu, 3, 3, eu2cu)
+  
+  /* OrientationMatrix Functors */
+  OC_CONVERTOR_FUNCTOR(Om2Eu, 9, 3, om2eu)
+  OC_CONVERTOR_FUNCTOR(Om2Qu, 9, 4, om2qu)
+  OC_CONVERTOR_FUNCTOR(Om2Ax, 9, 4, om2ax)
+  OC_CONVERTOR_FUNCTOR(Om2Ro, 9, 4, om2ro)
+  OC_CONVERTOR_FUNCTOR(Om2Ho, 9, 3, om2ho)
+  OC_CONVERTOR_FUNCTOR(Om2Cu, 9, 3, om2cu)
+   
+  /* Quaterion Functors */
+  OC_CONVERTOR_FUNCTOR(Qu2Eu, 4, 3, qu2eu)
+  OC_CONVERTOR_FUNCTOR(Qu2Om, 4, 9, qu2om)
+  OC_CONVERTOR_FUNCTOR(Qu2Ax, 4, 4, qu2ax)
+  OC_CONVERTOR_FUNCTOR(Qu2Ro, 4, 4, qu2ro)
+  OC_CONVERTOR_FUNCTOR(Qu2Ho, 4, 3, qu2ho)
+  OC_CONVERTOR_FUNCTOR(Qu2Cu, 4, 3, qu2cu) 
+    
+  /* AxisAngles Functors */
+  OC_CONVERTOR_FUNCTOR(Ax2Eu, 4, 3, ax2eu)
+  OC_CONVERTOR_FUNCTOR(Ax2Om, 4, 9, ax2om)
+  OC_CONVERTOR_FUNCTOR(Ax2Qu, 4, 4, ax2qu)
+  OC_CONVERTOR_FUNCTOR(Ax2Ro, 4, 4, ax2ro)
+  OC_CONVERTOR_FUNCTOR(Ax2Ho, 4, 3, ax2ho)
+  OC_CONVERTOR_FUNCTOR(Ax2Cu, 4, 3, ax2cu)
+    
+  /* Rodrigues Functors */
+  OC_CONVERTOR_FUNCTOR(Ro2Eu, 4, 3, ro2eu)
+  OC_CONVERTOR_FUNCTOR(Ro2Om, 4, 9, ro2om)
+  OC_CONVERTOR_FUNCTOR(Ro2Qu, 4, 4, ro2qu)
+  OC_CONVERTOR_FUNCTOR(Ro2Ax, 4, 4, ro2ax)
+  OC_CONVERTOR_FUNCTOR(Ro2Ho, 4, 3, ro2ho)
+  OC_CONVERTOR_FUNCTOR(Ro2Cu, 4, 3, ro2cu)  
+  
+  /* Rodrigues Functors */
+  OC_CONVERTOR_FUNCTOR(Ho2Eu, 3, 3, ho2eu)
+  OC_CONVERTOR_FUNCTOR(Ho2Om, 3, 9, ho2om)
+  OC_CONVERTOR_FUNCTOR(Ho2Qu, 3, 4, ho2qu)
+  OC_CONVERTOR_FUNCTOR(Ho2Ax, 3, 4, ho2ax)
+  OC_CONVERTOR_FUNCTOR(Ho2Ro, 3, 3, ho2ro)
+  OC_CONVERTOR_FUNCTOR(Ho2Cu, 3, 3, ho2cu)      
+
+  /* Rodrigues Functors */
+  OC_CONVERTOR_FUNCTOR(Cu2Eu, 3, 3, cu2eu)
+  OC_CONVERTOR_FUNCTOR(Cu2Om, 3, 9, cu2om)
+  OC_CONVERTOR_FUNCTOR(Cu2Qu, 3, 4, cu2qu)
+  OC_CONVERTOR_FUNCTOR(Cu2Ax, 3, 4, cu2ax)
+  OC_CONVERTOR_FUNCTOR(Cu2Ro, 3, 3, cu2ro)
+  OC_CONVERTOR_FUNCTOR(Cu2Ho, 3, 3, cu2ho)   
+  
+}
+
+/**
+ * @brief This templated class is a functor class that is used for 
+ * the TBB classes to use to parallelize the conversion of orientation
+ * representations
+ */
+template <typename T, class Converter>
+class ConvertRepresentation
+{
+  public:
+    ConvertRepresentation(T* inPtr, T* outPtr, size_t inStride, size_t outStride) :
+    m_InPtr(inPtr)
+    , m_OutPtr(outPtr)
+    , m_InStride(inStride)
+    , m_OutStride(outStride)
+    {}
+    ~ConvertRepresentation() = default;
+    
+    /**
+     * @brief This is the main conversion routine
+     * @param start Starting index
+     * @param end Ending index
+     */
+    void convert(size_t start, size_t end) const
+    {
+      Converter conv;
+      T* input = m_InPtr + (start * m_InStride);
+      T* output = m_OutPtr + (start * m_OutStride);
+      for (size_t i = start; i < end; ++i) { 
+        conv(input, output);
+        input = input + m_InStride; /* Increment input pointer */ 
+        output = output + m_OutStride; /* Increment output pointer*/ 
+      }
+    } 
+    
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t>& r) const
+    {
+      convert(r.begin(), r.end());
+    }
+#endif
+    
+  private:
+    T* m_InPtr = nullptr;
+    T* m_OutPtr = nullptr;
+    size_t m_InStride = 0;
+    size_t m_OutStride = 0;
+};
 
 
+/**
+ * @brief OC_CONVERT_BODY Generates the body of method that will perform the conversion
+ */
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+
+#define OC_CONVERT_BODY(OUTSTRIDE, OUT_ARRAY_NAME, CONVERSION_METHOD, FUNCTOR)\
+      sanityCheckInputData();\
+      typename DataArray<T>::Pointer input = this->getInputData();\
+      T* inPtr = input->getPointer(0);\
+      size_t nTuples = this->getInputData()->getNumberOfTuples();\
+      int inStride = input->getNumberOfComponents();\
+      size_t outStride = OUTSTRIDE;\
+      QVector<size_t> cDims = {outStride};\
+      typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);\
+      output->initializeWithZeros(); /* Intialize the array with Zeros */\
+      T* outPtr = output->getPointer(0);\
+      tbb::task_scheduler_init init;\
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples),\
+                          ConvertRepresentation<T, Convertors::FUNCTOR<T>>(inPtr, outPtr, inStride, outStride), tbb::auto_partitioner());\
+      this->setOutputData(output);
+
+#else
+
+#define OC_CONVERT_BODY(OUTSTRIDE, OUT_ARRAY_NAME, CONVERSION_METHOD, FUNCTOR)\
+      sanityCheckInputData();\
+      typename DataArray<T>::Pointer input = this->getInputData();\
+      T* inPtr = input->getPointer(0);\
+      size_t nTuples = this->getInputData()->getNumberOfTuples();\
+      int inStride = input->getNumberOfComponents();\
+      size_t outStride = OUTSTRIDE;\
+      QVector<size_t> cDims = {outStride}; /* Create the n component (nx1) based array.*/\
+      typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);\
+      output->initializeWithZeros(); /* Intialize the array with Zeros */\
+      T* outPtr = output->getPointer(0);\
+      ConvertRepresentation<T, Convertors::FUNCTOR <T>> serial(inPtr, outPtr, inStride, outStride);\
+      serial.convert(0, nTuples);\
+      this->setOutputData(output);
+
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -289,50 +448,42 @@ class EulerConverter : public OrientationConverter<T>
 
     virtual void toOrientationMatrix()
     {
-      sanityCheckInputData();
-      OC_CONVERT_BODY(9, OrientationMatrix, eu2om)
+      OC_CONVERT_BODY(9, OrientationMatrix, eu2om, Eu2Om)
     }
-
+    
     virtual void toQuaternion()
-    {
-      sanityCheckInputData();
-      OC_CONVERT_BODY(4, Quaternions, eu2qu)
+    {  
+      OC_CONVERT_BODY(4, Quaternion, eu2qu, Eu2Qu)      
     }
 
     virtual void toAxisAngle()
     {
-      sanityCheckInputData();
-      OC_CONVERT_BODY(4, AxisAngle, eu2ax)
+      OC_CONVERT_BODY(4, AxisAngle, eu2ax, Eu2Ax)
     }
 
     virtual void toRodrigues()
     {
-      sanityCheckInputData();
-      OC_CONVERT_BODY(4, Rodrigues, eu2ro)
+      OC_CONVERT_BODY(4, Rodrigues, eu2ro, Eu2Ro)
     }
 
     virtual void toHomochoric()
     {
-      sanityCheckInputData();
-      OC_CONVERT_BODY(3, Homochoric, eu2ho)
+      OC_CONVERT_BODY(3, Homochoric, eu2ho, Eu2Ho)
     }
 
     virtual void toCubochoric()
     {
-      sanityCheckInputData();
-      OC_CONVERT_BODY(3, Cubochoric, eu2cu)
+      OC_CONVERT_BODY(3, Cubochoric, eu2cu, Eu2Cu)
     }
 
     virtual void sanityCheckInputData()
     {
-
       typename DataArray<T>::Pointer input = this->getInputData();
       T* inPtr = input->getPointer(0);
       size_t nTuples = input->getNumberOfTuples();
       int inStride = input->getNumberOfComponents();
       for (size_t i = 0; i < nTuples; ++i)
       {
-
         inPtr[0] = fmod(inPtr[0], SIMPLib::Constants::k_2Pi);
         inPtr[1] = fmod(inPtr[1], SIMPLib::Constants::k_Pi);
         inPtr[2] = fmod(inPtr[2], SIMPLib::Constants::k_2Pi);
@@ -398,7 +549,7 @@ class OrientationMatrixConverter : public OrientationConverter<T>
     virtual void toEulers()
     {
       sanityCheckInputData();
-      OC_CONVERT_BODY(3, Eulers, om2eu)
+      OC_CONVERT_BODY(3, Eulers, om2eu, Om2Eu)
     }
 
     virtual void toOrientationMatrix()
@@ -412,31 +563,31 @@ class OrientationMatrixConverter : public OrientationConverter<T>
     virtual void toQuaternion()
     {
       sanityCheckInputData();
-      OC_CONVERT_BODY(4, Quaternion, om2qu)
+      OC_CONVERT_BODY(4, Quaternion, om2qu, Om2Qu)
     }
 
     virtual void toAxisAngle()
     {
       sanityCheckInputData();
-      OC_CONVERT_BODY(4, AxisAngle, om2ax)
+      OC_CONVERT_BODY(4, AxisAngle, om2ax, Om2Ax)
     }
 
     virtual void toRodrigues()
     {
       sanityCheckInputData();
-      OC_CONVERT_BODY(4, Rodrigues, om2ro)
+      OC_CONVERT_BODY(4, Rodrigues, om2ro, Om2Ro)
     }
 
     virtual void toHomochoric()
     {
       sanityCheckInputData();
-      OC_CONVERT_BODY(3, Homochoric, om2ho)
+      OC_CONVERT_BODY(3, Homochoric, om2ho, Om2Ho)
     }
 
     virtual void toCubochoric()
     {
       sanityCheckInputData();
-      OC_CONVERT_BODY(3, Cubochoric, om2cu)
+      OC_CONVERT_BODY(3, Cubochoric, om2cu, Om2Cu)
     }
 
     virtual void sanityCheckInputData()
@@ -520,12 +671,12 @@ class QuaternionConverter : public OrientationConverter<T>
 
     virtual void toEulers()
     {
-      OC_CONVERT_BODY(3, Eulers, qu2eu)
+      OC_CONVERT_BODY(3, Eulers, qu2eu, Qu2Eu)
     }
 
     virtual void toOrientationMatrix()
     {
-      OC_CONVERT_BODY(9, OrientationMatrix, qu2om)
+      OC_CONVERT_BODY(9, OrientationMatrix, qu2om, Qu2Om)
     }
 
     virtual void toQuaternion()
@@ -538,22 +689,22 @@ class QuaternionConverter : public OrientationConverter<T>
 
     virtual void toAxisAngle()
     {
-      OC_CONVERT_BODY(4, AxisAngle, qu2ax)
+      OC_CONVERT_BODY(4, AxisAngle, qu2ax, Qu2Ax)
     }
 
     virtual void toRodrigues()
     {
-      OC_CONVERT_BODY(4, Rodrigues, qu2ro)
+      OC_CONVERT_BODY(4, Rodrigues, qu2ro, Qu2Ro)
     }
 
     virtual void toHomochoric()
     {
-      OC_CONVERT_BODY(3, Homochoric, qu2ho)
+      OC_CONVERT_BODY(3, Homochoric, qu2ho, Qu2Ho)
     }
 
     virtual void toCubochoric()
     {
-      OC_CONVERT_BODY(3, Cubochoric, qu2cu)
+      OC_CONVERT_BODY(3, Cubochoric, qu2cu, Qu2Cu)
     }
 
     virtual void sanityCheckInputData()
@@ -620,17 +771,17 @@ class AxisAngleConverter : public OrientationConverter<T>
 
     virtual void toEulers()
     {
-      OC_CONVERT_BODY(3, Eulers, ax2eu)
+      OC_CONVERT_BODY(3, Eulers, ax2eu, Ax2Eu)
     }
 
     virtual void toOrientationMatrix()
     {
-      OC_CONVERT_BODY(9, OrientationMatrix, ax2om)
+      OC_CONVERT_BODY(9, OrientationMatrix, ax2om, Ax2Om)
     }
 
     virtual void toQuaternion()
     {
-      OC_CONVERT_BODY(4, Quaternions, ax2qu)
+      OC_CONVERT_BODY(4, Quaternions, ax2qu, Ax2Qu)
     }
 
     virtual void toAxisAngle()
@@ -643,17 +794,17 @@ class AxisAngleConverter : public OrientationConverter<T>
 
     virtual void toRodrigues()
     {
-      OC_CONVERT_BODY(4, Rodrigues, ax2ro)
+      OC_CONVERT_BODY(4, Rodrigues, ax2ro, Ax2Ro)
     }
 
     virtual void toHomochoric()
     {
-      OC_CONVERT_BODY(3, Homochoric, ax2ho)
+      OC_CONVERT_BODY(3, Homochoric, ax2ho, Ax2Ho)
     }
 
     virtual void toCubochoric()
     {
-      OC_CONVERT_BODY(3, Cubochoric, ax2cu)
+      OC_CONVERT_BODY(3, Cubochoric, ax2cu, Ax2Cu)
     }
 
     virtual void sanityCheckInputData()
@@ -715,22 +866,22 @@ class RodriguesConverter : public OrientationConverter<T>
 
     virtual void toEulers()
     {
-      OC_CONVERT_BODY(3, Eulers, ro2eu)
+      OC_CONVERT_BODY(3, Eulers, ro2eu, Ro2Eu)
     }
 
     virtual void toOrientationMatrix()
     {
-      OC_CONVERT_BODY(9, OrientationMatrix, ro2om)
+      OC_CONVERT_BODY(9, OrientationMatrix, ro2om, Ro2Om)
     }
 
     virtual void toQuaternion()
     {
-      OC_CONVERT_BODY(4, Quaternions, ro2qu)
+      OC_CONVERT_BODY(4, Quaternions, ro2qu, Ro2Qu)
     }
 
     virtual void toAxisAngle()
     {
-      OC_CONVERT_BODY(4, AxisAngle, ro2ax)
+      OC_CONVERT_BODY(4, AxisAngle, ro2ax, Ro2Ax)
     }
 
     virtual void toRodrigues()
@@ -743,12 +894,12 @@ class RodriguesConverter : public OrientationConverter<T>
 
     virtual void toHomochoric()
     {
-      OC_CONVERT_BODY(3, Homochoric, ro2ho)
+      OC_CONVERT_BODY(3, Homochoric, ro2ho, Ro2Ho)
     }
 
     virtual void toCubochoric()
     {
-      OC_CONVERT_BODY(3, Cubochoric, ro2cu)
+      OC_CONVERT_BODY(3, Cubochoric, ro2cu, Ro2Cu)
     }
 
     virtual void sanityCheckInputData()
@@ -810,27 +961,27 @@ class HomochoricConverter : public OrientationConverter<T>
 
     virtual void toEulers()
     {
-      OC_CONVERT_BODY(3, Eulers, ho2eu)
+      OC_CONVERT_BODY(3, Eulers, ho2eu, Ho2Eu)
     }
 
     virtual void toOrientationMatrix()
     {
-      OC_CONVERT_BODY(9, OrientationMatrix, ho2om)
+      OC_CONVERT_BODY(9, OrientationMatrix, ho2om, Ho2Om)
     }
 
     virtual void toQuaternion()
     {
-      OC_CONVERT_BODY(4, Quaternions, ho2qu)
+      OC_CONVERT_BODY(4, Quaternions, ho2qu, Ho2Qu)
     }
 
     virtual void toAxisAngle()
     {
-      OC_CONVERT_BODY(4, AxisAngle, ho2ax)
+      OC_CONVERT_BODY(4, AxisAngle, ho2ax, Ho2Ax)
     }
 
     virtual void toRodrigues()
     {
-      OC_CONVERT_BODY(4, Rodrigues, ho2ro)
+      OC_CONVERT_BODY(4, Rodrigues, ho2ro, Ho2Ro)
     }
 
     virtual void toHomochoric()
@@ -843,7 +994,7 @@ class HomochoricConverter : public OrientationConverter<T>
 
     virtual void toCubochoric()
     {
-      OC_CONVERT_BODY(3, Cubochoric, ho2cu)
+      OC_CONVERT_BODY(3, Cubochoric, ho2cu, Ho2Cu)
     }
 
     virtual void sanityCheckInputData()
@@ -906,32 +1057,32 @@ class CubochoricConverter : public OrientationConverter<T>
 
     virtual void toEulers()
     {
-      OC_CONVERT_BODY(3, Eulers, cu2eu)
+      OC_CONVERT_BODY(3, Eulers, cu2eu, Cu2Eu)
     }
 
     virtual void toOrientationMatrix()
     {
-      OC_CONVERT_BODY(9, OrientationMatrix, cu2om)
+      OC_CONVERT_BODY(9, OrientationMatrix, cu2om, Cu2Om)
     }
 
     virtual void toQuaternion()
     {
-      OC_CONVERT_BODY(4, Quaternions, cu2qu)
+      OC_CONVERT_BODY(4, Quaternions, cu2qu, Cu2Qu)
     }
 
     virtual void toAxisAngle()
     {
-      OC_CONVERT_BODY(4, AxisAngle, cu2ax)
+      OC_CONVERT_BODY(4, AxisAngle, cu2ax, Cu2Ax)
     }
 
     virtual void toRodrigues()
     {
-      OC_CONVERT_BODY(4, Rodrigues, cu2ro)
+      OC_CONVERT_BODY(4, Rodrigues, cu2ro, Cu2Ro)
     }
 
     virtual void toHomochoric()
     {
-      OC_CONVERT_BODY(3, Homochoric, cu2ho)
+      OC_CONVERT_BODY(3, Homochoric, cu2ho, Cu2Ho)
     }
 
     virtual void toCubochoric()
@@ -980,4 +1131,4 @@ class CubochoricConverter : public OrientationConverter<T>
     void operator=(const CubochoricConverter&); // Operator '=' Not Implemented
 };
 
-#endif /* _OrientationConverter_H_ */
+#endif /* _orientationConverter_H_ */
