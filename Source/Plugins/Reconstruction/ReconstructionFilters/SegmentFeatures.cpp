@@ -218,8 +218,8 @@ void SegmentFeatures::execute()
           }
         }
       }
-      voxelslist.clear();
-      voxelslist.resize(initialVoxelsListSize, -1);
+      
+      voxelslist.assign(initialVoxelsListSize, -1);
       gnum++;
       QString ss = QObject::tr("Total Features: %1").arg(gnum);
       if(gnum % 100 == 0)
