@@ -151,7 +151,7 @@ if(SIMPL_USE_MKDOCS)
 
   if(APPLE)
     set(MKDOCS_EXECUTABLE "${DREAM3DDocRoot}/ReferenceManual/mkdocs")
-    file(WRITE "${MKDOCS_EXECUTABLE}" "#!${PYTHON_EXECUTABLE}\n")
+    file(WRITE "${MKDOCS_EXECUTABLE}" "#!/usr/bin/python\n")
     file(APPEND "${MKDOCS_EXECUTABLE}" "# -*- coding: utf-8 -*-\n")
     file(APPEND "${MKDOCS_EXECUTABLE}" "import re\n")
     file(APPEND "${MKDOCS_EXECUTABLE}" "import sys\n")
