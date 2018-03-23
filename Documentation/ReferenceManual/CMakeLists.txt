@@ -148,6 +148,7 @@ if(SIMPL_USE_MKDOCS)
           MKDOCS_EXECUTABLE
           mkdocs
   )
+  message(STATUS "MKDOCS_EXECUTABLE: ${MKDOCS_EXECUTABLE}")
 
   set(docsStampFile "${DREAM3DDocRoot}/MkDocsGeneration.stamp")
   string(TIMESTAMP mkdocsTimeStamp %Y:%m:%d:%H:%M:%S)
@@ -170,6 +171,8 @@ if(SIMPL_USE_MKDOCS)
   file(APPEND "${docsCmakeFile}" "  if(NOT \"\${mkdocs_gen_result}\" STREQUAL \"0\")\n")
   file(APPEND "${docsCmakeFile}" "    message(STATUS \"MKDOCS: mkdocs_gen_result: \${mkdocs_gen_result}\")\n")
   file(APPEND "${docsCmakeFile}" "    message(STATUS \"MKDOCS: mkdocs_gen_error:  \${mkdocs_gen_error}\")\n")
+  file(APPEND "${docsCmakeFile}" "    message(STATUS \"MKDOCS_EXECUTABLE:  \${MKDOCS_EXECUTABLE}\")\n")
+  file(APPEND "${docsCmakeFile}" "    message(STATUS \"PYTHON_EXECUTABLE:  \${PYTHON_EXECUTABLE}\")\n")
   file(APPEND "${docsCmakeFile}" "    #message(STATUS \"**************************************************************************\")\n")
   file(APPEND "${docsCmakeFile}" "    #message(STATUS \"MKDOCS: mkdocs_gen_output: \${mkdocs_gen_output}\")\n")
   file(APPEND "${docsCmakeFile}" "    #message(STATUS \"**************************************************************************\")\n")
