@@ -148,20 +148,32 @@ if(SIMPL_USE_MKDOCS)
           MKDOCS_EXECUTABLE
           mkdocs
   )
-  message(STATUS "MKDOCS_EXECUTABLE: ${MKDOCS_EXECUTABLE}")
+
   if(APPLE)
-    set(MKDOCS_EXECUTABLE "/usr/local/bin/mkdocs")
-    # file(WRITE "${MKDOCS_EXECUTABLE}" "#!${PYTHON_EXECUTABLE}\n")
-    # file(APPEND "${MKDOCS_EXECUTABLE}" "# -*- coding: utf-8 -*-\n")
-    # file(APPEND "${MKDOCS_EXECUTABLE}" "import re\n")
-    # file(APPEND "${MKDOCS_EXECUTABLE}" "import sys\n")
-    # file(APPEND "${MKDOCS_EXECUTABLE}" "from mkdocs.__main__ import cli\n")
-    # file(APPEND "${MKDOCS_EXECUTABLE}" "if __name__ == '__main__':\n")
-    # file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])\n")
-    # file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.exit(cli())\n")
-    # file(APPEND "${MKDOCS_EXECUTABLE}" "\n")
-    # execute_process(COMMAND "/bin/chmod ug+rwx \"${DREAM3DDocRoot}/ReferenceManual/mkdocs\"")
+    set(MKDOCS_EXECUTABLE "${DREAM3DDocRoot}/ReferenceManual/mkdocs")
+    file(WRITE "${MKDOCS_EXECUTABLE}" "#!${PYTHON_EXECUTABLE}\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "# -*- coding: utf-8 -*-\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "import re\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "import sys\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "from mkdocs.__main__ import cli\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "if __name__ == '__main__':\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.exit(cli())\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "\n")
+    execute_process(COMMAND "/bin/chmod" ug+rwx ${MKDOCS_EXECUTABLE}
+                  OUTPUT_VARIABLE chmod_output              
+                  RESULT_VARIABLE chmod_result
+                  ERROR_VARIABLE chmod_error
+                  WORKING_DIRECTORY ${DREAM3DDocRoot}/ReferenceManual    
+    )
+    message(STATUS "chmod_output: ${chmod_output}")
+    message(STATUS "chmod_result: ${chmod_result}")
+    message(STATUS "chmod_error: ${chmod_error}")
   endif()
+  
+  message(STATUS "MKDOCS_EXECUTABLE: ${MKDOCS_EXECUTABLE}")
+  message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
+
 
 
   set(docsStampFile "${DREAM3DDocRoot}/MkDocsGeneration.stamp")
