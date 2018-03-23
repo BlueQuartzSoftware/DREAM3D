@@ -149,6 +149,20 @@ if(SIMPL_USE_MKDOCS)
           mkdocs
   )
   message(STATUS "MKDOCS_EXECUTABLE: ${MKDOCS_EXECUTABLE}")
+  if(APPLE)
+    set(MKDOCS_EXECUTABLE "/usr/local/bin/mkdocs")
+    # file(WRITE "${MKDOCS_EXECUTABLE}" "#!${PYTHON_EXECUTABLE}\n")
+    # file(APPEND "${MKDOCS_EXECUTABLE}" "# -*- coding: utf-8 -*-\n")
+    # file(APPEND "${MKDOCS_EXECUTABLE}" "import re\n")
+    # file(APPEND "${MKDOCS_EXECUTABLE}" "import sys\n")
+    # file(APPEND "${MKDOCS_EXECUTABLE}" "from mkdocs.__main__ import cli\n")
+    # file(APPEND "${MKDOCS_EXECUTABLE}" "if __name__ == '__main__':\n")
+    # file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])\n")
+    # file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.exit(cli())\n")
+    # file(APPEND "${MKDOCS_EXECUTABLE}" "\n")
+    # execute_process(COMMAND "/bin/chmod ug+rwx \"${DREAM3DDocRoot}/ReferenceManual/mkdocs\"")
+  endif()
+
 
   set(docsStampFile "${DREAM3DDocRoot}/MkDocsGeneration.stamp")
   string(TIMESTAMP mkdocsTimeStamp %Y:%m:%d:%H:%M:%S)
@@ -157,6 +171,7 @@ if(SIMPL_USE_MKDOCS)
   # to run during the compile process.
   file(WRITE "${docsStampFile}" "${mkdocsTimeStamp}")
 
+  
   file(APPEND "${docsCmakeFile}" "\n\n")
   file(APPEND "${docsCmakeFile}" "#--------------------------------------------------------------\n")
   file(APPEND "${docsCmakeFile}" "# Execute the 'mkdocs' python command to generate the docs\n")
