@@ -128,8 +128,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices()
-: AbstractFilter()
-, m_SelectedArrayPath("", "", "")
+: m_SelectedArrayPath("", "", "")
 , m_Plane(0)
 , m_PSize1(0)
 , m_PSize2(0)
@@ -245,7 +244,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getMotionDirectionArrayName());
   m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
       this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_MotionDirectionPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_MotionDirectionPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

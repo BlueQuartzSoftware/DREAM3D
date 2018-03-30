@@ -39,7 +39,6 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshFilter::SurfaceMeshFilter()
-: AbstractFilter()
 {
   setupFilterParameters();
 }

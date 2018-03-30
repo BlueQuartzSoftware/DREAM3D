@@ -47,8 +47,7 @@
 //
 // -----------------------------------------------------------------------------
 AppendImageGeometryZSlice::AppendImageGeometryZSlice()
-: AbstractFilter()
-, m_InputAttributeMatrix()
+: m_InputAttributeMatrix()
 , m_DestinationAttributeMatrix()
 , m_CheckResolution(false)
 {

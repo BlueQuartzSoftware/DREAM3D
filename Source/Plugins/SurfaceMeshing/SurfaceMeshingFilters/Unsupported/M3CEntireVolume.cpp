@@ -53,8 +53,7 @@
 //
 // -----------------------------------------------------------------------------
 M3CEntireVolume::M3CEntireVolume()
-: AbstractFilter()
-, m_SurfaceMeshEdgesArrayName(SIMPL::CellData::SurfaceMeshEdges)
+: m_SurfaceMeshEdgesArrayName(SIMPL::CellData::SurfaceMeshEdges)
 , m_SurfaceMeshInternalEdgesArrayName(SIMPL::CellData::SurfaceMeshInternalEdges)
 , m_AddSurfaceLayer(true)
 , m_GrainIdsArrayName(SIMPL::CellData::GrainIds)
@@ -115,7 +114,7 @@ void M3CEntireVolume::dataCheck()
   VoxelDataContainer* m = getVoxelDataContainer();
 
   m_GrainIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_GrainIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_GrainIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_GrainIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_GrainIds = m_GrainIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -135,7 +134,7 @@ void M3CEntireVolume::dataCheck()
 
     m_SurfaceMeshNodeTypePtr = sattrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_CellAttributeMatrixName, m_SurfaceMeshNodeTypeArrayName, 0, 1,
                                                                                                          1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_SurfaceMeshNodeTypePtr.lock().get())                                                     /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if(nullptr != m_SurfaceMeshNodeTypePtr.lock())                                                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */

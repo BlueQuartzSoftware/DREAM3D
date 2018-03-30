@@ -161,8 +161,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections()
-: AbstractFilter()
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_WriteAlignmentShifts(false)
 , m_AlignmentShiftFileName("")

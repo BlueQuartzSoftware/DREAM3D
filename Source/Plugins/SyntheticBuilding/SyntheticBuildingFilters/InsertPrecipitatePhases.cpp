@@ -68,8 +68,7 @@ const QString PrecipitateSyntheticShapeParametersName("Synthetic Shape Parameter
 //
 // -----------------------------------------------------------------------------
 InsertPrecipitatePhases::InsertPrecipitatePhases()
-: AbstractFilter()
-, m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList)
+: m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList)
 , m_ErrorOutputFile("")
 , m_CsvOutputFile("")
 , m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
@@ -263,35 +262,35 @@ void InsertPrecipitatePhases::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
   setWarningCondition(0);
-  if(nullptr != m_FeaturePhasesPtr.lock().get())
+  if(nullptr != m_FeaturePhasesPtr.lock())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   }
-  if(nullptr != m_NumCellsPtr.lock().get())
+  if(nullptr != m_NumCellsPtr.lock())
   {
     m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
   }
-  if(nullptr != m_EquivalentDiametersPtr.lock().get())
+  if(nullptr != m_EquivalentDiametersPtr.lock())
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   }
-  if(nullptr != m_VolumesPtr.lock().get())
+  if(nullptr != m_VolumesPtr.lock())
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);
   }
-  if(nullptr != m_Omega3sPtr.lock().get())
+  if(nullptr != m_Omega3sPtr.lock())
   {
     m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
   }
-  if(nullptr != m_CentroidsPtr.lock().get())
+  if(nullptr != m_CentroidsPtr.lock())
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   }
-  if(nullptr != m_AxisEulerAnglesPtr.lock().get())
+  if(nullptr != m_AxisEulerAnglesPtr.lock())
   {
     m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
   }
-  if(nullptr != m_AxisLengthsPtr.lock().get())
+  if(nullptr != m_AxisLengthsPtr.lock())
   {
     m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
   }
@@ -367,7 +366,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   QVector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
-  if(nullptr != m_PhaseTypesPtr.lock().get())
+  if(nullptr != m_PhaseTypesPtr.lock())
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
   }
@@ -377,7 +376,7 @@ void InsertPrecipitatePhases::dataCheck()
   }
 
   m_ShapeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputShapeTypesArrayPath(), cDims);
-  if(nullptr != m_ShapeTypesPtr.lock().get())
+  if(nullptr != m_ShapeTypesPtr.lock())
   {
     m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);
   }
@@ -401,7 +400,7 @@ void InsertPrecipitatePhases::dataCheck()
   // Cell Data
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims);
 
-  if(nullptr != m_FeatureIdsPtr.lock().get())
+  if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
@@ -412,7 +411,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims);
 
-  if(nullptr != m_CellPhasesPtr.lock().get())
+  if(nullptr != m_CellPhasesPtr.lock())
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   }
@@ -423,7 +422,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), cDims);
 
-  if(nullptr != m_BoundaryCellsPtr.lock().get())
+  if(nullptr != m_BoundaryCellsPtr.lock())
   {
     m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
   }
@@ -435,7 +434,7 @@ void InsertPrecipitatePhases::dataCheck()
   if(m_UseMask == true)
   {
     m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
-    if(nullptr != m_MaskPtr.lock().get())
+    if(nullptr != m_MaskPtr.lock())
     {
       m_Mask = m_MaskPtr.lock()->getPointer(0);
     }
@@ -466,7 +465,7 @@ void InsertPrecipitatePhases::dataCheck()
   // Feature Data
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims);
 
-  if(nullptr != m_FeaturePhasesPtr.lock().get())
+  if(nullptr != m_FeaturePhasesPtr.lock())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   }
@@ -474,7 +473,7 @@ void InsertPrecipitatePhases::dataCheck()
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getNumCellsArrayName());
   m_NumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, getNumCellsArrayName());
 
-  if(nullptr != m_NumCellsPtr.lock().get())
+  if(nullptr != m_NumCellsPtr.lock())
   {
     m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
   }
@@ -482,7 +481,7 @@ void InsertPrecipitatePhases::dataCheck()
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getEquivalentDiametersArrayName());
   m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getEquivalentDiametersArrayName());
 
-  if(nullptr != m_EquivalentDiametersPtr.lock().get())
+  if(nullptr != m_EquivalentDiametersPtr.lock())
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   }
@@ -490,7 +489,7 @@ void InsertPrecipitatePhases::dataCheck()
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getVolumesArrayName());
   m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getVolumesArrayName());
 
-  if(nullptr != m_VolumesPtr.lock().get())
+  if(nullptr != m_VolumesPtr.lock())
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);
   }
@@ -498,7 +497,7 @@ void InsertPrecipitatePhases::dataCheck()
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getOmega3sArrayName());
   m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getOmega3sArrayName());
 
-  if(nullptr != m_Omega3sPtr.lock().get())
+  if(nullptr != m_Omega3sPtr.lock())
   {
     m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
   }
@@ -507,7 +506,7 @@ void InsertPrecipitatePhases::dataCheck()
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getCentroidsArrayName());
   m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getCentroidsArrayName());
 
-  if(nullptr != m_CentroidsPtr.lock().get())
+  if(nullptr != m_CentroidsPtr.lock())
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   }
@@ -515,7 +514,7 @@ void InsertPrecipitatePhases::dataCheck()
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisEulerAnglesArrayName());
   m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getAxisEulerAnglesArrayName());
 
-  if(nullptr != m_AxisEulerAnglesPtr.lock().get())
+  if(nullptr != m_AxisEulerAnglesPtr.lock())
   {
     m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
   }
@@ -523,7 +522,7 @@ void InsertPrecipitatePhases::dataCheck()
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAxisLengthsArrayName());
   m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, getAxisLengthsArrayName());
 
-  if(nullptr != m_AxisLengthsPtr.lock().get())
+  if(nullptr != m_AxisLengthsPtr.lock())
   {
     m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
   }
@@ -532,7 +531,7 @@ void InsertPrecipitatePhases::dataCheck()
   cDims[0] = 1;
   m_NumFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumFeaturesArrayPath(), cDims);
 
-  if(nullptr != m_NumFeaturesPtr.lock().get())
+  if(nullptr != m_NumFeaturesPtr.lock())
   {
     m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0);
   }

@@ -49,8 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 QuiltCellData::QuiltCellData()
-: AbstractFilter()
-, m_SelectedCellArrayPath("", "", "")
+: m_SelectedCellArrayPath("", "", "")
 , m_OutputDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
 , m_OutputAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_OutputArrayName("Quilt_Data")
@@ -240,7 +239,7 @@ void QuiltCellData::dataCheck()
   tempPath.update(getOutputDataContainerName(), getOutputAttributeMatrixName(), getOutputArrayName());
   m_OutputArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
                                                                                                                     dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_OutputArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_OutputArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputArray = m_OutputArrayPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

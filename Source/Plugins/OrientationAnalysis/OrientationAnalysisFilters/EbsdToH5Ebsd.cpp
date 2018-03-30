@@ -55,8 +55,7 @@
 //
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::EbsdToH5Ebsd()
-: AbstractFilter()
-, m_OutputFile("")
+: m_OutputFile("")
 , m_ZStartIndex(0)
 , m_ZEndIndex(0)
 , m_ZResolution(1.0f)

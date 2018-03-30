@@ -57,8 +57,7 @@
 //
 // -----------------------------------------------------------------------------
 VtkStructuredPointsReader::VtkStructuredPointsReader()
-: AbstractFilter()
-, m_ReadCellData(true)
+: m_ReadCellData(true)
 , m_VolumeDataContainerName("ImageDataContainer_CellData")
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_ReadPointData(true)

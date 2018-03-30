@@ -46,8 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 SegmentFeatures::SegmentFeatures()
-: AbstractFilter()
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 {
 }
 

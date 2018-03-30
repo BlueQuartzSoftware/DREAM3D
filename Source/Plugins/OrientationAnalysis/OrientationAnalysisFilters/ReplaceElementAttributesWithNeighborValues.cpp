@@ -264,8 +264,7 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
 //
 // -----------------------------------------------------------------------------
 ReplaceElementAttributesWithNeighborValues::ReplaceElementAttributesWithNeighborValues()
-: AbstractFilter()
-, m_MinConfidence(0.1f)
+: m_MinConfidence(0.1f)
 , m_Loop(false)
 , m_ConfidenceIndexArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex)
 , m_SelectedComparison(Detail::LessThan)

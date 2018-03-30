@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 WarpRegularGrid::WarpRegularGrid()
-: AbstractFilter()
-, m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
+: m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
 , m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
 , m_PolyOrder(0)
 , m_SaveAsNewDataContainer(false)

@@ -252,6 +252,136 @@ void AddPybindMacros(QString absPath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool AddUuidCodes(const QString& hFile)
+{
+  QString contents;
+  QFileInfo fi(hFile);
+
+  //  if (fi.baseName().compare("CropImageGeometry") != 0)
+  //  {
+  //    return false;
+  //  }
+
+  {
+    // Read the Source File
+
+    QFile source(hFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+  bool didReplace = false;
+
+  QString searchString = "virtual const QString getSubGroupName() override;";
+
+  QStringList outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+
+  while(sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains("virtual const QString getCompiledLibraryName() const override"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual const QString getBrandingString() const override"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual const QString getFilterVersion() const override;"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual const QString getGroupName() const override;"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual const QString getSubGroupName() const override;"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual const QUuid getUuid() override;"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual const QString getHumanLabel() const override;"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      replaceString = replaceString.replace(";", " override;");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+
+    else if(line.contains("virtual void setupFilterParameters() override;"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual void execute() override;"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+    else if(line.contains("virtual void preflight() override;"))
+    {
+      QString replaceString = line;
+      replaceString = replaceString.replace("virtual ", "");
+      outLines.push_back(replaceString);
+      didReplace = true;
+    }
+
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+
+  writeOutput(didReplace, outLines, hFile);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReplaceGrepSearchesRecursively(QDir currentDir)
 {
 
@@ -277,7 +407,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   foreach(QFileInfo itemInfo, itemList)
   {
     QString headerFilePath = itemInfo.absoluteFilePath();
-    AddPybindMacros(headerFilePath);
+    // AddPybindMacros(headerFilePath);
+    AddUuidCodes(headerFilePath);
   }
 }
 
@@ -287,7 +418,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 int main(int argc, char* argv[])
 {
 
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -304,8 +435,9 @@ int main(int argc, char* argv[])
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
 
-
   ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/Plugins"));
+  ReplaceGrepSearchesRecursively(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
 
   return 0;
 }

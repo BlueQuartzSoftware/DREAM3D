@@ -16,7 +16,6 @@
 //
 // -----------------------------------------------------------------------------
 OrientationUtility::OrientationUtility()
-: AbstractFilter()
 {
   setupFilterParameters();
 }

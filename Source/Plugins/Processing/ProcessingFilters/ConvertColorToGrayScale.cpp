@@ -236,8 +236,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 ConvertColorToGrayScale::ConvertColorToGrayScale()
-: AbstractFilter()
-, m_ConversionAlgorithm(0)
+: m_ConversionAlgorithm(0)
 , m_ColorChannel(0)
 , m_CreateNewAttributeMatrix(false)
 , m_OutputAttributeMatrixName("GrayScaleData")

@@ -47,8 +47,7 @@
 //
 // -----------------------------------------------------------------------------
 GroupFeatures::GroupFeatures()
-: AbstractFilter()
-, m_ContiguousNeighborListArrayPath("", "", "")
+: m_ContiguousNeighborListArrayPath("", "", "")
 , m_NonContiguousNeighborListArrayPath("", "", "")
 , m_UseNonContiguousNeighbors(false)
 , m_PatchGrouping(false)
