@@ -30,7 +30,6 @@ public:
     }
 
     bool didReplace = false;
-    bool isFilter = false;
     QString searchString = "";
 
     QStringList outLines;

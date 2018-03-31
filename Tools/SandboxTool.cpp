@@ -155,7 +155,7 @@ template <typename T> void RecursiveFileSearch(const QDir& currentDir, const QSt
 int main(int argc, char* argv[])
 {
 
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
 
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
