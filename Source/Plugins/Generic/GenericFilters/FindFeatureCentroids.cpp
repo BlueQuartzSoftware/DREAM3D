@@ -55,7 +55,6 @@ FindFeatureCentroids::FindFeatureCentroids()
 , m_FeatureIds(nullptr)
 , m_Centroids(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

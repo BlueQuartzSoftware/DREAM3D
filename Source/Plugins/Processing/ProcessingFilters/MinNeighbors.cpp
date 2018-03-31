@@ -61,7 +61,6 @@ MinNeighbors::MinNeighbors()
 , m_FeaturePhases(nullptr)
 , m_NumNeighbors(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

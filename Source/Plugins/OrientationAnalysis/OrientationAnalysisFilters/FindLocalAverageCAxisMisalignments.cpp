@@ -80,7 +80,6 @@ FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments()
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

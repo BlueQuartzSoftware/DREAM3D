@@ -57,12 +57,10 @@
 //
 // -----------------------------------------------------------------------------
 MultiEmmpmFilter::MultiEmmpmFilter()
-: EMMPMFilter()
-, m_OutputAttributeMatrixName("MultiArrayEMMPMOutput")
+: m_OutputAttributeMatrixName("MultiArrayEMMPMOutput")
 , m_OutputArrayPrefix("Segmented_")
 , m_UsePreviousMuSigma(true)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

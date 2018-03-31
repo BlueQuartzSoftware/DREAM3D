@@ -59,7 +59,6 @@ FindFeaturePhasesBinary::FindFeaturePhasesBinary()
 , m_GoodVoxels(nullptr)
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

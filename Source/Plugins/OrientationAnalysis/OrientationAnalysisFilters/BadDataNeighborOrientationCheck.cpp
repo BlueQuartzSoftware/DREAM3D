@@ -62,7 +62,6 @@ BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck()
 , m_CrystalStructures(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

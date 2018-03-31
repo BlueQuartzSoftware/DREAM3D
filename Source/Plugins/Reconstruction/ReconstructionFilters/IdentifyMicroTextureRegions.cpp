@@ -250,7 +250,6 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions()
 {
   m_CAxisToleranceRad = 0.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh()
-: SampleSurfaceMesh()
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_XPoints(0)
 , m_YPoints(0)
@@ -74,7 +73,6 @@ UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh()
   m_Uncertainty.y = 0.1f;
   m_Uncertainty.z = 0.1f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -68,7 +68,6 @@ VtkStructuredPointsReader::VtkStructuredPointsReader()
 , m_DatasetType("")
 , m_FileIsBinary(true)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

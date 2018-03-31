@@ -78,7 +78,6 @@ GenerateRodriguesColors::GenerateRodriguesColors()
 , m_CellRodriguesColors(nullptr)
 , m_GoodVoxels(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -160,7 +160,6 @@ GenerateIPFColors::GenerateIPFColors()
   m_ReferenceDir.y = 0.0f;
   m_ReferenceDir.z = 1.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -125,7 +125,6 @@ FindDifferenceMap::FindDifferenceMap()
 , m_SecondInputArray(nullptr)
 , m_DifferenceMap(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

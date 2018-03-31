@@ -72,7 +72,6 @@ FindShapes::FindShapes()
   m_FeatureMoments = nullptr;
   m_FeatureEigenVals = nullptr;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

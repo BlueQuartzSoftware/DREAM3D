@@ -56,7 +56,6 @@ ErodeDilateCoordinationNumber::ErodeDilateCoordinationNumber()
 , m_Neighbors(nullptr)
 , m_FeatureIds(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

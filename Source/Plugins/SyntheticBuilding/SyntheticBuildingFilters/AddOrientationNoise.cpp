@@ -55,7 +55,6 @@ AddOrientationNoise::AddOrientationNoise()
 , m_CellEulerAnglesArrayPath("", "", "")
 , m_CellEulerAngles(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

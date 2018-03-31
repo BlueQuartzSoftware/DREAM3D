@@ -53,14 +53,12 @@
 //
 // -----------------------------------------------------------------------------
 AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid()
-: AlignSections()
-, m_ReferenceSlice(0)
+: m_ReferenceSlice(0)
 , m_UseReferenceSlice(false)
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_GoodVoxels(nullptr)
 {
   // only setting up the child parameters because the parent constructor has already been called
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

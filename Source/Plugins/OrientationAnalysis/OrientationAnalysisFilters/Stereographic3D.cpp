@@ -123,7 +123,6 @@ Stereographic3D::Stereographic3D()
 , m_CoordinatesArrayName("Coordinates")
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

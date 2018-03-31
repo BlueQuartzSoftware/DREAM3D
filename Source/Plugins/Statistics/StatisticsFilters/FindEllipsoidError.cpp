@@ -67,7 +67,6 @@ FindEllipsoidError::FindEllipsoidError()
 , m_EllipsoidError(nullptr)
 , m_ScaleFator(1.0f)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

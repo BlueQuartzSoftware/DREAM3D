@@ -67,7 +67,6 @@ WriteIPFStandardTriangle::WriteIPFStandardTriangle()
 : m_OutputFile("")
 , m_ImageSize(512)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

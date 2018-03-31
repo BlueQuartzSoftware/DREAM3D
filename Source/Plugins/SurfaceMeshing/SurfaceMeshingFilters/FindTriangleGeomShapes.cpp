@@ -72,7 +72,6 @@ FindTriangleGeomShapes::FindTriangleGeomShapes()
   featuremoments = nullptr;
   featureeigenvals = nullptr;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

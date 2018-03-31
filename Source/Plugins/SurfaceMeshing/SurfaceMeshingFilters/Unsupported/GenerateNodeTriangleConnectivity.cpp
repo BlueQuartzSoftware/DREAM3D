@@ -45,7 +45,6 @@ GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity()
 , m_SurfaceMeshTriangleEdgesArrayName(SIMPL::CellData::SurfaceMeshTriangleEdges)
 , m_SurfaceMeshTriangleEdges(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

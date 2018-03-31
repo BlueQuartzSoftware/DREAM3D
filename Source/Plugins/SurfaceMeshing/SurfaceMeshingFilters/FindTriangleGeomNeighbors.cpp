@@ -61,7 +61,6 @@ FindTriangleGeomNeighbors::FindTriangleGeomNeighbors()
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

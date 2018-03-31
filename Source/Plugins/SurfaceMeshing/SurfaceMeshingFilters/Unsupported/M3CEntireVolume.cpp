@@ -61,7 +61,6 @@ M3CEntireVolume::M3CEntireVolume()
 , m_SurfaceMeshNodeTypeArrayName(SIMPL::CellData::SurfaceMeshNodeType)
 , m_SurfaceMeshNodeType(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -72,7 +72,6 @@ CreateLambertSphere::CreateLambertSphere()
 , m_CreateTriangleGeometry(true)
 , m_CreateQuadGeometry(true)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

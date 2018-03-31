@@ -63,7 +63,6 @@ GenerateVectorColors::GenerateVectorColors()
 , m_GoodVoxels(nullptr)
 , m_CellVectorColors(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

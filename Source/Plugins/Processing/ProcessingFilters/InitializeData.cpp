@@ -78,7 +78,6 @@ InitializeData::InitializeData()
 , m_InitType(Manual)
 , m_InitValue(0)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

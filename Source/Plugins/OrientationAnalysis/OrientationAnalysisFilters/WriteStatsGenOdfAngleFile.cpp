@@ -86,7 +86,6 @@ WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile()
 , m_ConvertToDegrees(false)
 , m_UseGoodVoxels(false)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

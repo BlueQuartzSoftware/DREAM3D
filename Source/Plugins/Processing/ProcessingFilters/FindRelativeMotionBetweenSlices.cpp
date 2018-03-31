@@ -139,7 +139,6 @@ FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices()
 , m_InData(nullptr)
 , m_MotionDirection(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -205,8 +205,7 @@ public:
 //
 // -----------------------------------------------------------------------------
 GenerateFaceIPFColoring::GenerateFaceIPFColoring()
-: SurfaceMeshFilter()
-, m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
+: m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_SurfaceMeshFaceNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals)
 , m_FeatureEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::EulerAngles)
 , m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
@@ -219,7 +218,6 @@ GenerateFaceIPFColoring::GenerateFaceIPFColoring()
 , m_CrystalStructures(nullptr)
 , m_SurfaceMeshFaceIPFColors(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

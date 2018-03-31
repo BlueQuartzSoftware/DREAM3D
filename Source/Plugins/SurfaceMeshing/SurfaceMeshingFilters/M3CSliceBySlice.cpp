@@ -310,7 +310,6 @@ M3CSliceBySlice::M3CSliceBySlice()
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , m_FeatureIds(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

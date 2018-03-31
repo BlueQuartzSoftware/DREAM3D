@@ -74,7 +74,6 @@ FindFeatureClustering::FindFeatureClustering()
 , m_MaxMinArray(nullptr)
 , m_BiasedFeatures(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

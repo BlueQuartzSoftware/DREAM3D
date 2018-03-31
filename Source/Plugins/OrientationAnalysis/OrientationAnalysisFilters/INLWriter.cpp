@@ -67,7 +67,6 @@ INLWriter::INLWriter()
 , m_CellEulerAngles(nullptr)
 , m_CrystalStructures(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

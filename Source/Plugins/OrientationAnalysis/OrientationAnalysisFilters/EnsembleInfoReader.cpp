@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 EnsembleInfoReader::EnsembleInfoReader()
-: FileReader()
-, m_DataContainerName("")
+: m_DataContainerName("")
 , m_CellEnsembleAttributeMatrixName("EnsembleAttributeMatrix")
 , m_InputFile("")
 , m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
@@ -65,7 +64,6 @@ EnsembleInfoReader::EnsembleInfoReader()
 , m_ptype(PhaseType::Type::Unknown)
 , m_crystruct(999)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

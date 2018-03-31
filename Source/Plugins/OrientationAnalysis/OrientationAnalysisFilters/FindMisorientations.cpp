@@ -68,7 +68,6 @@ FindMisorientations::FindMisorientations()
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_MisorientationList = NeighborList<float>::NullPointer();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

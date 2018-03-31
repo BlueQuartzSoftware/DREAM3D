@@ -236,14 +236,12 @@ private:
 //
 // -----------------------------------------------------------------------------
 VerifyTriangleWinding::VerifyTriangleWinding()
-: SurfaceMeshFilter()
-, m_SurfaceDataContainerName(SIMPL::Defaults::DataContainerName)
+: m_SurfaceDataContainerName(SIMPL::Defaults::DataContainerName)
 , m_SurfaceMeshNodeFacesArrayName(SIMPL::VertexData::SurfaceMeshNodeFaces)
 , m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_SurfaceMeshFaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_SurfaceMeshFaceLabels(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

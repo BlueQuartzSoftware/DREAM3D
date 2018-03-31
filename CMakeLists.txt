@@ -44,10 +44,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS False)
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-  # CMake 3.0 introduces VERSION variables for each Project.
-  cmake_policy(SET CMP0048 NEW)
-  # CMake 3.0 introduces some OS X RPath policies
-  cmake_policy(SET CMP0042 OLD)
   # CMake 3.1 introduces if() policies on dereferencing variables in quotes
   cmake_policy(SET CMP0054 NEW)
 

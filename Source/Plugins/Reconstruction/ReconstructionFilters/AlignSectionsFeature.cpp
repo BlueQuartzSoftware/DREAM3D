@@ -50,12 +50,10 @@
 //
 // -----------------------------------------------------------------------------
 AlignSectionsFeature::AlignSectionsFeature()
-: AlignSections()
-, m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
+: m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_GoodVoxels(nullptr)
 {
   // only setting up the child parameters because the parent constructor has already been called
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

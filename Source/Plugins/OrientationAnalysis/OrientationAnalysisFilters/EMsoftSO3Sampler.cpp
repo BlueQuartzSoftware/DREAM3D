@@ -72,7 +72,6 @@ EMsoftSO3Sampler::EMsoftSO3Sampler()
   m_RefOrFull.y = 0.0;
   m_RefOrFull.z = 0.0;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

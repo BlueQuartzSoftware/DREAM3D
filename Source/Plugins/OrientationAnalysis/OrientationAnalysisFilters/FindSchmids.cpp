@@ -87,7 +87,6 @@ FindSchmids::FindSchmids()
 
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

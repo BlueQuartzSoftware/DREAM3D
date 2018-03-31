@@ -64,7 +64,6 @@ FindNeighborhoods::FindNeighborhoods()
 {
   m_NeighborhoodList = NeighborList<int32_t>::NullPointer();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

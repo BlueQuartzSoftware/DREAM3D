@@ -84,7 +84,6 @@ GoldfeatherReader::GoldfeatherReader()
 , m_SurfaceMeshFaceNormalsArrayName(SIMPL::FaceData::SurfaceMeshFaceNormals)
 , m_InputFile("")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

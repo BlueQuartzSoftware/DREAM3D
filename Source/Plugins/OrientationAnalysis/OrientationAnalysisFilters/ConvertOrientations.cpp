@@ -53,7 +53,6 @@ ConvertOrientations::ConvertOrientations()
 : m_InputType(0)
 , m_OutputType(1)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

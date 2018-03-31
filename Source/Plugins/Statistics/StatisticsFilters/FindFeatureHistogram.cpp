@@ -61,7 +61,6 @@ FindFeatureHistogram::FindFeatureHistogram()
 , m_NewEnsembleArray(nullptr)
 , m_FeaturePhases(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

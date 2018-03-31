@@ -32,7 +32,6 @@ ComputeMomentInvariants2D::ComputeMomentInvariants2D()
 , m_CentralMomentsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "CentralMoments")
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

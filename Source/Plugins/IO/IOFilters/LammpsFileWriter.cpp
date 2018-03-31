@@ -55,7 +55,6 @@ LammpsFileWriter::LammpsFileWriter()
 : m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
 , m_LammpsFile("")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

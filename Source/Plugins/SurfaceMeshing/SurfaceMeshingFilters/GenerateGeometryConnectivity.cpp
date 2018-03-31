@@ -47,12 +47,10 @@
 //
 // -----------------------------------------------------------------------------
 GenerateGeometryConnectivity::GenerateGeometryConnectivity()
-: SurfaceMeshFilter()
-, m_SurfaceDataContainerName("")
+: m_SurfaceDataContainerName("")
 , m_GenerateVertexTriangleLists(true)
 , m_GenerateTriangleNeighbors(true)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

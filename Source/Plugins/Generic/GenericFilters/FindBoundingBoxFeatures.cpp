@@ -61,7 +61,6 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures()
 , m_SurfaceFeatures(nullptr)
 , m_BiasedFeatures(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

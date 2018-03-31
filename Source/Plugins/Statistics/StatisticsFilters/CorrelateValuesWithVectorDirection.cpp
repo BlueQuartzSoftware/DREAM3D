@@ -56,7 +56,6 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection()
 , m_StepSize(sqrt(SIMPLib::Constants::k_2Pi) / 72.0)
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

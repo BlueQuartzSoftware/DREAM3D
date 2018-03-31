@@ -56,7 +56,6 @@ FindLargestCrossSections::FindLargestCrossSections()
 , m_FeatureIds(nullptr)
 , m_LargestCrossSections(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -57,8 +57,7 @@
 //
 // -----------------------------------------------------------------------------
 VectorSegmentFeatures::VectorSegmentFeatures()
-: SegmentFeatures()
-, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
+: m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
 , m_SelectedVectorArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::VectorData)
 , m_AngleTolerance(5.0f)
 , m_RandomizeFeatureIds(true)
@@ -73,7 +72,6 @@ VectorSegmentFeatures::VectorSegmentFeatures()
 , m_AngleToleranceRad(0.0f)
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

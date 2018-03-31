@@ -65,7 +65,6 @@ FindAvgOrientations::FindAvgOrientations()
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

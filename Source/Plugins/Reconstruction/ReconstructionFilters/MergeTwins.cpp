@@ -53,8 +53,7 @@
 //
 // -----------------------------------------------------------------------------
 MergeTwins::MergeTwins()
-: GroupFeatures()
-, m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName)
+: m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName)
 , m_AxisTolerance(1.0f)
 , m_AngleTolerance(1.0f)
 , m_RandomizeParentIds(true)
@@ -77,7 +76,6 @@ MergeTwins::MergeTwins()
 
   m_AxisToleranceRad = 0.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

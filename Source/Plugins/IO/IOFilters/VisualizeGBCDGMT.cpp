@@ -69,7 +69,6 @@ VisualizeGBCDGMT::VisualizeGBCDGMT()
 
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

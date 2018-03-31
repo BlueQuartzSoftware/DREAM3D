@@ -81,8 +81,7 @@ PhReaderPrivate::PhReaderPrivate(PhReader* ptr)
 //
 // -----------------------------------------------------------------------------
 PhReader::PhReader()
-: FileReader()
-, m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_InputFile("")
 , m_FileWasRead(false)
@@ -102,7 +101,6 @@ PhReader::PhReader()
   m_Dims[1] = 0;
   m_Dims[2] = 0;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

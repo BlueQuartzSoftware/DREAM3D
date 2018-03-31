@@ -269,7 +269,6 @@ ReplaceElementAttributesWithNeighborValues::ReplaceElementAttributesWithNeighbor
 , m_ConfidenceIndexArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex)
 , m_SelectedComparison(Detail::LessThan)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

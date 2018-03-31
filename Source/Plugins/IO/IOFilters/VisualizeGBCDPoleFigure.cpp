@@ -71,7 +71,6 @@ VisualizeGBCDPoleFigure::VisualizeGBCDPoleFigure()
 
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

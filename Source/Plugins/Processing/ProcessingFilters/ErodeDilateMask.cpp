@@ -60,7 +60,6 @@ ErodeDilateMask::ErodeDilateMask()
 , m_MaskCopy(nullptr)
 , m_Mask(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

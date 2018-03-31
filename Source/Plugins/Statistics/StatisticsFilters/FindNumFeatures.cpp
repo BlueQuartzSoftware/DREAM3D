@@ -53,7 +53,6 @@ FindNumFeatures::FindNumFeatures()
 , m_FeaturePhases(nullptr)
 , m_NumFeatures(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

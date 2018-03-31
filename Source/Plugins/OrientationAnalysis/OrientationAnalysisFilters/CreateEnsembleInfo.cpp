@@ -62,7 +62,6 @@ CreateEnsembleInfo::CreateEnsembleInfo()
 , m_CrystalStructures(nullptr)
 , m_PhaseTypes(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

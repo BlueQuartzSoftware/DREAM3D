@@ -119,7 +119,6 @@ ReadStlFile::ReadStlFile()
 , m_minZcoord(std::numeric_limits<float>::max())
 , m_maxZcoord(-std::numeric_limits<float>::max())
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

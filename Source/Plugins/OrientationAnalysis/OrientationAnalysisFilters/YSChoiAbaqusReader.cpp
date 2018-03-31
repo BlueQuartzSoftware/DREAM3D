@@ -70,8 +70,7 @@
 //
 // -----------------------------------------------------------------------------
 YSChoiAbaqusReader::YSChoiAbaqusReader()
-: FileReader()
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
 , m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
@@ -92,7 +91,6 @@ YSChoiAbaqusReader::YSChoiAbaqusReader()
 , m_CellEulerAngles(nullptr)
 , m_CrystalStructures(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

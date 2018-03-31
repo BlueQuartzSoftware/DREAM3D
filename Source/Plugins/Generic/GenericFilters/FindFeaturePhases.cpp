@@ -57,7 +57,6 @@ FindFeaturePhases::FindFeaturePhases()
 , m_FeaturePhases(nullptr)
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -247,7 +247,6 @@ ConvertColorToGrayScale::ConvertColorToGrayScale()
   m_ColorWeights.y = 0.7154f;
   m_ColorWeights.z = 0.0721f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

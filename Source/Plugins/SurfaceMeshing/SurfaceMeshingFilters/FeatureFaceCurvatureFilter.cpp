@@ -55,8 +55,7 @@
 //
 // -----------------------------------------------------------------------------
 FeatureFaceCurvatureFilter::FeatureFaceCurvatureFilter()
-: SurfaceMeshFilter()
-, m_FaceAttributeMatrixPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, "")
+: m_FaceAttributeMatrixPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, "")
 , m_SurfaceMeshPrincipalCurvature1sArrayName(SIMPL::FaceData::SurfaceMeshPrincipalCurvature1)
 , m_SurfaceMeshPrincipalCurvature2sArrayName(SIMPL::FaceData::SurfaceMeshPrincipalCurvature2)
 , m_SurfaceMeshPrincipalDirection1sArrayName(SIMPL::FaceData::SurfaceMeshPrincipalDirection1)
@@ -82,7 +81,6 @@ FeatureFaceCurvatureFilter::FeatureFaceCurvatureFilter()
 , m_SurfaceMeshGaussianCurvatures(nullptr)
 , m_SurfaceMeshMeanCurvatures(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

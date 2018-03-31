@@ -55,7 +55,6 @@ GroupFeatures::GroupFeatures()
   m_ContiguousNeighborList = NeighborList<int32_t>::NullPointer();
   m_NonContiguousNeighborList = NeighborList<int32_t>::NullPointer();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

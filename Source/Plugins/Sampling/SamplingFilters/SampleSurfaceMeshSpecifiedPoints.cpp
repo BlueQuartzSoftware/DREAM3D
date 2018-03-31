@@ -50,13 +50,11 @@
 //
 // -----------------------------------------------------------------------------
 SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints()
-: SampleSurfaceMesh()
-, m_InputFilePath("")
+: m_InputFilePath("")
 , m_OutputFilePath("")
 , m_FeatureIds(nullptr)
 , m_NumPoints(0)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

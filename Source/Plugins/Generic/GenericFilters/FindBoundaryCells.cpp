@@ -59,7 +59,6 @@ FindBoundaryCells::FindBoundaryCells()
 , m_FeatureIds(nullptr)
 , m_BoundaryCells(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

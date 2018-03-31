@@ -54,7 +54,6 @@ FindVolFractions::FindVolFractions()
 , m_CellPhases(nullptr)
 , m_VolFractions(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

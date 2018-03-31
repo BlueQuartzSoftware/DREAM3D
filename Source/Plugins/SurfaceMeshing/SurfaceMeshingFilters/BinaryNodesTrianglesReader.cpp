@@ -52,8 +52,7 @@
 //
 // -----------------------------------------------------------------------------
 BinaryNodesTrianglesReader::BinaryNodesTrianglesReader()
-: SurfaceMeshFilter()
-, m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
+: m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
 , m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
 , m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
 , m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
@@ -63,7 +62,6 @@ BinaryNodesTrianglesReader::BinaryNodesTrianglesReader()
 , m_SurfaceMeshNodeTypes(nullptr)
 , m_FaceLabels(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

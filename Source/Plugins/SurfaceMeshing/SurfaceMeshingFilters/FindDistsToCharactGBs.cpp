@@ -239,8 +239,7 @@ public:
 //
 // -----------------------------------------------------------------------------
 FindDistsToCharactGBs::FindDistsToCharactGBs()
-: SurfaceMeshFilter()
-, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+: m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_FeatureEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgEulerAngles)
 , m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
 , m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
@@ -259,7 +258,6 @@ FindDistsToCharactGBs::FindDistsToCharactGBs()
 , m_DistToSymmetric(nullptr)
 , m_DistTo180Tilt(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

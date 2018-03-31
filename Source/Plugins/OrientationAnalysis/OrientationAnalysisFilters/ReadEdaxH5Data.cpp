@@ -109,7 +109,6 @@ ReadEdaxH5Data::ReadEdaxH5Data()
   value.z = 0;
   m_Origin = value;
 
-  setupFilterParameters();
   setPatternDims(QVector<int32_t>(2, 0)); // initialize this with a 2 element vector
 }
 

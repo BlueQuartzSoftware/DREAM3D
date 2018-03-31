@@ -408,8 +408,7 @@ public:
 //
 // -----------------------------------------------------------------------------
 FindGBCDMetricBased::FindGBCDMetricBased()
-: SurfaceMeshFilter()
-, m_PhaseOfInterest(1)
+: m_PhaseOfInterest(1)
 , m_ChosenLimitDists(FindGBCDMetricBased::k_DefaultResolutionChoice)
 , m_NumSamplPts(3000)
 , m_ExcludeTripleLines(false)
@@ -438,7 +437,6 @@ FindGBCDMetricBased::FindGBCDMetricBased()
   m_MisorientationRotation.k = 1.0f;
   m_MisorientationRotation.l = 1.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

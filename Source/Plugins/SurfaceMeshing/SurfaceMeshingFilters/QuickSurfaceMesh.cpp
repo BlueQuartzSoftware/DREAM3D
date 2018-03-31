@@ -64,7 +64,6 @@ QuickSurfaceMesh::QuickSurfaceMesh()
 , m_FaceLabels(nullptr)
 , m_NodeTypes(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

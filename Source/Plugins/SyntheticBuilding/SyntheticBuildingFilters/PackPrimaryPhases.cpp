@@ -285,7 +285,6 @@ PackPrimaryPhases::PackPrimaryPhases()
 {
 
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

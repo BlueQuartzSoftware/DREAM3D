@@ -48,8 +48,7 @@
 //
 // -----------------------------------------------------------------------------
 SharedFeatureFaceFilter::SharedFeatureFaceFilter()
-: SurfaceMeshFilter()
-, m_FaceFeatureAttributeMatrixName(SIMPL::Defaults::FaceFeatureAttributeMatrixName)
+: m_FaceFeatureAttributeMatrixName(SIMPL::Defaults::FaceFeatureAttributeMatrixName)
 , m_SurfaceMeshFeatureFaceIdsArrayName(SIMPL::FaceData::SurfaceMeshFeatureFaceId)
 , m_SurfaceMeshFeatureFaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_SurfaceMeshFeatureFaceNumTrianglesArrayName("NumTriangles")
@@ -59,7 +58,6 @@ SharedFeatureFaceFilter::SharedFeatureFaceFilter()
 , m_SurfaceMeshFeatureFaceLabels(nullptr)
 , m_SurfaceMeshFeatureFaceNumTriangles(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

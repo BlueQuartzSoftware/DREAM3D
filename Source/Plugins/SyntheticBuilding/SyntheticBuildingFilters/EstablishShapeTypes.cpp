@@ -54,7 +54,6 @@ EstablishShapeTypes::EstablishShapeTypes()
 , m_PhaseTypes(nullptr)
 , m_ShapeTypes(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

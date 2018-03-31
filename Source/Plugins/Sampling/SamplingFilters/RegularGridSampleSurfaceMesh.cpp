@@ -53,8 +53,7 @@
 //
 // -----------------------------------------------------------------------------
 RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh()
-: SampleSurfaceMesh()
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_XPoints(0)
 , m_YPoints(0)
@@ -70,7 +69,6 @@ RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh()
   m_Origin.y = 0.0f;
   m_Origin.z = 0.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

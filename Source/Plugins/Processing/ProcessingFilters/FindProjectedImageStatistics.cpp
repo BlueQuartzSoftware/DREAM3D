@@ -161,7 +161,6 @@ FindProjectedImageStatistics::FindProjectedImageStatistics()
 , m_ProjectedImageStd(nullptr)
 , m_ProjectedImageVar(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -366,8 +366,7 @@ public:
 //
 // -----------------------------------------------------------------------------
 FindGBPDMetricBased::FindGBPDMetricBased()
-: SurfaceMeshFilter()
-, m_PhaseOfInterest(1)
+: m_PhaseOfInterest(1)
 , m_LimitDist(7.0f)
 , m_NumSamplPts(3000)
 , m_ExcludeTripleLines(false)
@@ -391,7 +390,6 @@ FindGBPDMetricBased::FindGBPDMetricBased()
 , m_SurfaceMeshFeatureFaceLabels(nullptr)
 , m_NodeTypes(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

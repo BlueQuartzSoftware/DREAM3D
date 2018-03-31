@@ -74,7 +74,6 @@ FindBoundaryStrengths::FindBoundaryStrengths()
   m_Loading.y = 1.0f;
   m_Loading.z = 1.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

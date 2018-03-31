@@ -261,7 +261,6 @@ InsertAtoms::InsertAtoms()
   m_LatticeConstants.y = 1.0f;
   m_LatticeConstants.z = 1.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

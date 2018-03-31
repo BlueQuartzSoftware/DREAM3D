@@ -55,7 +55,6 @@ ExtractFlaggedFeatures::ExtractFlaggedFeatures()
 , m_FeatureIds(nullptr)
 , m_FlaggedFeatures(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

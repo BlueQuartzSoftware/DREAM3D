@@ -172,8 +172,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 ScalarSegmentFeatures::ScalarSegmentFeatures()
-: SegmentFeatures()
-, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
+: m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
 , m_ScalarArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
 , m_ScalarTolerance(5.0f)
 , m_RandomizeFeatureIds(true)
@@ -186,7 +185,6 @@ ScalarSegmentFeatures::ScalarSegmentFeatures()
 , m_FeatureIds(nullptr)
 , m_Active(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

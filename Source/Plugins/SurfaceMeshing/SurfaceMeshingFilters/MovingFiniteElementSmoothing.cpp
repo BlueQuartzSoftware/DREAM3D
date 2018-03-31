@@ -131,8 +131,7 @@ template <typename Node, typename T> double AngleLineCurvature(Node& n0, Node& n
 //
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing()
-: SurfaceMeshFilter()
-, m_IterationSteps(1)
+: m_IterationSteps(1)
 , m_NodeConstraints(true)
 , m_ConstrainSurfaceNodes(true)
 , m_ConstrainQuadPoints(true)
@@ -141,7 +140,6 @@ MovingFiniteElementSmoothing::MovingFiniteElementSmoothing()
 , m_SurfaceMeshNodeTypeArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
 , m_SurfaceMeshNodeType(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

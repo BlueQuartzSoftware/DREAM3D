@@ -67,7 +67,6 @@ FindFeatureReferenceCAxisMisorientations::FindFeatureReferenceCAxisMisorientatio
 , m_FeatureAvgCAxisMisorientations(nullptr)
 , m_FeatureStdevCAxisMisorientations(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

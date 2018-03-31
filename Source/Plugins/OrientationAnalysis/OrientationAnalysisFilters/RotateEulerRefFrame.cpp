@@ -125,7 +125,6 @@ RotateEulerRefFrame::RotateEulerRefFrame()
   m_RotationAxis.y = 0.0f;
   m_RotationAxis.z = 1.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

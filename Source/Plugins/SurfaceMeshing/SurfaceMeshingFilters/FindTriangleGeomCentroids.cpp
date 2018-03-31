@@ -59,7 +59,6 @@ FindTriangleGeomCentroids::FindTriangleGeomCentroids()
 , m_Centroids(nullptr)
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

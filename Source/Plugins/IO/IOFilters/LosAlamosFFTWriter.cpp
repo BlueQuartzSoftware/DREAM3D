@@ -62,7 +62,6 @@ LosAlamosFFTWriter::LosAlamosFFTWriter()
 , m_CellPhases(nullptr)
 , m_CellEulerAngles(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -69,7 +69,6 @@ FindKernelAvgMisorientations::FindKernelAvgMisorientations()
   m_KernelSize.y = 1;
   m_KernelSize.z = 1;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

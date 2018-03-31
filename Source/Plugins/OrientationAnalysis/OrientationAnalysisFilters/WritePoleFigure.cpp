@@ -92,7 +92,6 @@ WritePoleFigure::WritePoleFigure()
 , m_CrystalStructures(nullptr)
 , m_GoodVoxels(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

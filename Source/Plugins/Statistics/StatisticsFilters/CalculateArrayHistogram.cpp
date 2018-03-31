@@ -65,7 +65,6 @@ CalculateArrayHistogram::CalculateArrayHistogram()
 , m_InDataArray(nullptr)
 , m_NewDataArray(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

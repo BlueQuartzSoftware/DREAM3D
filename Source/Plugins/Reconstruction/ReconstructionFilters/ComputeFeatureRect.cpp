@@ -21,7 +21,6 @@ ComputeFeatureRect::ComputeFeatureRect()
 , m_FeatureRectArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "FeatureRect")
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -37,11 +37,7 @@ PROJECT( EMMPMLib VERSION 1.0)
 cmake_minimum_required(VERSION 3.8.0)
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-  # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
-  # cmake ignore that policy
-  cmake_policy(SET CMP0048 OLD)
-  # CMake 3.0 introduces some OS X RPath policies
-  cmake_policy(SET CMP0042 OLD)
+
 endif()
 
 if(NOT DEFINED DREAM3DProj_BINARY_DIR)

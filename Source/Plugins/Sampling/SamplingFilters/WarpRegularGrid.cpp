@@ -82,7 +82,6 @@ WarpRegularGrid::WarpRegularGrid()
   m_FourthOrderBCoeff.c02 = 0.0f, m_FourthOrderBCoeff.c11 = 0.0f, m_FourthOrderBCoeff.c10 = 1.0f;
   m_FourthOrderBCoeff.c01 = 1.0f, m_FourthOrderBCoeff.c00 = 0.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

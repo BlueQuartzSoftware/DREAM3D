@@ -55,7 +55,6 @@ FindSurfaceFeatures::FindSurfaceFeatures()
 , m_FeatureIds(nullptr)
 , m_SurfaceFeatures(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

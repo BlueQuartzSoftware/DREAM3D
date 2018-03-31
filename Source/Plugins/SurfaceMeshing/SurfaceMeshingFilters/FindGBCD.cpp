@@ -354,8 +354,7 @@ public:
 //
 // -----------------------------------------------------------------------------
 FindGBCD::FindGBCD()
-: SurfaceMeshFilter()
-, m_FaceEnsembleAttributeMatrixName(SIMPL::Defaults::FaceEnsembleAttributeMatrixName)
+: m_FaceEnsembleAttributeMatrixName(SIMPL::Defaults::FaceEnsembleAttributeMatrixName)
 , m_GBCDRes(9.0f)
 , m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_SurfaceMeshFaceNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals)
@@ -383,7 +382,6 @@ FindGBCD::FindGBCD()
   m_GbcdBinsArray = Int32ArrayType::NullPointer();
   m_GbcdHemiCheckArray = BoolArrayType::NullPointer();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

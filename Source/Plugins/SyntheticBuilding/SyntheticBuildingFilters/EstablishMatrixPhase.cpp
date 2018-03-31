@@ -81,7 +81,6 @@ EstablishMatrixPhase::EstablishMatrixPhase()
   firstMatrixFeature = 1;
   sizex = sizey = sizez = totalvol = 0.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -52,10 +52,10 @@ class SurfaceMeshFilter : public AbstractFilter
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(SurfaceMeshFilter)
-  SIMPL_STATIC_NEW_MACRO(SurfaceMeshFilter)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SurfaceMeshFilter, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(SurfaceMeshFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SurfaceMeshFilter, AbstractFilter)
 
-  virtual ~SurfaceMeshFilter();
+  ~SurfaceMeshFilter() override;
 
 signals:
   /**
@@ -84,7 +84,9 @@ protected:
   SurfaceMeshFilter();
 
 private:
+public:
   SurfaceMeshFilter(const SurfaceMeshFilter&) = delete; // Copy Constructor Not Implemented
+  SurfaceMeshFilter(SurfaceMeshFilter&&) = delete;      // Move Constructor
   void operator=(const SurfaceMeshFilter&);    // Operator '=' Not Implemented
 };
 

@@ -93,7 +93,6 @@ ReadAngData::ReadAngData()
 , m_CrystalStructures(nullptr)
 , m_LatticeConstants(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

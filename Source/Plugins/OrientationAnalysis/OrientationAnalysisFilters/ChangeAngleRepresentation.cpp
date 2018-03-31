@@ -97,7 +97,6 @@ ChangeAngleRepresentation::ChangeAngleRepresentation()
 , m_CellEulerAnglesArrayPath("", "", "")
 , m_CellEulerAngles(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

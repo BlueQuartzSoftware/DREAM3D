@@ -65,7 +65,6 @@ GenerateEulerColors::GenerateEulerColors()
 , m_CellEulerColors(nullptr)
 , m_CrystalStructures(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

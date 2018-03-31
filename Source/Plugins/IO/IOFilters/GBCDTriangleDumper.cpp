@@ -60,7 +60,6 @@ GBCDTriangleDumper::GBCDTriangleDumper()
 , m_SurfaceMeshFaceNormals(nullptr)
 , m_FeatureEulerAngles(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

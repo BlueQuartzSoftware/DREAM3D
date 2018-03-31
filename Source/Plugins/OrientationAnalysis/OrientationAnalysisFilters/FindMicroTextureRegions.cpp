@@ -59,7 +59,6 @@ FindMicroTextureRegions::FindMicroTextureRegions()
 , m_MicroTextureRegionFractionOccupied(nullptr)
 , m_FeatureIds(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

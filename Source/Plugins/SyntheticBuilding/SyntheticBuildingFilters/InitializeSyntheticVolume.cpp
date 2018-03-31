@@ -100,7 +100,6 @@ InitializeSyntheticVolume::InitializeSyntheticVolume()
 
   m_EstimatedPrimaryFeatures = "";
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

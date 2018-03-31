@@ -55,8 +55,7 @@
 //
 // -----------------------------------------------------------------------------
 SineParamsSegmentFeatures::SineParamsSegmentFeatures()
-: SegmentFeatures()
-, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
+: m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
 , m_SineParamsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::SineParams)
 , m_RandomizeFeatureIds(true)
 , m_UseGoodVoxels(true)
@@ -69,7 +68,6 @@ SineParamsSegmentFeatures::SineParamsSegmentFeatures()
 , m_Active(nullptr)
 , m_MissingGoodVoxels(false)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

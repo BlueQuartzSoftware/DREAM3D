@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 LaplacianSmoothing::LaplacianSmoothing()
-: SurfaceMeshFilter()
-, m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
+: m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
 , m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType)
 , m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_IterationSteps(1)
@@ -70,7 +69,6 @@ LaplacianSmoothing::LaplacianSmoothing()
 , m_SurfaceMeshNodeType(nullptr)
 , m_SurfaceMeshFaceLabels(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

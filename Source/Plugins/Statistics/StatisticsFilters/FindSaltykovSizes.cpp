@@ -55,7 +55,6 @@ FindSaltykovSizes::FindSaltykovSizes()
 , m_EquivalentDiameters(nullptr)
 , m_SaltykovEquivalentDiameters(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -60,8 +60,7 @@
 //
 // -----------------------------------------------------------------------------
 CAxisSegmentFeatures::CAxisSegmentFeatures()
-: SegmentFeatures()
-, m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
+: m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
 , m_MisorientationTolerance(5.0f)
 , m_RandomizeFeatureIds(true)
 , m_UseGoodVoxels(true)
@@ -82,7 +81,6 @@ CAxisSegmentFeatures::CAxisSegmentFeatures()
 
   m_MisoTolerance = 0.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

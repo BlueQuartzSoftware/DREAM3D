@@ -68,7 +68,6 @@ ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid()
 , m_HeaderIsComplete(false)
 , m_HexGridStack(0) // this is just a dummy variable
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

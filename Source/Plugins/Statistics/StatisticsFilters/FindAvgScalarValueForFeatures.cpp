@@ -57,7 +57,6 @@ FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures()
 , m_NewFeatureArray(nullptr)
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

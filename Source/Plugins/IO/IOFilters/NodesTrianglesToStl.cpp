@@ -58,7 +58,6 @@ NodesTrianglesToStl::NodesTrianglesToStl()
 , m_OutputStlDirectory("")
 , m_OutputStlPrefix("")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

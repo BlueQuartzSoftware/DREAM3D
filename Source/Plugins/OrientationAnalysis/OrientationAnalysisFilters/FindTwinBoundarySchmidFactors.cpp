@@ -249,7 +249,6 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()
 
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

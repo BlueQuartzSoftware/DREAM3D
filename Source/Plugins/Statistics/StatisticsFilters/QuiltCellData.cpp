@@ -63,7 +63,6 @@ QuiltCellData::QuiltCellData()
   m_PatchSize.y = 3;
   m_PatchSize.z = 3;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

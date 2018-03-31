@@ -127,7 +127,6 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()
 
   m_StatsDataArray = StatsDataArray::NullPointer();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

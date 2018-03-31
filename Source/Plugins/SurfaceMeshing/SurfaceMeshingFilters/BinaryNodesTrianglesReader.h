@@ -77,22 +77,22 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters() override;
+    void setupFilterParameters() override;
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+    void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
     /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
-    virtual void execute() override;
+    void execute() override;
 
     /**
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
-    virtual void preflight() override;
+    void preflight() override;
 
   protected:
     BinaryNodesTrianglesReader();

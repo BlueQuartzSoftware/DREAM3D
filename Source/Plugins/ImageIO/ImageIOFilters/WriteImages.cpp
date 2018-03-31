@@ -62,7 +62,6 @@ WriteImages::WriteImages()
 , m_ColorsArrayPath("", "", "")
 , m_Colors(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

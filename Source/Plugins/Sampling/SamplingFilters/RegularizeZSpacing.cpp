@@ -56,7 +56,6 @@ RegularizeZSpacing::RegularizeZSpacing()
 , m_InputFile("")
 , m_NewZRes(1.0f)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

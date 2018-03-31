@@ -76,7 +76,6 @@ EbsdToH5Ebsd::EbsdToH5Ebsd()
   m_EulerTransformation.k = 0.0f;
   m_EulerTransformation.l = 1.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

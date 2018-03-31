@@ -56,8 +56,7 @@
 //
 // -----------------------------------------------------------------------------
 FeatureInfoReader::FeatureInfoReader()
-: FileReader()
-, m_CellAttributeMatrixName("", "", "")
+: m_CellAttributeMatrixName("", "", "")
 , m_CellFeatureAttributeMatrixName("FeatureAttributeMatrix")
 , m_InputFile("")
 , m_CreateCellLevelArrays(true)
@@ -73,7 +72,6 @@ FeatureInfoReader::FeatureInfoReader()
 , m_FeaturePhases(nullptr)
 , m_FeatureEulerAngles(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -64,7 +64,6 @@ FitFeatureData::FitFeatureData()
 , m_FeaturePhases(nullptr)
 , m_NewEnsembleArray(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

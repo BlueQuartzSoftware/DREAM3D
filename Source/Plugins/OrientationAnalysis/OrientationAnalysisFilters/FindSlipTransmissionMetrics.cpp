@@ -68,7 +68,6 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics()
   m_mPrimeList = NeighborList<float>::NullPointer();
   m_NeighborList = NeighborList<int32_t>::NullPointer();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

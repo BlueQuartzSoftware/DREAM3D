@@ -57,7 +57,6 @@ FindCAxisLocations::FindCAxisLocations()
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

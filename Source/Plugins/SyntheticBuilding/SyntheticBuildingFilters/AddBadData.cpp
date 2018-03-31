@@ -58,7 +58,6 @@ AddBadData::AddBadData()
 , m_BoundaryVolFraction(0.0f)
 , m_GBEuclideanDistances(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

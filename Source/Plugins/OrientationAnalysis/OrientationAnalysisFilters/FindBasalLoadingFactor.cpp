@@ -62,7 +62,6 @@ FindBasalLoadingFactor::FindBasalLoadingFactor()
   m_LoadingDirection.y = 1.0f;
   m_LoadingDirection.z = 1.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

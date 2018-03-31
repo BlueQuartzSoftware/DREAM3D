@@ -70,7 +70,6 @@ StatsGeneratorFilter::StatsGeneratorFilter()
 , m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
 , m_PhaseNamesArrayName(SIMPL::EnsembleData::PhaseName)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

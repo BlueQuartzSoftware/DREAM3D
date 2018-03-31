@@ -61,7 +61,6 @@ SurfaceMeshToNonconformalVtk::SurfaceMeshToNonconformalVtk()
 , m_SurfaceMeshFaceLabels(nullptr)
 , m_SurfaceMeshNodeType(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

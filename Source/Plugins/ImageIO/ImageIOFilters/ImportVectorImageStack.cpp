@@ -73,7 +73,6 @@ ImportVectorImageStack::ImportVectorImageStack()
 , m_VectorData(nullptr)
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

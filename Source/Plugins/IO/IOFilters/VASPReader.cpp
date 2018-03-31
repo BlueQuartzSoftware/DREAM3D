@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 VASPReader::VASPReader()
-: FileReader()
-, m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
+: m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
 , m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
 , m_InputFile("")
 , m_AtomVelocitiesArrayName(SIMPL::VertexData::AtomVelocities)
@@ -63,7 +62,6 @@ VASPReader::VASPReader()
 , m_AtomVelocities(nullptr)
 , m_AtomTypes(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

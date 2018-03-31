@@ -61,7 +61,6 @@ WriteStlFile::WriteStlFile()
 , m_SurfaceMeshFaceLabels(nullptr)
 , m_SurfaceMeshFacePhases(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

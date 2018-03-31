@@ -56,7 +56,6 @@ FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()
 , m_NumCells(nullptr)
 , m_SurfaceAreaVolumeRatio(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

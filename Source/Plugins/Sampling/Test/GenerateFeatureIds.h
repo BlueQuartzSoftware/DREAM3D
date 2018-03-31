@@ -15,10 +15,10 @@ class GenerateFeatureIds : public AbstractFilter
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(GenerateFeatureIds)
-  SIMPL_STATIC_NEW_MACRO(GenerateFeatureIds)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFeatureIds, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(GenerateFeatureIds)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFeatureIds, AbstractFilter)
 
-  virtual ~GenerateFeatureIds()
+  ~GenerateFeatureIds()
   {
   }
   SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
@@ -116,7 +116,9 @@ private:
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
+public:
   GenerateFeatureIds(const GenerateFeatureIds&) = delete; // Copy Constructor Not Implemented
+  GenerateFeatureIds(GenerateFeatureIds&&) = delete;      // Move Constructor
   void operator=(const GenerateFeatureIds&);     // Operator '=' Not Implemented
 };
 
@@ -132,10 +134,10 @@ class CreateDataContainer : public AbstractFilter
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(CreateDataContainer)
-  SIMPL_STATIC_NEW_MACRO(CreateDataContainer)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateDataContainer, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(CreateDataContainer)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateDataContainer, AbstractFilter)
 
-  virtual ~CreateDataContainer()
+  ~CreateDataContainer()
   {
   }
 

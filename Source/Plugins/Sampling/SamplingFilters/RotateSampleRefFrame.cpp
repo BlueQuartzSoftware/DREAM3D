@@ -174,7 +174,6 @@ RotateSampleRefFrame::RotateSampleRefFrame()
   m_RotationAxis.y = 0.0;
   m_RotationAxis.z = 1.0;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

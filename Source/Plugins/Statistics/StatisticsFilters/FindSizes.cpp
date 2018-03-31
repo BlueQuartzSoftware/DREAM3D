@@ -62,7 +62,6 @@ FindSizes::FindSizes()
 , m_EquivalentDiameters(nullptr)
 , m_NumElements(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

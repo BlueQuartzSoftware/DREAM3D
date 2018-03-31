@@ -101,7 +101,6 @@ MatchCrystallography::MatchCrystallography()
 
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

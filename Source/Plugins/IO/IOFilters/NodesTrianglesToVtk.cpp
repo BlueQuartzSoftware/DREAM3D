@@ -58,7 +58,6 @@ NodesTrianglesToVtk::NodesTrianglesToVtk()
 , m_WriteBinaryFile(false)
 , m_WriteConformalMesh(true)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

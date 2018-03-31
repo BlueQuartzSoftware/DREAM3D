@@ -62,7 +62,6 @@ AbaqusHexahedronWriter::AbaqusHexahedronWriter()
 , m_JobName("")
 , m_FeatureIds(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -215,7 +215,6 @@ VtkRectilinearGridWriter::VtkRectilinearGridWriter()
 : m_OutputFile("")
 , m_WriteBinaryFile(false)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

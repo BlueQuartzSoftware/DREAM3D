@@ -67,7 +67,6 @@ JumbleOrientations::JumbleOrientations()
 , m_FeatureEulerAngles(nullptr)
 , m_AvgQuats(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

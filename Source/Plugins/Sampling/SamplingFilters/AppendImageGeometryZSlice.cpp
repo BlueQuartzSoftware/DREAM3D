@@ -51,7 +51,6 @@ AppendImageGeometryZSlice::AppendImageGeometryZSlice()
 , m_DestinationAttributeMatrix()
 , m_CheckResolution(false)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

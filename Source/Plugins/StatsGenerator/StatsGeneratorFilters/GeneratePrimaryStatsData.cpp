@@ -53,7 +53,6 @@ GeneratePrimaryStatsData::GeneratePrimaryStatsData()
 , m_SelectedEnsembleAttributeMatrix()
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

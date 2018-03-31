@@ -92,7 +92,6 @@ ReadH5Ebsd::ReadH5Ebsd()
 
   m_MaterialNamesPtr = StringDataArray::NullPointer();
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

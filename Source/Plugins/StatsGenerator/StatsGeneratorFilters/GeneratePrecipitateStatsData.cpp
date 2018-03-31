@@ -57,7 +57,6 @@ GeneratePrecipitateStatsData::GeneratePrecipitateStatsData()
 , m_PrecipitateStatsData(nullptr)
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

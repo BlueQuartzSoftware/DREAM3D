@@ -129,7 +129,6 @@ GenerateFZQuaternions::GenerateFZQuaternions()
 {
   initialize();
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

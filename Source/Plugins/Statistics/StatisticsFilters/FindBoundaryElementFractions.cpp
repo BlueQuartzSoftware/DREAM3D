@@ -55,7 +55,6 @@ FindBoundaryElementFractions::FindBoundaryElementFractions()
 , m_BoundaryCells(nullptr)
 , m_BoundaryCellFractions(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -84,10 +84,10 @@ function(COMPILE_TOOL)
 endfunction()
 
 
-# Create a Command line tool for the FilterParameterTool
+# Create a Command line tool for the SandboxTool
 COMPILE_TOOL(
-    TARGET FilterParameterTool
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/FilterParameterTool.cpp ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h
+    TARGET SandboxTool
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/SandboxTool.cpp ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}
@@ -97,7 +97,7 @@ COMPILE_TOOL(
     LINK_LIBRARIES Qt5::Core SIMPLib
 )
 
-# Create a Command line tool for the FilterParameterTool
+# Create a Command line tool for the SandboxTool
 COMPILE_TOOL(
     TARGET ExamplePipelineCoverage
     SOURCES ${DREAM3DTools_SOURCE_DIR}/ExamplePipelineCoverage.cpp ${DREAM3DTools_BINARY_DIR}/${PROJECT_NAME}Configuration.h

@@ -166,7 +166,6 @@ AlignSections::AlignSections()
 , m_WriteAlignmentShifts(false)
 , m_AlignmentShiftFileName("")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

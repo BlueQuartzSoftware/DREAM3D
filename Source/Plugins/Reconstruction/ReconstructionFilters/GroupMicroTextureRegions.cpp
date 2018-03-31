@@ -60,8 +60,7 @@
 //
 // -----------------------------------------------------------------------------
 GroupMicroTextureRegions::GroupMicroTextureRegions()
-: GroupFeatures()
-, m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName)
+: m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName)
 , m_CAxisTolerance(1.0f)
 , m_UseRunningAverage(false)
 , m_RandomizeParentIds(true)
@@ -88,7 +87,6 @@ GroupMicroTextureRegions::GroupMicroTextureRegions()
   m_AvgCAxes[2] = 0.0f;
   m_CAxisToleranceRad = 0.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

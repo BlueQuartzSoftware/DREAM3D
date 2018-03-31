@@ -91,8 +91,7 @@ float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110}, {-unit111, 
 //
 // -----------------------------------------------------------------------------
 MergeColonies::MergeColonies()
-: GroupFeatures()
-, m_NewCellFeatureAttributeMatrixName("NewFeatureData")
+: m_NewCellFeatureAttributeMatrixName("NewFeatureData")
 , m_FeatureIdsArrayPath("", "", "")
 , m_CellPhasesArrayPath("", "", "")
 , m_FeaturePhasesArrayPath("", "", "")
@@ -120,7 +119,6 @@ MergeColonies::MergeColonies()
 
   m_AxisToleranceRad = 0.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

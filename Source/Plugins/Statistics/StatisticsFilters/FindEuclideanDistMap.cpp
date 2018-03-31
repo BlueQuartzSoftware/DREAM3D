@@ -299,7 +299,6 @@ FindEuclideanDistMap::FindEuclideanDistMap()
 , m_TJManhattanDistances(nullptr)
 , m_QPManhattanDistances(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

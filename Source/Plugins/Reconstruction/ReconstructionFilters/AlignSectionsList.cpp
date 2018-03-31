@@ -53,12 +53,10 @@
 //
 // -----------------------------------------------------------------------------
 AlignSectionsList::AlignSectionsList()
-: AlignSections()
-, m_InputFile("")
+: m_InputFile("")
 , m_DREAM3DAlignmentFile(false)
 {
   // only setting up the child parameters because the parent constructor has already been called
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

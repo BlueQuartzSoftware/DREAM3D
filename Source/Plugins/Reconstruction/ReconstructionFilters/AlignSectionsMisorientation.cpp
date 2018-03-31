@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 AlignSectionsMisorientation::AlignSectionsMisorientation()
-: AlignSections()
-, m_MisorientationTolerance(5.0f)
+: m_MisorientationTolerance(5.0f)
 , m_UseGoodVoxels(true)
 , m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
 , m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
@@ -71,7 +70,6 @@ AlignSectionsMisorientation::AlignSectionsMisorientation()
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   // only setting up the child parameters because the parent constructor has already been called
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

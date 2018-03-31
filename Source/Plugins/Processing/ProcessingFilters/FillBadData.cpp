@@ -60,7 +60,6 @@ FillBadData::FillBadData()
 , m_FeatureIds(nullptr)
 , m_CellPhases(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

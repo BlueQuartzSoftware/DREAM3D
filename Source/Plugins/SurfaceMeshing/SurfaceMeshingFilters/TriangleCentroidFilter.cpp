@@ -96,11 +96,9 @@ public:
 //
 // -----------------------------------------------------------------------------
 TriangleCentroidFilter::TriangleCentroidFilter()
-: SurfaceMeshFilter()
-, m_SurfaceMeshTriangleCentroidsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceCentroids)
+: m_SurfaceMeshTriangleCentroidsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceCentroids)
 , m_SurfaceMeshTriangleCentroids(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

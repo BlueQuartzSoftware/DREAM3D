@@ -114,7 +114,6 @@ InsertPrecipitatePhases::InsertPrecipitatePhases()
 {
 
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

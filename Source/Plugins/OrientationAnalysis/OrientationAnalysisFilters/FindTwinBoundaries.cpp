@@ -235,7 +235,6 @@ FindTwinBoundaries::FindTwinBoundaries()
 , m_SurfaceMeshTwinBoundaryIncoherence(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

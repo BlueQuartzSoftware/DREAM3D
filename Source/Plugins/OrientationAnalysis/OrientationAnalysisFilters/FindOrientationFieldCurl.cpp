@@ -130,7 +130,6 @@ FindOrientationFieldCurl::FindOrientationFieldCurl()
   m_CurlSize.y = 1;
   m_CurlSize.z = 1;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

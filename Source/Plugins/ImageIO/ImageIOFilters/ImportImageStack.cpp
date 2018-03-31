@@ -63,7 +63,6 @@ ImportImageStack::ImportImageStack()
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

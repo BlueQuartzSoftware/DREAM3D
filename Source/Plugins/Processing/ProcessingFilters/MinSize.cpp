@@ -61,7 +61,6 @@ MinSize::MinSize()
 , m_FeaturePhases(nullptr)
 , m_NumCells(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 SPParksDumpReader::SPParksDumpReader()
-: FileReader()
-, m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_InputFile("")
 , m_OneBasedArrays(false)
@@ -69,7 +68,6 @@ SPParksDumpReader::SPParksDumpReader()
   m_Resolution.y = 1.0f;
   m_Resolution.z = 1.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

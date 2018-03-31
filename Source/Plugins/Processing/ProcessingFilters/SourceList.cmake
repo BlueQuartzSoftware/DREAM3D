@@ -28,6 +28,7 @@ set(_PublicFilters
   MinNeighbors
   MinSize
   RemoveFlaggedFeatures
+  FixNonmanifoldVoxels
 )
 
 
